@@ -1,4 +1,4 @@
-package eu.mosaic;
+package eu.mosaic.JettyAmqpConnector;
 
 import java.io.Serializable;
 

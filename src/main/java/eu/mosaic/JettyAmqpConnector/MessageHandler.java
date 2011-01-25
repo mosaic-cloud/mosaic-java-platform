@@ -1,4 +1,4 @@
-package eu.mosaic;
+package eu.mosaic.JettyAmqpConnector;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rabbitmq.client.QueueingConsumer;
+
 
 public class MessageHandler {
 

@@ -1,10 +1,8 @@
-package eu.mosaic;
-
+package eu.mosaic.JettyAmqpConnector;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
 
 import org.eclipse.jetty.io.ByteArrayEndPoint;
 import org.eclipse.jetty.io.ConnectedEndPoint;
@@ -20,7 +18,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 
-import eu.mosaic.MessageHandler.MessageFormatException;
+import eu.mosaic.JettyAmqpConnector.MessageHandler.MessageFormatException;
 
 public class AmqpConnector extends AbstractConnector {
 	protected final Set<EndPoint> _connections;
@@ -30,30 +28,37 @@ public class AmqpConnector extends AbstractConnector {
 	private Channel _channel = null;
 	private QueueingConsumer _consumer = null;
 	private String _hostName;
+	private String _userName;
+	private String _userPassword;
+	private int _serverPort;
 	private String _routingKey;
 	private String _exchangeName;
 	private String _inputQueueName;
-	
-	public AmqpConnector(String exchangeName, String routingKey, String hostName) {
-		_connections=new HashSet<EndPoint>();
+
+	public AmqpConnector(String exchangeName, String routingKey,
+			String hostName, String userName, String userPassword, int port) {
+		_userName = userName;
+		_userPassword = userPassword;
+		_serverPort = port;
 		_exchangeName = exchangeName;
 		_routingKey = routingKey;
 		_hostName = hostName;
+		_connections = new HashSet<EndPoint>();
 	}
 
 	@Override
 	protected void accept(int acceptorID) throws IOException,
 			InterruptedException {
 		QueueMessage msg = null;
-		//Log.info("Waiting for messages");
+		// Log.info("Waiting for messages");
 		QueueingConsumer.Delivery delivery = _consumer.nextDelivery();
 		try {
 			msg = MessageHandler.decodeMessage(delivery);
 			msg.set_channel(_channel);
 		} catch (MessageFormatException e) {
-			Log.warn("Could not decode message: "+e.getMessage());
+			Log.warn("Could not decode message: " + e.getMessage());
 		} catch (IOException e) {
-			Log.warn("Could not read message: "+e.getMessage());
+			Log.warn("Could not read message: " + e.getMessage());
 			e.printStackTrace();
 		}
 		ConnectorEndPoint _endPoint = new ConnectorEndPoint(msg);
@@ -63,9 +68,8 @@ public class AmqpConnector extends AbstractConnector {
 	@Override
 	public void close() throws IOException {
 
-
 	}
-	
+
 	protected org.eclipse.jetty.io.Connection newConnection(EndPoint endp) {
 		return new HttpConnection(this, endp, getServer());
 	}
@@ -88,60 +92,60 @@ public class AmqpConnector extends AbstractConnector {
 		if (_connectionFactory == null) {
 			_connectionFactory = new ConnectionFactory();
 			_connectionFactory.setHost(_hostName);
+			_connectionFactory.setUsername(_userName);
+			_connectionFactory.setPassword(_userPassword);
 		}
-		
+
 		if (_connection == null) {
 			_connection = _connectionFactory.newConnection();
 		}
-		
+
 		if (_channel == null) {
 			_channel = _connection.createChannel();
 			_channel.exchangeDeclare(_exchangeName, "topic", false);
 			_inputQueueName = _channel.queueDeclare().getQueue();
 			_channel.queueBind(_inputQueueName, _exchangeName, _routingKey);
 		}
-		
+
 		if (_consumer == null) {
 			_consumer = new QueueingConsumer(_channel);
 			_channel.basicConsume(_inputQueueName, true, _consumer);
 		}
-		
 
 	}
-	
-	protected class ConnectorEndPoint extends ByteArrayEndPoint implements ConnectedEndPoint, Runnable {
+
+	protected class ConnectorEndPoint extends ByteArrayEndPoint implements
+			ConnectedEndPoint, Runnable {
 		volatile org.eclipse.jetty.io.Connection _connection;
 		private QueueMessage _message;
 		private QueueingConsumer _consumer = null;
 
-		
 		public ConnectorEndPoint(QueueMessage msg) {
 			super(msg.get_http_request(), 128);
 			_connection = newConnection(this);
 			set_message(msg);
-			
+
 			setGrowOutput(true);
 		}
-		
+
 		public org.eclipse.jetty.io.Connection getConnection() {
 			return _connection;
-		} 
-		
+		}
+
 		private void sendResponse() throws IOException, JSONException {
 			QueueMessage msg = this.get_message();
 
 			Channel c = msg.get_channel();
-			
-			c.basicPublish(msg.get_callback_exchange(), 
-					msg.get_callback_routing_key(), 
-					null, 
-					MessageHandler.encodeMessage(this.getOut().array(),
-							msg.get_callback_identifier()));
+
+			c.basicPublish(msg.get_callback_exchange(), msg
+					.get_callback_routing_key(), null, MessageHandler
+					.encodeMessage(this.getOut().array(), msg
+							.get_callback_identifier()));
 		}
-		
+
 		@Override
 		public void close() throws IOException {
-			//Log.info("connector close() called!");
+			// Log.info("connector close() called!");
 			try {
 				sendResponse();
 			} catch (JSONException e) {
@@ -150,18 +154,17 @@ public class AmqpConnector extends AbstractConnector {
 			}
 			super.close();
 		}
-		
+
 		public void setConnection(org.eclipse.jetty.io.Connection connection) {
-			if (_connection!=connection) {
+			if (_connection != connection) {
 				connectionUpgraded(_connection, connection);
 			}
-			_connection=connection;
+			_connection = connection;
 		}
-		
+
 		public void dispatch() throws IOException {
-			if (getThreadPool()==null || !getThreadPool().dispatch(this))
-			{
-				Log.warn("dispatch failed for {}",_connection);
+			if (getThreadPool() == null || !getThreadPool().dispatch(this)) {
+				Log.warn("dispatch failed for {}", _connection);
 				close();
 			}
 
@@ -169,39 +172,40 @@ public class AmqpConnector extends AbstractConnector {
 
 		@Override
 		public void run() {
-			//Log.warn("Running...");
+			// Log.warn("Running...");
 			try {
 				connectionOpened(getConnection());
-				synchronized(_connections) {
+				synchronized (_connections) {
 					_connections.add(this);
 				}
-				
-				 while (isStarted() && isOpen()) {
-					 if (_connection.isIdle()) {
-						 if (isLowResources()) {
-							 setMaxIdleTime(getLowResourcesMaxIdleTime());
-						 }
-					 }
 
-					 _connection=_connection.handle();
+				while (isStarted() && isOpen()) {
+					if (_connection.isIdle()) {
+						if (isLowResources()) {
+							setMaxIdleTime(getLowResourcesMaxIdleTime());
+						}
+					}
 
-				 }
-				
-			} 
-			catch (EofException e) {
+					_connection = _connection.handle();
+
+				}
+
+			} catch (EofException e) {
 				Log.debug("EOF", e);
-				try{close();}
-				catch(IOException e2){Log.ignore(e2);}
-
-			}
-			catch(Exception e)
-			{
-				Log.warn("handle failed?",e);
 				try {
 					close();
-				} catch(IOException e2) {
-						Log.ignore(e2);}
-			    }
+				} catch (IOException e2) {
+					Log.ignore(e2);
+				}
+
+			} catch (Exception e) {
+				Log.warn("handle failed?", e);
+				try {
+					close();
+				} catch (IOException e2) {
+					Log.ignore(e2);
+				}
+			}
 
 			finally {
 				connectionClosed(_connection);
@@ -218,8 +222,7 @@ public class AmqpConnector extends AbstractConnector {
 		public QueueMessage get_message() {
 			return _message;
 		}
-		
-		
+
 	}
 
 }
