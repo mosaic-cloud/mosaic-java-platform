@@ -2,11 +2,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>eu.mosaic.JettyAmqpConnector</groupId>
-  <artifactId>jetty-connector</artifactId>
+  <artifactId>jetty-mosaic-connector</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>jetty-connector</name>
-  <url>http://maven.apache.org</url>
+  <version>0.1.1-SNAPSHOT</version>
+  <name>jetty-mosaic-connector</name>
+  <url>http://www.mosaic-cloud.eu</url>
   <dependencies>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
@@ -41,6 +41,18 @@
     </dependency>
   </dependencies>
 
+  <issueManagement>
+  	<system>trac</system>
+  	<url>http://mosaic.ieat.ro</url>
+  </issueManagement>
+  <scm>
+    <connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</connection>
+    <developerConnection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</developerConnection>
+  </scm>
+  <organization>
+  	<name>Research Institute eAustria</name>
+  	<url>http://www.ieat.ro</url>
+  </organization>
   <build>
     <plugins>
       <plugin>
