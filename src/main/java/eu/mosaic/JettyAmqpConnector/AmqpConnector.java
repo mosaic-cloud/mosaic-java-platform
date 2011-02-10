@@ -30,7 +30,6 @@ public class AmqpConnector extends AbstractConnector {
 	private String _hostName;
 	private String _userName;
 	private String _userPassword;
-	private int _serverPort;
 	private String _routingKey;
 	private String _exchangeName;
 	private String _inputQueueName;
@@ -39,7 +38,6 @@ public class AmqpConnector extends AbstractConnector {
 			String hostName, String userName, String userPassword, int port) {
 		_userName = userName;
 		_userPassword = userPassword;
-		_serverPort = port;
 		_exchangeName = exchangeName;
 		_routingKey = routingKey;
 		_hostName = hostName;
@@ -51,7 +49,7 @@ public class AmqpConnector extends AbstractConnector {
 			InterruptedException {
 		QueueMessage msg = null;
 		// Log.info("Waiting for messages");
-		QueueingConsumer.Delivery delivery = _consumer.nextDelivery();
+		final QueueingConsumer.Delivery delivery = _consumer.nextDelivery();
 		try {
 			msg = MessageHandler.decodeMessage(delivery);
 			msg.set_channel(_channel);
@@ -116,31 +114,33 @@ public class AmqpConnector extends AbstractConnector {
 
 	protected class ConnectorEndPoint extends ByteArrayEndPoint implements
 			ConnectedEndPoint, Runnable {
-		volatile org.eclipse.jetty.io.Connection _connection;
+		volatile org.eclipse.jetty.io.Connection _jettyConnection;
 		private QueueMessage _message;
-		private QueueingConsumer _consumer = null;
+		//private QueueingConsumer _consumer = null;
 
 		public ConnectorEndPoint(QueueMessage msg) {
 			super(msg.get_http_request(), 128);
-			_connection = newConnection(this);
+			_jettyConnection = newConnection(this);
 			set_message(msg);
 
 			setGrowOutput(true);
 		}
 
 		public org.eclipse.jetty.io.Connection getConnection() {
-			return _connection;
+			return _jettyConnection;
 		}
 
 		private void sendResponse() throws IOException, JSONException {
-			QueueMessage msg = this.get_message();
+			final QueueMessage msg = this.get_message();
 
-			Channel c = msg.get_channel();
+			final Channel c = msg.get_channel();
 
-			c.basicPublish(msg.get_callback_exchange(), msg
-					.get_callback_routing_key(), null, MessageHandler
-					.encodeMessage(this.getOut().array(), msg
-							.get_callback_identifier()));
+			c.basicPublish(
+					msg.get_callback_exchange(),
+					msg.get_callback_routing_key(),
+					null,
+					MessageHandler.encodeMessage(this.getOut().array(),
+							msg.get_callback_identifier()));
 		}
 
 		@Override
@@ -156,15 +156,15 @@ public class AmqpConnector extends AbstractConnector {
 		}
 
 		public void setConnection(org.eclipse.jetty.io.Connection connection) {
-			if (_connection != connection) {
-				connectionUpgraded(_connection, connection);
+			if (_jettyConnection != connection) {
+				connectionUpgraded(_jettyConnection, connection);
 			}
-			_connection = connection;
+			_jettyConnection = connection;
 		}
 
 		public void dispatch() throws IOException {
 			if (getThreadPool() == null || !getThreadPool().dispatch(this)) {
-				Log.warn("dispatch failed for {}", _connection);
+				Log.warn("dispatch failed for {}", _jettyConnection);
 				close();
 			}
 
@@ -180,13 +180,13 @@ public class AmqpConnector extends AbstractConnector {
 				}
 
 				while (isStarted() && isOpen()) {
-					if (_connection.isIdle()) {
+					if (_jettyConnection.isIdle()) {
 						if (isLowResources()) {
 							setMaxIdleTime(getLowResourcesMaxIdleTime());
 						}
 					}
 
-					_connection = _connection.handle();
+					_jettyConnection = _jettyConnection.handle();
 
 				}
 
@@ -208,7 +208,7 @@ public class AmqpConnector extends AbstractConnector {
 			}
 
 			finally {
-				connectionClosed(_connection);
+				connectionClosed(_jettyConnection);
 				synchronized (_connections) {
 					_connections.remove(this);
 				}

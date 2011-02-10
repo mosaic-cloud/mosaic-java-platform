@@ -50,7 +50,8 @@ public class ServerCommandLine {
 		Option jettyClassicConnector = new Option("c",
 				"jetty-socket-connector-port", true,
 				"Also start the normal on the specified port");
-		Option webappDirOption = new Option("w", "webappdir", true, "The location for searching for webapps");
+		Option webappDirOption = new Option("w", "webappdir", true,
+				"The location for searching for webapps");
 
 		options.addOption(helpOption);
 		options.addOption(amqpServerOption);
@@ -78,6 +79,7 @@ public class ServerCommandLine {
 			try {
 				FileInputStream fstream = new FileInputStream(fname);
 				props.load(fstream);
+				fstream.close();
 			} catch (FileNotFoundException e) {
 				System.err.println("Could not open file: " + e.getMessage());
 				System.exit(1);
@@ -117,7 +119,7 @@ public class ServerCommandLine {
 		String routingKey = props.getProperty("routing-key");
 		String exchangeName = props.getProperty("exchange");
 		int amqpPort = Integer.parseInt(props.getProperty("port"));
-		
+
 		/*
 		 * Setup connectors
 		 */
@@ -134,21 +136,21 @@ public class ServerCommandLine {
 			connectors = new Connector[] { amqpConnector };
 		}
 		jettyServer.setConnectors(connectors);
-		
+
 		/*
 		 * Check if user want's to register webapps
 		 */
 		if (props.containsKey("webappdir")) {
 			final String webAppDir = props.getProperty("webappdir");
-			ResourceHandler resource_handler=new ResourceHandler();
+			ResourceHandler resource_handler = new ResourceHandler();
 			resource_handler.setDirectoriesListed(true);
-			resource_handler.setWelcomeFiles(new String[]{"index.html"});
+			resource_handler.setWelcomeFiles(new String[] { "index.html" });
 			resource_handler.setResourceBase(webAppDir);
 			HandlerList handlers = new HandlerList();
-			handlers.setHandlers(new Handler[]{resource_handler,new DefaultHandler()});
+			handlers.setHandlers(new Handler[] { resource_handler,
+					new DefaultHandler() });
 			jettyServer.setHandler(handlers);
 		}
-		
 
 		/*
 		 * Start the toy
