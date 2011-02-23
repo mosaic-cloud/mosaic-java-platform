@@ -46,9 +46,8 @@
   	<url>http://mosaic.ieat.ro</url>
   </issueManagement>
   <scm>
-    <connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</connection> 
-    <developerConnection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</developerConnection>
-    <url>http://mosaic.ieat.ro/hg/users/marian/jetty-connector</url>
+  	<connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</connection>
+  	<url>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</url>
   </scm>
   <organization>
   	<name>Research Institute eAustria</name>
@@ -102,24 +101,7 @@
           </execution>
         </executions>
       </plugin>
-      
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.0-beta-3</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-        </configuration>
-      </plugin>
+
 
     </plugins>
 
