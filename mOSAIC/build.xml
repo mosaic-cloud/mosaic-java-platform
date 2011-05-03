@@ -39,7 +39,15 @@
 
 	<target name="compile" depends="clean" description="Compiles the project">
 		<mkdir dir="${build.dir}" />
-		<javac srcdir="${src.dir}" destdir="${build.dir}" debug="yes" includeantruntime="true">
+		<javac destdir="${build.dir}" debug="yes" includeantruntime="true">
+			<src path="${src.dir}/mosaic-core">
+			</src>
+			<src path="${src.dir}/mosaic-interop">
+			</src>
+			<src path="${src.dir}/mosaic-driver">
+			</src>
+			<src path="${src.dir}/mosaic-connector">
+			</src>
 			<classpath>
 				<fileset dir="lib">
 					<include name="**/*.jar" />
@@ -51,7 +59,13 @@
 	<target name="compile-all" depends="clean" description="Compiles the project">
 		<mkdir dir="${build.test.dir}" />
 		<javac destdir="${build.test.dir}" debug="yes" includeantruntime="true">
-			<src path="${src.dir}">
+			<src path="${src.dir}/mosaic-core">
+			</src>
+			<src path="${src.dir}/mosaic-interop">
+			</src>
+			<src path="${src.dir}/mosaic-driver">
+			</src>
+			<src path="${src.dir}/mosaic-connector">
 			</src>
 			<src path="${test.dir}">
 			</src>
