@@ -1,0 +1,112 @@
+package mosaic.core.configuration.tests;
+
+import java.io.FileInputStream;
+
+import mosaic.core.configuration.ConfigurationIdentifier;
+import mosaic.core.configuration.PropertyTypeConfiguration;
+
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class PropertyTypeConfigurationTest {
+	private static PropertyTypeConfiguration configuration;
+	private static PropertyTypeConfiguration fileConfiguration;
+	private static PropertyTypeConfiguration systemConfiguration;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		configuration = PropertyTypeConfiguration.create(
+				PropertyTypeConfigurationTest.class.getClassLoader(),
+				"configuration-test.prop");
+		fileConfiguration = PropertyTypeConfiguration
+				.create(new FileInputStream(
+						"test/mosaic/core/configuration/tests/configuration-test.prop"));
+		systemConfiguration = PropertyTypeConfiguration.create(null);
+	}
+
+	@Test
+	public void testConfigurationIdentifierResolve() {
+		ConfigurationIdentifier id0 = ConfigurationIdentifier
+				.resolveAbsolute("mosaic");
+		Assert.assertNotNull(id0);
+		Assert.assertEquals("Absolute for root resolve absolute failed",
+				"/mosaic", id0.getIdentifier());
+
+		ConfigurationIdentifier id1 = ConfigurationIdentifier
+				.resolveAbsolute("mosaic/int");
+		Assert.assertNotNull(id1);
+		Assert.assertEquals("Absolute for non-root resolve absolute failed",
+				"/mosaic/int", id1.getIdentifier());
+
+		ConfigurationIdentifier id2 = ConfigurationIdentifier
+				.resolveRelative("boolean");
+		Assert.assertNotNull(id2);
+		Assert.assertEquals("Relative for non-root resolve relative failed",
+				"boolean", id2.getIdentifier());
+
+		ConfigurationIdentifier id3 = ConfigurationIdentifier.resolveRelative(
+				id0, "boolean");
+		Assert.assertNotNull(id3);
+		Assert.assertEquals(
+				"Absolute for non-root resolve relative with absolute path failed",
+				"/mosaic/boolean", id3.getIdentifier());
+
+		ConfigurationIdentifier id4 = id0.resolve(id2);
+		Assert.assertNotNull(id4);
+		Assert.assertEquals("Absolute for instance resolve failed",
+				"/mosaic/boolean", id4.getIdentifier());
+
+		ConfigurationIdentifier id5 = id0.resolve("real");
+		Assert.assertNotNull(id5);
+		Assert.assertEquals("Absolute for instance resolve failed",
+				"/mosaic/real", id5.getIdentifier());
+	}
+
+	@Test
+	public void testPropertyTypeConfiguration() {
+//		Assert.assertNotNull(configuration);
+		Assert.assertNotNull(fileConfiguration);
+		Assert.assertNotNull(systemConfiguration);
+	}
+
+	@Test
+	public void testGetParameter() {
+		ConfigurationIdentifier id;
+
+		id = ConfigurationIdentifier.resolveAbsolute("mosaic/int");
+		Integer value = fileConfiguration.getParameter(id, Integer.class)
+				.getValue(0);
+		Assert.assertEquals(1, value.intValue());
+
+		id = ConfigurationIdentifier.resolveAbsolute("mosaic/real");
+		Double dvalue = fileConfiguration.getParameter(id, Double.class)
+				.getValue(0.0);
+		Assert.assertEquals(2.0, dvalue.doubleValue(), 0.0);
+
+		id = ConfigurationIdentifier.resolveAbsolute("mosaic/boolean");
+		Boolean bvalue = fileConfiguration.getParameter(id, Boolean.class)
+				.getValue(false);
+		Assert.assertEquals(true, bvalue.booleanValue());
+
+		id = ConfigurationIdentifier.resolveAbsolute("mosaic/string");
+		String svalue = fileConfiguration.getParameter(id, String.class)
+				.getValue("");
+		Assert.assertEquals("abac", svalue);
+
+		id = ConfigurationIdentifier.resolveAbsolute("os/arch");
+		String ovalue = fileConfiguration.getParameter(id, String.class)
+				.getValue("");
+		Assert.assertEquals("x86", ovalue);
+
+		String osvalue = systemConfiguration.getParameter(id, String.class)
+				.getValue("");
+		Assert.assertEquals("x86", osvalue);
+	}
+
+//	@Test
+//	public void testSpliceConfiguration() {
+//		fail("Not yet implemented"); // TODO
+//	}
+
+}

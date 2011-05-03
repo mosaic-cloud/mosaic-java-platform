@@ -1,0 +1,78 @@
+@namespace("mosaic.interop.idl.kvstore")
+protocol Memcached {
+	enum OperationNames {
+		SET, ADD, REPLACE, APPEND, PREPEND, CAS, GET, GET_BULK, DELETE
+	}
+		
+	error MemcachedError {
+		string explanation;
+	}	
+
+	record CompletionToken {
+		string id;
+		string client_id;
+	}
+	
+	record StoreOperation {
+		CompletionToken token;
+		OperationNames name;
+		string key;
+		int exptime;
+		bytes data;
+	}
+	
+	record GetOperation {
+		CompletionToken token;
+		OperationNames name;
+		array<string> keys;
+	}
+	
+	record DeleteOperation {
+		CompletionToken token;
+		OperationNames name;
+		string key;
+	}
+	
+	record Operation {
+		union {StoreOperation, GetOperation, DeleteOperation} operation;
+	}
+	
+	record OperationResponse {
+		CompletionToken token;
+		OperationNames name;
+		boolean is_error;
+		union {MemcachedError, boolean, map<bytes>} response;
+	}
+	
+	// store request commands
+	
+	void add(CompletionToken token, string key, long exptime, int nobytes, bytes data) oneway;
+	
+	void set(CompletionToken token, string key, long exptime, int nobytes, bytes data) oneway;
+	
+	void replace(CompletionToken token, string key, long exptime, int nobytes, bytes data) oneway;
+	
+	void append(CompletionToken token, string key, long exptime, int nobytes, bytes data) oneway;
+	
+	void prepend(CompletionToken token, string key, long exptime, int nobytes, bytes data) oneway;
+	
+	void cas(CompletionToken token, string key, long exptime, int nobytes, bytes data) oneway;
+	
+	// retrieve request commands
+	
+	void get(CompletionToken token, string key) oneway;
+	
+	void get_bulk(CompletionToken token, array<string> key) oneway;
+	
+	// delete data
+	void delete(CompletionToken token, string key) oneway;
+	
+	// store commands response
+	void store_response(CompletionToken token, string response) oneway;
+	
+	// retrieve commands response
+	void get_response(CompletionToken token, array<string> response) oneway;
+	
+	// delete response
+	void delete_response(CompletionToken token, string response) oneway;
+}

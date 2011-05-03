@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="mOSAIC API build file" default="jar" basedir=".">
+	<description>
+		mOSAIC API build file
+    </description>
+
+	<!-- Define the environment variable -->
+	<property environment="env" />
+
+	<!-- 
+    Properties in these files will override the properties defined in this file.
+    -->
+	<property file="build.properties" />
+
+	<!-- Important directories and files -->
+	<property name="src.dir" value="src" />
+	<property name="test.dir" value="test" />
+	<property name="lib.dir" value="lib" />
+
+	<!-- Name of the JAR file that will be generated -->
+	<property name="jar.all.name" value="mosaic.all.jar" />
+
+	<!-- Build directories -->
+
+	<!-- Auxiliary directory where all the intermediate files will be placed -->
+	<property name="build.dir" location="build" />
+	<property name="build.test.dir" location="build-tests" />
+
+
+	<target name="init">
+		<tstamp />
+	</target>
+
+	<target name="clean" depends="init" description="Delete the generated files">
+		<delete dir="${build.dir}" failonerror="false" />
+		<delete dir="${build.test.dir}" failonerror="false" />
+	</target>
+
+	<target name="compile" depends="clean" description="Compiles the project">
+		<mkdir dir="${build.dir}" />
+		<javac srcdir="${src.dir}" destdir="${build.dir}" debug="yes" includeantruntime="true">
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="compile-all" depends="clean" description="Compiles the project">
+		<mkdir dir="${build.test.dir}" />
+		<javac destdir="${build.test.dir}" debug="yes" includeantruntime="true">
+			<src path="${src.dir}">
+			</src>
+			<src path="${test.dir}">
+			</src>
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<copy todir="${build.test.dir}">
+			<fileset dir="${test.dir}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="jar" depends="compile-all" description="Creates a JAR archive for the project">
+		<jar destfile="${jar.all.name}" basedir="${build.test.dir}" />
+	</target>
+
+	<target name="config-tests">
+		<junit>
+			<test name="mosaic.core.configuration.tests.PropertyTypeConfigurationTest" outfile="tests-result">
+			</test>
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir=".">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<formatter type="plain" />
+		</junit>
+	</target>
+
+	<target name="driver-tests" description="Runs the driver tests. Assumes a membase store is running on localhost.">
+		<junit>
+			<test name="mosaic.driver.kvstore.tests.MemcachedDriverTest" outfile="tests-result">
+			</test>
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir=".">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<formatter type="plain" />
+		</junit>
+	</target>
+
+	<target name="conn-tests" description="Runs the connector tests. Assumes a membase store  and a RabbitMQ server is running on localhost.">
+		<junit>
+			<test name="mosaic.connector.kvstore.tests.MemcachedConnectorTest" outfile="tests-result">
+			</test>
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir=".">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+			<formatter type="plain" />
+		</junit>
+	</target>
+
+</project>
