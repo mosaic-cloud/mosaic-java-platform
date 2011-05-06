@@ -37,7 +37,7 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> set(String key, int exp, Object data,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers);
 
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data
@@ -63,7 +63,7 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> add(String key, int exp, Object data,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers);
 
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -89,7 +89,7 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> replace(String key, int exp, Object data,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers);
 
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -104,7 +104,7 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> append(String key, Object data,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers);
 
 	/**
 	 * Adds specified data to an existing key before existing data.
@@ -119,7 +119,7 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> prepend(String key, Object data,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers);
 
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -135,7 +135,7 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> cas(String key, Object data,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers);
 
 	/**
 	 * Gets data associated with a single key.
@@ -144,7 +144,7 @@ public interface IMemcachedStore {
 	 *            the key
 	 * @return a result handle for the operation
 	 */
-	IResult<Object> get(String key, List<IOperationCompletionHandler> handlers);
+	IResult<Object> get(String key, List<IOperationCompletionHandler<Object>> handlers);
 
 	/**
 	 * Gets data associated with several keys.
@@ -157,7 +157,7 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Map<String, Object>> getBulk(List<String> keys,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Map<String, Object>>> handlers);
 
 	/**
 	 * Deletes the given key.
@@ -170,5 +170,5 @@ public interface IMemcachedStore {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> delete(String key,
-			List<IOperationCompletionHandler> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers);
 }

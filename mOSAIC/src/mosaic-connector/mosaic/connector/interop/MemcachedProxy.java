@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import mosaic.connector.kvstore.MemcachedStoreConnector;
@@ -152,49 +153,49 @@ public class MemcachedProxy {
 	}
 
 	public synchronized void set(String key, int exp, Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(OperationNames.SET, key, exp, data, handlers);
 	}
 
 	public synchronized void add(String key, int exp, Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(OperationNames.ADD, key, exp, data, handlers);
 	}
 
 	public synchronized void replace(String key, int exp, Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(OperationNames.REPLACE, key, exp, data, handlers);
 	}
 
 	public synchronized void append(String key, Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(OperationNames.APPEND, key, 0, data, handlers);
 	}
 
 	public synchronized void prepend(String key, Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(OperationNames.PREPEND, key, 0, data, handlers);
 	}
 
 	public synchronized void cas(String key, Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(OperationNames.CAS, key, 0, data, handlers);
 	}
 
 	public synchronized void get(String key,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Object>> handlers) {
 		List<String> keys = new ArrayList<String>();
 		keys.add(key);
 		sendGetMessage(OperationNames.GET, keys, handlers);
 	}
 
 	public synchronized void getBulk(List<String> keys,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Map<String, Object>>> handlers) {
 		sendGetMessage(OperationNames.GET_BULK, keys, handlers);
 	}
 
 	public synchronized void delete(String key,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		byte[] message;
 		String id;
 
@@ -228,7 +229,7 @@ public class MemcachedProxy {
 	}
 
 	private void sendStoreMessage(OperationNames operation, String key,
-			int exp, Object data, List<IOperationCompletionHandler> handlers) {
+			int exp, Object data, List<IOperationCompletionHandler<Boolean>> handlers) {
 		byte[] dataBytes;
 		byte[] message;
 		String id;
@@ -264,8 +265,8 @@ public class MemcachedProxy {
 		}
 	}
 
-	private void sendGetMessage(OperationNames operation, List<String> keys,
-			List<IOperationCompletionHandler> handlers) {
+	private <T extends Object> void sendGetMessage(OperationNames operation, List<String> keys,
+			List<IOperationCompletionHandler<T>> handlers) {
 		byte[] message;
 		String id;
 

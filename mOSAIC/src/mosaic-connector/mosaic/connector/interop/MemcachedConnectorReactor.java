@@ -173,6 +173,7 @@ public class MemcachedConnectorReactor implements Runnable {
 		cleanupSignal.countDown();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void processResponse(byte[] message) throws IOException {
 		OperationResponse response = new OperationResponse();
 		response = SerDesUtils.deserializeWithSchema(message, response);
@@ -181,7 +182,7 @@ public class MemcachedConnectorReactor implements Runnable {
 		boolean isError = (Boolean) response.get(2);
 		String id = ((CharSequence) token.get(0)).toString();
 
-		List<IOperationCompletionHandler> handlers = this.mcDispatcher
+		List<IOperationCompletionHandler<?>> handlers = this.mcDispatcher
 				.removeRequestHandlers(id);
 		if (handlers == null) {
 			MosaicLogger.getLogger().error(
@@ -193,7 +194,7 @@ public class MemcachedConnectorReactor implements Runnable {
 
 		if (isError) {
 			MemcachedError error = (MemcachedError) response.get(3);
-			for (IOperationCompletionHandler handler : handlers) {
+			for (IOperationCompletionHandler<?> handler : handlers) {
 				handler.onFailure(new Exception(((CharSequence) error.get(0))
 						.toString()));
 			}
@@ -209,8 +210,8 @@ public class MemcachedConnectorReactor implements Runnable {
 		case REPLACE:
 		case DELETE:
 			Boolean resultB = (Boolean) response.get(3);
-			for (IOperationCompletionHandler handler : handlers) {
-				handler.onSuccess(resultB);
+			for (IOperationCompletionHandler<?> handler : handlers) {
+				((IOperationCompletionHandler<Boolean>)handler).onSuccess(resultB);
 			}
 			break;
 		case GET:
@@ -223,8 +224,8 @@ public class MemcachedConnectorReactor implements Runnable {
 				data = null;
 				if (buff != null)
 					data = SerDesUtils.toObject(buff.array());
-				for (IOperationCompletionHandler handler : handlers) {
-					handler.onSuccess(data);
+				for (IOperationCompletionHandler<?> handler : handlers) {
+					((IOperationCompletionHandler<Object>)handler).onSuccess(data);
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -243,8 +244,8 @@ public class MemcachedConnectorReactor implements Runnable {
 					data = SerDesUtils.toObject(buff.array());
 					resMap.put(entry.getKey().toString(), data);
 				}
-				for (IOperationCompletionHandler handler : handlers) {
-					handler.onSuccess(resMap);
+				for (IOperationCompletionHandler<?> handler : handlers) {
+					((IOperationCompletionHandler<Map<String, Object>>)handler).onSuccess(resMap);
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();

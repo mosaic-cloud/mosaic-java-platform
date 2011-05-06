@@ -64,7 +64,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> set(final String key, final int exp,
-			final Object data, List<IOperationCompletionHandler> handlers) {
+			final Object data, List<IOperationCompletionHandler<Boolean>> handlers) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
@@ -86,7 +86,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> add(final String key, final int exp,
-			final Object data, List<IOperationCompletionHandler> handlers) {
+			final Object data, List<IOperationCompletionHandler<Boolean>> handlers) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
@@ -108,7 +108,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> replace(final String key, final int exp,
-			final Object data, List<IOperationCompletionHandler> handlers) {
+			final Object data, List<IOperationCompletionHandler<Boolean>> handlers) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
@@ -130,7 +130,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> append(final String key, final Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
@@ -152,7 +152,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> prepend(final String key, final Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
@@ -174,7 +174,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> cas(final String key, final Object data,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
@@ -196,7 +196,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Object> get(final String key,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Object>> handlers) {
 		IResult<Object> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Object> op = new EventDrivenOperation<Object>(
@@ -218,7 +218,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Map<String, Object>> getBulk(final List<String> keys,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Map<String, Object>>> handlers) {
 		IResult<Map<String, Object>> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Map<String, Object>> op = new EventDrivenOperation<Map<String, Object>>(
@@ -240,7 +240,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> delete(final String key,
-			List<IOperationCompletionHandler> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(

@@ -12,19 +12,19 @@ import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.exceptions.ResultSetException;
 
 public class EventDrivenOperation<T> implements IOperation<T>,
-		IOperationCompletionHandler {
+		IOperationCompletionHandler<T> {
 	private CountDownLatch doneSignal;
 	private AtomicReference<T> result;
 	private AtomicReference<Throwable> exception;
-	private List<IOperationCompletionHandler> completionHandlers;
+	private List<IOperationCompletionHandler<T>> completionHandlers;
 	private Runnable operation = null;
 
-	public EventDrivenOperation(List<IOperationCompletionHandler> complHandlers) {
+	public EventDrivenOperation(List<IOperationCompletionHandler<T>> complHandlers) {
 		super();
 		doneSignal = new CountDownLatch(1);
 		result = new AtomicReference<T>();
 		exception = new AtomicReference<Throwable>();
-		completionHandlers = new ArrayList<IOperationCompletionHandler>();
+		completionHandlers = new ArrayList<IOperationCompletionHandler<T>>();
 		completionHandlers.add(this);
 		completionHandlers.addAll(complHandlers);
 		// this.operation = op;
@@ -67,9 +67,9 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 			this.operation = operation;
 	}
 
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@Override
-	public void onSuccess(Object response) {
+	public void onSuccess(T response) {
 		if (!result.compareAndSet(null, ((T) response))) {
 			ExceptionTracer.traceRethrown(new ResultSetException(
 					"Operation result cannot be set."));
@@ -87,7 +87,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 
 	}
 
-	public List<IOperationCompletionHandler> getCompletionHandlers() {
+	public List<IOperationCompletionHandler<T>> getCompletionHandlers() {
 		return completionHandlers;
 	}
 

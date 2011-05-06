@@ -24,7 +24,8 @@ import org.junit.Test;
 public class MemcachedConnectorTest {
 	private static MemcachedStoreConnector connector;
 	private static String keyPrefix;
-	private List<IOperationCompletionHandler> handlers;
+	private List<IOperationCompletionHandler<Boolean>> handlersBool;
+	private List<IOperationCompletionHandler<Object>> handlersObject;
 	private static MemcachedStub driverStub;
 
 	@BeforeClass
@@ -47,8 +48,10 @@ public class MemcachedConnectorTest {
 
 	@Before
 	public void setUp() {
-		handlers = new ArrayList<IOperationCompletionHandler>();
-		handlers.add(new TestLoggingHandler());
+		handlersBool = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		handlersBool.add(new TestLoggingHandler<Boolean>());
+		handlersObject=new ArrayList<IOperationCompletionHandler<Object>>();
+		handlersObject.add(new TestLoggingHandler<Object>());
 
 	}
 
@@ -60,11 +63,11 @@ public class MemcachedConnectorTest {
 	@Test
 	public void testSet() {
 		String k1 = keyPrefix + "_key_fantastic";
-		IResult<Boolean> r1 = connector.set(k1, 30, "fantastic", handlers);
+		IResult<Boolean> r1 = connector.set(k1, 30, "fantastic", handlersBool);
 		Assert.assertNotNull(r1);
 
 		String k2 = keyPrefix + "_key_famous";
-		IResult<Boolean> r2 = connector.set(k2, 30, "famous", handlers);
+		IResult<Boolean> r2 = connector.set(k2, 30, "famous", handlersBool);
 		Assert.assertNotNull(r2);
 
 		try {
@@ -82,7 +85,7 @@ public class MemcachedConnectorTest {
 	@Test
 	public void testGet() {
 		String k1 = keyPrefix + "_key_fantastic";
-		IResult<Object> r1 = connector.get(k1, handlers);
+		IResult<Object> r1 = connector.get(k1, handlersObject);
 
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().toString());
@@ -102,7 +105,9 @@ public class MemcachedConnectorTest {
 		List<String> keys = new ArrayList<String>();
 		keys.add(k1);
 		keys.add(k2);
-		IResult<Map<String, Object>> r1 = connector.getBulk(keys, handlers);
+		List<IOperationCompletionHandler<Map<String,Object>>> handlersMap=new ArrayList<IOperationCompletionHandler<Map<String,Object>>>();
+		handlersMap.add(new TestLoggingHandler<Map<String,Object>>());
+		IResult<Map<String, Object>> r1 = connector.getBulk(keys, handlersMap);
 
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().get(k1).toString());
@@ -121,8 +126,8 @@ public class MemcachedConnectorTest {
 		String k1 = keyPrefix + "_key_fantastic";
 		String k2 = keyPrefix + "_key_fabulous";
 
-		IResult<Boolean> r1 = connector.add(k1, 30, "wrong", handlers);
-		IResult<Boolean> r2 = connector.add(k2, 30, "fabulous", handlers);
+		IResult<Boolean> r1 = connector.add(k1, 30, "wrong", handlersBool);
+		IResult<Boolean> r2 = connector.add(k2, 30, "fabulous", handlersBool);
 
 		try {
 			Assert.assertFalse(r1.getResult());
@@ -141,7 +146,7 @@ public class MemcachedConnectorTest {
 		String k1 = keyPrefix + "_key_fabulous";
 
 		IResult<Boolean> r1 = connector
-				.replace(k1, 30, "fantabulous", handlers);
+				.replace(k1, 30, "fantabulous", handlersBool);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -152,7 +157,7 @@ public class MemcachedConnectorTest {
 			Assert.fail();
 		}
 
-		IResult<Object> r2 = connector.get(k1, handlers);
+		IResult<Object> r2 = connector.get(k1, handlersObject);
 
 		try {
 			Assert.assertEquals("fantabulous", r2.getResult().toString());
@@ -170,7 +175,7 @@ public class MemcachedConnectorTest {
 	public void testAppend() {
 		String k1 = keyPrefix + "_key_fabulous";
 
-		IResult<Boolean> r1 = connector.append(k1, " and miraculous", handlers);
+		IResult<Boolean> r1 = connector.append(k1, " and miraculous", handlersBool);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -181,7 +186,7 @@ public class MemcachedConnectorTest {
 			Assert.fail();
 		}
 
-		IResult<Object> r2 = connector.get(k1, handlers);
+		IResult<Object> r2 = connector.get(k1, handlersObject);
 
 		try {
 			Assert.assertEquals("fantabulous and miraculous", r2.getResult()
@@ -199,7 +204,7 @@ public class MemcachedConnectorTest {
 	public void testPrepend() {
 		String k1 = keyPrefix + "_key_fabulous";
 
-		IResult<Boolean> r1 = connector.prepend(k1, "it is ", handlers);
+		IResult<Boolean> r1 = connector.prepend(k1, "it is ", handlersBool);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -210,7 +215,7 @@ public class MemcachedConnectorTest {
 			Assert.fail();
 		}
 
-		IResult<Object> r2 = connector.get(k1, handlers);
+		IResult<Object> r2 = connector.get(k1, handlersObject);
 
 		try {
 			Assert.assertEquals("it is fantabulous and miraculous", r2
@@ -228,7 +233,7 @@ public class MemcachedConnectorTest {
 	public void testCas() {
 		String k1 = keyPrefix + "_key_fabulous";
 
-		IResult<Boolean> r1 = connector.cas(k1, "replaced by dummy", handlers);
+		IResult<Boolean> r1 = connector.cas(k1, "replaced by dummy", handlersBool);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -239,7 +244,7 @@ public class MemcachedConnectorTest {
 			Assert.fail();
 		}
 
-		IResult<Object> r2 = connector.get(k1, handlers);
+		IResult<Object> r2 = connector.get(k1, handlersObject);
 
 		try {
 			Assert.assertEquals("replaced by dummy", r2.getResult().toString());
@@ -256,7 +261,7 @@ public class MemcachedConnectorTest {
 	public void testDelete() {
 		String k1 = keyPrefix + "_key_fabulous";
 
-		IResult<Boolean> r1 = connector.delete(k1, handlers);
+		IResult<Boolean> r1 = connector.delete(k1, handlersBool);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -267,7 +272,7 @@ public class MemcachedConnectorTest {
 			Assert.fail();
 		}
 
-		IResult<Object> r2 = connector.get(k1, handlers);
+		IResult<Object> r2 = connector.get(k1, handlersObject);
 
 		try {
 			Assert.assertNull(r2.getResult());

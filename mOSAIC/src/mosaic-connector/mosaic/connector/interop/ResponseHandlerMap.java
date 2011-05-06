@@ -1,5 +1,6 @@
 package mosaic.connector.interop;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import mosaic.core.ops.IOperationCompletionHandler;
  */
 public class ResponseHandlerMap {
 
-	private Map<String, List<IOperationCompletionHandler>> handlerMap = new HashMap<String, List<IOperationCompletionHandler>>();
+	private Map<String, List<IOperationCompletionHandler<? extends Object>>> handlerMap = new HashMap<String, List<IOperationCompletionHandler<?>>>();
 
 	public ResponseHandlerMap() {
 		super();
@@ -30,14 +31,17 @@ public class ResponseHandlerMap {
 	 * @param handlers
 	 *            the list of handlers to add
 	 */
-	public synchronized void addHandlers(String requestId,
-			List<IOperationCompletionHandler> handlers) {
-		List<IOperationCompletionHandler> oldHandlers = this.handlerMap
+	public synchronized <T extends Object> void addHandlers(String requestId,
+			List<IOperationCompletionHandler<T>> handlers) {
+		List<IOperationCompletionHandler<?>> eHandlers = this.handlerMap
 				.get(requestId);
-		if (oldHandlers != null) {
-			oldHandlers.addAll(handlers);
+		if (eHandlers != null) {
+			eHandlers.addAll(handlers);
 		} else {
-			this.handlerMap.put(requestId, handlers);
+			eHandlers=new ArrayList<IOperationCompletionHandler<?>>();
+			for(IOperationCompletionHandler<T> handler:handlers)
+				eHandlers.add(handler);
+			this.handlerMap.put(requestId, eHandlers);
 		}
 	}
 
@@ -48,7 +52,7 @@ public class ResponseHandlerMap {
 	 *            the request identifier
 	 * @return the list of response handlers
 	 */
-	public synchronized List<IOperationCompletionHandler> removeRequestHandlers(
+	public synchronized List<IOperationCompletionHandler<?>> removeRequestHandlers(
 			String requestId) {
 		return this.handlerMap.remove(requestId);
 	}
@@ -60,7 +64,7 @@ public class ResponseHandlerMap {
 	 *            the request identifier
 	 * @return the list of response handlers
 	 */
-	public synchronized List<IOperationCompletionHandler> getRequestHandlers(
+	public synchronized List<IOperationCompletionHandler<?>> getRequestHandlers(
 			String requestId) {
 		return this.handlerMap.get(requestId);
 	}
