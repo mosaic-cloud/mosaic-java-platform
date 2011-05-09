@@ -34,12 +34,6 @@ public enum KvSession
 	}
 	
 	@Override
-	public String getName ()
-	{
-		return (this.name ());
-	}
-	
-	@Override
 	public RoleSpecification getPeerRole ()
 	{
 		return (this.peerRole);

@@ -18,10 +18,10 @@ public enum KvMessage
 	Aborted (MessageType.Termination, null),
 	Access (MessageType.Initiation, null),
 	Error (MessageType.Exchange, Error.class),
-	GetReply (MessageType.Exchange, GetReply.class),
-	GetRequest (MessageType.Exchange, GetRequest.class),
-	Ok (MessageType.Exchange, Ok.class),
-	PutRequest (MessageType.Exchange, PutRequest.class);
+	GetReply (MessageType.Exchange, KvPayloads.GetReply.class),
+	GetRequest (MessageType.Exchange, KvPayloads.GetRequest.class),
+	Ok (MessageType.Exchange, KvPayloads.Ok.class),
+	PutRequest (MessageType.Exchange, KvPayloads.PutRequest.class);
 	
 	KvMessage (final MessageType type, final Class<? extends Serializable> clasz)
 	{
@@ -46,12 +46,6 @@ public enum KvMessage
 	}
 	
 	@Override
-	public String getName ()
-	{
-		return (this.name ());
-	}
-	
-	@Override
 	public MessageType getType ()
 	{
 		return (this.type);
@@ -60,82 +54,4 @@ public enum KvMessage
 	public final MessageCoder coder;
 	public final String identifier;
 	public final MessageType type;
-	
-	public static final class Error
-			implements
-				Serializable
-	{
-		public Error (final long sequence)
-		{
-			this.sequence = sequence;
-		}
-		
-		public final long sequence;
-		
-		private static final long serialVersionUID = 1L;
-	}
-	
-	public static final class GetReply
-			implements
-				Serializable
-	{
-		public GetReply (final long sequence, final String value)
-		{
-			this.sequence = sequence;
-			this.value = value;
-		}
-		
-		public final long sequence;
-		public final String value;
-		
-		private static final long serialVersionUID = 1L;
-	}
-	
-	public static final class GetRequest
-			implements
-				Serializable
-	{
-		public GetRequest (final long sequence, final String key)
-		{
-			this.sequence = sequence;
-			this.key = key;
-		}
-		
-		public final String key;
-		public final long sequence;
-		
-		private static final long serialVersionUID = 1L;
-	}
-	
-	public static final class Ok
-			implements
-				Serializable
-	{
-		public Ok (final long sequence)
-		{
-			this.sequence = sequence;
-		}
-		
-		public final long sequence;
-		
-		private static final long serialVersionUID = 1L;
-	}
-	
-	public static final class PutRequest
-			implements
-				Serializable
-	{
-		public PutRequest (final long sequence, final String key, final String value)
-		{
-			this.sequence = sequence;
-			this.key = key;
-			this.value = value;
-		}
-		
-		public final String key;
-		public final long sequence;
-		public final String value;
-		
-		private static final long serialVersionUID = 1L;
-	}
 }

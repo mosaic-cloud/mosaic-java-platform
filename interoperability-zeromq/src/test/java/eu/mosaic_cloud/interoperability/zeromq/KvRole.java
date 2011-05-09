@@ -13,15 +13,16 @@ public enum KvRole
 	Client (),
 	Server ();
 	
-	@Override
-	public String getIdentifier ()
+	KvRole ()
 	{
-		return (Identifiers.generate (this));
+		this.identifier = Identifiers.generate (this);
 	}
 	
 	@Override
-	public String getName ()
+	public String getIdentifier ()
 	{
-		return (this.name ());
+		return (this.identifier);
 	}
+	
+	public final String identifier;
 }

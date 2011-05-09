@@ -15,12 +15,10 @@ public final class KvServer
 		implements
 			SessionCallbacks
 {
-	public KvServer (final ZeroMqChannel channel)
+	public KvServer ()
 	{
 		this.logger = LoggerFactory.getLogger (this.getClass ());
 		this.bucket = new HashMap<String, String> ();
-		channel.register (KvSession.Server);
-		channel.accept (KvSession.Server, this);
 	}
 	
 	@Override
@@ -31,6 +29,11 @@ public final class KvServer
 	public final synchronized void destroyed (final Session session)
 	{}
 	
+	public final void initialize (final ZeroMqChannel channel)
+	{
+		channel.accept (KvSession.Server, this);
+	}
+	
 	@Override
 	public final synchronized void received (final Session session, final Message message)
 	{
@@ -40,17 +43,17 @@ public final class KvServer
 			}
 				break;
 			case GetRequest : {
-				final KvMessage.GetRequest request = (KvMessage.GetRequest) message.payload;
+				final KvPayloads.GetRequest request = (KvPayloads.GetRequest) message.payload;
 				this.logger.info ("get requested: {}", request.key);
 				final String value = this.bucket.get (request.key);
-				session.send (new Message (KvMessage.GetReply, new KvMessage.GetReply (request.sequence, value)));
+				session.send (new Message (KvMessage.GetReply, new KvPayloads.GetReply (request.sequence, value)));
 			}
 				break;
 			case PutRequest : {
-				final KvMessage.PutRequest request = (KvMessage.PutRequest) message.payload;
+				final KvPayloads.PutRequest request = (KvPayloads.PutRequest) message.payload;
 				this.logger.info ("put requested: {} -> {}", request.key, request.value);
 				this.bucket.put (request.key, request.value);
-				session.send (new Message (KvMessage.Ok, new KvMessage.Ok (request.sequence)));
+				session.send (new Message (KvMessage.Ok, new KvPayloads.Ok (request.sequence)));
 			}
 				break;
 			default: {
