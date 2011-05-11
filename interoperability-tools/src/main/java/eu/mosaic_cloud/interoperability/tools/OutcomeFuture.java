@@ -33,7 +33,7 @@ public final class OutcomeFuture<_Outcome_ extends Object>
 			this.future = future;
 		}
 		
-		public final void completed (final _Outcome_ outcome)
+		public final void succeeded (final _Outcome_ outcome)
 		{
 			this.future.callable.outcome = outcome;
 			this.future.run ();

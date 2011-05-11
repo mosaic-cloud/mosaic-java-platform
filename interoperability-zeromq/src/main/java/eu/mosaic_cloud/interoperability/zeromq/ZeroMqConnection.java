@@ -25,7 +25,6 @@ public final class ZeroMqConnection
 		this.dequeueTrigger = dequeueTrigger;
 		this.shouldStop = false;
 		this.looper = new Looper ();
-		this.looper.setDaemon (true);
 		this.looper.start ();
 	}
 	
@@ -270,6 +269,12 @@ public final class ZeroMqConnection
 	private final class Looper
 			extends Thread
 	{
+		Looper ()
+		{
+			this.setName (String.format ("%s#%08x", ZeroMqConnection.this.getClass ().getSimpleName (), Integer.valueOf (System.identityHashCode (ZeroMqConnection.this))));
+			this.setDaemon (true);
+		}
+		
 		@Override
 		public final void run ()
 		{

@@ -6,22 +6,13 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
-
 import junit.framework.Assert;
+
+import org.junit.Test;
 
 
 public final class Tests
 {
-	public static final void main (final String[] arguments)
-			throws Throwable
-	{
-		Assert.assertTrue (arguments.length == 0);
-		final Tests tests = new Tests ();
-		tests.testConnection ();
-		tests.testChannel ();
-	}
-	
 	@Test
 	public final void testChannel ()
 			throws Throwable
@@ -44,23 +35,25 @@ public final class Tests
 		
 		final KvClient client_1 = new KvClient ();
 		Assert.assertTrue (client_1.initialize (clientChannel, serverIdentifier).get ());
-		
 		final Future<Boolean> put_a = client_1.put ("a", "1");
-		Assert.assertTrue (put_a.get (1000, TimeUnit.MILLISECONDS));
 		final Future<Boolean> put_b = client_1.put ("b", "2");
-		Assert.assertTrue (put_b.get (1000, TimeUnit.MILLISECONDS));
+		Assert.assertTrue (put_a.get (1000, TimeUnit.MILLISECONDS));
+		Assert.assertTrue (put_b.get (2000 + 1000, TimeUnit.MILLISECONDS));
 		
 		final KvClient client_2 = new KvClient ();
 		Assert.assertTrue (client_2.initialize (clientChannel, serverIdentifier).get ());
 		final Future<String> get_a = client_2.get ("a");
+		final Future<String> get_b = client_2.get ("b");
 		Assert.assertEquals ("1", get_a.get (1000, TimeUnit.MILLISECONDS));
+		Assert.assertEquals ("2", get_b.get (1000, TimeUnit.MILLISECONDS));
 		
-		serverChannel.terminate ();
-		clientChannel.terminate ();
+		serverChannel.terminate (1000);
+		clientChannel.terminate (1000);
 	}
 	
 	@Test
 	public final void testConnection ()
+			throws Throwable
 	{
 		final String serverEndpoint = "tcp://127.0.0.1:31027";
 		
@@ -73,6 +66,7 @@ public final class Tests
 		server.accept (serverEndpoint);
 		final ZeroMqConnection client = new ZeroMqConnection (clientIdentifier, null);
 		client.connect (serverEndpoint);
+		Thread.sleep (1000);
 		
 		final ZeroMqConnection.Packet packet1 = new ZeroMqConnection.Packet (serverIdentifier, header, payload);
 		client.enqueue (packet1, 1000);
@@ -84,5 +78,14 @@ public final class Tests
 		
 		server.terminate ();
 		client.terminate ();
+	}
+	
+	public static final void main (final String[] arguments)
+			throws Throwable
+	{
+		Assert.assertTrue (arguments.length == 0);
+		final Tests tests = new Tests ();
+		tests.testConnection ();
+		tests.testChannel ();
 	}
 }
