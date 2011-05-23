@@ -4,10 +4,10 @@ import mosaic.core.configuration.IConfiguration;
 
 public interface ICloudlet {
 
-	void init(IConfiguration configData);
+	boolean init(IConfiguration configData);
 
-	void destroy();
+	boolean destroy();
 
-	void service(ICloudletRequest aRequest, ICloudletResponse aResponse);
+	boolean isActive();
 
 }

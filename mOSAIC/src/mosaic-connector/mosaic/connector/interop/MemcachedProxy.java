@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import mosaic.connector.kvstore.MemcachedStoreConnector;
-import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
@@ -22,10 +21,6 @@ import mosaic.interop.idl.kvstore.Operation;
 import mosaic.interop.idl.kvstore.OperationNames;
 import mosaic.interop.idl.kvstore.StoreOperation;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-
 /**
  * Proxy for the driver for key-value distributed storage systems implementing
  * the memcached protocol. This is used by the {@link MemcachedStoreConnector}
@@ -34,122 +29,41 @@ import com.rabbitmq.client.ConnectionFactory;
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedProxy {
+public class MemcachedProxy extends ConnectorProxy {
 	private static final String DEFAULT_QUEUE_NAME = "memcached_requests";
 	private static final String DEFAULT_EXCHANGE_NAME = "memcached";
-
-	private IConfiguration configuration;
-	private Channel commChannel;
-	private Connection connection;
-	private String exchange;
-	private String routingKey;
-	private String connectorId;
-
-	private ResponseHandlerMap handlerMap;
-	private MemcachedConnectorReactor responseReactor;
 
 	/**
 	 * Creates a proxy for memcached key-value distributed storage systems.
 	 * 
 	 * @param config
 	 *            the configurations required to initialize the proxy
+	 * @param connectorId
+	 *            the identifier of this connector's proxy
+	 * @param reactor
+	 *            the response reactor
 	 */
-	public MemcachedProxy(IConfiguration config) {
-		this.configuration = config;
-		connectorId = UUID.randomUUID().toString(); // FIXME this should be
-													// replaced
+	private MemcachedProxy(IConfiguration config, String connectorId,
+			MemcachedConnectorReactor reactor) {
+		super(config, connectorId, DEFAULT_EXCHANGE_NAME, DEFAULT_QUEUE_NAME,
+				reactor);
 
-		// read connection details from the configuration
-		String amqpServerHost = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.host", String.class,
-				ConnectionFactory.DEFAULT_HOST);
-		int amqpServerPort = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.port", Integer.class,
-				ConnectionFactory.DEFAULT_AMQP_PORT);
-		String amqpServerUser = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.user", String.class,
-				ConnectionFactory.DEFAULT_USER);
-		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.passwd", String.class,
-				ConnectionFactory.DEFAULT_PASS);
-		exchange = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.exchange", String.class,
-				DEFAULT_EXCHANGE_NAME);
-		routingKey = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.rountingkey", String.class,
-				DEFAULT_QUEUE_NAME);
-
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(amqpServerHost);
-		factory.setPort(amqpServerPort);
-		if (!amqpServerUser.equals("")) {
-			factory.setUsername(amqpServerUser);
-			factory.setPassword(amqpServerPasswd);
-		}
-
-		try {
-			// create communication channel
-			connection = factory.newConnection();
-			commChannel = connection.createChannel();
-
-			// create exchange and queue
-			commChannel.exchangeDeclare(exchange, "direct", true);
-			// commChannel.queueDeclare(routingKey, true, false, false, null);
-			String queueName = commChannel.queueDeclare().getQueue();
-			commChannel.queueBind(queueName, exchange, routingKey);
-
-			// start also the response reactor for this proxy
-			handlerMap = new ResponseHandlerMap();
-			responseReactor = new MemcachedConnectorReactor(configuration,
-					connectorId, handlerMap);
-			Thread reactorThread = new Thread(responseReactor);
-			reactorThread.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-			// close connections
-			try {
-				if (commChannel != null && commChannel.isOpen()) {
-					commChannel.close();
-				}
-				if (connection != null && connection.isOpen()) {
-					connection.close();
-				}
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				ExceptionTracer.traceRethrown(new ConnectionException(
-						"The Memcached proxy cannot connect to the driver: "
-								+ e1.getMessage()));
-			}
-		}
-	}
-
-	public static MemcachedProxy create(IConfiguration config) {
-		return new MemcachedProxy(config);
 	}
 
 	/**
-	 * Destroys the proxy, freeing up any allocated resources.
+	 * Returns a proxy for memcached key-value distributed storage systems.
+	 * 
+	 * @param config
+	 *            the configurations required to initialize the proxy
+	 * @return the proxy
 	 */
-	public void destroy() {
-		// close connection
-		try {
-			if (commChannel != null && commChannel.isOpen()) {
-				commChannel.close();
-			}
-			if (connection != null && connection.isOpen()) {
-				connection.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			ExceptionTracer.traceRethrown(new ConnectionException(
-					"The Memcached proxy cannot close connection to the driver: "
-							+ e.getMessage()));
-		}
-		responseReactor.destroy();
-	}
-
-	public MemcachedConnectorReactor getResponseReactor() {
-		return responseReactor;
+	public static MemcachedProxy create(IConfiguration config) {
+		String connectorId = UUID.randomUUID().toString(); // FIXME this should
+															// be
+		// replaced
+		MemcachedConnectorReactor reactor = new MemcachedConnectorReactor(
+				config, connectorId);
+		return new MemcachedProxy(config, connectorId, reactor);
 	}
 
 	public synchronized void set(String key, int exp, Object data,
@@ -203,7 +117,7 @@ public class MemcachedProxy {
 		id = UUID.randomUUID().toString();
 		CompletionToken token = new CompletionToken();
 		token.put(0, id);
-		token.put(1, connectorId);
+		token.put(1, super.getConnectorId());
 
 		MosaicLogger.getLogger().trace(
 				"Sending " + OperationNames.DELETE.toString() + " request ["
@@ -211,7 +125,7 @@ public class MemcachedProxy {
 
 		try {
 			// store token and completion handlers
-			this.handlerMap.addHandlers(id, handlers);
+			super.registerHandlers(id, handlers);
 
 			DeleteOperation op = new DeleteOperation();
 			op.put(0, token);
@@ -222,14 +136,17 @@ public class MemcachedProxy {
 
 			// send request
 			message = SerDesUtils.serializeWithSchema(enclosingOperation);
-			commChannel.basicPublish(exchange, routingKey, null, message);
+			super.sendRequest(message);
 		} catch (IOException e) {
 			e.printStackTrace();
+			ExceptionTracer.traceRethrown(new ConnectionException(
+					"Cannot send delete request to driver: " + e.getMessage()));
 		}
 	}
 
 	private void sendStoreMessage(OperationNames operation, String key,
-			int exp, Object data, List<IOperationCompletionHandler<Boolean>> handlers) {
+			int exp, Object data,
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		byte[] dataBytes;
 		byte[] message;
 		String id;
@@ -239,12 +156,12 @@ public class MemcachedProxy {
 		id = UUID.randomUUID().toString();
 		CompletionToken token = new CompletionToken();
 		token.put(0, id);
-		token.put(1, connectorId);
+		token.put(1, super.getConnectorId());
 		MosaicLogger.getLogger().trace(
 				"Sending " + operation.toString() + " request [" + id + "]...");
 		try {
 			// store token and completion handlers
-			this.handlerMap.addHandlers(id, handlers);
+			super.registerHandlers(id, handlers);
 
 			dataBytes = SerDesUtils.toBytes(data);
 			buff = ByteBuffer.wrap(dataBytes);
@@ -259,14 +176,16 @@ public class MemcachedProxy {
 
 			// send request
 			message = SerDesUtils.serializeWithSchema(enclosingOperation);
-			commChannel.basicPublish(exchange, routingKey, null, message);
+			super.sendRequest(message);
 		} catch (IOException e) {
 			e.printStackTrace();
+			ExceptionTracer.traceRethrown(new ConnectionException(
+					"Cannot send store request to driver: " + e.getMessage()));
 		}
 	}
 
-	private <T extends Object> void sendGetMessage(OperationNames operation, List<String> keys,
-			List<IOperationCompletionHandler<T>> handlers) {
+	private <T extends Object> void sendGetMessage(OperationNames operation,
+			List<String> keys, List<IOperationCompletionHandler<T>> handlers) {
 		byte[] message;
 		String id;
 
@@ -274,14 +193,14 @@ public class MemcachedProxy {
 		id = UUID.randomUUID().toString();
 		CompletionToken token = new CompletionToken();
 		token.put(0, id);
-		token.put(1, connectorId);
+		token.put(1, super.getConnectorId());
 
 		MosaicLogger.getLogger().trace(
 				"Sending " + operation.toString() + " request [" + id + "]...");
 
 		try {
 			// store token and completion handlers
-			this.handlerMap.addHandlers(id, handlers);
+			super.registerHandlers(id, handlers);
 
 			GetOperation op = new GetOperation();
 			op.put(0, token);
@@ -292,9 +211,11 @@ public class MemcachedProxy {
 
 			// send request
 			message = SerDesUtils.serializeWithSchema(enclosingOperation);
-			commChannel.basicPublish(exchange, routingKey, null, message);
+			super.sendRequest(message);
 		} catch (IOException e) {
 			e.printStackTrace();
+			ExceptionTracer.traceRethrown(new ConnectionException(
+					"Cannot send get request to driver: " + e.getMessage()));
 		}
 	}
 }

@@ -3,11 +3,8 @@ package mosaic.driver.kvstore;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import mosaic.core.configuration.ConfigUtils;
@@ -16,7 +13,7 @@ import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.GenericResult;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
-import mosaic.driver.IResourceDriver;
+import mosaic.driver.AbstractResourceDriver;
 import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.MemcachedClient;
 
@@ -27,22 +24,27 @@ import net.spy.memcached.MemcachedClient;
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedDriver implements IResourceDriver {
+public class MemcachedDriver extends AbstractResourceDriver {
 
 	private MemcachedClient mcClient;
-	private List<IResult<?>> pendingResults;
-	private ExecutorService executor;
 	private MemcachedOperationFactory opFactory;
 
+	/**
+	 * Creates a new memcached driver.
+	 * 
+	 * @param client
+	 *            the memcached client object
+	 * @param noThreads
+	 *            number of threads to be used for serving requests
+	 */
 	private MemcachedDriver(MemcachedClient client, int noThreads) {
+		super(noThreads);
 		this.mcClient = client;
-		this.pendingResults = new ArrayList<IResult<?>>();
-		this.executor = Executors.newFixedThreadPool(noThreads);
 		this.opFactory = MemcachedOperationFactory.getFactory(client);
 	}
 
 	/**
-	 * Creates a new driver.
+	 * Returns a Memcached driver.
 	 * 
 	 * @param config
 	 *            the configuration parameters required by the driver:
@@ -55,7 +57,7 @@ public class MemcachedDriver implements IResourceDriver {
 	 *            number of threads that shall be created by the driver for
 	 *            serving requests </il>
 	 *            </ol>
-	 * @return the new driver
+	 * @return the driver
 	 * @throws IOException
 	 */
 	public static synchronized MemcachedDriver create(IConfiguration config)
@@ -92,17 +94,8 @@ public class MemcachedDriver implements IResourceDriver {
 	 * the driver object.
 	 */
 	public void destroy() {
-		IResult<?> pResult;
-
-		// cancel all pending operations
-		Iterator<IResult<?>> it = this.pendingResults.iterator();
-		while (it.hasNext()) {
-			pResult = it.next();
-			pResult.cancel();
-			it.remove();
-		}
+		super.destroy();
 		this.mcClient.shutdown(30, TimeUnit.SECONDS);
-		this.executor.shutdown();
 	}
 
 	public synchronized IResult<Boolean> invokeSetOperation(String key,
@@ -201,20 +194,10 @@ public class MemcachedDriver implements IResourceDriver {
 			GenericOperation<T> op, IOperationCompletionHandler complHandler) {
 		IResult<T> iResult = new GenericResult<T>(op);
 		op.setHandler(complHandler);
-		synchronized (pendingResults) {
-			pendingResults.add(iResult);
-		}
+		super.addPendingOperation(iResult);
 
-		executor.submit(op.getOperation());
+		super.submitOperation(op.getOperation());
 		return iResult;
-	}
-
-	public synchronized int countPendingOperations() {
-		return this.pendingResults.size();
-	}
-
-	public synchronized void removePendingOperation(IResult<?> pendingOp) {
-		this.pendingResults.remove(pendingOp);
 	}
 
 }

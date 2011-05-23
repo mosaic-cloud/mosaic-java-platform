@@ -1,0 +1,11 @@
+@namespace("mosaic.interop.idl")
+protocol mosaic {
+	error BaseError {
+		string explanation;
+	}
+	
+	record CompletionToken {
+		string id;
+		string client_id;
+	}
+}

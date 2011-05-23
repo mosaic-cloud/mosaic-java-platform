@@ -8,9 +8,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import mosaic.cloudlet.core.ICloudlet;
 import mosaic.cloudlet.core.ICloudletRequest;
+import mosaic.cloudlet.core.ICloudletResponse;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
-import mosaic.core.ops.IOperationCompletionHandler;
+import mosaic.core.ops.IOperation;
 
 /**
  * A Cloudlet executor that executes operations requested in a certain cloudlet
@@ -42,7 +43,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 	/**
 	 * The queue used for holding requests and handing off to the worker thread.
 	 */
-	private BlockingQueue<ICloudletRequest> requestQueue;
+	private BlockingQueue<IOperation> requestQueue;
 
 	/**
 	 * The queue used for holding response handler and handing off to the worker
@@ -334,7 +335,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 	 * @throws NullPointerException
 	 *             if request is null
 	 */
-	public void submitRequest(ICloudletRequest request) {
+	public void handleRequest(IOperation<?> request) {
 		if (request == null)
 			throw new NullPointerException();
 
@@ -348,7 +349,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 
 	/**
 	 * Rechecks state after queuing a request. Called from
-	 * {@link CloudletExecutor#submitRequest(ICloudletRequest)} when executor
+	 * {@link CloudletExecutor#handleRequest(ICloudletRequest)} when executor
 	 * state has been observed to change after queuing a request. If the request
 	 * was queued concurrently with a call to
 	 * {@link CloudletExecutor#shutdownNow()}, and is still present in the
@@ -400,7 +401,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 	/**
 	 * Gets the next task (request or response processing) for the worker thread
 	 * to run. The general approach is similar to
-	 * {@link CloudletExecutor#submitRequest(ICloudletRequest)} in that worker
+	 * {@link CloudletExecutor#handleRequest(ICloudletRequest)} in that worker
 	 * threads trying to get a task to run do so on the basis of prevailing
 	 * state accessed outside of locks. This may cause them to choose the
 	 * "wrong" action, such as trying to exit because no tasks appear to be
@@ -427,7 +428,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 							@Override
 							public void run() {
 								ICloudletRequest req = requestQueue.poll();
-//
+
 							}
 						};
 				else {
@@ -440,7 +441,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 							@Override
 							public void run() {
 								ICloudletRequest req = requestQueue.poll();
-//
+								//
 							}
 						};
 					}
@@ -461,7 +462,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 	/**
 	 * Gets the next response to process by the backup worker thread. The
 	 * general approach is similar to
-	 * {@link CloudletExecutor#submitRequest(ICloudletRequest)} in that worker
+	 * {@link CloudletExecutor#handleRequest(ICloudletRequest)} in that worker
 	 * threads trying to get a task to run do so on the basis of prevailing
 	 * state accessed outside of locks. This may cause them to choose the
 	 * "wrong" action, such as trying to exit because no tasks appear to be
