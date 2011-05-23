@@ -55,7 +55,7 @@
 	</issueManagement>
 	<scm>
 		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</connection>
-		<url>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</url>
+		<developerConnection>scm:hg:file://${basedir}</developerConnection>
 	</scm>
 	<organization>
 		<name>Research Institute eAustria</name>
@@ -65,11 +65,20 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>5</source>
-					<target>5</target>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 			<plugin>
