@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.transcript;
+package eu.mosaic_cloud.transcript.core;
 
 
 public enum TranscriptTraceType

@@ -1,10 +1,9 @@
 
-package eu.mosaic_cloud.transcript;
+package eu.mosaic_cloud.transcript.core;
 
-
-import eu.mosaic_cloud.tools.ExceptionResolution;
 
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.ExceptionResolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,7 @@ public final class Transcript
 	{
 		super ();
 		if (useLogger)
-			this.logger = LoggerFactory.getLogger ("eu.mosaic_cloud.transcript");
+			this.logger = LoggerFactory.getLogger ("eu.mosaic_cloud.transcript.core");
 		else
 			this.logger = null;
 	}
