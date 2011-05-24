@@ -1,9 +1,11 @@
 
 package eu.mosaic_cloud.components.core;
 
+
 import java.nio.ByteBuffer;
 
 import com.google.common.base.Preconditions;
+
 
 public final class ComponentCallRequest
 		extends Object
@@ -19,7 +21,7 @@ public final class ComponentCallRequest
 		this.continuation = continuation;
 	}
 	
-	public final Object metaData;
-	public final ByteBuffer data;
 	public ComponentCallContinuation continuation;
+	public final ByteBuffer data;
+	public final Object metaData;
 }

@@ -15,11 +15,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.transcript.Transcript;
-
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
-import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.AbstractService;
 import eu.mosaic_cloud.components.core.Channel;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelMessage;
@@ -28,18 +26,14 @@ import eu.mosaic_cloud.tools.CaughtException;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.tools.UnexpectedException;
 import eu.mosaic_cloud.tools.UnhandledException;
+import eu.mosaic_cloud.transcript.core.Transcript;
 
 
 public final class DefaultNioChannel
-		extends Object
+		extends AbstractService
 		implements
 			Channel
 {
-	public DefaultNioChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final ExecutorService executor)
-	{
-		this (input, output, coder, ThrowingChannelCallbacks.defaultInstance, executor);
-	}
-	
 	public DefaultNioChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final ChannelCallbacks callbacks, final ExecutorService executor)
 	{
 		super ();
@@ -77,19 +71,15 @@ public final class DefaultNioChannel
 		}
 	}
 	
+	public DefaultNioChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final ExecutorService executor)
+	{
+		this (input, output, coder, ThrowingChannelCallbacks.defaultInstance, executor);
+	}
+	
 	@Override
 	public final void close ()
 	{
-		synchronized (this.monitor) {
-			this.transcript.traceDebugging ("closing channel...");
-			final Service.State state = this.channelsThread.state ();
-			Preconditions.checkState ((state == Service.State.STARTING) || (state == Service.State.RUNNING) || (state == Service.State.STOPPING));
-			this.selector.wakeup ();
-			this.channelsThread.stop ();
-			this.encoderThread.stop ();
-			this.decoderThread.stop ();
-			this.dispatcherThread.stop ();
-		}
+		this.stop ();
 	}
 	
 	@Override
@@ -102,14 +92,7 @@ public final class DefaultNioChannel
 	
 	public final void open ()
 	{
-		synchronized (this.monitor) {
-			this.transcript.traceDebugging ("opening channel...");
-			Preconditions.checkState (this.channelsThread.state () == Service.State.NEW);
-			this.channelsThread.start ();
-			this.encoderThread.start ();
-			this.decoderThread.start ();
-			this.dispatcherThread.start ();
-		}
+		this.start ();
 	}
 	
 	@Override
@@ -131,22 +114,47 @@ public final class DefaultNioChannel
 		}
 	}
 	
+	@Override
+	protected void doStart ()
+	{
+		synchronized (this.monitor) {
+			this.transcript.traceDebugging ("opening channel...");
+			this.channelsThread.start ();
+			this.encoderThread.start ();
+			this.decoderThread.start ();
+			this.dispatcherThread.start ();
+		}
+	}
+	
+	@Override
+	protected void doStop ()
+	{
+		synchronized (this.monitor) {
+			this.transcript.traceDebugging ("closing channel...");
+			this.selector.wakeup ();
+			this.channelsThread.stop ();
+			this.encoderThread.stop ();
+			this.decoderThread.stop ();
+			this.dispatcherThread.stop ();
+		}
+	}
+	
+	final ChannelMessageCoder coder;
+	final ExecutorService executor;
+	final LinkedBlockingQueue<ChannelMessage> inboundMessages;
+	final LinkedBlockingQueue<ByteBuffer> inboundPackets;
+	final ReadableByteChannel input;
+	final LinkedBlockingQueue<ChannelMessage> outboundMessages;
+	final LinkedBlockingQueue<ByteBuffer> outboundPackets;
+	final WritableByteChannel output;
+	final Selector selector;
+	final Transcript transcript;
 	private ChannelCallbacks callbacks;
 	private final ChannelsThread channelsThread;
-	private final ChannelMessageCoder coder;
 	private final DecoderThread decoderThread;
 	private final DispatcherThread dispatcherThread;
 	private final EncoderThread encoderThread;
-	private final ExecutorService executor;
-	private final LinkedBlockingQueue<ChannelMessage> inboundMessages;
-	private final LinkedBlockingQueue<ByteBuffer> inboundPackets;
-	private final ReadableByteChannel input;
 	private final Monitor monitor;
-	private final LinkedBlockingQueue<ChannelMessage> outboundMessages;
-	private final LinkedBlockingQueue<ByteBuffer> outboundPackets;
-	private final WritableByteChannel output;
-	private final Selector selector;
-	private final Transcript transcript;
 	
 	private abstract class BaseThread
 			extends AbstractExecutionThreadService
@@ -207,7 +215,7 @@ public final class DefaultNioChannel
 					this.failure = exception;
 			}
 			if (this.failure != null)
-				DefaultNioChannel.this.close ();
+				DefaultNioChannel.this.stop ();
 		}
 		
 		protected abstract void shutDown_1 ()
@@ -243,7 +251,7 @@ public final class DefaultNioChannel
 	private final class ChannelsThread
 			extends BaseThread
 	{
-		private ChannelsThread ()
+		ChannelsThread ()
 		{
 			super ();
 			this.input = DefaultNioChannel.this.input;
@@ -415,7 +423,7 @@ public final class DefaultNioChannel
 	private final class DecoderThread
 			extends BaseThread
 	{
-		private DecoderThread ()
+		DecoderThread ()
 		{
 			super ();
 			this.coder = DefaultNioChannel.this.coder;
@@ -471,7 +479,7 @@ public final class DefaultNioChannel
 	private final class DispatcherThread
 			extends BaseThread
 	{
-		private DispatcherThread ()
+		DispatcherThread ()
 		{
 			this.inboundMessages = DefaultNioChannel.this.inboundMessages;
 		}
@@ -532,7 +540,7 @@ public final class DefaultNioChannel
 	private final class EncoderThread
 			extends BaseThread
 	{
-		private EncoderThread ()
+		EncoderThread ()
 		{
 			super ();
 			this.coder = DefaultNioChannel.this.coder;

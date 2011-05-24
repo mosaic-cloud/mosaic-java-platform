@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.components.tools;
+package eu.mosaic_cloud.components.tools.tests;
 
 
 import java.nio.channels.Pipe;
@@ -7,13 +7,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import eu.mosaic_cloud.components.core.ChannelMessage;
+import eu.mosaic_cloud.components.tools.DefaultJsonSimpleMessageCoder;
+import eu.mosaic_cloud.components.tools.DefaultNioChannel;
+import eu.mosaic_cloud.components.tools.QueueingChannelCallbacks;
 import junit.framework.Assert;
 import net.minidev.json.JSONObject;
 
 import org.junit.Test;
 
 
-public class DefaultNioChannelTests
+public class DefaultNioChannelTest
 {
 	@Test
 	public final void test ()
@@ -44,7 +47,7 @@ public class DefaultNioChannelTests
 			throws Exception
 	{
 		Assert.assertTrue (arguments.length == 0);
-		final DefaultNioChannelTests tests = new DefaultNioChannelTests ();
+		final DefaultNioChannelTest tests = new DefaultNioChannelTest ();
 		tests.test ();
 	}
 }

@@ -7,12 +7,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 
-import eu.mosaic_cloud.transcript.Transcript;
-
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
+import eu.mosaic_cloud.transcript.core.Transcript;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONStyle;
 import net.minidev.json.JSONValue;

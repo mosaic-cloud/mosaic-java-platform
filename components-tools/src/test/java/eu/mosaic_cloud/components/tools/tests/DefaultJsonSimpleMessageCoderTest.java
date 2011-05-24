@@ -1,17 +1,18 @@
 
-package eu.mosaic_cloud.components.tools;
+package eu.mosaic_cloud.components.tools.tests;
 
 
 import java.nio.ByteBuffer;
 
 import eu.mosaic_cloud.components.core.ChannelMessage;
+import eu.mosaic_cloud.components.tools.DefaultJsonSimpleMessageCoder;
 import junit.framework.Assert;
 import net.minidev.json.JSONObject;
 
 import org.junit.Test;
 
 
-public class DefaultJsonSimpleMessageCoderTests
+public class DefaultJsonSimpleMessageCoderTest
 {
 	@Test
 	public final void test ()
@@ -37,7 +38,7 @@ public class DefaultJsonSimpleMessageCoderTests
 			throws Exception
 	{
 		Assert.assertTrue (arguments.length == 0);
-		final DefaultJsonSimpleMessageCoderTests tests = new DefaultJsonSimpleMessageCoderTests ();
+		final DefaultJsonSimpleMessageCoderTest tests = new DefaultJsonSimpleMessageCoderTest ();
 		tests.test ();
 	}
 }

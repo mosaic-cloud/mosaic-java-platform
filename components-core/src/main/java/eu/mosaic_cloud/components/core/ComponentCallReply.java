@@ -1,9 +1,11 @@
 
 package eu.mosaic_cloud.components.core;
 
+
 import java.nio.ByteBuffer;
 
 import com.google.common.base.Preconditions;
+
 
 public final class ComponentCallReply
 		extends Object
@@ -17,6 +19,6 @@ public final class ComponentCallReply
 		this.data = data;
 	}
 	
-	public final Object metaData;
 	public final ByteBuffer data;
+	public final Object metaData;
 }
