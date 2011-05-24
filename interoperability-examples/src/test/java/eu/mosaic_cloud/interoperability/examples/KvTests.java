@@ -6,7 +6,8 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.interoperability.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+
 import junit.framework.Assert;
 
 import org.junit.Test;

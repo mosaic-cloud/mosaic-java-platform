@@ -1,21 +1,20 @@
 
-package eu.mosaic_cloud.interoperability.zeromq;
+package eu.mosaic_cloud.interoperability.implementations.zeromq;
 
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.transcript.Transcript;
-
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.transcript.core.Transcript;
 import org.zeromq.ZMQ;
 
 
-public final class ZeroMqConnection
+public final class ZeroMqChannelSocket
 		extends Object
 {
-	public ZeroMqConnection (final String self, final Runnable dequeueTrigger)
+	public ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger)
 	{
 		super ();
 		Preconditions.checkNotNull (self);
@@ -101,7 +100,7 @@ public final class ZeroMqConnection
 	private final void loop ()
 	{
 		this.transcript.traceDebugging ("loopping...");
-		final ZMQ.Poller poller = ZeroMqConnection.context.poller (3);
+		final ZMQ.Poller poller = ZeroMqChannelSocket.context.poller (3);
 		while (true) {
 			if (this.shouldStop)
 				break;
@@ -235,7 +234,7 @@ public final class ZeroMqConnection
 	private final void setup ()
 	{
 		this.transcript.traceDebugging ("setting-up...");
-		this.socket = ZeroMqConnection.context.socket (ZMQ.XREP);
+		this.socket = ZeroMqChannelSocket.context.socket (ZMQ.XREP);
 		this.socket.setIdentity (this.self.getBytes ());
 	}
 	
@@ -284,16 +283,16 @@ public final class ZeroMqConnection
 	{
 		Looper ()
 		{
-			this.setName (String.format ("%s#%08x", ZeroMqConnection.this.getClass ().getSimpleName (), Integer.valueOf (System.identityHashCode (ZeroMqConnection.this))));
+			this.setName (String.format ("%s#%08x", ZeroMqChannelSocket.this.getClass ().getSimpleName (), Integer.valueOf (System.identityHashCode (ZeroMqChannelSocket.this))));
 			this.setDaemon (true);
 		}
 		
 		@Override
 		public final void run ()
 		{
-			ZeroMqConnection.this.setup ();
-			ZeroMqConnection.this.loop ();
-			ZeroMqConnection.this.teardown ();
+			ZeroMqChannelSocket.this.setup ();
+			ZeroMqChannelSocket.this.loop ();
+			ZeroMqChannelSocket.this.teardown ();
 		}
 	}
 }

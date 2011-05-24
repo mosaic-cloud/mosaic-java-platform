@@ -4,10 +4,11 @@ package eu.mosaic_cloud.interoperability.examples;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
-import eu.mosaic_cloud.interoperability.zeromq.ZeroMqChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

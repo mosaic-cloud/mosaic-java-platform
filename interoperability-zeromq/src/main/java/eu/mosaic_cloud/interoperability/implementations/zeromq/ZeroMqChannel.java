@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.interoperability.zeromq;
+package eu.mosaic_cloud.interoperability.implementations.zeromq;
 
 
 import java.io.ByteArrayInputStream;
@@ -20,8 +20,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import eu.mosaic_cloud.transcript.Transcript;
-
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
@@ -31,8 +29,9 @@ import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
-import eu.mosaic_cloud.interoperability.zeromq.ZeroMqConnection.Packet;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSocket.Packet;
 import eu.mosaic_cloud.tools.Monitor;
+import eu.mosaic_cloud.transcript.core.Transcript;
 
 
 public final class ZeroMqChannel
@@ -50,7 +49,7 @@ public final class ZeroMqChannel
 		this.handlers = new ConcurrentLinkedQueue<ZeroMqChannel.Handler> ();
 		this.idle = new Semaphore (1);
 		this.executor = Executors.newCachedThreadPool (new ExecutorThreadFactory ());
-		this.connection = new ZeroMqConnection (this.selfIdentifier, new PacketDequeueTrigger ());
+		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger ());
 	}
 	
 	@Override
@@ -80,7 +79,7 @@ public final class ZeroMqChannel
 	{
 		Preconditions.checkNotNull (endpoint);
 		synchronized (this.state.monitor) {
-			this.connection.accept (endpoint);
+			this.socket.accept (endpoint);
 		}
 	}
 	
@@ -88,7 +87,7 @@ public final class ZeroMqChannel
 	{
 		Preconditions.checkNotNull (endpoint);
 		synchronized (this.state.monitor) {
-			this.connection.connect (endpoint);
+			this.socket.connect (endpoint);
 		}
 	}
 	
@@ -152,57 +151,28 @@ public final class ZeroMqChannel
 			throws InterruptedException
 	{
 		synchronized (this.state.monitor) {
-			this.connection.terminate ();
+			this.socket.terminate ();
 			this.executor.shutdown ();
 		}
 		return (this.executor.awaitTermination (timeout, TimeUnit.MILLISECONDS));
 	}
 	
-	private final void dispatchSessionCreated (final Session session)
+	final void dispatchSessionCreated (final Session session)
 	{
 		session.callbacks.get ().created (session);
 	}
 	
-	private final void dispatchSessionDestroyed (final Session session)
+	final void dispatchSessionDestroyed (final Session session)
 	{
 		session.callbacks.get ().destroyed (session);
 	}
 	
-	private final void dispatchSessionReceived (final Session session, final Message message)
+	final void dispatchSessionReceived (final Session session, final Message message)
 	{
 		session.callbacks.get ().received (session, message);
 	}
 	
-	private final void enqueueDispatcher (final Dispatcher dispatcher)
-	{
-		final Session session = dispatcher.session;
-		session.dispatchers.add (dispatcher);
-		this.scheduleDispatcher (session);
-	}
-	
-	private final void enqueueHandler (final Handler handler)
-	{
-		this.handlers.add (handler);
-		this.scheduleHandler ();
-	}
-	
-	private final void executeDispatcher (final Dispatcher dispatcher)
-	{
-		final Session session = dispatcher.session;
-		session.dispatchContinued.set (Boolean.FALSE);
-		try {
-			dispatcher.dispatch ();
-		} catch (final Error exception) {
-			this.transcript.traceIgnoredException (exception, "error encountered while executing dispatcher; ignoring!");
-		}
-		if (session.dispatchContinued.get () == Boolean.FALSE) {
-			session.idle.release ();
-			this.scheduleDispatcher (session);
-		}
-		session.dispatchContinued.set (null);
-	}
-	
-	private final void executeHandler (final Handler handler)
+	final void executeHandler (final Handler handler)
 	{
 		try {
 			handler.handle ();
@@ -213,7 +183,7 @@ public final class ZeroMqChannel
 		this.scheduleHandler ();
 	}
 	
-	private final void executeTrigger (final Trigger trigger)
+	final void executeTrigger (final Trigger trigger)
 	{
 		try {
 			trigger.trigger ();
@@ -222,10 +192,10 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	private final void handlePacketDequeue ()
+	final void handlePacketDequeue ()
 	{
 		synchronized (this.state.monitor) {
-			final Packet packet = this.connection.dequeue ();
+			final Packet packet = this.socket.dequeue ();
 			if (packet == null)
 				throw (new IllegalStateException ());
 			final String sessionIdentifier;
@@ -315,6 +285,54 @@ public final class ZeroMqChannel
 		}
 	}
 	
+	final void triggerPacketDequeue ()
+	{
+		this.enqueueHandler (new PacketDequeueHandler ());
+	}
+	
+	final void triggerPacketEnqueue (final Session session, final Message message)
+	{
+		this.enqueueHandler (new PacketEnqueueHandler (session, message));
+	}
+	
+	final void triggerSessionContinueDispatch (final Session session)
+	{
+		if (session.dispatchContinued.get () == Boolean.FALSE) {
+			session.dispatchContinued.set (Boolean.TRUE);
+			session.idle.release ();
+			this.scheduleDispatcher (session);
+		}
+	}
+	
+	private final void enqueueDispatcher (final Dispatcher dispatcher)
+	{
+		final Session session = dispatcher.session;
+		session.dispatchers.add (dispatcher);
+		this.scheduleDispatcher (session);
+	}
+	
+	private final void enqueueHandler (final Handler handler)
+	{
+		this.handlers.add (handler);
+		this.scheduleHandler ();
+	}
+	
+	private final void executeDispatcher (final Dispatcher dispatcher)
+	{
+		final Session session = dispatcher.session;
+		session.dispatchContinued.set (Boolean.FALSE);
+		try {
+			dispatcher.dispatch ();
+		} catch (final Error exception) {
+			this.transcript.traceIgnoredException (exception, "error encountered while executing dispatcher; ignoring!");
+		}
+		if (session.dispatchContinued.get () == Boolean.FALSE) {
+			session.idle.release ();
+			this.scheduleDispatcher (session);
+		}
+		session.dispatchContinued.set (null);
+	}
+	
 	private final void handlePacketEnqueue (final Session session, final Message message)
 	{
 		synchronized (this.state.monitor) {
@@ -378,7 +396,7 @@ public final class ZeroMqChannel
 				return;
 			}
 			final Packet packet = new Packet (session.peerIdentifier, ByteBuffer.wrap (header), payload);
-			if (!this.connection.enqueue (packet, 1000))
+			if (!this.socket.enqueue (packet, 1000))
 				throw (new IllegalStateException ());
 			if (coder.messageType == MessageType.Termination)
 				this.enqueueDispatcher (new SessionDestroyedDispatcher (session));
@@ -409,30 +427,11 @@ public final class ZeroMqChannel
 			}
 	}
 	
-	private final void triggerPacketDequeue ()
-	{
-		this.enqueueHandler (new PacketDequeueHandler ());
-	}
-	
-	private final void triggerPacketEnqueue (final Session session, final Message message)
-	{
-		this.enqueueHandler (new PacketEnqueueHandler (session, message));
-	}
-	
-	private final void triggerSessionContinueDispatch (final Session session)
-	{
-		if (session.dispatchContinued.get () == Boolean.FALSE) {
-			session.dispatchContinued.set (Boolean.TRUE);
-			session.idle.release ();
-			this.scheduleDispatcher (session);
-		}
-	}
-	
-	private final ZeroMqConnection connection;
 	private final ExecutorService executor;
 	private final ConcurrentLinkedQueue<Handler> handlers;
 	private final Semaphore idle;
 	private final String selfIdentifier;
+	private final ZeroMqChannelSocket socket;
 	private final State state;
 	private final Transcript transcript;
 	
@@ -505,6 +504,11 @@ public final class ZeroMqChannel
 			implements
 				ThreadFactory
 	{
+		ExecutorThreadFactory ()
+		{
+			super ();
+		}
+		
 		@Override
 		public final Thread newThread (final java.lang.Runnable runnable)
 		{
@@ -518,6 +522,11 @@ public final class ZeroMqChannel
 	private abstract class Handler
 			extends Runnable
 	{
+		Handler ()
+		{
+			super ();
+		}
+		
 		@Override
 		public final void run ()
 		{
@@ -571,7 +580,12 @@ public final class ZeroMqChannel
 			extends Object
 			implements
 				java.lang.Runnable
-	{}
+	{
+		Runnable ()
+		{
+			super ();
+		}
+	}
 	
 	private final class Session
 			extends Object
@@ -701,6 +715,11 @@ public final class ZeroMqChannel
 	private abstract class Trigger
 			extends Runnable
 	{
+		Trigger ()
+		{
+			super ();
+		}
+		
 		@Override
 		public final void run ()
 		{
