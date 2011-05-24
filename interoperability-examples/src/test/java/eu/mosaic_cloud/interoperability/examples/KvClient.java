@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.interoperability.zeromq;
+package eu.mosaic_cloud.interoperability.examples;
 
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
-import eu.mosaic_cloud.interoperability.tools.OutcomeFuture;
+import eu.mosaic_cloud.tools.OutcomeFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized void failed (final Session session)
+	public final synchronized void failed (final Session session, final Throwable exception)
 	{
 		Preconditions.checkState (this.session == session);
 	}

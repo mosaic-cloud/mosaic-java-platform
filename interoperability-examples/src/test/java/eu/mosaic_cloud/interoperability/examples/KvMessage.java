@@ -1,13 +1,13 @@
 
-package eu.mosaic_cloud.interoperability.zeromq;
+package eu.mosaic_cloud.interoperability.examples;
 
 
 import java.io.Serializable;
 
-import eu.mosaic_cloud.interoperability.core.MessageCoder;
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
-import eu.mosaic_cloud.interoperability.tools.DefaultJavaSerializationCoder;
+import eu.mosaic_cloud.interoperability.core.PayloadCoder;
+import eu.mosaic_cloud.interoperability.tools.DefaultJavaSerializationPayloadCoder;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
@@ -28,15 +28,9 @@ public enum KvMessage
 		this.identifier = Identifiers.generate (this);
 		this.type = type;
 		if (clasz != null)
-			this.coder = new DefaultJavaSerializationCoder (clasz, false);
+			this.coder = new DefaultJavaSerializationPayloadCoder (clasz, false);
 		else
 			this.coder = null;
-	}
-	
-	@Override
-	public MessageCoder getCoder ()
-	{
-		return (this.coder);
 	}
 	
 	@Override
@@ -46,12 +40,18 @@ public enum KvMessage
 	}
 	
 	@Override
+	public PayloadCoder getPayloadCoder ()
+	{
+		return (this.coder);
+	}
+	
+	@Override
 	public MessageType getType ()
 	{
 		return (this.type);
 	}
 	
-	public final MessageCoder coder;
+	public final PayloadCoder coder;
 	public final String identifier;
 	public final MessageType type;
 }

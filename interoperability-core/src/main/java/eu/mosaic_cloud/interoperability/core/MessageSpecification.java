@@ -6,9 +6,9 @@ public interface MessageSpecification
 		extends
 			Specification
 {
-	public abstract MessageCoder getCoder ();
-	
 	public abstract String getIdentifier ();
+	
+	public abstract PayloadCoder getPayloadCoder ();
 	
 	public abstract MessageType getType ();
 }

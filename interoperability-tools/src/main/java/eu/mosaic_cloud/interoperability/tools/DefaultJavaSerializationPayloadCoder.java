@@ -8,17 +8,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.interoperability.core.MessageCoder;
+import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 
 
-public final class DefaultJavaSerializationCoder
+public final class DefaultJavaSerializationPayloadCoder
 		extends Object
 		implements
-			MessageCoder
+			PayloadCoder
 {
-	public DefaultJavaSerializationCoder (final Class<? extends Serializable> clasz, final boolean nullAllowed)
+	public DefaultJavaSerializationPayloadCoder (final Class<? extends Serializable> clasz, final boolean nullAllowed)
 	{
 		super ();
 		Preconditions.checkNotNull (clasz);
@@ -28,10 +29,10 @@ public final class DefaultJavaSerializationCoder
 	}
 	
 	@Override
-	public Object decodeMessage (final byte[] buffer)
+	public Object decode (final ByteBuffer buffer)
 			throws Throwable
 	{
-		final ByteArrayInputStream bufferStream = new ByteArrayInputStream (buffer);
+		final ByteArrayInputStream bufferStream = new ByteArrayInputStream (buffer.array (), buffer.arrayOffset () + buffer.position (), buffer.remaining ());
 		final ObjectInputStream objectStream = new ObjectInputStream (bufferStream);
 		final Object object = objectStream.readObject ();
 		if (!this.nullAllowed && (object == null))
@@ -44,7 +45,7 @@ public final class DefaultJavaSerializationCoder
 	}
 	
 	@Override
-	public byte[] encodeMessage (final Object object)
+	public ByteBuffer encode (final Object object)
 			throws Throwable
 	{
 		if (!this.nullAllowed)
@@ -54,7 +55,7 @@ public final class DefaultJavaSerializationCoder
 		final ObjectOutputStream objectStream = new ObjectOutputStream (bufferStream);
 		objectStream.writeObject (object);
 		objectStream.close ();
-		final byte[] buffer = bufferStream.toByteArray ();
+		final ByteBuffer buffer = ByteBuffer.wrap (bufferStream.toByteArray ());
 		return (buffer);
 	}
 	

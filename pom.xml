@@ -6,24 +6,20 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>interoperability-parent</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>interoperability-core</module>
-		<module>interoperability-zeromq</module>
+		<module>interoperability-examples</module>
 		<module>interoperability-tools</module>
+		<module>interoperability-zeromq</module>
 		<module>zeromq</module>
 	</modules>
 	<dependencies>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>0.9.28</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.guava</groupId>
-			<artifactId>guava-base</artifactId>
-			<version>r03</version>
+			<artifactId>guava</artifactId>
+			<version>r09</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -43,21 +39,6 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.8.1</version>
-				<configuration>
-					<systemProperties>
-						<property>
-							<name>java.library.path</name>
-							<value>../zeromq/lib</value>
-						</property>
-					</systemProperties>
-				</configuration>
-			</plugin>
-			-->
 		</plugins>
 	</build>
 	<properties>

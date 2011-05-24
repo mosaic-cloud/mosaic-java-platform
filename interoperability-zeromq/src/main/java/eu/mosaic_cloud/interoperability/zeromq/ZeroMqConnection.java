@@ -2,12 +2,13 @@
 package eu.mosaic_cloud.interoperability.zeromq;
 
 
+import java.nio.ByteBuffer;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import eu.mosaic_cloud.transcript.Transcript;
+
 import com.google.common.base.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zeromq.ZMQ;
 
 
@@ -18,7 +19,7 @@ public final class ZeroMqConnection
 	{
 		super ();
 		Preconditions.checkNotNull (self);
-		this.logger = LoggerFactory.getLogger (this.getClass ());
+		this.transcript = Transcript.create (this);
 		this.self = self;
 		this.inboundPackets = new LinkedBlockingQueue<Packet> ();
 		this.outboundPackets = new LinkedBlockingQueue<Packet> ();
@@ -31,11 +32,13 @@ public final class ZeroMqConnection
 	public final void accept (final String endpoint)
 	{
 		Preconditions.checkNotNull (endpoint);
-		this.logger.debug ("accepting on `{}`...", endpoint);
+		this.transcript.traceDebugging ("accepting on `%s`...", endpoint);
 		if (this.socket == null)
 			try {
 				Thread.sleep (100);
-			} catch (final InterruptedException exception) {}
+			} catch (final InterruptedException exception) {
+				this.transcript.traceIgnoredException (exception);
+			}
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.bind (endpoint);
@@ -44,11 +47,13 @@ public final class ZeroMqConnection
 	public final void connect (final String endpoint)
 	{
 		Preconditions.checkNotNull (endpoint);
-		this.logger.debug ("connecting to `{}`...", endpoint);
+		this.transcript.traceDebugging ("connecting to `%s`...", endpoint);
 		if (this.socket == null)
 			try {
 				Thread.sleep (100);
-			} catch (final InterruptedException exception) {}
+			} catch (final InterruptedException exception) {
+				this.transcript.traceIgnoredException (exception);
+			}
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.connect (endpoint);
@@ -84,18 +89,18 @@ public final class ZeroMqConnection
 	
 	public final void terminate ()
 	{
-		this.logger.debug ("terminating...");
+		this.transcript.traceDebugging ("terminating...");
 		this.shouldStop = true;
 	}
 	
 	private final void failed ()
 	{
-		this.logger.error ("socket failed; ignoring!");
+		this.transcript.traceError ("socket failed; ignoring!");
 	}
 	
 	private final void loop ()
 	{
-		this.logger.debug ("loopping...");
+		this.transcript.traceDebugging ("loopping...");
 		final ZMQ.Poller poller = ZeroMqConnection.context.poller (3);
 		while (true) {
 			if (this.shouldStop)
@@ -126,7 +131,7 @@ public final class ZeroMqConnection
 	
 	private final void receive ()
 	{
-		this.logger.trace ("receiving packet...");
+		this.transcript.traceDebugging ("receiving packet...");
 		final String peer;
 		final byte[] peer_;
 		final byte[] delimiter;
@@ -134,59 +139,59 @@ public final class ZeroMqConnection
 		final byte[] payload;
 		peer_ = this.socket.recv (0);
 		if (peer_ == null) {
-			this.logger.error ("error encountered while receiving packet peer part; ignoring!");
+			this.transcript.traceError ("error encountered while receiving packet peer part; ignoring!");
 			this.receiveFlush ();
 			return;
 		}
 		if (!this.socket.hasReceiveMore ()) {
-			this.logger.error ("error encountered while decoding packet: missing delimiter; ignoring!");
+			this.transcript.traceError ("error encountered while decoding packet: missing delimiter; ignoring!");
 			this.receiveFlush ();
 			return;
 		}
 		delimiter = this.socket.recv (0);
 		if (delimiter == null) {
-			this.logger.error ("error encountered while receiving packet delimiter part: ignoring!");
+			this.transcript.traceError ("error encountered while receiving packet delimiter part: ignoring!");
 			this.receiveFlush ();
 			return;
 		}
 		if (delimiter.length != 0) {
-			this.logger.error ("error encountered while decoding packet: non-empty delimiter; ignoring!");
+			this.transcript.traceError ("error encountered while decoding packet: non-empty delimiter; ignoring!");
 			this.receiveFlush ();
 			return;
 		}
 		if (!this.socket.hasReceiveMore ()) {
-			this.logger.error ("error encounterd while decoding packet: missing header; ignoring!");
+			this.transcript.traceError ("error encounterd while decoding packet: missing header; ignoring!");
 			this.receiveFlush ();
 			return;
 		}
 		header = this.socket.recv (0);
 		if (header == null) {
-			this.logger.error ("error encountered while receiving packet header part; ignoring!");
+			this.transcript.traceError ("error encountered while receiving packet header part; ignoring!");
 			this.receiveFlush ();
 			return;
 		}
 		if (this.socket.hasReceiveMore ()) {
 			payload = this.socket.recv (0);
 			if (payload == null) {
-				this.logger.error ("error encountered while receiving packet payload part; ignoring!");
+				this.transcript.traceError ("error encountered while receiving packet payload part; ignoring!");
 				this.receiveFlush ();
 				return;
 			}
 		} else
 			payload = null;
 		if (this.socket.hasReceiveMore ()) {
-			this.logger.error ("error encountered while receiving packet: unexpected garbage; ignoring!");
+			this.transcript.traceError ("error encountered while receiving packet: unexpected garbage; ignoring!");
 			this.receiveFlush ();
 			return;
 		}
 		peer = new String (peer_);
-		final Packet packet = new Packet (peer, header, payload);
+		final Packet packet = new Packet (peer, ByteBuffer.wrap (header), payload != null ? ByteBuffer.wrap (payload) : null);
 		this.inboundPackets.add (packet);
 		if (this.dequeueTrigger != null)
 			try {
 				this.dequeueTrigger.run ();
 			} catch (final Error exception) {
-				this.logger.error ("error encountered while executing dequeue trigger; ignoring!");
+				this.transcript.traceError ("error encountered while executing dequeue trigger; ignoring!");
 			}
 	}
 	
@@ -198,49 +203,57 @@ public final class ZeroMqConnection
 	
 	private final void send ()
 	{
-		this.logger.trace ("sending packet...");
+		this.transcript.traceDebugging ("sending packet...");
 		final Packet packet = this.outboundPackets.remove ();
 		if (!this.socket.send (packet.peer.getBytes (), ZMQ.SNDMORE)) {
-			this.logger.error ("error encountered while sending packet: ignoring!");
+			this.transcript.traceError ("error encountered while sending packet: ignoring!");
 			return;
 		}
 		if (!this.socket.send (new byte[0], ZMQ.SNDMORE)) {
-			this.logger.error ("error encountered while sending packet: ignoring!");
+			this.transcript.traceError ("error encountered while sending packet: ignoring!");
 			return;
 		}
-		if (!this.socket.send (packet.header, (packet.payload != null) ? ZMQ.SNDMORE : 0)) {
-			this.logger.error ("error encountered while sending packet: ignoring!");
+		final byte[] header = new byte[packet.header.remaining ()];
+		packet.header.get (header);
+		final byte[] payload;
+		if (packet.payload != null) {
+			payload = new byte[packet.payload.remaining ()];
+			packet.payload.get (payload);
+		} else
+			payload = null;
+		if (!this.socket.send (header, (payload != null) ? ZMQ.SNDMORE : 0)) {
+			this.transcript.traceError ("error encountered while sending packet: ignoring!");
 			return;
 		}
-		if (packet.payload != null)
-			if (!this.socket.send (packet.payload, 0)) {
-				this.logger.error ("error encountered while sending packet: ignoring!");
+		if (payload != null)
+			if (!this.socket.send (payload, 0)) {
+				this.transcript.traceError ("error encountered while sending packet: ignoring!");
 				return;
 			}
 	}
 	
 	private final void setup ()
 	{
-		this.logger.debug ("setting-up...");
+		this.transcript.traceDebugging ("setting-up...");
 		this.socket = ZeroMqConnection.context.socket (ZMQ.XREP);
 		this.socket.setIdentity (this.self.getBytes ());
 	}
 	
 	private final void teardown ()
 	{
-		this.logger.debug ("tearing-down...");
+		this.transcript.traceDebugging ("tearing-down...");
 		this.socket.close ();
 		this.socket = null;
 	}
 	
 	private final Runnable dequeueTrigger;
 	private final LinkedBlockingQueue<Packet> inboundPackets;
-	private final Logger logger;
 	private final Thread looper;
 	private final LinkedBlockingQueue<Packet> outboundPackets;
 	private final String self;
 	private boolean shouldStop;
 	private ZMQ.Socket socket;
+	private final Transcript transcript;
 	
 	static {
 		context = ZMQ.context (1);
@@ -251,7 +264,7 @@ public final class ZeroMqConnection
 	public static final class Packet
 			extends Object
 	{
-		public Packet (final String peer, final byte[] header, final byte[] payload)
+		public Packet (final String peer, final ByteBuffer header, final ByteBuffer payload)
 		{
 			super ();
 			Preconditions.checkNotNull (peer);
@@ -261,8 +274,8 @@ public final class ZeroMqConnection
 			this.payload = payload;
 		}
 		
-		public final byte[] header;
-		public final byte[] payload;
+		public final ByteBuffer header;
+		public final ByteBuffer payload;
 		public final String peer;
 	}
 	

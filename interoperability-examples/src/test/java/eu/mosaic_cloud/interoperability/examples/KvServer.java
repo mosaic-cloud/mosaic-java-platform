@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.interoperability.zeromq;
+package eu.mosaic_cloud.interoperability.examples;
 
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
+import eu.mosaic_cloud.interoperability.zeromq.ZeroMqChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ public final class KvServer
 	{}
 	
 	@Override
-	public final void failed (final Session session)
+	public final void failed (final Session session, final Throwable Exception)
 	{}
 	
 	public final void initialize (final ZeroMqChannel channel)
@@ -64,7 +65,7 @@ public final class KvServer
 				break;
 			case PutRequest : {
 				final KvPayloads.PutRequest request = (KvPayloads.PutRequest) message.payload;
-				this.logger.info ("put requested [{}]: {} -> {}", new Object [] {request.sequence, request.key, request.value});
+				this.logger.info ("put requested [{}]: {} -> {}", new Object[] {request.sequence, request.key, request.value});
 				this.bucket.put (request.key, request.value);
 				session.continueDispatch ();
 				try {

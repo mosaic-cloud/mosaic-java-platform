@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -19,18 +20,19 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import eu.mosaic_cloud.transcript.Transcript;
+
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.MessageCoder;
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
+import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.zeromq.ZeroMqConnection.Packet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import eu.mosaic_cloud.tools.Monitor;
 
 
 public final class ZeroMqChannel
@@ -42,7 +44,7 @@ public final class ZeroMqChannel
 	{
 		super ();
 		Preconditions.checkNotNull (self);
-		this.logger = LoggerFactory.getLogger (this.getClass ());
+		this.transcript = Transcript.create (this);
 		this.selfIdentifier = self;
 		this.state = new State ();
 		this.handlers = new ConcurrentLinkedQueue<ZeroMqChannel.Handler> ();
@@ -66,10 +68,10 @@ public final class ZeroMqChannel
 		final Acceptor acceptor = new Acceptor (acceptorKey, selfRoleIdentifier, peerRoleIdentifier, specification, callbacks);
 		synchronized (this.state.monitor) {
 			if (this.state.acceptors.containsKey (acceptorKey)) {
-				this.logger.error ("error encountered while registering acceptor: already registered; throwing!");
+				this.transcript.traceError ("error encountered while registering acceptor: already registered; throwing!");
 				throw (new IllegalStateException ());
 			}
-			this.logger.trace ("registering acceptor: `{}` -> {}...", acceptor.key, acceptor.callbacks);
+			this.transcript.traceDebugging ("registering acceptor: `%s` -> %s...", acceptor.key, acceptor.callbacks);
 			this.state.acceptors.put (acceptorKey, acceptor);
 		}
 	}
@@ -126,7 +128,7 @@ public final class ZeroMqChannel
 		for (final MessageSpecification messageSpecification : specification.getMessages ()) {
 			final String messageIdentifier = messageSpecification.getIdentifier ();
 			final MessageType messageType = messageSpecification.getType ();
-			final MessageCoder messageCoder = messageSpecification.getCoder ();
+			final PayloadCoder messageCoder = messageSpecification.getPayloadCoder ();
 			Preconditions.checkNotNull (messageIdentifier);
 			Preconditions.checkNotNull (messageType);
 			final String coderKey = selfRoleIdentifier + "//" + peerRoleIdentifier + "//" + messageIdentifier;
@@ -136,11 +138,11 @@ public final class ZeroMqChannel
 		synchronized (this.state.monitor) {
 			for (final Coder coder : coders)
 				if (this.state.coders.containsKey (coder.key)) {
-					this.logger.error ("error encountered while registering coder: already registered; throwing!");
+					this.transcript.traceError ("error encountered while registering coder: already registered; throwing!");
 					throw (new IllegalStateException ());
 				}
 			for (final Coder coder : coders) {
-				this.logger.trace ("registering coder: `{}` -> {}...", coder.key, coder.coder);
+				this.transcript.traceError ("registering coder: `%s` -> %s...", coder.key, coder.coder);
 				this.state.coders.put (coder.key, coder);
 			}
 		}
@@ -191,7 +193,7 @@ public final class ZeroMqChannel
 		try {
 			dispatcher.dispatch ();
 		} catch (final Error exception) {
-			this.logger.error ("error encountered while executing dispatcher; ignoring!", exception);
+			this.transcript.traceIgnoredException (exception, "error encountered while executing dispatcher; ignoring!");
 		}
 		if (session.dispatchContinued.get () == Boolean.FALSE) {
 			session.idle.release ();
@@ -205,7 +207,7 @@ public final class ZeroMqChannel
 		try {
 			handler.handle ();
 		} catch (final Error exception) {
-			this.logger.error ("error encountered while executing handler; ignoring!", exception);
+			this.transcript.traceIgnoredException (exception, "error encountered while executing handler; ignoring!");
 		}
 		this.idle.release ();
 		this.scheduleHandler ();
@@ -216,7 +218,7 @@ public final class ZeroMqChannel
 		try {
 			trigger.trigger ();
 		} catch (final Error exception) {
-			this.logger.error ("error encountered while executing trigger; ignoring!", exception);
+			this.transcript.traceIgnoredException (exception, "error encountered while executing trigger; ignoring!");
 		}
 	}
 	
@@ -231,7 +233,7 @@ public final class ZeroMqChannel
 			final String peerRoleIdentifier;
 			final String messageIdentifier;
 			try {
-				final DataInputStream stream = new DataInputStream (new ByteArrayInputStream (packet.header));
+				final DataInputStream stream = new DataInputStream (new ByteArrayInputStream (packet.header.array (), packet.header.arrayOffset () + packet.header.position (), packet.header.remaining ()));
 				{
 					final int bufferSize = stream.readUnsignedShort ();
 					final byte[] buffer = new byte[bufferSize];
@@ -257,19 +259,19 @@ public final class ZeroMqChannel
 					messageIdentifier = new String (buffer);
 				}
 				if (stream.available () > 0) {
-					this.logger.error ("error encountered while decoding packet: header trailing garbage; ignoring!");
+					this.transcript.traceError ("error encountered while decoding packet: header trailing garbage; ignoring!");
 					return;
 				}
 				stream.close ();
 			} catch (final IOException exception) {
-				this.logger.error ("error encountered while decoding packet; ignoring!", exception);
+				this.transcript.traceIgnoredException (exception, "error encountered while decoding packet; ignoring!");
 				return;
 			}
 			final String acceptorKey = selfRoleIdentifier + "//" + peerRoleIdentifier;
 			final String coderKey = selfRoleIdentifier + "//" + peerRoleIdentifier + "//" + messageIdentifier;
 			final Coder coder = this.state.coders.get (coderKey);
 			if (coder == null) {
-				this.logger.error ("error encountered while decoding packet: missing coder; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet: missing coder; ignoring!");
 				return;
 			}
 			final Session session;
@@ -279,11 +281,11 @@ public final class ZeroMqChannel
 			} else {
 				final Acceptor acceptor = this.state.acceptors.get (acceptorKey);
 				if (acceptor == null) {
-					this.logger.error ("error encountered while initiating session: mismatched roles; ignoring!");
+					this.transcript.traceError ("error encountered while initiating session: mismatched roles; ignoring!");
 					return;
 				}
 				if (coder.messageType != MessageType.Initiation) {
-					this.logger.error ("error encountered while initiating session: mismatched message type; ignoring!");
+					this.transcript.traceError ("error encountered while initiating session: mismatched message type; ignoring!");
 					return;
 				}
 				session = new Session (sessionIdentifier, selfRoleIdentifier, peerRoleIdentifier, packet.peer, acceptor.specification, acceptor.callbacks, this.executor);
@@ -292,16 +294,16 @@ public final class ZeroMqChannel
 			}
 			final Object payload;
 			if ((coder.coder == null) && (packet.payload != null)) {
-				this.logger.error ("error encountered while decoding packet: missing coder, but existing payload; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet: missing coder, but existing payload; ignoring!");
 				return;
 			} else if ((coder.coder != null) && (packet.payload == null)) {
-				this.logger.error ("error encountered while decoding packet: existing coder, but missing payload; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet: existing coder, but missing payload; ignoring!");
 				return;
 			} else if (packet.payload != null)
 				try {
-					payload = coder.coder.decodeMessage (packet.payload);
+					payload = coder.coder.decode (packet.payload);
 				} catch (final Throwable exception) {
-					this.logger.error ("error encountered while decoding packet: coder failed; ignoring!", exception);
+					this.transcript.traceIgnoredException (exception, "error encountered while decoding packet: coder failed; ignoring!");
 					return;
 				}
 			else
@@ -320,27 +322,27 @@ public final class ZeroMqChannel
 			try {
 				messageIdentifier = message.specification.getIdentifier ();
 			} catch (final Error exception) {
-				this.logger.error ("error encountered while encoding packet; ignoring!", exception);
+				this.transcript.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}
 			final String coderKey = session.selfRoleIdentifier + "//" + session.peerRoleIdentifier + "//" + messageIdentifier;
 			final Coder coder = this.state.coders.get (coderKey);
 			if (coder == null) {
-				this.logger.error ("error encountered while decoding packet: missing coder; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet: missing coder; ignoring!");
 				return;
 			}
-			final byte[] payload;
+			final ByteBuffer payload;
 			if ((coder.coder == null) && (message.payload != null)) {
-				this.logger.error ("error encountered while encoding packet: missing coder, but existing payload; ignoring!");
+				this.transcript.traceError ("error encountered while encoding packet: missing coder, but existing payload; ignoring!");
 				return;
 			} else if ((coder.coder != null) && (message.payload == null)) {
-				this.logger.error ("error encountered while encoding packet: existing coder, but missing payload; ignoring!");
+				this.transcript.traceError ("error encountered while encoding packet: existing coder, but missing payload; ignoring!");
 				return;
 			} else if (message.payload != null)
 				try {
-					payload = coder.coder.encodeMessage (message.payload);
+					payload = coder.coder.encode (message.payload);
 				} catch (final Throwable exception) {
-					this.logger.error ("error encountered while encoding packet: coder failed; ignoring!", exception);
+					this.transcript.traceIgnoredException (exception, "error encountered while encoding packet: coder failed; ignoring!");
 					return;
 				}
 			else
@@ -372,10 +374,10 @@ public final class ZeroMqChannel
 				stream.close ();
 				header = headerStream.toByteArray ();
 			} catch (final IOException exception) {
-				this.logger.error ("error encountered while encoding packet; ignoring!", exception);
+				this.transcript.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}
-			final Packet packet = new Packet (session.peerIdentifier, header, payload);
+			final Packet packet = new Packet (session.peerIdentifier, ByteBuffer.wrap (header), payload);
 			if (!this.connection.enqueue (packet, 1000))
 				throw (new IllegalStateException ());
 			if (coder.messageType == MessageType.Termination)
@@ -389,6 +391,7 @@ public final class ZeroMqChannel
 			try {
 				session.executor.get ().execute (session.dispatchers.poll ());
 			} catch (final Error exception) {
+				this.transcript.traceRethrownException (exception, "error encountered while scheduling dispatcher; rethrowing!");
 				session.idle.release ();
 				throw (exception);
 			}
@@ -400,18 +403,10 @@ public final class ZeroMqChannel
 			try {
 				this.executor.execute (this.handlers.poll ());
 			} catch (final Error exception) {
+				this.transcript.traceRethrownException (exception, "error encountered while scheduling handler; rethrowing!");
 				this.idle.release ();
 				throw (exception);
 			}
-	}
-	
-	private final void triggerSessionContinueDispatch (final Session session)
-	{
-		if (session.dispatchContinued.get () == Boolean.FALSE) {
-			session.dispatchContinued.set (Boolean.TRUE);
-			session.idle.release ();
-			this.scheduleDispatcher (session);
-		}
 	}
 	
 	private final void triggerPacketDequeue ()
@@ -424,13 +419,22 @@ public final class ZeroMqChannel
 		this.enqueueHandler (new PacketEnqueueHandler (session, message));
 	}
 	
+	private final void triggerSessionContinueDispatch (final Session session)
+	{
+		if (session.dispatchContinued.get () == Boolean.FALSE) {
+			session.dispatchContinued.set (Boolean.TRUE);
+			session.idle.release ();
+			this.scheduleDispatcher (session);
+		}
+	}
+	
 	private final ZeroMqConnection connection;
 	private final ExecutorService executor;
 	private final ConcurrentLinkedQueue<Handler> handlers;
 	private final Semaphore idle;
-	private final Logger logger;
 	private final String selfIdentifier;
 	private final State state;
+	private final Transcript transcript;
 	
 	private static final class Acceptor
 			extends Object
@@ -455,7 +459,7 @@ public final class ZeroMqChannel
 	private static final class Coder
 			extends Object
 	{
-		Coder (final String key, final String selfRoleIdentifier, final String peerRoleIdentifier, final String messageIdentifier, final MessageType messageType, final MessageSpecification specification, final MessageCoder coder)
+		Coder (final String key, final String selfRoleIdentifier, final String peerRoleIdentifier, final String messageIdentifier, final MessageType messageType, final MessageSpecification specification, final PayloadCoder coder)
 		{
 			super ();
 			this.key = key;
@@ -467,7 +471,7 @@ public final class ZeroMqChannel
 			this.coder = coder;
 		}
 		
-		final MessageCoder coder;
+		final PayloadCoder coder;
 		final String key;
 		final String messageIdentifier;
 		final MessageType messageType;
@@ -617,6 +621,7 @@ public final class ZeroMqChannel
 		}
 		
 		final AtomicReference<SessionCallbacks> callbacks;
+		final ThreadLocal<Boolean> dispatchContinued;
 		final ConcurrentLinkedQueue<Dispatcher> dispatchers;
 		final AtomicReference<Executor> executor;
 		final Semaphore idle;
@@ -625,7 +630,6 @@ public final class ZeroMqChannel
 		final String selfRoleIdentifier;
 		final String sessionIdentifier;
 		final SessionSpecification specification;
-		final ThreadLocal<Boolean> dispatchContinued;
 	}
 	
 	private final class SessionCreatedHandler
@@ -682,7 +686,7 @@ public final class ZeroMqChannel
 		State ()
 		{
 			super ();
-			this.monitor = new Object ();
+			this.monitor = Monitor.create (this);
 			this.sessions = new HashMap<String, Session> ();
 			this.acceptors = new HashMap<String, Acceptor> ();
 			this.coders = new HashMap<String, Coder> ();
@@ -690,7 +694,7 @@ public final class ZeroMqChannel
 		
 		final HashMap<String, Acceptor> acceptors;
 		final HashMap<String, Coder> coders;
-		final Object monitor;
+		final Monitor monitor;
 		final HashMap<String, Session> sessions;
 	}
 	

@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.interoperability.zeromq;
+package eu.mosaic_cloud.interoperability.examples;
 
 
 import java.io.Serializable;
