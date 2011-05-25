@@ -38,8 +38,8 @@ public class ResponseHandlerMap {
 		if (eHandlers != null) {
 			eHandlers.addAll(handlers);
 		} else {
-			eHandlers=new ArrayList<IOperationCompletionHandler<?>>();
-			for(IOperationCompletionHandler<T> handler:handlers)
+			eHandlers = new ArrayList<IOperationCompletionHandler<?>>();
+			for (IOperationCompletionHandler<T> handler : handlers)
 				eHandlers.add(handler);
 			this.handlerMap.put(requestId, eHandlers);
 		}

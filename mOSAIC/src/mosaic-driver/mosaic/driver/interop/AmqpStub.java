@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 
+import mosaic.connector.queue.AmqpInboundMessage;
 import mosaic.connector.queue.AmqpOutboundMessage;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
@@ -14,6 +15,7 @@ import mosaic.driver.IResourceDriver;
 import mosaic.driver.queue.AmqpDriver;
 import mosaic.driver.queue.AmqpExchangeType;
 import mosaic.driver.queue.AmqpOperations;
+import mosaic.driver.queue.IAmqpConsumer;
 import mosaic.interop.idl.amqp.AckOperation;
 import mosaic.interop.idl.amqp.BindQueueOperation;
 import mosaic.interop.idl.amqp.CancelOperation;
@@ -71,7 +73,9 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 		return stub;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see mosaic.driver.interop.AbstractDriverStub#startOperation(byte[])
 	 */
 	protected void startOperation(byte[] message) throws IOException,
@@ -174,8 +178,10 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 			autoAck = (Boolean) cop.get(3);
 			dataBytes = (ByteBuffer) cop.get(4);
 			Object extra = SerDesUtils.toObject(dataBytes.array());
+			IAmqpConsumer consumeCallback = new ConsumerHandler(
+					(String) token.get(1));
 			resultString = driver.basicConsume(queue, consumer, exclusive,
-					autoAck, extra, complHandler);
+					autoAck, extra, consumeCallback, complHandler);
 			complHandler.setDetails(AmqpOperations.CONSUME, resultString);
 			break;
 		case GET:
@@ -262,4 +268,56 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 		}
 	}
 
+	final class ConsumerHandler implements IAmqpConsumer {
+		private String callerId;
+
+		public ConsumerHandler(String callerId) {
+			super();
+			this.callerId = callerId;
+		}
+
+		/* (non-Javadoc)
+		 * @see mosaic.driver.queue.IAmqpConsumer#handleConsumeOk(java.lang.String)
+		 */
+		@Override
+		public void handleConsumeOk(String consumerTag) {
+			AmqpResponseTransmitter transmitter = AmqpStub.this
+					.getResponseTransmitter(AmqpResponseTransmitter.class);
+			transmitter.sendConsumeOk(callerId, consumerTag);
+
+		}
+
+		/* (non-Javadoc)
+		 * @see mosaic.driver.queue.IAmqpConsumer#handleCancelOk(java.lang.String)
+		 */
+		@Override
+		public void handleCancelOk(String consumerTag) {
+			AmqpResponseTransmitter transmitter = AmqpStub.this
+					.getResponseTransmitter(AmqpResponseTransmitter.class);
+			transmitter.sendCancelOk(callerId, consumerTag);
+
+		}
+
+		/* (non-Javadoc)
+		 * @see mosaic.driver.queue.IAmqpConsumer#handleDelivery(mosaic.connector.queue.AmqpInboundMessage)
+		 */
+		@Override
+		public void handleDelivery(AmqpInboundMessage message) {
+			AmqpResponseTransmitter transmitter = AmqpStub.this
+					.getResponseTransmitter(AmqpResponseTransmitter.class);
+			transmitter.sendDelivery(callerId, message);
+
+		}
+
+		/* (non-Javadoc)
+		 * @see mosaic.driver.queue.IAmqpConsumer#handleShutdown(java.lang.String, java.lang.String)
+		 */
+		@Override
+		public void handleShutdown(String consumerTag, String errorMessage) {
+			AmqpResponseTransmitter transmitter = AmqpStub.this
+					.getResponseTransmitter(AmqpResponseTransmitter.class);
+			transmitter.sendShutdownSignal(callerId, consumerTag, errorMessage);
+
+		}
+	}
 }

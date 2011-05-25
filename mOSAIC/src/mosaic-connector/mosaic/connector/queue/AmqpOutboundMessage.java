@@ -20,6 +20,20 @@ public class AmqpOutboundMessage implements IAmqpMessage {
 	private final boolean mandatory;
 	private final String routingKey;
 
+	/**
+	 * @param exchange
+	 *            the exchange to publish the message to
+	 * @param routingKey
+	 *            the routing key
+	 * @param data
+	 *            the message body
+	 * @param mandatory
+	 *            <code>true</code> if we are requesting a mandatory publish
+	 * @param immediate
+	 *            <code>true</code> if we are requesting an immediate publish
+	 * @param durable
+	 *            <code>true</code> if delivery mode should be 2
+	 */
 	public AmqpOutboundMessage(String exchange, String routingKey, byte[] data,
 			boolean mandatory, boolean immediate, boolean durable) {
 		this(exchange, routingKey, data, mandatory, immediate, durable, null,

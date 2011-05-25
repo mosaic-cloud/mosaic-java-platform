@@ -40,7 +40,8 @@ public class AmqpConnector implements IResourceConnector {
 	}
 
 	/**
-	 * Returns an AMQP connector.
+	 * Returns an AMQP connector. For AMQP it should always return a new
+	 * connector.
 	 * 
 	 * @param config
 	 *            the configuration parameters required by the connector. This
@@ -200,7 +201,8 @@ public class AmqpConnector implements IResourceConnector {
 
 	public IResult<String> consume(final String queue, final String consumer,
 			final boolean exclusive, final boolean autoAck, final Object extra,
-			List<IOperationCompletionHandler<String>> handlers) {
+			List<IOperationCompletionHandler<String>> handlers,
+			final IAmqpConsumerCallback consumerCallback) {
 		IResult<String> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<String> op = new EventDrivenOperation<String>(
@@ -210,7 +212,7 @@ public class AmqpConnector implements IResourceConnector {
 				@Override
 				public void run() {
 					proxy.consume(queue, consumer, exclusive, autoAck, extra,
-							op.getCompletionHandlers());
+							op.getCompletionHandlers(), consumerCallback);
 
 				}
 			});

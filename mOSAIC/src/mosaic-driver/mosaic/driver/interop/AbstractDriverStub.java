@@ -164,16 +164,12 @@ public abstract class AbstractDriverStub implements Runnable {
 				commChannel.basicAck(delivery.getEnvelope().getDeliveryTag(),
 						false);
 			} catch (IOException e) {
-				e.printStackTrace();
 				ExceptionTracer.traceRethrown(e);
 			} catch (ShutdownSignalException e) {
-				e.printStackTrace();
 				ExceptionTracer.traceRethrown(e);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 				ExceptionTracer.traceRethrown(e);
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
 				ExceptionTracer.traceRethrown(e);
 			}
 		}

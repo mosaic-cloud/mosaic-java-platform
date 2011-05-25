@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mosaic.core.configuration.IConfiguration;
+import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.kvstore.MemcachedOperations;
 import mosaic.interop.idl.kvstore.CompletionToken;
@@ -80,7 +81,7 @@ public class MemcachedResponseTransmitter extends ResponseTransmitter {
 			message = SerDesUtils.serializeWithSchema(response);
 			publishResponse(routingKey, message);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 		}
 
 	}

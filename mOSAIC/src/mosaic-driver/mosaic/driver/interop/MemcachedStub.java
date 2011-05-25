@@ -70,10 +70,9 @@ public class MemcachedStub extends AbstractDriverStub implements Runnable {
 			MemcachedDriver driver = MemcachedDriver.create(config);
 			stub = new MemcachedStub(config, transmitter, driver);
 		} catch (IOException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
 					"The Memcached proxy cannot connect to the driver: "
-							+ e.getMessage()));
+							+ e.getMessage(), e));
 		}
 		return stub;
 	}
@@ -247,7 +246,7 @@ public class MemcachedStub extends AbstractDriverStub implements Runnable {
 			try {
 				this.signal.await();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceRethrown(e);
 			}
 			this.driver.removePendingOperation(result);
 
@@ -267,7 +266,7 @@ public class MemcachedStub extends AbstractDriverStub implements Runnable {
 			try {
 				this.signal.await();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceRethrown(e);
 			}
 			this.driver.removePendingOperation(result);
 			// result is error

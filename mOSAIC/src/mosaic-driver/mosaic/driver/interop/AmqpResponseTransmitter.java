@@ -2,13 +2,20 @@ package mosaic.driver.interop;
 
 import java.io.IOException;
 
+import mosaic.connector.queue.AmqpInboundMessage;
 import mosaic.core.configuration.IConfiguration;
+import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.queue.AmqpOperations;
 import mosaic.interop.idl.amqp.AmqpError;
+import mosaic.interop.idl.amqp.CancelOkMssg;
 import mosaic.interop.idl.amqp.CompletionToken;
+import mosaic.interop.idl.amqp.ConsumeOkMssg;
+import mosaic.interop.idl.amqp.DeliveryMssg;
 import mosaic.interop.idl.amqp.OperationNames;
 import mosaic.interop.idl.amqp.OperationResponse;
+import mosaic.interop.idl.amqp.Response;
+import mosaic.interop.idl.amqp.ShutdownMssg;
 
 /**
  * Serializes responses for AMQP operation requests and sends them to the
@@ -47,29 +54,146 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		byte[] message;
 		String routingKey = ((CharSequence) token.get(1)).toString();
 
-		OperationResponse response = new OperationResponse();
+		OperationResponse opResponse = new OperationResponse();
 		try {
-			response.put(0, token);
-			response.put(1, convertOperationType(op));
-			response.put(2, isError);
+			opResponse.put(0, token);
+			opResponse.put(1, convertOperationType(op));
+			opResponse.put(2, isError);
 			if (!isError) {
 				if (result instanceof Boolean) {
-					response.put(3, (Boolean) result);
+					opResponse.put(3, (Boolean) result);
 				} else {
-					response.put(3, (String) result);
+					opResponse.put(3, (String) result);
 				}
 			} else {
 				AmqpError error = new AmqpError();
 				error.put(0, (String) result);
-				response.put(3, error);
+				opResponse.put(3, error);
 			}
+			Response response = new Response();
+			response.put(0, opResponse);
+
 			// send response
 			message = SerDesUtils.serializeWithSchema(response);
 			publishResponse(routingKey, message);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 		}
 
+	}
+
+	/**
+	 * Builds the Cancel Ok message and sends it to the actual consumer.
+	 * 
+	 * @param callerId
+	 *            the identifier of the consumer (connector)
+	 * @param consumerTag
+	 *            the tag of the consumer
+	 */
+	public void sendCancelOk(String callerId, String consumerTag) {
+		byte[] message;
+
+		CancelOkMssg cmessage = new CancelOkMssg();
+		try {
+			cmessage.put(0, consumerTag);
+			Response response = new Response();
+			response.put(0, cmessage);
+
+			// send response
+			message = SerDesUtils.serializeWithSchema(response);
+			publishResponse(callerId, message);
+		} catch (IOException e) {
+			ExceptionTracer.traceRethrown(e);
+		}
+	}
+
+	/**
+	 * Builds the Consume Ok message and sends it to the actual consumer.
+	 * 
+	 * @param callerId
+	 *            the identifier of the consumer (connector)
+	 * @param consumerTag
+	 *            the tag of the consumer
+	 */
+	public void sendConsumeOk(String callerId, String consumerTag) {
+		byte[] message;
+
+		ConsumeOkMssg cmessage = new ConsumeOkMssg();
+		try {
+			cmessage.put(0, consumerTag);
+			Response response = new Response();
+			response.put(0, cmessage);
+
+			// send response
+			message = SerDesUtils.serializeWithSchema(response);
+			publishResponse(callerId, message);
+		} catch (IOException e) {
+			ExceptionTracer.traceRethrown(e);
+		}
+	}
+
+	/**
+	 * Delivers a message to its consumer
+	 * 
+	 * @param callerId
+	 *            the identifier of the consumer (connector)
+	 * @param message
+	 *            the message contents and properties
+	 */
+	public void sendDelivery(String callerId, AmqpInboundMessage message) {
+		byte[] mssg;
+
+		DeliveryMssg dmessage = new DeliveryMssg();
+		try {
+			dmessage.put(0, message.getConsumer());
+			dmessage.put(1, message.getDelivery());
+			dmessage.put(2, message.getExchange());
+			dmessage.put(3, message.getRoutingKey());
+			dmessage.put(4, message.getCallback());
+			dmessage.put(5, message.getContentEncoding());
+			dmessage.put(6, message.getContentType());
+			dmessage.put(7, message.getCorrelation());
+			dmessage.put(8, message.isDurable() ? 2 : 1);
+			dmessage.put(9, message.getIdentifier());
+			dmessage.put(10, message.getData());
+			Response response = new Response();
+			response.put(0, dmessage);
+
+			// send response
+			mssg = SerDesUtils.serializeWithSchema(response);
+			publishResponse(callerId, mssg);
+		} catch (IOException e) {
+			ExceptionTracer.traceRethrown(e);
+		}
+	}
+
+	/**
+	 * Builds the Shutdown message and sends it to the actual consumer.
+	 * 
+	 * @param callerId
+	 *            the identifier of the consumer (connector)
+	 * @param consumerTag
+	 *            the tag of the consumer
+	 * @param errorMessage
+	 *            a message about the shutdown cause
+	 */
+	public void sendShutdownSignal(String callerId, String consumerTag,
+			String errorMessage) {
+		byte[] message;
+
+		ShutdownMssg smessage = new ShutdownMssg();
+		try {
+			smessage.put(0, consumerTag);
+			smessage.put(1, errorMessage);
+			Response response = new Response();
+			response.put(0, smessage);
+
+			// send response
+			message = SerDesUtils.serializeWithSchema(response);
+			publishResponse(callerId, message);
+		} catch (IOException e) {
+			ExceptionTracer.traceRethrown(e);
+		}
 	}
 
 	private OperationNames convertOperationType(AmqpOperations op) {

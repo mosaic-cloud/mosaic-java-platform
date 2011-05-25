@@ -26,6 +26,7 @@ public class AmqpInboundMessage implements IAmqpMessage {
 	 * @param consumer
 	 *            a client-generated consumer tag to establish context
 	 * @param delivery
+	 *            delivery mode
 	 * @param exchange
 	 *            the exchange to publish the message to
 	 * @param routingKey
@@ -38,7 +39,7 @@ public class AmqpInboundMessage implements IAmqpMessage {
 	 *            the address of the Node to send replies to
 	 * @param contentEncoding
 	 * @param contentType
-	 *            tThe RFC-2046 MIME type for the Message content (such as
+	 *            the RFC-2046 MIME type for the Message content (such as
 	 *            "text/plain")
 	 * @param correlation
 	 *            this is a client-specific id that may be used to mark or

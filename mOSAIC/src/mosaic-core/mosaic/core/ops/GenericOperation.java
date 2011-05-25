@@ -11,20 +11,27 @@ import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.exceptions.NullCompletionCallback;
 
 /**
- * Basic implementation of an asynchronous operation. It uses {@link FutureTask}
- * to implement the asynchronism.
+ * Basic implementation of an asynchronous operation. It uses Java
+ * {@link FutureTask} to implement the asynchronism.
  * 
  * @author Georgiana Macariu
- * 
+ * @param <T>
+ *            The type of the actual result of the asynchronous operation.
  */
 public class GenericOperation<T> implements IOperation<T> {
-	private IOperationCompletionHandler complHandler;
+	private IOperationCompletionHandler<T> complHandler;
 	private final FutureTask<T> operation;
 	private CountDownLatch cHandlerSet = new CountDownLatch(1);
 
+	/**
+	 * Creates a new operation.
+	 * 
+	 * @param op
+	 *            the code to run
+	 */
 	public GenericOperation(Callable<T> op) {
 		super();
-		this.operation = new GenericTask<T>(op);
+		this.operation = new GenericTask(op);
 	}
 
 	/**
@@ -120,7 +127,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * 
 	 * @return the completion handler to be called when operation completes
 	 */
-	public IOperationCompletionHandler getHandler() {
+	public IOperationCompletionHandler<T> getHandler() {
 		return this.complHandler;
 	}
 
@@ -130,7 +137,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * @param compHandler
 	 *            the completion handler to be called when operation completes
 	 */
-	public void setHandler(IOperationCompletionHandler complHandler) {
+	public void setHandler(IOperationCompletionHandler<T> complHandler) {
 		this.complHandler = complHandler;
 		this.cHandlerSet.countDown();
 	}
@@ -145,9 +152,9 @@ public class GenericOperation<T> implements IOperation<T> {
 		return operation;
 	}
 
-	private final class GenericTask<V> extends FutureTask<V> {
+	private final class GenericTask extends FutureTask<T> {
 
-		public GenericTask(Callable<V> callable) {
+		public GenericTask(Callable<T> callable) {
 			super(callable);
 		}
 
@@ -173,7 +180,7 @@ public class GenericOperation<T> implements IOperation<T> {
 		 * 
 		 * @see java.util.concurrent.FutureTask#set(java.lang.Object)
 		 */
-		protected void set(V t) {
+		protected void set(T t) {
 			super.set(t);
 		}
 

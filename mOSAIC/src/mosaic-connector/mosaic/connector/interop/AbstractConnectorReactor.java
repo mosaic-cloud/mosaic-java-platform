@@ -7,7 +7,6 @@ import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
-import mosaic.core.log.MosaicLogger;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -96,7 +95,7 @@ public abstract class AbstractConnectorReactor implements Runnable {
 			consumer = new QueueingConsumer(commChannel);
 			commChannel.basicConsume(anonQueue, false, consumer);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 			// close connections
 			try {
 				if (commChannel != null && commChannel.isOpen()) {
@@ -106,10 +105,9 @@ public abstract class AbstractConnectorReactor implements Runnable {
 					connection.close();
 				}
 			} catch (IOException e1) {
-				e1.printStackTrace();
 				ExceptionTracer.traceRethrown(new ConnectionException(
 						"The Memcached proxy cannot connect to the driver: "
-								+ e1.getMessage()));
+								+ e1.getMessage(), e1));
 			}
 		}
 	}
@@ -130,15 +128,13 @@ public abstract class AbstractConnectorReactor implements Runnable {
 				connection.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
 					"The proxy cannot close connection to the driver: "
-							+ e.getMessage()));
+							+ e.getMessage(), e));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
 					"The proxy cannot close connection to the driver: "
-							+ e.getMessage()));
+							+ e.getMessage(), e));
 		}
 	}
 
@@ -152,14 +148,11 @@ public abstract class AbstractConnectorReactor implements Runnable {
 				commChannel.basicAck(delivery.getEnvelope().getDeliveryTag(),
 						false);
 			} catch (IOException e) {
-				MosaicLogger.getLogger().error(e.getMessage());
-				e.printStackTrace();
+				ExceptionTracer.traceRethrown(e);
 			} catch (ShutdownSignalException e) {
-				MosaicLogger.getLogger().error(e.getMessage());
-				e.printStackTrace();
+				ExceptionTracer.traceRethrown(e);
 			} catch (InterruptedException e) {
-				MosaicLogger.getLogger().error(e.getMessage());
-				e.printStackTrace();
+				ExceptionTracer.traceRethrown(e);
 			}
 		}
 		this.workDone();
@@ -189,14 +182,11 @@ public abstract class AbstractConnectorReactor implements Runnable {
 			commChannel
 					.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		} catch (IOException e) {
-			MosaicLogger.getLogger().error(e.getMessage());
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 		} catch (ShutdownSignalException e) {
-			MosaicLogger.getLogger().error(e.getMessage());
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 		} catch (InterruptedException e) {
-			MosaicLogger.getLogger().error(e.getMessage());
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 		}
 		return message;
 	}

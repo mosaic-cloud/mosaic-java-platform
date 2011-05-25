@@ -134,4 +134,28 @@
 		</junit>
 	</target>
 
+	<target name="amqp-idl">
+		<java jar="lib/avro-tools-1.5.0.jar" fork="true">
+			<arg value="idl" />
+			<arg value="protocol/amqp.avdl" />
+			<arg value="protocol/amqp.avpr" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="avro-tools*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<java jar="lib/avro-tools-1.5.0.jar" fork="true">
+			<arg value="compile" />
+			<arg value="protocol" />
+			<arg value="protocol/amqp.avpr" />
+			<arg value="protocol/src" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="avro-tools*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
 </project>

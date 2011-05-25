@@ -97,7 +97,7 @@ public class ConnectorProxy {
 			Thread reactorThread = new Thread(responseReactor);
 			reactorThread.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 			// close connections
 			try {
 				if (commChannel != null && commChannel.isOpen()) {
@@ -107,10 +107,9 @@ public class ConnectorProxy {
 					connection.close();
 				}
 			} catch (IOException e1) {
-				e1.printStackTrace();
 				ExceptionTracer.traceRethrown(new ConnectionException(
 						"The proxy cannot connect to the driver: "
-								+ e1.getMessage()));
+								+ e1.getMessage(), e1));
 			}
 		}
 	}
@@ -128,10 +127,9 @@ public class ConnectorProxy {
 				connection.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
 					"The proxy cannot close connection to the driver: "
-							+ e.getMessage()));
+							+ e.getMessage(), e));
 		}
 		responseReactor.destroy();
 	}

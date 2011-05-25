@@ -11,6 +11,18 @@ import java.util.concurrent.atomic.AtomicReference;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.exceptions.ResultSetException;
 
+/**
+ * Implementation of an asynchronous operation using only an event driven
+ * approach. It is also possible for the caller of the operation to block until
+ * its result becomes available in a manner similar to the one defined by the
+ * Future pattern. However, this feature should be used only when it absolutely
+ * necessary and not as a rule.
+ * 
+ * @author Georgiana Macariu
+ * 
+ * @param <T>
+ *            The type of the actual result of the operation.
+ */
 public class EventDrivenOperation<T> implements IOperation<T>,
 		IOperationCompletionHandler<T> {
 	private CountDownLatch doneSignal;
@@ -19,7 +31,14 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	private List<IOperationCompletionHandler<T>> completionHandlers;
 	private Runnable operation = null;
 
-	public EventDrivenOperation(List<IOperationCompletionHandler<T>> complHandlers) {
+	/**
+	 * Creates a new operation.
+	 * 
+	 * @param complHandlers
+	 *            handlers to be called when the operation completes
+	 */
+	public EventDrivenOperation(
+			List<IOperationCompletionHandler<T>> complHandlers) {
 		super();
 		doneSignal = new CountDownLatch(1);
 		result = new AtomicReference<T>();
@@ -67,7 +86,6 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 			this.operation = operation;
 	}
 
-//	@SuppressWarnings("unchecked")
 	@Override
 	public void onSuccess(T response) {
 		if (!result.compareAndSet(null, ((T) response))) {

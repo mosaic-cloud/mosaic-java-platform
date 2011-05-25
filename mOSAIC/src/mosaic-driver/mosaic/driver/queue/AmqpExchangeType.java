@@ -29,6 +29,10 @@ public enum AmqpExchangeType {
 		this.amqpName = amqpName;
 	}
 	
+	/**
+	 * Returns the AMQP name of the exchange type.
+	 * @return
+	 */
 	public String getAmqpName() {
 		return this.amqpName;
 	}

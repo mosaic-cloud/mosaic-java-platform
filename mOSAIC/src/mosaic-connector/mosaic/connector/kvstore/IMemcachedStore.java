@@ -144,7 +144,8 @@ public interface IMemcachedStore {
 	 *            the key
 	 * @return a result handle for the operation
 	 */
-	IResult<Object> get(String key, List<IOperationCompletionHandler<Object>> handlers);
+	IResult<Object> get(String key,
+			List<IOperationCompletionHandler<Object>> handlers);
 
 	/**
 	 * Gets data associated with several keys.

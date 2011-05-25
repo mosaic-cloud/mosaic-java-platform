@@ -9,6 +9,8 @@ import java.util.concurrent.TimeoutException;
  * 
  * @author Georgiana Macariu
  * 
+ * @param <T>
+ *            The type of the actual result of the operation.
  */
 public interface IOperation<T> {
 	/**

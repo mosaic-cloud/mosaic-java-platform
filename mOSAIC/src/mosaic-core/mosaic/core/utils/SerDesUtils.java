@@ -16,6 +16,12 @@ import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.avro.util.Utf8;
 
+/**
+ * Defines utility methods for serializing and deserializing messages.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
 public class SerDesUtils {
 	private final static DecoderFactory DIRECT_DECODER = new DecoderFactory();
 

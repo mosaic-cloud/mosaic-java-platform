@@ -65,7 +65,7 @@ public class PropertyTypeConfigurationTest {
 
 	@Test
 	public void testPropertyTypeConfiguration() {
-//		Assert.assertNotNull(configuration);
+		// Assert.assertNotNull(configuration);
 		Assert.assertNotNull(fileConfiguration);
 		Assert.assertNotNull(systemConfiguration);
 	}
@@ -104,9 +104,9 @@ public class PropertyTypeConfigurationTest {
 		Assert.assertEquals("x86", osvalue);
 	}
 
-//	@Test
-//	public void testSpliceConfiguration() {
-//		fail("Not yet implemented"); // TODO
-//	}
+	// @Test
+	// public void testSpliceConfiguration() {
+	// fail("Not yet implemented"); // TODO
+	// }
 
 }

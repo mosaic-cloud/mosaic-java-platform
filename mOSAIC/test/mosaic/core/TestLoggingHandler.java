@@ -3,7 +3,8 @@ package mosaic.core;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 
-public class TestLoggingHandler<T extends Object> implements IOperationCompletionHandler<T> {
+public class TestLoggingHandler<T extends Object> implements
+		IOperationCompletionHandler<T> {
 	private static int testCounter = 0;
 
 	@Override
@@ -11,8 +12,7 @@ public class TestLoggingHandler<T extends Object> implements IOperationCompletio
 		System.out.println("Test " + testCounter + " finished with result: "
 				+ result);
 		MosaicLogger.getLogger().trace(
-				"Test " + testCounter + " finished with result: "
-						+ result);
+				"Test " + testCounter + " finished with result: " + result);
 		testCounter++;
 	}
 

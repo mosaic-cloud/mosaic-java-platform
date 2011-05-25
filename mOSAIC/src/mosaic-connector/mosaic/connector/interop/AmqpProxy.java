@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import mosaic.connector.queue.AmqpConnector;
 import mosaic.connector.queue.AmqpOutboundMessage;
+import mosaic.connector.queue.IAmqpConsumerCallback;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
@@ -56,7 +57,6 @@ public class AmqpProxy extends ConnectorProxy {
 			AmqpConnectorReactor reactor) {
 		super(config, connectorId, DEFAULT_EXCHANGE_NAME, DEFAULT_QUEUE_NAME,
 				reactor);
-
 	}
 
 	/**
@@ -142,7 +142,8 @@ public class AmqpProxy extends ConnectorProxy {
 
 	public synchronized void consume(String queue, String consumer,
 			boolean exclusive, boolean autoAck, Object extra,
-			List<IOperationCompletionHandler<String>> handlers) {
+			List<IOperationCompletionHandler<String>> handlers,
+			IAmqpConsumerCallback consumerCallback) {
 
 		byte[] dataBytes;
 		try {
@@ -154,13 +155,14 @@ public class AmqpProxy extends ConnectorProxy {
 			op.put(2, exclusive);
 			op.put(3, autoAck);
 			op.put(4, buff);
-			sendRequest(op, OperationNames.CONSUME, handlers);
+			String requestId = sendRequest(op, OperationNames.CONSUME, handlers);
+			AmqpConnectorReactor reactor = super
+					.getResponseReactor(AmqpConnectorReactor.class);
+			reactor.addCallback(requestId, consumerCallback);
 		} catch (IOException e) {
-			e.printStackTrace();
-			ExceptionTracer
-					.traceRethrown(new ConnectionException(
-							"Cannot send consume request to driver: "
-									+ e.getMessage()));
+			ExceptionTracer.traceRethrown(new ConnectionException(
+					"Cannot send consume request to driver: " + e.getMessage(),
+					e));
 		}
 
 	}
@@ -188,8 +190,8 @@ public class AmqpProxy extends ConnectorProxy {
 		sendRequest(op, OperationNames.ACK, handlers);
 	}
 
-	private <T extends SpecificRecord, V extends Object> void sendRequest(T operation,
-			OperationNames opName,
+	private <T extends SpecificRecord, V extends Object> String sendRequest(
+			T operation, OperationNames opName,
 			List<IOperationCompletionHandler<V>> handlers) {
 		byte[] message;
 		String id;
@@ -201,6 +203,7 @@ public class AmqpProxy extends ConnectorProxy {
 		token.put(1, super.getConnectorId());
 		MosaicLogger.getLogger().trace(
 				"Sending " + opName.toString() + " request [" + id + "]...");
+
 		try {
 			// store token and completion handlers
 			super.registerHandlers(id, handlers);
@@ -214,11 +217,11 @@ public class AmqpProxy extends ConnectorProxy {
 			message = SerDesUtils.serializeWithSchema(enclosingOperation);
 			super.sendRequest(message);
 		} catch (IOException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
 					"Cannot send " + opName.toString() + " request to driver: "
-							+ e.getMessage()));
+							+ e.getMessage(), e));
 		}
+		return id;
 	}
 
 }

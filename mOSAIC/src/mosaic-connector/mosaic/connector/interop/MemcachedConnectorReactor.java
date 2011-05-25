@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import mosaic.core.configuration.IConfiguration;
+import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.SerDesUtils;
@@ -100,8 +101,7 @@ public class MemcachedConnectorReactor extends AbstractConnectorReactor {
 							.onSuccess(data);
 				}
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				MosaicLogger.getLogger().error(e.getMessage());
+				ExceptionTracer.traceRethrown(e);
 			}
 
 			break;
@@ -121,8 +121,7 @@ public class MemcachedConnectorReactor extends AbstractConnectorReactor {
 							.onSuccess(resMap);
 				}
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				MosaicLogger.getLogger().error(e.getMessage());
+				ExceptionTracer.traceRethrown(e);
 			}
 			break;
 		default:

@@ -138,9 +138,9 @@ public class MemcachedProxy extends ConnectorProxy {
 			message = SerDesUtils.serializeWithSchema(enclosingOperation);
 			super.sendRequest(message);
 		} catch (IOException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
-					"Cannot send delete request to driver: " + e.getMessage()));
+					"Cannot send delete request to driver: " + e.getMessage(),
+					e));
 		}
 	}
 
@@ -178,9 +178,10 @@ public class MemcachedProxy extends ConnectorProxy {
 			message = SerDesUtils.serializeWithSchema(enclosingOperation);
 			super.sendRequest(message);
 		} catch (IOException e) {
-			e.printStackTrace();
-			ExceptionTracer.traceRethrown(new ConnectionException(
-					"Cannot send store request to driver: " + e.getMessage()));
+			ExceptionTracer
+					.traceRethrown(new ConnectionException(
+							"Cannot send store request to driver: "
+									+ e.getMessage(), e));
 		}
 	}
 
@@ -213,9 +214,8 @@ public class MemcachedProxy extends ConnectorProxy {
 			message = SerDesUtils.serializeWithSchema(enclosingOperation);
 			super.sendRequest(message);
 		} catch (IOException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
-					"Cannot send get request to driver: " + e.getMessage()));
+					"Cannot send get request to driver: " + e.getMessage(), e));
 		}
 	}
 }

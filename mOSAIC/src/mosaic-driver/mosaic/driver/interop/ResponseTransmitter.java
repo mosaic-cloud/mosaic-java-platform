@@ -74,7 +74,7 @@ public class ResponseTransmitter {
 			// commChannel.queueDeclare(queueName, true, false, false, null);
 			// commChannel.queueBind(queueName, exchange, "");
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 			// close connections
 			try {
 				if (commChannel != null && commChannel.isOpen()) {
@@ -84,7 +84,7 @@ public class ResponseTransmitter {
 					connection.close();
 				}
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				ExceptionTracer.traceRethrown(e1);
 			}
 		}
 	}
@@ -102,12 +102,10 @@ public class ResponseTransmitter {
 			if (connection != null && connection.isOpen()) {
 				connection.close();
 			}
-			System.out.println("transmiter closed connection");
 		} catch (IOException e) {
-			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
 					"The Memcached proxy cannot close connection to the driver: "
-							+ e.getMessage()));
+							+ e.getMessage(), e));
 		}
 	}
 
@@ -123,7 +121,7 @@ public class ResponseTransmitter {
 		try {
 			commChannel.basicPublish(exchange, routingKey, null, message);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceRethrown(e);
 		}
 	}
 

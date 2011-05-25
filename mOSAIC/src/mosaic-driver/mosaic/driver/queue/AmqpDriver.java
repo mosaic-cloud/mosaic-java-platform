@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import mosaic.connector.queue.AmqpInboundMessage;
 import mosaic.connector.queue.AmqpOutboundMessage;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
+import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.GenericResult;
@@ -48,6 +52,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 	private Channel defaultChannel;
 	private FlowCallback flowCallback;
 	private ReturnCallback returnCallback;
+	private ConcurrentHashMap<String, IAmqpConsumer> consumers;
+	private ExecutorService executor;
 
 	/**
 	 * Creates a new driver.
@@ -69,6 +75,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 		this.connection = null;
 		this.channels = null;
 		this.defaultChannel = null;
+		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
+		this.executor = Executors.newFixedThreadPool(1);
 	}
 
 	/**
@@ -98,7 +106,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 			} catch (IOException e) {
 				MosaicLogger.getLogger().error(
 						"AMQP cannot close connection with server.");
-				e.printStackTrace();
+				ExceptionTracer.traceRethrown(e);
 			}
 		}
 	}
@@ -273,6 +281,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            acknowledged once delivered; false if the server should expect
 	 *            explicit acknowledgments
 	 * @param extra
+	 * @param consumeCallback
+	 *            the consumer callback (this will called when the queuing
+	 *            system will send Consume messages)
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return the client-generated consumer tag to establish context
@@ -283,11 +294,12 @@ public class AmqpDriver extends AbstractResourceDriver {
 			boolean exclusive,
 			boolean autoAck,
 			Object extra,
+			IAmqpConsumer consumeCallback,
 			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<String> op = (GenericOperation<String>) this.opFactory
 				.getOperation(AmqpOperations.CONSUME, queue, consumer,
-						exclusive, autoAck, extra);
+						exclusive, autoAck, extra, consumeCallback);
 
 		IResult<String> iResult = startOperation(op, complHandler);
 		return iResult;
@@ -382,8 +394,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 					this.channels.add(channel);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
-				MosaicLogger.getLogger().error(e.getMessage());
+				ExceptionTracer.traceRethrown(e);
 			}
 		}
 
@@ -434,26 +445,48 @@ public class AmqpDriver extends AbstractResourceDriver {
 		}
 
 		@Override
-		public final void handleCancelOk(String consumer) {
+		public final void handleCancelOk(final String consumer) {
 			MosaicLogger.getLogger().trace(
 					"Received CANCEL Ok callback for consumer " + consumer
 							+ ".");
 			;
-			// TODO
+			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
+					.remove(consumer);
+			if (consumeCallback != null) {
+				Runnable task = new Runnable() {
+
+					@Override
+					public void run() {
+						consumeCallback.handleCancelOk(consumer);
+					}
+				};
+				AmqpDriver.this.executor.execute(task);
+			}
 		}
 
 		@Override
-		public final void handleConsumeOk(String consumer) {
+		public final void handleConsumeOk(final String consumer) {
 			MosaicLogger.getLogger().trace(
 					"Received CONSUME Ok callback for consumer " + consumer
 							+ ".");
-			// TODO
+			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
+					.get(consumer);
+			if (consumeCallback != null) {
+				Runnable task = new Runnable() {
+
+					@Override
+					public void run() {
+						consumeCallback.handleConsumeOk(consumer);
+					}
+				};
+				AmqpDriver.this.executor.execute(task);
+			}
 		}
 
 		@Override
 		public final void handleDelivery(String consumer, Envelope envelope,
 				AMQP.BasicProperties properties, byte[] data) {
-			AmqpInboundMessage message = new AmqpInboundMessage(consumer,
+			final AmqpInboundMessage message = new AmqpInboundMessage(consumer,
 					envelope.getDeliveryTag(), envelope.getExchange(),
 					envelope.getRoutingKey(), data,
 					properties.getDeliveryMode() == 2 ? true : false,
@@ -462,18 +495,43 @@ public class AmqpDriver extends AbstractResourceDriver {
 					properties.getMessageId());
 			MosaicLogger.getLogger().trace(
 					"Received delivery " + message.getDelivery());
-			// TODO
+			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
+					.get(consumer);
+			if (consumeCallback != null) {
+				Runnable task = new Runnable() {
+
+					@Override
+					public void run() {
+						consumeCallback.handleDelivery(message);
+					}
+				};
+				AmqpDriver.this.executor.execute(task);
+			}
 		}
 
 		@Override
 		public final void handleRecoverOk() {
-			// TODO
 		}
 
 		@Override
-		public final void handleShutdownSignal(String consumer,
-				ShutdownSignalException signal) {
-			// TODO
+		public final void handleShutdownSignal(final String consumer,
+				final ShutdownSignalException signal) {
+			MosaicLogger.getLogger()
+					.trace("Received SHUTDOWN callback for consumer "
+							+ consumer + ".");
+			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
+					.get(consumer);
+			if (consumeCallback != null) {
+				Runnable task = new Runnable() {
+
+					@Override
+					public void run() {
+						consumeCallback.handleShutdown(consumer,
+								signal.getMessage());
+					}
+				};
+				AmqpDriver.this.executor.execute(task);
+			}
 		}
 	}
 
@@ -596,9 +654,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 									AmqpDriver.this.channels = new LinkedList<Channel>();
 									succeeded = true;
 								} catch (IOException e) {
-									e.printStackTrace();
-									MosaicLogger.getLogger().error(
-											e.getMessage());
+									ExceptionTracer.traceRethrown(e);
 									AmqpDriver.this.connection = null;
 								}
 								return succeeded;
@@ -621,9 +677,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 										AmqpDriver.this.connected = false;
 										succeeded = true;
 									} catch (IOException e) {
-										e.printStackTrace();
-										MosaicLogger.getLogger().error(
-												e.getMessage());
+										ExceptionTracer.traceRethrown(e);
 									}
 								}
 								return succeeded;
@@ -721,9 +775,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 											succeeded = (outcome != null);
 										}
 									} catch (IOException e) {
-										e.printStackTrace();
-										MosaicLogger.getLogger().error(
-												e.getMessage());
+										ExceptionTracer.traceRethrown(e);
 									}
 								}
 								return succeeded;
@@ -770,6 +822,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 				exclusive = (Boolean) parameters[2];
 				autoAck = (Boolean) parameters[3];
 				final Object extra = parameters[4];
+				final IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
 
 				operation = new GenericOperation<String>(
 						new Callable<String>() {
@@ -785,6 +838,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 												queue, autoAck, consumer, true,
 												exclusive, null,
 												new ConsumerCallback(extra));
+										AmqpDriver.this.consumers.put(
+												consumerTag, consumeCallback);
 									}
 								}
 								return consumerTag;
@@ -835,9 +890,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 																.getMessageId());
 											}
 										} catch (IOException e) {
-											e.printStackTrace();
-											MosaicLogger.getLogger().error(
-													e.getMessage());
+											ExceptionTracer.traceRethrown(e);
 										}
 									}
 								}
@@ -863,9 +916,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 											channel.basicAck(delivery, multiple);
 											succeeded = true;
 										} catch (IOException e) {
-											e.printStackTrace();
-											MosaicLogger.getLogger().error(
-													e.getMessage());
+											ExceptionTracer.traceRethrown(e);
 										}
 									}
 								}
@@ -890,9 +941,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 											channel.basicCancel(consumer);
 											succeeded = true;
 										} catch (IOException e) {
-											e.printStackTrace();
-											MosaicLogger.getLogger().error(
-													e.getMessage());
+											ExceptionTracer.traceRethrown(e);
 										}
 									}
 								}

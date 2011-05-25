@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException;
  * Interface for handling the result of any asynchronous operation. An object of
  * this type acts like a handle for the actual result of the operation. To
  * implement this interface, you can write a generic class extending
- * {@link GenericResult}.
+ * {@link GenericResult} or {@link EventDrivenResult}.
  * 
  * @author Georgiana Macariu
  * 
