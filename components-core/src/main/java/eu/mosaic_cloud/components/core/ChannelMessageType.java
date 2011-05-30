@@ -8,7 +8,6 @@ import com.google.common.base.Preconditions;
 public enum ChannelMessageType
 {
 	Exchange ("exchange");
-	
 	ChannelMessageType (final String identifier)
 	{
 		Preconditions.checkNotNull (identifier);

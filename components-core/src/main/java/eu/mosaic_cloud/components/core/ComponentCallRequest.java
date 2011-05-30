@@ -8,20 +8,25 @@ import com.google.common.base.Preconditions;
 
 
 public final class ComponentCallRequest
-		extends Object
+		extends ComponentMessage
 {
-	public ComponentCallRequest (final Object metaData, final ByteBuffer data, final ComponentCallContinuation continuation)
+	private ComponentCallRequest (final Object metaData, final ByteBuffer data, final ComponentCallReference reference)
 	{
 		super ();
 		Preconditions.checkNotNull (metaData);
 		Preconditions.checkNotNull (data);
-		Preconditions.checkNotNull (continuation);
+		Preconditions.checkNotNull (reference);
 		this.metaData = metaData;
 		this.data = data;
-		this.continuation = continuation;
+		this.reference = reference;
 	}
 	
-	public ComponentCallContinuation continuation;
 	public final ByteBuffer data;
 	public final Object metaData;
+	public final ComponentCallReference reference;
+	
+	public static final ComponentCallRequest create (final Object metaData, final ByteBuffer data, final ComponentCallReference reference)
+	{
+		return (new ComponentCallRequest (metaData, data, reference));
+	}
 }

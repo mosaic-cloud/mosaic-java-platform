@@ -1,12 +1,17 @@
 
-package eu.mosaic_cloud.components.tools.tests;
+package eu.mosaic_cloud.components.tests;
 
 
 import java.nio.ByteBuffer;
 import java.util.Random;
 
+import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
+import eu.mosaic_cloud.components.core.ComponentCallReference;
+import eu.mosaic_cloud.components.core.ComponentCallReply;
+import eu.mosaic_cloud.components.core.ComponentCallRequest;
+import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -19,13 +24,42 @@ public class RandomMessageGenerator
 		this.random = new Random ();
 	}
 	
-	public ChannelMessage generate ()
+	public JSONArray generateArray ()
 	{
-		final JSONObject metaData = this.generateObject (1.0f);
+		return (this.generateArray (1.0f));
+	}
+	
+	public ChannelMessage generateChannelMessage ()
+	{
+		return (ChannelMessage.create (ChannelMessageType.Exchange, this.generateObject (), this.generateData ()));
+	}
+	
+	public ComponentCallReply generateComponentCallReply (final ComponentCallRequest request)
+	{
+		Preconditions.checkNotNull (request);
+		return (ComponentCallReply.create (request.metaData, request.data, request.reference));
+	}
+	
+	public ComponentCallRequest generateComponentCallRequest ()
+	{
+		return (ComponentCallRequest.create (this.generateObject (), this.generateData (), ComponentCallReference.create ()));
+	}
+	
+	public ComponentCastRequest generateComponentCastRequest ()
+	{
+		return (ComponentCastRequest.create (this.generateObject (), this.generateData ()));
+	}
+	
+	public ByteBuffer generateData ()
+	{
 		final byte[] data = new byte[1024];
 		this.random.nextBytes (data);
-		final ChannelMessage message = new ChannelMessage (ChannelMessageType.Exchange, metaData, ByteBuffer.wrap (data));
-		return (message);
+		return (ByteBuffer.wrap (data).asReadOnlyBuffer ());
+	}
+	
+	public JSONObject generateObject ()
+	{
+		return (this.generateObject (1.0f));
 	}
 	
 	protected JSONArray generateArray (final float chance)
@@ -60,6 +94,5 @@ public class RandomMessageGenerator
 	}
 	
 	protected final Random random;
-	
 	public static final RandomMessageGenerator defaultInstance = new RandomMessageGenerator ();
 }

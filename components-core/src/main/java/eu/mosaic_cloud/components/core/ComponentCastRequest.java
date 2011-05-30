@@ -7,10 +7,10 @@ import java.nio.ByteBuffer;
 import com.google.common.base.Preconditions;
 
 
-public final class ComponentCast
-		extends Object
+public final class ComponentCastRequest
+		extends ComponentMessage
 {
-	public ComponentCast (final Object metaData, final ByteBuffer data)
+	private ComponentCastRequest (final Object metaData, final ByteBuffer data)
 	{
 		super ();
 		Preconditions.checkNotNull (metaData);
@@ -21,4 +21,9 @@ public final class ComponentCast
 	
 	public final ByteBuffer data;
 	public final Object metaData;
+	
+	public static final ComponentCastRequest create (final Object metaData, final ByteBuffer data)
+	{
+		return (new ComponentCastRequest (metaData, data));
+	}
 }

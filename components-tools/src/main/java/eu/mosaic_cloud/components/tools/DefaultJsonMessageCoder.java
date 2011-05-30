@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ChannelMessage;
@@ -19,12 +20,12 @@ import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
 
-public final class DefaultJsonSimpleMessageCoder
+public final class DefaultJsonMessageCoder
 		extends Object
 		implements
 			ChannelMessageCoder
 {
-	public DefaultJsonSimpleMessageCoder ()
+	private DefaultJsonMessageCoder ()
 	{
 		super ();
 		this.transcript = Transcript.create (this);
@@ -32,12 +33,13 @@ public final class DefaultJsonSimpleMessageCoder
 	}
 	
 	@Override
-	public ChannelMessage decode (final ByteBuffer packet)
+	public ChannelMessage decode (final ByteBuffer packet_)
 			throws IOException,
 				ParseException
 	{
 		this.transcript.traceDebugging ("decoding message...");
-		Preconditions.checkNotNull (packet);
+		Preconditions.checkNotNull (packet_);
+		final ByteBuffer packet = packet_.asReadOnlyBuffer ();
 		Preconditions.checkArgument (packet.order () == ByteOrder.BIG_ENDIAN, "invalid packet byte-order");
 		Preconditions.checkArgument (packet.remaining () >= 4, "invalid packet framing");
 		final int packetSize = packet.getInt ();
@@ -57,18 +59,18 @@ public final class DefaultJsonSimpleMessageCoder
 		final String metaDataString = new String (metaDataBytes, this.metaDataCharset);
 		final JSONParser metaDataParser = new JSONParser ();
 		final Object metaDataValue = metaDataParser.parse (metaDataString);
-		Preconditions.checkArgument ((metaDataValue != null) && (metaDataValue instanceof JSONObject), "unexpected meta-data value: `{}`", metaDataValue);
+		Preconditions.checkArgument ((metaDataValue != null) && (metaDataValue instanceof JSONObject), "unexpected meta-data value: `%s`", metaDataValue);
 		final JSONObject metaData = (JSONObject) metaDataValue;
 		final Object messageTypeValue = metaData.get ("__type__");
-		Preconditions.checkArgument ((messageTypeValue != null) && (messageTypeValue instanceof String), "unexpected message type value: `{}`", messageTypeValue);
+		Preconditions.checkArgument ((messageTypeValue != null) && (messageTypeValue instanceof String), "unexpected message type value: `%s`", messageTypeValue);
 		final ChannelMessageType messageType;
 		if ("exchange".equals (ChannelMessageType.Exchange.identifier))
 			messageType = ChannelMessageType.Exchange;
 		else
 			messageType = null;
-		Preconditions.checkArgument (messageType != null, "invalid message type: `{}`", messageTypeValue);
+		Preconditions.checkArgument (messageType != null, "invalid message type: `%s`", messageTypeValue);
 		metaData.remove ("__type__");
-		final ChannelMessage message = new ChannelMessage (messageType, metaData, packet);
+		final ChannelMessage message = ChannelMessage.create (messageType, metaData, packet);
 		return (message);
 	}
 	
@@ -77,25 +79,31 @@ public final class DefaultJsonSimpleMessageCoder
 	{
 		this.transcript.traceDebugging ("encoding message...");
 		Preconditions.checkNotNull (message);
-		Preconditions.checkArgument (message.type != null, "unexpected message-type value: `{}`", message.type);
-		Preconditions.checkArgument ((message.metaData != null) && (message.metaData instanceof JSONObject), "unexpected meta-data value: `{}`", message.metaData);
+		Preconditions.checkArgument (message.type != null, "unexpected message-type value: `%s`", message.type);
+		Preconditions.checkArgument ((message.metaData != null) && (message.metaData instanceof Map), "unexpected meta-data value: `%s`", message.metaData);
 		Preconditions.checkNotNull (message.data);
-		final JSONObject metaData = (JSONObject) message.metaData;
+		final JSONObject metaData = new JSONObject ((Map) message.metaData);
 		metaData.put ("__type__", message.type.identifier);
 		final String metaDataString = JSONValue.toJSONString (metaData, JSONStyle.MAX_COMPRESS);
 		final byte[] metaDataBytes = metaDataString.getBytes (this.metaDataCharset);
-		final int packetSize = metaDataBytes.length + 1 + message.data.remaining ();
+		final ByteBuffer data = message.data.asReadOnlyBuffer ();
+		final int packetSize = metaDataBytes.length + 1 + data.remaining ();
 		final ByteBuffer packet = ByteBuffer.allocate (packetSize + 4);
 		packet.putInt (packetSize);
 		packet.put (metaDataBytes);
 		packet.put ((byte) 0);
-		packet.put (message.data);
+		packet.put (data);
 		packet.flip ();
-		return (packet);
+		return (packet.asReadOnlyBuffer ());
 	}
 	
 	private final Charset metaDataCharset;
 	private final Transcript transcript;
 	
-	public static final DefaultJsonSimpleMessageCoder defaultInstance = new DefaultJsonSimpleMessageCoder ();
+	public static final DefaultJsonMessageCoder create ()
+	{
+		return (new DefaultJsonMessageCoder ());
+	}
+	
+	public static final DefaultJsonMessageCoder defaultInstance = new DefaultJsonMessageCoder ();
 }

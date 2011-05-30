@@ -10,4 +10,11 @@
 		<version>0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>components-core</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>eu.mosaic_cloud</groupId>
+			<artifactId>tools-callbacks</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>

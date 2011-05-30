@@ -2,15 +2,23 @@
 package eu.mosaic_cloud.components.core;
 
 
+import eu.mosaic_cloud.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.callbacks.core.Callbacks;
+
+
 public interface ComponentCallbacks
+		extends
+			Callbacks
 {
-	public abstract void called (final Component component, final ComponentCallRequest request);
+	public abstract CallbackReference called (final Component component, final ComponentCallRequest request);
 	
-	public abstract void casted (final Component component, final ComponentCast cast);
+	public abstract CallbackReference casted (final Component component, final ComponentCastRequest request);
 	
-	public abstract void created (final Component component);
+	public abstract CallbackReference failed (final Component component, final Throwable exception);
 	
-	public abstract void destroyed (final Component component);
+	public abstract CallbackReference initialized (final Component component);
 	
-	public abstract void failed (final Component component, final Throwable exception);
+	public abstract CallbackReference replied (final Component component, final ComponentCallReply reply);
+	
+	public abstract CallbackReference terminated (final Component component);
 }
