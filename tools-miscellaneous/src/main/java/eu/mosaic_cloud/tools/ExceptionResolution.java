@@ -6,8 +6,5 @@ public enum ExceptionResolution
 {
 	Deferred (),
 	Handled (),
-	Ignored (),
-	Rethrown (),
-	Unexpected (),
-	Unhandled ();
+	Ignored ();
 }

@@ -10,7 +10,6 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>tools-callbacks</module>
-		<module>tools-json</module>
 		<module>tools-miscellaneous</module>
 		<module>tools-transcript</module>
 	</modules>

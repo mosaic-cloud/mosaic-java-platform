@@ -27,7 +27,7 @@ public final class OutcomeFuture<_Outcome_ extends Object>
 	public static final class OutcomeTrigger<_Outcome_ extends Object>
 			extends Object
 	{
-		private OutcomeTrigger (final OutcomeFuture<_Outcome_> future)
+		OutcomeTrigger (final OutcomeFuture<_Outcome_> future)
 		{
 			super ();
 			this.future = future;
@@ -47,7 +47,7 @@ public final class OutcomeFuture<_Outcome_ extends Object>
 			implements
 				Callable<_Outcome_>
 	{
-		private OutcomeCallable ()
+		OutcomeCallable ()
 		{
 			super ();
 			this.outcome = null;

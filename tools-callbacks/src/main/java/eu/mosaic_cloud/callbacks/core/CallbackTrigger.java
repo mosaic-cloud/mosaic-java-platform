@@ -2,5 +2,5 @@
 package eu.mosaic_cloud.callbacks.core;
 
 
-public interface CallbacksTrigger
+public interface CallbackTrigger
 {}

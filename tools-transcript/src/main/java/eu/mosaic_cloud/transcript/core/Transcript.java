@@ -4,102 +4,35 @@ package eu.mosaic_cloud.transcript.core;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.ExceptionResolution;
+import eu.mosaic_cloud.tools.ExtendedFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public final class Transcript
 {
-	Transcript (final boolean useLogger)
-	{
-		super ();
-		if (useLogger)
-			this.logger = LoggerFactory.getLogger ("eu.mosaic_cloud.transcript.core");
-		else
-			this.logger = null;
-	}
-	
-	Transcript (final Logger logger)
+	Transcript (final Logger logger, final ExtendedFormatter formatter)
 	{
 		super ();
 		Preconditions.checkNotNull (logger);
+		Preconditions.checkNotNull (formatter);
 		this.logger = logger;
+		this.formatter = formatter;
 	}
 	
 	public final void trace (final TranscriptTraceType type, final String message)
 	{
-		Preconditions.checkNotNull (type);
-		Preconditions.checkNotNull (message);
-		if (this.logger != null) {
-			switch (type) {
-				case Information :
-					if (this.logger.isInfoEnabled ())
-						this.logger.info (message);
-					break;
-				case Warning :
-					if (this.logger.isWarnEnabled ())
-						this.logger.warn (message);
-					break;
-				case Error :
-					if (this.logger.isErrorEnabled ())
-						this.logger.error (message);
-					break;
-				case Debugging :
-					if (this.logger.isDebugEnabled ())
-						this.logger.debug (message);
-					break;
-				case Input :
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message);
-					break;
-				case Output :
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message);
-					break;
-				case Event :
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message);
-					break;
-				default:
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message);
-					break;
-			}
-		} else {
-			synchronized (System.err) {
-				switch (type) {
-					case Information :
-						System.err.println ("[ii] " + message);
-						break;
-					case Warning :
-						System.err.println ("[ww] " + message);
-						break;
-					case Error :
-						System.err.println ("[ee] " + message);
-						break;
-					case Input :
-						System.err.println ("[<<] " + message);
-						break;
-					case Output :
-						System.err.println ("[>>] " + message);
-						break;
-					case Event :
-						System.err.println ("[--] " + message);
-						break;
-					case Debugging :
-						System.err.println ("[  ] " + message);
-						break;
-					default:
-						System.err.println ("[??] " + message);
-						break;
-				}
-			}
-		}
+		this.trace (type, message, null, null);
 	}
 	
 	public final void trace (final TranscriptTraceType type, final String format, final Object ... tokens)
 	{
-		this.trace (type, String.format (format, tokens));
+		this.trace (type, format, tokens, null);
+	}
+	
+	public final void traceDebugging (final String message)
+	{
+		this.trace (TranscriptTraceType.Debugging, message);
 	}
 	
 	public final void traceDebugging (final String format, final Object ... tokens)
@@ -109,7 +42,12 @@ public final class Transcript
 	
 	public final void traceDeferredException (final Throwable exception)
 	{
-		this.traceException (ExceptionResolution.Deferred, exception, null);
+		this.traceException (ExceptionResolution.Deferred, exception);
+	}
+	
+	public final void traceDeferredException (final Throwable exception, final String message)
+	{
+		this.traceException (ExceptionResolution.Deferred, exception, message);
 	}
 	
 	public final void traceDeferredException (final Throwable exception, final String format, final Object ... tokens)
@@ -117,74 +55,39 @@ public final class Transcript
 		this.traceException (ExceptionResolution.Deferred, exception, format, tokens);
 	}
 	
+	public final void traceError (final String message)
+	{
+		this.trace (TranscriptTraceType.Error, message);
+	}
+	
 	public final void traceError (final String format, final Object ... tokens)
 	{
 		this.trace (TranscriptTraceType.Error, format, tokens);
 	}
 	
-	public final void traceEvent (final String format, final Object ... tokens)
+	public final void traceException (final ExceptionResolution resolution, final Throwable exception)
 	{
-		this.trace (TranscriptTraceType.Event, format, tokens);
+		this.trace (this.map (resolution), null, null, exception);
 	}
 	
-	public final void traceException (final ExceptionResolution resolution, final Throwable exception, final String message_)
+	public final void traceException (final ExceptionResolution resolution, final Throwable exception, final String message)
 	{
-		final String message = message_ != null ? message_ : "encountered exception";
-		if (this.logger != null) {
-			switch (resolution) {
-				case Handled :
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message, exception);
-					break;
-				case Rethrown :
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message, exception);
-					break;
-				case Ignored :
-					if (this.logger.isWarnEnabled ())
-						this.logger.warn (message, exception);
-					break;
-				case Deferred :
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message, exception);
-					break;
-				default:
-					if (this.logger.isTraceEnabled ())
-						this.logger.trace (message, exception);
-					break;
-			}
-		} else {
-			synchronized (System.err) {
-				switch (resolution) {
-					case Handled :
-						System.err.println ("[  ] " + message + " / " + exception.toString ());
-						break;
-					case Rethrown :
-						System.err.println ("[  ] " + message + " / " + exception.toString ());
-						break;
-					case Ignored :
-						System.err.println ("[ww] " + message + " / " + exception.toString ());
-						break;
-					case Deferred :
-						System.err.println ("[  ] " + message + " / " + exception.toString ());
-						break;
-					default:
-						System.err.println ("[??] " + message + " / " + exception.toString ());
-						break;
-				}
-				exception.printStackTrace (System.err);
-			}
-		}
+		this.trace (this.map (resolution), message, null, exception);
 	}
 	
 	public final void traceException (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
 	{
-		this.traceException (resolution, exception, String.format (format, tokens));
+		this.trace (this.map (resolution), format, tokens, exception);
 	}
 	
 	public final void traceHandledException (final Throwable exception)
 	{
-		this.traceException (ExceptionResolution.Handled, exception, null);
+		this.traceException (ExceptionResolution.Handled, exception);
+	}
+	
+	public final void traceHandledException (final Throwable exception, final String message)
+	{
+		this.traceException (ExceptionResolution.Handled, exception, message);
 	}
 	
 	public final void traceHandledException (final Throwable exception, final String format, final Object ... tokens)
@@ -194,7 +97,12 @@ public final class Transcript
 	
 	public final void traceIgnoredException (final Throwable exception)
 	{
-		this.traceException (ExceptionResolution.Ignored, exception, null);
+		this.traceException (ExceptionResolution.Ignored, exception);
+	}
+	
+	public final void traceIgnoredException (final Throwable exception, final String message)
+	{
+		this.traceException (ExceptionResolution.Ignored, exception, message);
 	}
 	
 	public final void traceIgnoredException (final Throwable exception, final String format, final Object ... tokens)
@@ -202,29 +110,19 @@ public final class Transcript
 		this.traceException (ExceptionResolution.Ignored, exception, format, tokens);
 	}
 	
+	public final void traceInformation (final String message)
+	{
+		this.trace (TranscriptTraceType.Information, message);
+	}
+	
 	public final void traceInformation (final String format, final Object ... tokens)
 	{
 		this.trace (TranscriptTraceType.Information, format, tokens);
 	}
 	
-	public final void traceInput (final String format, final Object ... tokens)
+	public final void traceWarning (final String message)
 	{
-		this.trace (TranscriptTraceType.Input, format, tokens);
-	}
-	
-	public final void traceOutput (final String format, final Object ... tokens)
-	{
-		this.trace (TranscriptTraceType.Output, format, tokens);
-	}
-	
-	public final void traceRethrownException (final Throwable exception)
-	{
-		this.traceException (ExceptionResolution.Rethrown, exception, null);
-	}
-	
-	public final void traceRethrownException (final Throwable exception, final String format, final Object ... tokens)
-	{
-		this.traceException (ExceptionResolution.Rethrown, exception, format, tokens);
+		this.trace (TranscriptTraceType.Warning, message);
 	}
 	
 	public final void traceWarning (final String format, final Object ... tokens)
@@ -232,14 +130,82 @@ public final class Transcript
 		this.trace (TranscriptTraceType.Warning, format, tokens);
 	}
 	
+	private final String format (final String format, final Object[] tokens)
+	{
+		if (format == null) {
+			if (tokens != null)
+				throw (new IllegalArgumentException ());
+			return ("");
+		}
+		if (tokens == null)
+			return (format);
+		return (this.formatter.format (format, tokens));
+	}
+	
+	private final TranscriptTraceType map (final ExceptionResolution resolution)
+	{
+		switch (resolution) {
+			case Handled :
+				return (TranscriptTraceType.Debugging);
+			case Deferred :
+				return (TranscriptTraceType.Debugging);
+			case Ignored :
+				return (TranscriptTraceType.Warning);
+		}
+		return (TranscriptTraceType.Error);
+	}
+	
+	private final void trace (final TranscriptTraceType type, final String format, final Object[] tokens, final Throwable exception)
+	{
+		Preconditions.checkNotNull (type);
+		switch (type) {
+			case Information :
+				if (this.logger.isInfoEnabled ()) {
+					final String message = this.format (format, tokens);
+					if (exception != null)
+						this.logger.info (message, exception);
+					else
+						this.logger.info (message);
+				}
+				break;
+			case Warning :
+				if (this.logger.isWarnEnabled ()) {
+					final String message = this.format (format, tokens);
+					if (exception != null)
+						this.logger.warn (message, exception);
+					else
+						this.logger.warn (message);
+				}
+				break;
+			case Error :
+				if (this.logger.isErrorEnabled ()) {
+					final String message = this.format (format, tokens);
+					if (exception != null)
+						this.logger.error (message, exception);
+					else
+						this.logger.error (message);
+				}
+				break;
+			case Debugging :
+				if (this.logger.isDebugEnabled ()) {
+					final String message = this.format (format, tokens);
+					if (exception != null)
+						this.logger.debug (message, exception);
+					else
+						this.logger.debug (message);
+				}
+				break;
+		}
+	}
+	
+	private final ExtendedFormatter formatter;
 	private final Logger logger;
 	
 	public static final Transcript create (final Object owner)
 	{
 		Preconditions.checkNotNull (owner);
-		return (new Transcript (LoggerFactory.getLogger (owner.getClass ())));
+		return (new Transcript (LoggerFactory.getLogger (owner.getClass ()), ExtendedFormatter.defaultInstance));
 	}
 	
-	public static final Transcript defaultInstance = new Transcript (Transcript.defaultInstanceUseLogger);
-	private static final boolean defaultInstanceUseLogger = true;
+	public static final Transcript defaultInstance = new Transcript (LoggerFactory.getLogger ("eu.mosaic_cloud.transcript.core"), ExtendedFormatter.defaultInstance);
 }

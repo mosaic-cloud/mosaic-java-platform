@@ -31,6 +31,5 @@ public abstract class CaughtException
 	protected final Object[] messageArguments;
 	protected final String messageFormat;
 	protected final ExceptionResolution resolution;
-	
 	private static final long serialVersionUID = 1L;
 }

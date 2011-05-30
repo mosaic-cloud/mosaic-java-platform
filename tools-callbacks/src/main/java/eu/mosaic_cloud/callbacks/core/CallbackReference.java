@@ -11,6 +11,7 @@ public final class CallbackReference
 	private CallbackReference (final CallbackReactor reactor)
 	{
 		super ();
+		Preconditions.checkNotNull (reactor);
 		this.reactor = reactor;
 	}
 	
@@ -18,7 +19,6 @@ public final class CallbackReference
 	
 	public static final CallbackReference create (final CallbackReactor reactor)
 	{
-		Preconditions.checkNotNull (reactor);
 		return (new CallbackReference (reactor));
 	}
 }
