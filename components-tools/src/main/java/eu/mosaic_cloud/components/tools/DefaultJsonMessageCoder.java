@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
-import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ChannelMessage;
@@ -30,6 +29,7 @@ public final class DefaultJsonMessageCoder
 		super ();
 		this.transcript = Transcript.create (this);
 		this.metaDataCharset = Charset.forName ("utf-8");
+		this.style = new JSONStyle (-1 & ~JSONStyle.FLAG_PROTECT_KEYS & ~JSONStyle.FLAG_PROTECT_VALUES);
 	}
 	
 	@Override
@@ -80,11 +80,11 @@ public final class DefaultJsonMessageCoder
 		this.transcript.traceDebugging ("encoding message...");
 		Preconditions.checkNotNull (message);
 		Preconditions.checkArgument (message.type != null, "unexpected message-type value: `%s`", message.type);
-		Preconditions.checkArgument ((message.metaData != null) && (message.metaData instanceof Map), "unexpected meta-data value: `%s`", message.metaData);
+		Preconditions.checkArgument ((message.metaData != null), "unexpected meta-data value: `%s`", message.metaData);
 		Preconditions.checkNotNull (message.data);
-		final JSONObject metaData = new JSONObject ((Map) message.metaData);
+		final JSONObject metaData = new JSONObject (message.metaData);
 		metaData.put ("__type__", message.type.identifier);
-		final String metaDataString = JSONValue.toJSONString (metaData, JSONStyle.MAX_COMPRESS);
+		final String metaDataString = JSONValue.toJSONString (metaData, this.style);
 		final byte[] metaDataBytes = metaDataString.getBytes (this.metaDataCharset);
 		final ByteBuffer data = message.data.asReadOnlyBuffer ();
 		final int packetSize = metaDataBytes.length + 1 + data.remaining ();
@@ -98,6 +98,7 @@ public final class DefaultJsonMessageCoder
 	}
 	
 	private final Charset metaDataCharset;
+	private final JSONStyle style;
 	private final Transcript transcript;
 	
 	public static final DefaultJsonMessageCoder create ()

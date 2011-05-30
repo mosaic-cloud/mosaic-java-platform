@@ -9,7 +9,9 @@
 	<version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
+		<module>components-container</module>
 		<module>components-core</module>
+		<module>components-examples</module>
 		<module>components-tools</module>
 	</modules>
 	<dependencies>

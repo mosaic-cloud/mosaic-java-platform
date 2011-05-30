@@ -158,6 +158,16 @@ public final class BasicChannel
 				this.decoder.stop ();
 				this.dispatcher.stop ();
 				this.notifyStopped ();
+				try {
+					this.input.close ();
+				} catch (final IOException exception) {
+					this.transcript.traceIgnoredException (exception);
+				}
+				try {
+					this.output.close ();
+				} catch (final IOException exception) {
+					this.transcript.traceIgnoredException (exception);
+				}
 			}
 		}
 		

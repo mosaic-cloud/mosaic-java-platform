@@ -12,12 +12,11 @@ import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingChannelCallbacks;
 import junit.framework.Assert;
-import net.minidev.json.JSONObject;
 
 import org.junit.Test;
 
 
-public class BasicChannelTest
+public final class BasicChannelTest
 {
 	@Test
 	public final void test ()

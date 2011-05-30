@@ -21,7 +21,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 
-public class BasicComponentTest
+public final class BasicComponentTest
 {
 	@Test
 	public final void test ()
@@ -51,8 +51,9 @@ public class BasicComponentTest
 			component.reply (outboundReply);
 			final ComponentCallReply inboundReply = (ComponentCallReply) queue.poll (1000, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundReply);
-			Assert.assertEquals (outboundReply.metaData, inboundReply.metaData);
-			Assert.assertEquals (outboundReply.data, inboundReply.data);
+			Assert.assertEquals (outboundRequest.reference, inboundReply.reference);
+			Assert.assertEquals (outboundRequest.metaData, inboundReply.metaData);
+			Assert.assertEquals (outboundRequest.data, inboundReply.data);
 		}
 		component.terminate ();
 		channel.terminate ();
