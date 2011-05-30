@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
-			<artifactId>interoperability-zeromq</artifactId>
+			<artifactId>interoperability-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -23,8 +23,13 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
-			<artifactId>tools-transcript</artifactId>
+			<artifactId>interoperability-zeromq</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.1</version>
 		</dependency>
 	</dependencies>
 </project>

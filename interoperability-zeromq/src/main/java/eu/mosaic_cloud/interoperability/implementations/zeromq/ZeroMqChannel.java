@@ -172,6 +172,22 @@ public final class ZeroMqChannel
 		session.callbacks.get ().received (session, message);
 	}
 	
+	final void executeDispatcher (final Dispatcher dispatcher)
+	{
+		final Session session = dispatcher.session;
+		session.dispatchContinued.set (Boolean.FALSE);
+		try {
+			dispatcher.dispatch ();
+		} catch (final Error exception) {
+			this.transcript.traceIgnoredException (exception, "error encountered while executing dispatcher; ignoring!");
+		}
+		if (session.dispatchContinued.get () == Boolean.FALSE) {
+			session.idle.release ();
+			this.scheduleDispatcher (session);
+		}
+		session.dispatchContinued.set (null);
+	}
+	
 	final void executeHandler (final Handler handler)
 	{
 		try {
@@ -285,55 +301,7 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	final void triggerPacketDequeue ()
-	{
-		this.enqueueHandler (new PacketDequeueHandler ());
-	}
-	
-	final void triggerPacketEnqueue (final Session session, final Message message)
-	{
-		this.enqueueHandler (new PacketEnqueueHandler (session, message));
-	}
-	
-	final void triggerSessionContinueDispatch (final Session session)
-	{
-		if (session.dispatchContinued.get () == Boolean.FALSE) {
-			session.dispatchContinued.set (Boolean.TRUE);
-			session.idle.release ();
-			this.scheduleDispatcher (session);
-		}
-	}
-	
-	private final void enqueueDispatcher (final Dispatcher dispatcher)
-	{
-		final Session session = dispatcher.session;
-		session.dispatchers.add (dispatcher);
-		this.scheduleDispatcher (session);
-	}
-	
-	private final void enqueueHandler (final Handler handler)
-	{
-		this.handlers.add (handler);
-		this.scheduleHandler ();
-	}
-	
-	private final void executeDispatcher (final Dispatcher dispatcher)
-	{
-		final Session session = dispatcher.session;
-		session.dispatchContinued.set (Boolean.FALSE);
-		try {
-			dispatcher.dispatch ();
-		} catch (final Error exception) {
-			this.transcript.traceIgnoredException (exception, "error encountered while executing dispatcher; ignoring!");
-		}
-		if (session.dispatchContinued.get () == Boolean.FALSE) {
-			session.idle.release ();
-			this.scheduleDispatcher (session);
-		}
-		session.dispatchContinued.set (null);
-	}
-	
-	private final void handlePacketEnqueue (final Session session, final Message message)
+	final void handlePacketEnqueue (final Session session, final Message message)
 	{
 		synchronized (this.state.monitor) {
 			final String messageIdentifier;
@@ -401,6 +369,38 @@ public final class ZeroMqChannel
 			if (coder.messageType == MessageType.Termination)
 				this.enqueueDispatcher (new SessionDestroyedDispatcher (session));
 		}
+	}
+	
+	final void triggerPacketDequeue ()
+	{
+		this.enqueueHandler (new PacketDequeueHandler ());
+	}
+	
+	final void triggerPacketEnqueue (final Session session, final Message message)
+	{
+		this.enqueueHandler (new PacketEnqueueHandler (session, message));
+	}
+	
+	final void triggerSessionContinueDispatch (final Session session)
+	{
+		if (session.dispatchContinued.get () == Boolean.FALSE) {
+			session.dispatchContinued.set (Boolean.TRUE);
+			session.idle.release ();
+			this.scheduleDispatcher (session);
+		}
+	}
+	
+	private final void enqueueDispatcher (final Dispatcher dispatcher)
+	{
+		final Session session = dispatcher.session;
+		session.dispatchers.add (dispatcher);
+		this.scheduleDispatcher (session);
+	}
+	
+	private final void enqueueHandler (final Handler handler)
+	{
+		this.handlers.add (handler);
+		this.scheduleHandler ();
 	}
 	
 	private final void scheduleDispatcher (final Session session)
@@ -539,6 +539,11 @@ public final class ZeroMqChannel
 	private final class PacketDequeueHandler
 			extends Handler
 	{
+		PacketDequeueHandler ()
+		{
+			super ();
+		}
+		
 		@Override
 		final void handle ()
 		{
@@ -549,6 +554,11 @@ public final class ZeroMqChannel
 	private final class PacketDequeueTrigger
 			extends Trigger
 	{
+		PacketDequeueTrigger ()
+		{
+			super ();
+		}
+		
 		@Override
 		final void trigger ()
 		{

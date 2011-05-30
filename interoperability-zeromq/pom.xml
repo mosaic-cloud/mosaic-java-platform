@@ -13,22 +13,17 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
-			<artifactId>interoperability-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>interoperability-tools</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
-			<artifactId>tools-transcript</artifactId>
+			<artifactId>tools-miscellaneous</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
-			<artifactId>tools-miscellaneous</artifactId>
+			<artifactId>tools-transcript</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

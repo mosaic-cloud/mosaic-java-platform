@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.interoperability.examples;
+package eu.mosaic_cloud.interoperability.examples.kv;
 
 
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
