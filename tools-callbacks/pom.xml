@@ -13,6 +13,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
+			<artifactId>tools-miscellaneous</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-transcript</artifactId>
 			<version>${project.version}</version>
 		</dependency>

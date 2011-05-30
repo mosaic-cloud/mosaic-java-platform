@@ -201,6 +201,12 @@ public final class Transcript
 	private final ExtendedFormatter formatter;
 	private final Logger logger;
 	
+	public static final Transcript create (final Class<?> owner)
+	{
+		Preconditions.checkNotNull (owner);
+		return (new Transcript (LoggerFactory.getLogger (owner), ExtendedFormatter.defaultInstance));
+	}
+	
 	public static final Transcript create (final Object owner)
 	{
 		Preconditions.checkNotNull (owner);
