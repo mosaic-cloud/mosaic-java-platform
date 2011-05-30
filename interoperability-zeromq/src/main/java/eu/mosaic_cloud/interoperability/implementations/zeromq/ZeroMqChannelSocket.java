@@ -253,11 +253,9 @@ public final class ZeroMqChannelSocket
 	private boolean shouldStop;
 	private ZMQ.Socket socket;
 	private final Transcript transcript;
-	
 	static {
 		context = ZMQ.context (1);
 	}
-	
 	private static final ZMQ.Context context;
 	
 	public static final class Packet

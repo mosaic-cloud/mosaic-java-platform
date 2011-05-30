@@ -4,11 +4,11 @@ package eu.mosaic_cloud.interoperability.examples;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-
+import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,16 +24,22 @@ public final class KvServer
 	}
 	
 	@Override
-	public final void created (final Session session)
-	{}
+	public final CallbackReference created (final Session session)
+	{
+		return (null);
+	}
 	
 	@Override
-	public final void destroyed (final Session session)
-	{}
+	public final CallbackReference destroyed (final Session session)
+	{
+		return (null);
+	}
 	
 	@Override
-	public final void failed (final Session session, final Throwable Exception)
-	{}
+	public final CallbackReference failed (final Session session, final Throwable Exception)
+	{
+		return (null);
+	}
 	
 	public final void initialize (final ZeroMqChannel channel)
 	{
@@ -41,7 +47,7 @@ public final class KvServer
 	}
 	
 	@Override
-	public final void received (final Session session, final Message message)
+	public final CallbackReference received (final Session session, final Message message)
 	{
 		switch ((KvMessage) message.specification) {
 			case Access : {
@@ -86,6 +92,7 @@ public final class KvServer
 			}
 				break;
 		}
+		return (null);
 	}
 	
 	private final ConcurrentHashMap<String, String> bucket;

@@ -22,7 +22,6 @@ public enum KvMessage
 	GetRequest (MessageType.Exchange, KvPayloads.GetRequest.class),
 	Ok (MessageType.Exchange, KvPayloads.Ok.class),
 	PutRequest (MessageType.Exchange, KvPayloads.PutRequest.class);
-	
 	KvMessage (final MessageType type, final Class<? extends Serializable> clasz)
 	{
 		this.identifier = Identifiers.generate (this);

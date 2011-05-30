@@ -17,7 +17,6 @@ public interface KvPayloads
 		}
 		
 		public final long sequence;
-		
 		private static final long serialVersionUID = 1L;
 	}
 	
@@ -33,7 +32,6 @@ public interface KvPayloads
 		
 		public final long sequence;
 		public final String value;
-		
 		private static final long serialVersionUID = 1L;
 	}
 	
@@ -49,7 +47,6 @@ public interface KvPayloads
 		
 		public final String key;
 		public final long sequence;
-		
 		private static final long serialVersionUID = 1L;
 	}
 	
@@ -63,7 +60,6 @@ public interface KvPayloads
 		}
 		
 		public final long sequence;
-		
 		private static final long serialVersionUID = 1L;
 	}
 	
@@ -81,7 +77,6 @@ public interface KvPayloads
 		public final String key;
 		public final long sequence;
 		public final String value;
-		
 		private static final long serialVersionUID = 1L;
 	}
 }

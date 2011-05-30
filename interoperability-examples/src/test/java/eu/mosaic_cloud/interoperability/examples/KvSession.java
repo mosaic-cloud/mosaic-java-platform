@@ -16,7 +16,6 @@ public enum KvSession
 {
 	Client (KvRole.Client, KvRole.Server),
 	Server (KvRole.Server, KvRole.Client);
-	
 	KvSession (final KvRole selfRole, final KvRole peerRole)
 	{
 		this.selfRole = selfRole;

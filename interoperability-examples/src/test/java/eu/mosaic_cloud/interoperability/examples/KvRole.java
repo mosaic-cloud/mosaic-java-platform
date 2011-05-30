@@ -12,7 +12,6 @@ public enum KvRole
 {
 	Client (),
 	Server ();
-	
 	KvRole ()
 	{
 		this.identifier = Identifiers.generate (this);

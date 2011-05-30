@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.concurrent.Future;
 
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
@@ -28,28 +29,31 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized void created (final Session session)
+	public final synchronized CallbackReference created (final Session session)
 	{
 		Preconditions.checkState (this.session == null);
 		final OutcomeFuture<Boolean> future = (OutcomeFuture<Boolean>) this.futures.remove (Long.valueOf (0));
 		if (future != null)
 			future.trigger.succeeded (Boolean.TRUE);
 		this.session = session;
+		return (null);
 	}
 	
 	@Override
-	public final synchronized void destroyed (final Session session)
+	public final synchronized CallbackReference destroyed (final Session session)
 	{
 		Preconditions.checkState (this.session == session);
 		for (final OutcomeFuture<?> future : this.futures.values ())
 			future.cancel (true);
 		this.futures.clear ();
+		return (null);
 	}
 	
 	@Override
-	public final synchronized void failed (final Session session, final Throwable exception)
+	public final synchronized CallbackReference failed (final Session session, final Throwable exception)
 	{
 		Preconditions.checkState (this.session == session);
+		return (null);
 	}
 	
 	public final synchronized Future<String> get (final String key)
@@ -83,7 +87,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized void received (final Session session, final Message message)
+	public final synchronized CallbackReference received (final Session session, final Message message)
 	{
 		Preconditions.checkState (this.session == session);
 		switch ((KvMessage) message.specification) {
@@ -117,6 +121,7 @@ public final class KvClient
 			}
 				break;
 		}
+		return (null);
 	}
 	
 	private final HashMap<Long, OutcomeFuture<?>> futures;

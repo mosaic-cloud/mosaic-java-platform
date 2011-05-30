@@ -409,7 +409,7 @@ public final class ZeroMqChannel
 			try {
 				session.executor.get ().execute (session.dispatchers.poll ());
 			} catch (final Error exception) {
-				this.transcript.traceRethrownException (exception, "error encountered while scheduling dispatcher; rethrowing!");
+				this.transcript.traceDeferredException (exception, "error encountered while scheduling dispatcher; rethrowing!");
 				session.idle.release ();
 				throw (exception);
 			}
@@ -421,7 +421,7 @@ public final class ZeroMqChannel
 			try {
 				this.executor.execute (this.handlers.poll ());
 			} catch (final Error exception) {
-				this.transcript.traceRethrownException (exception, "error encountered while scheduling handler; rethrowing!");
+				this.transcript.traceDeferredException (exception, "error encountered while scheduling handler; rethrowing!");
 				this.idle.release ();
 				throw (exception);
 			}
