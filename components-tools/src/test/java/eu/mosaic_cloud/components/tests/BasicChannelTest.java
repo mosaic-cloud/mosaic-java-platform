@@ -22,7 +22,6 @@ public final class BasicChannelTest
 	public final void test ()
 			throws Exception
 	{
-		final int tries = 16;
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create ();
 		reactor.initialize ();
 		final Pipe pipe = Pipe.open ();
@@ -35,12 +34,18 @@ public final class BasicChannelTest
 		for (int index = 0; index < tries; index++) {
 			final ChannelMessage outboundMessage = RandomMessageGenerator.defaultInstance.generateChannelMessage ();
 			channel.send (outboundMessage);
-			final ChannelMessage inboundMessage = queue.poll (1000, TimeUnit.MILLISECONDS);
+			final ChannelMessage inboundMessage = queue.poll (pollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundMessage);
 			Assert.assertEquals (outboundMessage.metaData, inboundMessage.metaData);
 			Assert.assertEquals (outboundMessage.data, inboundMessage.data);
 		}
-		channel.terminate ();
+		pipe.sink ().close ();
+		while (channel.isActive ())
+			Thread.sleep (sleepTimeout);
 		reactor.terminate ();
 	}
+	
+	private static final int tries = 16;
+	private static final long pollTimeout = 1000;
+	private static final long sleepTimeout = 100;
 }

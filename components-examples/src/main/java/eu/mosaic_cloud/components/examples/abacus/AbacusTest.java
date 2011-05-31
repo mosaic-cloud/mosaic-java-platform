@@ -32,7 +32,6 @@ public class AbacusTest
 	public final void test ()
 			throws Exception
 	{
-		final int tries = 16;
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create ();
 		reactor.initialize ();
@@ -60,7 +59,7 @@ public class AbacusTest
 			outboundRequestMetaData.put ("operands", Arrays.asList (Integer.valueOf (operandA), Integer.valueOf (operandB)));
 			final ComponentCallRequest outboundRequest = ComponentCallRequest.create (outboundRequestMetaData, ByteBuffer.allocate (0), ComponentCallReference.create ());
 			clientComponent.call (peer, outboundRequest);
-			final ComponentCallReply reply = (ComponentCallReply) clientQueue.poll (1000, TimeUnit.MILLISECONDS);
+			final ComponentCallReply reply = (ComponentCallReply) clientQueue.poll (pollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (reply);
 			final Object outcome = reply.metaData.get ("outcome");
 			Assert.assertNotNull (outcome);
@@ -68,10 +67,14 @@ public class AbacusTest
 			Assert.assertEquals (outboundRequest.reference, reply.reference);
 			Assert.assertTrue ((operandA + operandB) == ((Number) outcome).doubleValue ());
 		}
-		serverComponent.terminate ();
-		clientComponent.terminate ();
-		serverChannel.terminate ();
-		clientChannel.terminate ();
+		pipe1.sink ().close ();
+		pipe2.sink ().close ();
+		while (serverComponent.isActive () || clientComponent.isActive ())
+			Thread.sleep (sleepTimeout);
 		reactor.terminate ();
 	}
+	
+	private static final int tries = 16;
+	private static final long pollTimeout = 1000;
+	private static final long sleepTimeout = 100;
 }

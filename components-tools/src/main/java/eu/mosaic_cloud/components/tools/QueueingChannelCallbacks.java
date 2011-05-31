@@ -9,6 +9,7 @@ import eu.mosaic_cloud.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.components.core.Channel;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
+import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 
 
@@ -28,9 +29,11 @@ public class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public CallbackReference closed (final Channel channel)
+	public CallbackReference closed (final Channel channel, final ChannelFlow flow)
 	{
 		Preconditions.checkArgument (this.channel == channel);
+		if (flow == ChannelFlow.Inbound)
+			channel.terminate ();
 		return (null);
 	}
 	
@@ -53,7 +56,7 @@ public class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public CallbackReference opened (final Channel channel)
+	public CallbackReference initialized (final Channel channel)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		return (null);
@@ -77,6 +80,13 @@ public class QueueingChannelCallbacks
 	@Override
 	public void registered (final ChannelCallbacks trigger)
 	{}
+	
+	@Override
+	public final CallbackReference terminated (final Channel channel)
+	{
+		Preconditions.checkArgument (this.channel == channel);
+		return (null);
+	}
 	
 	@Override
 	public void unregistered (final ChannelCallbacks trigger)

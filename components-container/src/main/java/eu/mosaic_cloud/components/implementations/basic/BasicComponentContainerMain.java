@@ -155,22 +155,33 @@ public final class BasicComponentContainerMain
 			try {
 				final ByteBuffer buffer = ByteBuffer.allocateDirect (1024 * 1024);
 				while (true) {
-					try {
-						final int outcome = this.source.read (buffer);
-						if (outcome == -1)
+					if ((!this.source.isOpen () && buffer.remaining () == 0) || !this.sink.isOpen ())
+						break;
+					buffer.position (0);
+					buffer.limit (buffer.capacity ());
+					if (this.source.isOpen ()) {
+						this.transcript.traceDebugging ("accessing source...");
+						try {
+							final int outcome = this.source.read (buffer);
+							if (outcome == -1)
+								this.source.close ();
+						} catch (final IOException exception) {
+							this.transcript.traceDeferredException (exception, "error encountered while reading from the source channel; aborting!");
+							throw (new Error (exception));
+						}
+						buffer.flip ();
+					}
+					while (this.sink.isOpen ()) {
+						this.transcript.traceDebugging ("accessing sink...");
+						try {
+							this.sink.write (buffer);
+						} catch (final IOException exception) {
+							this.transcript.traceDeferredException (exception, "error encountered while writing to the sink channel; aborting!");
+							throw (new Error (exception));
+						}
+						if (buffer.remaining () == 0)
 							break;
-					} catch (final IOException exception) {
-						this.transcript.traceDeferredException (exception, "error encountered while reading from the source channel; aborting!");
-						throw (new Error (exception));
 					}
-					buffer.flip ();
-					try {
-						this.sink.write (buffer);
-					} catch (final IOException exception) {
-						this.transcript.traceDeferredException (exception, "error encountered while writing to the sink channel; aborting!");
-						throw (new Error (exception));
-					}
-					buffer.compact ();
 				}
 			} finally {
 				this.close ();
@@ -187,11 +198,13 @@ public final class BasicComponentContainerMain
 		
 		private final void close ()
 		{
+			this.transcript.traceDebugging ("closing source...");
 			try {
 				this.source.close ();
 			} catch (final Throwable exception) {
 				this.transcript.traceIgnoredException (exception);
 			}
+			this.transcript.traceDebugging ("closing sink...");
 			try {
 				this.sink.close ();
 			} catch (final Throwable exception) {

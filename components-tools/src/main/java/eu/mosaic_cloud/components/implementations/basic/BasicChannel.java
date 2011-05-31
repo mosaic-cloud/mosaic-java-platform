@@ -23,6 +23,7 @@ import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.AbstractService;
 import eu.mosaic_cloud.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
+import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
 import eu.mosaic_cloud.tools.CaughtException;
@@ -49,9 +50,20 @@ public final class BasicChannel
 		this.delegate.assign (callbacks);
 	}
 	
+	@Override
+	public final void close (final ChannelFlow flow)
+	{
+		this.delegate.close (flow);
+	}
+	
 	public void initialize ()
 	{
 		this.delegate.startAndWait ();
+	}
+	
+	public final boolean isActive ()
+	{
+		return (this.delegate.dispatcher.isRunning () || this.delegate.ioputer.isRunning ());
 	}
 	
 	@Override
@@ -176,6 +188,31 @@ public final class BasicChannel
 			this.callbackReactor.assign (this.callbackTrigger, callbacks);
 		}
 		
+		final void close (final ChannelFlow flow)
+		{
+			Preconditions.checkNotNull (flow);
+			synchronized (this.monitor) {
+				switch (flow) {
+					case Inbound :
+						try {
+							this.input.close ();
+						} catch (final IOException exception) {
+							this.transcript.traceIgnoredException (exception);
+						}
+						break;
+					case Outbound :
+						try {
+							this.output.close ();
+						} catch (final IOException exception) {
+							this.transcript.traceIgnoredException (exception);
+						}
+						break;
+					default:
+						throw (new AssertionError ());
+				}
+			}
+		}
+		
 		final void send (final ChannelMessage message)
 		{
 			Preconditions.checkNotNull (message);
@@ -269,6 +306,8 @@ public final class BasicChannel
 			super (channel);
 			this.callbackTrigger = this.channel.callbackTrigger;
 			this.inboundMessages = this.channel.inboundMessages;
+			this.inboundActive = true;
+			this.outboundActive = true;
 		}
 		
 		@Override
@@ -283,13 +322,37 @@ public final class BasicChannel
 				throw (new DeferredException (exception, "unexpected error encountered while dequeueing inbound message; aborting!"));
 			}
 			if (message != null) {
-				this.transcript.traceDebugging ("dispatching receive callback...");
+				if (this.inboundActive) {
+					this.transcript.traceDebugging ("dispatching receive callback...");
+					try {
+						this.callbackTrigger.received (this.channel.facade, message);
+					} catch (final Throwable exception) {
+						throw (new DeferredException (exception, "unexpected error encountered while dispatching receive callback; aborting!"));
+					}
+				} else
+					this.transcript.traceError ("discarding receive callback due to closed inbound flow;");
+			}
+			if (message == null)
+				if (this.inboundActive && !this.channel.input.isOpen ()) {
+					this.transcript.traceDebugging ("dispatching close inbound callback...");
+					this.inboundActive = false;
+					try {
+						this.callbackTrigger.closed (this.channel.facade, ChannelFlow.Inbound);
+					} catch (final Throwable exception) {
+						throw (new DeferredException (exception, "unexpected error encountered while dispatching close inbound callback; aborting!"));
+					}
+				}
+			if (this.outboundActive && !this.channel.output.isOpen ()) {
+				this.transcript.traceDebugging ("dispatching close outbound callback...");
+				this.outboundActive = false;
 				try {
-					this.callbackTrigger.received (this.channel.facade, message);
+					this.callbackTrigger.closed (this.channel.facade, ChannelFlow.Outbound);
 				} catch (final Throwable exception) {
-					throw (new DeferredException (exception, "unexpected error encountered while dispatching receive callback; aborting!"));
+					throw (new DeferredException (exception, "unexpected error encountered while dispatching close outbound callback; aborting!"));
 				}
 			}
+			if (!this.outboundActive && !this.inboundActive)
+				this.triggerShutdown ();
 		}
 		
 		@Override
@@ -297,9 +360,9 @@ public final class BasicChannel
 				throws CaughtException
 		{
 			this.transcript.traceDebugging ("finalizing dispatcher worker...");
-			this.transcript.traceDebugging ("dispatching close callback...");
+			this.transcript.traceDebugging ("dispatching terminate callback...");
 			try {
-				this.callbackTrigger.closed (this.channel.facade);
+				this.callbackTrigger.terminated (this.channel.facade);
 			} catch (final Throwable exception) {
 				throw (new DeferredException (exception, "unexpected error encountered while dispatching close callback; aborting!"));
 			}
@@ -310,16 +373,18 @@ public final class BasicChannel
 				throws CaughtException
 		{
 			this.transcript.traceDebugging ("initializing dispatcher worker...");
-			this.transcript.traceDebugging ("dispatching open callback...");
+			this.transcript.traceDebugging ("dispatching initialize callback...");
 			try {
-				this.callbackTrigger.opened (this.channel.facade);
+				this.callbackTrigger.initialized (this.channel.facade);
 			} catch (final Throwable exception) {
 				throw (new DeferredException (exception, "unexpected error encountered while dispatching open callback; aborting!"));
 			}
 		}
 		
 		private final ChannelCallbacks callbackTrigger;
+		private boolean inboundActive;
 		private final LinkedBlockingQueue<ChannelMessage> inboundMessages;
+		private boolean outboundActive;
 	}
 	
 	private static final class Encoder
@@ -403,26 +468,40 @@ public final class BasicChannel
 				throws CaughtException
 		{
 			this.transcript.traceDebugging ("executing channels worker...");
-			if (this.inputPending == null) {
-				this.inputPending = ByteBuffer.allocate (this.inputBufferSize);
-				this.inputPendingSize = -1;
+			if (this.input.isOpen ()) {
+				if (this.inputPending == null) {
+					this.inputPending = ByteBuffer.allocate (this.inputBufferSize);
+					this.inputPendingSize = -1;
+				}
+			} else {
+				if (this.inputPending != null) {
+					this.transcript.traceError ("discarding inbound packet due to closed inbound flow;");
+					this.inputPending = null;
+				}
 			}
-			if (this.outputPending == null) {
-				final ByteBuffer packet_ = this.outboundPackets.poll ();
-				final ByteBuffer packet;
-				if (packet_ != null) {
-					try {
-						packet = packet_.asReadOnlyBuffer ();
-						Preconditions.checkArgument (packet.order () == ByteOrder.BIG_ENDIAN, "invalid packet byte-order");
-						Preconditions.checkArgument (packet.remaining () >= 4, "invalid packet framing");
-						packet.mark ();
-						final int packetSize = packet.getInt ();
-						Preconditions.checkArgument (packetSize == packet.remaining (), "invalid outbound packet encoding");
-						packet.reset ();
-					} catch (final IllegalArgumentException exception) {
-						throw (new DeferredException (exception, "unexpected validation error encountered while polling outbound packet; aborting!"));
+			if (this.output.isOpen ()) {
+				if (this.outputPending == null) {
+					final ByteBuffer packet_ = this.outboundPackets.poll ();
+					if (packet_ != null) {
+						final ByteBuffer packet;
+						try {
+							packet = packet_.asReadOnlyBuffer ();
+							Preconditions.checkArgument (packet.order () == ByteOrder.BIG_ENDIAN, "invalid packet byte-order");
+							Preconditions.checkArgument (packet.remaining () >= 4, "invalid packet framing");
+							packet.mark ();
+							final int packetSize = packet.getInt ();
+							Preconditions.checkArgument (packetSize == packet.remaining (), "invalid outbound packet encoding");
+							packet.reset ();
+						} catch (final IllegalArgumentException exception) {
+							throw (new DeferredException (exception, "unexpected validation error encountered while polling outbound packet; aborting!"));
+						}
+						this.outputPending = packet;
 					}
-					this.outputPending = packet;
+				}
+			} else {
+				if (this.outputPending != null) {
+					this.transcript.traceError ("discarding outbound packet due to closed outbound flow;");
+					this.outputPending = null;
 				}
 			}
 			try {
@@ -432,7 +511,7 @@ public final class BasicChannel
 					this.inputKey.cancel ();
 					this.inputKey = null;
 				}
-				if ((this.outputPending != null) && (this.outputKey == null))
+				if ((this.outputPending != null) && (this.outputKey == null) && this.output.isOpen ())
 					this.outputKey = ((SelectableChannel) this.output).register (this.selector, SelectionKey.OP_WRITE);
 				else if ((this.outputKey != null) && (this.outputPending == null)) {
 					this.outputKey.cancel ();
@@ -449,11 +528,13 @@ public final class BasicChannel
 			final boolean inputValid;
 			final boolean outputValid;
 			if (this.inputKey != null) {
-				inputValid = this.inputKey.isValid ();
+				inputValid = this.inputKey.isValid () && this.input.isOpen ();
 				if (inputValid && this.inputKey.isReadable ()) {
 					this.transcript.traceDebugging ("accessing input stream...");
 					try {
-						this.input.read (this.inputPending);
+						final int outcome = this.input.read (this.inputPending);
+						if (outcome == -1)
+							this.input.close ();
 					} catch (final IOException exception) {
 						throw (new DeferredException (exception, "i/o error encountered while accessing input stream; aborting!"));
 					}
@@ -461,7 +542,7 @@ public final class BasicChannel
 			} else
 				inputValid = true;
 			if (this.outputKey != null) {
-				outputValid = this.outputKey.isValid ();
+				outputValid = this.outputKey.isValid () && this.output.isOpen ();
 				if (outputValid && this.outputKey.isWritable ()) {
 					this.transcript.traceDebugging ("accessing output stream...");
 					try {
@@ -490,10 +571,13 @@ public final class BasicChannel
 						packet = this.inputPending;
 						this.inputPending = null;
 						this.inputPendingSize = -1;
-					} else if (this.inputPending.position () >= this.inputPendingSize) {
+					} else if (this.inputPending.position () > this.inputPendingSize) {
 						this.inputPending.flip ();
 						packet = ByteBuffer.allocate (this.inputPendingSize);
-						packet.put (this.inputPending);
+						final ByteBuffer inputPendingSlice = this.inputPending.slice ();
+						inputPendingSlice.limit (this.inputPendingSize);
+						packet.put (inputPendingSlice);
+						this.inputPending.position (this.inputPendingSize);
 						this.inputPending.compact ();
 					} else
 						packet = null;
@@ -512,7 +596,7 @@ public final class BasicChannel
 					this.outputPending = null;
 			}
 			if (!inputValid && !outputValid)
-				throw (new AssertionError ());
+				this.triggerShutdown ();
 		}
 		
 		@Override
@@ -521,6 +605,14 @@ public final class BasicChannel
 		{
 			this.transcript.traceDebugging ("finalizing channels worker...");
 			try {
+				if (this.inputKey != null) {
+					this.inputKey.cancel ();
+					this.inputKey = null;
+				}
+				if (this.outputKey != null) {
+					this.outputKey.cancel ();
+					this.outputKey = null;
+				}
 				this.selector.close ();
 			} catch (final IOException exception) {
 				throw (new DeferredException (exception, "i/o error encountered while closing the selector; ignoring!"));
@@ -579,6 +671,8 @@ public final class BasicChannel
 		{
 			try {
 				while (true) {
+					if (!this.channel.isRunning ())
+						this.triggerShutdown ();
 					if (!this.isRunning ())
 						break;
 					this.loop_1 ();

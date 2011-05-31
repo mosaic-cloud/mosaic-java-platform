@@ -14,6 +14,7 @@ import eu.mosaic_cloud.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.components.core.Channel;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
+import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
@@ -44,13 +45,13 @@ public final class BasicComponent
 	}
 	
 	@Override
-	public void call (final ComponentIdentifier component, final ComponentCallRequest request)
+	public final void call (final ComponentIdentifier component, final ComponentCallRequest request)
 	{
 		this.delegate.call (component, request);
 	}
 	
 	@Override
-	public void cast (final ComponentIdentifier component, final ComponentCastRequest request)
+	public final void cast (final ComponentIdentifier component, final ComponentCastRequest request)
 	{
 		this.delegate.cast (component, request);
 	}
@@ -66,7 +67,7 @@ public final class BasicComponent
 	}
 	
 	@Override
-	public void reply (final ComponentCallReply reply)
+	public final void reply (final ComponentCallReply reply)
 	{
 		this.delegate.reply (reply);
 	}
@@ -117,18 +118,20 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference closed (final Channel channel)
+		public final CallbackReference closed (final Channel channel, final ChannelFlow flow)
 		{
 			Preconditions.checkState (channel == this.channel);
 			synchronized (this.monitor) {
-				this.callbackTrigger.terminated (this.facade);
-				this.stop ();
+				if (flow == ChannelFlow.Inbound) {
+					this.callbackTrigger.terminated (this.facade);
+					this.stop ();
+				}
 			}
 			return (null);
 		}
 		
 		@Override
-		public void deassigned (final ChannelCallbacks trigger, final ChannelCallbacks newCallbacks)
+		public final void deassigned (final ChannelCallbacks trigger, final ChannelCallbacks newCallbacks)
 		{
 			Preconditions.checkState (false);
 		}
@@ -145,7 +148,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference opened (final Channel channel)
+		public final CallbackReference initialized (final Channel channel)
 		{
 			Preconditions.checkState (channel == this.channel);
 			synchronized (this.monitor) {
@@ -155,7 +158,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public void reassigned (final ChannelCallbacks trigger, final ChannelCallbacks oldCallbacks)
+		public final void reassigned (final ChannelCallbacks trigger, final ChannelCallbacks oldCallbacks)
 		{
 			Preconditions.checkState (false);
 		}
@@ -236,11 +239,22 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public void registered (final ChannelCallbacks trigger)
+		public final void registered (final ChannelCallbacks trigger)
 		{}
 		
 		@Override
-		public void unregistered (final ChannelCallbacks trigger)
+		public final CallbackReference terminated (final Channel channel)
+		{
+			Preconditions.checkState (channel == this.channel);
+			synchronized (this.monitor) {
+				this.callbackTrigger.terminated (this.facade);
+				this.stop ();
+			}
+			return (null);
+		}
+		
+		@Override
+		public final void unregistered (final ChannelCallbacks trigger)
 		{
 			this.callbackReactor.unregister (this.callbackTrigger);
 		}
