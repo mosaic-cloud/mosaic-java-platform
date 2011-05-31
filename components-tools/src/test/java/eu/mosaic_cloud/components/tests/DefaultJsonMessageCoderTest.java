@@ -3,7 +3,6 @@ package eu.mosaic_cloud.components.tests;
 
 
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
 
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
