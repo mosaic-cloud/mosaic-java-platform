@@ -462,7 +462,7 @@ public final class BasicCallbackReactor
 			this.transcript.traceDebugging ("triggering callback `%{method}` `%{array}` for trigger `%{object:identity}` for class `%{class}`...", method, arguments, proxy.trigger, proxy.specification);
 			final CallbackReference reference;
 			synchronized (this.monitor) {
-				Preconditions.checkState (this.state () == State.RUNNING);
+				// Preconditions.checkState (this.state () == State.RUNNING);
 				reference = CallbackReference.create (this.facade);
 				final InvokeAction action = new InvokeAction (proxy, reference, method, arguments);
 				proxy.actions.add (action);
