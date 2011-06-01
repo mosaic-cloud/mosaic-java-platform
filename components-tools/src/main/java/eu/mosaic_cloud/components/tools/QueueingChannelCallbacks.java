@@ -3,6 +3,7 @@ package eu.mosaic_cloud.components.tools;
 
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.core.CallbackHandler;
@@ -13,13 +14,13 @@ import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 
 
-public class QueueingChannelCallbacks
+public final class QueueingChannelCallbacks
 		extends Object
 		implements
 			ChannelCallbacks,
 			CallbackHandler<ChannelCallbacks>
 {
-	public QueueingChannelCallbacks (final Channel channel, final BlockingQueue<ChannelMessage> queue)
+	private QueueingChannelCallbacks (final Channel channel, final BlockingQueue<ChannelMessage> queue)
 	{
 		super ();
 		Preconditions.checkNotNull (channel);
@@ -28,8 +29,13 @@ public class QueueingChannelCallbacks
 		this.queue = queue;
 	}
 	
+	public final void assign ()
+	{
+		this.channel.assign (this);
+	}
+	
 	@Override
-	public CallbackReference closed (final Channel channel, final ChannelFlow flow)
+	public final CallbackReference closed (final Channel channel, final ChannelFlow flow)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		if (flow == ChannelFlow.Inbound)
@@ -38,38 +44,33 @@ public class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public void deassigned (final ChannelCallbacks trigger, final ChannelCallbacks newCallbacks)
+	public final void deassigned (final ChannelCallbacks trigger, final ChannelCallbacks newCallbacks)
 	{
 		Preconditions.checkState (false);
 	}
 	
 	@Override
-	public CallbackReference failed (final Channel channel, final Throwable exception)
-	{
-		Preconditions.checkArgument (this.channel == channel);
-		return (null);
-	}
-	
-	public void initialize ()
-	{
-		this.channel.assign (this);
-	}
-	
-	@Override
-	public CallbackReference initialized (final Channel channel)
+	public final CallbackReference failed (final Channel channel, final Throwable exception)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		return (null);
 	}
 	
 	@Override
-	public void reassigned (final ChannelCallbacks trigger, final ChannelCallbacks oldCallbacks)
+	public final CallbackReference initialized (final Channel channel)
+	{
+		Preconditions.checkArgument (this.channel == channel);
+		return (null);
+	}
+	
+	@Override
+	public final void reassigned (final ChannelCallbacks trigger, final ChannelCallbacks oldCallbacks)
 	{
 		Preconditions.checkState (false);
 	}
 	
 	@Override
-	public CallbackReference received (final Channel channel, final ChannelMessage message)
+	public final CallbackReference received (final Channel channel, final ChannelMessage message)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		Preconditions.checkNotNull (message);
@@ -78,7 +79,7 @@ public class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public void registered (final ChannelCallbacks trigger)
+	public final void registered (final ChannelCallbacks trigger)
 	{}
 	
 	@Override
@@ -89,9 +90,19 @@ public class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public void unregistered (final ChannelCallbacks trigger)
+	public final void unregistered (final ChannelCallbacks trigger)
 	{}
 	
-	protected final Channel channel;
-	protected final BlockingQueue<ChannelMessage> queue;
+	public final BlockingQueue<ChannelMessage> queue;
+	private final Channel channel;
+	
+	public static final QueueingChannelCallbacks create (final Channel channel)
+	{
+		return (new QueueingChannelCallbacks (channel, new LinkedBlockingQueue<ChannelMessage> ()));
+	}
+	
+	public static final QueueingChannelCallbacks create (final Channel channel, final BlockingQueue<ChannelMessage> queue)
+	{
+		return (new QueueingChannelCallbacks (channel, queue));
+	}
 }

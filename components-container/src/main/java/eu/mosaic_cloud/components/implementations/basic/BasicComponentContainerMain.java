@@ -17,7 +17,11 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
+import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
 
 public final class BasicComponentContainerMain
@@ -29,32 +33,24 @@ public final class BasicComponentContainerMain
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final ComponentCallbacks callbacks)
+	public static final void main (final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
 	{
-		final long pollTimeout = 100;
-		final ReadableByteChannel input;
-		final WritableByteChannel output;
-		final Piper inputPiper;
-		final Piper outputPiper;
+		final Pipe inputPipe;
+		final Pipe outputPipe;
 		try {
-			final Pipe inputPipe = Pipe.open ();
-			final Pipe outputPipe = Pipe.open ();
-			final ReadableByteChannel stdin = Channels.newChannel (BasicComponentContainerPreMain.stdin);
-			final WritableByteChannel stdout = Channels.newChannel (BasicComponentContainerPreMain.stdout);
-			inputPiper = new Piper (stdin, inputPipe.sink ());
-			outputPiper = new Piper (outputPipe.source (), stdout);
-			input = inputPipe.source ();
-			output = outputPipe.sink ();
-		} catch (final Exception exception) {
-			throw (new IllegalStateException (exception));
+			inputPipe = Pipe.open ();
+			outputPipe = Pipe.open ();
+		} catch (final IOException exception) {
+			exceptions.trace (ExceptionResolution.Deferred, exception);
+			throw (new Error (exception));
 		}
-		inputPiper.start ();
-		outputPiper.start ();
+		final Piper inputPiper = new Piper (Channels.newChannel (BasicComponentContainerPreMain.stdin), inputPipe.sink (), exceptions);
+		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (BasicComponentContainerPreMain.stdout), exceptions);
 		final DefaultJsonMessageCoder coder = DefaultJsonMessageCoder.create ();
-		final BasicCallbackReactor reactor = BasicCallbackReactor.create ();
+		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
+		final BasicChannel channel = BasicChannel.create (inputPipe.source (), outputPipe.sink (), coder, reactor, exceptions);
+		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
 		reactor.initialize ();
-		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, null);
-		final BasicComponent component = BasicComponent.create (channel, reactor, null);
 		channel.initialize ();
 		component.initialize ();
 		component.assign (callbacks);
@@ -62,9 +58,10 @@ public final class BasicComponentContainerMain
 			if (!component.isActive ())
 				break;
 			try {
-				Thread.sleep (pollTimeout);
+				Thread.sleep (BasicComponentContainerMain.sleepTimeout);
 			} catch (final InterruptedException exception) {
-				throw (new IllegalStateException (exception));
+				exceptions.trace (ExceptionResolution.Handled, exception);
+				break;
 			}
 		}
 		component.terminate ();
@@ -72,9 +69,13 @@ public final class BasicComponentContainerMain
 		reactor.terminate ();
 		try {
 			inputPiper.join ();
+		} catch (final InterruptedException exception) {
+			exceptions.trace (ExceptionResolution.Ignored, exception);
+		}
+		try {
 			outputPiper.join ();
 		} catch (final InterruptedException exception) {
-			throw (new IllegalStateException (exception));
+			exceptions.trace (ExceptionResolution.Ignored, exception);
 		}
 	}
 	
@@ -113,7 +114,7 @@ public final class BasicComponentContainerMain
 		} catch (final Exception exception) {
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while instantiating)", componentClass.getName ()), exception));
 		}
-		BasicComponentContainerMain.main (callbacks);
+		BasicComponentContainerMain.main (callbacks, AbortingExceptionTracer.defaultInstance);
 	}
 	
 	public static final void main (final String[] arguments)
@@ -133,67 +134,68 @@ public final class BasicComponentContainerMain
 		BasicComponentContainerMain.main (componentArgument, classpathArgument);
 	}
 	
+	private static final long sleepTimeout = 100;
+	
 	private static final class Piper
 			extends Thread
 			implements
 				UncaughtExceptionHandler
 	{
-		Piper (final ReadableByteChannel source, final WritableByteChannel sink)
+		Piper (final ReadableByteChannel source, final WritableByteChannel sink, final ExceptionTracer exceptions)
 		{
 			super ();
 			this.transcript = Transcript.create (this);
+			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
 			this.setDaemon (true);
 			this.setName (String.format ("Piper#%08x", Integer.valueOf (System.identityHashCode (this))));
 			this.setUncaughtExceptionHandler (this);
+			this.start ();
 		}
 		
 		@Override
 		public final void run ()
 		{
-			try {
-				final ByteBuffer buffer = ByteBuffer.allocateDirect (1024 * 1024);
-				while (true) {
-					if ((!this.source.isOpen () && buffer.remaining () == 0) || !this.sink.isOpen ())
-						break;
-					buffer.position (0);
-					buffer.limit (buffer.capacity ());
-					if (this.source.isOpen ()) {
-						this.transcript.traceDebugging ("accessing source...");
-						try {
-							final int outcome = this.source.read (buffer);
-							if (outcome == -1)
-								this.source.close ();
-						} catch (final IOException exception) {
-							this.transcript.traceDeferredException (exception, "error encountered while reading from the source channel; aborting!");
-							throw (new Error (exception));
-						}
-						buffer.flip ();
+			final ByteBuffer buffer = ByteBuffer.allocateDirect (1024 * 1024);
+			loop : while (true) {
+				if ((!this.source.isOpen () && (buffer.remaining () == 0)) || !this.sink.isOpen ())
+					break;
+				buffer.position (0);
+				buffer.limit (buffer.capacity ());
+				if (this.source.isOpen ()) {
+					this.transcript.traceDebugging ("accessing source...");
+					try {
+						final int outcome = this.source.read (buffer);
+						if (outcome == -1)
+							this.source.close ();
+					} catch (final IOException exception) {
+						this.exceptions.traceHandledException (exception, "i/o error encountered while reading from the source channel; aborting!");
+						break loop;
 					}
-					while (this.sink.isOpen ()) {
-						this.transcript.traceDebugging ("accessing sink...");
-						try {
-							this.sink.write (buffer);
-						} catch (final IOException exception) {
-							this.transcript.traceDeferredException (exception, "error encountered while writing to the sink channel; aborting!");
-							throw (new Error (exception));
-						}
-						if (buffer.remaining () == 0)
-							break;
-					}
+					buffer.flip ();
 				}
-			} finally {
-				this.close ();
+				while (this.sink.isOpen ()) {
+					this.transcript.traceDebugging ("accessing sink...");
+					try {
+						this.sink.write (buffer);
+					} catch (final IOException exception) {
+						this.exceptions.traceHandledException (exception, "i/o error encountered while writing to the sink channel; aborting!");
+						break loop;
+					}
+					if (buffer.remaining () == 0)
+						break;
+				}
 			}
+			this.close ();
 		}
 		
 		@Override
 		public void uncaughtException (final Thread thread, final Throwable exception)
 		{
 			Preconditions.checkArgument (this == thread);
+			this.exceptions.traceIgnoredException (exception);
 			this.close ();
-			this.transcript.traceIgnoredException (exception);
 		}
 		
 		private final void close ()
@@ -202,16 +204,17 @@ public final class BasicComponentContainerMain
 			try {
 				this.source.close ();
 			} catch (final Throwable exception) {
-				this.transcript.traceIgnoredException (exception);
+				this.exceptions.traceIgnoredException (exception);
 			}
 			this.transcript.traceDebugging ("closing sink...");
 			try {
 				this.sink.close ();
 			} catch (final Throwable exception) {
-				this.transcript.traceIgnoredException (exception);
+				this.exceptions.traceIgnoredException (exception);
 			}
 		}
 		
+		private final TranscriptExceptionTracer exceptions;
 		private final WritableByteChannel sink;
 		private final ReadableByteChannel source;
 		private final Transcript transcript;

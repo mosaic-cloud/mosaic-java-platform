@@ -23,8 +23,10 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
 
 public final class BasicComponent
@@ -32,10 +34,10 @@ public final class BasicComponent
 		implements
 			eu.mosaic_cloud.components.core.Component
 {
-	private BasicComponent (final Channel channel, final CallbackReactor callbackReactor, final ComponentCallbacks callbacks)
+	private BasicComponent (final Channel channel, final CallbackReactor callbackReactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Component (this, channel, callbackReactor, callbacks);
+		this.delegate = new Component (this, channel, callbackReactor, callbacks, exceptions);
 	}
 	
 	@Override
@@ -82,7 +84,17 @@ public final class BasicComponent
 	
 	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ComponentCallbacks callbacks)
 	{
-		return (new BasicComponent (channel, reactor, callbacks));
+		return (new BasicComponent (channel, reactor, callbacks, null));
+	}
+	
+	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
+	{
+		return (new BasicComponent (channel, reactor, callbacks, exceptions));
+	}
+	
+	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ExceptionTracer exceptions)
+	{
+		return (new BasicComponent (channel, reactor, null, exceptions));
 	}
 	
 	private static enum Action
@@ -98,7 +110,7 @@ public final class BasicComponent
 				ChannelCallbacks,
 				CallbackHandler<ChannelCallbacks>
 	{
-		Component (final BasicComponent facade, final Channel channel, final CallbackReactor callbackReactor, final ComponentCallbacks callbacks)
+		Component (final BasicComponent facade, final Channel channel, final CallbackReactor callbackReactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
 		{
 			super ();
 			Preconditions.checkNotNull (facade);
@@ -108,6 +120,7 @@ public final class BasicComponent
 			this.monitor = Monitor.create (this.facade);
 			synchronized (this.monitor) {
 				this.transcript = Transcript.create (this.facade);
+				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 				this.channel = channel;
 				this.channel.assign (this);
 				this.callbackReactor = callbackReactor;
@@ -330,6 +343,7 @@ public final class BasicComponent
 		final CallbackReactor callbackReactor;
 		final ComponentCallbacks callbackTrigger;
 		final Channel channel;
+		final TranscriptExceptionTracer exceptions;
 		final BasicComponent facade;
 		final HashBiMap<ComponentCallReference, String> inboundCalls;
 		final Monitor monitor;

@@ -3,7 +3,6 @@ package eu.mosaic_cloud.components.implementations.basic;
 
 
 import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
@@ -15,7 +14,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
@@ -26,11 +24,13 @@ import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
-import eu.mosaic_cloud.tools.CaughtException;
+import eu.mosaic_cloud.exceptions.core.CaughtException;
+import eu.mosaic_cloud.exceptions.core.DeferredException;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.DefaultThreadPoolFactory;
-import eu.mosaic_cloud.tools.DeferredException;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
 
 public final class BasicChannel
@@ -38,10 +38,10 @@ public final class BasicChannel
 		implements
 			eu.mosaic_cloud.components.core.Channel
 {
-	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ExecutorService executor)
+	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Channel (this, input, output, coder, callbackReactor, callbacks, executor);
+		this.delegate = new Channel (this, input, output, coder, callbackReactor, callbacks, exceptions);
 	}
 	
 	@Override
@@ -78,24 +78,29 @@ public final class BasicChannel
 		this.delegate.stop ();
 	}
 	
-	private final Channel delegate;
+	final Channel delegate;
 	
 	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks)
 	{
 		return (new BasicChannel (input, output, coder, reactor, callbacks, null));
 	}
 	
-	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks, final ExecutorService executor)
+	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks, final ExceptionTracer exceptions)
 	{
-		return (new BasicChannel (input, output, coder, reactor, callbacks, executor));
+		return (new BasicChannel (input, output, coder, reactor, callbacks, exceptions));
 	}
+	
+	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ExceptionTracer exceptions)
+	{
+		return (new BasicChannel (input, output, coder, reactor, null, exceptions));
+	}
+	
+	private static final long defaultPollTimeout = 1000;
 	
 	private static final class Channel
 			extends AbstractService
-			implements
-				UncaughtExceptionHandler
 	{
-		Channel (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ExecutorService executor)
+		Channel (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ExceptionTracer exceptions)
 		{
 			super ();
 			Preconditions.checkNotNull (facade);
@@ -109,25 +114,21 @@ public final class BasicChannel
 			this.monitor = Monitor.create (this.facade);
 			synchronized (this.monitor) {
 				this.transcript = Transcript.create (this.facade);
+				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 				this.input = input;
 				this.output = output;
 				final Selector selector;
 				try {
 					selector = Selector.open ();
-				} catch (final IOException exception) {
-					this.transcript.traceDeferredException (exception, "encountered i/o error while creating selector; aborting!");
-					throw (new IllegalStateException (exception));
+				} catch (final Throwable exception) {
+					this.exceptions.traceDeferredException (exception);
+					throw (new Error (exception));
 				}
 				this.selector = selector;
 				this.coder = coder;
 				this.callbackReactor = callbackReactor;
 				this.callbackTrigger = this.callbackReactor.register (ChannelCallbacks.class, callbacks);
-				if (executor != null)
-					this.executor = executor;
-				else {
-					final ThreadFactory threadFactory = DefaultThreadPoolFactory.create (this.facade, true, Thread.NORM_PRIORITY, this);
-					this.executor = Executors.newCachedThreadPool (threadFactory);
-				}
+				this.executor = Executors.newCachedThreadPool (DefaultThreadPoolFactory.create (this.facade, true, Thread.NORM_PRIORITY, this.exceptions));
 				this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.inboundMessages = new LinkedBlockingQueue<ChannelMessage> ();
@@ -137,13 +138,6 @@ public final class BasicChannel
 				this.decoder = new Decoder (this);
 				this.dispatcher = new Dispatcher (this);
 			}
-		}
-		
-		@Override
-		public final void uncaughtException (final Thread thread, final Throwable exception)
-		{
-			this.transcript.traceIgnoredException (exception, "unexpected error encountered; aborting!");
-			this.stop ();
 		}
 		
 		@Override
@@ -164,7 +158,6 @@ public final class BasicChannel
 		{
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("closing channel...");
-				this.selector.wakeup ();
 				this.ioputer.stop ();
 				this.encoder.stop ();
 				this.decoder.stop ();
@@ -172,13 +165,18 @@ public final class BasicChannel
 				this.notifyStopped ();
 				try {
 					this.input.close ();
-				} catch (final IOException exception) {
-					this.transcript.traceIgnoredException (exception);
+				} catch (final Throwable exception) {
+					this.exceptions.traceIgnoredException (exception);
 				}
 				try {
 					this.output.close ();
-				} catch (final IOException exception) {
-					this.transcript.traceIgnoredException (exception);
+				} catch (final Throwable exception) {
+					this.exceptions.traceIgnoredException (exception);
+				}
+				try {
+					this.selector.wakeup ();
+				} catch (final Throwable exception) {
+					this.exceptions.traceIgnoredException (exception);
 				}
 			}
 		}
@@ -196,15 +194,15 @@ public final class BasicChannel
 					case Inbound :
 						try {
 							this.input.close ();
-						} catch (final IOException exception) {
-							this.transcript.traceIgnoredException (exception);
+						} catch (final Throwable exception) {
+							this.exceptions.traceIgnoredException (exception);
 						}
 						break;
 					case Outbound :
 						try {
 							this.output.close ();
-						} catch (final IOException exception) {
-							this.transcript.traceIgnoredException (exception);
+						} catch (final Throwable exception) {
+							this.exceptions.traceIgnoredException (exception);
 						}
 						break;
 					default:
@@ -228,6 +226,7 @@ public final class BasicChannel
 		final Decoder decoder;
 		final Dispatcher dispatcher;
 		final Encoder encoder;
+		final TranscriptExceptionTracer exceptions;
 		final ExecutorService executor;
 		final BasicChannel facade;
 		final LinkedBlockingQueue<ChannelMessage> inboundMessages;
@@ -293,9 +292,9 @@ public final class BasicChannel
 			this.transcript.traceDebugging ("initializing decoder worker...");
 		}
 		
-		private final ChannelMessageCoder coder;
-		private final LinkedBlockingQueue<ChannelMessage> inboundMessages;
-		private final LinkedBlockingQueue<ByteBuffer> inboundPackets;
+		final ChannelMessageCoder coder;
+		final LinkedBlockingQueue<ChannelMessage> inboundMessages;
+		final LinkedBlockingQueue<ByteBuffer> inboundPackets;
 	}
 	
 	private static final class Dispatcher
@@ -331,8 +330,7 @@ public final class BasicChannel
 					}
 				} else
 					this.transcript.traceError ("discarding receive callback due to closed inbound flow;");
-			}
-			if (message == null)
+			} else {
 				if (this.inboundActive && !this.channel.input.isOpen ()) {
 					this.transcript.traceDebugging ("dispatching close inbound callback...");
 					this.inboundActive = false;
@@ -342,6 +340,7 @@ public final class BasicChannel
 						throw (new DeferredException (exception, "unexpected error encountered while dispatching close inbound callback; aborting!"));
 					}
 				}
+			}
 			if (this.outboundActive && !this.channel.output.isOpen ()) {
 				this.transcript.traceDebugging ("dispatching close outbound callback...");
 				this.outboundActive = false;
@@ -381,10 +380,10 @@ public final class BasicChannel
 			}
 		}
 		
-		private final ChannelCallbacks callbackTrigger;
-		private boolean inboundActive;
-		private final LinkedBlockingQueue<ChannelMessage> inboundMessages;
-		private boolean outboundActive;
+		final ChannelCallbacks callbackTrigger;
+		boolean inboundActive;
+		final LinkedBlockingQueue<ChannelMessage> inboundMessages;
+		boolean outboundActive;
 	}
 	
 	private static final class Encoder
@@ -439,9 +438,9 @@ public final class BasicChannel
 			this.transcript.traceDebugging ("initializing encoder worker...");
 		}
 		
-		private final ChannelMessageCoder coder;
-		private final LinkedBlockingQueue<ChannelMessage> outboundMessages;
-		private final LinkedBlockingQueue<ByteBuffer> outboundPackets;
+		final ChannelMessageCoder coder;
+		final LinkedBlockingQueue<ChannelMessage> outboundMessages;
+		final LinkedBlockingQueue<ByteBuffer> outboundPackets;
 	}
 	
 	private static final class Ioputer
@@ -475,7 +474,8 @@ public final class BasicChannel
 				}
 			} else {
 				if (this.inputPending != null) {
-					this.transcript.traceError ("discarding inbound packet due to closed inbound flow;");
+					if (this.inputPending.position () > 0)
+						this.transcript.traceError ("discarding inbound packet due to closed inbound flow;");
 					this.inputPending = null;
 				}
 			}
@@ -518,12 +518,12 @@ public final class BasicChannel
 					this.outputKey = null;
 				}
 			} catch (final IOException exception) {
-				throw (new DeferredException (exception, "unexpected i/o error encountered while polling streams; aborting!"));
+				throw (new DeferredException (exception, "i/o error encountered while polling streams; aborting!"));
 			}
 			try {
 				this.selector.select (this.pollTimeout);
 			} catch (final IOException exception) {
-				throw (new DeferredException (exception, "unexpected i/o error encountered while polling streams; aborting!"));
+				throw (new DeferredException (exception, "i/o error encountered while polling streams; aborting!"));
 			}
 			final boolean inputValid;
 			final boolean outputValid;
@@ -604,18 +604,27 @@ public final class BasicChannel
 				throws CaughtException
 		{
 			this.transcript.traceDebugging ("finalizing channels worker...");
-			try {
-				if (this.inputKey != null) {
+			if (this.inputKey != null)
+				try {
 					this.inputKey.cancel ();
+				} catch (final Throwable exception) {
+					this.exceptions.traceIgnoredException (exception);
+				} finally {
 					this.inputKey = null;
 				}
-				if (this.outputKey != null) {
+			if (this.outputKey != null)
+				try {
 					this.outputKey.cancel ();
 					this.outputKey = null;
+				} catch (final Throwable exception) {
+					this.exceptions.traceIgnoredException (exception);
+				} finally {
+					this.outputKey = null;
 				}
+			try {
 				this.selector.close ();
-			} catch (final IOException exception) {
-				throw (new DeferredException (exception, "i/o error encountered while closing the selector; ignoring!"));
+			} catch (final Throwable exception) {
+				this.exceptions.traceIgnoredException (exception);
 			}
 		}
 		
@@ -632,17 +641,17 @@ public final class BasicChannel
 			}
 		}
 		
-		private final LinkedBlockingQueue<ByteBuffer> inboundPackets;
-		private final ReadableByteChannel input;
-		private final int inputBufferSize;
-		private SelectionKey inputKey;
-		private ByteBuffer inputPending;
-		private int inputPendingSize;
-		private final LinkedBlockingQueue<ByteBuffer> outboundPackets;
-		private final WritableByteChannel output;
-		private SelectionKey outputKey;
-		private ByteBuffer outputPending;
-		private final Selector selector;
+		final LinkedBlockingQueue<ByteBuffer> inboundPackets;
+		final ReadableByteChannel input;
+		final int inputBufferSize;
+		SelectionKey inputKey;
+		ByteBuffer inputPending;
+		int inputPendingSize;
+		final LinkedBlockingQueue<ByteBuffer> outboundPackets;
+		final WritableByteChannel output;
+		SelectionKey outputKey;
+		ByteBuffer outputPending;
+		final Selector selector;
 	}
 	
 	private static abstract class Worker
@@ -653,8 +662,9 @@ public final class BasicChannel
 			super ();
 			this.channel = channel;
 			this.transcript = this.channel.transcript;
+			this.exceptions = this.channel.exceptions;
 			this.executor = this.channel.executor;
-			this.pollTimeout = 1000;
+			this.pollTimeout = BasicChannel.defaultPollTimeout;
 		}
 		
 		@Override
@@ -678,7 +688,7 @@ public final class BasicChannel
 					this.loop_1 ();
 				}
 			} catch (final Throwable exception) {
-				this.channel.uncaughtException (Thread.currentThread (), exception);
+				this.exceptions.traceIgnoredException (exception);
 			}
 		}
 		
@@ -688,7 +698,7 @@ public final class BasicChannel
 			try {
 				this.shutDown_1 ();
 			} catch (final Throwable exception) {
-				this.channel.uncaughtException (Thread.currentThread (), exception);
+				this.exceptions.traceIgnoredException (exception);
 			}
 		}
 		
@@ -701,7 +711,7 @@ public final class BasicChannel
 			try {
 				this.startUp_1 ();
 			} catch (final Throwable exception) {
-				this.channel.uncaughtException (Thread.currentThread (), exception);
+				this.exceptions.traceIgnoredException (exception);
 			}
 		}
 		
@@ -709,6 +719,7 @@ public final class BasicChannel
 				throws CaughtException;
 		
 		final Channel channel;
+		final TranscriptExceptionTracer exceptions;
 		final ExecutorService executor;
 		final long pollTimeout;
 		final Transcript transcript;

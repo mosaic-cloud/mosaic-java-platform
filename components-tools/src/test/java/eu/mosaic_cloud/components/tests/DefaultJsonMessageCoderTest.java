@@ -6,8 +6,8 @@ import java.nio.ByteBuffer;
 
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
-import junit.framework.Assert;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 

@@ -3,6 +3,7 @@ package eu.mosaic_cloud.components.tools;
 
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.core.CallbackHandler;
@@ -15,13 +16,13 @@ import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentMessage;
 
 
-public class QueueingComponentCallbacks
+public final class QueueingComponentCallbacks
 		extends Object
 		implements
 			ComponentCallbacks,
 			CallbackHandler<ComponentCallbacks>
 {
-	public QueueingComponentCallbacks (final Component component, final BlockingQueue<ComponentMessage> queue)
+	private QueueingComponentCallbacks (final Component component, final BlockingQueue<ComponentMessage> queue)
 	{
 		super ();
 		Preconditions.checkNotNull (component);
@@ -30,61 +31,61 @@ public class QueueingComponentCallbacks
 		this.queue = queue;
 	}
 	
-	@Override
-	public CallbackReference called (final Component component, final ComponentCallRequest request)
-	{
-		Preconditions.checkArgument (this.component == component);
-		Preconditions.checkNotNull (request);
-		this.queue.add (request);
-		return (null);
-	}
-	
-	@Override
-	public CallbackReference casted (final Component component, final ComponentCastRequest request)
-	{
-		Preconditions.checkArgument (this.component == component);
-		Preconditions.checkNotNull (request);
-		this.queue.add (request);
-		return (null);
-	}
-	
-	@Override
-	public void deassigned (final ComponentCallbacks trigger, final ComponentCallbacks newCallbacks)
-	{
-		Preconditions.checkState (false);
-	}
-	
-	@Override
-	public CallbackReference failed (final Component component, final Throwable exception)
-	{
-		Preconditions.checkArgument (this.component == component);
-		return (null);
-	}
-	
-	public void initialize ()
+	public final void assign ()
 	{
 		this.component.assign (this);
 	}
 	
 	@Override
-	public CallbackReference initialized (final Component component)
+	public final CallbackReference called (final Component component, final ComponentCallRequest request)
+	{
+		Preconditions.checkArgument (this.component == component);
+		Preconditions.checkNotNull (request);
+		this.queue.add (request);
+		return (null);
+	}
+	
+	@Override
+	public final CallbackReference casted (final Component component, final ComponentCastRequest request)
+	{
+		Preconditions.checkArgument (this.component == component);
+		Preconditions.checkNotNull (request);
+		this.queue.add (request);
+		return (null);
+	}
+	
+	@Override
+	public final void deassigned (final ComponentCallbacks trigger, final ComponentCallbacks newCallbacks)
+	{
+		Preconditions.checkState (false);
+	}
+	
+	@Override
+	public final CallbackReference failed (final Component component, final Throwable exception)
 	{
 		Preconditions.checkArgument (this.component == component);
 		return (null);
 	}
 	
 	@Override
-	public void reassigned (final ComponentCallbacks trigger, final ComponentCallbacks oldCallbacks)
+	public final CallbackReference initialized (final Component component)
+	{
+		Preconditions.checkArgument (this.component == component);
+		return (null);
+	}
+	
+	@Override
+	public final void reassigned (final ComponentCallbacks trigger, final ComponentCallbacks oldCallbacks)
 	{
 		Preconditions.checkState (false);
 	}
 	
 	@Override
-	public void registered (final ComponentCallbacks trigger)
+	public final void registered (final ComponentCallbacks trigger)
 	{}
 	
 	@Override
-	public CallbackReference replied (final Component component, final ComponentCallReply reply)
+	public final CallbackReference replied (final Component component, final ComponentCallReply reply)
 	{
 		Preconditions.checkArgument (this.component == component);
 		this.queue.add (reply);
@@ -92,16 +93,26 @@ public class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public CallbackReference terminated (final Component component)
+	public final CallbackReference terminated (final Component component)
 	{
 		Preconditions.checkArgument (this.component == component);
 		return (null);
 	}
 	
 	@Override
-	public void unregistered (final ComponentCallbacks trigger)
+	public final void unregistered (final ComponentCallbacks trigger)
 	{}
 	
-	protected final Component component;
-	protected final BlockingQueue<ComponentMessage> queue;
+	public final BlockingQueue<ComponentMessage> queue;
+	private final Component component;
+	
+	public static final QueueingComponentCallbacks create (final Component component)
+	{
+		return (new QueueingComponentCallbacks (component, new LinkedBlockingQueue<ComponentMessage> ()));
+	}
+	
+	public static final QueueingComponentCallbacks create (final Component component, final BlockingQueue<ComponentMessage> queue)
+	{
+		return (new QueueingComponentCallbacks (component, queue));
+	}
 }
