@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-	<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+	<statusListener class="eu.mosaic_cloud.transcript.implementations.slf4j.Slf4jStatusListener" />
+	<define name="jvm_pid" class="eu.mosaic_cloud.transcript.implementations.slf4j.Slf4jJvmPidPropertyDefiner" />
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>[%8relative] [%-5level] [%-48logger{48}] [%-32thread] %msg%n</pattern>
+			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48logger{48}][%-32thread] %msg%n</pattern>
 		</encoder>
 	</appender>
-	<root level="trace">
+	<root level="info">
 		<appender-ref ref="console" />
 	</root>
 </configuration>

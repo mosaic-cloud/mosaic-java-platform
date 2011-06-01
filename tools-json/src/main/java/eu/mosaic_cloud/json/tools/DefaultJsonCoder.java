@@ -11,6 +11,7 @@ import eu.mosaic_cloud.json.core.JsonCoder;
 import net.minidev.json.JSONStyle;
 import net.minidev.json.JSONValue;
 import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.JSONParserBase;
 import net.minidev.json.parser.ParseException;
 
 
@@ -35,7 +36,7 @@ public final class DefaultJsonCoder
 			final byte[] dataBytes = new byte[data.remaining ()];
 			data.get (dataBytes);
 			final String dataString = new String (dataBytes, this.metaDataCharset);
-			final JSONParser parser = new JSONParser ();
+			final JSONParser parser = new JSONParser (JSONParserBase.MODE_RFC4627);
 			final Object structure = parser.parse (dataString);
 			return (structure);
 		} catch (final ParseException exception) {

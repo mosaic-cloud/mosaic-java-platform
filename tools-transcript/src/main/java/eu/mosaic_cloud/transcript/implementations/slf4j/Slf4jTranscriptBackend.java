@@ -2,6 +2,8 @@
 package eu.mosaic_cloud.transcript.implementations.slf4j;
 
 
+import java.lang.management.ManagementFactory;
+
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.ExtendedFormatter;
