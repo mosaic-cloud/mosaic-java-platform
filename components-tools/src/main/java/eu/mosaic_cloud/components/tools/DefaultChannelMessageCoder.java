@@ -2,21 +2,17 @@
 package eu.mosaic_cloud.components.tools;
 
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.Charset;
+import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
-import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.json.core.JsonCoder;
+import eu.mosaic_cloud.json.tools.DefaultJsonCoder;
 import net.minidev.json.JSONObject;
-import net.minidev.json.JSONStyle;
-import net.minidev.json.JSONValue;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 
 
 public final class DefaultChannelMessageCoder
@@ -24,20 +20,17 @@ public final class DefaultChannelMessageCoder
 		implements
 			ChannelMessageCoder
 {
-	private DefaultChannelMessageCoder ()
+	private DefaultChannelMessageCoder (final JsonCoder jsonCoder)
 	{
 		super ();
-		this.transcript = Transcript.create (this);
-		this.metaDataCharset = Charset.forName ("utf-8");
-		this.style = new JSONStyle (-1 & ~JSONStyle.FLAG_PROTECT_KEYS & ~JSONStyle.FLAG_PROTECT_VALUES);
+		Preconditions.checkNotNull (jsonCoder);
+		this.jsonCoder = jsonCoder;
 	}
 	
 	@Override
 	public final ChannelMessage decode (final ByteBuffer packet_)
-			throws IOException,
-				ParseException
+			throws Throwable
 	{
-		this.transcript.traceDebugging ("decoding message...");
 		Preconditions.checkNotNull (packet_);
 		final ByteBuffer packet = packet_.asReadOnlyBuffer ();
 		Preconditions.checkArgument (packet.order () == ByteOrder.BIG_ENDIAN, "invalid packet byte-order");
@@ -53,15 +46,14 @@ public final class DefaultChannelMessageCoder
 		}
 		final int metaDataEndPosition = packet.position () - 1;
 		packet.position (metaDataBeginPosition);
-		final byte[] metaDataBytes = new byte[metaDataEndPosition - metaDataBeginPosition];
-		packet.get (metaDataBytes);
+		final ByteBuffer metaDataSlice = packet.asReadOnlyBuffer ();
+		metaDataSlice.position (metaDataBeginPosition);
+		metaDataSlice.limit (metaDataEndPosition);
+		final Object metaDataValue = this.jsonCoder.decode (metaDataSlice);
 		packet.position (metaDataEndPosition + 1);
-		final String metaDataString = new String (metaDataBytes, this.metaDataCharset);
-		final JSONParser metaDataParser = new JSONParser ();
-		final Object metaDataValue = metaDataParser.parse (metaDataString);
-		Preconditions.checkArgument ((metaDataValue != null) && (metaDataValue instanceof JSONObject), "unexpected meta-data value: `%s`", metaDataValue);
-		final JSONObject metaData = (JSONObject) metaDataValue;
-		final Object messageTypeValue = metaData.get ("__type__");
+		Preconditions.checkArgument ((metaDataValue != null) && (metaDataValue instanceof Map), "unexpected meta-data value: `%s`", metaDataValue);
+		final Map<String, Object> metaData = (Map<String, Object>) metaDataValue;
+		final Object messageTypeValue = metaData.remove ("__type__");
 		Preconditions.checkArgument ((messageTypeValue != null) && (messageTypeValue instanceof String), "unexpected message type value: `%s`", messageTypeValue);
 		final ChannelMessageType messageType;
 		if ("exchange".equals (ChannelMessageType.Exchange.identifier))
@@ -69,42 +61,38 @@ public final class DefaultChannelMessageCoder
 		else
 			messageType = null;
 		Preconditions.checkArgument (messageType != null, "invalid message type: `%s`", messageTypeValue);
-		metaData.remove ("__type__");
 		final ChannelMessage message = ChannelMessage.create (messageType, metaData, packet);
 		return (message);
 	}
 	
 	@Override
 	public final ByteBuffer encode (final ChannelMessage message)
+			throws Throwable
 	{
-		this.transcript.traceDebugging ("encoding message...");
 		Preconditions.checkNotNull (message);
 		Preconditions.checkArgument (message.type != null, "unexpected message-type value: `%s`", message.type);
 		Preconditions.checkArgument ((message.metaData != null), "unexpected meta-data value: `%s`", message.metaData);
 		Preconditions.checkNotNull (message.data);
-		final JSONObject metaData = new JSONObject (message.metaData);
-		metaData.put ("__type__", message.type.identifier);
-		final String metaDataString = JSONValue.toJSONString (metaData, this.style);
-		final byte[] metaDataBytes = metaDataString.getBytes (this.metaDataCharset);
+		final JSONObject metaDataValue = new JSONObject (message.metaData);
+		metaDataValue.put ("__type__", message.type.identifier);
+		final ByteBuffer metaData = this.jsonCoder.encode (metaDataValue);
 		final ByteBuffer data = message.data.asReadOnlyBuffer ();
-		final int packetSize = metaDataBytes.length + 1 + data.remaining ();
+		final int packetSize = metaData.remaining () + 1 + data.remaining ();
 		final ByteBuffer packet = ByteBuffer.allocate (packetSize + 4);
 		packet.putInt (packetSize);
-		packet.put (metaDataBytes);
+		packet.put (metaData);
 		packet.put ((byte) 0);
 		packet.put (data);
 		packet.flip ();
 		return (packet.asReadOnlyBuffer ());
 	}
 	
-	private final Charset metaDataCharset;
-	private final JSONStyle style;
-	private final Transcript transcript;
+	private final JsonCoder jsonCoder;
 	
 	public static final DefaultChannelMessageCoder create ()
 	{
-		return (new DefaultChannelMessageCoder ());
+		return (new DefaultChannelMessageCoder (DefaultJsonCoder.defaultInstance));
 	}
 	
-	public static final DefaultChannelMessageCoder defaultInstance = new DefaultChannelMessageCoder ();
+	public static final DefaultChannelMessageCoder defaultInstance = new DefaultChannelMessageCoder (DefaultJsonCoder.defaultInstance);
 }

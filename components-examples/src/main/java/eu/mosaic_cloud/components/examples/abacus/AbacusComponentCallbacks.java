@@ -15,7 +15,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
-import eu.mosaic_cloud.components.tools.DefaultObjectMapper;
+import eu.mosaic_cloud.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.transcript.core.Transcript;
 import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
@@ -43,7 +43,7 @@ public final class AbacusComponentCallbacks
 		Preconditions.checkArgument (request.data.remaining () == 0);
 		final RequestMetaData requestMetaData;
 		try {
-			requestMetaData = DefaultObjectMapper.defaultInstance.decode (request.metaData, RequestMetaData.class);
+			requestMetaData = DefaultJsonMapper.defaultInstance.decode (request.metaData, RequestMetaData.class);
 			Preconditions.checkNotNull (requestMetaData);
 		} catch (final Throwable exception) {
 			this.exceptions.traceIgnoredException (exception);
@@ -60,7 +60,7 @@ public final class AbacusComponentCallbacks
 		final ReplyMetaData replyMetaData = new ReplyMetaData (outcome);
 		final ComponentCallReply reply;
 		try {
-			reply = ComponentCallReply.create (DefaultObjectMapper.defaultInstance.encode (replyMetaData, ReplyMetaData.class), ByteBuffer.allocate (0), request.reference);
+			reply = ComponentCallReply.create (DefaultJsonMapper.defaultInstance.encode (replyMetaData, ReplyMetaData.class), ByteBuffer.allocate (0), request.reference);
 		} catch (final Throwable exception) {
 			this.exceptions.traceIgnoredException (exception);
 			return (null);

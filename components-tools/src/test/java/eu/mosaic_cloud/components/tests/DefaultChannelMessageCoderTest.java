@@ -11,11 +11,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
-public final class DefaultJsonMessageCoderTest
+public final class DefaultChannelMessageCoderTest
 {
 	@Test
 	public final void test ()
-			throws Exception
+			throws Throwable
 	{
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final int tries = 16;

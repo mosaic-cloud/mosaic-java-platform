@@ -17,9 +17,9 @@ import eu.mosaic_cloud.components.examples.abacus.AbacusComponentCallbacks.Reque
 import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponent;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
-import eu.mosaic_cloud.components.tools.DefaultObjectMapper;
 import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.json.tools.DefaultJsonMapper;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,11 +54,11 @@ public class AbacusTest
 			final double operandA = Math.random () * 10;
 			final double operandB = Math.random () * 10;
 			final RequestMetaData requestMetaData = new RequestMetaData ("+", operandA, operandB);
-			final ComponentCallRequest request = ComponentCallRequest.create (DefaultObjectMapper.defaultInstance.encode (requestMetaData, RequestMetaData.class), ByteBuffer.allocate (0), ComponentCallReference.create ());
+			final ComponentCallRequest request = ComponentCallRequest.create (DefaultJsonMapper.defaultInstance.encode (requestMetaData, RequestMetaData.class), ByteBuffer.allocate (0), ComponentCallReference.create ());
 			clientComponent.call (peer, request);
 			final ComponentCallReply reply = (ComponentCallReply) clientCallbacks.queue.poll (AbacusTest.pollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (reply);
-			final ReplyMetaData replyMetaData = DefaultObjectMapper.defaultInstance.decode (reply.metaData, ReplyMetaData.class);
+			final ReplyMetaData replyMetaData = DefaultJsonMapper.defaultInstance.decode (reply.metaData, ReplyMetaData.class);
 			Assert.assertNotNull (replyMetaData.ok);
 			Assert.assertNotNull (replyMetaData.outcome);
 			Assert.assertEquals (request.reference, reply.reference);
