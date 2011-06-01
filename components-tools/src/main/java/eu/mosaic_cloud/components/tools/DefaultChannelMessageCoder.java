@@ -19,12 +19,12 @@ import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
 
-public final class DefaultJsonMessageCoder
+public final class DefaultChannelMessageCoder
 		extends Object
 		implements
 			ChannelMessageCoder
 {
-	private DefaultJsonMessageCoder ()
+	private DefaultChannelMessageCoder ()
 	{
 		super ();
 		this.transcript = Transcript.create (this);
@@ -33,7 +33,7 @@ public final class DefaultJsonMessageCoder
 	}
 	
 	@Override
-	public ChannelMessage decode (final ByteBuffer packet_)
+	public final ChannelMessage decode (final ByteBuffer packet_)
 			throws IOException,
 				ParseException
 	{
@@ -75,7 +75,7 @@ public final class DefaultJsonMessageCoder
 	}
 	
 	@Override
-	public ByteBuffer encode (final ChannelMessage message)
+	public final ByteBuffer encode (final ChannelMessage message)
 	{
 		this.transcript.traceDebugging ("encoding message...");
 		Preconditions.checkNotNull (message);
@@ -101,10 +101,10 @@ public final class DefaultJsonMessageCoder
 	private final JSONStyle style;
 	private final Transcript transcript;
 	
-	public static final DefaultJsonMessageCoder create ()
+	public static final DefaultChannelMessageCoder create ()
 	{
-		return (new DefaultJsonMessageCoder ());
+		return (new DefaultChannelMessageCoder ());
 	}
 	
-	public static final DefaultJsonMessageCoder defaultInstance = new DefaultJsonMessageCoder ();
+	public static final DefaultChannelMessageCoder defaultInstance = new DefaultChannelMessageCoder ();
 }

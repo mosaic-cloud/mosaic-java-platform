@@ -3,8 +3,7 @@ package eu.mosaic_cloud.components.examples.abacus;
 
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Joiner;
@@ -16,7 +15,9 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.tools.DefaultObjectMapper;
 import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
 
 public final class AbacusComponentCallbacks
@@ -29,6 +30,7 @@ public final class AbacusComponentCallbacks
 	{
 		super ();
 		this.transcript = Transcript.create (this);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript);
 		this.component = null;
 		this.status = Status.Created;
 	}
@@ -39,27 +41,30 @@ public final class AbacusComponentCallbacks
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkArgument (request.data.remaining () == 0);
-		final Object operatorValue = request.metaData.get ("operator");
-		Preconditions.checkArgument ((operatorValue != null) && (operatorValue instanceof String));
-		final String operator = (String) operatorValue;
-		final Object operandsValue = request.metaData.get ("operands");
-		Preconditions.checkArgument ((operandsValue != null) && (operandsValue instanceof List));
-		final LinkedList<Number> operands = new LinkedList<Number> ();
-		for (final Object operand : (List<?>) operandsValue) {
-			Preconditions.checkArgument ((operand != null) && (operand instanceof Number));
-			operands.add ((Number) operand);
+		final RequestMetaData requestMetaData;
+		try {
+			requestMetaData = DefaultObjectMapper.defaultInstance.decode (request.metaData, RequestMetaData.class);
+			Preconditions.checkNotNull (requestMetaData);
+		} catch (final Throwable exception) {
+			this.exceptions.traceIgnoredException (exception);
+			return (null);
 		}
-		this.transcript.traceInformation ("called `%s` with `%s`", operator, Joiner.on ("`, `").join (operands));
+		this.transcript.traceInformation ("called `%s` with `%s`", requestMetaData.operator, Joiner.on ("`, `").join (requestMetaData.operands));
 		double outcome;
-		if ("+".equals (operator)) {
+		if ("+".equals (requestMetaData.operator)) {
 			outcome = 0;
-			for (final Number operand : operands)
+			for (final Number operand : requestMetaData.operands)
 				outcome += operand.doubleValue ();
 		} else
 			throw (new IllegalArgumentException ());
-		final HashMap<String, Object> replyMetaData = new HashMap<String, Object> ();
-		replyMetaData.put ("outcome", Double.valueOf (outcome));
-		final ComponentCallReply reply = ComponentCallReply.create (replyMetaData, ByteBuffer.allocate (0), request.reference);
+		final ReplyMetaData replyMetaData = new ReplyMetaData (outcome);
+		final ComponentCallReply reply;
+		try {
+			reply = ComponentCallReply.create (DefaultObjectMapper.defaultInstance.encode (replyMetaData, ReplyMetaData.class), ByteBuffer.allocate (0), request.reference);
+		} catch (final Throwable exception) {
+			this.exceptions.traceIgnoredException (exception);
+			return (null);
+		}
 		component.reply (reply);
 		return (null);
 	}
@@ -139,8 +144,49 @@ public final class AbacusComponentCallbacks
 	}
 	
 	private Component component;
+	private final TranscriptExceptionTracer exceptions;
 	private Status status;
 	private final Transcript transcript;
+	
+	public static final class ReplyMetaData
+			extends Object
+	{
+		public ReplyMetaData ()
+		{
+			super ();
+		}
+		
+		public ReplyMetaData (final double value)
+		{
+			super ();
+			this.ok = Boolean.TRUE;
+			this.outcome = Double.valueOf (value);
+		}
+		
+		public Boolean ok;
+		public Number outcome;
+	}
+	
+	public static final class RequestMetaData
+			extends Object
+	{
+		public RequestMetaData ()
+		{
+			super ();
+		}
+		
+		public RequestMetaData (final String operator, final double ... operands)
+		{
+			super ();
+			this.operator = operator;
+			this.operands = new ArrayList<Number> (operands.length);
+			for (final double operand : operands)
+				this.operands.add (Double.valueOf (operand));
+		}
+		
+		public List<Number> operands;
+		public String operator;
+	}
 	
 	private static enum Status
 	{

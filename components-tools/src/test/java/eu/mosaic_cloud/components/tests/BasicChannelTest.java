@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import eu.mosaic_cloud.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
-import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
+import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingChannelCallbacks;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
 
@@ -25,7 +25,7 @@ public final class BasicChannelTest
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create ();
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
-		final DefaultJsonMessageCoder coder = DefaultJsonMessageCoder.defaultInstance;
+		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, exceptions);
 		final QueueingChannelCallbacks callbacks = QueueingChannelCallbacks.create (channel);
 		reactor.initialize ();

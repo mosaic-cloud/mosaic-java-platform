@@ -12,7 +12,7 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponent;
-import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
+import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
 
@@ -30,7 +30,7 @@ public final class BasicComponentTest
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create ();
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
-		final DefaultJsonMessageCoder coder = DefaultJsonMessageCoder.defaultInstance;
+		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
 		final QueueingComponentCallbacks callbacks = QueueingComponentCallbacks.create (component);

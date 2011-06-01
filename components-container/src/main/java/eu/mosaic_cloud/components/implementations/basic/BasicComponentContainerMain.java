@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
-import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
+import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
@@ -46,7 +46,7 @@ public final class BasicComponentContainerMain
 		}
 		final Piper inputPiper = new Piper (Channels.newChannel (BasicComponentContainerPreMain.stdin), inputPipe.sink (), exceptions);
 		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (BasicComponentContainerPreMain.stdout), exceptions);
-		final DefaultJsonMessageCoder coder = DefaultJsonMessageCoder.create ();
+		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.create ();
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
 		final BasicChannel channel = BasicChannel.create (inputPipe.source (), outputPipe.sink (), coder, reactor, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);

@@ -5,7 +5,7 @@ package eu.mosaic_cloud.components.tests;
 import java.nio.ByteBuffer;
 
 import eu.mosaic_cloud.components.core.ChannelMessage;
-import eu.mosaic_cloud.components.tools.DefaultJsonMessageCoder;
+import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public final class DefaultJsonMessageCoderTest
 	public final void test ()
 			throws Exception
 	{
-		final DefaultJsonMessageCoder coder = DefaultJsonMessageCoder.defaultInstance;
+		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final int tries = 16;
 		for (int index = 0; index < tries; index++) {
 			final ChannelMessage outboundMessage = RandomMessageGenerator.defaultInstance.generateChannelMessage ();
