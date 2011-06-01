@@ -9,12 +9,17 @@
 		<artifactId>tools-parent</artifactId>
 		<version>0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>tools-miscellaneous</artifactId>
+	<artifactId>tools-exceptions</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>eu.mosaic_cloud</groupId>
-			<artifactId>tools-exceptions</artifactId>
-			<version>${project.version}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>0.9.28</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 	</dependencies>
 </project>

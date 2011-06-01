@@ -17,7 +17,7 @@ public final class OutcomeFuture<_Outcome_ extends Object>
 	}
 	
 	public final OutcomeFuture.OutcomeTrigger<_Outcome_> trigger;
-	private final OutcomeFuture.OutcomeCallable<_Outcome_> callable;
+	final OutcomeFuture.OutcomeCallable<_Outcome_> callable;
 	
 	public static final <_Outcome_ extends Object> OutcomeFuture<_Outcome_> create ()
 	{

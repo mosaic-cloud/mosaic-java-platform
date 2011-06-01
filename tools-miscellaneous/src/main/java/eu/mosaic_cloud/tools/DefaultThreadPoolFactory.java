@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.UncaughtExceptionHandlers;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 
 
 public final class DefaultThreadPoolFactory
@@ -46,11 +46,26 @@ public final class DefaultThreadPoolFactory
 	
 	public static final DefaultThreadPoolFactory create (final Object owner)
 	{
-		return (new DefaultThreadPoolFactory (owner, true, Thread.NORM_PRIORITY, UncaughtExceptionHandlers.systemExit ()));
+		return (new DefaultThreadPoolFactory (owner, true, Thread.NORM_PRIORITY, null));
+	}
+	
+	public static final DefaultThreadPoolFactory create (final Object owner, final boolean daemon, final int priority, final ExceptionTracer exceptionTracer)
+	{
+		return (new DefaultThreadPoolFactory (owner, daemon, priority, eu.mosaic_cloud.exceptions.tools.UncaughtExceptionHandler.create (exceptionTracer)));
 	}
 	
 	public static final DefaultThreadPoolFactory create (final Object owner, final boolean daemon, final int priority, final UncaughtExceptionHandler exceptionHandler)
 	{
 		return (new DefaultThreadPoolFactory (owner, daemon, priority, exceptionHandler));
+	}
+	
+	public static final DefaultThreadPoolFactory create (final Object owner, final ExceptionTracer exceptionTracer)
+	{
+		return (new DefaultThreadPoolFactory (owner, true, Thread.NORM_PRIORITY, eu.mosaic_cloud.exceptions.tools.UncaughtExceptionHandler.create (exceptionTracer)));
+	}
+	
+	public static final DefaultThreadPoolFactory create (final Object owner, final UncaughtExceptionHandler exceptionHandler)
+	{
+		return (new DefaultThreadPoolFactory (owner, true, Thread.NORM_PRIORITY, exceptionHandler));
 	}
 }

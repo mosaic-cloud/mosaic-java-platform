@@ -3,6 +3,7 @@ package eu.mosaic_cloud.callbacks.tools;
 
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.core.CallbackHandler;
@@ -15,7 +16,7 @@ public final class QueueingQueueCallbacks<_Element_ extends Object>
 			QueueCallbacks<_Element_>,
 			CallbackHandler<QueueCallbacks<_Element_>>
 {
-	public QueueingQueueCallbacks (final BlockingQueue<_Element_> queue)
+	private QueueingQueueCallbacks (final BlockingQueue<_Element_> queue)
 	{
 		super ();
 		Preconditions.checkNotNull (queue);
@@ -23,7 +24,7 @@ public final class QueueingQueueCallbacks<_Element_ extends Object>
 	}
 	
 	@Override
-	public void deassigned (final QueueCallbacks<_Element_> trigger, final QueueCallbacks<_Element_> newCallbacks)
+	public final void deassigned (final QueueCallbacks<_Element_> trigger, final QueueCallbacks<_Element_> newCallbacks)
 	{}
 	
 	@Override
@@ -34,16 +35,26 @@ public final class QueueingQueueCallbacks<_Element_ extends Object>
 	}
 	
 	@Override
-	public void reassigned (final QueueCallbacks<_Element_> trigger, final QueueCallbacks<_Element_> oldCallbacks)
+	public final void reassigned (final QueueCallbacks<_Element_> trigger, final QueueCallbacks<_Element_> oldCallbacks)
 	{}
 	
 	@Override
-	public void registered (final QueueCallbacks<_Element_> trigger)
+	public final void registered (final QueueCallbacks<_Element_> trigger)
 	{}
 	
 	@Override
-	public void unregistered (final QueueCallbacks<_Element_> trigger)
+	public final void unregistered (final QueueCallbacks<_Element_> trigger)
 	{}
 	
-	private final BlockingQueue<_Element_> queue;
+	public final BlockingQueue<_Element_> queue;
+	
+	public static final <_Element_ extends Object> QueueingQueueCallbacks<_Element_> create ()
+	{
+		return (new QueueingQueueCallbacks<_Element_> (new LinkedBlockingQueue<_Element_> ()));
+	}
+	
+	public static final <_Element_ extends Object> QueueingQueueCallbacks<_Element_> create (final BlockingQueue<_Element_> queue)
+	{
+		return (new QueueingQueueCallbacks<_Element_> (queue));
+	}
 }

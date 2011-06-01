@@ -2,14 +2,12 @@
 package eu.mosaic_cloud.callbacks.implementations.basic;
 
 
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -22,9 +20,11 @@ import eu.mosaic_cloud.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.callbacks.core.CallbackTrigger;
 import eu.mosaic_cloud.callbacks.core.Callbacks;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.DefaultThreadPoolFactory;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
 
 public final class BasicCallbackReactor
@@ -32,10 +32,10 @@ public final class BasicCallbackReactor
 		implements
 			CallbackReactor
 {
-	private BasicCallbackReactor (final ExecutorService executor)
+	private BasicCallbackReactor (final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Reactor (this, executor);
+		this.delegate = new Reactor (this, exceptions);
 	}
 	
 	@Override
@@ -80,9 +80,9 @@ public final class BasicCallbackReactor
 		return (new BasicCallbackReactor (null));
 	}
 	
-	public static final BasicCallbackReactor create (final ExecutorService executor)
+	public static final BasicCallbackReactor create (final ExceptionTracer exceptions)
 	{
-		return (new BasicCallbackReactor (executor));
+		return (new BasicCallbackReactor (exceptions));
 	}
 	
 	private static abstract class Action
@@ -181,7 +181,8 @@ public final class BasicCallbackReactor
 			try {
 				this.reactor.execute (this);
 			} catch (final Throwable exception) {
-				this.reactor.uncaughtException (Thread.currentThread (), exception);
+				this.reactor.exceptions.traceIgnoredException (exception);
+				this.reactor.stop ();
 			}
 		}
 		
@@ -196,32 +197,19 @@ public final class BasicCallbackReactor
 	
 	static private final class Reactor
 			extends AbstractService
-			implements
-				UncaughtExceptionHandler
 	{
-		Reactor (final BasicCallbackReactor facade, final ExecutorService executor)
+		Reactor (final BasicCallbackReactor facade, final ExceptionTracer exceptions)
 		{
 			Preconditions.checkNotNull (facade);
 			this.facade = facade;
 			this.monitor = Monitor.create (this.facade);
 			synchronized (this.monitor) {
 				this.transcript = Transcript.create (this.facade);
-				if (executor != null)
-					this.executor = executor;
-				else {
-					final ThreadFactory threadFactory = DefaultThreadPoolFactory.create (this.facade, true, Thread.NORM_PRIORITY, this);
-					this.executor = Executors.newCachedThreadPool (threadFactory);
-				}
+				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
+				this.executor = Executors.newCachedThreadPool (DefaultThreadPoolFactory.create (this.facade, true, Thread.NORM_PRIORITY, this.exceptions));
 				this.proxies = new WeakHashMap<CallbackTrigger, Proxy> ();
 				this.actions = new WeakHashMap<CallbackReference, Action> ();
 			}
-		}
-		
-		@Override
-		public final void uncaughtException (final Thread thread, final Throwable exception)
-		{
-			this.transcript.traceIgnoredException (exception, "unexpected error encountered; aborting!");
-			this.stop ();
 		}
 		
 		@Override
@@ -250,7 +238,6 @@ public final class BasicCallbackReactor
 			Preconditions.checkArgument (trigger instanceof CallbackTrigger);
 			final CallbackReference reference;
 			synchronized (this.monitor) {
-				Preconditions.checkState (this.state () == State.RUNNING);
 				this.transcript.traceDebugging ("replacing trigger `%{object:identity}`...", trigger);
 				final Proxy proxy = this.proxies.get (trigger);
 				Preconditions.checkNotNull (proxy);
@@ -290,8 +277,9 @@ public final class BasicCallbackReactor
 					((CallbackHandler<Callbacks>) newHandler).reassigned ((Callbacks) proxy.trigger, (Callbacks) oldHandler);
 				action.triggerSucceed ();
 			} catch (final Throwable exception) {
-				this.transcript.traceIgnoredException (exception, "unexpected error encountered while invocking assign callbacks for trigger `%{object:identity}` for class `%{class}` with old-handler `%{object}` and new-handle `%{object}`...", proxy.trigger, proxy.specification, oldHandler, newHandler);
+				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking assign callbacks for trigger `%{object:identity}` for class `%{class}` with old-handler `%{object}` and new-handle `%{object}`; deferring!", proxy.trigger, proxy.specification, oldHandler, newHandler);
 				action.triggerFail (exception);
+				proxy.failed.set (true);
 			}
 			this.schedule (proxy);
 		}
@@ -310,7 +298,7 @@ public final class BasicCallbackReactor
 				action.method.invoke (handler, action.arguments);
 				action.triggerSucceed ();
 			} catch (final Throwable exception) {
-				this.transcript.traceDeferredException (exception, "unexpected error encountered while invocking callback `%{method}` `%{array}` for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`; deferring!", action.method, action.arguments, proxy.trigger, proxy.specification, handler);
+				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking callback `%{method}` `%{array}` for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`; deferring!", action.method, action.arguments, proxy.trigger, proxy.specification, handler);
 				action.triggerFail (exception);
 				proxy.failed.set (true);
 			}
@@ -349,8 +337,9 @@ public final class BasicCallbackReactor
 				((CallbackHandler<Callbacks>) handler).registered ((Callbacks) proxy.trigger);
 				action.triggerSucceed ();
 			} catch (final Throwable exception) {
-				this.transcript.traceIgnoredException (exception, "unexpected error encountered while invocking register callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`...", proxy.trigger, proxy.specification, handler);
+				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking register callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`; deferring!", proxy.trigger, proxy.specification, handler);
 				action.triggerFail (exception);
+				proxy.failed.set (true);
 			}
 			this.schedule (proxy);
 		}
@@ -370,7 +359,7 @@ public final class BasicCallbackReactor
 				((CallbackHandler<Callbacks>) handler).unregistered ((Callbacks) proxy.trigger);
 				action.triggerSucceed ();
 			} catch (final Throwable exception) {
-				this.transcript.traceIgnoredException (exception, "unexpected error encountered while invocking unregister callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`...", proxy.trigger, proxy.specification, handler);
+				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking unregister callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`; deferring!", proxy.trigger, proxy.specification, handler);
 				action.triggerFail (exception);
 				proxy.failed.set (true);
 			}
@@ -388,17 +377,13 @@ public final class BasicCallbackReactor
 			}
 			final CallbackTrigger trigger;
 			synchronized (this.monitor) {
-				Preconditions.checkState (this.state () == State.RUNNING);
 				this.transcript.traceDebugging ("registering trigger for class `%{class}` with handler `%{object}`...", specification, handler);
 				final Proxy proxy;
 				try {
 					proxy = new Proxy (this, specification);
-				} catch (final RuntimeException exception) {
-					this.transcript.traceDeferredException (exception, "unexpected error encountered while registering trigger for class `%{class}` with handler `%{object}`; re-throwing!", specification, handler);
-					throw (exception);
-				} catch (final Error exception) {
-					this.transcript.traceDeferredException (exception, "unexpected error encountered while registering trigger for class `%{class}` with handler `%{object}`; re-throwing!", specification, handler);
-					throw (exception);
+				} catch (final Throwable exception) {
+					this.exceptions.traceDeferredException (exception, "unexpected error encountered while registering trigger for class `%{class}` with handler `%{object}`; re-throwing!", specification, handler);
+					throw (new Error (exception));
 				}
 				trigger = proxy.trigger;
 				this.proxies.put (trigger, proxy);
@@ -443,12 +428,9 @@ public final class BasicCallbackReactor
 						this.transcript.traceDebugging ("scheduling action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}`...", action.reference, proxy.trigger, proxy.specification);
 						try {
 							this.executor.execute (proxy);
-						} catch (final Error exception) {
+						} catch (final Throwable exception) {
 							Preconditions.checkState (proxy.scheduled.compareAndSet (action, null));
-							throw (exception);
-						} catch (final RuntimeException exception) {
-							Preconditions.checkState (proxy.scheduled.compareAndSet (action, null));
-							throw (exception);
+							this.exceptions.traceDeferredException (exception);
 						}
 					}
 					break;
@@ -462,7 +444,6 @@ public final class BasicCallbackReactor
 			this.transcript.traceDebugging ("triggering callback `%{method}` `%{array}` for trigger `%{object:identity}` for class `%{class}`...", method, arguments, proxy.trigger, proxy.specification);
 			final CallbackReference reference;
 			synchronized (this.monitor) {
-				// Preconditions.checkState (this.state () == State.RUNNING);
 				reference = CallbackReference.create (this.facade);
 				final InvokeAction action = new InvokeAction (proxy, reference, method, arguments);
 				proxy.actions.add (action);
@@ -478,7 +459,6 @@ public final class BasicCallbackReactor
 			Preconditions.checkNotNull (trigger);
 			final CallbackReference reference;
 			synchronized (this.monitor) {
-				// Preconditions.checkState ((this.state () == State.RUNNING) || (this.state () == State.STOPPING));
 				this.transcript.traceDebugging ("unregistering trigger `%{object:identity}`...", trigger);
 				final Proxy proxy = this.proxies.get (trigger);
 				Preconditions.checkNotNull (proxy);
@@ -496,6 +476,7 @@ public final class BasicCallbackReactor
 		}
 		
 		final WeakHashMap<CallbackReference, Action> actions;
+		final TranscriptExceptionTracer exceptions;
 		final ExecutorService executor;
 		final BasicCallbackReactor facade;
 		final Monitor monitor;

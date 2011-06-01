@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.tools;
+package eu.mosaic_cloud.exceptions.core;
 
 
 public enum ExceptionResolution
