@@ -7,18 +7,21 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 import org.zeromq.ZMQ;
 
 
 public final class ZeroMqChannelSocket
 		extends Object
 {
-	public ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger)
+	public ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (self);
 		this.transcript = Transcript.create (this);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.self = self;
 		this.inboundPackets = new LinkedBlockingQueue<Packet> ();
 		this.outboundPackets = new LinkedBlockingQueue<Packet> ();
@@ -36,7 +39,7 @@ public final class ZeroMqChannelSocket
 			try {
 				Thread.sleep (100);
 			} catch (final InterruptedException exception) {
-				this.transcript.traceIgnoredException (exception);
+				this.exceptions.traceIgnoredException (exception);
 			}
 		if (this.socket == null)
 			throw (new IllegalStateException ());
@@ -51,7 +54,7 @@ public final class ZeroMqChannelSocket
 			try {
 				Thread.sleep (100);
 			} catch (final InterruptedException exception) {
-				this.transcript.traceIgnoredException (exception);
+				this.exceptions.traceIgnoredException (exception);
 			}
 		if (this.socket == null)
 			throw (new IllegalStateException ());
@@ -246,6 +249,7 @@ public final class ZeroMqChannelSocket
 	}
 	
 	private final Runnable dequeueTrigger;
+	private final TranscriptExceptionTracer exceptions;
 	private final LinkedBlockingQueue<Packet> inboundPackets;
 	private final Thread looper;
 	private final LinkedBlockingQueue<Packet> outboundPackets;

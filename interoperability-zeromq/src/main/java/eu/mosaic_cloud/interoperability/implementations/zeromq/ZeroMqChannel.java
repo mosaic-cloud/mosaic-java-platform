@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
@@ -32,6 +33,7 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSocket.Packet;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.transcript.core.Transcript;
+import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
 
 public final class ZeroMqChannel
@@ -39,17 +41,18 @@ public final class ZeroMqChannel
 		implements
 			Channel
 {
-	public ZeroMqChannel (final String self)
+	public ZeroMqChannel (final String self, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (self);
 		this.transcript = Transcript.create (this);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.selfIdentifier = self;
 		this.state = new State ();
 		this.handlers = new ConcurrentLinkedQueue<ZeroMqChannel.Handler> ();
 		this.idle = new Semaphore (1);
 		this.executor = Executors.newCachedThreadPool (new ExecutorThreadFactory ());
-		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger ());
+		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger (), exceptions);
 	}
 	
 	@Override
@@ -179,7 +182,7 @@ public final class ZeroMqChannel
 		try {
 			dispatcher.dispatch ();
 		} catch (final Error exception) {
-			this.transcript.traceIgnoredException (exception, "error encountered while executing dispatcher; ignoring!");
+			this.exceptions.traceIgnoredException (exception, "error encountered while executing dispatcher; ignoring!");
 		}
 		if (session.dispatchContinued.get () == Boolean.FALSE) {
 			session.idle.release ();
@@ -193,7 +196,7 @@ public final class ZeroMqChannel
 		try {
 			handler.handle ();
 		} catch (final Error exception) {
-			this.transcript.traceIgnoredException (exception, "error encountered while executing handler; ignoring!");
+			this.exceptions.traceIgnoredException (exception, "error encountered while executing handler; ignoring!");
 		}
 		this.idle.release ();
 		this.scheduleHandler ();
@@ -204,7 +207,7 @@ public final class ZeroMqChannel
 		try {
 			trigger.trigger ();
 		} catch (final Error exception) {
-			this.transcript.traceIgnoredException (exception, "error encountered while executing trigger; ignoring!");
+			this.exceptions.traceIgnoredException (exception, "error encountered while executing trigger; ignoring!");
 		}
 	}
 	
@@ -250,7 +253,7 @@ public final class ZeroMqChannel
 				}
 				stream.close ();
 			} catch (final IOException exception) {
-				this.transcript.traceIgnoredException (exception, "error encountered while decoding packet; ignoring!");
+				this.exceptions.traceIgnoredException (exception, "error encountered while decoding packet; ignoring!");
 				return;
 			}
 			final String acceptorKey = selfRoleIdentifier + "//" + peerRoleIdentifier;
@@ -289,7 +292,7 @@ public final class ZeroMqChannel
 				try {
 					payload = coder.coder.decode (packet.payload);
 				} catch (final Throwable exception) {
-					this.transcript.traceIgnoredException (exception, "error encountered while decoding packet: coder failed; ignoring!");
+					this.exceptions.traceIgnoredException (exception, "error encountered while decoding packet: coder failed; ignoring!");
 					return;
 				}
 			else
@@ -308,7 +311,7 @@ public final class ZeroMqChannel
 			try {
 				messageIdentifier = message.specification.getIdentifier ();
 			} catch (final Error exception) {
-				this.transcript.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
+				this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}
 			final String coderKey = session.selfRoleIdentifier + "//" + session.peerRoleIdentifier + "//" + messageIdentifier;
@@ -328,7 +331,7 @@ public final class ZeroMqChannel
 				try {
 					payload = coder.coder.encode (message.payload);
 				} catch (final Throwable exception) {
-					this.transcript.traceIgnoredException (exception, "error encountered while encoding packet: coder failed; ignoring!");
+					this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet: coder failed; ignoring!");
 					return;
 				}
 			else
@@ -360,7 +363,7 @@ public final class ZeroMqChannel
 				stream.close ();
 				header = headerStream.toByteArray ();
 			} catch (final IOException exception) {
-				this.transcript.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
+				this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}
 			final Packet packet = new Packet (session.peerIdentifier, ByteBuffer.wrap (header), payload);
@@ -409,7 +412,7 @@ public final class ZeroMqChannel
 			try {
 				session.executor.get ().execute (session.dispatchers.poll ());
 			} catch (final Error exception) {
-				this.transcript.traceDeferredException (exception, "error encountered while scheduling dispatcher; rethrowing!");
+				this.exceptions.traceDeferredException (exception, "error encountered while scheduling dispatcher; rethrowing!");
 				session.idle.release ();
 				throw (exception);
 			}
@@ -421,12 +424,13 @@ public final class ZeroMqChannel
 			try {
 				this.executor.execute (this.handlers.poll ());
 			} catch (final Error exception) {
-				this.transcript.traceDeferredException (exception, "error encountered while scheduling handler; rethrowing!");
+				this.exceptions.traceDeferredException (exception, "error encountered while scheduling handler; rethrowing!");
 				this.idle.release ();
 				throw (exception);
 			}
 	}
 	
+	private final TranscriptExceptionTracer exceptions;
 	private final ExecutorService executor;
 	private final ConcurrentLinkedQueue<Handler> handlers;
 	private final Semaphore idle;
