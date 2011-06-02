@@ -3,16 +3,17 @@ package mosaic.connector.kvstore;
 import java.util.List;
 import java.util.Map;
 
+import mosaic.core.ops.CompletionInvocationHandler;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 
 /**
- * Interface for working with key-value stores.
+ * Interface for working with key-value memcached compatible stores.
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface IMemcachedStore {
+public interface IMemcachedStore extends IKeyValueStore {
 
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -34,10 +35,15 @@ public interface IMemcachedStore {
 	 * @param handlers
 	 *            a set of handlers which shall be called when the operation
 	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> set(String key, int exp, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler);
 
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data
@@ -60,10 +66,15 @@ public interface IMemcachedStore {
 	 * @param handlers
 	 *            a set of handlers which shall be called when the operation
 	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> add(String key, int exp, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler);
 
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -86,10 +97,15 @@ public interface IMemcachedStore {
 	 * @param handlers
 	 *            a set of handlers which shall be called when the operation
 	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> replace(String key, int exp, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler);
 
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -101,10 +117,15 @@ public interface IMemcachedStore {
 	 * @param handlers
 	 *            a set of handlers which shall be called when the operation
 	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> append(String key, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler);
 
 	/**
 	 * Adds specified data to an existing key before existing data.
@@ -116,10 +137,15 @@ public interface IMemcachedStore {
 	 * @param handlers
 	 *            a set of handlers which shall be called when the operation
 	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> prepend(String key, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler);
 
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -132,20 +158,15 @@ public interface IMemcachedStore {
 	 * @param handlers
 	 *            a set of handlers which shall be called when the operation
 	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> cas(String key, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers);
-
-	/**
-	 * Gets data associated with a single key.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return a result handle for the operation
-	 */
-	IResult<Object> get(String key,
-			List<IOperationCompletionHandler<Object>> handlers);
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler);
 
 	/**
 	 * Gets data associated with several keys.
@@ -155,21 +176,14 @@ public interface IMemcachedStore {
 	 * @param handlers
 	 *            a set of handlers which shall be called when the operation
 	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
 	IResult<Map<String, Object>> getBulk(List<String> keys,
-			List<IOperationCompletionHandler<Map<String, Object>>> handlers);
+			List<IOperationCompletionHandler<Map<String, Object>>> handlers,
+			CompletionInvocationHandler<Map<String, Object>> iHandler);
 
-	/**
-	 * Deletes the given key.
-	 * 
-	 * @param key
-	 *            the key to delete
-	 * @param handlers
-	 *            a set of handlers which shall be called when the operation
-	 *            completes
-	 * @return a result handle for the operation
-	 */
-	IResult<Boolean> delete(String key,
-			List<IOperationCompletionHandler<Boolean>> handlers);
 }

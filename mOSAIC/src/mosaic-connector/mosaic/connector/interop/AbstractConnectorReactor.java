@@ -3,6 +3,7 @@ package mosaic.connector.interop;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import mosaic.connector.ConfigProperties;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
@@ -56,21 +57,21 @@ public abstract class AbstractConnectorReactor implements Runnable {
 
 		// read connection details from the configuration
 		String amqpServerHost = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.host", String.class,
+				ConfigProperties.getString("AbstractConnectorReactor.0"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_HOST);
 		int amqpServerPort = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.port", Integer.class,
+				ConfigProperties.getString("AbstractConnectorReactor.1"), Integer.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_AMQP_PORT);
 		String amqpServerUser = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.user", String.class,
+				ConfigProperties.getString("AbstractConnectorReactor.2"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_USER);
 		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.passwd", String.class,
+				ConfigProperties.getString("AbstractConnectorReactor.3"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_PASS);
 		exchange = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.exchange", String.class, defaultExchange);
+				ConfigProperties.getString("AbstractConnectorReactor.4"), String.class, defaultExchange); //$NON-NLS-1$
 		queueName = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.rountingkey", String.class, defaultQueue);
+				ConfigProperties.getString("AbstractConnectorReactor.5"), String.class, defaultQueue); //$NON-NLS-1$
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);
@@ -86,7 +87,7 @@ public abstract class AbstractConnectorReactor implements Runnable {
 			commChannel = connection.createChannel();
 
 			// create exchange and queue
-			commChannel.exchangeDeclare(exchange, "direct", true);
+			commChannel.exchangeDeclare(exchange, "direct", true); //$NON-NLS-1$
 			// commChannel.queueDeclare(queueName, true, false, false, null);
 			String anonQueue = commChannel.queueDeclare().getQueue();
 			commChannel.queueBind(anonQueue, exchange, bindingKey);
@@ -106,7 +107,7 @@ public abstract class AbstractConnectorReactor implements Runnable {
 				}
 			} catch (IOException e1) {
 				ExceptionTracer.traceRethrown(new ConnectionException(
-						"The Memcached proxy cannot connect to the driver: "
+						"The Memcached proxy cannot connect to the driver: " //$NON-NLS-1$
 								+ e1.getMessage(), e1));
 			}
 		}
@@ -129,11 +130,11 @@ public abstract class AbstractConnectorReactor implements Runnable {
 			}
 		} catch (IOException e) {
 			ExceptionTracer.traceRethrown(new ConnectionException(
-					"The proxy cannot close connection to the driver: "
+					"The proxy cannot close connection to the driver: " //$NON-NLS-1$
 							+ e.getMessage(), e));
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceRethrown(new ConnectionException(
-					"The proxy cannot close connection to the driver: "
+					"The proxy cannot close connection to the driver: " //$NON-NLS-1$
 							+ e.getMessage(), e));
 		}
 	}

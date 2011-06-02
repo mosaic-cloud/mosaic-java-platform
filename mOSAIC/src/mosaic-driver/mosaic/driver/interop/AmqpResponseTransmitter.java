@@ -53,7 +53,6 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 			Object result, boolean isError) {
 		byte[] message;
 		String routingKey = ((CharSequence) token.get(1)).toString();
-
 		OperationResponse opResponse = new OperationResponse();
 		try {
 			opResponse.put(0, token);

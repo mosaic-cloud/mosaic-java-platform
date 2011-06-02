@@ -6,6 +6,7 @@ import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.driver.ConfigProperties;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -20,7 +21,7 @@ import com.rabbitmq.client.ConnectionFactory;
  * 
  */
 public class ResponseTransmitter {
-	private static final String DEFAULT_EXCHANGE_NAME = "";
+	private static final String DEFAULT_EXCHANGE_NAME = ""; //$NON-NLS-1$
 
 	private Channel commChannel;
 	private Connection connection;
@@ -38,19 +39,19 @@ public class ResponseTransmitter {
 		super();
 		// read connection details from the configuration
 		String amqpServerHost = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.host", String.class,
+				ConfigProperties.getString("ResponseTransmitter.1"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_HOST);
 		int amqpServerPort = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.port", Integer.class,
+				ConfigProperties.getString("ResponseTransmitter.2"), Integer.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_AMQP_PORT);
 		String amqpServerUser = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.user", String.class,
+				ConfigProperties.getString("ResponseTransmitter.3"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_USER);
 		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.passwd", String.class,
+				ConfigProperties.getString("ResponseTransmitter.4"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_PASS);
 		exchange = ConfigUtils.resolveParameter(config,
-				"interop.resp.amqp.exchange", String.class,
+				ConfigProperties.getString("ResponseTransmitter.5"), String.class, //$NON-NLS-1$
 				DEFAULT_EXCHANGE_NAME);
 		// queueName = ConfigUtils.resolveParameter(config,
 		// "interop.resp.amqp.rountingkey", String.class,
@@ -70,7 +71,7 @@ public class ResponseTransmitter {
 			commChannel = connection.createChannel();
 
 			// create exchange
-			commChannel.exchangeDeclare(exchange, "direct", true);
+			commChannel.exchangeDeclare(exchange, "direct", true); //$NON-NLS-1$
 			// commChannel.queueDeclare(queueName, true, false, false, null);
 			// commChannel.queueBind(queueName, exchange, "");
 		} catch (IOException e) {
@@ -104,7 +105,7 @@ public class ResponseTransmitter {
 			}
 		} catch (IOException e) {
 			ExceptionTracer.traceRethrown(new ConnectionException(
-					"The Memcached proxy cannot close connection to the driver: "
+					"The Memcached proxy cannot close connection to the driver: " //$NON-NLS-1$
 							+ e.getMessage(), e));
 		}
 	}

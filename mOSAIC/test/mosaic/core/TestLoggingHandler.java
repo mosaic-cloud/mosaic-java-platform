@@ -9,8 +9,6 @@ public class TestLoggingHandler<T extends Object> implements
 
 	@Override
 	public void onSuccess(T result) {
-		System.out.println("Test " + testCounter + " finished with result: "
-				+ result);
 		MosaicLogger.getLogger().trace(
 				"Test " + testCounter + " finished with result: " + result);
 		testCounter++;
@@ -18,8 +16,6 @@ public class TestLoggingHandler<T extends Object> implements
 
 	@Override
 	public <E extends Throwable> void onFailure(E error) {
-		System.out.println("Test " + testCounter + " finished with error: "
-				+ error.getMessage());
 		MosaicLogger.getLogger().error(
 				"Test " + testCounter + " finished with error: "
 						+ error.getMessage());

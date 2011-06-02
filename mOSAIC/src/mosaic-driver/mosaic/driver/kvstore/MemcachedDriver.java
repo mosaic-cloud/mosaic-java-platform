@@ -14,6 +14,7 @@ import mosaic.core.ops.GenericResult;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.driver.AbstractResourceDriver;
+import mosaic.driver.ConfigProperties;
 import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.MemcachedClient;
 
@@ -70,18 +71,18 @@ public class MemcachedDriver extends AbstractResourceDriver {
 		while (true) {
 			noNodes++;
 			String host = ConfigUtils.resolveParameter(config,
-					"memcached.host_" + noNodes, String.class, "");
-			if (host.equals("")) {
+					ConfigProperties.getString("MemcachedDriver.0") + noNodes, String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+			if (host.equals("")) { //$NON-NLS-1$
 				noNodes--;
 				break;
 			}
-			port = ConfigUtils.resolveParameter(config, "memcached.port_"
+			port = ConfigUtils.resolveParameter(config, ConfigProperties.getString("MemcachedDriver.3") //$NON-NLS-1$
 					+ noNodes, Integer.class, 0);
 			address = new InetSocketAddress(host, port);
 			nodes.add(address);
 		}
 		noThreads = ConfigUtils.resolveParameter(config,
-				"memcached.driver_threads", Integer.class, 1);
+				ConfigProperties.getString("MemcachedDriver.4"), Integer.class, 1); //$NON-NLS-1$
 
 		MemcachedDriver wrapper = new MemcachedDriver(new MemcachedClient(
 				new BinaryConnectionFactory(), nodes), noThreads);
@@ -99,7 +100,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeSetOperation(String key,
-			int exp, Object data, IOperationCompletionHandler complHandler) {
+			int exp, Object data, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(MemcachedOperations.SET, key, exp, data);
@@ -109,7 +110,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeAddOperation(String key,
-			int exp, Object data, IOperationCompletionHandler complHandler) {
+			int exp, Object data, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(MemcachedOperations.ADD, key, exp, data);
@@ -119,7 +120,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeReplaceOperation(String key,
-			int exp, Object data, IOperationCompletionHandler complHandler) {
+			int exp, Object data, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(MemcachedOperations.REPLACE, key, exp, data);
@@ -129,7 +130,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeAppendOperation(String key,
-			Object data, IOperationCompletionHandler complHandler) {
+			Object data, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(MemcachedOperations.APPEND, key, data);
@@ -139,7 +140,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokePrependOperation(String key,
-			Object data, IOperationCompletionHandler complHandler) {
+			Object data, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(MemcachedOperations.PREPEND, key, data);
@@ -149,7 +150,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeCASOperation(String key,
-			Object data, IOperationCompletionHandler complHandler) {
+			Object data, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(MemcachedOperations.CAS, key, data);
@@ -159,7 +160,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Object> invokeGetOperation(String key,
-			IOperationCompletionHandler complHandler) {
+			IOperationCompletionHandler<Object> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Object> op = (GenericOperation<Object>) this.opFactory
 				.getOperation(MemcachedOperations.GET, key);
@@ -169,7 +170,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Map<String, Object>> invokeGetBulkOperation(
-			List<String> keys, IOperationCompletionHandler complHandler) {
+			List<String> keys, IOperationCompletionHandler<Map<String, Object>> complHandler) {
 		String[] aKeys = keys.toArray(new String[0]);
 
 		@SuppressWarnings("unchecked")
@@ -181,7 +182,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeDeleteOperation(String key,
-			IOperationCompletionHandler complHandler) {
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(MemcachedOperations.DELETE, key);
@@ -190,6 +191,7 @@ public class MemcachedDriver extends AbstractResourceDriver {
 		return iResult;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private <T extends Object> IResult<T> startOperation(
 			GenericOperation<T> op, IOperationCompletionHandler complHandler) {
 		IResult<T> iResult = new GenericResult<T>(op);

@@ -119,7 +119,7 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 			break;
 		case DECLARE_EXCHANGE:
 			DeclareExchangeOperation deop = (DeclareExchangeOperation) ob;
-			exchange = (String) deop.get(0);
+			exchange = deop.get(0).toString();
 			ExchangeType type = (ExchangeType) deop.get(1);
 			durable = (Boolean) deop.get(2);
 			autoDelete = (Boolean) deop.get(3);
@@ -132,7 +132,7 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 			break;
 		case DECLARE_QUEUE:
 			DeclareQueueOperation dqop = (DeclareQueueOperation) ob;
-			queue = (String) dqop.get(0);
+			queue = dqop.get(0).toString();
 			exclusive = (Boolean) dqop.get(1);
 			durable = (Boolean) dqop.get(2);
 			autoDelete = (Boolean) dqop.get(3);
@@ -143,23 +143,23 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 			break;
 		case BIND_QUEUE:
 			BindQueueOperation bqop = (BindQueueOperation) ob;
-			exchange = (String) bqop.get(0);
-			queue = (String) bqop.get(1);
-			routingKey = (String) bqop.get(2);
+			exchange = bqop.get(0).toString();
+			queue = bqop.get(1).toString();
+			routingKey = bqop.get(2).toString();
 			resultBool = driver.bindQueue(exchange, queue, routingKey,
 					complHandler);
 			complHandler.setDetails(AmqpOperations.BIND_QUEUE, resultBool);
 			break;
 		case PUBLISH:
 			PublishOperation pop = (PublishOperation) ob;
-			String callback = (String) pop.get(0);
-			String contentEncoding = (String) pop.get(1);
-			String contentType = (String) pop.get(2);
-			String correlation = (String) pop.get(3);
+			String callback = pop.get(0).toString();
+			String contentEncoding = pop.get(1).toString();
+			String contentType = pop.get(2).toString();
+			String correlation = pop.get(3).toString();
 			dataBytes = (ByteBuffer) pop.get(4);
 			durable = (Boolean) pop.get(5);
-			exchange = (String) pop.get(6);
-			String identifier = (String) pop.get(7);
+			exchange = pop.get(6).toString();
+			String identifier = pop.get(7).toString();
 			boolean immediate = (Boolean) pop.get(8);
 			boolean mandatory = (Boolean) pop.get(9);
 			routingKey = (String) pop.get(10);
@@ -172,28 +172,28 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 			break;
 		case CONSUME:
 			ConsumeOperation cop = (ConsumeOperation) ob;
-			queue = (String) cop.get(0);
-			consumer = (String) cop.get(1);
+			queue = cop.get(0).toString();
+			consumer = cop.get(1).toString();
 			exclusive = (Boolean) cop.get(2);
 			autoAck = (Boolean) cop.get(3);
 			dataBytes = (ByteBuffer) cop.get(4);
 			Object extra = SerDesUtils.toObject(dataBytes.array());
-			IAmqpConsumer consumeCallback = new ConsumerHandler(
-					(String) token.get(1));
+			IAmqpConsumer consumeCallback = new ConsumerHandler(token.get(1)
+					.toString());
 			resultString = driver.basicConsume(queue, consumer, exclusive,
 					autoAck, extra, consumeCallback, complHandler);
 			complHandler.setDetails(AmqpOperations.CONSUME, resultString);
 			break;
 		case GET:
 			GetOperation gop = (GetOperation) ob;
-			queue = (String) gop.get(0);
+			queue = gop.get(0).toString();
 			autoAck = (Boolean) gop.get(1);
 			resultBool = driver.basicGet(queue, autoAck, complHandler);
 			complHandler.setDetails(AmqpOperations.GET, resultBool);
 			break;
 		case CANCEL:
 			CancelOperation clop = (CancelOperation) ob;
-			consumer = (String) clop.get(0);
+			consumer = clop.get(0).toString();
 			resultBool = driver.basicCancel(consumer, complHandler);
 			complHandler.setDetails(AmqpOperations.CANCEL, resultBool);
 			break;
@@ -276,8 +276,11 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 			this.callerId = callerId;
 		}
 
-		/* (non-Javadoc)
-		 * @see mosaic.driver.queue.IAmqpConsumer#handleConsumeOk(java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * mosaic.driver.queue.IAmqpConsumer#handleConsumeOk(java.lang.String)
 		 */
 		@Override
 		public void handleConsumeOk(String consumerTag) {
@@ -287,8 +290,11 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 
 		}
 
-		/* (non-Javadoc)
-		 * @see mosaic.driver.queue.IAmqpConsumer#handleCancelOk(java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * mosaic.driver.queue.IAmqpConsumer#handleCancelOk(java.lang.String)
 		 */
 		@Override
 		public void handleCancelOk(String consumerTag) {
@@ -298,8 +304,12 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 
 		}
 
-		/* (non-Javadoc)
-		 * @see mosaic.driver.queue.IAmqpConsumer#handleDelivery(mosaic.connector.queue.AmqpInboundMessage)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * mosaic.driver.queue.IAmqpConsumer#handleDelivery(mosaic.connector
+		 * .queue.AmqpInboundMessage)
 		 */
 		@Override
 		public void handleDelivery(AmqpInboundMessage message) {
@@ -309,8 +319,12 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 
 		}
 
-		/* (non-Javadoc)
-		 * @see mosaic.driver.queue.IAmqpConsumer#handleShutdown(java.lang.String, java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * mosaic.driver.queue.IAmqpConsumer#handleShutdown(java.lang.String,
+		 * java.lang.String)
 		 */
 		@Override
 		public void handleShutdown(String consumerTag, String errorMessage) {

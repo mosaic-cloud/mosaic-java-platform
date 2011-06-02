@@ -1,5 +1,6 @@
 package mosaic.core.ops;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -46,7 +47,33 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 		completionHandlers = new ArrayList<IOperationCompletionHandler<T>>();
 		completionHandlers.add(this);
 		completionHandlers.addAll(complHandlers);
-		// this.operation = op;
+	}
+
+	/**
+	 * Creates a new operation.
+	 * 
+	 * @param complHandlers
+	 *            handlers to be called when the operation completes
+	 * @param invocationHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
+	 */
+	public EventDrivenOperation(
+			List<IOperationCompletionHandler<T>> complHandlers,
+			CompletionInvocationHandler<T> invocationHandler) {
+		this(complHandlers);
+		
+		if (invocationHandler != null) {
+			for (IOperationCompletionHandler<T> handler : this.completionHandlers) {
+				CompletionInvocationHandler<T> iHandler = invocationHandler
+						.createHandler(handler);
+				IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
+						.newProxyInstance(handler.getClass().getClassLoader(),
+								new Class[] { handler.getClass() }, iHandler);
+				this.completionHandlers.add(proxy);
+			}
+		}
 	}
 
 	@Override

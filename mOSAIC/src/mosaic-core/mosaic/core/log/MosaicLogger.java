@@ -9,7 +9,7 @@ public class MosaicLogger {
 	private final Logger logger;
 
 	private MosaicLogger() {
-		logger = LoggerFactory.getLogger("mosaic-logging.properties");
+		logger = LoggerFactory.getLogger(MosaicLogger.class);
 	}
 
 	public final static MosaicLogger getLogger() {

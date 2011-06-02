@@ -6,10 +6,11 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import mosaic.connector.IResourceConnector;
+import mosaic.connector.ConfigProperties;
 import mosaic.connector.interop.MemcachedProxy;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
+import mosaic.core.ops.CompletionInvocationHandler;
 import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
 import mosaic.core.ops.IOperationCompletionHandler;
@@ -22,8 +23,7 @@ import mosaic.core.ops.IResult;
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedStoreConnector implements IMemcachedStore,
-		IResourceConnector {
+public class MemcachedStoreConnector implements IMemcachedStore {
 
 	private MemcachedProxy proxy;
 	private ExecutorService executor;
@@ -46,7 +46,7 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 	public static synchronized MemcachedStoreConnector create(
 			IConfiguration config) throws IOException {
 		int noThreads = ConfigUtils.resolveParameter(config,
-				"memcached.connector_threads", Integer.class, 1);
+				ConfigProperties.getString("MemcachedStoreConnector.0"), Integer.class, 1); //$NON-NLS-1$
 		MemcachedProxy proxy = MemcachedProxy.create(config);
 		return new MemcachedStoreConnector(proxy, noThreads);
 	}
@@ -65,11 +65,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 	@Override
 	public IResult<Boolean> set(final String key, final int exp,
 			final Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -88,11 +89,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 	@Override
 	public IResult<Boolean> add(final String key, final int exp,
 			final Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -111,11 +113,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 	@Override
 	public IResult<Boolean> replace(final String key, final int exp,
 			final Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -133,11 +136,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> append(final String key, final Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -155,11 +159,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> prepend(final String key, final Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -177,11 +182,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> cas(final String key, final Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -199,11 +205,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Object> get(final String key,
-			List<IOperationCompletionHandler<Object>> handlers) {
+			List<IOperationCompletionHandler<Object>> handlers,
+			CompletionInvocationHandler<Object> iHandler) {
 		IResult<Object> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Object> op = new EventDrivenOperation<Object>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -221,11 +228,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Map<String, Object>> getBulk(final List<String> keys,
-			List<IOperationCompletionHandler<Map<String, Object>>> handlers) {
+			List<IOperationCompletionHandler<Map<String, Object>>> handlers,
+			CompletionInvocationHandler<Map<String, Object>> iHandler) {
 		IResult<Map<String, Object>> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Map<String, Object>> op = new EventDrivenOperation<Map<String, Object>>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -243,11 +251,12 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 
 	@Override
 	public IResult<Boolean> delete(final String key,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
 		synchronized (this) {
 			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers);
+					handlers, iHandler);
 			op.setOperation(new Runnable() {
 
 				@Override
@@ -261,6 +270,14 @@ public class MemcachedStoreConnector implements IMemcachedStore,
 		}
 
 		return result;
+	}
+
+	@Override
+	public IResult<Boolean> set(String key, Object data,
+			List<IOperationCompletionHandler<Boolean>> handlers,
+			CompletionInvocationHandler<Boolean> iHandler) {
+		IResult<Boolean> iResult = this.set(key, 0, data, handlers, iHandler);
+		return iResult;
 	}
 
 }

@@ -2,16 +2,10 @@ package mosaic.cloudlet.runtime;
 
 import java.lang.Thread.State;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-
-import mosaic.cloudlet.core.ICloudlet;
-import mosaic.cloudlet.core.ICloudletRequest;
-import mosaic.cloudlet.core.ICloudletResponse;
-import mosaic.core.configuration.IConfiguration;
-import mosaic.core.exceptions.ExceptionTracer;
-import mosaic.core.ops.IOperation;
 
 /**
  * A Cloudlet executor that executes operations requested in a certain cloudlet
@@ -25,10 +19,8 @@ import mosaic.core.ops.IOperation;
  * 
  * @author Georgiana Macariu
  * 
- * @param <T>
- *            the type of the managed cloudlet instance
  */
-public class CloudletExecutor<T extends ICloudlet> {
+public class CloudletExecutor {
 	/**
 	 * Permission for checking shutdown
 	 */
@@ -36,14 +28,9 @@ public class CloudletExecutor<T extends ICloudlet> {
 			"modifyThread");
 
 	/**
-	 * The cloudlet instance which will be executed by this executor.
-	 */
-	private T cloudlet;
-
-	/**
 	 * The queue used for holding requests and handing off to the worker thread.
 	 */
-	private BlockingQueue<IOperation> requestQueue;
+	private BlockingQueue<Runnable> requestQueue;
 
 	/**
 	 * The queue used for holding response handler and handing off to the worker
@@ -136,37 +123,14 @@ public class CloudletExecutor<T extends ICloudlet> {
 	 */
 	private volatile Object queuesNotEmpty = new Object();
 
+	private CountDownLatch terminationLatch = new CountDownLatch(1);
+
 	/**
-	 * Creates a new CloudletExecutor with the given initial parameters.
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet instance which execution will be managed by the
-	 *            cloudlet executor
-	 * @param config
-	 *            configuration data required for configuring the executor and
-	 *            initializing the managed cloudlet instance
-	 * 
-	 * @throws NullPointerException
-	 *             if either <i>cloudlet</i> or <i>config</i> parameters are
-	 *             null
+	 * Creates a new CloudletExecutor.
 	 */
-	public CloudletExecutor(T cloudlet, IConfiguration config) {
+	public CloudletExecutor() {
 		super();
-		if (cloudlet == null)
-			throw new NullPointerException(
-					"A CloudletExecutor can not be created for a null coudlet.");
-		if (config == null)
-			throw new NullPointerException("Config data is null.");
-		this.cloudlet = cloudlet;
 		this.runState = INITIALIZING;
-		try {
-			this.cloudlet.init(config);
-		} catch (Exception e) {
-			ExceptionTracer.traceHandled(e);
-			this.runState = TERMINATED;
-			return;
-		}
-		this.runState = IDLE;
 
 		this.worker = new Worker();
 		this.worker.thread = new Thread(this.worker);
@@ -176,6 +140,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 		this.backupWorker.thread = new Thread(this.backupWorker);
 		this.backupWorker.thread.start();
 		runningWorkers = 2;
+		this.runState = IDLE;
 	}
 
 	/**
@@ -240,7 +205,6 @@ public class CloudletExecutor<T extends ICloudlet> {
 					this.backupWorker.interruptIfIdle();
 			} catch (SecurityException se) { // Try to back out
 				runState = state;
-				// tryTerminate() here would be a no-op
 				throw se;
 			}
 
@@ -280,6 +244,15 @@ public class CloudletExecutor<T extends ICloudlet> {
 	}
 
 	/**
+	 * The calling thread will block waiting for the executor to shutdown.
+	 * 
+	 * @throws InterruptedException
+	  */
+	public void waitTermination() throws InterruptedException {
+		this.terminationLatch.await();
+	}
+
+	/**
 	 * Transitions to TERMINATED state if either (SHUTDOWN and queues empty) or
 	 * (STOP and workers stopped), otherwise unless stopped, ensuring that there
 	 * is at least one live thread to handle queued tasks.
@@ -299,6 +272,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 			}
 			if (state == STOP || state == SHUTDOWN) {
 				runState = TERMINATED;
+				this.terminationLatch.countDown();
 			}
 		}
 	}
@@ -313,7 +287,8 @@ public class CloudletExecutor<T extends ICloudlet> {
 		mainLock.lock();
 		boolean canExit;
 		try {
-			canExit = runState >= STOP || requestQueue.isEmpty();
+			canExit = runState >= STOP
+					|| (requestQueue.isEmpty() && responseQueue.isEmpty());
 		} finally {
 			mainLock.unlock();
 		}
@@ -335,7 +310,7 @@ public class CloudletExecutor<T extends ICloudlet> {
 	 * @throws NullPointerException
 	 *             if request is null
 	 */
-	public void handleRequest(IOperation<?> request) {
+	public void handleRequest(Runnable request) {
 		if (request == null)
 			throw new NullPointerException();
 
@@ -349,19 +324,18 @@ public class CloudletExecutor<T extends ICloudlet> {
 
 	/**
 	 * Rechecks state after queuing a request. Called from
-	 * {@link CloudletExecutor#handleRequest(ICloudletRequest)} when executor
-	 * state has been observed to change after queuing a request. If the request
-	 * was queued concurrently with a call to
-	 * {@link CloudletExecutor#shutdownNow()}, and is still present in the
-	 * queue, this request must be removed and rejected to preserve
-	 * {@link CloudletExecutor#shutdownNow()} guarantees. Otherwise, this method
-	 * ensures that the request will be handled at some time in the future,
-	 * unless executor shutdown is executed.
+	 * {@link CloudletExecutor#handleRequest(Runnable)} when executor state has
+	 * been observed to change after queuing a request. If the request was
+	 * queued concurrently with a call to {@link CloudletExecutor#shutdownNow()}
+	 * , and is still present in the queue, this request must be removed and
+	 * rejected to preserve {@link CloudletExecutor#shutdownNow()} guarantees.
+	 * Otherwise, this method ensures that the request will be handled at some
+	 * time in the future, unless executor shutdown is executed.
 	 * 
 	 * @param request
 	 *            the request
 	 */
-	private void ensureQueuedRequestHandled(ICloudletRequest request) {
+	private void ensureQueuedRequestHandled(Runnable request) {
 		mainLock.lock();
 		boolean reject = false;
 		try {
@@ -384,31 +358,38 @@ public class CloudletExecutor<T extends ICloudlet> {
 	 * @throws RejectedExecutionException
 	 *             alwaysF
 	 */
-	private void reject(ICloudletRequest request) {
+	private void reject(Runnable request) {
 		throw new RejectedExecutionException();
 
 	}
 
-	public <R extends Object> void processResponse(Runnable response) {
+	/**
+	 * Processes the given response sometime in the future.
+	 * 
+	 * @param response
+	 *            the response to process
+	 */
+	public void handleResponse(Runnable response) {
 		if (response == null)
 			throw new NullPointerException();
 		if (responseQueue.offer(response))
 			if (worker.isBlocked())
 				mainWorkerBlocked.signal();
+		queuesNotEmpty.notify();
 
 	}
 
 	/**
 	 * Gets the next task (request or response processing) for the worker thread
 	 * to run. The general approach is similar to
-	 * {@link CloudletExecutor#handleRequest(ICloudletRequest)} in that worker
-	 * threads trying to get a task to run do so on the basis of prevailing
-	 * state accessed outside of locks. This may cause them to choose the
-	 * "wrong" action, such as trying to exit because no tasks appear to be
-	 * available, or entering a take when the executor is in the process of
-	 * being shut down. These potential problems are countered by (1) rechecking
-	 * executor state (in workerCanExit) before giving up, and (2) interrupting
-	 * other workers upon shutdown, so they can recheck state.
+	 * {@link CloudletExecutor#handleRequest(Runnable)} in that worker threads
+	 * trying to get a task to run do so on the basis of prevailing state
+	 * accessed outside of locks. This may cause them to choose the "wrong"
+	 * action, such as trying to exit because no tasks appear to be available,
+	 * or entering a take when the executor is in the process of being shut
+	 * down. These potential problems are countered by (1) rechecking executor
+	 * state (in workerCanExit) before giving up, and (2) interrupting other
+	 * workers upon shutdown, so they can recheck state.
 	 * 
 	 * @return the task
 	 */
@@ -423,27 +404,13 @@ public class CloudletExecutor<T extends ICloudlet> {
 					if (!responseQueue.isEmpty())
 						r = responseQueue.poll();
 					else
-						r = new Runnable() {
-
-							@Override
-							public void run() {
-								ICloudletRequest req = requestQueue.poll();
-
-							}
-						};
+						r = requestQueue.poll();
 				else {
 					queuesNotEmpty.wait();
 					if (!responseQueue.isEmpty())
 						r = responseQueue.take();
 					else {
-						r = new Runnable() {
-
-							@Override
-							public void run() {
-								ICloudletRequest req = requestQueue.poll();
-								//
-							}
-						};
+						r = requestQueue.poll();
 					}
 				}
 				if (r != null)
@@ -462,13 +429,13 @@ public class CloudletExecutor<T extends ICloudlet> {
 	/**
 	 * Gets the next response to process by the backup worker thread. The
 	 * general approach is similar to
-	 * {@link CloudletExecutor#handleRequest(ICloudletRequest)} in that worker
-	 * threads trying to get a task to run do so on the basis of prevailing
-	 * state accessed outside of locks. This may cause them to choose the
-	 * "wrong" action, such as trying to exit because no tasks appear to be
-	 * available, or entering a take when the executor is in the process of
-	 * being shut down. These potential problems are countered by rechecking
-	 * executor state (in workerCanExit) before giving up.
+	 * {@link CloudletExecutor#handleRequest(Runnable)} in that worker threads
+	 * trying to get a task to run do so on the basis of prevailing state
+	 * accessed outside of locks. This may cause them to choose the "wrong"
+	 * action, such as trying to exit because no tasks appear to be available,
+	 * or entering a take when the executor is in the process of being shut
+	 * down. These potential problems are countered by rechecking executor state
+	 * (in workerCanExit) before giving up.
 	 * 
 	 * @return the task
 	 */
@@ -605,6 +572,11 @@ public class CloudletExecutor<T extends ICloudlet> {
 			}
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Runnable#run()
+		 */
 		public void run() {
 			try {
 				Runnable task = null;

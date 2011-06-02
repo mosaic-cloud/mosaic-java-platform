@@ -7,6 +7,7 @@ import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.driver.ConfigProperties;
 import mosaic.driver.IResourceDriver;
 
 import com.rabbitmq.client.Channel;
@@ -62,21 +63,21 @@ public abstract class AbstractDriverStub implements Runnable {
 
 		// read connection details from the configuration
 		String amqpServerHost = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.host", String.class,
+				ConfigProperties.getString("AbstractDriverStub.0"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_HOST);
 		int amqpServerPort = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.port", Integer.class,
+				ConfigProperties.getString("AbstractDriverStub.1"), Integer.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_AMQP_PORT);
 		String amqpServerUser = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.user", String.class,
+				ConfigProperties.getString("AbstractDriverStub.2"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_USER);
 		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.passwd", String.class,
+				ConfigProperties.getString("AbstractDriverStub.3"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_PASS);
 		exchange = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.exchange", String.class, defaultExchange);
+				ConfigProperties.getString("AbstractDriverStub.4"), String.class, defaultExchange); //$NON-NLS-1$
 		routingKey = ConfigUtils.resolveParameter(config,
-				"interop.req.amqp.rountingkey", String.class, defaultQueue);
+				ConfigProperties.getString("AbstractDriverStub.5"), String.class, defaultQueue); //$NON-NLS-1$
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);
@@ -92,7 +93,7 @@ public abstract class AbstractDriverStub implements Runnable {
 			commChannel = connection.createChannel();
 
 			// create exchange and queue
-			commChannel.exchangeDeclare(exchange, "direct", true);
+			commChannel.exchangeDeclare(exchange, "direct", true); //$NON-NLS-1$
 			// commChannel.queueDeclare(routingKey, true, false, false, null);
 			String queueName = commChannel.queueDeclare().getQueue();
 			commChannel.queueBind(queueName, exchange, routingKey);
@@ -118,7 +119,7 @@ public abstract class AbstractDriverStub implements Runnable {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				ExceptionTracer.traceRethrown(new ConnectionException(
-						"The proxy cannot connect to the driver: "
+						"The proxy cannot connect to the driver: " //$NON-NLS-1$
 								+ e1.getMessage()));
 			}
 		}
@@ -139,16 +140,15 @@ public abstract class AbstractDriverStub implements Runnable {
 			if (connection != null && connection.isOpen()) {
 				connection.close();
 			}
-			System.out.println("stub closed connection");
 		} catch (IOException e) {
 			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
-					"The proxy cannot close connection to the driver: "
+					"The proxy cannot close connection to the driver: " //$NON-NLS-1$
 							+ e.getMessage()));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			ExceptionTracer.traceRethrown(new ConnectionException(
-					"The proxy cannot close connection to the driver: "
+					"The proxy cannot close connection to the driver: " //$NON-NLS-1$
 							+ e.getMessage()));
 		}
 		driver.destroy();

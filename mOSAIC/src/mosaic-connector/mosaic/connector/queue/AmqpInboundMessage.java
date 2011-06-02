@@ -47,7 +47,7 @@ public class AmqpInboundMessage implements IAmqpMessage {
 	 *            field.
 	 * @param identifier
 	 *            message-id is an optional property which uniquely identifies a
-	 *            Message within the Message system. The Message producer is
+	 *            Message within the Message system. The Message publisher is
 	 *            usually responsible for setting the message-id in such a way
 	 *            that it is assured to be globally unique. The server MAY
 	 *            discard a Message as a duplicate if the value of the

@@ -98,4 +98,39 @@ protocol Amqp {
 		boolean is_error;
 		union {AmqpError, boolean, string} response;
 	}
+	
+	record ConsumeOkMssg {
+		string consumer_tag;
+	}
+	
+	record CancelOkMssg {
+		string consumer_tag;
+	}
+	
+	record DeliveryMssg {
+		string consumer_tag;
+		long delivery_tag;
+		string exchange;
+		string routing_key;
+		string callback;
+		string content_encoding;
+		string content_type;
+		string correlation;
+		int deliveryMode;
+		string identifier;
+		bytes data;
+	}
+	
+	record ShutdownMssg {
+		string consumer_tag;
+		string message;
+	}
+	
+	record Response {
+		union {OperationResponse, 
+			ConsumeOkMssg, 
+			CancelOkMssg, 
+			DeliveryMssg, 
+			ShutdownMssg} response;
+	}
 }

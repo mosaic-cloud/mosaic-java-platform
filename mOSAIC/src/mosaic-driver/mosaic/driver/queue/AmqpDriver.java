@@ -22,6 +22,7 @@ import mosaic.core.ops.IOperationFactory;
 import mosaic.core.ops.IOperationType;
 import mosaic.core.ops.IResult;
 import mosaic.driver.AbstractResourceDriver;
+import mosaic.driver.ConfigProperties;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
@@ -88,7 +89,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 */
 	public static AmqpDriver create(IConfiguration configuration) {
 		int noThreads = ConfigUtils.resolveParameter(configuration,
-				"amqp.driver_threads", Integer.class, 1);
+				ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
 		return new AmqpDriver(configuration, noThreads);
 	}
 
@@ -105,7 +106,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 				this.connected = false;
 			} catch (IOException e) {
 				MosaicLogger.getLogger().error(
-						"AMQP cannot close connection with server.");
+						"AMQP cannot close connection with server."); //$NON-NLS-1$
 				ExceptionTracer.traceRethrown(e);
 			}
 		}
@@ -120,7 +121,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 * @return <code>true</code> if the connection was established
 	 */
 	public synchronized IResult<Boolean> openConnection(
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.OPEN_CONNECTION);
@@ -138,7 +139,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 * @return <code>true</code> if the connection was closed
 	 */
 	public synchronized IResult<Boolean> closeConnection(
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.CLOSE_CONNECTION);
@@ -167,13 +168,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the exchange declaration succeeded
 	 */
-	public IResult<Boolean> declareExchange(
-			String name,
-			AmqpExchangeType type,
-			boolean durable,
-			boolean autoDelete,
-			boolean passive,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+	public IResult<Boolean> declareExchange(String name, AmqpExchangeType type,
+			boolean durable, boolean autoDelete, boolean passive,
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.DECLARE_EXCHANGE, name, type,
@@ -204,13 +201,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the queue declaration succeeded
 	 */
-	public IResult<Boolean> declareQueue(
-			String queue,
-			boolean exclusive,
-			boolean durable,
-			boolean autoDelete,
-			boolean passive,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+	public IResult<Boolean> declareQueue(String queue, boolean exclusive,
+			boolean durable, boolean autoDelete, boolean passive,
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.DECLARE_QUEUE, queue, exclusive,
@@ -233,11 +226,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the queue bind succeeded
 	 */
-	public IResult<Boolean> bindQueue(
-			String exchange,
-			String queue,
-			String routingKey,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+	public IResult<Boolean> bindQueue(String exchange, String queue,
+			String routingKey, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.BIND_QUEUE, exchange, queue,
@@ -256,9 +246,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if message was published successfully
 	 */
-	public IResult<Boolean> basicPublish(
-			AmqpOutboundMessage message,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+	public IResult<Boolean> basicPublish(AmqpOutboundMessage message,
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.PUBLISH, message);
@@ -288,14 +277,10 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return the client-generated consumer tag to establish context
 	 */
-	public IResult<String> basicConsume(
-			String queue,
-			String consumer,
-			boolean exclusive,
-			boolean autoAck,
-			Object extra,
+	public IResult<String> basicConsume(String queue, String consumer,
+			boolean exclusive, boolean autoAck, Object extra,
 			IAmqpConsumer consumeCallback,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+			IOperationCompletionHandler<String> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<String> op = (GenericOperation<String>) this.opFactory
 				.getOperation(AmqpOperations.CONSUME, queue, consumer,
@@ -318,10 +303,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if messages were acknowledged successfully
 	 */
-	public IResult<Boolean> basicAck(
-			long delivery,
-			boolean multiple,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+	public IResult<Boolean> basicAck(long delivery, boolean multiple,
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.ACK, delivery, multiple);
@@ -343,10 +326,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if message was retrieved successfully
 	 */
-	public IResult<Boolean> basicGet(
-			String queue,
-			boolean autoAck,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+	public IResult<Boolean> basicGet(String queue, boolean autoAck,
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.GET, queue, autoAck);
@@ -365,9 +346,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if consumer was canceled
 	 */
-	public IResult<Boolean> basicCancel(
-			String consumer,
-			@SuppressWarnings("rawtypes") IOperationCompletionHandler complHandler) {
+	public IResult<Boolean> basicCancel(String consumer,
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.CANCEL, consumer);
@@ -401,6 +381,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 		return channel;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T extends Object> IResult<T> startOperation(
 			GenericOperation<T> op, IOperationCompletionHandler complHandler) {
 		IResult<T> iResult = new GenericResult<T>(op);
@@ -447,8 +428,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 		@Override
 		public final void handleCancelOk(final String consumer) {
 			MosaicLogger.getLogger().trace(
-					"Received CANCEL Ok callback for consumer " + consumer
-							+ ".");
+					"Received CANCEL Ok callback for consumer " + consumer //$NON-NLS-1$
+							+ "."); //$NON-NLS-1$
 			;
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.remove(consumer);
@@ -467,8 +448,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 		@Override
 		public final void handleConsumeOk(final String consumer) {
 			MosaicLogger.getLogger().trace(
-					"Received CONSUME Ok callback for consumer " + consumer
-							+ ".");
+					"Received CONSUME Ok callback for consumer " + consumer //$NON-NLS-1$
+							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
 			if (consumeCallback != null) {
@@ -494,7 +475,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 					properties.getContentType(), properties.getCorrelationId(),
 					properties.getMessageId());
 			MosaicLogger.getLogger().trace(
-					"Received delivery " + message.getDelivery());
+					"Received delivery " + message.getDelivery()); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
 			if (consumeCallback != null) {
@@ -517,8 +498,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 		public final void handleShutdownSignal(final String consumer,
 				final ShutdownSignalException signal) {
 			MosaicLogger.getLogger()
-					.trace("Received SHUTDOWN callback for consumer "
-							+ consumer + ".");
+					.trace("Received SHUTDOWN callback for consumer " //$NON-NLS-1$
+							+ consumer + "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
 			if (consumeCallback != null) {
@@ -554,7 +535,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 					properties.getContentType(), properties.getCorrelationId(),
 					properties.getMessageId());
 			MosaicLogger.getLogger().trace(
-					"Received RETURN callback for " + message.getDelivery());
+					"Received RETURN callback for " + message.getDelivery()); //$NON-NLS-1$
 			// TODO
 		}
 	}
@@ -584,7 +565,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 				Object... parameters) {
 			IOperation<?> operation = null;
 			if (!(type instanceof AmqpOperations)) {
-				throw new IllegalArgumentException("Unsupported operation: "
+				throw new IllegalArgumentException("Unsupported operation: " //$NON-NLS-1$
 						+ type.toString());
 			}
 			AmqpOperations mType = (AmqpOperations) type;
@@ -614,28 +595,28 @@ public class AmqpDriver extends AbstractResourceDriver {
 								String amqpServerHost = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												"amqp.host", String.class,
+												ConfigProperties.getString("AmqpDriver.1"), String.class, //$NON-NLS-1$
 												ConnectionFactory.DEFAULT_HOST);
 								int amqpServerPort = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												"amqp.port",
+												ConfigProperties.getString("AmqpDriver.2"), //$NON-NLS-1$
 												Integer.class,
 												ConnectionFactory.DEFAULT_AMQP_PORT);
 								String amqpServerUser = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												"amqp.user", String.class,
+												ConfigProperties.getString("AmqpDriver.3"), String.class, //$NON-NLS-1$
 												ConnectionFactory.DEFAULT_USER);
 								String amqpServerPasswd = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												"amqp.passwd", String.class,
+												ConfigProperties.getString("AmqpDriver.4"), String.class, //$NON-NLS-1$
 												ConnectionFactory.DEFAULT_PASS);
 								String amqpVirtualHost = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												"amqp.virtual_host",
+												ConfigProperties.getString("AmqpDriver.5"), //$NON-NLS-1$
 												String.class,
 												ConnectionFactory.DEFAULT_VHOST);
 
@@ -653,6 +634,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 											.newConnection();
 									AmqpDriver.this.channels = new LinkedList<Channel>();
 									succeeded = true;
+									AmqpDriver.this.connected=true;
 								} catch (IOException e) {
 									ExceptionTracer.traceRethrown(e);
 									AmqpDriver.this.connection = null;
@@ -677,6 +659,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 										AmqpDriver.this.connected = false;
 										succeeded = true;
 									} catch (IOException e) {
+										e.printStackTrace();
 										ExceptionTracer.traceRethrown(e);
 									}
 								}
@@ -952,7 +935,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 				break;
 			default:
 				throw new UnsupportedOperationException(
-						"Unsupported operation: " + mType.toString());
+						"Unsupported operation: " + mType.toString()); //$NON-NLS-1$
 			}
 
 			return operation;

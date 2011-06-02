@@ -3,6 +3,7 @@ package mosaic.core.configuration.tests;
 import java.io.FileInputStream;
 
 import mosaic.core.configuration.ConfigurationIdentifier;
+import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 
 import org.junit.Assert;
@@ -21,7 +22,7 @@ public class PropertyTypeConfigurationTest {
 				"configuration-test.prop");
 		fileConfiguration = PropertyTypeConfiguration
 				.create(new FileInputStream(
-						"test/mosaic/core/configuration/tests/configuration-test.prop"));
+						"test/resources/configuration-test.prop"));
 		systemConfiguration = PropertyTypeConfiguration.create(null);
 	}
 
@@ -61,6 +62,27 @@ public class PropertyTypeConfigurationTest {
 		Assert.assertNotNull(id5);
 		Assert.assertEquals("Absolute for instance resolve failed",
 				"/mosaic/real", id5.getIdentifier());
+
+	}
+
+	private <T extends Object> T resolveRelativeParameter(
+			IConfiguration configuration, String identifier,
+			Class<T> valueClass, T defaultValue) {
+		if (configuration != null)
+			return (configuration.getParameter(
+					ConfigurationIdentifier.resolveRelative(identifier),
+					valueClass).getValue(defaultValue));
+		return defaultValue;
+	}
+
+	private <T extends Object> T resolveAbsoluteParameter(
+			IConfiguration configuration, String identifier,
+			Class<T> valueClass, T defaultValue) {
+		if (configuration != null)
+			return (configuration.getParameter(
+					ConfigurationIdentifier.resolveAbsolute(identifier),
+					valueClass).getValue(defaultValue));
+		return defaultValue;
 	}
 
 	@Test

@@ -197,6 +197,74 @@
       "name" : "response",
       "type" : [ "AmqpError", "boolean", "string" ]
     } ]
+  }, {
+    "type" : "record",
+    "name" : "ConsumeOkMssg",
+    "fields" : [ {
+      "name" : "consumer_tag",
+      "type" : "string"
+    } ]
+  }, {
+    "type" : "record",
+    "name" : "CancelOkMssg",
+    "fields" : [ {
+      "name" : "consumer_tag",
+      "type" : "string"
+    } ]
+  }, {
+    "type" : "record",
+    "name" : "DeliveryMssg",
+    "fields" : [ {
+      "name" : "consumer_tag",
+      "type" : "string"
+    }, {
+      "name" : "delivery_tag",
+      "type" : "long"
+    }, {
+      "name" : "exchange",
+      "type" : "string"
+    }, {
+      "name" : "routing_key",
+      "type" : "string"
+    }, {
+      "name" : "callback",
+      "type" : "string"
+    }, {
+      "name" : "content_encoding",
+      "type" : "string"
+    }, {
+      "name" : "content_type",
+      "type" : "string"
+    }, {
+      "name" : "correlation",
+      "type" : "string"
+    }, {
+      "name" : "deliveryMode",
+      "type" : "int"
+    }, {
+      "name" : "identifier",
+      "type" : "string"
+    }, {
+      "name" : "data",
+      "type" : "bytes"
+    } ]
+  }, {
+    "type" : "record",
+    "name" : "ShutdownMssg",
+    "fields" : [ {
+      "name" : "consumer_tag",
+      "type" : "string"
+    }, {
+      "name" : "message",
+      "type" : "string"
+    } ]
+  }, {
+    "type" : "record",
+    "name" : "Response",
+    "fields" : [ {
+      "name" : "response",
+      "type" : [ "OperationResponse", "ConsumeOkMssg", "CancelOkMssg", "DeliveryMssg", "ShutdownMssg" ]
+    } ]
   } ],
   "messages" : {
   }

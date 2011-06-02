@@ -19,11 +19,11 @@ public class DebugDriver {
 			MemcachedDriver wrapper = MemcachedDriver
 					.create(PropertyTypeConfiguration
 							.create(new FileInputStream(
-									"test/mosaic/driver/kvstore/tests/memcached-test.prop")));
+									"test/resources/memcached-test.prop")));
 			String keyPrefix = UUID.randomUUID().toString();
 
 			String k1 = keyPrefix + "_key_fantastic";
-			IOperationCompletionHandler handler = new TestLoggingHandler();
+			IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>();
 			IResult<Boolean> r1 = wrapper.invokeSetOperation(k1, 30,
 					"fantastic", handler);
 			System.out.println("Result: " + r1.getResult());

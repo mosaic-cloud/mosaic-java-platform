@@ -40,7 +40,7 @@ import org.apache.avro.specific.SpecificRecord;
  * 
  */
 public class AmqpProxy extends ConnectorProxy {
-	private static final String DEFAULT_QUEUE_NAME = "aqmp_requests";
+	private static final String DEFAULT_QUEUE_NAME = "amqp_requests";
 	private static final String DEFAULT_EXCHANGE_NAME = "amqp";
 
 	/**

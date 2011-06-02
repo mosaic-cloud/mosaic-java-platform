@@ -1,6 +1,7 @@
 package mosaic.core.configuration;
 
 import java.util.IdentityHashMap;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 /**
@@ -65,6 +66,7 @@ public final class ConfigurationIdentifier {
 	@Override
 	public final String toString() {
 		return (this.identifier);
+
 	}
 
 	/**
@@ -140,7 +142,7 @@ public final class ConfigurationIdentifier {
 	private static ConfigurationIdentifier resolve(
 			ConfigurationIdentifier reference, String specification) {
 		boolean isAbsolute = false;
-		final String identifier_;
+		String identifier_;
 		final String identifier;
 		// int slashIndex;
 		// String parentIdentifier;
@@ -154,14 +156,14 @@ public final class ConfigurationIdentifier {
 			identifier_ = specification;
 		} else if (reference.absolute) {
 			isAbsolute = true;
-			if (reference.identifier != null)
+			if (reference.identifier != null) {
 				identifier_ = reference.identifier + "/" + specification;
-			else
+			} else
 				identifier_ = "/" + specification;
+			identifier_=identifier_.replaceAll("//", "/");
 		} else {
 			identifier_ = reference.identifier + "/" + specification;
 		}
-
 		if (!ConfigurationIdentifier.identifierPattern.matcher(identifier_)
 				.matches())
 			throw (new IllegalArgumentException(String.format(
@@ -196,5 +198,10 @@ public final class ConfigurationIdentifier {
 
 		return parameterIdentifier;
 	}
+
+	// public String toString() {
+	//
+	// return builder.toString();
+	// }
 
 }

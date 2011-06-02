@@ -15,32 +15,26 @@ import mosaic.driver.kvstore.MemcachedDriver;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class MemcachedDriverTest {
 	private static MemcachedDriver wrapper;
 	private static String keyPrefix;
-	private IOperationCompletionHandler handler;
+	private static IOperationCompletionHandler handler;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		wrapper = MemcachedDriver
-				.create(PropertyTypeConfiguration
-						.create(new FileInputStream(
-								"test/mosaic/driver/kvstore/tests/memcached-test.prop")));
+		wrapper = MemcachedDriver.create(PropertyTypeConfiguration
+				.create(new FileInputStream(
+						"test/resources/memcached-test.prop")));
 		keyPrefix = UUID.randomUUID().toString();
+		handler = new TestLoggingHandler();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		wrapper.destroy();
-	}
-
-	@Before
-	public void setUp() {
-		handler = new TestLoggingHandler();
 	}
 
 	@Test
