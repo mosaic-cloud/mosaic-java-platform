@@ -1,9 +1,7 @@
 package mosaic.driver.amqp.tests;
 
-import java.io.FileInputStream;
 import java.util.concurrent.ExecutionException;
 
-import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
@@ -24,10 +22,10 @@ public class AmqpDriverTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		configuration = PropertyTypeConfiguration.create(new FileInputStream(
-				"test/resources/amqp-test.prop"));
+		configuration = PropertyTypeConfiguration.create(
+				AmqpDriverTest.class.getClassLoader(), "amqp-test.prop");
 		wrapper = AmqpDriver.create(configuration);
-		handler = new TestLoggingHandler<Boolean>();
+		handler = new mosaic.core.TestLoggingHandler<Boolean>();
 	}
 
 	@AfterClass

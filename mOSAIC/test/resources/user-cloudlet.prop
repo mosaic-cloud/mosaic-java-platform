@@ -1,5 +1,5 @@
-consumer.amqp.consumer.queue=logging-queue
-consumer.amqp.consumer.consumer_id=logging-consumer
+consumer.amqp.consumer.queue=user-queue
+consumer.amqp.consumer.consumer_id=user-consumer
 consumer.amqp.consumer.auto_ack=false
 consumer.amqp.consumer.exclusive=false
 
@@ -16,7 +16,6 @@ test.token=got_it
 
 # configurations below will normally not be set by the cloudlet creator
 # this is just for test
-memcached.connector_threads=1
 amqp.connector_threads=1
 
 interop.req.amqp.host=localhost
@@ -33,10 +32,6 @@ interop.resp.amqp.user=
 interop.resp.amqp.passwd=
 interop.resp.amqp.exchange=amqp
 interop.resp.amqp.queue=amqp_responses
-
-memcached.host_1=localhost
-memcached.port_1=11211
-memcached.driver_threads=10
 
 amqp.driver_threads=10
 amqp.host=localhost

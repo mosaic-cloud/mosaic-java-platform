@@ -4,7 +4,7 @@ import mosaic.core.configuration.IConfiguration;
 
 public interface ICloudlet {
 
-	boolean init(IConfiguration configData);
+	boolean initialize(IConfiguration configData);
 
 	boolean destroy();
 

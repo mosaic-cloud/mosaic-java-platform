@@ -19,6 +19,7 @@ import mosaic.cloudlet.resources.kvstore.KeyValueCallbackArguments;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IResult;
 
 public class LoggingCloudlet {
@@ -29,16 +30,17 @@ public class LoggingCloudlet {
 		@Override
 		public void initialize(LoggingCloudletState state,
 				CallbackArguments<LoggingCloudletState> arguments) {
+			MosaicLogger.getLogger().trace("LoggingCloudlet initializing");
 			ICloudletController<LoggingCloudletState> cloudlet = arguments
 					.getCloudlet();
 			IConfiguration configuration = cloudlet.getConfiguration();
 			state.kvStore = new KeyValueAccessor<LoggingCloudletState>(
 					configuration, cloudlet);
-			state.consumer = new AmqpQueueConsumer<LoggingCloudlet.LoggingCloudletState, LoggingCloudlet.LoggingData>(
-					configuration, cloudlet, LoggingCloudlet.LoggingData.class);
-			state.publisher = new AmqpQueuePublisher<LoggingCloudlet.LoggingCloudletState, LoggingCloudlet.AuthenticationToken>(
+			state.consumer = new AmqpQueueConsumer<LoggingCloudlet.LoggingCloudletState, LoggingData>(
+					configuration, cloudlet, LoggingData.class);
+			state.publisher = new AmqpQueuePublisher<LoggingCloudlet.LoggingCloudletState, AuthenticationToken>(
 					configuration, cloudlet,
-					LoggingCloudlet.AuthenticationToken.class);
+					AuthenticationToken.class);
 
 		}
 
@@ -63,7 +65,7 @@ public class LoggingCloudlet {
 		@Override
 		public void destroy(LoggingCloudletState state,
 				CallbackArguments<LoggingCloudletState> arguments) {
-			System.out.println("Logging cloudlet is being destroyed.");
+			MosaicLogger.getLogger().info("Logging cloudlet is being destroyed.");
 		}
 
 	}
@@ -223,37 +225,5 @@ public class LoggingCloudlet {
 		IKeyValueAccessor<LoggingCloudletState> kvStore;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
-	}
-
-	public static final class LoggingData {
-		private final String user;
-		private final String password;
-
-		public LoggingData(String user, String password) {
-			this.user = user;
-			this.password = password;
-		}
-
-		public String getUser() {
-			return user;
-		}
-
-		public String getPassword() {
-			return password;
-		}
-	}
-
-	public static final class AuthenticationToken {
-		private final String token;
-
-		public AuthenticationToken(String token) {
-			super();
-			this.token = token;
-		}
-
-		public String getToken() {
-			return token;
-		}
-
 	}
 }

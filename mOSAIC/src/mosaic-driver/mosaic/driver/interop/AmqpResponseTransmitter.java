@@ -8,6 +8,7 @@ import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.queue.AmqpOperations;
 import mosaic.interop.idl.amqp.AmqpError;
+import mosaic.interop.idl.amqp.CancelMssg;
 import mosaic.interop.idl.amqp.CancelOkMssg;
 import mosaic.interop.idl.amqp.CompletionToken;
 import mosaic.interop.idl.amqp.ConsumeOkMssg;
@@ -104,6 +105,32 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		} catch (IOException e) {
 			ExceptionTracer.traceRethrown(e);
 		}
+	}
+
+	/**
+	 * Builds the Cancel message and sends it to the actual consumer.
+	 * 
+	 * @param callerId
+	 *            the identifier of the consumer (connector)
+	 * @param consumerTag
+	 *            the tag of the consumer
+	 */
+	public void sendCancel(String callerId, String consumerTag) {
+		byte[] message;
+
+		CancelMssg cmessage = new CancelMssg();
+		try {
+			cmessage.put(0, consumerTag);
+			Response response = new Response();
+			response.put(0, cmessage);
+
+			// send response
+			message = SerDesUtils.serializeWithSchema(response);
+			publishResponse(callerId, message);
+		} catch (IOException e) {
+			ExceptionTracer.traceRethrown(e);
+		}
+
 	}
 
 	/**
@@ -231,4 +258,5 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		}
 		return cOp;
 	}
+
 }

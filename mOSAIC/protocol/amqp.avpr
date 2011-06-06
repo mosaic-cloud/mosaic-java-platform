@@ -213,6 +213,13 @@
     } ]
   }, {
     "type" : "record",
+    "name" : "CancelMssg",
+    "fields" : [ {
+      "name" : "consumer_tag",
+      "type" : "string"
+    } ]
+  }, {
+    "type" : "record",
     "name" : "DeliveryMssg",
     "fields" : [ {
       "name" : "consumer_tag",
@@ -263,7 +270,7 @@
     "name" : "Response",
     "fields" : [ {
       "name" : "response",
-      "type" : [ "OperationResponse", "ConsumeOkMssg", "CancelOkMssg", "DeliveryMssg", "ShutdownMssg" ]
+      "type" : [ "OperationResponse", "ConsumeOkMssg", "CancelOkMssg", "CancelMssg", "DeliveryMssg", "ShutdownMssg" ]
     } ]
   } ],
   "messages" : {

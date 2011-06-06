@@ -47,6 +47,7 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 		final Properties properties = new Properties(System.getProperties());
 		if (stream != null) {
 			properties.load(stream);
+			properties.list(System.out);
 			stream.close();
 		}
 		PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(

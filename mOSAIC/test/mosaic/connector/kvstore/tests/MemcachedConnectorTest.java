@@ -1,6 +1,5 @@
 package mosaic.connector.kvstore.tests;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,8 @@ public class MemcachedConnectorTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		IConfiguration config = PropertyTypeConfiguration
-				.create(new FileInputStream(
-						"test/resources/memcached-test.prop"));
+				.create(MemcachedConnectorTest.class.getClassLoader(),
+						"memcached-test.prop");
 		connector = MemcachedStoreConnector.create(config);
 		keyPrefix = UUID.randomUUID().toString();
 		handlersBool = new ArrayList<IOperationCompletionHandler<Boolean>>();

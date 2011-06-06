@@ -13,6 +13,7 @@ import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.runtime.CloudletExecutor;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.CompletionInvocationHandler;
 import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
@@ -91,6 +92,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 
 				@Override
 				public void run() {
+					MosaicLogger.getLogger().trace("Cloudlet - calling cloudlet initialize...");
 					// call the user defined init
 					Cloudlet.this.controllerCallback.initialize(
 							Cloudlet.this.state, new CallbackArguments<S>(

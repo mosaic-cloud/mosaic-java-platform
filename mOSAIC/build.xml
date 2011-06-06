@@ -16,6 +16,7 @@
 	<!-- Important directories and files -->
 	<property name="src.dir" value="src" />
 	<property name="test.dir" value="test" />
+	<property name="test.output.dir" value="test-output" />
 	<property name="lib.dir" value="lib" />
 
 	<!-- Name of the JAR file that will be generated -->
@@ -35,6 +36,7 @@
 	<target name="clean" depends="init" description="Delete the generated files">
 		<delete dir="${build.dir}" failonerror="false" />
 		<delete dir="${build.test.dir}" failonerror="false" />
+		<delete dir="${test.output.dir}" failonerror="false" />
 	</target>
 
 	<target name="compile" depends="clean" description="Compiles the project">
@@ -54,6 +56,23 @@
 				</fileset>
 			</classpath>
 		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}/mosaic-core">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-interop">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-driver">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-connector">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-cloudlet">
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="compile-all" depends="clean" description="Compiles the project">
@@ -67,6 +86,8 @@
 			</src>
 			<src path="${src.dir}/mosaic-connector">
 			</src>
+			<src path="${src.dir}/mosaic-cloudlet">
+			</src>
 			<src path="${test.dir}">
 			</src>
 			<classpath>
@@ -78,6 +99,26 @@
 		<copy todir="${build.test.dir}">
 			<fileset dir="${test.dir}">
 				<exclude name="**/*.java" />
+				<exclude name="**/*.prop" />
+				<exclude name="resources" />
+			</fileset>
+			<fileset dir="${test.dir}/resources">
+				<include name="*.prop" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-core">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-interop">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-driver">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-connector">
+				<include name="**/*.properties" />
+			</fileset>
+			<fileset dir="${src.dir}/mosaic-cloudlet">
+				<include name="**/*.properties" />
 			</fileset>
 		</copy>
 	</target>
@@ -87,6 +128,7 @@
 	</target>
 
 	<target name="config-tests">
+		<mkdir dir="${test.output.dir}" />
 		<junit>
 			<test name="mosaic.core.configuration.tests.PropertyTypeConfigurationTest" outfile="tests-result">
 			</test>
@@ -103,9 +145,14 @@
 	</target>
 
 	<target name="driver-tests" description="Runs the driver tests. Assumes a membase store is running on localhost.">
+		<mkdir dir="${test.output.dir}" />
 		<junit>
-			<test name="mosaic.driver.kvstore.tests.MemcachedDriverTest" outfile="tests-result">
-			</test>
+			<batchtest fork="yes" todir="${test.output.dir}">
+				<fileset dir="${test.dir}">
+					<include name="mosaic/driver/**/*.java" />
+				</fileset>
+				<formatter type="plain" usefile="true" />
+			</batchtest>
 			<classpath>
 				<fileset dir="lib">
 					<include name="**/*.jar" />
@@ -114,14 +161,18 @@
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
-			<formatter type="plain" />
 		</junit>
 	</target>
 
 	<target name="conn-tests" description="Runs the connector tests. Assumes a membase store  and a RabbitMQ server is running on localhost.">
+		<mkdir dir="${test.output.dir}" />
 		<junit>
-			<test name="mosaic.connector.kvstore.tests.MemcachedConnectorTest" outfile="tests-result">
-			</test>
+			<batchtest fork="yes" todir="${test.output.dir}">
+				<fileset dir="${test.dir}">
+					<include name="mosaic/connector/**/*.java" />
+				</fileset>
+				<formatter type="plain" usefile="true" />
+			</batchtest>
 			<classpath>
 				<fileset dir="lib">
 					<include name="**/*.jar" />
@@ -130,10 +181,29 @@
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
-			<formatter type="plain" />
 		</junit>
 	</target>
-
+	<!--
+	<target name="cloudlet-tests" description="Runs the connector tests. Assumes a membase store  and a RabbitMQ server is running on localhost.">
+			<mkdir dir="${test.output.dir}" />
+			<junit>
+				<batchtest fork="yes" todir="${test.output.dir}">
+					<fileset dir="${test.dir}">
+						<include name="mosaic/connector/**/*.java" />
+					</fileset>
+					<formatter type="plain" usefile="true" />
+				</batchtest>
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+			</junit>
+		</target>
+-->
 	<target name="amqp-idl">
 		<java jar="lib/avro-tools-1.5.0.jar" fork="true">
 			<arg value="idl" />
@@ -142,17 +212,18 @@
 			<classpath>
 				<fileset dir="lib">
 					<include name="avro-tools*.jar" />
+					<include name="slf4j*.jar" />
 				</fileset>
 			</classpath>
 		</java>
-		<java jar="lib/avro-tools-1.5.0.jar" fork="true">
+		<java jar="lib/avro-tools-gen.jar" fork="true">
 			<arg value="compile" />
 			<arg value="protocol" />
 			<arg value="protocol/amqp.avpr" />
 			<arg value="protocol/src" />
 			<classpath>
 				<fileset dir="lib">
-					<include name="avro-tools*.jar" />
+					<include name="avro-tools-gen.jar" />
 				</fileset>
 			</classpath>
 		</java>

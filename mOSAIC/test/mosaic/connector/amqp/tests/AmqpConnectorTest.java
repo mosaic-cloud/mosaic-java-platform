@@ -1,6 +1,5 @@
 package mosaic.connector.amqp.tests;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -28,8 +27,8 @@ public class AmqpConnectorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		configuration = PropertyTypeConfiguration.create(new FileInputStream(
-				"test/resources/amqp-test.prop"));
+		configuration = PropertyTypeConfiguration.create(
+				AmqpConnectorTest.class.getClassLoader(), "amqp-test.prop");
 		connector = AmqpConnector.create(configuration);
 		handlersBool = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlersBool.add(new TestLoggingHandler<Boolean>());

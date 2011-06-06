@@ -52,30 +52,42 @@ public class CloudletDummyContainer {
 	}
 
 	private void createCloudlets() throws CloudletException {
-		int noCloudlets = 0;
+		int noCloudlets = 1;
 		Class<?> handlerClasz;
 		Class<?> stateClasz;
 		IConfiguration resourceConfig;
 
 		try {
 			while (true) {
-				String cloudletClass = ConfigUtils.resolveParameter(
-						configuration, ConfigProperties.getString("CloudletDummyContainer.0") + noCloudlets //$NON-NLS-1$
-								+ ConfigProperties.getString("CloudletDummyContainer.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+				String cloudletClass = ConfigUtils
+						.resolveParameter(
+								configuration,
+								ConfigProperties
+										.getString("CloudletDummyContainer.0") + noCloudlets //$NON-NLS-1$
+										+ ConfigProperties
+												.getString("CloudletDummyContainer.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 				if (cloudletClass.equals("")) //$NON-NLS-1$
 					break;
-				String cloudletStateClass = ConfigUtils.resolveParameter(
-						configuration, ConfigProperties.getString("CloudletDummyContainer.2") + noCloudlets //$NON-NLS-1$
-								+ ConfigProperties.getString("CloudletDummyContainer.3"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+				String cloudletStateClass = ConfigUtils
+						.resolveParameter(
+								configuration,
+								ConfigProperties
+										.getString("CloudletDummyContainer.2") + noCloudlets //$NON-NLS-1$
+										+ ConfigProperties
+												.getString("CloudletDummyContainer.3"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 				if (cloudletStateClass.equals("")) { //$NON-NLS-1$
 					throw new CloudletException("The configuration file " //$NON-NLS-1$
 							+ configuration.toString()
 							+ " does not specify a state class for cloudlet " //$NON-NLS-1$
 							+ cloudletClass + "."); //$NON-NLS-1$
 				}
-				String resourceFile = ConfigUtils.resolveParameter(
-						configuration, ConfigProperties.getString("CloudletDummyContainer.4") + noCloudlets //$NON-NLS-1$
-								+ ConfigProperties.getString("CloudletDummyContainer.5"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+				String resourceFile = ConfigUtils
+						.resolveParameter(
+								configuration,
+								ConfigProperties
+										.getString("CloudletDummyContainer.4") + noCloudlets //$NON-NLS-1$
+										+ ConfigProperties
+												.getString("CloudletDummyContainer.5"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 
 				handlerClasz = this.classLoader.loadClass(cloudletClass);
 				stateClasz = this.classLoader.loadClass(cloudletStateClass);
@@ -111,14 +123,8 @@ public class CloudletDummyContainer {
 
 	private <T> T createHandler(final Class<T> clasz) {
 		T instance = null;
-		boolean isCallback = false;
-		Type genericTypes[] = clasz.getGenericInterfaces();
-		for (int i = 0; i < genericTypes.length; i++) {
-			if (genericTypes[i].getClass() == ICloudletCallback.class) {
-				isCallback = true;
-				break;
-			}
-		}
+		boolean isCallback = implementsType(clasz, ICloudletCallback.class);
+		
 		if (!isCallback) {
 			MosaicLogger.getLogger().error(
 					"Missmatched object class: `" + clasz.getName() + "`"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -133,6 +139,26 @@ public class CloudletDummyContainer {
 			throw new IllegalArgumentException();
 		}
 		return instance;
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> boolean implementsType(Class<T> clasz,
+			Class<?> searchedType) {
+		Type genericTypes[] = clasz.getInterfaces();
+		for (int i = 0; i < genericTypes.length; i++) {
+			if (genericTypes[i] == searchedType)
+				return true;
+		}
+		boolean found = false;
+		for (int i = 0; i < genericTypes.length; i++) {
+			found = implementsType((Class<T>) genericTypes[i], searchedType);
+			if (found)
+				return true;
+		}
+		Class<? super T> superClass = clasz.getSuperclass();
+		found = implementsType(superClass, searchedType);
+
+		return found;
 	}
 
 }

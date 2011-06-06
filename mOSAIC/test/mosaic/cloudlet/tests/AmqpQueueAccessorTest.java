@@ -1,27 +1,5 @@
 package mosaic.cloudlet.tests;
 
-import java.io.FileInputStream;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-
-import mosaic.cloudlet.resources.amqp.DefaultAmqpAccessorCallback;
-import mosaic.connector.queue.AmqpConnector;
-import mosaic.core.configuration.ConfigUtils;
-import mosaic.core.configuration.ConfigurationIdentifier;
-import mosaic.core.configuration.IConfiguration;
-import mosaic.core.configuration.PropertyTypeConfiguration;
-import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.ops.IResult;
-import mosaic.driver.queue.AmqpExchangeType;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public final class AmqpQueueAccessorTest {
 //	@Before

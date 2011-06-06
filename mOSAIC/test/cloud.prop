@@ -1,0 +1,7 @@
+cloudlet_1.main_class=mosaic.cloudlet.tests.LoggingCloudlet$LifeCycleHandler
+cloudlet_1.state_class=mosaic.cloudlet.tests.LoggingCloudlet$LoggingCloudletState
+cloudlet_1.resource_file=logging-cloudlet.prop
+
+cloudlet_2.main_class=mosaic.cloudlet.tests.UserCloudlet$LifeCycleHandler
+cloudlet_2.state_class=mosaic.cloudlet.tests.UserCloudlet$UserCloudletState
+cloudlet_2.resource_file=user-cloudlet.prop

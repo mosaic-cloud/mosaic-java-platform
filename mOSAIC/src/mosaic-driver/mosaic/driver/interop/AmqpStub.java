@@ -333,5 +333,13 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 			transmitter.sendShutdownSignal(callerId, consumerTag, errorMessage);
 
 		}
+
+		@Override
+		public void handleCancel(String consumerTag) {
+			AmqpResponseTransmitter transmitter = AmqpStub.this
+					.getResponseTransmitter(AmqpResponseTransmitter.class);
+			transmitter.sendCancel(callerId, consumerTag);
+
+		}
 	}
 }

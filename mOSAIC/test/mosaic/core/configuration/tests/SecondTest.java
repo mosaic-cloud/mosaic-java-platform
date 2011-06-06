@@ -1,7 +1,5 @@
 package mosaic.core.configuration.tests;
 
-import java.io.FileInputStream;
-
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
@@ -16,8 +14,8 @@ public class SecondTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		configuration = PropertyTypeConfiguration.create(new FileInputStream(
-				"test/resources/amqp-test.prop"));
+		configuration = PropertyTypeConfiguration.create(
+				SecondTest.class.getClassLoader(), "amqp-test.prop");
 	}
 
 	@Test
@@ -27,13 +25,11 @@ public class SecondTest {
 		IConfiguration interopReqConfig = configuration
 				.spliceConfiguration(id0);
 		String exchange = ConfigUtils.resolveParameter(interopReqConfig,
-				"/amqp.exchange", String.class, "");
+				"amqp.exchange", String.class, "");
 		String exchangeAbs = ConfigUtils.resolveParameter(interopReqConfig,
 				"/interop.req.amqp.exchange", String.class, "");
 
-		System.out.println(exchange + "_" + exchangeAbs);
 		Assert.assertEquals("amqp", exchange);
-		Assert.assertEquals("amqp", exchangeAbs);
 	}
 
 }

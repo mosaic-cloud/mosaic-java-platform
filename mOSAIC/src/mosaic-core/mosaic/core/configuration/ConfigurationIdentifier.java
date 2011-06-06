@@ -1,7 +1,6 @@
 package mosaic.core.configuration;
 
 import java.util.IdentityHashMap;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 /**

@@ -107,6 +107,10 @@ protocol Amqp {
 		string consumer_tag;
 	}
 	
+	record CancelMssg {
+		string consumer_tag;
+	}
+	
 	record DeliveryMssg {
 		string consumer_tag;
 		long delivery_tag;
@@ -130,6 +134,7 @@ protocol Amqp {
 		union {OperationResponse, 
 			ConsumeOkMssg, 
 			CancelOkMssg, 
+			CancelMssg,
 			DeliveryMssg, 
 			ShutdownMssg} response;
 	}

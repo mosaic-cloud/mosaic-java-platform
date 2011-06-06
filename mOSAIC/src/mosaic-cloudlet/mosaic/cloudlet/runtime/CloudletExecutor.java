@@ -3,9 +3,12 @@ package mosaic.cloudlet.runtime;
 import java.lang.Thread.State;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+
+import mosaic.core.log.MosaicLogger;
 
 /**
  * A Cloudlet executor that executes operations requested in a certain cloudlet
@@ -52,6 +55,12 @@ public class CloudletExecutor {
 	private final Condition mainWorkerBlocked = mainLock.newCondition();
 
 	/**
+	 * Used for notifying the workers that there is a request or a response to a
+	 * previously submitted request that is ready for processing.
+	 */
+	private final Condition queuesNotEmpty = mainLock.newCondition();
+
+	/**
 	 * The thread running the cloudlet. Must be volatile, to ensure visibility
 	 * upon completion.
 	 */
@@ -69,11 +78,9 @@ public class CloudletExecutor {
 	 * 
 	 * INITIALIZING: Initializing the cloudlet instance.
 	 * 
-	 * RUNNING: Processing a request.
+	 * RUNNING: Processes requests.
 	 * 
-	 * IDLE: Does nothing just waits for a new request
-	 * 
-	 * SHUTDOWN: Don't accept new requests, but finish the current one
+	 * SHUTDOWN: Don't accept new requests, but finish the current ones
 	 * 
 	 * STOP: Don't accept new requests, don't process queued requests and
 	 * interrupt in-progress request
@@ -85,13 +92,6 @@ public class CloudletExecutor {
 	 * hit each state. The transitions are:
 	 * 
 	 * 
-	 * RUNNING -> IDLE<br/>
-	 * When the processing for the current request has finished and no other
-	 * request is waiting for processing.
-	 * 
-	 * IDLE -> RUNNING<br/>
-	 * A new request has arrived.
-	 * 
 	 * RUNNING -> SHUTDOWN<br/>
 	 * On invocation of shutdown(), perhaps implicitly in finalize()
 	 * 
@@ -99,29 +99,39 @@ public class CloudletExecutor {
 	 * On invocation of shutdownNow()
 	 * 
 	 * SHUTDOWN -> TERMINATED<br/>
-	 * When the current job is finished and no other has been accepted for
+	 * When the current jobs are finished and no other has been accepted for
 	 * processing.
 	 * 
 	 * STOP -> TERMINATED<br/>
 	 * When all cleanup is done.
 	 */
 	volatile int runState;
+	/**
+	 * Initializing the cloudlet instance.
+	 */
 	static final int INITIALIZING = 0;
+	/**
+	 * Processes requests.
+	 */
 	static final int RUNNING = 1;
-	static final int IDLE = 3;
+	/**
+	 * Don't accept new requests, but finish the current ones
+	 */
 	static final int SHUTDOWN = 2;
-	static final int STOP = 4;
-	static final int TERMINATED = 5;
+	/**
+	 * Don't accept new requests, don't process queued requests and interrupt
+	 * in-progress request.
+	 */
+	static final int STOP = 3;
+	/**
+	 * Same as STOP, plus all threads have terminated.
+	 */
+	static final int TERMINATED = 4;
 
 	/**
 	 * How many worker threads are active (>=0 && <=2).
 	 */
 	private volatile int runningWorkers;
-	/**
-	 * Used for notifying the workers that there is a request or a response to a
-	 * previously submitted request that is ready for processing.
-	 */
-	private volatile Object queuesNotEmpty = new Object();
 
 	private CountDownLatch terminationLatch = new CountDownLatch(1);
 
@@ -131,6 +141,8 @@ public class CloudletExecutor {
 	public CloudletExecutor() {
 		super();
 		this.runState = INITIALIZING;
+		this.requestQueue = new LinkedBlockingQueue<Runnable>();
+		this.responseQueue = new LinkedBlockingQueue<Runnable>();
 
 		this.worker = new Worker();
 		this.worker.thread = new Thread(this.worker);
@@ -140,7 +152,8 @@ public class CloudletExecutor {
 		this.backupWorker.thread = new Thread(this.backupWorker);
 		this.backupWorker.thread.start();
 		runningWorkers = 2;
-		this.runState = IDLE;
+		this.runState = RUNNING;
+		MosaicLogger.getLogger().trace("CloudletExecutor started.");
 	}
 
 	/**
@@ -208,7 +221,7 @@ public class CloudletExecutor {
 				throw se;
 			}
 
-			tryTerminate(); // Terminate now if pool and queue empty
+			tryTerminate(); // Terminate now if queues empty
 		} finally {
 			mainLock.unlock();
 		}
@@ -247,7 +260,7 @@ public class CloudletExecutor {
 	 * The calling thread will block waiting for the executor to shutdown.
 	 * 
 	 * @throws InterruptedException
-	  */
+	 */
 	public void waitTermination() throws InterruptedException {
 		this.terminationLatch.await();
 	}
@@ -263,13 +276,9 @@ public class CloudletExecutor {
 	 * are no live threads.
 	 */
 	private void tryTerminate() {
-		if (runningWorkers == 0) {
-			int state = runState;
-			if (state < STOP
-					&& !(requestQueue.isEmpty() || responseQueue.isEmpty())) {
-				state = RUNNING; // disable termination check below
 
-			}
+		int state = runState;
+		if (runningWorkers == 0) {
 			if (state == STOP || state == SHUTDOWN) {
 				runState = TERMINATED;
 				this.terminationLatch.countDown();
@@ -288,7 +297,8 @@ public class CloudletExecutor {
 		boolean canExit;
 		try {
 			canExit = runState >= STOP
-					|| (requestQueue.isEmpty() && responseQueue.isEmpty());
+					|| (runState == SHUTDOWN && requestQueue.isEmpty() && responseQueue
+							.isEmpty());
 		} finally {
 			mainLock.unlock();
 		}
@@ -314,12 +324,21 @@ public class CloudletExecutor {
 		if (request == null)
 			throw new NullPointerException();
 
-		if ((runState == RUNNING || runState == IDLE)
-				&& requestQueue.offer(request)) {
-			if (runState != RUNNING && runState != IDLE)
-				ensureQueuedRequestHandled(request);
-		} else
-			reject(request); // is shutdown
+		// if ((runState == RUNNING) && requestQueue.offer(request)) {
+		// if (runState != RUNNING)
+		// ensureQueuedRequestHandled(request);
+		// } else
+		// reject(request); // is shutdown
+
+		mainLock.lock();
+		try {
+			if ((runState == RUNNING) && requestQueue.offer(request)) {
+				queuesNotEmpty.signal();
+			} else
+				reject(request); // is shutdown
+		} finally {
+			mainLock.unlock();
+		}
 	}
 
 	/**
@@ -340,16 +359,16 @@ public class CloudletExecutor {
 		boolean reject = false;
 		try {
 			int state = runState;
-			if ((state != RUNNING && state != IDLE)
-					&& requestQueue.remove(request))
+			if ((state != RUNNING) && requestQueue.remove(request))
 				reject = true;
+
+			if (reject)
+				reject(request);
+			else
+				queuesNotEmpty.signal();
 		} finally {
 			mainLock.unlock();
 		}
-		if (reject)
-			reject(request);
-		else
-			queuesNotEmpty.notify();
 	}
 
 	/**
@@ -372,11 +391,15 @@ public class CloudletExecutor {
 	public void handleResponse(Runnable response) {
 		if (response == null)
 			throw new NullPointerException();
-		if (responseQueue.offer(response))
-			if (worker.isBlocked())
-				mainWorkerBlocked.signal();
-		queuesNotEmpty.notify();
-
+		mainLock.lock();
+		try {
+			if (runState < STOP && responseQueue.offer(response))
+				if (worker.isBlocked())
+					mainWorkerBlocked.signal();
+			queuesNotEmpty.signal();
+		} finally {
+			mainLock.unlock();
+		}
 	}
 
 	/**
@@ -400,13 +423,19 @@ public class CloudletExecutor {
 				if (state > SHUTDOWN)
 					return null;
 				Runnable r;
+				mainLock.lock();
 				if (state == SHUTDOWN) // Help drain queues
 					if (!responseQueue.isEmpty())
 						r = responseQueue.poll();
 					else
 						r = requestQueue.poll();
 				else {
-					queuesNotEmpty.wait();
+					while (responseQueue.isEmpty() && requestQueue.isEmpty()) {
+						MosaicLogger
+								.getLogger()
+								.trace("CloudletExecutor.Worker blocking waiting for work...");
+						queuesNotEmpty.await();
+					}
 					if (!responseQueue.isEmpty())
 						r = responseQueue.take();
 					else {
@@ -422,6 +451,8 @@ public class CloudletExecutor {
 				}
 			} catch (InterruptedException ie) {
 				// On interruption, re-check runState
+			} finally {
+				mainLock.unlock();
 			}
 		}
 	}
@@ -451,7 +482,7 @@ public class CloudletExecutor {
 				while (!worker.isBlocked())
 					mainWorkerBlocked.await();
 
-				if (state == SHUTDOWN) { // Help drain queues
+				if (state >= SHUTDOWN) { // Help drain queues
 					if (worker.isBlocked() && !responseQueue.isEmpty())
 						r = responseQueue.poll();
 					else
@@ -467,6 +498,7 @@ public class CloudletExecutor {
 
 			} catch (InterruptedException ie) {
 				// On interruption, re-check runState
+				ie.printStackTrace();
 			} finally {
 				mainLock.unlock();
 			}

@@ -28,6 +28,15 @@ public interface IAmqpConsumer {
 	void handleCancelOk(String consumerTag);
 
 	/**
+	 * Handles the Cancel message. Called when the consumer is cancelled for
+	 * reasons other than by a basicCancel.
+	 * 
+	 * @param consumerTag
+	 *            the consumer identifier
+	 */
+	void handleCancel(String consumerTag);
+
+	/**
 	 * Handles a delivered message.
 	 * 
 	 * @param message

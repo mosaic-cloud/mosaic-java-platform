@@ -3,7 +3,6 @@ package mosaic.core.configuration.tests;
 import java.io.FileInputStream;
 
 import mosaic.core.configuration.ConfigurationIdentifier;
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 
 import org.junit.Assert;
@@ -65,29 +64,9 @@ public class PropertyTypeConfigurationTest {
 
 	}
 
-	private <T extends Object> T resolveRelativeParameter(
-			IConfiguration configuration, String identifier,
-			Class<T> valueClass, T defaultValue) {
-		if (configuration != null)
-			return (configuration.getParameter(
-					ConfigurationIdentifier.resolveRelative(identifier),
-					valueClass).getValue(defaultValue));
-		return defaultValue;
-	}
-
-	private <T extends Object> T resolveAbsoluteParameter(
-			IConfiguration configuration, String identifier,
-			Class<T> valueClass, T defaultValue) {
-		if (configuration != null)
-			return (configuration.getParameter(
-					ConfigurationIdentifier.resolveAbsolute(identifier),
-					valueClass).getValue(defaultValue));
-		return defaultValue;
-	}
-
 	@Test
 	public void testPropertyTypeConfiguration() {
-		// Assert.assertNotNull(configuration);
+		Assert.assertNotNull(configuration);
 		Assert.assertNotNull(fileConfiguration);
 		Assert.assertNotNull(systemConfiguration);
 	}
@@ -97,28 +76,28 @@ public class PropertyTypeConfigurationTest {
 		ConfigurationIdentifier id;
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/int");
-		Integer value = fileConfiguration.getParameter(id, Integer.class)
-				.getValue(0);
+		Integer value = configuration.getParameter(id, Integer.class).getValue(
+				0);
 		Assert.assertEquals(1, value.intValue());
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/real");
-		Double dvalue = fileConfiguration.getParameter(id, Double.class)
-				.getValue(0.0);
+		Double dvalue = configuration.getParameter(id, Double.class).getValue(
+				0.0);
 		Assert.assertEquals(2.0, dvalue.doubleValue(), 0.0);
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/boolean");
-		Boolean bvalue = fileConfiguration.getParameter(id, Boolean.class)
+		Boolean bvalue = configuration.getParameter(id, Boolean.class)
 				.getValue(false);
 		Assert.assertEquals(true, bvalue.booleanValue());
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/string");
-		String svalue = fileConfiguration.getParameter(id, String.class)
-				.getValue("");
+		String svalue = configuration.getParameter(id, String.class).getValue(
+				"");
 		Assert.assertEquals("abac", svalue);
 
 		id = ConfigurationIdentifier.resolveAbsolute("os/arch");
-		String ovalue = fileConfiguration.getParameter(id, String.class)
-				.getValue("");
+		String ovalue = configuration.getParameter(id, String.class).getValue(
+				"");
 		Assert.assertEquals("x86", ovalue);
 
 		String osvalue = systemConfiguration.getParameter(id, String.class)

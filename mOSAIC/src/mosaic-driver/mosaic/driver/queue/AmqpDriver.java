@@ -431,14 +431,14 @@ public class AmqpDriver extends AbstractResourceDriver {
 					"Received CANCEL Ok callback for consumer " + consumer //$NON-NLS-1$
 							+ "."); //$NON-NLS-1$
 			;
-			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
+			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
 					.remove(consumer);
-			if (consumeCallback != null) {
+			if (cancelCallback != null) {
 				Runnable task = new Runnable() {
 
 					@Override
 					public void run() {
-						consumeCallback.handleCancelOk(consumer);
+						cancelCallback.handleCancelOk(consumer);
 					}
 				};
 				AmqpDriver.this.executor.execute(task);
@@ -497,8 +497,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 		@Override
 		public final void handleShutdownSignal(final String consumer,
 				final ShutdownSignalException signal) {
-			MosaicLogger.getLogger()
-					.trace("Received SHUTDOWN callback for consumer " //$NON-NLS-1$
+			MosaicLogger.getLogger().trace(
+					"Received SHUTDOWN callback for consumer " //$NON-NLS-1$
 							+ consumer + "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
@@ -514,6 +514,27 @@ public class AmqpDriver extends AbstractResourceDriver {
 				AmqpDriver.this.executor.execute(task);
 			}
 		}
+
+		@Override
+		public void handleCancel(final String consumer) throws IOException {
+			MosaicLogger.getLogger().trace(
+					"Received CANCEL callback for consumer " + consumer //$NON-NLS-1$
+							+ "."); //$NON-NLS-1$
+			;
+			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
+					.remove(consumer);
+			if (cancelCallback != null) {
+				Runnable task = new Runnable() {
+
+					@Override
+					public void run() {
+						cancelCallback.handleCancel(consumer);
+					}
+				};
+				AmqpDriver.this.executor.execute(task);
+			}
+
+		}
 	}
 
 	/**
@@ -524,10 +545,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 * 
 	 */
 	private final class ReturnCallback implements ReturnListener {
+
 		@Override
-		public void handleBasicReturn(int replyCode, String replyMessage,
+		public void handleReturn(int replyCode, String replyMessage,
 				String exchange, String routingKey, BasicProperties properties,
-				byte[] data) {
+				byte[] data) throws IOException {
 			AmqpInboundMessage message = new AmqpInboundMessage(null, -1,
 					exchange, routingKey, data,
 					properties.getDeliveryMode() == 2 ? true : false,
@@ -595,28 +617,33 @@ public class AmqpDriver extends AbstractResourceDriver {
 								String amqpServerHost = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												ConfigProperties.getString("AmqpDriver.1"), String.class, //$NON-NLS-1$
+												ConfigProperties
+														.getString("AmqpDriver.1"), String.class, //$NON-NLS-1$
 												ConnectionFactory.DEFAULT_HOST);
 								int amqpServerPort = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												ConfigProperties.getString("AmqpDriver.2"), //$NON-NLS-1$
+												ConfigProperties
+														.getString("AmqpDriver.2"), //$NON-NLS-1$
 												Integer.class,
 												ConnectionFactory.DEFAULT_AMQP_PORT);
 								String amqpServerUser = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												ConfigProperties.getString("AmqpDriver.3"), String.class, //$NON-NLS-1$
+												ConfigProperties
+														.getString("AmqpDriver.3"), String.class, //$NON-NLS-1$
 												ConnectionFactory.DEFAULT_USER);
 								String amqpServerPasswd = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												ConfigProperties.getString("AmqpDriver.4"), String.class, //$NON-NLS-1$
+												ConfigProperties
+														.getString("AmqpDriver.4"), String.class, //$NON-NLS-1$
 												ConnectionFactory.DEFAULT_PASS);
 								String amqpVirtualHost = ConfigUtils
 										.resolveParameter(
 												AmqpDriver.this.configuration,
-												ConfigProperties.getString("AmqpDriver.5"), //$NON-NLS-1$
+												ConfigProperties
+														.getString("AmqpDriver.5"), //$NON-NLS-1$
 												String.class,
 												ConnectionFactory.DEFAULT_VHOST);
 
@@ -634,7 +661,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 											.newConnection();
 									AmqpDriver.this.channels = new LinkedList<Channel>();
 									succeeded = true;
-									AmqpDriver.this.connected=true;
+									AmqpDriver.this.connected = true;
 								} catch (IOException e) {
 									ExceptionTracer.traceRethrown(e);
 									AmqpDriver.this.connection = null;
