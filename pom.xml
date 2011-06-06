@@ -3,7 +3,7 @@
 	<groupId>eu.mosaic.jetty_connector</groupId>
 	<artifactId>jetty-mosaic-connector</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.2</version>
 	<name>jetty-mosaic-connector</name>
 	<url>http://www.mosaic-cloud.eu</url>
 	<dependencies>
