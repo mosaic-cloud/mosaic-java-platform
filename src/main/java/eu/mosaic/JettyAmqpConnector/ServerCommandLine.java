@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -45,8 +46,12 @@ public class ServerCommandLine {
 				"Password for the user in cleartext. Warning! thnk twice b4 using da option!");
 		Option amqpExchangeOption = new Option("e", "exchange", true,
 				"The exchange name");
+		Option amqpQueueOption = new Option("q", "queue", true,
+				"The queue name");
 		Option amqpRoutingKeyOption = new Option("r", "routing-key", true,
 				"The routing key");
+		Option amqpAutodeclareQueue = new Option("a", "auto-declare", false,
+				"auto declare the queue");
 		Option jettyClassicConnector = new Option("c",
 				"jetty-socket-connector-port", true,
 				"Also start the normal on the specified port");
@@ -58,8 +63,10 @@ public class ServerCommandLine {
 		options.addOption(amqpServerPortOption);
 		options.addOption(amqpRoutingKeyOption);
 		options.addOption(amqpExchangeOption);
+		options.addOption(amqpQueueOption);
 		options.addOption(amqpUserNameOption);
 		options.addOption(amqpUserPasswordOption);
+		options.addOption(amqpAutodeclareQueue);
 		options.addOption(propertyFileOption);
 		options.addOption(jettyClassicConnector);
 		options.addOption(webappDirOption);
@@ -99,6 +106,8 @@ public class ServerCommandLine {
 		props.setProperty("routing-key", "#");
 		props.setProperty("username", "guest");
 		props.setProperty("password", "guest");
+		props.setProperty("queue", UUID.randomUUID().toString());
+
 		/*
 		 * Add command line options to property
 		 */
@@ -106,6 +115,10 @@ public class ServerCommandLine {
 			if (o.getValue() != null) {
 				props.setProperty(o.getLongOpt(), o.getValue());
 			}
+		}
+
+		if (line.hasOption("auto-declare")) {
+			props.setProperty("auto-declare", "");
 		}
 
 		return props;
@@ -118,13 +131,15 @@ public class ServerCommandLine {
 		String hostName = props.getProperty("server");
 		String routingKey = props.getProperty("routing-key");
 		String exchangeName = props.getProperty("exchange");
+		String queueName = props.getProperty("queue");
 		int amqpPort = Integer.parseInt(props.getProperty("port"));
 
 		/*
 		 * Setup connectors
 		 */
 		AmqpConnector amqpConnector = new AmqpConnector(exchangeName,
-				routingKey, hostName, userName, userPassword, amqpPort);
+				routingKey, queueName, hostName, userName, userPassword,
+				amqpPort, props.containsKey("auto-declare"));
 		Connector[] connectors = null;
 		if (props.containsKey("jetty-socket-connector-port")) {
 			int port = Integer.parseInt(props
@@ -156,6 +171,7 @@ public class ServerCommandLine {
 		 * Start the toy
 		 */
 		System.err.println("Starting server!");
+		System.err.println("Queue name: " + queueName);
 		jettyServer.start();
 		jettyServer.join();
 	}

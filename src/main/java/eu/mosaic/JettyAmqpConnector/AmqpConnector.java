@@ -2,6 +2,7 @@ package eu.mosaic.JettyAmqpConnector;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jetty.io.ByteArrayEndPoint;
@@ -33,14 +34,17 @@ public class AmqpConnector extends AbstractConnector {
 	private String _routingKey;
 	private String _exchangeName;
 	private String _inputQueueName;
+	private boolean _autoDeclareQueue;
 
-	public AmqpConnector(String exchangeName, String routingKey,
-			String hostName, String userName, String userPassword, int port) {
+	public AmqpConnector(String exchangeName, String routingKey, String queueName,
+			String hostName, String userName, String userPassword, int port, boolean autoDeclareQueue) {
 		_userName = userName;
 		_userPassword = userPassword;
 		_exchangeName = exchangeName;
 		_routingKey = routingKey;
 		_hostName = hostName;
+		_inputQueueName = queueName;
+		_autoDeclareQueue = autoDeclareQueue;
 		_connections = new HashSet<EndPoint>();
 	}
 
@@ -101,7 +105,10 @@ public class AmqpConnector extends AbstractConnector {
 		if (_channel == null) {
 			_channel = _connection.createChannel();
 			_channel.exchangeDeclare(_exchangeName, "topic", false);
-			_inputQueueName = _channel.queueDeclare().getQueue();
+			if (_autoDeclareQueue) {
+				_inputQueueName = _channel.queueDeclare(_inputQueueName, false, false, false, null).getQueue();
+			}
+
 			_channel.queueBind(_inputQueueName, _exchangeName, _routingKey);
 		}
 
