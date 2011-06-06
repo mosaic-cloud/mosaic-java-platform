@@ -159,7 +159,7 @@ public class ServerCommandLine {
 			final String webAppDir = props.getProperty("webappdir");
 			ResourceHandler resource_handler = new ResourceHandler();
 			resource_handler.setDirectoriesListed(true);
-			resource_handler.setWelcomeFiles(new String[] { "index.html" });
+			resource_handler.setWelcomeFiles(new String[] { "index.html", "index.jsp" });
 			resource_handler.setResourceBase(webAppDir);
 			HandlerList handlers = new HandlerList();
 			handlers.setHandlers(new Handler[] { resource_handler,

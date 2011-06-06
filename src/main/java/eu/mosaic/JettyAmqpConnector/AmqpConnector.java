@@ -18,6 +18,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownListener;
+import com.rabbitmq.client.ShutdownSignalException;
 
 import eu.mosaic.JettyAmqpConnector.MessageHandler.MessageFormatException;
 
@@ -102,10 +104,12 @@ public class AmqpConnector extends AbstractConnector {
 			_connection = _connectionFactory.newConnection();
 		}
 
+
 		if (_channel == null) {
 			_channel = _connection.createChannel();
-			_channel.exchangeDeclare(_exchangeName, "topic", false);
+			
 			if (_autoDeclareQueue) {
+				_channel.exchangeDeclare(_exchangeName, "topic", false);
 				_inputQueueName = _channel.queueDeclare(_inputQueueName, false, false, false, null).getQueue();
 			}
 
