@@ -171,7 +171,7 @@ public class MessageHandler {
 		final byte[] body_bytes = new byte[size_of_body];
 
 		System.arraycopy(in, 0, header_bytes, 0, startOfBody);
-		System.arraycopy(in, startOfBody-1, body_bytes, 0, size_of_body);
+		System.arraycopy(in, startOfBody, body_bytes, 0, size_of_body);
 
 		final ByteArrayInputStream header_istream = new ByteArrayInputStream(
 				header_bytes);
