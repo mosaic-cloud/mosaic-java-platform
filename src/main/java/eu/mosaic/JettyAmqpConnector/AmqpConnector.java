@@ -178,11 +178,13 @@ public class AmqpConnector extends AbstractConnector {
 		@Override
 		public void close() throws IOException {
 			// Log.info("connector close() called!");
+			if (!_closed) {
 			try {
 				sendResponse();
 			} catch (JSONException e) {
 				// TODO Handle this...
 				e.printStackTrace();
+			}
 			}
 			super.close();
 		}
