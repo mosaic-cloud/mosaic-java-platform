@@ -100,8 +100,10 @@ public class MessageHandler {
 
 		byte[] body = new byte[0];
 
-		if (!headers.optString("http-body", "empty").equalsIgnoreCase("empty")) {
-
+		String body_method = headers.optString("http-body", "empty");
+		if (body_method.equalsIgnoreCase("empty")) {
+			
+		} else if (body_method.equalsIgnoreCase("following")) {
 			final int bodyLength = dis.readInt(); // Body Length
 			if (bodyLength > (message_body.length - metadataLength)) {
 				throw new MessageFormatException(
@@ -111,8 +113,13 @@ public class MessageHandler {
 			if (dis.read(body) != bodyLength) {
 				throw new MessageFormatException("Could not read body");
 			}
-
+		} else if (body_method.equalsIgnoreCase("embedded")) {
+			body = headers.optString("http-body-content").getBytes();
+		} else {
+			throw new MessageFormatException("Unknown body encapsulation method");
 		}
+		
+		
 		QueueMessage _msg = new QueueMessage(headers, body);
 		try {
 			final String callback_exchange = headers.getString("callback-exchange");
