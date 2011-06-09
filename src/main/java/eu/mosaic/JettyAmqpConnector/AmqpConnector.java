@@ -2,7 +2,6 @@ package eu.mosaic.JettyAmqpConnector;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jetty.io.ByteArrayEndPoint;
@@ -18,8 +17,6 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
-import com.rabbitmq.client.ShutdownListener;
-import com.rabbitmq.client.ShutdownSignalException;
 
 import eu.mosaic.JettyAmqpConnector.MessageHandler.MessageFormatException;
 
