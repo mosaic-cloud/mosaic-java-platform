@@ -108,7 +108,7 @@ public class ServerCommandLine {
 		props.setProperty("routing-key", "#");
 		props.setProperty("username", "guest");
 		props.setProperty("password", "guest");
-		props.setProperty("queue", UUID.randomUUID().toString());
+		props.setProperty("queue", "mosaic-http-requests");
 
 		/*
 		 * Add command line options to property
