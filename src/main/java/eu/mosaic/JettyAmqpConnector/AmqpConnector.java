@@ -17,6 +17,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownListener;
+import com.rabbitmq.client.ShutdownSignalException;
 
 import eu.mosaic.JettyAmqpConnector.MessageHandler.MessageFormatException;
 
@@ -35,8 +37,9 @@ public class AmqpConnector extends AbstractConnector {
 	private String _inputQueueName;
 	private boolean _autoDeclareQueue;
 
-	public AmqpConnector(String exchangeName, String routingKey, String queueName,
-			String hostName, String userName, String userPassword, int port, boolean autoDeclareQueue) {
+	public AmqpConnector(String exchangeName, String routingKey,
+			String queueName, String hostName, String userName,
+			String userPassword, int port, boolean autoDeclareQueue) {
 		_userName = userName;
 		_userPassword = userPassword;
 		_exchangeName = exchangeName;
@@ -87,8 +90,7 @@ public class AmqpConnector extends AbstractConnector {
 		return 0;
 	}
 
-	@Override
-	public void open() throws IOException {
+	private void setupConnection() throws IOException {
 		Log.info("Opening AmqpConnector");
 		if (_connectionFactory == null) {
 			_connectionFactory = new ConnectionFactory();
@@ -97,26 +99,49 @@ public class AmqpConnector extends AbstractConnector {
 			_connectionFactory.setPassword(_userPassword);
 		}
 
-		if (_connection == null) {
-			_connection = _connectionFactory.newConnection();
+		_connection = _connectionFactory.newConnection();
+
+		_channel = _connection.createChannel();
+
+		if (_autoDeclareQueue) {
+			_channel.exchangeDeclare(_exchangeName, "topic", false);
+			_inputQueueName = _channel.queueDeclare(_inputQueueName, false,
+					false, false, null).getQueue();
 		}
 
+		_channel.queueBind(_inputQueueName, _exchangeName, _routingKey);
+		_consumer = new QueueingConsumer(_channel);
+		_channel.basicConsume(_inputQueueName, true, _consumer);
 
-		if (_channel == null) {
-			_channel = _connection.createChannel();
-			
-			if (_autoDeclareQueue) {
-				_channel.exchangeDeclare(_exchangeName, "topic", false);
-				_inputQueueName = _channel.queueDeclare(_inputQueueName, false, false, false, null).getQueue();
+	}
+
+	@Override
+	public void open() throws IOException {
+		setupConnection();
+		_connection.addShutdownListener(new ShutdownListener() {
+
+			@Override
+			public void shutdownCompleted(ShutdownSignalException cause) {
+				Log.warn("Connection to RabbitMQ failed!");
+				try {
+					Thread.sleep(400);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				try {
+					setupConnection();
+				} catch (IOException e) {
+					Log.warn("Faild connecting... Going to sleep and retry");
+					try {
+						Thread.sleep(4000);
+					} catch (InterruptedException e1) {
+
+					}
+					shutdownCompleted(cause);
+				}
+
 			}
-
-			_channel.queueBind(_inputQueueName, _exchangeName, _routingKey);
-		}
-
-		if (_consumer == null) {
-			_consumer = new QueueingConsumer(_channel);
-			_channel.basicConsume(_inputQueueName, true, _consumer);
-		}
+		});
 
 	}
 
@@ -124,7 +149,6 @@ public class AmqpConnector extends AbstractConnector {
 			ConnectedEndPoint, Runnable {
 		volatile org.eclipse.jetty.io.Connection _jettyConnection;
 		private QueueMessage _message;
-		//private QueueingConsumer _consumer = null;
 
 		public ConnectorEndPoint(QueueMessage msg) {
 			super(msg.get_http_request(), 128);
