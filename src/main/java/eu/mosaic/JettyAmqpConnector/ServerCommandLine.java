@@ -13,13 +13,13 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.eclipse.jetty.deploy.DeploymentManager;
+import org.eclipse.jetty.deploy.DeploymentManager.AppEntry;
+import org.eclipse.jetty.deploy.providers.WebAppProvider;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 public class ServerCommandLine {
 	private static void printHelpAndExit(Options options) {
@@ -55,8 +55,9 @@ public class ServerCommandLine {
 		Option jettyClassicConnector = new Option("c",
 				"jetty-socket-connector-port", true,
 				"Also start the normal on the specified port");
-		Option webappDirOption = new Option("w", "webappdir", true,
-				"The location for searching for webapps");
+		Option webapp = new Option("w", "webapp", true,
+				"The location of the war file");
+		Option webappContext = new Option("q", "app-context", true, "App context path");
 
 		options.addOption(helpOption);
 		options.addOption(amqpServerOption);
@@ -69,7 +70,8 @@ public class ServerCommandLine {
 		options.addOption(amqpAutodeclareQueue);
 		options.addOption(propertyFileOption);
 		options.addOption(jettyClassicConnector);
-		options.addOption(webappDirOption);
+		options.addOption(webapp);
+		options.addOption(webappContext);
 		try {
 			line = parser.parse(options, args);
 		} catch (ParseException exp) {
@@ -155,16 +157,15 @@ public class ServerCommandLine {
 		/*
 		 * Check if user want's to register webapps
 		 */
-		if (props.containsKey("webappdir")) {
-			final String webAppDir = props.getProperty("webappdir");
-			ResourceHandler resource_handler = new ResourceHandler();
-			resource_handler.setDirectoriesListed(true);
-			resource_handler.setWelcomeFiles(new String[] { "index.html", "index.jsp" });
-			resource_handler.setResourceBase(webAppDir);
-			HandlerList handlers = new HandlerList();
-			handlers.setHandlers(new Handler[] { resource_handler,
-					new DefaultHandler() });
-			jettyServer.setHandler(handlers);
+		if (props.containsKey("webapp")) {
+			final String webAppDir = props.getProperty("webapp");
+			final String ctxPath = props.getProperty("app-context", "/");
+			
+			WebAppContext webapp = new WebAppContext();
+			webapp.setContextPath(ctxPath);
+			webapp.setWar(webAppDir);
+			jettyServer.setHandler(webapp);
+
 		}
 
 		/*
