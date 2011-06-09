@@ -167,14 +167,11 @@ public class MessageHandler {
 			startOfBody++;
 		}
 		final byte[] header_bytes = new byte[startOfBody];
-		final int size_of_body = end - startOfBody;
+		final int size_of_body = end - startOfBody + 1;
 		final byte[] body_bytes = new byte[size_of_body];
-		for (int i = 0; i < startOfBody; i++) {
-			header_bytes[i] = in[i];
-		}
-		for (int i = startOfBody; i < end; i++) {
-			body_bytes[i - (end - size_of_body)] = in[i];
-		}
+
+		System.arraycopy(in, 0, header_bytes, 0, startOfBody);
+		System.arraycopy(in, startOfBody-1, body_bytes, 0, size_of_body);
 
 		final ByteArrayInputStream header_istream = new ByteArrayInputStream(
 				header_bytes);
@@ -238,6 +235,7 @@ public class MessageHandler {
 				.put("http-body", "following");
 		final byte[] json_data = json.toString().getBytes();
 		final int message_size = json_data.length + body_bytes.length + 8;
+
 		final ByteArrayOutputStream ostream = new ByteArrayOutputStream(message_size);
 		final DataOutputStream dos = new DataOutputStream(ostream);
 		dos.writeInt(json_data.length);
