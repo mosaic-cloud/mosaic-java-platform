@@ -34,6 +34,7 @@ public abstract class AbstractConnectorReactor implements Runnable {
 	private QueueingConsumer consumer;
 	private String exchange;
 	private String queueName;
+	private Thread runner;
 
 	/**
 	 * Creates the reactor for the connector proxy.
@@ -50,28 +51,42 @@ public abstract class AbstractConnectorReactor implements Runnable {
 	 * @param defaultQueue
 	 *            default queue to be used by the reactor (in case one is not
 	 *            given in the configuration data)
+	 * @throws Throwable
 	 */
 	protected AbstractConnectorReactor(IConfiguration config,
-			String bindingKey, String defaultExchange, String defaultQueue) {
+			String bindingKey, String defaultExchange, String defaultQueue)
+			throws Throwable {
 		super();
 
 		// read connection details from the configuration
-		String amqpServerHost = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AbstractConnectorReactor.0"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_HOST);
-		int amqpServerPort = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AbstractConnectorReactor.1"), Integer.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_AMQP_PORT);
-		String amqpServerUser = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AbstractConnectorReactor.2"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_USER);
-		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AbstractConnectorReactor.3"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_PASS);
-		exchange = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AbstractConnectorReactor.4"), String.class, defaultExchange); //$NON-NLS-1$
-		queueName = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AbstractConnectorReactor.5"), String.class, defaultQueue); //$NON-NLS-1$
+		String amqpServerHost = ConfigUtils
+				.resolveParameter(config, ConfigProperties
+						.getString("AbstractConnectorReactor.0"), String.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_HOST);
+		int amqpServerPort = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties
+								.getString("AbstractConnectorReactor.1"), Integer.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_AMQP_PORT);
+		String amqpServerUser = ConfigUtils
+				.resolveParameter(config, ConfigProperties
+						.getString("AbstractConnectorReactor.2"), String.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_USER);
+		String amqpServerPasswd = ConfigUtils
+				.resolveParameter(config, ConfigProperties
+						.getString("AbstractConnectorReactor.3"), String.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_PASS);
+		exchange = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties
+								.getString("AbstractConnectorReactor.4"), String.class, defaultExchange); //$NON-NLS-1$
+		queueName = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties
+								.getString("AbstractConnectorReactor.5"), String.class, defaultQueue); //$NON-NLS-1$
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);
@@ -87,9 +102,10 @@ public abstract class AbstractConnectorReactor implements Runnable {
 			commChannel = connection.createChannel();
 
 			// create exchange and queue
-			commChannel.exchangeDeclare(exchange, "direct", true); //$NON-NLS-1$
+			commChannel.exchangeDeclare(exchange, "direct", false, false, null); //$NON-NLS-1$
 			// commChannel.queueDeclare(queueName, true, false, false, null);
-			String anonQueue = commChannel.queueDeclare().getQueue();
+			String anonQueue = commChannel.queueDeclare("", false, true, true,
+					null).getQueue();
 			commChannel.queueBind(anonQueue, exchange, bindingKey);
 
 			// create consumer
@@ -115,11 +131,14 @@ public abstract class AbstractConnectorReactor implements Runnable {
 
 	/**
 	 * Destroys this reactor.
+	 * 
+	 * @throws Throwable
 	 */
-	public void destroy() {
+	public synchronized void destroy() throws Throwable {
 		// close connection
 		isAlive = false;
 		try {
+			this.runner.interrupt();
 			cleanupSignal.await();
 			// commChannel.basicCancel(queueName);
 			if (commChannel != null && commChannel.isOpen()) {
@@ -141,19 +160,28 @@ public abstract class AbstractConnectorReactor implements Runnable {
 
 	@Override
 	public void run() {
-		while (this.isAlive) {
+		this.runner = Thread.currentThread();
+		while (true) {
 			try {
 				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-				processResponse(delivery.getBody());
+				synchronized (this) {
+					if (Thread.interrupted() && !this.isAlive)
+						break;
+					processResponse(delivery.getBody());
+					commChannel.basicAck(delivery.getEnvelope()
+							.getDeliveryTag(), false);
+					if (!this.isAlive)
+						break;
 
-				commChannel.basicAck(delivery.getEnvelope().getDeliveryTag(),
-						false);
+				}
 			} catch (IOException e) {
-				ExceptionTracer.traceRethrown(e);
+				ExceptionTracer.traceDeferred(e);
 			} catch (ShutdownSignalException e) {
-				ExceptionTracer.traceRethrown(e);
+				ExceptionTracer.traceDeferred(e);
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceRethrown(e);
+				if (!this.isAlive)
+					break;
+				ExceptionTracer.traceDeferred(e);
 			}
 		}
 		this.workDone();
@@ -183,11 +211,11 @@ public abstract class AbstractConnectorReactor implements Runnable {
 			commChannel
 					.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 		} catch (ShutdownSignalException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 		} catch (InterruptedException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 		}
 		return message;
 	}

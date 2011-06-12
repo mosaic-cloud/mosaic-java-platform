@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * a configuration file may form a hierarchy and thus an identifier string may
  * be absolute or relative.
  * 
- * @author Georgiana Macariu
+ * @author Ciprian Craciun, Georgiana Macariu
  * 
  */
 public final class ConfigurationIdentifier {
@@ -33,6 +33,27 @@ public final class ConfigurationIdentifier {
 		super();
 		this.absolute = absolute;
 		this.identifier = identifier;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object identifier) {
+		if (identifier == null)
+			return false;
+		if (!(identifier instanceof ConfigurationIdentifier))
+			return false;
+		ConfigurationIdentifier otherId = (ConfigurationIdentifier) identifier;
+		if (absolute != otherId.absolute)
+			return false;
+		if (this.identifier != null
+				&& !this.identifier.equals(otherId.identifier))
+			return false;
+		if (this.identifier == null && otherId.identifier != null)
+			return false;
+		return true;
 	}
 
 	/**
@@ -159,7 +180,7 @@ public final class ConfigurationIdentifier {
 				identifier_ = reference.identifier + "/" + specification;
 			} else
 				identifier_ = "/" + specification;
-			identifier_=identifier_.replaceAll("//", "/");
+			identifier_ = identifier_.replaceAll("//", "/");
 		} else {
 			identifier_ = reference.identifier + "/" + specification;
 		}
@@ -197,10 +218,5 @@ public final class ConfigurationIdentifier {
 
 		return parameterIdentifier;
 	}
-
-	// public String toString() {
-	//
-	// return builder.toString();
-	// }
 
 }

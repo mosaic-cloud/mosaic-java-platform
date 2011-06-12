@@ -4,17 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.ICloudletController;
 import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
-import mosaic.connector.queue.AmqpOutboundMessage;
-import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.SerDesUtils;
+import mosaic.driver.queue.amqp.AmqpOutboundMessage;
 
 /**
  * This class provides access for cloudlets to an AMQP-based queueing system as
@@ -30,11 +29,6 @@ import mosaic.core.utils.SerDesUtils;
 public class AmqpQueuePublisher<S, D extends Object> extends
 		AmqpQueueAccessor<S, D> implements IAmqpQueuePublisher<S, D> {
 
-	private String exchange;
-	private String routingKey;
-	private boolean mandatory;
-	private boolean immediate;
-	private boolean durable;
 	private IAmqpQueuePublisherCallback<S, D> callback;
 
 	/**
@@ -61,19 +55,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	 */
 	public AmqpQueuePublisher(IConfiguration config,
 			ICloudletController<S> cloudlet, Class<D> dataClass) {
-		super(config, cloudlet, dataClass);
-		synchronized (this) {
-			this.exchange = ConfigUtils.resolveParameter(config,
-					ConfigProperties.getString("AmqpQueuePublisher.0"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-			this.routingKey = ConfigUtils.resolveParameter(config,
-					ConfigProperties.getString("AmqpQueuePublisher.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-			this.mandatory = ConfigUtils.resolveParameter(config,
-					ConfigProperties.getString("AmqpQueuePublisher.2"), Boolean.class, false); //$NON-NLS-1$
-			this.immediate = ConfigUtils.resolveParameter(config,
-					ConfigProperties.getString("AmqpQueuePublisher.3"), Boolean.class, false); //$NON-NLS-1$
-			this.durable = ConfigUtils.resolveParameter(config,
-					ConfigProperties.getString("AmqpQueuePublisher.4"), Boolean.class, false); //$NON-NLS-1$
-		}
+		super(config, cloudlet, dataClass, false);
 	}
 
 	/*
@@ -108,20 +90,37 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	@Override
 	public void register() {
 		synchronized (this) {
+			// declare queue and in case of success register as consumer
+			startRegister(callback);
+		}
+	}
+
+	@Override
+	protected void finishRegister(IAmqpQueueAccessorCallback<S> callback) {
+		synchronized (AmqpQueuePublisher.this) {
+			if (AmqpQueuePublisher.super.registered)
+				return;
 			CallbackArguments<S> arguments = new CallbackArguments<S>(
 					AmqpQueuePublisher.super.cloudlet);
 			this.callback.registerSucceeded(
 					AmqpQueuePublisher.this.cloudletState, arguments);
+			AmqpQueuePublisher.super.registered = true;
 		}
+
 	}
 
 	@Override
 	public void unregister() {
 		synchronized (this) {
-			CallbackArguments<S> arguments = new CallbackArguments<S>(
-					AmqpQueuePublisher.super.cloudlet);
-			this.callback.unregisterSucceeded(
-					AmqpQueuePublisher.this.cloudletState, arguments);
+			synchronized (AmqpQueuePublisher.this) {
+				if (!AmqpQueuePublisher.super.registered)
+					return;
+				CallbackArguments<S> arguments = new CallbackArguments<S>(
+						AmqpQueuePublisher.super.cloudlet);
+				this.callback.unregisterSucceeded(
+						AmqpQueuePublisher.this.cloudletState, arguments);
+				AmqpQueuePublisher.super.registered = false;
+			}
 		}
 	}
 
@@ -131,8 +130,8 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 			try {
 				byte[] sData = SerDesUtils.toBytes(data);
 				final AmqpOutboundMessage message = new AmqpOutboundMessage(
-						this.exchange, this.routingKey, sData, mandatory,
-						immediate, durable);
+						this.exchange, this.routingKey, sData, true, true,
+						false);
 
 				IOperationCompletionHandler<Boolean> cHandler = new PublishCompletionHandler(
 						message, token);
@@ -141,6 +140,8 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 				super.getConnector().publish(message, handlers,
 						this.cloudlet.getResponseInvocationHandler(cHandler));
+				MosaicLogger.getLogger().trace(
+						"AmqpQueuePublisher - published message " + data);
 			} catch (IOException e) {
 				@SuppressWarnings("unchecked")
 				IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
@@ -152,7 +153,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 						AmqpQueuePublisher.this.cloudlet, pMessage);
 				proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
 						arguments);
-				ExceptionTracer.traceRethrown(e);
+				ExceptionTracer.traceDeferred(e);
 			}
 		}
 

@@ -2,7 +2,9 @@ package mosaic.core.configuration.tests;
 
 import java.io.FileInputStream;
 
+import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.ConfigurationIdentifier;
+import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 
 import org.junit.Assert;
@@ -72,6 +74,11 @@ public class PropertyTypeConfigurationTest {
 	}
 
 	@Test
+	public void testEquals() {
+		Assert.assertTrue(configuration.equals(fileConfiguration));
+	}
+
+	@Test
 	public void testGetParameter() {
 		ConfigurationIdentifier id;
 
@@ -105,9 +112,26 @@ public class PropertyTypeConfigurationTest {
 		Assert.assertEquals("x86", osvalue);
 	}
 
-	// @Test
-	// public void testSpliceConfiguration() {
-	// fail("Not yet implemented"); // TODO
-	// }
+	@Test
+	public void testSpliceConfiguration() {
+		IConfiguration mConfiguration = configuration
+				.spliceConfiguration(ConfigurationIdentifier
+						.resolveAbsolute("mosaic"));
+		int intValue = ConfigUtils.resolveParameter(mConfiguration, "int",
+				Integer.class, 0);
+		Assert.assertEquals(1, intValue);
+
+		String strValue = ConfigUtils.resolveParameter(mConfiguration,
+				"string", String.class, "");
+		Assert.assertEquals("abac", strValue);
+
+		boolean boolValue = ConfigUtils.resolveParameter(mConfiguration,
+				"boolean", Boolean.class, false);
+		Assert.assertTrue(boolValue);
+
+		double realValue = ConfigUtils.resolveParameter(mConfiguration, "real",
+				Double.class, 0.0);
+		Assert.assertEquals(2.0, realValue, 0.0);
+	}
 
 }

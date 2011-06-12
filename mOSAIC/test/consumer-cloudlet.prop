@@ -1,0 +1,29 @@
+cloudlet.main_class=mosaic.cloudlet.tests.ConsumerCloudlet$LifeCycleHandler
+cloudlet.state_class=mosaic.cloudlet.tests.ConsumerCloudlet$ConsumerCloudletState
+cloudlet.resource_file=consumer-cloudlet.prop
+
+queue.consumer.amqp.exchange=simple-exchange
+queue.consumer.amqp.routing_key=simple-rk
+queue.consumer.amqp.queue=simple-queue
+
+# configurations below will normally not be set by the cloudlet creator
+# this is just for test
+queue.amqp.connector_threads=1
+
+queue.interop.req.amqp.host=localhost
+queue.interop.req.amqp.port=5672
+queue.interop.req.amqp.user=
+queue.interop.req.amqp.passwd=
+queue.interop.req.amqp.exchange=amqp_test
+queue.interop.req.amqp.queue=amqp_requests
+
+
+queue.interop.resp.amqp.host=localhost
+queue.interop.resp.amqp.port=5672
+queue.interop.resp.amqp.user=
+queue.interop.resp.amqp.passwd=
+queue.interop.resp.amqp.exchange=amqp_test
+queue.interop.resp.amqp.queue=amqp_responses
+
+
+

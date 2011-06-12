@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mosaic.cloudlet.core.ICloudletController;
-import mosaic.connector.kvstore.IMemcachedStore;
+import mosaic.connector.kvstore.memcached.IMemcachedStore;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
@@ -269,13 +269,10 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			};
 			List<IOperationCompletionHandler<Map<String, Object>>> handlers = new ArrayList<IOperationCompletionHandler<Map<String, Object>>>();
 			handlers.add(cHandler);
-			return super.getConnector(IMemcachedStore.class)
-					.getBulk(
-							keys,
-							handlers,
-							this.cloudlet.getResponseInvocationHandler(cHandler));
+			return super.getConnector(IMemcachedStore.class).getBulk(keys,
+					handlers,
+					this.cloudlet.getResponseInvocationHandler(cHandler));
 		}
 	}
 
-	
 }

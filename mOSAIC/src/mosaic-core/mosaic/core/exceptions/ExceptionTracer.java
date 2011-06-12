@@ -32,7 +32,7 @@ public final class ExceptionTracer {
 	}
 
 	public final void trace(ExceptionResolution resolution,
-			Throwable exception, String message_) {
+			Throwable exception, String message_) throws Throwable {
 		final String message = message_ != null ? message_
 				: "encountered exception";
 		if (this.logger != null) {
@@ -89,6 +89,8 @@ public final class ExceptionTracer {
 		case Ignored:
 			this.ignoredExceptions.add(exception);
 			break;
+		case Rethrown:
+			throw exception;
 		default:
 			break;
 		}
@@ -96,12 +98,18 @@ public final class ExceptionTracer {
 
 	public final void trace(ExceptionResolution resolution,
 			Throwable exception, String format, Object... tokens) {
-		this.trace(resolution, exception, String.format(format, tokens));
+		try {
+			this.trace(resolution, exception, String.format(format, tokens));
+		} catch (Throwable e) {
+		}
 	}
 
 	public static final void traceDeferred(Throwable exception) {
-		ExceptionTracer.defaultInstance.trace(ExceptionResolution.Deferred,
-				exception, null);
+		try {
+			ExceptionTracer.defaultInstance.trace(ExceptionResolution.Deferred,
+					exception, null);
+		} catch (Throwable e) {
+		}
 	}
 
 	public static final void traceDeferred(Throwable exception,
@@ -111,8 +119,11 @@ public final class ExceptionTracer {
 	}
 
 	public static final void traceHandled(Throwable exception) {
-		ExceptionTracer.defaultInstance.trace(ExceptionResolution.Handled,
-				exception, null);
+		try {
+			ExceptionTracer.defaultInstance.trace(ExceptionResolution.Handled,
+					exception, null);
+		} catch (Throwable e) {
+		}
 	}
 
 	public static final void traceHandled(Throwable exception, String format,
@@ -122,8 +133,11 @@ public final class ExceptionTracer {
 	}
 
 	public static final void traceIgnored(Throwable exception) {
-		ExceptionTracer.defaultInstance.trace(ExceptionResolution.Ignored,
-				exception, null);
+		try {
+			ExceptionTracer.defaultInstance.trace(ExceptionResolution.Ignored,
+					exception, null);
+		} catch (Throwable e) {
+		}
 	}
 
 	public static final void traceIgnored(Throwable exception,
@@ -132,7 +146,8 @@ public final class ExceptionTracer {
 				exception, format, tokens);
 	}
 
-	public static final void traceRethrown(Throwable exception) {
+	public static final void traceRethrown(Throwable exception)
+			throws Throwable {
 		ExceptionTracer.defaultInstance.trace(ExceptionResolution.Rethrown,
 				exception, null);
 	}

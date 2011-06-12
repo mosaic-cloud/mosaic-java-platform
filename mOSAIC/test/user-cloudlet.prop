@@ -1,13 +1,14 @@
-consumer.amqp.consumer.queue=user-queue
-consumer.amqp.consumer.consumer_id=user-consumer
-consumer.amqp.consumer.auto_ack=false
-consumer.amqp.consumer.exclusive=false
+cloudlet.main_class=mosaic.cloudlet.tests.UserCloudlet$LifeCycleHandler
+cloudlet.state_class=mosaic.cloudlet.tests.UserCloudlet$UserCloudletState
+cloudlet.resource_file=user-cloudlet.prop
 
-publisher.amqp.publisher.exchange=exchange
-publisher.amqp.publisher.routing_key=rk-1
-publisher.amqp.publisher.manadatory=true
-publisher.amqp.publisher.immediate=true
-publisher.amqp.publisher.durable=true
+queue.consumer.amqp.exchange=exchange-test
+queue.consumer.amqp.routing_key=rk-2
+queue.consumer.amqp.queue=user-queue
+
+queue.publisher.amqp.exchange=exchange-test
+queue.publisher.amqp.routing_key=rk-1
+queue.publisher.amqp.queue=logging-queue
 
 # just some test data
 test.user=dummy
@@ -16,26 +17,19 @@ test.token=got_it
 
 # configurations below will normally not be set by the cloudlet creator
 # this is just for test
-amqp.connector_threads=1
+queue.amqp.connector_threads=1
 
-interop.req.amqp.host=localhost
-interop.req.amqp.port=5679
-interop.req.amqp.user=
-interop.req.amqp.passwd=
-interop.req.amqp.exchange=amqp
-interop.req.amqp.queue=amqp_requests
+queue.interop.req.amqp.host=localhost
+queue.interop.req.amqp.port=5672
+queue.interop.req.amqp.user=
+queue.interop.req.amqp.passwd=
+queue.interop.req.amqp.exchange=amqp_test
+queue.interop.req.amqp.queue=amqp_requests
 
 
-interop.resp.amqp.host=localhost
-interop.resp.amqp.port=5679
-interop.resp.amqp.user=
-interop.resp.amqp.passwd=
-interop.resp.amqp.exchange=amqp
-interop.resp.amqp.queue=amqp_responses
-
-amqp.driver_threads=10
-amqp.host=localhost
-amqp.port=5679
-amqp.user=
-amqp.passwd=
-amqp.virtual_host=/
+queue.interop.resp.amqp.host=localhost
+queue.interop.resp.amqp.port=5672
+queue.interop.resp.amqp.user=
+queue.interop.resp.amqp.passwd=
+queue.interop.resp.amqp.exchange=amqp_test
+queue.interop.resp.amqp.queue=amqp_responses

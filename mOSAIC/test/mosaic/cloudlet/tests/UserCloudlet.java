@@ -11,6 +11,7 @@ import mosaic.cloudlet.resources.amqp.AmqpQueuePublisher;
 import mosaic.cloudlet.resources.amqp.DefaultAmqpConsumerCallback;
 import mosaic.cloudlet.resources.amqp.DefaultAmqpPublisherCallback;
 import mosaic.core.configuration.ConfigUtils;
+import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 
@@ -22,35 +23,38 @@ public class UserCloudlet {
 		@Override
 		public void initialize(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info("UserCloudlet is being initialized.");
 			ICloudletController<UserCloudletState> cloudlet = arguments
 					.getCloudlet();
 			IConfiguration configuration = cloudlet.getConfiguration();
+			IConfiguration queueConfiguration = configuration
+					.spliceConfiguration(ConfigurationIdentifier
+							.resolveAbsolute("queue"));
 			state.consumer = new AmqpQueueConsumer<UserCloudlet.UserCloudletState, AuthenticationToken>(
-					configuration, cloudlet, AuthenticationToken.class);
+					queueConfiguration, cloudlet, AuthenticationToken.class);
 			state.publisher = new AmqpQueuePublisher<UserCloudlet.UserCloudletState, LoggingData>(
-					configuration, cloudlet, LoggingData.class);
+					queueConfiguration, cloudlet, LoggingData.class);
 
 		}
 
 		@Override
 		public void initializeSucceeded(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet initialized successfully.");
 			ICloudletController<UserCloudletState> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.initializeResource(state.consumer,
 					new AmqpConsumerCallback(), state);
 			cloudlet.initializeResource(state.publisher,
 					new AmqpPublisherCallback(), state);
-			String user = ConfigUtils.resolveParameter(arguments.getCloudlet()
-					.getConfiguration(), "test.user", String.class, "error");
-			String pass = ConfigUtils.resolveParameter(arguments.getCloudlet()
-					.getConfiguration(), "test.password", String.class, "");
 		}
 
 		@Override
 		public void destroy(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
-			System.out.println("Logging cloudlet is being destroyed.");
+			MosaicLogger.getLogger().info("UserCloudlet is being destroyed.");
+
 		}
 
 	}
@@ -61,12 +65,16 @@ public class UserCloudlet {
 		@Override
 		public void registerSucceeded(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet consumer registered successfully.");
 			state.consumerRunning = true;
 		}
 
 		@Override
 		public void unregisterSucceeded(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<UserCloudletState> cloudlet = arguments
 					.getCloudlet();
@@ -85,6 +93,8 @@ public class UserCloudlet {
 		@Override
 		public void destroySucceeded(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet consumer was destroyed successfully.");
 			state.consumer = null;
 			if (state.publisher == null) {
 				arguments.getCloudlet().destroy();
@@ -107,12 +117,11 @@ public class UserCloudlet {
 			AuthenticationToken data = message.getData();
 			String token = data.getToken();
 			if (token != null) {
-				MosaicLogger.getLogger()
-						.info("User cloudlet received authentication token: "
-								+ token);
+				MosaicLogger.getLogger().info(
+						"UserCloudlet received authentication token: " + token);
 			} else {
 				MosaicLogger.getLogger().error(
-						"User cloudlet did not receive authentication token.");
+						"UserCloudlet did not receive authentication token.");
 			}
 			message.acknowledge();
 		}
@@ -125,12 +134,22 @@ public class UserCloudlet {
 		@Override
 		public void registerSucceeded(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet publisher registered successfully.");
 			state.publisherRunning = true;
+			String user = ConfigUtils.resolveParameter(arguments.getCloudlet()
+					.getConfiguration(), "test.user", String.class, "error");
+			String pass = ConfigUtils.resolveParameter(arguments.getCloudlet()
+					.getConfiguration(), "test.password", String.class, "");
+			LoggingData data = new LoggingData(user, pass);
+			state.publisher.publish(data, null);
 		}
 
 		@Override
 		public void unregisterSucceeded(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<UserCloudletState> cloudlet = arguments
 					.getCloudlet();
@@ -149,6 +168,8 @@ public class UserCloudlet {
 		@Override
 		public void destroySucceeded(UserCloudletState state,
 				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet publisher was destroyed successfully.");
 			state.publisher = null;
 			if (state.consumer == null) {
 				arguments.getCloudlet().destroy();

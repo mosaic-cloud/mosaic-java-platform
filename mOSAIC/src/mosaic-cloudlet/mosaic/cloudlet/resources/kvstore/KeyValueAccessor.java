@@ -1,6 +1,5 @@
 package mosaic.cloudlet.resources.kvstore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +9,12 @@ import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.resources.ResourceStatus;
 import mosaic.connector.kvstore.IKeyValueStore;
-import mosaic.connector.kvstore.MemcachedStoreConnector;
+import mosaic.connector.kvstore.memcached.MemcachedStoreConnector;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.Miscellaneous;
 
 /**
  * Base cloudlet-level accessor for key value storages. Cloudlets will use an
@@ -56,6 +56,8 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 		synchronized (this) {
 			this.status = ResourceStatus.INITIALIZING;
 			this.cloudletState = state;
+			this.callback = Miscellaneous.cast(IKeyValueAccessorCallback.class,
+					callback);
 
 			this.callbackProxy = this.cloudlet.buildCallbackInvoker(
 					this.callback, IKeyValueAccessorCallback.class);
@@ -67,11 +69,11 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 						KeyValueAccessor.this.cloudlet, true);
 				this.callbackProxy
 						.initializeSucceeded(cloudletState, arguments);
-			} catch (IOException e) {
+			} catch (Throwable e) {
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						this.cloudlet, e);
 				this.callbackProxy.initializeFailed(state, arguments);
-				ExceptionTracer.traceRethrown(e);
+				ExceptionTracer.traceDeferred(e);
 			}
 		}
 	}
@@ -80,11 +82,18 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	public void destroy(IResourceAccessorCallback<S> callback) {
 		synchronized (this) {
 			this.status = ResourceStatus.DESTROYING;
-			this.connector.destroy();
-			this.status = ResourceStatus.DESTROYED;
-			CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
-					KeyValueAccessor.this.cloudlet, true);
-			this.callbackProxy.destroySucceeded(cloudletState, arguments);
+			try {
+				this.connector.destroy();
+				this.status = ResourceStatus.DESTROYED;
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						KeyValueAccessor.this.cloudlet, true);
+				this.callbackProxy.destroySucceeded(cloudletState, arguments);
+			} catch (Throwable e) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						this.cloudlet, e);
+				this.callbackProxy.destroyFailed(cloudletState, arguments);
+				ExceptionTracer.traceDeferred(e);
+			}
 		}
 	}
 
@@ -219,6 +228,35 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 			List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 			handlers.add(cHandler);
 			return this.connector.delete(key, handlers,
+					this.cloudlet.getResponseInvocationHandler(cHandler));
+		}
+	}
+
+	@Override
+	public IResult<List<String>> list() {
+		synchronized (this) {
+			IOperationCompletionHandler<List<String>> cHandler = new IOperationCompletionHandler<List<String>>() {
+
+				@Override
+				public void onSuccess(List<String> result) {
+					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+							KeyValueAccessor.this.cloudlet, result, null);
+					KeyValueAccessor.this.callback.deleteSucceeded(
+							KeyValueAccessor.this.cloudletState, arguments);
+
+				}
+
+				@Override
+				public <E extends Throwable> void onFailure(E error) {
+					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+							KeyValueAccessor.this.cloudlet, "", error);
+					KeyValueAccessor.this.callback.deleteFailed(
+							KeyValueAccessor.this.cloudletState, arguments);
+				}
+			};
+			List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
+			handlers.add(cHandler);
+			return this.connector.list(handlers,
 					this.cloudlet.getResponseInvocationHandler(cHandler));
 		}
 	}

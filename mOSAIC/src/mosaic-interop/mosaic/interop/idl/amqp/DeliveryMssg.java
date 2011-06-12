@@ -9,17 +9,12 @@ package mosaic.interop.idl.amqp;
 public class DeliveryMssg extends org.apache.avro.specific.SpecificRecordBase
 		implements org.apache.avro.specific.SpecificRecord {
 	public static final org.apache.avro.Schema SCHEMA$ = org.apache.avro.Schema
-			.parse("{\"type\":\"record\",\"name\":\"DeliveryMssg\",\"namespace\":\"mosaic.interop.idl.amqp\",\"fields\":[{\"name\":\"consumer_tag\",\"type\":\"string\"},{\"name\":\"delivery_tag\",\"type\":\"long\"},{\"name\":\"exchange\",\"type\":\"string\"},{\"name\":\"routing_key\",\"type\":\"string\"},{\"name\":\"callback\",\"type\":\"string\"},{\"name\":\"content_encoding\",\"type\":\"string\"},{\"name\":\"content_type\",\"type\":\"string\"},{\"name\":\"correlation\",\"type\":\"string\"},{\"name\":\"deliveryMode\",\"type\":\"int\"},{\"name\":\"identifier\",\"type\":\"string\"},{\"name\":\"data\",\"type\":\"bytes\"}]}");
+			.parse("{\"type\":\"record\",\"name\":\"DeliveryMssg\",\"namespace\":\"mosaic.interop.idl.amqp\",\"fields\":[{\"name\":\"consumer_tag\",\"type\":\"string\"},{\"name\":\"delivery_tag\",\"type\":\"long\"},{\"name\":\"exchange\",\"type\":\"string\"},{\"name\":\"routing_key\",\"type\":\"string\"},{\"name\":\"deliveryMode\",\"type\":\"int\"},{\"name\":\"data\",\"type\":\"bytes\"}]}");
 	public java.lang.CharSequence consumer_tag;
 	public long delivery_tag;
 	public java.lang.CharSequence exchange;
 	public java.lang.CharSequence routing_key;
-	public java.lang.CharSequence callback;
-	public java.lang.CharSequence content_encoding;
-	public java.lang.CharSequence content_type;
-	public java.lang.CharSequence correlation;
 	public int deliveryMode;
-	public java.lang.CharSequence identifier;
 	public java.nio.ByteBuffer data;
 
 	public org.apache.avro.Schema getSchema() {
@@ -38,18 +33,8 @@ public class DeliveryMssg extends org.apache.avro.specific.SpecificRecordBase
 		case 3:
 			return routing_key;
 		case 4:
-			return callback;
-		case 5:
-			return content_encoding;
-		case 6:
-			return content_type;
-		case 7:
-			return correlation;
-		case 8:
 			return deliveryMode;
-		case 9:
-			return identifier;
-		case 10:
+		case 5:
 			return data;
 		default:
 			throw new org.apache.avro.AvroRuntimeException("Bad index");
@@ -73,24 +58,9 @@ public class DeliveryMssg extends org.apache.avro.specific.SpecificRecordBase
 			routing_key = (java.lang.CharSequence) value$;
 			break;
 		case 4:
-			callback = (java.lang.CharSequence) value$;
-			break;
-		case 5:
-			content_encoding = (java.lang.CharSequence) value$;
-			break;
-		case 6:
-			content_type = (java.lang.CharSequence) value$;
-			break;
-		case 7:
-			correlation = (java.lang.CharSequence) value$;
-			break;
-		case 8:
 			deliveryMode = (java.lang.Integer) value$;
 			break;
-		case 9:
-			identifier = (java.lang.CharSequence) value$;
-			break;
-		case 10:
+		case 5:
 			data = (java.nio.ByteBuffer) value$;
 			break;
 		default:

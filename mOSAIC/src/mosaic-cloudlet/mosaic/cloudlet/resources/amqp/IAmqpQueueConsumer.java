@@ -1,6 +1,5 @@
 package mosaic.cloudlet.resources.amqp;
 
-
 /**
  * Interface for registering and using for an AMQP resource as a consumer.
  * 

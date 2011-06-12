@@ -1,6 +1,10 @@
 package mosaic.cloudlet.tests;
 
-public final class LoggingData {
+import java.io.Serializable;
+
+public final class LoggingData implements Serializable {
+
+	private static final long serialVersionUID = 3715149789764562975L;
 	final String user;
 	final String password;
 
@@ -15,5 +19,9 @@ public final class LoggingData {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public String toString() {
+		return user + "(" + password + ")";
 	}
 }

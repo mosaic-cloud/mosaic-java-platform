@@ -4,17 +4,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.ICloudletController;
 import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.resources.ResourceStatus;
-import mosaic.connector.queue.AmqpConnector;
-import mosaic.connector.queue.IAmqpQueue;
+import mosaic.connector.queue.amqp.AmqpConnector;
+import mosaic.connector.queue.amqp.IAmqpQueueConnector;
+import mosaic.core.configuration.ConfigUtils;
+import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.SerDesUtils;
+import mosaic.driver.queue.amqp.AmqpExchangeType;
 
 /**
  * Base accessor class for AMQP queuing systems.
@@ -32,49 +37,87 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	protected ICloudletController<S> cloudlet;
 	protected S cloudletState;
 	private ResourceStatus status;
-	private IAmqpQueue connector;
+	private IAmqpQueueConnector connector;
 	private Class<D> dataClass;
+
+	protected String exchange;
+	protected String routingKey;
+	protected String queue;
+	protected boolean registered;
 
 	/**
 	 * Creates a new AMQP resource accessor.
 	 * 
 	 * @param config
-	 *            configuration data required by the accessor
+	 *            configuration data required by the accessor and connector
 	 * @param cloudlet
 	 *            the cloudlet controller of the cloudlet using the accessor
 	 * @param dataClass
 	 *            the type of the consumed or produced messages
 	 */
 	public AmqpQueueAccessor(IConfiguration config,
-			ICloudletController<S> cloudlet, Class<D> dataClass) {
+			ICloudletController<S> cloudlet, Class<D> dataClass,
+			boolean consumer) {
 		this.configuration = config;
 		this.cloudlet = cloudlet;
 		this.status = ResourceStatus.CREATED;
 		this.dataClass = dataClass;
+		this.registered = false;
+		String specification = ConfigProperties
+				.getString("AmqpQueueAccessor.3"); //$NON-NLS-1$
+		if (consumer)
+			specification = ConfigProperties.getString("AmqpQueueAccessor.4"); //$NON-NLS-1$
+		IConfiguration accessorConfig = config
+				.spliceConfiguration(ConfigurationIdentifier
+						.resolveRelative(specification));
+		this.exchange = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.0"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+		this.routingKey = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+		this.queue = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.2"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+		MosaicLogger.getLogger().trace(
+				"Queue accessor for exchange '" + exchange + "', routing key '"
+						+ routingKey + "' and queue '" + queue + "'");
 	}
 
 	@Override
 	public void initialize(IResourceAccessorCallback<S> callback, S state) {
 		synchronized (this) {
+			@SuppressWarnings("unchecked")
+			IResourceAccessorCallback<S> proxy = this.cloudlet
+					.buildCallbackInvoker(callback,
+							IResourceAccessorCallback.class);
 			try {
 				this.status = ResourceStatus.INITIALIZING;
 				this.cloudletState = state;
 				this.connector = AmqpConnector.create(configuration);
-				IOperationCompletionHandler<Boolean> cHandler = new ConnectionOpenHandler(
-						callback);
-				List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-				handlers.add(cHandler);
-				this.connector.openConnection(handlers, this.cloudlet
-						.getResponseInvocationHandler(cHandler));
-			} catch (IOException e) {
-				@SuppressWarnings("unchecked")
-				IResourceAccessorCallback<S> proxy = this.cloudlet
-						.buildCallbackInvoker(callback,
-								IResourceAccessorCallback.class);
+
+				// IOperationCompletionHandler<Boolean> cHandler = new
+				// ConnectionOpenHandler(
+				// callback);
+				// List<IOperationCompletionHandler<Boolean>> handlers = new
+				// ArrayList<IOperationCompletionHandler<Boolean>>();
+				// handlers.add(cHandler);
+				// this.connector.openConnection(handlers,
+				// this.cloudlet.getResponseInvocationHandler(cHandler));
+
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						AmqpQueueAccessor.this.cloudlet, true);
+				proxy.initializeSucceeded(AmqpQueueAccessor.this.cloudletState,
+						arguments);
+				this.status = ResourceStatus.INITIALIZED;
+			} catch (Throwable e) {
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.initializeFailed(state, arguments);
-				ExceptionTracer.traceRethrown(e);
+				ExceptionTracer.traceDeferred(e);
 			}
 		}
 	}
@@ -83,13 +126,34 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	public void destroy(IResourceAccessorCallback<S> callback) {
 		synchronized (this) {
 			this.status = ResourceStatus.DESTROYING;
-			IOperationCompletionHandler<Boolean> cHandler = new ConnectionCloseHandler(
-					callback);
-			List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-			handlers.add(cHandler);
-			connector.closeConnection(handlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-			connector.destroy();
+			@SuppressWarnings("unchecked")
+			IResourceAccessorCallback<S> proxy = this.cloudlet
+					.buildCallbackInvoker(callback,
+							IResourceAccessorCallback.class);
+			// IOperationCompletionHandler<Boolean> cHandler = new
+			// ConnectionCloseHandler(
+			// callback);
+			// List<IOperationCompletionHandler<Boolean>> handlers = new
+			// ArrayList<IOperationCompletionHandler<Boolean>>();
+			// handlers.add(cHandler);
+			// connector.closeConnection(handlers,
+			// this.cloudlet.getResponseInvocationHandler(cHandler));
+			try {
+				MosaicLogger.getLogger().trace(
+						"AmqpQueueAccessor is destroying the connector...");
+				connector.destroy();
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						AmqpQueueAccessor.this.cloudlet, true);
+				proxy.destroySucceeded(cloudletState, arguments);
+				MosaicLogger.getLogger().trace(
+						"AmqpQueueAccessor destroyed successfully.");
+			} catch (Throwable e) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						AmqpQueueAccessor.this.cloudlet, e);
+				proxy.destroyFailed(cloudletState, arguments);
+				ExceptionTracer.traceDeferred(e);
+			}
+			this.status = ResourceStatus.DESTROYED;
 		}
 	}
 
@@ -98,7 +162,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	 * 
 	 * @return the resource connector
 	 */
-	protected IAmqpQueue getConnector() {
+	protected IAmqpQueueConnector getConnector() {
 		return connector;
 	}
 
@@ -107,19 +171,101 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 		return this.status;
 	}
 
+	protected void declareExchange(final IAmqpQueueAccessorCallback<S> callback) {
+		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+
+			@Override
+			public void onSuccess(Boolean result) {
+				AmqpQueueAccessor.this.declareQueue(callback);
+			}
+
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
+						AmqpQueueAccessor.this.cloudlet, error);
+				callback.registerFailed(AmqpQueueAccessor.this.cloudletState,
+						arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		cHandlers.add(cHandler);
+
+		getConnector().declareExchange(this.exchange, AmqpExchangeType.DIRECT,
+				false, true, false, cHandlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
+
+	}
+
+	private void declareQueue(final IAmqpQueueAccessorCallback<S> callback) {
+		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+
+			@Override
+			public void onSuccess(Boolean result) {
+				AmqpQueueAccessor.this.bindQueue(callback);
+			}
+
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
+						AmqpQueueAccessor.this.cloudlet, error);
+				callback.registerFailed(AmqpQueueAccessor.this.cloudletState,
+						arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		cHandlers.add(cHandler);
+
+		getConnector()
+				.declareQueue(this.queue, true, false, false, false, cHandlers,
+						this.cloudlet.getResponseInvocationHandler(cHandler));
+
+	}
+
+	private void bindQueue(final IAmqpQueueAccessorCallback<S> callback) {
+		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+
+			@Override
+			public void onSuccess(Boolean result) {
+				AmqpQueueAccessor.this.finishRegister(callback);
+			}
+
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
+						AmqpQueueAccessor.this.cloudlet, error);
+				callback.registerFailed(AmqpQueueAccessor.this.cloudletState,
+						arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		cHandlers.add(cHandler);
+
+		getConnector()
+				.bindQueue(this.exchange, this.queue, this.routingKey,
+						cHandlers,
+						this.cloudlet.getResponseInvocationHandler(cHandler));
+	}
+
+	protected void startRegister(IAmqpQueueAccessorCallback<S> callback) {
+		declareExchange(callback);
+	}
+
+	protected abstract void finishRegister(
+			IAmqpQueueAccessorCallback<S> callback);
+
 	protected D deserializeMessage(byte[] data) {
 		D ob = null;
 		try {
 			ob = this.dataClass.cast(SerDesUtils.toObject(data));
 		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 		} catch (ClassNotFoundException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 		}
 		return ob;
 	}
 
-	protected byte[] serializeMessage(D message) {
+	protected byte[] serializeMessage(D message) throws Throwable {
 		byte[] bytes = null;
 		try {
 			bytes = SerDesUtils.toBytes(message);

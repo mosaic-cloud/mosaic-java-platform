@@ -54,7 +54,9 @@ public class ResponseHandlerMap {
 	 */
 	public synchronized List<IOperationCompletionHandler<?>> removeRequestHandlers(
 			String requestId) {
-		return this.handlerMap.remove(requestId);
+		List<IOperationCompletionHandler<?>> handlers = this.handlerMap
+				.remove(requestId);
+		return handlers;
 	}
 
 	/**

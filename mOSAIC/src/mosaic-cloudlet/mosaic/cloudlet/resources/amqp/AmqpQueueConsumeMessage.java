@@ -1,6 +1,6 @@
 package mosaic.cloudlet.resources.amqp;
 
-import mosaic.connector.queue.AmqpInboundMessage;
+import mosaic.driver.queue.amqp.AmqpInboundMessage;
 
 /**
  * An object of this class embeds the essential information about a consume

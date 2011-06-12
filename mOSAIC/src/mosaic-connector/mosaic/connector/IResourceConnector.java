@@ -9,6 +9,9 @@ package mosaic.connector;
 public interface IResourceConnector {
 	/**
 	 * Destroy the connection with the resource.
+	 * 
+	 * @throws Throwable
+	 *             if connector cannot be destroyed
 	 */
-	void destroy();
+	void destroy() throws Throwable;
 }

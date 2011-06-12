@@ -10,7 +10,7 @@ import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
-import mosaic.driver.kvstore.MemcachedDriver;
+import mosaic.driver.kvstore.memcached.MemcachedDriver;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -21,6 +21,7 @@ import org.junit.Test;
 public class MemcachedDriverTest {
 	private static MemcachedDriver wrapper;
 	private static String keyPrefix;
+	@SuppressWarnings("rawtypes")
 	private IOperationCompletionHandler handler;
 
 	@BeforeClass
@@ -36,6 +37,7 @@ public class MemcachedDriverTest {
 		wrapper.destroy();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Before
 	public void setUp() {
 		handler = new TestLoggingHandler();
@@ -46,6 +48,7 @@ public class MemcachedDriverTest {
 		Assert.assertNotNull(wrapper);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testSet() {
 		String k1 = keyPrefix + "_key_fantastic";
@@ -68,15 +71,9 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testGet() {
 		String k1 = keyPrefix + "_key_fantastic";
@@ -91,15 +88,9 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetBulk() {
 		String k1 = keyPrefix + "_key_fantastic";
@@ -120,15 +111,9 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testAdd() {
 		String k1 = keyPrefix + "_key_fantastic";
@@ -149,15 +134,9 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testReplace() {
 		String k1 = keyPrefix + "_key_fabulous";
@@ -185,15 +164,9 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testAppend() {
 		String k1 = keyPrefix + "_key_fabulous";
@@ -222,15 +195,9 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPrepend() {
 		String k1 = keyPrefix + "_key_fabulous";
@@ -259,51 +226,39 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 
-//	@Test
-//	public void testCAS() {
-//		String k1 = keyPrefix + "_key_fabulous";
-//
-//		IResult<Boolean> r1 = wrapper.invokeCASOperation(k1,
-//				"replaced by dummy", handler);
-//		try {
-//			Assert.assertTrue(r1.getResult());
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//			Assert.fail();
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//			Assert.fail();
-//		}
-//
-//		IResult<Object> r2 = wrapper.invokeGetOperation(k1, handler);
-//
-//		try {
-//			Assert.assertEquals("replaced by dummy", r2.getResult().toString());
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//			Assert.fail();
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//			Assert.fail();
-//		}
-//
-//		// try {
-//		// Thread.sleep(100);
-//		// } catch (InterruptedException e) {
-//		// e.printStackTrace();
-//		// }
-//		// Assert.assertEquals(0, wrapper.countPendingOperations());
-//	}
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testCAS() {
+		String k1 = keyPrefix + "_key_fabulous";
 
+		IResult<Boolean> r1 = wrapper.invokeCASOperation(k1,
+				"replaced by dummy", handler);
+		try {
+			Assert.assertTrue(r1.getResult());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+
+		IResult<Object> r2 = wrapper.invokeGetOperation(k1, handler);
+
+		try {
+			Assert.assertEquals("replaced by dummy", r2.getResult().toString());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDelete() {
 		String k1 = keyPrefix + "_key_fabulous";
@@ -330,12 +285,5 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Assert.assertEquals(0, wrapper.countPendingOperations());
 	}
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 
 /**
@@ -18,6 +19,7 @@ import mosaic.core.ops.IResult;
 public class AbstractResourceDriver implements IResourceDriver {
 	private List<IResult<?>> pendingResults;
 	private ExecutorService executor;
+	private boolean destroyed = false;
 
 	/**
 	 * Constructs a driver.
@@ -31,9 +33,10 @@ public class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		IResult<?> pResult;
 
+		this.destroyed = true;
 		// cancel all pending operations
 		Iterator<IResult<?>> it = this.pendingResults.iterator();
 		while (it.hasNext()) {
@@ -54,7 +57,8 @@ public class AbstractResourceDriver implements IResourceDriver {
 	 * @param op
 	 *            the operation
 	 */
-	protected <T extends Object> void submitOperation(FutureTask<T> op) {
+	protected synchronized <T extends Object> void submitOperation(
+			FutureTask<T> op) {
 		this.executor.submit(op);
 	}
 
@@ -67,7 +71,7 @@ public class AbstractResourceDriver implements IResourceDriver {
 	 * @param op
 	 *            the operation
 	 */
-	protected void executeOperation(Runnable op) {
+	protected synchronized void executeOperation(Runnable op) {
 		this.executor.execute(op);
 	}
 
@@ -83,4 +87,31 @@ public class AbstractResourceDriver implements IResourceDriver {
 		this.pendingResults.add(pendingOp);
 	}
 
+	/**
+	 * Handles unsupported operation errors. The base implementation sends an
+	 * error operation to the caller.
+	 * 
+	 * @param opName
+	 *            the name of the operation
+	 * @param handler
+	 *            the handler used for sending the error
+	 */
+	public synchronized void handleUnsupportedOperationError(
+			final String opName, final IOperationCompletionHandler<?> handler) {
+		Runnable task = new Runnable() {
+
+			@Override
+			public void run() {
+				Exception error = new UnsupportedOperationException(
+						"Operation " + opName
+								+ " is not supported by this driver.");
+				handler.onFailure(error);
+			}
+		};
+		executeOperation(task);
+	}
+
+	protected synchronized boolean isDestroyed() {
+		return this.destroyed;
+	}
 }

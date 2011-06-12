@@ -16,25 +16,26 @@ public class DefaultResourceAccessorCallback<S> extends DefaultCallback<S>
 
 	@Override
 	public void initializeSucceeded(S state, CallbackArguments<S> arguments) {
-		this.handleUnhandledCallback(arguments, "Resource Initialize Succeeded", true,
-				true);
+		this.handleUnhandledCallback(arguments,
+				"Resource Initialize Succeeded", true, true);
 	}
 
 	@Override
 	public void initializeFailed(S state, CallbackArguments<S> arguments) {
-		this.handleUnhandledCallback(arguments, "Resource Initialize Failed", false,
-				true);
+		this.handleUnhandledCallback(arguments, "Resource Initialize Failed",
+				false, true);
 	}
 
 	@Override
 	public void destroySucceeded(S state, CallbackArguments<S> arguments) {
-		this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded", true,
-				false);
+		this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded",
+				true, false);
 	}
 
 	@Override
 	public void destroyFailed(S state, CallbackArguments<S> arguments) {
-		this.handleUnhandledCallback(arguments, "Destroy Failed", false, false);
+		this.handleUnhandledCallback(arguments, "Resource Destroy Failed",
+				false, false);
 	}
 
 }

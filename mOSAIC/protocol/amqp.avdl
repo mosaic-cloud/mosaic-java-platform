@@ -1,7 +1,6 @@
 @namespace("mosaic.interop.idl.amqp")
 protocol Amqp {
 	enum OperationNames {
-		OPEN_CONNECTION, CLOSE_CONNECTION, 
 		DECLARE_EXCHANGE, DECLARE_QUEUE, BIND_QUEUE, 
 		CONSUME, PUBLISH, GET, ACK, CANCEL
 	}
@@ -19,11 +18,6 @@ protocol Amqp {
 		string client_id;
 	}
 	
-	record OpenConnectionOperation {
-	}
-	
-	record CloseConnectionOperation {
-	}	
 	
 	record DeclareExchangeOperation {
 		string exchange;
@@ -55,6 +49,7 @@ protocol Amqp {
 		bytes extra;
 	}
 	
+	/*
 	record PublishOperation {
 		string callback;
 		string content_encoding;
@@ -64,6 +59,15 @@ protocol Amqp {
 		boolean durable;
 		string exchange;
 		string identifier;
+		boolean immediate;
+		boolean mandatory;
+		string routingKey;
+	}*/
+	
+	record PublishOperation {
+		bytes data;
+		boolean durable;
+		string exchange;
 		boolean immediate;
 		boolean mandatory;
 		string routingKey;
@@ -86,7 +90,7 @@ protocol Amqp {
 	record Operation {
 		CompletionToken token;
 		OperationNames name;
-		union {OpenConnectionOperation, CloseConnectionOperation,
+		union {
 		DeclareExchangeOperation, DeclareQueueOperation, BindQueueOperation,
 		ConsumeOperation, PublishOperation, GetOperation, AckOperation, CancelOperation} operation;
 	}
@@ -111,6 +115,7 @@ protocol Amqp {
 		string consumer_tag;
 	}
 	
+	/*
 	record DeliveryMssg {
 		string consumer_tag;
 		long delivery_tag;
@@ -122,6 +127,15 @@ protocol Amqp {
 		string correlation;
 		int deliveryMode;
 		string identifier;
+		bytes data;
+	}*/
+	
+	record DeliveryMssg {
+		string consumer_tag;
+		long delivery_tag;
+		string exchange;
+		string routing_key;
+		int deliveryMode;
 		bytes data;
 	}
 	

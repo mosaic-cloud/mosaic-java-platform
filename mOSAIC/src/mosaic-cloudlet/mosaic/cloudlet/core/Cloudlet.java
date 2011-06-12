@@ -13,13 +13,23 @@ import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.runtime.CloudletExecutor;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
-import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.CompletionInvocationHandler;
 import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 
+/**
+ * This class handles the internals of cloudlet execution. An object of this
+ * class will be created by the container for each user cloudlet. The link
+ * between the user cloudlet and this object is done by an
+ * {@link ICloudletController} object.
+ * 
+ * @author Georgiana Macariu
+ * 
+ * @param <S>
+ *            the state of the cloudlet
+ */
 public class Cloudlet<S extends Object> implements ICloudlet {
 	private boolean active;
 	private CloudletExecutor executor;
@@ -86,17 +96,21 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 			CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object>(
 					complHandler);
 			handlers.add(complHandler);
-			EventDrivenOperation<Object> initOperation = new EventDrivenOperation<Object>(
+			final EventDrivenOperation<Object> initOperation = new EventDrivenOperation<Object>(
 					handlers, iHandler);
 			initOperation.setOperation(new Runnable() {
 
 				@Override
 				public void run() {
-					MosaicLogger.getLogger().trace("Cloudlet - calling cloudlet initialize...");
 					// call the user defined init
 					Cloudlet.this.controllerCallback.initialize(
 							Cloudlet.this.state, new CallbackArguments<S>(
 									controller));
+					List<IOperationCompletionHandler<Object>> handlers = initOperation
+							.getCompletionHandlers();
+					for (IOperationCompletionHandler<Object> handler : handlers) {
+						handler.onSuccess(null);
+					}
 				}
 			});
 			IResult<Object> result = new EventDrivenResult<Object>(
@@ -107,9 +121,9 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				initialized = true;
 				this.active = true;
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceRethrown(e);
+				ExceptionTracer.traceDeferred(e);
 			} catch (ExecutionException e) {
-				ExceptionTracer.traceRethrown(e);
+				ExceptionTracer.traceDeferred(e);
 			}
 		}
 		return initialized;
@@ -144,7 +158,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 			CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object>(
 					complHandler);
 			handlers.add(complHandler);
-			EventDrivenOperation<Object> destroyOperation = new EventDrivenOperation<Object>(
+			final EventDrivenOperation<Object> destroyOperation = new EventDrivenOperation<Object>(
 					handlers, iHandler);
 			destroyOperation.setOperation(new Runnable() {
 
@@ -154,21 +168,20 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 					Cloudlet.this.controllerCallback.destroy(
 							Cloudlet.this.state, new CallbackArguments<S>(
 									controller));
+					List<IOperationCompletionHandler<Object>> handlers = destroyOperation
+							.getCompletionHandlers();
+					for (IOperationCompletionHandler<Object> handler : handlers) {
+						handler.onSuccess(null);
+					}
 				}
 			});
 			IResult<Object> result = new EventDrivenResult<Object>(
 					destroyOperation);
 			this.executor.handleRequest(destroyOperation.getOperation());
-			try {
-				result.getResult();
-				this.executor.shutdown();
-				// TODO
-				destroyed = true;
-			} catch (InterruptedException e) {
-				ExceptionTracer.traceRethrown(e);
-			} catch (ExecutionException e) {
-				ExceptionTracer.traceRethrown(e);
-			}
+			// result.getResult();
+			this.executor.shutdown();
+			// TODO
+			destroyed = true;
 		}
 		return destroyed;
 	}
@@ -200,11 +213,18 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				callback);
 		@SuppressWarnings("unchecked")
 		T proxy = (T) Proxy.newProxyInstance(callback.getClass()
-				.getClassLoader(), new Class[] { callback.getClass() },
-				iHandler);
+				.getClassLoader(), new Class[] { callbackType }, iHandler);
 		return proxy;
 	}
 
+	/**
+	 * An implementation of the cloudlet controller. Basically, all operation in
+	 * the controller's interface are redirected to operations of the cloudlet
+	 * object.
+	 * 
+	 * @author Georgiana Macariu
+	 * 
+	 */
 	final class CloudletController implements ICloudletController<S> {
 		@Override
 		public final boolean destroy() {

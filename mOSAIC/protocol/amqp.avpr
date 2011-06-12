@@ -4,7 +4,7 @@
   "types" : [ {
     "type" : "enum",
     "name" : "OperationNames",
-    "symbols" : [ "OPEN_CONNECTION", "CLOSE_CONNECTION", "DECLARE_EXCHANGE", "DECLARE_QUEUE", "BIND_QUEUE", "CONSUME", "PUBLISH", "GET", "ACK", "CANCEL" ]
+    "symbols" : [ "DECLARE_EXCHANGE", "DECLARE_QUEUE", "BIND_QUEUE", "CONSUME", "PUBLISH", "GET", "ACK", "CANCEL" ]
   }, {
     "type" : "enum",
     "name" : "ExchangeType",
@@ -26,14 +26,6 @@
       "name" : "client_id",
       "type" : "string"
     } ]
-  }, {
-    "type" : "record",
-    "name" : "OpenConnectionOperation",
-    "fields" : [ ]
-  }, {
-    "type" : "record",
-    "name" : "CloseConnectionOperation",
-    "fields" : [ ]
   }, {
     "type" : "record",
     "name" : "DeclareExchangeOperation",
@@ -108,18 +100,6 @@
     "type" : "record",
     "name" : "PublishOperation",
     "fields" : [ {
-      "name" : "callback",
-      "type" : "string"
-    }, {
-      "name" : "content_encoding",
-      "type" : "string"
-    }, {
-      "name" : "content_type",
-      "type" : "string"
-    }, {
-      "name" : "correlation",
-      "type" : "string"
-    }, {
       "name" : "data",
       "type" : "bytes"
     }, {
@@ -127,9 +107,6 @@
       "type" : "boolean"
     }, {
       "name" : "exchange",
-      "type" : "string"
-    }, {
-      "name" : "identifier",
       "type" : "string"
     }, {
       "name" : "immediate",
@@ -179,7 +156,7 @@
       "type" : "OperationNames"
     }, {
       "name" : "operation",
-      "type" : [ "OpenConnectionOperation", "CloseConnectionOperation", "DeclareExchangeOperation", "DeclareQueueOperation", "BindQueueOperation", "ConsumeOperation", "PublishOperation", "GetOperation", "AckOperation", "CancelOperation" ]
+      "type" : [ "DeclareExchangeOperation", "DeclareQueueOperation", "BindQueueOperation", "ConsumeOperation", "PublishOperation", "GetOperation", "AckOperation", "CancelOperation" ]
     } ]
   }, {
     "type" : "record",
@@ -234,23 +211,8 @@
       "name" : "routing_key",
       "type" : "string"
     }, {
-      "name" : "callback",
-      "type" : "string"
-    }, {
-      "name" : "content_encoding",
-      "type" : "string"
-    }, {
-      "name" : "content_type",
-      "type" : "string"
-    }, {
-      "name" : "correlation",
-      "type" : "string"
-    }, {
       "name" : "deliveryMode",
       "type" : "int"
-    }, {
-      "name" : "identifier",
-      "type" : "string"
     }, {
       "name" : "data",
       "type" : "bytes"

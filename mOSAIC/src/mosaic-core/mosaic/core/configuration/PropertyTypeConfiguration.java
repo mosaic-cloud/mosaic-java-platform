@@ -6,25 +6,42 @@ import java.util.Properties;
 
 import mosaic.core.exceptions.ExceptionTracer;
 
+/**
+ * This class implements a configuration handler for project configurations
+ * based on property files.
+ * 
+ * @author CiprianCraciun, Georgiana Macariu
+ * 
+ */
 public final class PropertyTypeConfiguration implements IConfiguration {
 
 	private final Properties properties;
 
 	private final ConfigurationIdentifier root;
 
-	public PropertyTypeConfiguration(Properties properties,
+	private PropertyTypeConfiguration(Properties properties,
 			ConfigurationIdentifier root) {
 		super();
 		this.properties = properties;
 		this.root = root;
 	}
 
-	public PropertyTypeConfiguration(Properties properties) {
+	private PropertyTypeConfiguration(Properties properties) {
 		super();
 		this.properties = properties;
 		this.root = ConfigurationIdentifier.root;
 	}
 
+	/**
+	 * Creates a configuration object and loads the configuration parameters
+	 * from the specified resource file using a specific class loader.
+	 * 
+	 * @param classLoader
+	 *            the class loader used for loading the configuration file
+	 * @param resource
+	 *            the name of the configuration file
+	 * @return the configuration object
+	 */
 	public final static PropertyTypeConfiguration create(
 			ClassLoader classLoader, String resource) {
 		final InputStream stream = classLoader.getResourceAsStream(resource);
@@ -42,12 +59,21 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 		return configuration;
 	}
 
+	/**
+	 * Creates a configuration object and loads the configuration parameters
+	 * from the specified input stream.
+	 * 
+	 * @param stream
+	 *            the input stream from where to load configuration parameters
+	 * @return the configuration object
+	 * @throws IOException
+	 *             if an error occurred when reading from the input stream
+	 */
 	public final static PropertyTypeConfiguration create(InputStream stream)
 			throws IOException {
 		final Properties properties = new Properties(System.getProperties());
 		if (stream != null) {
 			properties.load(stream);
-			properties.list(System.out);
 			stream.close();
 		}
 		PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(
@@ -113,6 +139,37 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object config) {
+		if (config == null)
+			return false;
+		if (!(config instanceof PropertyTypeConfiguration))
+			return false;
+		PropertyTypeConfiguration otherConfig = (PropertyTypeConfiguration) config;
+		if (root != null && !root.equals(otherConfig.root))
+			return false;
+		if (root == null && otherConfig.root != null)
+			return false;
+		if (properties != null && !properties.equals(otherConfig.properties))
+			return false;
+		if (properties == null && otherConfig.properties != null)
+			return false;
+		return true;
+	}
+
+	/**
+	 * Implements the configuration parameter in property style configuration
+	 * object.
+	 * 
+	 * @author Ciprian Craciun, Georgiana Macariu
+	 * 
+	 * @param <T>
+	 *            the type of the value of the parameter
+	 */
 	public final class PropertyTypeParameter<T> implements
 			IConfigurationParameter<T> {
 		private final ConfigurationIdentifier identifier;

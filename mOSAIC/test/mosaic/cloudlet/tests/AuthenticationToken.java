@@ -1,6 +1,10 @@
 package mosaic.cloudlet.tests;
 
-public final class AuthenticationToken {
+import java.io.Serializable;
+
+public final class AuthenticationToken implements Serializable {
+
+	private static final long serialVersionUID = 8212390577294189529L;
 	private final String token;
 
 	public AuthenticationToken(String token) {
@@ -12,4 +16,7 @@ public final class AuthenticationToken {
 		return token;
 	}
 
+	public String toString() {
+		return token;
+	}
 }

@@ -1,7 +1,8 @@
 package mosaic.cloudlet.core;
 
 /**
- * Default cloudlet callback.
+ * Default cloudlet callback. This extends the {@link DefaultCallback} and
+ * handles callbacks for operations defined in the {@link ICloudlet}.
  * 
  * @author Georgiana Macariu
  * 

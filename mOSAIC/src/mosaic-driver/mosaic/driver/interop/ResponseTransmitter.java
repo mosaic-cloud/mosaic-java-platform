@@ -6,6 +6,7 @@ import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.driver.ConfigProperties;
 
 import com.rabbitmq.client.Channel;
@@ -38,21 +39,31 @@ public class ResponseTransmitter {
 	public ResponseTransmitter(IConfiguration config) {
 		super();
 		// read connection details from the configuration
-		String amqpServerHost = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ResponseTransmitter.1"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_HOST);
-		int amqpServerPort = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ResponseTransmitter.2"), Integer.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_AMQP_PORT);
-		String amqpServerUser = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ResponseTransmitter.3"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_USER);
-		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ResponseTransmitter.4"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_PASS);
-		exchange = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ResponseTransmitter.5"), String.class, //$NON-NLS-1$
-				DEFAULT_EXCHANGE_NAME);
+		String amqpServerHost = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("ResponseTransmitter.1"), String.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_HOST);
+		int amqpServerPort = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("ResponseTransmitter.2"), Integer.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_AMQP_PORT);
+		String amqpServerUser = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("ResponseTransmitter.3"), String.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_USER);
+		String amqpServerPasswd = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("ResponseTransmitter.4"), String.class, //$NON-NLS-1$
+						ConnectionFactory.DEFAULT_PASS);
+		exchange = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("ResponseTransmitter.5"), String.class, //$NON-NLS-1$
+						DEFAULT_EXCHANGE_NAME);
 		// queueName = ConfigUtils.resolveParameter(config,
 		// "interop.resp.amqp.rountingkey", String.class,
 		// DEFAULT_QUEUE_NAME);
@@ -71,11 +82,11 @@ public class ResponseTransmitter {
 			commChannel = connection.createChannel();
 
 			// create exchange
-			commChannel.exchangeDeclare(exchange, "direct", true); //$NON-NLS-1$
+			commChannel.exchangeDeclare(exchange, "direct", false, false, null); //$NON-NLS-1$
 			// commChannel.queueDeclare(queueName, true, false, false, null);
 			// commChannel.queueBind(queueName, exchange, "");
 		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 			// close connections
 			try {
 				if (commChannel != null && commChannel.isOpen()) {
@@ -85,7 +96,7 @@ public class ResponseTransmitter {
 					connection.close();
 				}
 			} catch (IOException e1) {
-				ExceptionTracer.traceRethrown(e1);
+				ExceptionTracer.traceDeferred(e1);
 			}
 		}
 	}
@@ -94,7 +105,7 @@ public class ResponseTransmitter {
 	 * Destroys the transmitter.
 	 */
 
-	public void destroy() {
+	public synchronized void destroy() {
 		// close connection
 		try {
 			if (commChannel != null && commChannel.isOpen()) {
@@ -103,8 +114,9 @@ public class ResponseTransmitter {
 			if (connection != null && connection.isOpen()) {
 				connection.close();
 			}
+			MosaicLogger.getLogger().trace("ResponseTransmitter destroyed.");
 		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(new ConnectionException(
+			ExceptionTracer.traceDeferred(new ConnectionException(
 					"The Memcached proxy cannot close connection to the driver: " //$NON-NLS-1$
 							+ e.getMessage(), e));
 		}
@@ -118,11 +130,12 @@ public class ResponseTransmitter {
 	 * @param message
 	 *            the message
 	 */
-	protected void publishResponse(String routingKey, byte[] message) {
+	protected synchronized void publishResponse(String routingKey,
+			byte[] message) {
 		try {
 			commChannel.basicPublish(exchange, routingKey, null, message);
 		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 		}
 	}
 

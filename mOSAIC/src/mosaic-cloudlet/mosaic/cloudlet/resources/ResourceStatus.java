@@ -7,5 +7,5 @@ package mosaic.cloudlet.resources;
  * 
  */
 public enum ResourceStatus {
-	INITIALIZING, CREATED, READY, DESTROYING, DESTROYED
+	CREATED, INITIALIZING, INITIALIZED, READY, DESTROYING, DESTROYED
 }

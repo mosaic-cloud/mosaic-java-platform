@@ -9,22 +9,30 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 
-import org.junit.Test;
-
 public class CloudletDummyContainerTest {
 	public static void main(String... args) {
 		IConfiguration configuration;
-		configuration = PropertyTypeConfiguration
-				.create(CloudletDummyContainerTest.class.getClassLoader(),
-						"cloud.prop");
-		CloudletDummyContainer container = new CloudletDummyContainer(
-				CloudletDummyContainerTest.class.getClassLoader(),
-				configuration);
 
-		try {
-			container.start();
-		} catch (CloudletException e) {
-			ExceptionTracer.traceRethrown(e);
+		for (int i = 0; i < args.length; i++) {
+			configuration = PropertyTypeConfiguration.create(
+					CloudletDummyContainerTest.class.getClassLoader(), args[i]);
+			final CloudletDummyContainer container = new CloudletDummyContainer(
+					CloudletDummyContainerTest.class.getClassLoader(),
+					configuration);
+			Runnable r = new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						container.start();
+					} catch (CloudletException e) {
+						ExceptionTracer.traceDeferred(e);
+					}
+
+				}
+			};
+			Thread t = new Thread(r);
+			t.start();
 		}
 	}
 
@@ -124,7 +132,7 @@ public class CloudletDummyContainerTest {
 		try {
 			container.start();
 		} catch (CloudletException e) {
-			ExceptionTracer.traceRethrown(e);
+			ExceptionTracer.traceDeferred(e);
 		}
 
 	}

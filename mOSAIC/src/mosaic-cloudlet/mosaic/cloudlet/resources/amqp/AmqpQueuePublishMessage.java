@@ -1,6 +1,6 @@
 package mosaic.cloudlet.resources.amqp;
 
-import mosaic.connector.queue.AmqpOutboundMessage;
+import mosaic.driver.queue.amqp.AmqpOutboundMessage;
 
 /**
  * An object of this class embeds the essential information about a publish

@@ -11,7 +11,8 @@ import mosaic.cloudlet.resources.IResourceAccessorCallback;
  * @param <S>
  *            the type of the cloudlet state
  */
-public interface IAmqpQueueAccessorCallback<S> extends IResourceAccessorCallback<S> {
+public interface IAmqpQueueAccessorCallback<S> extends
+		IResourceAccessorCallback<S> {
 	/**
 	 * Called when consumer or publisher registered successfully.
 	 * 

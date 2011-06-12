@@ -1,5 +1,7 @@
 package mosaic.cloudlet.resources.kvstore;
 
+import java.util.List;
+
 import mosaic.cloudlet.resources.IResourceAccessor;
 import mosaic.core.ops.IResult;
 
@@ -41,4 +43,11 @@ public interface IKeyValueAccessor<S> extends IResourceAccessor<S> {
 	 * @return a result handle for the operation
 	 */
 	IResult<Boolean> delete(String key);
+
+	/**
+	 * Lists the keys in the bucket associated with the accessor.
+	 * 
+	 * @return a result handle for the operation
+	 */
+	IResult<List<String>> list();
 }

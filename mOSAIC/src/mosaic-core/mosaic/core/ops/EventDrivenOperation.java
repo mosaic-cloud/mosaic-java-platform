@@ -122,7 +122,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	@Override
 	public void onSuccess(T response) {
 		if (!result.compareAndSet(null, ((T) response))) {
-			ExceptionTracer.traceRethrown(new ResultSetException(
+			ExceptionTracer.traceDeferred(new ResultSetException(
 					"Operation result cannot be set."));
 		}
 		doneSignal.countDown();
@@ -131,7 +131,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	@Override
 	public <E extends Throwable> void onFailure(E error) {
 		if (!exception.compareAndSet(null, error)) {
-			ExceptionTracer.traceRethrown(new ResultSetException(
+			ExceptionTracer.traceDeferred(new ResultSetException(
 					"Operation result cannot be set."));
 		}
 		doneSignal.countDown();

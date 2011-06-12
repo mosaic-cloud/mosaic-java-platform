@@ -431,9 +431,6 @@ public class CloudletExecutor {
 						r = requestQueue.poll();
 				else {
 					while (responseQueue.isEmpty() && requestQueue.isEmpty()) {
-						MosaicLogger
-								.getLogger()
-								.trace("CloudletExecutor.Worker blocking waiting for work...");
 						queuesNotEmpty.await();
 					}
 					if (!responseQueue.isEmpty())
@@ -498,7 +495,7 @@ public class CloudletExecutor {
 
 			} catch (InterruptedException ie) {
 				// On interruption, re-check runState
-				ie.printStackTrace();
+				// ie.printStackTrace();
 			} finally {
 				mainLock.unlock();
 			}

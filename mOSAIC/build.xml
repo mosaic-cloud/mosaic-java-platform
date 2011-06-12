@@ -99,11 +99,13 @@
 		<copy todir="${build.test.dir}">
 			<fileset dir="${test.dir}">
 				<exclude name="**/*.java" />
-				<exclude name="**/*.prop" />
 				<exclude name="resources" />
 			</fileset>
+			<fileset dir="${basedir}">
+				<include name="log4j.properties" />
+			</fileset>
 			<fileset dir="${test.dir}/resources">
-				<include name="*.prop" />
+				<include name="*.prop*" />
 			</fileset>
 			<fileset dir="${src.dir}/mosaic-core">
 				<include name="**/*.properties" />
@@ -130,7 +132,7 @@
 	<target name="config-tests">
 		<mkdir dir="${test.output.dir}" />
 		<junit>
-			<test name="mosaic.core.configuration.tests.PropertyTypeConfigurationTest" outfile="tests-result">
+			<test name="mosaic.core.configuration.tests.PropertyTypeConfigurationTest" todir="${test.output.dir}">
 			</test>
 			<classpath>
 				<fileset dir="lib">
@@ -140,7 +142,7 @@
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
-			<formatter type="plain" />
+			<formatter type="plain" usefile="true" />
 		</junit>
 	</target>
 
@@ -183,28 +185,110 @@
 			</classpath>
 		</junit>
 	</target>
-	<!--
-	<target name="cloudlet-tests" description="Runs the connector tests. Assumes a membase store  and a RabbitMQ server is running on localhost.">
-			<mkdir dir="${test.output.dir}" />
-			<junit>
-				<batchtest fork="yes" todir="${test.output.dir}">
-					<fileset dir="${test.dir}">
-						<include name="mosaic/connector/**/*.java" />
-					</fileset>
-					<formatter type="plain" usefile="true" />
-				</batchtest>
+
+	<target name="hello-cloudlet" description="Runs the logging cloudlet. Assumes a membase store  and a RabbitMQ server is running on localhost.">
+		<mkdir dir="${test.output.dir}" />
+		<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/hello-cloudlet.test">
+			<arg value="hello-cloudlet.prop" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir=".">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="start-amqp-driver" description="Starts an amqp driver">
+		<java classname="mosaic.cloudlet.tests.AmqpDriverStarter" fork="true" output="${test.output.dir}/amqp-driver.out">
+			<arg value="amqp-driver.prop" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir=".">
+					<include name="mosaic*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="start-memcached-driver" description="Starts a memcached driver">
+		<java classname="mosaic.cloudlet.tests.MemcachedDriverStarter" fork="true" output="${test.output.dir}/memcached-driver.out">
+			<arg value="memcached-driver.prop" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar" />
+				</fileset>
+				<fileset dir=".">
+					<include name="mosaic*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="queue-cloudlet" description="Runs the logging cloudlet. Assumes a membase store  and a RabbitMQ server is running on localhost.">
+		<mkdir dir="${test.output.dir}" />
+		<parallel>
+			<antcall target="start-amqp-driver" />
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/publisher-cloudlet.out">
+				<arg value="publisher-cloudlet.prop" />
 				<classpath>
 					<fileset dir="lib">
 						<include name="**/*.jar" />
 					</fileset>
 					<fileset dir=".">
-						<include name="**/*.jar" />
+						<include name="mosaic*.jar" />
 					</fileset>
 				</classpath>
-			</junit>
-		</target>
--->
-	<target name="amqp-idl">
+			</java>
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/consumer-cloudlet.out">
+				<arg value="consumer-cloudlet.prop" />
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="mosaic*.jar" />
+					</fileset>
+				</classpath>
+			</java>
+		</parallel>
+	</target>
+
+	<target name="logging-cloudlet" description="Runs the logging cloudlet. Assumes a membase store  and a RabbitMQ server is running on localhost.">
+		<mkdir dir="${test.output.dir}" />
+		<parallel>
+			<antcall target="start-amqp-driver" />
+			<!--<antcall target="start-memcached-driver" />-->
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/logging-cloudlet.out">
+				<arg value="simple-logging-cloudlet.prop" />
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="mosaic*.jar" />
+					</fileset>
+				</classpath>
+			</java>
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/user-cloudlet.out">
+				<arg value="user-cloudlet.prop" />
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="mosaic*.jar" />
+					</fileset>
+				</classpath>
+			</java>
+		</parallel>
+	</target>
+
+	<target name="amqp-idl" description="Generates classes for amqp protocol">
 		<java jar="lib/avro-tools-1.5.0.jar" fork="true">
 			<arg value="idl" />
 			<arg value="protocol/amqp.avdl" />

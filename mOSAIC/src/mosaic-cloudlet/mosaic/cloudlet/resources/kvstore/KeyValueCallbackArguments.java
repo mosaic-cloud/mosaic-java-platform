@@ -20,7 +20,7 @@ public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	private final Object value;
 
 	/**
-	 * Creates a new argument
+	 * Creates a new argument.
 	 * 
 	 * @param cloudlet
 	 *            the cloudlet

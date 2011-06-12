@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import mosaic.connector.kvstore.MemcachedStoreConnector;
+import mosaic.connector.kvstore.memcached.MemcachedStoreConnector;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
-import mosaic.driver.interop.MemcachedStub;
+import mosaic.driver.interop.kvstore.memcached.MemcachedStub;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -27,10 +27,10 @@ public class MemcachedConnectorTest {
 	private static MemcachedStub driverStub;
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		IConfiguration config = PropertyTypeConfiguration
-				.create(MemcachedConnectorTest.class.getClassLoader(),
-						"memcached-test.prop");
+	public static void setUpBeforeClass() throws Throwable {
+		IConfiguration config = PropertyTypeConfiguration.create(
+				MemcachedConnectorTest.class.getClassLoader(),
+				"memcached-test.prop");
 		connector = MemcachedStoreConnector.create(config);
 		keyPrefix = UUID.randomUUID().toString();
 		handlersBool = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -43,9 +43,9 @@ public class MemcachedConnectorTest {
 	}
 
 	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		// connector.destroy();
-		// driverStub.destroy();
+	public static void tearDownAfterClass() throws Throwable {
+		connector.destroy();
+		driverStub.destroy();
 	}
 
 	@Test
@@ -286,4 +286,19 @@ public class MemcachedConnectorTest {
 		}
 	}
 
+	@Test
+	public void testList() {
+		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
+		handlers.add(new TestLoggingHandler<List<String>>());
+		IResult<List<String>> r1 = connector.list(handlers, null);
+		try {
+			Assert.assertNull(r1.getResult());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
 }

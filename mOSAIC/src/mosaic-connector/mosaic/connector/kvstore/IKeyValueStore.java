@@ -69,4 +69,22 @@ public interface IKeyValueStore extends IResourceConnector {
 	IResult<Boolean> delete(String key,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
+
+	/**
+	 * Lists the keys of the bucket used by the connector.
+	 * 
+	 * @param handlers
+	 * @param iHandler
+	 * @param handlers
+	 *            a set of handlers which shall be called when the operation
+	 *            completes
+	 * @param iHandler
+	 *            an invocation handler which shall be used to invoke the
+	 *            completion handlers. This can be used for controlling how the
+	 *            completion handlers are executed
+	 * @return a result handle for the operation
+	 */
+	IResult<List<String>> list(
+			List<IOperationCompletionHandler<List<String>>> handlers,
+			CompletionInvocationHandler<List<String>> iHandler);
 }

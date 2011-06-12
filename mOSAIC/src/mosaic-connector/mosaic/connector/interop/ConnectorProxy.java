@@ -48,10 +48,11 @@ public class ConnectorProxy {
 	 *            given in the configuration data)
 	 * @param reactor
 	 *            the response reactor
+	 * @throws Throwable
 	 */
 	public ConnectorProxy(IConfiguration config, String connectorId,
 			String defaultExchange, String defaultQueue,
-			AbstractConnectorReactor reactor) {
+			AbstractConnectorReactor reactor) throws Throwable {
 		this.configuration = config;
 		this.connectorId = connectorId;
 
@@ -77,9 +78,6 @@ public class ConnectorProxy {
 						config,
 						ConfigProperties.getString("ConnectorProxy.5"), String.class, defaultQueue); //$NON-NLS-1$
 
-		MosaicLogger.getLogger().trace(
-				"The connector proxy is using the exchange :" + exchange);
-
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);
 		factory.setPort(amqpServerPort);
@@ -94,7 +92,7 @@ public class ConnectorProxy {
 			commChannel = connection.createChannel();
 
 			// create exchange and queue
-			commChannel.exchangeDeclare(exchange, "direct", true); //$NON-NLS-1$
+			commChannel.exchangeDeclare(exchange, "direct", false, false, null); //$NON-NLS-1$
 			// commChannel.queueDeclare(routingKey, true, false, false, null);
 			String queueName = commChannel.queueDeclare().getQueue();
 			commChannel.queueBind(queueName, exchange, routingKey);
@@ -125,8 +123,10 @@ public class ConnectorProxy {
 
 	/**
 	 * Destroys the proxy, freeing up any allocated resources.
+	 * 
+	 * @throws Throwable
 	 */
-	public void destroy() {
+	public synchronized void destroy() throws Throwable {
 		// close connection
 		try {
 			if (commChannel != null && commChannel.isOpen()) {
@@ -141,6 +141,7 @@ public class ConnectorProxy {
 							+ e.getMessage(), e));
 		}
 		responseReactor.destroy();
+		MosaicLogger.getLogger().trace("ConnectorProxy destroyed.");
 	}
 
 	/**
@@ -150,7 +151,7 @@ public class ConnectorProxy {
 	 *            the request
 	 * @throws IOException
 	 */
-	protected void sendRequest(byte[] request) throws IOException {
+	protected synchronized void sendRequest(byte[] request) throws IOException {
 		commChannel.basicPublish(exchange, routingKey, null, request);
 	}
 

@@ -7,7 +7,7 @@ package mosaic.interop.idl.amqp;
 
 @SuppressWarnings("all")
 public enum OperationNames {
-	OPEN_CONNECTION, CLOSE_CONNECTION, DECLARE_EXCHANGE, DECLARE_QUEUE, BIND_QUEUE, CONSUME, PUBLISH, GET, ACK, CANCEL;
+	DECLARE_EXCHANGE, DECLARE_QUEUE, BIND_QUEUE, CONSUME, PUBLISH, GET, ACK, CANCEL;
 	public static final org.apache.avro.Schema SCHEMA$ = org.apache.avro.Schema
-			.parse("{\"type\":\"enum\",\"name\":\"OperationNames\",\"namespace\":\"mosaic.interop.idl.amqp\",\"symbols\":[\"OPEN_CONNECTION\",\"CLOSE_CONNECTION\",\"DECLARE_EXCHANGE\",\"DECLARE_QUEUE\",\"BIND_QUEUE\",\"CONSUME\",\"PUBLISH\",\"GET\",\"ACK\",\"CANCEL\"]}");
+			.parse("{\"type\":\"enum\",\"name\":\"OperationNames\",\"namespace\":\"mosaic.interop.idl.amqp\",\"symbols\":[\"DECLARE_EXCHANGE\",\"DECLARE_QUEUE\",\"BIND_QUEUE\",\"CONSUME\",\"PUBLISH\",\"GET\",\"ACK\",\"CANCEL\"]}");
 }
