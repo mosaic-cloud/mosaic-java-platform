@@ -3,7 +3,6 @@ package eu.mosaic_cloud.components.core;
 
 
 import java.nio.ByteBuffer;
-import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
@@ -11,23 +10,25 @@ import com.google.common.base.Preconditions;
 public final class ComponentCallRequest
 		extends ComponentMessage
 {
-	private ComponentCallRequest (final Map<String, ? extends Object> metaData, final ByteBuffer data, final ComponentCallReference reference)
+	private ComponentCallRequest (final String operation, final Object inputs, final ByteBuffer data, final ComponentCallReference reference)
 	{
 		super ();
-		Preconditions.checkNotNull (metaData);
+		Preconditions.checkNotNull (operation);
 		Preconditions.checkNotNull (data);
 		Preconditions.checkNotNull (reference);
-		this.metaData = metaData;
+		this.operation = operation;
+		this.inputs = inputs;
 		this.data = data;
 		this.reference = reference;
 	}
 	
 	public final ByteBuffer data;
-	public final Map<String, ? extends Object> metaData;
+	public final Object inputs;
+	public final String operation;
 	public final ComponentCallReference reference;
 	
-	public static final ComponentCallRequest create (final Map<String, ? extends Object> metaData, final ByteBuffer data, final ComponentCallReference reference)
+	public static final ComponentCallRequest create (final String operation, final Object inputs, final ByteBuffer data, final ComponentCallReference reference)
 	{
-		return (new ComponentCallRequest (metaData, data, reference));
+		return (new ComponentCallRequest (operation, inputs, data, reference));
 	}
 }

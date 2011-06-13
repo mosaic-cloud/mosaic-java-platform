@@ -4,6 +4,7 @@ package eu.mosaic_cloud.components.examples.abacus;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.Pipe;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Strings;
@@ -12,14 +13,11 @@ import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
-import eu.mosaic_cloud.components.examples.abacus.AbacusComponentCallbacks.ReplyMetaData;
-import eu.mosaic_cloud.components.examples.abacus.AbacusComponentCallbacks.RequestMetaData;
 import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponent;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.json.tools.DefaultJsonMapper;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -53,17 +51,14 @@ public class AbacusTest
 		for (int index = 0; index < AbacusTest.tries; index++) {
 			final double operandA = Math.random () * 10;
 			final double operandB = Math.random () * 10;
-			final RequestMetaData requestMetaData = new RequestMetaData ("+", operandA, operandB);
-			final ComponentCallRequest request = ComponentCallRequest.create (DefaultJsonMapper.defaultInstance.encode (requestMetaData, RequestMetaData.class), ByteBuffer.allocate (0), ComponentCallReference.create ());
+			final ComponentCallRequest request = ComponentCallRequest.create ("+", Arrays.asList (Double.valueOf (operandA), Double.valueOf (operandB)), ByteBuffer.allocate (0), ComponentCallReference.create ());
 			clientComponent.call (peer, request);
 			final ComponentCallReply reply = (ComponentCallReply) clientCallbacks.queue.poll (AbacusTest.pollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (reply);
-			final ReplyMetaData replyMetaData = DefaultJsonMapper.defaultInstance.decode (reply.metaData, ReplyMetaData.class);
-			Assert.assertNotNull (replyMetaData.ok);
-			Assert.assertNotNull (replyMetaData.outcome);
+			Assert.assertTrue (reply.ok);
+			Assert.assertNotNull (reply.outputsOrError);
 			Assert.assertEquals (request.reference, reply.reference);
-			Assert.assertTrue (replyMetaData.ok.booleanValue ());
-			Assert.assertTrue ((operandA + operandB) == replyMetaData.outcome.doubleValue ());
+			Assert.assertTrue ((operandA + operandB) == ((Number) reply.outputsOrError).doubleValue ());
 		}
 		pipe1.sink ().close ();
 		pipe2.sink ().close ();

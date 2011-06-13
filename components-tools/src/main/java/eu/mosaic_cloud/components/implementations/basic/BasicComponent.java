@@ -3,7 +3,6 @@ package eu.mosaic_cloud.components.implementations.basic;
 
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import com.google.common.base.Preconditions;
@@ -100,8 +99,8 @@ public final class BasicComponent
 	private static enum Action
 	{
 		Call (),
-		Cast (),
-		Return ();
+		CallReturn (),
+		Cast ();
 	}
 	
 	private static final class Component
@@ -190,8 +189,8 @@ public final class BasicComponent
 						final Action action;
 						if (Token.Call.string.equals (actionValue))
 							action = Action.Call;
-						else if (Token.Return.string.equals (actionValue))
-							action = Action.Return;
+						else if (Token.CallReturn.string.equals (actionValue))
+							action = Action.CallReturn;
 						else if (Token.Cast.string.equals (actionValue))
 							action = Action.Cast;
 						else
@@ -199,41 +198,53 @@ public final class BasicComponent
 						Preconditions.checkNotNull (action, "invalid action attribute `%s`", actionValue);
 						switch (action) {
 							case Call : {
+								final Object operationValue = message.metaData.get (Token.Operation.string);
+								Preconditions.checkNotNull (operationValue, "missing operation attribute");
+								Preconditions.checkArgument (operationValue instanceof String, "invalid operation attribute `%s`", operationValue);
 								final Object correlationValue = message.metaData.get (Token.Correlation.string);
 								Preconditions.checkNotNull (correlationValue, "missing correlation attribute");
 								Preconditions.checkArgument (correlationValue instanceof String, "invalid correlation attribute `%s`", correlationValue);
 								final String correlation = (String) correlationValue;
-								final Object metaDataValue = message.metaData.get (Token.MetaData.string);
-								Preconditions.checkNotNull (metaDataValue, "missing meta-data attribute");
-								Preconditions.checkArgument (metaDataValue instanceof Map, "invalid meta-data attribute `%s`", metaDataValue);
-								final Map<String, ? extends Object> metaData = (Map<String, ? extends Object>) metaDataValue;
+								Preconditions.checkArgument (message.metaData.containsKey (Token.Inputs.string), "missing meta-data attribute");
+								final Object inputsValue = message.metaData.get (Token.Inputs.string);
 								Preconditions.checkArgument (!this.inboundCalls.inverse ().containsKey (correlation), "coliding correlation attribute `%s`", correlation);
-								final ComponentCallRequest request = ComponentCallRequest.create (metaData, message.data.asReadOnlyBuffer (), ComponentCallReference.create ());
+								final ComponentCallRequest request = ComponentCallRequest.create ((String) operationValue, inputsValue, message.data.asReadOnlyBuffer (), ComponentCallReference.create ());
 								this.inboundCalls.put (request.reference, correlation);
 								this.callbackTrigger.called (this.facade, request);
 							}
 								break;
-							case Return : {
+							case CallReturn : {
 								final Object correlationValue = message.metaData.get (Token.Correlation.string);
 								Preconditions.checkNotNull (correlationValue, "missing correlation attribute");
 								Preconditions.checkArgument (correlationValue instanceof String, "invalid correlation attribute `%s`", correlationValue);
 								final String correlation = (String) correlationValue;
-								final Object metaDataValue = message.metaData.get (Token.MetaData.string);
-								Preconditions.checkNotNull (metaDataValue, "missing meta-data attribute");
-								Preconditions.checkArgument (metaDataValue instanceof Map, "invalid meta-data attribute `%s`", metaDataValue);
-								final Map<String, ? extends Object> metaData = (Map<String, ? extends Object>) metaDataValue;
-								Preconditions.checkArgument (this.outboundCalls.inverse ().containsKey (correlation), "mismatched correlation attribute `%s`", correlation);
-								final ComponentCallReference reference = this.outboundCalls.inverse ().remove (correlation);
-								final ComponentCallReply reply = ComponentCallReply.create (metaData, message.data.asReadOnlyBuffer (), reference);
+								final Object okValue = message.metaData.get (Token.Ok.string);
+								Preconditions.checkNotNull (okValue, "missing ok attribute");
+								Preconditions.checkArgument (okValue instanceof Boolean, "invalid ok attribute `%s`", okValue);
+								final ComponentCallReply reply;
+								if (Boolean.TRUE.equals (okValue)) {
+									final Object outputsValue = message.metaData.get (Token.Outputs.string);
+									Preconditions.checkArgument (message.metaData.containsKey (Token.Outputs.string), "missing outputs attribute");
+									Preconditions.checkArgument (this.outboundCalls.inverse ().containsKey (correlation), "mismatched correlation attribute `%s`", correlation);
+									final ComponentCallReference reference = this.outboundCalls.inverse ().remove (correlation);
+									reply = ComponentCallReply.create (true, outputsValue, message.data.asReadOnlyBuffer (), reference);
+								} else {
+									final Object errorValue = message.metaData.get (Token.Error.string);
+									Preconditions.checkArgument (message.metaData.containsKey (Token.Error.string), "missing error attribute");
+									Preconditions.checkArgument (this.outboundCalls.inverse ().containsKey (correlation), "mismatched correlation attribute `%s`", correlation);
+									final ComponentCallReference reference = this.outboundCalls.inverse ().remove (correlation);
+									reply = ComponentCallReply.create (false, errorValue, message.data.asReadOnlyBuffer (), reference);
+								}
 								this.callbackTrigger.replied (this.facade, reply);
 							}
 								break;
 							case Cast : {
-								final Object metaDataValue = message.metaData.get (Token.MetaData.string);
-								Preconditions.checkNotNull (metaDataValue, "missing meta-data attribute");
-								Preconditions.checkArgument (metaDataValue instanceof Map, "invalid meta-data attribute `%s`", metaDataValue);
-								final Map<String, ? extends Object> metaData = (Map<String, ? extends Object>) metaDataValue;
-								final ComponentCastRequest request = ComponentCastRequest.create (metaData, message.data.asReadOnlyBuffer ());
+								final Object operationValue = message.metaData.get (Token.Operation.string);
+								Preconditions.checkNotNull (operationValue, "missing operation attribute");
+								Preconditions.checkArgument (operationValue instanceof String, "invalid operation attribute `%s`", operationValue);
+								Preconditions.checkArgument (message.metaData.containsKey (Token.Inputs.string), "missing meta-data attribute");
+								final Object inputsValue = message.metaData.get (Token.Inputs.string);
+								final ComponentCastRequest request = ComponentCastRequest.create ((String) operationValue, inputsValue, message.data.asReadOnlyBuffer ());
 								this.callbackTrigger.casted (this.facade, request);
 							}
 								break;
@@ -303,8 +314,9 @@ public final class BasicComponent
 				final HashMap<String, Object> metaData = new HashMap<String, Object> ();
 				metaData.put (Token.Action.string, Token.Call.string);
 				metaData.put (Token.Component.string, identifier.string);
+				metaData.put (Token.Operation.string, request.operation);
 				metaData.put (Token.Correlation.string, correlation);
-				metaData.put (Token.MetaData.string, request.metaData);
+				metaData.put (Token.Inputs.string, request.inputs);
 				final ChannelMessage message = ChannelMessage.create (ChannelMessageType.Exchange, metaData, request.data);
 				this.outboundCalls.put (request.reference, correlation);
 				this.channel.send (message);
@@ -319,7 +331,8 @@ public final class BasicComponent
 				final HashMap<String, Object> metaData = new HashMap<String, Object> ();
 				metaData.put (Token.Action.string, Token.Cast.string);
 				metaData.put (Token.Component.string, identifier.string);
-				metaData.put (Token.MetaData.string, request.metaData);
+				metaData.put (Token.Operation.string, request.operation);
+				metaData.put (Token.Inputs.string, request.inputs);
 				final ChannelMessage message = ChannelMessage.create (ChannelMessageType.Exchange, metaData, request.data);
 				this.channel.send (message);
 			}
@@ -332,9 +345,13 @@ public final class BasicComponent
 				Preconditions.checkArgument (this.inboundCalls.containsKey (reply.reference));
 				final String correlation = this.inboundCalls.remove (reply.reference);
 				final HashMap<String, Object> metaData = new HashMap<String, Object> ();
-				metaData.put (Token.Action.string, Token.Return.string);
+				metaData.put (Token.Action.string, Token.CallReturn.string);
 				metaData.put (Token.Correlation.string, correlation);
-				metaData.put (Token.MetaData.string, reply.metaData);
+				metaData.put (Token.Ok.string, Boolean.valueOf (reply.ok));
+				if (reply.ok)
+					metaData.put (Token.Outputs.string, reply.outputsOrError);
+				else
+					metaData.put (Token.Error.string, reply.outputsOrError);
 				final ChannelMessage message = ChannelMessage.create (ChannelMessageType.Exchange, metaData, reply.data.asReadOnlyBuffer ());
 				this.channel.send (message);
 			}
@@ -355,12 +372,16 @@ public final class BasicComponent
 	{
 		Action ("action"),
 		Call ("call"),
+		CallReturn ("call-return"),
 		Cast ("cast"),
 		Component ("component"),
 		Correlation ("correlation"),
-		MetaData ("meta-data"),
-		Request ("request"),
-		Return ("return");
+		Error ("error"),
+		Inputs ("inputs"),
+		Ok ("ok"),
+		Operation ("operation"),
+		Outputs ("outputs"),
+		Request ("request");
 		Token (final String string)
 		{
 			Preconditions.checkNotNull (string);

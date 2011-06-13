@@ -37,17 +37,17 @@ public class RandomMessageGenerator
 	public ComponentCallReply generateComponentCallReply (final ComponentCallRequest request)
 	{
 		Preconditions.checkNotNull (request);
-		return (ComponentCallReply.create (request.metaData, request.data, request.reference));
+		return (ComponentCallReply.create (true, request.inputs, request.data, request.reference));
 	}
 	
 	public ComponentCallRequest generateComponentCallRequest ()
 	{
-		return (ComponentCallRequest.create (this.generateObject (), this.generateData (), ComponentCallReference.create ()));
+		return (ComponentCallRequest.create (Long.toString (this.random.nextLong ()), this.generateObject (), this.generateData (), ComponentCallReference.create ()));
 	}
 	
 	public ComponentCastRequest generateComponentCastRequest ()
 	{
-		return (ComponentCastRequest.create (this.generateObject (), this.generateData ()));
+		return (ComponentCastRequest.create (Long.toString (this.random.nextLong ()), this.generateObject (), this.generateData ()));
 	}
 	
 	public ByteBuffer generateData ()

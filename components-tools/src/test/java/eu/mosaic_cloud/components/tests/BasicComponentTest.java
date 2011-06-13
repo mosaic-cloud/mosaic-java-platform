@@ -41,16 +41,17 @@ public final class BasicComponentTest
 		for (int index = 0; index < BasicComponentTest.tries; index++) {
 			final ComponentCallRequest outboundRequest = RandomMessageGenerator.defaultInstance.generateComponentCallRequest ();
 			component.call (peer, outboundRequest);
-			final ComponentCallRequest inboundRequest = (ComponentCallRequest) callbacks.queue.poll (BasicComponentTest.pollTimeout, TimeUnit.MILLISECONDS);
+			final ComponentCallRequest inboundRequest = (ComponentCallRequest) callbacks.queue.poll (BasicComponentTest.pollTimeout * 10000, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundRequest);
-			Assert.assertEquals (outboundRequest.metaData, inboundRequest.metaData);
+			Assert.assertEquals (outboundRequest.operation, inboundRequest.operation);
+			Assert.assertEquals (outboundRequest.inputs, inboundRequest.inputs);
 			Assert.assertEquals (outboundRequest.data, inboundRequest.data);
 			final ComponentCallReply outboundReply = RandomMessageGenerator.defaultInstance.generateComponentCallReply (inboundRequest);
 			component.reply (outboundReply);
 			final ComponentCallReply inboundReply = (ComponentCallReply) callbacks.queue.poll (BasicComponentTest.pollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundReply);
 			Assert.assertEquals (outboundRequest.reference, inboundReply.reference);
-			Assert.assertEquals (outboundRequest.metaData, inboundReply.metaData);
+			Assert.assertEquals (outboundRequest.inputs, inboundReply.outputsOrError);
 			Assert.assertEquals (outboundRequest.data, inboundReply.data);
 		}
 		pipe.sink ().close ();
