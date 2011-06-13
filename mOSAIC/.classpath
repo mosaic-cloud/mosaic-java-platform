@@ -21,5 +21,6 @@
 	<classpathentry kind="lib" path="lib/jmock-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/netty-3.2.4.Final.jar"/>
 	<classpathentry kind="lib" path="lib/memcached-2.7-2-mosaic.jar"/>
+	<classpathentry kind="lib" path="lib/jedis-2.0.0.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

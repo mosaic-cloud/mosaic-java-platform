@@ -15,8 +15,8 @@ kvstore.interop.resp.amqp.queue=memcached_responses
 
 kvstore.memcached.host_1=nanosim-g.ieat.ro
 kvstore.memcached.port_1=11211
-kvstore.memcached.driver_threads=10
-kvstore.memcached.user=mosaic
-kvstore.memcached.passwd=mosaic
-kvstore.memcached.bucket=mosaic
+kvstore.kvstore.driver_threads=10
+kvstore.kvstore.user=mosaic
+kvstore.kvstore.passwd=mosaic
+kvstore.kvstore.bucket=mosaic
 

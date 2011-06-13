@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import com.rabbitmq.client.ConnectionFactory;
+
+import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.core.utils.SerDesUtils;
+import mosaic.driver.ConfigProperties;
 import mosaic.driver.IResourceDriver;
 import mosaic.driver.interop.AbstractDriverStub;
 import mosaic.driver.interop.DriverConnectionData;
@@ -71,8 +75,7 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 	 * @return the AMQP driver stub
 	 */
 	public static AmqpStub create(IConfiguration config) {
-		DriverConnectionData cData = AbstractDriverStub
-				.readConnectionData(config);
+		DriverConnectionData cData = AmqpStub.readConnectionData(config);
 		AmqpStub stub = null;
 		synchronized (AbstractDriverStub.lock) {
 			stub = stubs.get(cData);
@@ -222,6 +225,38 @@ public class AmqpStub extends AbstractDriverStub implements Runnable {
 					"Unknown amqp message: " + opName.toString());
 			break;
 		}
+	}
+
+	/**
+	 * Reads resource connection data from the configuration data.
+	 * 
+	 * @param config
+	 *            the configuration data
+	 * @return resource connection data
+	 */
+	protected static DriverConnectionData readConnectionData(
+			IConfiguration config) {
+		String resourceHost = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AmqpDriver.1"), String.class, //$NON-NLS-1$
+				ConnectionFactory.DEFAULT_HOST);
+		int resourcePort = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AmqpDriver.2"), Integer.class, //$NON-NLS-1$
+				ConnectionFactory.DEFAULT_AMQP_PORT);
+		String amqpServerUser = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AmqpDriver.3"), String.class, //$NON-NLS-1$
+				ConnectionFactory.DEFAULT_USER);
+		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AmqpDriver.4"), String.class, //$NON-NLS-1$
+				ConnectionFactory.DEFAULT_PASS);
+
+		DriverConnectionData cData = null;
+		if (amqpServerUser.equals(ConnectionFactory.DEFAULT_USER)
+				&& amqpServerPasswd.equals(ConnectionFactory.DEFAULT_PASS))
+			cData = new DriverConnectionData(resourceHost, resourcePort, "AMQP");
+		else
+			cData = new DriverConnectionData(resourceHost, resourcePort,
+					"AMQP", amqpServerUser, amqpServerPasswd);
+		return cData;
 	}
 
 	/**

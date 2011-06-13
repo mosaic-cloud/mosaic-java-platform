@@ -9,22 +9,5 @@ import mosaic.core.ops.IOperationType;
  * 
  */
 public enum MemcachedOperations implements IOperationType {
-	SET, ADD, REPLACE, APPEND, PREPEND, CAS, GET, GET_BULK, DELETE;
-
-	private static final MemcachedOperations[] copyOfValues = values();
-
-	/**
-	 * Tests if given operation is supported by driver.
-	 * 
-	 * @param operation
-	 *            name of operation
-	 * @return <code>true</code> if operation is supported
-	 */
-	public static boolean isOperation(String operation) {
-		for (MemcachedOperations op : copyOfValues) {
-			if (op.name().equalsIgnoreCase(operation))
-				return true;
-		}
-		return false;
-	}
+	ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK, LIST, GET, SET;
 }

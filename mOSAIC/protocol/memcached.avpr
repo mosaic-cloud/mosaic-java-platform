@@ -4,7 +4,7 @@
   "types" : [ {
     "type" : "enum",
     "name" : "OperationNames",
-    "symbols" : [ "SET", "ADD", "REPLACE", "APPEND", "PREPEND", "CAS", "GET", "GET_BULK", "DELETE" ]
+    "symbols" : [ "SET", "ADD", "REPLACE", "APPEND", "PREPEND", "CAS", "GET", "GET_BULK", "DELETE", "LIST" ]
   }, {
     "type" : "error",
     "name" : "MemcachedError",
@@ -43,6 +43,22 @@
     } ]
   }, {
     "type" : "record",
+    "name" : "SetOperation",
+    "fields" : [ {
+      "name" : "token",
+      "type" : "CompletionToken"
+    }, {
+      "name" : "name",
+      "type" : "OperationNames"
+    }, {
+      "name" : "key",
+      "type" : "string"
+    }, {
+      "name" : "data",
+      "type" : "bytes"
+    } ]
+  }, {
+    "type" : "record",
     "name" : "GetOperation",
     "fields" : [ {
       "name" : "token",
@@ -72,10 +88,20 @@
     } ]
   }, {
     "type" : "record",
+    "name" : "ListOperation",
+    "fields" : [ {
+      "name" : "token",
+      "type" : "CompletionToken"
+    }, {
+      "name" : "name",
+      "type" : "OperationNames"
+    } ]
+  }, {
+    "type" : "record",
     "name" : "Operation",
     "fields" : [ {
       "name" : "operation",
-      "type" : [ "StoreOperation", "GetOperation", "DeleteOperation" ]
+      "type" : [ "StoreOperation", "SetOperation", "GetOperation", "DeleteOperation", "ListOperation" ]
     } ]
   }, {
     "type" : "record",
@@ -94,6 +120,9 @@
       "type" : [ "MemcachedError", "boolean", {
         "type" : "map",
         "values" : "bytes"
+      }, {
+        "type" : "array",
+        "items" : "string"
       } ]
     } ]
   } ],

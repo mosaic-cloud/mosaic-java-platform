@@ -1,13 +1,13 @@
-package mosaic.driver.interop.kvstore.memcached;
+package mosaic.driver.interop.kvstore;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
@@ -15,11 +15,14 @@ import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.core.utils.SerDesUtils;
+import mosaic.driver.ConfigProperties;
+import mosaic.driver.DriverNotFoundException;
 import mosaic.driver.IResourceDriver;
 import mosaic.driver.interop.AbstractDriverStub;
 import mosaic.driver.interop.DriverConnectionData;
 import mosaic.driver.interop.ResponseTransmitter;
-import mosaic.driver.interop.kvstore.KeyValueStub;
+import mosaic.driver.kvstore.BaseKeyValueDriver;
+import mosaic.driver.kvstore.KeyValueDriverFactory;
 import mosaic.driver.kvstore.KeyValueOperations;
 import mosaic.driver.kvstore.memcached.MemcachedDriver;
 import mosaic.interop.idl.kvstore.CompletionToken;
@@ -32,18 +35,19 @@ import mosaic.interop.idl.kvstore.SetOperation;
 import mosaic.interop.idl.kvstore.StoreOperation;
 
 /**
- * Stub for the driver for key-value distributed storage systems implementing
- * the memcached protocol. This is used for communicating with a memcached
- * driver.
+ * Stub for the driver for key-value distributed storage systems. This is used
+ * for communicating with a key-value driver.
  * 
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedStub extends KeyValueStub implements Runnable {
-	private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub>();
+public class KeyValueStub extends AbstractDriverStub implements Runnable {
+	private static final String DEFAULT_QUEUE_NAME = "kvstore_requests"; //$NON-NLS-1$
+	private static final String DEFAULT_EXCHANGE_NAME = "kvstore"; //$NON-NLS-1$
+	private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub>();
 
 	/**
-	 * Creates a new stub for the Memcached driver.
+	 * Creates a new stub for the key-value store driver.
 	 * 
 	 * @param config
 	 *            the configuration data for the stub and driver
@@ -53,33 +57,40 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 	 * @param driver
 	 *            the driver used for processing requests submitted to this stub
 	 */
-	public MemcachedStub(IConfiguration config,
-			ResponseTransmitter transmitter, IResourceDriver driver) {
-		super(config, transmitter, driver);
+	public KeyValueStub(IConfiguration config, ResponseTransmitter transmitter,
+			IResourceDriver driver) {
+		super(config, DEFAULT_EXCHANGE_NAME, DEFAULT_QUEUE_NAME, transmitter,
+				driver);
 
 	}
 
 	/**
-	 * Returns a stub for the Memcached driver.
+	 * Returns a stub for the key-value store driver.
 	 * 
 	 * @param config
 	 *            the configuration data for the stub and driver
-	 * @return the Memcached driver stub
+	 * @return the driver stub
 	 */
-	public static MemcachedStub create(IConfiguration config) {
+	public static KeyValueStub create(IConfiguration config) {
 		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
-		MemcachedStub stub = null;
+		KeyValueStub stub = null;
 		synchronized (AbstractDriverStub.lock) {
 			stub = stubs.get(cData);
 			try {
 				if (stub == null) {
 					MosaicLogger.getLogger().trace(
-							"MemcachedStub: create new stub.");
+							"KeyValueStub: create new stub."); //$NON-NLS-1$
 
-					MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter(
+					KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter(
 							config);
-					MemcachedDriver driver = MemcachedDriver.create(config);
-					stub = new MemcachedStub(config, transmitter, driver);
+					String driverName = ConfigUtils
+							.resolveParameter(
+									config,
+									ConfigProperties
+											.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+					BaseKeyValueDriver driver = KeyValueDriverFactory
+							.createDriver(driverName, config);
+					stub = new KeyValueStub(config, transmitter, driver);
 					stubs.put(cData, stub);
 					// FIXME this will be removed - the driver will be started
 					// from somewhere else
@@ -87,10 +98,10 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 					driverThread.start();
 				} else
 					MosaicLogger.getLogger().trace(
-							"MemcachedStub: use existing stub.");
-			} catch (IOException e) {
+							"MemcachedStub: use existing stub."); //$NON-NLS-1$
+			} catch (DriverNotFoundException e) {
 				ExceptionTracer.traceDeferred(new ConnectionException(
-						"The Memcached proxy cannot connect to the driver: "
+						"The required key-value driver cannot be provided: " //$NON-NLS-1$
 								+ e.getMessage(), e));
 			}
 		}
@@ -105,8 +116,8 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 	@SuppressWarnings("unchecked")
 	protected void startOperation(byte[] message) throws IOException,
 			ClassNotFoundException {
-		CompletionToken token = null;
-		OperationNames opName = null;
+		CompletionToken token;
+		OperationNames opName;
 		String key;
 
 		Operation op = new Operation();
@@ -115,72 +126,41 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 
 		MemcachedDriver driver = super.getDriver(MemcachedDriver.class);
 
-		if (ob instanceof StoreOperation) {
+		if (ob instanceof SetOperation) {
 			StoreOperation sop = (StoreOperation) ob;
 			token = (CompletionToken) sop.get(0);
 			opName = (OperationNames) sop.get(1);
 			key = ((CharSequence) sop.get(2)).toString();
-			int exp = (Integer) sop.get(3);
-			ByteBuffer dataBytes = (ByteBuffer) sop.get(4);
+			ByteBuffer dataBytes = (ByteBuffer) sop.get(3);
 			Object data = SerDesUtils.toObject(dataBytes.array());
 
 			MosaicLogger.getLogger().trace(
-					"MemcachedStub - Received request for " + opName.toString()
-							+ " - request id: " + token.get(0) + " client id: "
+					"KeyValueStub - Received request for " + opName.toString() //$NON-NLS-1$
+							+ " - request id: " + token.get(0) + " client id: " //$NON-NLS-1$ //$NON-NLS-2$
 							+ token.get(1));
 
 			// execute operation
 			IResult<Boolean> resultStore = null;
 			DriverOperationFinishedHandler storeCallback = new DriverOperationFinishedHandler(
 					token);
-			KeyValueOperations operation = KeyValueOperations.ADD;
-			switch (opName) {
-			case ADD:
-				resultStore = driver.invokeAddOperation(key, exp, data,
+			if (opName.equals(OperationNames.SET)) {
+				resultStore = driver.invokeSetOperation(key, data,
 						storeCallback);
-				break;
-			case APPEND:
-				resultStore = driver.invokeAppendOperation(key, data,
-						storeCallback);
-				operation = KeyValueOperations.APPEND;
-				break;
-			case CAS:
-				resultStore = driver.invokeCASOperation(key, data,
-						storeCallback);
-				operation = KeyValueOperations.CAS;
-				break;
-			case PREPEND:
-				resultStore = driver.invokePrependOperation(key, data,
-						storeCallback);
-				operation = KeyValueOperations.PREPEND;
-				break;
-			case REPLACE:
-				resultStore = driver.invokeReplaceOperation(key, exp, data,
-						storeCallback);
-				operation = KeyValueOperations.REPLACE;
-				break;
-			case SET:
-				resultStore = driver.invokeSetOperation(key, exp, data,
-						storeCallback);
-				operation = KeyValueOperations.SET;
-				break;
-			default:
-				MosaicLogger.getLogger()
-						.error("Unknown memcached store message: "
-								+ opName.toString());
+			} else {
+				MosaicLogger.getLogger().error(
+						"Unknown store message: " + opName.toString()); //$NON-NLS-1$
 				driver.handleUnsupportedOperationError(opName.toString(),
 						storeCallback);
-				break;
 			}
-			storeCallback.setDetails(operation, resultStore);
+			storeCallback.setDetails(KeyValueOperations.SET, resultStore);
 		} else if (ob instanceof DeleteOperation) {
 			DeleteOperation dop = (DeleteOperation) ob;
 			token = (CompletionToken) dop.get(0);
 			opName = (OperationNames) dop.get(1);
 			key = ((CharSequence) dop.get(2)).toString();
 			MosaicLogger.getLogger().trace(
-					"Received request for " + opName.toString() + " - id: "
-							+ token.get(0) + " key: " + key);
+					"Received request for " + opName.toString() + " - id: " //$NON-NLS-1$ //$NON-NLS-2$
+							+ token.get(0) + " key: " + key); //$NON-NLS-1$
 
 			DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler(
 					token);
@@ -193,8 +173,7 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 				driver.handleUnsupportedOperationError(opName.toString(),
 						delCallback);
 				MosaicLogger.getLogger().error(
-						"Unknown memcached delete message: "
-								+ opName.toString());
+						"Unknown delete message: " + opName.toString()); //$NON-NLS-1$
 			}
 		} else if (ob instanceof GetOperation) {
 			GetOperation gop = (GetOperation) ob;
@@ -203,55 +182,82 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 			List<CharSequence> keys = (List<CharSequence>) gop.get(2);
 
 			MosaicLogger.getLogger().trace(
-					"Received request for " + opName.toString() + " - id: "
+					"Received request for " + opName.toString() + " - id: " //$NON-NLS-1$ //$NON-NLS-2$
 							+ token.get(0));
 
-			switch (opName) {
-			case GET:
+			if (opName.equals(OperationNames.GET)) {
 				DriverOperationFinishedHandler getCallback = new DriverOperationFinishedHandler(
 						token);
 				IResult<Object> resultGet = driver.invokeGetOperation(
 						keys.get(0).toString(), getCallback);
 				getCallback.setDetails(KeyValueOperations.GET, resultGet);
-				break;
-			case GET_BULK:
-				List<String> strKeys = new ArrayList<String>();
-				for (CharSequence kcs : keys) {
-					strKeys.add(kcs.toString());
-				}
-				DriverOperationFinishedHandler getBCallback = new DriverOperationFinishedHandler(
-						token);
-				IResult<Map<String, Object>> resultGetBulk = driver
-						.invokeGetBulkOperation(strKeys, getBCallback);
-				getBCallback.setDetails(KeyValueOperations.GET_BULK,
-						resultGetBulk);
-				break;
-			default:
+			} else {
 				DriverOperationFinishedHandler callback = new DriverOperationFinishedHandler(
 						token);
 				driver.handleUnsupportedOperationError(opName.toString(),
 						callback);
 				MosaicLogger.getLogger().error(
-						"Unknown memcached get message: " + opName.toString());
-				break;
+						"Unknown get message: " + opName.toString()); //$NON-NLS-1$
 			}
-		} else {
-			if (ob instanceof SetOperation) {
-				SetOperation opp = (SetOperation) ob;
-				token = (CompletionToken) opp.get(0);
-				opName = (OperationNames) opp.get(1);
-			} else if (ob instanceof ListOperation) {
-				ListOperation opp = (ListOperation) ob;
-				token = (CompletionToken) opp.get(0);
-				opName = (OperationNames) opp.get(1);
-			}
+		} else if (ob instanceof ListOperation) {
+			ListOperation lop = (ListOperation) ob;
+			token = (CompletionToken) lop.get(0);
+			opName = (OperationNames) lop.get(1);
 
-			DriverOperationFinishedHandler callback = new DriverOperationFinishedHandler(
+			MosaicLogger.getLogger().trace(
+					"Received request for " + opName.toString() + " - id: " //$NON-NLS-1$ //$NON-NLS-2$
+							+ token.get(0));
+			DriverOperationFinishedHandler listCallback = new DriverOperationFinishedHandler(
 					token);
-			driver.handleUnsupportedOperationError(opName.toString(), callback);
-			MosaicLogger.getLogger().error(
-					"Unknown memcached get message: " + opName.toString());
+			if (opName.equals(OperationNames.LIST)) {
+				IResult<List<String>> resultList = driver
+						.invokeListOperation(listCallback);
+				listCallback.setDetails(KeyValueOperations.LIST, resultList);
+
+			} else {
+				driver.handleUnsupportedOperationError(opName.toString(),
+						listCallback);
+				MosaicLogger.getLogger().error(
+						"Unknown list message: " + opName.toString()); //$NON-NLS-1$
+			}
 		}
+	}
+
+	/**
+	 * Reads resource connection data from the configuration data.
+	 * 
+	 * @param config
+	 *            the configuration data
+	 * @return resource connection data
+	 */
+	protected static DriverConnectionData readConnectionData(
+			IConfiguration config) {
+		String resourceHost = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.0"), String.class, //$NON-NLS-1$
+				"localhost"); //$NON-NLS-1$
+		int resourcePort = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.1"), Integer.class, //$NON-NLS-1$
+				0);
+		String driver = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+		String user = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.5"), String.class, //$NON-NLS-1$
+				""); //$NON-NLS-1$
+		String passwd = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.4"), String.class, //$NON-NLS-1$
+				""); //$NON-NLS-1$
+		// String bucket = ConfigUtils.resolveParameter(config,
+		//				ConfigProperties.getString("KVStoreDriver.3"), String.class, //$NON-NLS-1$
+		// "");
+		DriverConnectionData cData = null;
+		if (user.equals("") && passwd.equals("")) //$NON-NLS-1$ //$NON-NLS-2$
+			cData = new DriverConnectionData(resourceHost, resourcePort, driver);
+		else
+			cData = new DriverConnectionData(resourceHost, resourcePort,
+					driver, user, passwd);
+		return cData;
 	}
 
 	/**
@@ -268,15 +274,15 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 		private KeyValueOperations operation;
 		private final CompletionToken complToken;
 		private CountDownLatch signal;
-		private MemcachedDriver driver;
-		private MemcachedResponseTransmitter transmitter;
+		private BaseKeyValueDriver driver;
+		private KeyValueResponseTransmitter transmitter;
 
 		public DriverOperationFinishedHandler(CompletionToken complToken) {
 			this.complToken = complToken;
 			this.signal = new CountDownLatch(1);
-			this.driver = MemcachedStub.this.getDriver(MemcachedDriver.class);
-			this.transmitter = MemcachedStub.this
-					.getResponseTransmitter(MemcachedResponseTransmitter.class);
+			this.driver = KeyValueStub.this.getDriver(MemcachedDriver.class);
+			this.transmitter = KeyValueStub.this
+					.getResponseTransmitter(KeyValueResponseTransmitter.class);
 		}
 
 		public void setDetails(KeyValueOperations op, IResult<?> result) {
@@ -296,7 +302,7 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 
 			if (operation.equals(KeyValueOperations.GET)) {
 				Map<String, Object> resMap = new HashMap<String, Object>();
-				resMap.put("dummy", response);
+				resMap.put("dummy", response); //$NON-NLS-1$
 				transmitter.sendResponse(complToken, operation, resMap, false);
 			} else {
 				transmitter

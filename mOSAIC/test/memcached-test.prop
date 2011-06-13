@@ -1,11 +1,12 @@
-memcached.connector_threads=10
+kvstore.connector_threads=10
 
 memcached.host_1=localhost
 memcached.port_1=11210
-memcached.user=mosaic
-memcached.passwd=mosaic
-memcached.bucket=mosaic
-memcached.driver_threads=10
+kvstore.user=mosaic
+kvstore.passwd=mosaic
+kvstore.bucket=mosaic
+kvstore.driver_threads=10
+kvstore.driver_name=memcached
 
 interop.req.amqp.host=localhost
 interop.req.amqp.port=5672

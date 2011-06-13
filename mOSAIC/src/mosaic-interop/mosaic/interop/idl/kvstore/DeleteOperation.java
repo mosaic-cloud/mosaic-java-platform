@@ -10,7 +10,7 @@ public class DeleteOperation extends
 		org.apache.avro.specific.SpecificRecordBase implements
 		org.apache.avro.specific.SpecificRecord {
 	public static final org.apache.avro.Schema SCHEMA$ = org.apache.avro.Schema
-			.parse("{\"type\":\"record\",\"name\":\"DeleteOperation\",\"namespace\":\"mosaic.interop.idl.kvstore\",\"fields\":[{\"name\":\"token\",\"type\":{\"type\":\"record\",\"name\":\"CompletionToken\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"client_id\",\"type\":\"string\"}]}},{\"name\":\"name\",\"type\":{\"type\":\"enum\",\"name\":\"OperationNames\",\"symbols\":[\"SET\",\"ADD\",\"REPLACE\",\"APPEND\",\"PREPEND\",\"CAS\",\"GET\",\"GET_BULK\",\"DELETE\"]}},{\"name\":\"key\",\"type\":\"string\"}]}");
+			.parse("{\"type\":\"record\",\"name\":\"DeleteOperation\",\"namespace\":\"mosaic.interop.idl.kvstore\",\"fields\":[{\"name\":\"token\",\"type\":{\"type\":\"record\",\"name\":\"CompletionToken\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"client_id\",\"type\":\"string\"}]}},{\"name\":\"name\",\"type\":{\"type\":\"enum\",\"name\":\"OperationNames\",\"symbols\":[\"SET\",\"ADD\",\"REPLACE\",\"APPEND\",\"PREPEND\",\"CAS\",\"GET\",\"GET_BULK\",\"DELETE\",\"LIST\"]}},{\"name\":\"key\",\"type\":\"string\"}]}");
 	public mosaic.interop.idl.kvstore.CompletionToken token;
 	public mosaic.interop.idl.kvstore.OperationNames name;
 	public java.lang.CharSequence key;

@@ -6,13 +6,12 @@
 package mosaic.interop.idl.kvstore;
 
 @SuppressWarnings("all")
-public class GetOperation extends org.apache.avro.specific.SpecificRecordBase
+public class ListOperation extends org.apache.avro.specific.SpecificRecordBase
 		implements org.apache.avro.specific.SpecificRecord {
 	public static final org.apache.avro.Schema SCHEMA$ = org.apache.avro.Schema
-			.parse("{\"type\":\"record\",\"name\":\"GetOperation\",\"namespace\":\"mosaic.interop.idl.kvstore\",\"fields\":[{\"name\":\"token\",\"type\":{\"type\":\"record\",\"name\":\"CompletionToken\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"client_id\",\"type\":\"string\"}]}},{\"name\":\"name\",\"type\":{\"type\":\"enum\",\"name\":\"OperationNames\",\"symbols\":[\"SET\",\"ADD\",\"REPLACE\",\"APPEND\",\"PREPEND\",\"CAS\",\"GET\",\"GET_BULK\",\"DELETE\",\"LIST\"]}},{\"name\":\"keys\",\"type\":{\"type\":\"array\",\"items\":\"string\"}}]}");
+			.parse("{\"type\":\"record\",\"name\":\"ListOperation\",\"namespace\":\"mosaic.interop.idl.kvstore\",\"fields\":[{\"name\":\"token\",\"type\":{\"type\":\"record\",\"name\":\"CompletionToken\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"client_id\",\"type\":\"string\"}]}},{\"name\":\"name\",\"type\":{\"type\":\"enum\",\"name\":\"OperationNames\",\"symbols\":[\"SET\",\"ADD\",\"REPLACE\",\"APPEND\",\"PREPEND\",\"CAS\",\"GET\",\"GET_BULK\",\"DELETE\",\"LIST\"]}}]}");
 	public mosaic.interop.idl.kvstore.CompletionToken token;
 	public mosaic.interop.idl.kvstore.OperationNames name;
-	public java.util.List<java.lang.CharSequence> keys;
 
 	public org.apache.avro.Schema getSchema() {
 		return SCHEMA$;
@@ -25,8 +24,6 @@ public class GetOperation extends org.apache.avro.specific.SpecificRecordBase
 			return token;
 		case 1:
 			return name;
-		case 2:
-			return keys;
 		default:
 			throw new org.apache.avro.AvroRuntimeException("Bad index");
 		}
@@ -41,9 +38,6 @@ public class GetOperation extends org.apache.avro.specific.SpecificRecordBase
 			break;
 		case 1:
 			name = (mosaic.interop.idl.kvstore.OperationNames) value$;
-			break;
-		case 2:
-			keys = (java.util.List<java.lang.CharSequence>) value$;
 			break;
 		default:
 			throw new org.apache.avro.AvroRuntimeException("Bad index");

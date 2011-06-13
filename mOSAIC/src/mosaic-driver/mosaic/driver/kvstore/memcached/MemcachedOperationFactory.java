@@ -8,6 +8,7 @@ import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.IOperation;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.core.ops.IOperationType;
+import mosaic.driver.kvstore.KeyValueOperations;
 import net.spy.memcached.CASResponse;
 import net.spy.memcached.MemcachedClient;
 
@@ -49,11 +50,11 @@ public class MemcachedOperationFactory implements IOperationFactory {
 	@Override
 	public IOperation<?> getOperation(IOperationType type, Object... parameters) {
 		IOperation<?> operation = null;
-		if (!(type instanceof MemcachedOperations)) {
+		if (!(type instanceof KeyValueOperations)) {
 			throw new IllegalArgumentException("Unsupported operation: "
 					+ type.toString());
 		}
-		MemcachedOperations mType = (MemcachedOperations) type;
+		KeyValueOperations mType = (KeyValueOperations) type;
 		final String key;
 		final int exp;
 		final Object data;

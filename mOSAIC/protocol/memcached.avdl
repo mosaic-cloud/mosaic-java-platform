@@ -1,7 +1,7 @@
 @namespace("mosaic.interop.idl.kvstore")
 protocol Memcached {
 	enum OperationNames {
-		SET, ADD, REPLACE, APPEND, PREPEND, CAS, GET, GET_BULK, DELETE
+		SET, ADD, REPLACE, APPEND, PREPEND, CAS, GET, GET_BULK, DELETE, LIST
 	}
 		
 	error MemcachedError {
@@ -21,6 +21,13 @@ protocol Memcached {
 		bytes data;
 	}
 	
+	record SetOperation {
+		CompletionToken token;
+		OperationNames name;
+		string key;
+		bytes data;
+	}
+	
 	record GetOperation {
 		CompletionToken token;
 		OperationNames name;
@@ -33,15 +40,20 @@ protocol Memcached {
 		string key;
 	}
 	
+	record ListOperation {
+		CompletionToken token;
+		OperationNames name;
+	}
+	
 	record Operation {
-		union {StoreOperation, GetOperation, DeleteOperation} operation;
+		union {StoreOperation, SetOperation, GetOperation, DeleteOperation, ListOperation} operation;
 	}
 	
 	record OperationResponse {
 		CompletionToken token;
 		OperationNames name;
 		boolean is_error;
-		union {MemcachedError, boolean, map<bytes>} response;
+		union {MemcachedError, boolean, map<bytes>, array<string>} response;
 	}
 	
 	// store request commands

@@ -6,13 +6,14 @@
 package mosaic.interop.idl.kvstore;
 
 @SuppressWarnings("all")
-public class GetOperation extends org.apache.avro.specific.SpecificRecordBase
+public class SetOperation extends org.apache.avro.specific.SpecificRecordBase
 		implements org.apache.avro.specific.SpecificRecord {
 	public static final org.apache.avro.Schema SCHEMA$ = org.apache.avro.Schema
-			.parse("{\"type\":\"record\",\"name\":\"GetOperation\",\"namespace\":\"mosaic.interop.idl.kvstore\",\"fields\":[{\"name\":\"token\",\"type\":{\"type\":\"record\",\"name\":\"CompletionToken\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"client_id\",\"type\":\"string\"}]}},{\"name\":\"name\",\"type\":{\"type\":\"enum\",\"name\":\"OperationNames\",\"symbols\":[\"SET\",\"ADD\",\"REPLACE\",\"APPEND\",\"PREPEND\",\"CAS\",\"GET\",\"GET_BULK\",\"DELETE\",\"LIST\"]}},{\"name\":\"keys\",\"type\":{\"type\":\"array\",\"items\":\"string\"}}]}");
+			.parse("{\"type\":\"record\",\"name\":\"SetOperation\",\"namespace\":\"mosaic.interop.idl.kvstore\",\"fields\":[{\"name\":\"token\",\"type\":{\"type\":\"record\",\"name\":\"CompletionToken\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"client_id\",\"type\":\"string\"}]}},{\"name\":\"name\",\"type\":{\"type\":\"enum\",\"name\":\"OperationNames\",\"symbols\":[\"SET\",\"ADD\",\"REPLACE\",\"APPEND\",\"PREPEND\",\"CAS\",\"GET\",\"GET_BULK\",\"DELETE\",\"LIST\"]}},{\"name\":\"key\",\"type\":\"string\"},{\"name\":\"data\",\"type\":\"bytes\"}]}");
 	public mosaic.interop.idl.kvstore.CompletionToken token;
 	public mosaic.interop.idl.kvstore.OperationNames name;
-	public java.util.List<java.lang.CharSequence> keys;
+	public java.lang.CharSequence key;
+	public java.nio.ByteBuffer data;
 
 	public org.apache.avro.Schema getSchema() {
 		return SCHEMA$;
@@ -26,7 +27,9 @@ public class GetOperation extends org.apache.avro.specific.SpecificRecordBase
 		case 1:
 			return name;
 		case 2:
-			return keys;
+			return key;
+		case 3:
+			return data;
 		default:
 			throw new org.apache.avro.AvroRuntimeException("Bad index");
 		}
@@ -43,7 +46,10 @@ public class GetOperation extends org.apache.avro.specific.SpecificRecordBase
 			name = (mosaic.interop.idl.kvstore.OperationNames) value$;
 			break;
 		case 2:
-			keys = (java.util.List<java.lang.CharSequence>) value$;
+			key = (java.lang.CharSequence) value$;
+			break;
+		case 3:
+			data = (java.nio.ByteBuffer) value$;
 			break;
 		default:
 			throw new org.apache.avro.AvroRuntimeException("Bad index");

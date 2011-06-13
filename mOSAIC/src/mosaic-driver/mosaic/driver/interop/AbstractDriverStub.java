@@ -222,7 +222,7 @@ public abstract class AbstractDriverStub implements Runnable {
 	 * 
 	 * @param <T>
 	 *            the type of the driver
-	 * @param transClass
+	 * @param driverClass
 	 *            the class object of the driver
 	 * @return the driver
 	 */
@@ -230,29 +230,6 @@ public abstract class AbstractDriverStub implements Runnable {
 		return driverClass.cast(this.driver);
 	}
 
-	/**
-	 * Reads resource connection data from the configuration data.
-	 * 
-	 * @param config
-	 *            the configuration data
-	 * @return resource connection data
-	 */
-	protected static DriverConnectionData readConnectionData(
-			IConfiguration config) {
-		String amqpServerHost = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.0"), String.class, //$NON-NLS-1$
-						ConnectionFactory.DEFAULT_HOST);
-		int amqpServerPort = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.1"), Integer.class, //$NON-NLS-1$
-						ConnectionFactory.DEFAULT_AMQP_PORT);
-		DriverConnectionData cData = new DriverConnectionData(amqpServerHost,
-				amqpServerPort);
-		return cData;
-	}
 
 	/**
 	 * Deserializes a message received by the stub and starts the operation

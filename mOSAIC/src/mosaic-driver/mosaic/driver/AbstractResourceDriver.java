@@ -37,6 +37,7 @@ public class AbstractResourceDriver implements IResourceDriver {
 		IResult<?> pResult;
 
 		this.destroyed = true;
+		this.executor.shutdown();
 		// cancel all pending operations
 		Iterator<IResult<?>> it = this.pendingResults.iterator();
 		while (it.hasNext()) {
@@ -44,7 +45,6 @@ public class AbstractResourceDriver implements IResourceDriver {
 			pResult.cancel();
 			it.remove();
 		}
-		this.executor.shutdown();
 	}
 
 	/**
