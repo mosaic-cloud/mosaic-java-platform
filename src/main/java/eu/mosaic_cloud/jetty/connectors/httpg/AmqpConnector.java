@@ -1,8 +1,10 @@
-package eu.mosaic.JettyAmqpConnector;
+package eu.mosaic_cloud.jetty.connectors.httpg;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+
+import eu.mosaic_cloud.jetty.connectors.httpg.MessageHandler.MessageFormatException;
 
 import org.eclipse.jetty.io.ByteArrayEndPoint;
 import org.eclipse.jetty.io.ConnectedEndPoint;
@@ -20,7 +22,6 @@ import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
-import eu.mosaic.JettyAmqpConnector.MessageHandler.MessageFormatException;
 
 public class AmqpConnector extends AbstractConnector {
 	protected final Set<EndPoint> _connections;

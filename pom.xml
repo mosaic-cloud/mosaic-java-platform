@@ -85,7 +85,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic.JettyAmqpConnector.ServerCommandLine</mainClass>
+							<mainClass>eu.mosaic_cloud.jetty.connectors.httpg.ServerCommandLine</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

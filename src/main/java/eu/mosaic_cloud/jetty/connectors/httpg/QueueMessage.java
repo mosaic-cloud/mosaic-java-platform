@@ -1,4 +1,4 @@
-package eu.mosaic.JettyAmqpConnector;
+package eu.mosaic_cloud.jetty.connectors.httpg;
 
 import java.io.Serializable;
 
