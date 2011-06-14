@@ -1,12 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+		xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.mosaic.jetty_connector</groupId>
-	<artifactId>jetty-mosaic-connector</artifactId>
-	<packaging>jar</packaging>
+	
+	<groupId>eu.mosaic_cloud</groupId>
+	<artifactId>jetty-httpg-connector</artifactId>
 	<version>0.1.3-SNAPSHOT</version>
-	<name>jetty-mosaic-connector</name>
-	<url>http://www.mosaic-cloud.eu</url>
+	<name>jetty-httpg-connector</name>
+	<url>http://www.mosaic-cloud.eu/</url>
+	<packaging>jar</packaging>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -38,26 +41,21 @@
 			<artifactId>jetty-jsp-2.1</artifactId>
 			<version>7.4.2.v20110526</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20090211</version>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-cli</groupId>
 			<artifactId>commons-cli</artifactId>
 			<version>1.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -65,38 +63,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<distributionManagement>
-		<site>
-			<id>mojo.website</id>
-			<name>Site Location</name>
-			<url>file:///srv/sites/jetty-connector</url>
-		</site>
-	</distributionManagement>
-
-	<issueManagement>
-		<system>trac</system>
-		<url>http://mosaic.ieat.ro</url>
-	</issueManagement>
-	<scm>
-		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector/</connection>
-		<developerConnection>scm:hg:file://${basedir}</developerConnection>
-	</scm>
-	<organization>
-		<name>Research Institute eAustria</name>
-		<url>http://www.ieat.ro</url>
-	</organization>
+	
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -106,12 +75,6 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.0-beta-3</version>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -135,10 +98,45 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.0-beta-3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
+	
+	<organization>
+		<name>Research Institute eAustria</name>
+		<url>http://www.ieat.ro</url>
+	</organization>
+	
+	<distributionManagement>
+		<site>
+			<id>mojo.website</id>
+			<name>mOSAIC Jetty HTTPG Connector</name>
+			<url>file:///srv/sites/mosaic-jetty-httpg-connector</url>
+		</site>
+	</distributionManagement>
+	
+	<scm>
+		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector</connection>
+		<developerConnection>scm:hg:file://${basedir}</developerConnection>
+	</scm>
+	
+	<issueManagement>
+		<system>trac</system>
+		<url>http://mosaic.ieat.ro/</url>
+	</issueManagement>
+	
 	<reporting>
 		<plugins>
 			<plugin>
@@ -158,7 +156,9 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-
-
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 </project>
