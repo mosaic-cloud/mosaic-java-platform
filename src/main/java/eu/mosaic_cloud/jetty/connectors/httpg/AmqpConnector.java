@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA._PolicyStub;
+
 import eu.mosaic_cloud.jetty.connectors.httpg.MessageHandler.MessageFormatException;
 
 import org.eclipse.jetty.io.ByteArrayEndPoint;
@@ -31,6 +33,8 @@ public class AmqpConnector extends AbstractConnector {
 	private Channel _channel = null;
 	private QueueingConsumer _consumer = null;
 	private String _hostName;
+	private int _port;
+	private String _virtualHost;
 	private String _userName;
 	private String _userPassword;
 	private String _routingKey;
@@ -40,12 +44,14 @@ public class AmqpConnector extends AbstractConnector {
 
 	public AmqpConnector(String exchangeName, String routingKey,
 			String queueName, String hostName, String userName,
-			String userPassword, int port, boolean autoDeclareQueue) {
+			String userPassword, int port, String virtualHost, boolean autoDeclareQueue) {
 		_userName = userName;
 		_userPassword = userPassword;
 		_exchangeName = exchangeName;
 		_routingKey = routingKey;
 		_hostName = hostName;
+		_port = port;
+		_virtualHost = virtualHost;
 		_inputQueueName = queueName;
 		_autoDeclareQueue = autoDeclareQueue;
 		_connections = new HashSet<EndPoint>();
@@ -56,7 +62,16 @@ public class AmqpConnector extends AbstractConnector {
 			InterruptedException {
 		QueueMessage msg = null;
 		// Log.info("Waiting for messages");
-		final QueueingConsumer.Delivery delivery = _consumer.nextDelivery();
+		QueueingConsumer.Delivery delivery;
+		try {
+			delivery = _consumer.nextDelivery();
+		} catch (ShutdownSignalException e) {
+			Log.warn ("Shutdown encountered...");
+			try {
+				Thread.sleep (1000);
+			} catch (InterruptedException e1) {}
+			throw (e);
+		}
 		try {
 			msg = MessageHandler.decodeMessage(delivery);
 			msg.set_channel(_channel);
@@ -96,6 +111,8 @@ public class AmqpConnector extends AbstractConnector {
 		if (_connectionFactory == null) {
 			_connectionFactory = new ConnectionFactory();
 			_connectionFactory.setHost(_hostName);
+			_connectionFactory.setPort(_port);
+			_connectionFactory.setVirtualHost(_virtualHost);
 			_connectionFactory.setUsername(_userName);
 			_connectionFactory.setPassword(_userPassword);
 		}

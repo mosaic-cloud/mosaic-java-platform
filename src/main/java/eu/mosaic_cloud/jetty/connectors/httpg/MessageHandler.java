@@ -191,9 +191,9 @@ public class MessageHandler {
 		final int response_code = Integer.parseInt(http_response_fields[1]);
 		final String response_message = http_response_fields[2];
 
-		if (response_code > 500) {
-			System.out.println("Made a booo");
-		}
+		// if (response_code > 500) {
+		//	System.out.println("Made a booo");
+		// }
 
 
 		while (true) {

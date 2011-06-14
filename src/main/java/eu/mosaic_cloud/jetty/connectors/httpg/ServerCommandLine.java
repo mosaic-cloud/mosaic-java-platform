@@ -102,8 +102,9 @@ public class ServerCommandLine {
 		/*
 		 * Add defaults
 		 */
-		props.setProperty("port", "5672");
 		props.setProperty("server", "127.0.0.1");
+		props.setProperty("port", "5672");
+		props.setProperty("virtual-host", "/");
 		props.setProperty("exchange", "mosaic-http-requests");
 		props.setProperty("routing-key", "#");
 		props.setProperty("username", "guest");
@@ -126,7 +127,7 @@ public class ServerCommandLine {
 		return props;
 	}
 
-	private static void startServer(Properties props) throws Exception {
+	public static Server startServer(Properties props) throws Exception {
 		Server jettyServer = new Server();
 		String userName = props.getProperty("username");
 		String userPassword = props.getProperty("password");
@@ -135,13 +136,14 @@ public class ServerCommandLine {
 		String exchangeName = props.getProperty("exchange");
 		String queueName = props.getProperty("queue");
 		int amqpPort = Integer.parseInt(props.getProperty("port"));
-
+		String amqpVirtualHost = props.getProperty("virtual-host");
+		
 		/*
 		 * Setup connectors
 		 */
 		AmqpConnector amqpConnector = new AmqpConnector(exchangeName,
 				routingKey, queueName, hostName, userName, userPassword,
-				amqpPort, props.containsKey("auto-declare"));
+				amqpPort, amqpVirtualHost, props.containsKey("auto-declare"));
 		Connector[] connectors = null;
 		if (props.containsKey("jetty-socket-connector-port")) {
 			int port = Integer.parseInt(props
@@ -164,23 +166,20 @@ public class ServerCommandLine {
 			WebAppContext webapp = new WebAppContext();
 			webapp.setContextPath(ctxPath);
 			webapp.setWar(webAppDir);
+			webapp.setParentLoaderPriority(true);
 			jettyServer.setHandler(webapp);
-
 		}
 
 		/*
 		 * Start the toy
 		 */
-		System.err.println("Starting server!");
-		System.err.println("Queue name: " + queueName);
 		jettyServer.start();
-		jettyServer.join();
+		return (jettyServer);
 	}
 
 	public static void main(String[] args) throws Exception {
 		Properties props = getConfig(args);
-		startServer(props);
-
+		startServer(props).join ();
 	}
 
 }
