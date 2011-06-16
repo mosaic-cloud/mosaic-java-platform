@@ -56,12 +56,13 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	 *            the configuration parameters required by the driver:
 	 *            <ol>
 	 *            <il>for each server to which the driver should connect there
-	 *            should be two parameters: <i>host_&lt;server_number&gt;</i>
-	 *            and <i>port_&lt;server_number&gt;</i> indicating the hostnames
-	 *            and the ports where the servers are installed </il>
-	 *            <il><i>memcached.driver_threads</i> specifies the maximum
-	 *            number of threads that shall be created by the driver for
-	 *            serving requests </il>
+	 *            should be two parameters:
+	 *            <i>memcached.host_&lt;server_number&gt;</i> and
+	 *            <i>memcached.port_&lt;server_number&gt;</i> indicating the
+	 *            hostnames and the ports where the servers are installed </il>
+	 *            <il><i>kvstore.driver_threads</i> specifies the maximum number
+	 *            of threads that shall be created by the driver for serving
+	 *            requests </il>
 	 *            </ol>
 	 * @return the driver
 	 * @throws IOException

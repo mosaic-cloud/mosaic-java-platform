@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import com.rabbitmq.client.ConnectionFactory;
-
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
@@ -37,6 +35,8 @@ import mosaic.interop.idl.amqp.GetOperation;
 import mosaic.interop.idl.amqp.Operation;
 import mosaic.interop.idl.amqp.OperationNames;
 import mosaic.interop.idl.amqp.PublishOperation;
+
+import com.rabbitmq.client.ConnectionFactory;
 
 /**
  * Stub for the driver for queuing systems implementing the AMQP protocol. This

@@ -595,14 +595,25 @@ public class AmqpDriver extends AbstractResourceDriver {
 		 * , java.lang.Object[])
 		 */
 		@Override
-		public IOperation<?> getOperation(IOperationType type,
+		public IOperation<?> getOperation(final IOperationType type,
 				Object... parameters) {
 			IOperation<?> operation = null;
 			if (!(type instanceof AmqpOperations)) {
-				throw new IllegalArgumentException("Unsupported operation: " //$NON-NLS-1$
-						+ type.toString());
+				operation = new GenericOperation<Object>(
+						new Callable<Object>() {
+
+							@Override
+							public Object call() throws Exception {
+								throw new UnsupportedOperationException(
+										"Unsupported operation: "
+												+ type.toString());
+							}
+
+						});
+				return operation;
 			}
-			AmqpOperations mType = (AmqpOperations) type;
+
+			final AmqpOperations mType = (AmqpOperations) type;
 			final String queue;
 			final String exchange;
 			final boolean durable;
@@ -881,8 +892,17 @@ public class AmqpDriver extends AbstractResourceDriver {
 						});
 				break;
 			default:
-				throw new UnsupportedOperationException(
-						"Unsupported operation: " + mType.toString()); //$NON-NLS-1$
+				operation = new GenericOperation<Object>(
+						new Callable<Object>() {
+
+							@Override
+							public Object call() throws Exception {
+								throw new UnsupportedOperationException(
+										"Unsupported operation: "
+												+ mType.toString());
+							}
+
+						});
 			}
 
 			return operation;

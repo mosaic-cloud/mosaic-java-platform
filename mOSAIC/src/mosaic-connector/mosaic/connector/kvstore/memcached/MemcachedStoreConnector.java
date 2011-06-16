@@ -2,11 +2,10 @@ package mosaic.connector.kvstore.memcached;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import mosaic.connector.ConfigProperties;
 import mosaic.connector.interop.kvstore.memcached.MemcachedProxy;
+import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
@@ -23,14 +22,11 @@ import mosaic.core.ops.IResult;
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedStoreConnector implements IMemcachedStore {
-
-	private MemcachedProxy proxy;
-	private ExecutorService executor;
+public class MemcachedStoreConnector extends KeyValueStoreConnector implements
+		IMemcachedStore {
 
 	private MemcachedStoreConnector(MemcachedProxy proxy, int noThreads) {
-		this.proxy = proxy;
-		this.executor = Executors.newFixedThreadPool(noThreads);
+		super(proxy, noThreads);
 	}
 
 	/**
@@ -43,12 +39,12 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static synchronized MemcachedStoreConnector create(
-			IConfiguration config) throws Throwable {
+	public static MemcachedStoreConnector create(IConfiguration config)
+			throws Throwable {
 		int noThreads = ConfigUtils
 				.resolveParameter(
 						config,
-						ConfigProperties.getString("MemcachedStoreConnector.0"), Integer.class, 1); //$NON-NLS-1$
+						ConfigProperties.getString("KeyValueStoreConnector.0"), Integer.class, 1); //$NON-NLS-1$
 		MemcachedProxy proxy = MemcachedProxy.create(config);
 		return new MemcachedStoreConnector(proxy, noThreads);
 	}
@@ -59,8 +55,7 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 	 * @see mosaic.connector.IResourceConnector#destroy()
 	 */
 	public void destroy() throws Throwable {
-		proxy.destroy();
-		executor.shutdown();
+		super.destroy();
 		MosaicLogger.getLogger().trace("MemcachedConnector destroyed.");
 	}
 
@@ -70,20 +65,19 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.set(key, exp, data, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).set(key, exp, data,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		submitOperation(op.getOperation());
 
 		return result;
 	}
@@ -94,20 +88,19 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.add(key, exp, data, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).add(key, exp, data,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		submitOperation(op.getOperation());
 
 		return result;
 	}
@@ -118,20 +111,19 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.replace(key, exp, data, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).replace(key, exp, data,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		submitOperation(op.getOperation());
 
 		return result;
 	}
@@ -141,20 +133,19 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.append(key, data, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).append(key, data,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		submitOperation(op.getOperation());
 
 		return result;
 	}
@@ -164,20 +155,19 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.prepend(key, data, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).prepend(key, data,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		submitOperation(op.getOperation());
 
 		return result;
 	}
@@ -187,43 +177,19 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.cas(key, data, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).cas(key, data,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			executor.submit(op.getOperation());
-		}
-
-		return result;
-	}
-
-	@Override
-	public IResult<Object> get(final String key,
-			List<IOperationCompletionHandler<Object>> handlers,
-			CompletionInvocationHandler<Object> iHandler) {
-		IResult<Object> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Object> op = new EventDrivenOperation<Object>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
-
-				@Override
-				public void run() {
-					proxy.get(key, op.getCompletionHandlers());
-
-				}
-			});
-			result = new EventDrivenResult<Object>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		submitOperation(op.getOperation());
 
 		return result;
 	}
@@ -233,53 +199,21 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<Map<String, Object>>> handlers,
 			CompletionInvocationHandler<Map<String, Object>> iHandler) {
 		IResult<Map<String, Object>> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Map<String, Object>> op = new EventDrivenOperation<Map<String, Object>>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<Map<String, Object>> op = new EventDrivenOperation<Map<String, Object>>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.getBulk(keys, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).getBulk(keys,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Map<String, Object>>(op);
-			executor.submit(op.getOperation());
-		}
-
-		return result;
-	}
-
-	@Override
-	public IResult<Boolean> delete(final String key,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
-
-				@Override
-				public void run() {
-					proxy.delete(key, op.getCompletionHandlers());
-
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<Map<String, Object>>(op);
+		submitOperation(op.getOperation());
 
 		return result;
-	}
-
-	@Override
-	public IResult<Boolean> set(String key, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> iResult = this.set(key, 0, data, handlers, iHandler);
-		return iResult;
 	}
 
 	@Override
@@ -287,20 +221,18 @@ public class MemcachedStoreConnector implements IMemcachedStore {
 			List<IOperationCompletionHandler<List<String>>> handlers,
 			CompletionInvocationHandler<List<String>> iHandler) {
 		IResult<List<String>> result = null;
-		synchronized (this) {
-			final EventDrivenOperation<List<String>> op = new EventDrivenOperation<List<String>>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		final EventDrivenOperation<List<String>> op = new EventDrivenOperation<List<String>>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					proxy.list(op.getCompletionHandlers());
+			@Override
+			public void run() {
+				getProxy(MemcachedProxy.class).list(op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<List<String>>(op);
-			executor.submit(op.getOperation());
-		}
+			}
+		});
+		result = new EventDrivenResult<List<String>>(op);
+		submitOperation(op.getOperation());
 
 		return result;
 	}

@@ -26,7 +26,6 @@ import mosaic.interop.idl.kvstore.OperationResponse;
  * 
  */
 public class KeyValueResponseTransmitter extends ResponseTransmitter {
-	// private static final String DEFAULT_QUEUE_NAME = "kvstore_responses";
 
 	/**
 	 * Creates a new transmitter.

@@ -224,10 +224,10 @@ public class AmqpProxy extends ConnectorProxy {
 			String requestId = sendRequest(op, OperationNames.CONSUME, handlers);
 			AmqpConnectorReactor reactor = super
 					.getResponseReactor(AmqpConnectorReactor.class);
-			// if (consumer.equals(""))
-			// reactor.addCallback(requestId, consumerCallback);
-			// else
-			reactor.addCallback(consumer, consumerCallback);
+			if (consumer.equals(""))
+				reactor.addCallback(requestId, consumerCallback);
+			else
+				reactor.addCallback(consumer, consumerCallback);
 		} catch (IOException e) {
 			for (IOperationCompletionHandler<String> handler : handlers) {
 				handler.onFailure(e);

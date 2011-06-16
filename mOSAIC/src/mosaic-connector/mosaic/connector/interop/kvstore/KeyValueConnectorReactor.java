@@ -1,12 +1,12 @@
-package mosaic.connector.interop.kvstore.memcached;
+package mosaic.connector.interop.kvstore;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mosaic.connector.interop.kvstore.KeyValueConnectorReactor;
+import mosaic.connector.interop.AbstractConnectorReactor;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
@@ -19,12 +19,14 @@ import mosaic.interop.idl.kvstore.OperationResponse;
 
 /**
  * Implements a reactor for processing asynchronous requests issued by the
- * Key-Value store connector.
+ * key-value store connector.
  * 
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
+public class KeyValueConnectorReactor extends AbstractConnectorReactor {
+	private static final String DEFAULT_QUEUE_NAME = "kvstore_responses";
+	private static final String DEFAULT_EXCHANGE_NAME = "kvstore";
 
 	/**
 	 * Creates the reactor for the key-value store connector proxy.
@@ -35,9 +37,9 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 	 *            queue binding key
 	 * @throws Throwable
 	 */
-	protected MemcachedConnectorReactor(IConfiguration config, String bindingKey)
+	protected KeyValueConnectorReactor(IConfiguration config, String bindingKey)
 			throws Throwable {
-		super(config, bindingKey);
+		super(config, bindingKey, DEFAULT_EXCHANGE_NAME, DEFAULT_QUEUE_NAME);
 	}
 
 	/*
@@ -75,12 +77,7 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 		}
 
 		switch (op) {
-		case ADD:
 		case SET:
-		case APPEND:
-		case PREPEND:
-		case CAS:
-		case REPLACE:
 		case DELETE:
 			Boolean resultB = (Boolean) response.get(3);
 			for (IOperationCompletionHandler<?> handler : handlers) {
@@ -106,23 +103,16 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 			}
 
 			break;
-		case GET_BULK:
-			Map<CharSequence, ByteBuffer> resultM = (Map<CharSequence, ByteBuffer>) response
+		case LIST:
+			List<CharSequence> resultList = (List<CharSequence>) response
 					.get(3);
-			Map<String, Object> resMap = new HashMap<String, Object>();
-			try {
-				for (Map.Entry<CharSequence, ByteBuffer> entry : resultM
-						.entrySet()) {
-					buff = entry.getValue();
-					data = SerDesUtils.toObject(buff.array());
-					resMap.put(entry.getKey().toString(), data);
-				}
-				for (IOperationCompletionHandler<?> handler : handlers) {
-					((IOperationCompletionHandler<Map<String, Object>>) handler)
-							.onSuccess(resMap);
-				}
-			} catch (ClassNotFoundException e) {
-				ExceptionTracer.traceDeferred(e);
+			List<String> resList = new ArrayList<String>();
+			for (CharSequence key : resultList) {
+				resList.add(key.toString());
+			}
+			for (IOperationCompletionHandler<?> handler : handlers) {
+				((IOperationCompletionHandler<List<String>>) handler)
+						.onSuccess(resList);
 			}
 			break;
 		default:

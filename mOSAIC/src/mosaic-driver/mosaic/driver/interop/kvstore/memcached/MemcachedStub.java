@@ -15,11 +15,11 @@ import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.core.utils.SerDesUtils;
-import mosaic.driver.IResourceDriver;
 import mosaic.driver.interop.AbstractDriverStub;
 import mosaic.driver.interop.DriverConnectionData;
-import mosaic.driver.interop.ResponseTransmitter;
+import mosaic.driver.interop.kvstore.KeyValueResponseTransmitter;
 import mosaic.driver.interop.kvstore.KeyValueStub;
+import mosaic.driver.kvstore.BaseKeyValueDriver;
 import mosaic.driver.kvstore.KeyValueOperations;
 import mosaic.driver.kvstore.memcached.MemcachedDriver;
 import mosaic.interop.idl.kvstore.CompletionToken;
@@ -54,7 +54,7 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 	 *            the driver used for processing requests submitted to this stub
 	 */
 	public MemcachedStub(IConfiguration config,
-			ResponseTransmitter transmitter, IResourceDriver driver) {
+			KeyValueResponseTransmitter transmitter, BaseKeyValueDriver driver) {
 		super(config, transmitter, driver);
 
 	}

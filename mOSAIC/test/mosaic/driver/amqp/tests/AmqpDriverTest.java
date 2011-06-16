@@ -19,14 +19,12 @@ import org.junit.Test;
 public class AmqpDriverTest {
 	private static IConfiguration configuration;
 	private static AmqpDriver wrapper;
-	private static IOperationCompletionHandler<Boolean> handler;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		configuration = PropertyTypeConfiguration.create(
 				AmqpDriverTest.class.getClassLoader(), "amqp-test.prop");
 		wrapper = AmqpDriver.create(configuration);
-		handler = new TestLoggingHandler<Boolean>();
 	}
 
 	@AfterClass
@@ -45,6 +43,8 @@ public class AmqpDriverTest {
 		String exchange = ConfigUtils.resolveParameter(configuration,
 				"publisher.amqp.exchange", String.class, "");
 
+		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+		"declare exchange");
 		IResult<Boolean> r = wrapper.declareExchange(exchange,
 				AmqpExchangeType.DIRECT, false, false, false, handler);
 		Assert.assertTrue(r.getResult());
@@ -55,6 +55,8 @@ public class AmqpDriverTest {
 			ExecutionException {
 		String queue = ConfigUtils.resolveParameter(configuration,
 				"consumer.amqp.queue", String.class, "");
+		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+		"declare queue");
 		IResult<Boolean> r = wrapper.declareQueue(queue, true, false, true,
 				false, handler);
 		Assert.assertTrue(r.getResult());
@@ -68,7 +70,8 @@ public class AmqpDriverTest {
 				"publisher.amqp.routing_key", String.class, "");
 		String queue = ConfigUtils.resolveParameter(configuration,
 				"onsumer.amqp.queue", String.class, "");
-
+		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+		"bind queueF");
 		IResult<Boolean> r = wrapper.bindQueue(exchange, queue, routingKey,
 				handler);
 		Assert.assertTrue(r.getResult());

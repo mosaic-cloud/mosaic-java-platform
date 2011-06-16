@@ -37,6 +37,7 @@
 		<delete dir="${build.dir}" failonerror="false" />
 		<delete dir="${build.test.dir}" failonerror="false" />
 		<delete dir="${test.output.dir}" failonerror="false" />
+		<delete file="${jar.all.name}" failonerror="false" />
 	</target>
 
 	<target name="compile" depends="clean" description="Compiles the project">
@@ -152,7 +153,7 @@
 			<batchtest fork="yes" todir="${test.output.dir}">
 				<fileset dir="${test.dir}">
 					<include name="mosaic/driver/**/*Test.java" />
-					<exclude name="mosaic/driver/**/Redis*Test.java"/>
+					<exclude name="mosaic/driver/**/Redis*Test.java" />
 				</fileset>
 				<formatter type="plain" usefile="true" />
 			</batchtest>
@@ -167,9 +168,9 @@
 		</junit>
 	</target>
 
-	<target name="redis-tests" description="Runs the driver tests. Assumes a membase store is running on localhost.">
+	<target name="redis-tests" description="Runs the Redis driver tests. Assumes a Redis store is running on localhost.">
 		<mkdir dir="${test.output.dir}" />
-		<junit>
+		<junit fork="false">
 			<test name="mosaic.driver.kvstore.tests.RedisDriverTest" todir="${test.output.dir}">
 			</test>
 
@@ -187,14 +188,38 @@
 
 	<target name="conn-tests" description="Runs the connector tests. Assumes a membase store  and a RabbitMQ server is running on localhost.">
 		<mkdir dir="${test.output.dir}" />
-		<junit>
-			<batchtest fork="yes" todir="${test.output.dir}">
-				<fileset dir="${test.dir}">
-					<include name="mosaic/connector/**/*Test.java" />
-					<exclude name="mosaic/connector/amqp/**/*Test.java" />
-				</fileset>
+		<sequential>
+			<junit fork="false">
+				<test name="mosaic.connector.kvstore.tests.MemcachedConnectorTest" todir="${test.output.dir}">
+				</test>
 				<formatter type="plain" usefile="true" />
-			</batchtest>
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+			</junit>
+			<junit fork="false">
+				<test name="mosaic.connector.kvstore.tests.KeyValueConnectorTest" todir="${test.output.dir}">
+				</test>
+				<formatter type="plain" usefile="true" />
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+			</junit>
+		</sequential>
+	</target>
+
+	<target name="debug-conn">
+		<java classname="mosaic.connector.kvstore.tests.KeyValueConnectorTest" fork="true">
 			<classpath>
 				<fileset dir="lib">
 					<include name="**/*.jar" />
@@ -203,7 +228,7 @@
 					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
-		</junit>
+		</java>
 	</target>
 
 	<target name="hello-cloudlet" description="Runs the logging cloudlet. Assumes a membase store  and a RabbitMQ server is running on localhost.">

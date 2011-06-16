@@ -41,13 +41,12 @@ public class RedisDriver extends BaseKeyValueDriver {
 	 * @param config
 	 *            the configuration parameters required by the driver:
 	 *            <ol>
-	 *            <il>for each server to which the driver should connect there
-	 *            should be two parameters: <i>host_&lt;server_number&gt;</i>
-	 *            and <i>port_&lt;server_number&gt;</i> indicating the hostnames
-	 *            and the ports where the servers are installed </il>
-	 *            <il><i>memcached.driver_threads</i> specifies the maximum
-	 *            number of threads that shall be created by the driver for
-	 *            serving requests </il>
+	 *            <il>there should be two parameters: <i>kvstore.host</i> and
+	 *            <i>kvstore.port</i> indicating the hostname and the port where
+	 *            the Redis server is listening </il>
+	 *            <il><i>kvstore.driver_threads</i> specifies the maximum number
+	 *            of threads that shall be created by the driver for serving
+	 *            requests </il>
 	 *            </ol>
 	 * @return the driver
 	 * @throws IOException
@@ -56,17 +55,23 @@ public class RedisDriver extends BaseKeyValueDriver {
 			throws IOException {
 		int port, noThreads;
 
-		String host = ConfigUtils.resolveParameter(config, ConfigProperties.getString("KVStoreDriver.0"), //$NON-NLS-1$
+		String host = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.0"), //$NON-NLS-1$
 				String.class, ""); //$NON-NLS-1$
 
-		port = ConfigUtils.resolveParameter(config, ConfigProperties.getString("KVStoreDriver.1"), //$NON-NLS-1$
+		port = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.1"), //$NON-NLS-1$
 				Integer.class, 0);
 
-		noThreads = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		int db = ConfigUtils.resolveParameter(config, ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
+		noThreads = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
+		int db = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
 				Integer.class, (-1));
-		String passwd = ConfigUtils.resolveParameter(config, ConfigProperties.getString("KVStoreDriver.4"), //$NON-NLS-1$
+		String passwd = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.4"), //$NON-NLS-1$
 				String.class, ""); //$NON-NLS-1$
 		Jedis jedis = new Jedis(host, port);
 		if (!passwd.equals("")) { //$NON-NLS-1$
@@ -89,7 +94,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 		super.destroy();
 		this.jedisClient.bgsave();
 		this.jedisClient.disconnect();
-		MosaicLogger.getLogger().trace("MemcachedDriver destroyed."); //$NON-NLS-1$
+		MosaicLogger.getLogger().trace("RedisDriver destroyed."); //$NON-NLS-1$
 	}
 
 }

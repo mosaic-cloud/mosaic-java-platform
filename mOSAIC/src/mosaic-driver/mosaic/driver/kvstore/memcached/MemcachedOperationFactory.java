@@ -48,13 +48,24 @@ public class MemcachedOperationFactory implements IOperationFactory {
 	 * java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation(IOperationType type, Object... parameters) {
+	public IOperation<?> getOperation(final IOperationType type, Object... parameters) {
 		IOperation<?> operation = null;
 		if (!(type instanceof KeyValueOperations)) {
-			throw new IllegalArgumentException("Unsupported operation: "
-					+ type.toString());
+			operation = new GenericOperation<Object>(
+					new Callable<Object>() {
+
+						@Override
+						public Object call() throws Exception {
+							throw new UnsupportedOperationException(
+									"Unsupported operation: "
+											+ type.toString());
+						}
+
+					});
+			return operation;
 		}
-		KeyValueOperations mType = (KeyValueOperations) type;
+		
+		final KeyValueOperations mType = (KeyValueOperations) type;
 		final String key;
 		final int exp;
 		final Object data;
@@ -62,8 +73,13 @@ public class MemcachedOperationFactory implements IOperationFactory {
 		switch (mType) {
 		case SET:
 			key = (String) parameters[0];
-			exp = (Integer) parameters[1];
-			data = parameters[2];
+			if (parameters.length == 3) {
+				exp = (Integer) parameters[1];
+				data = parameters[2];
+			} else {
+				exp = 0;
+				data = parameters[1];
+			}
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
 				@Override
@@ -193,8 +209,16 @@ public class MemcachedOperationFactory implements IOperationFactory {
 			});
 			break;
 		default:
-			throw new UnsupportedOperationException("Unsupported operation: "
-					+ mType.toString());
+			operation = new GenericOperation<Object>(new Callable<Object>() {
+
+				@Override
+				public Object call() throws Exception {
+					throw new UnsupportedOperationException(
+							"Unsupported operation: " + mType.toString());
+				}
+
+			});
+
 		}
 
 		return operation;

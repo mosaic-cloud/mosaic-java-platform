@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
@@ -30,7 +31,7 @@ public class RedisDriverTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-//		wrapper.destroy();
+		wrapper.destroy();
 	}
 
 	@Before
@@ -45,14 +46,14 @@ public class RedisDriverTest {
 	@Test
 	public void testSet() {
 		String k1 = keyPrefix + "_key_fantastic";
-		IOperationCompletionHandler<Boolean> handler1 = new RedisLoggingHandler<Boolean>(
+		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"set 1");
 		IResult<Boolean> r1 = wrapper.invokeSetOperation(k1, "fantastic",
 				handler1);
 		Assert.assertNotNull(r1);
 
 		String k2 = keyPrefix + "_key_famous";
-		IOperationCompletionHandler<Boolean> handler2 = new RedisLoggingHandler<Boolean>(
+		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"set 2");
 		IResult<Boolean> r2 = wrapper
 				.invokeSetOperation(k2, "famous", handler2);
@@ -73,7 +74,8 @@ public class RedisDriverTest {
 	@Test
 	public void testGet() {
 		String k1 = keyPrefix + "_key_fantastic";
-		IOperationCompletionHandler<Object> handler = new RedisLoggingHandler<Object>("get");
+		IOperationCompletionHandler<Object> handler = new TestLoggingHandler<Object>(
+				"get");
 		IResult<Object> r1 = wrapper.invokeGetOperation(k1, handler);
 
 		try {
@@ -94,7 +96,8 @@ public class RedisDriverTest {
 		List<String> keys = new ArrayList<String>();
 		keys.add(k1);
 		keys.add(k2);
-		IOperationCompletionHandler<List<String>> handler = new RedisLoggingHandler<List<String>>("list");
+		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
+				"list");
 		IResult<List<String>> r1 = wrapper.invokeListOperation(handler);
 
 		try {
@@ -117,8 +120,10 @@ public class RedisDriverTest {
 		String k1 = keyPrefix + "_key_fantastic";
 		String k2 = keyPrefix + "_key_famous";
 
-		IOperationCompletionHandler<Boolean> handler1 = new RedisLoggingHandler<Boolean>("delete 1");
-		IOperationCompletionHandler<Boolean> handler2 = new RedisLoggingHandler<Boolean>("delete 2");
+		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
+				"delete 1");
+		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
+				"delete 2");
 		IResult<Boolean> r1 = wrapper.invokeDeleteOperation(k1, handler1);
 		IResult<Boolean> r2 = wrapper.invokeDeleteOperation(k2, handler2);
 		try {
@@ -132,7 +137,8 @@ public class RedisDriverTest {
 			Assert.fail();
 		}
 
-		IOperationCompletionHandler<Object> handler3 = new RedisLoggingHandler<Object>("check deleted");
+		IOperationCompletionHandler<Object> handler3 = new TestLoggingHandler<Object>(
+				"check deleted");
 		IResult<Object> r3 = wrapper.invokeGetOperation(k1, handler3);
 
 		try {

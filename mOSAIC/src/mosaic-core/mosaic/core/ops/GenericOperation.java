@@ -92,10 +92,18 @@ public class GenericOperation<T> implements IOperation<T> {
 	 *             if the computation threw an exception
 	 */
 	public T get() throws InterruptedException, ExecutionException {
+		T result = null;
 		if (this.operation != null) {
-			return this.operation.get();
+			try {
+				result = this.operation.get();
+			} catch (ExecutionException e) {
+				// TODO customize exception
+				if (e.getCause() instanceof UnsupportedOperationException) {
+					getHandler().onFailure(e.getCause());
+				}
+			}
 		}
-		return null;
+		return result;
 	}
 
 	/**
@@ -116,10 +124,18 @@ public class GenericOperation<T> implements IOperation<T> {
 	 */
 	public T get(long timeout, TimeUnit unit) throws InterruptedException,
 			ExecutionException, TimeoutException {
+		T result = null;
 		if (this.operation != null) {
-			return this.operation.get(timeout, unit);
+			try {
+				result = this.operation.get(timeout, unit);
+			} catch (ExecutionException e) {
+				// TODO customize exception
+				if (e.getCause() instanceof UnsupportedOperationException) {
+					getHandler().onFailure(e.getCause());
+				}
+			}
 		}
-		return null;
+		return result;
 	}
 
 	/**
@@ -171,7 +187,11 @@ public class GenericOperation<T> implements IOperation<T> {
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceHandled(e);
 			} catch (ExecutionException e) {
-				ExceptionTracer.traceHandled(e);
+				// TODO customize exception
+				if (e.getCause() instanceof UnsupportedOperationException) {
+					getHandler().onFailure(e.getCause());
+				} else
+					ExceptionTracer.traceHandled(e);
 			}
 		}
 

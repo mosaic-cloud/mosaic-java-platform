@@ -17,14 +17,11 @@ import mosaic.core.ops.IResult;
 import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.ConfigProperties;
 import mosaic.driver.DriverNotFoundException;
-import mosaic.driver.IResourceDriver;
 import mosaic.driver.interop.AbstractDriverStub;
 import mosaic.driver.interop.DriverConnectionData;
-import mosaic.driver.interop.ResponseTransmitter;
 import mosaic.driver.kvstore.BaseKeyValueDriver;
 import mosaic.driver.kvstore.KeyValueDriverFactory;
 import mosaic.driver.kvstore.KeyValueOperations;
-import mosaic.driver.kvstore.memcached.MemcachedDriver;
 import mosaic.interop.idl.kvstore.CompletionToken;
 import mosaic.interop.idl.kvstore.DeleteOperation;
 import mosaic.interop.idl.kvstore.GetOperation;
@@ -32,7 +29,6 @@ import mosaic.interop.idl.kvstore.ListOperation;
 import mosaic.interop.idl.kvstore.Operation;
 import mosaic.interop.idl.kvstore.OperationNames;
 import mosaic.interop.idl.kvstore.SetOperation;
-import mosaic.interop.idl.kvstore.StoreOperation;
 
 /**
  * Stub for the driver for key-value distributed storage systems. This is used
@@ -46,6 +42,8 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 	private static final String DEFAULT_EXCHANGE_NAME = "kvstore"; //$NON-NLS-1$
 	private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub>();
 
+	private Class<? extends BaseKeyValueDriver> driverClass;
+
 	/**
 	 * Creates a new stub for the key-value store driver.
 	 * 
@@ -57,11 +55,10 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 	 * @param driver
 	 *            the driver used for processing requests submitted to this stub
 	 */
-	public KeyValueStub(IConfiguration config, ResponseTransmitter transmitter,
-			IResourceDriver driver) {
+	public KeyValueStub(IConfiguration config,
+			KeyValueResponseTransmitter transmitter, BaseKeyValueDriver driver) {
 		super(config, DEFAULT_EXCHANGE_NAME, DEFAULT_QUEUE_NAME, transmitter,
 				driver);
-
 	}
 
 	/**
@@ -91,6 +88,9 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 					BaseKeyValueDriver driver = KeyValueDriverFactory
 							.createDriver(driverName, config);
 					stub = new KeyValueStub(config, transmitter, driver);
+					stub.driverClass = KeyValueDriverFactory.DriverType
+							.valueOf(driverName.toUpperCase())
+							.getDriverClass();
 					stubs.put(cData, stub);
 					// FIXME this will be removed - the driver will be started
 					// from somewhere else
@@ -98,7 +98,7 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 					driverThread.start();
 				} else
 					MosaicLogger.getLogger().trace(
-							"MemcachedStub: use existing stub."); //$NON-NLS-1$
+							"KeyValueStub: use existing stub."); //$NON-NLS-1$
 			} catch (DriverNotFoundException e) {
 				ExceptionTracer.traceDeferred(new ConnectionException(
 						"The required key-value driver cannot be provided: " //$NON-NLS-1$
@@ -124,10 +124,10 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 		op = SerDesUtils.deserializeWithSchema(message, op);
 		Object ob = op.get(0);
 
-		MemcachedDriver driver = super.getDriver(MemcachedDriver.class);
+		BaseKeyValueDriver driver = super.getDriver(driverClass);
 
 		if (ob instanceof SetOperation) {
-			StoreOperation sop = (StoreOperation) ob;
+			SetOperation sop = (SetOperation) ob;
 			token = (CompletionToken) sop.get(0);
 			opName = (OperationNames) sop.get(1);
 			key = ((CharSequence) sop.get(2)).toString();
@@ -140,19 +140,18 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 							+ token.get(1));
 
 			// execute operation
-			IResult<Boolean> resultStore = null;
-			DriverOperationFinishedHandler storeCallback = new DriverOperationFinishedHandler(
+			IResult<Boolean> resultSet = null;
+			DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
 					token);
 			if (opName.equals(OperationNames.SET)) {
-				resultStore = driver.invokeSetOperation(key, data,
-						storeCallback);
+				resultSet = driver.invokeSetOperation(key, data, setCallback);
 			} else {
 				MosaicLogger.getLogger().error(
 						"Unknown store message: " + opName.toString()); //$NON-NLS-1$
 				driver.handleUnsupportedOperationError(opName.toString(),
-						storeCallback);
+						setCallback);
 			}
-			storeCallback.setDetails(KeyValueOperations.SET, resultStore);
+			setCallback.setDetails(KeyValueOperations.SET, resultSet);
 		} else if (ob instanceof DeleteOperation) {
 			DeleteOperation dop = (DeleteOperation) ob;
 			token = (CompletionToken) dop.get(0);
@@ -280,7 +279,7 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 		public DriverOperationFinishedHandler(CompletionToken complToken) {
 			this.complToken = complToken;
 			this.signal = new CountDownLatch(1);
-			this.driver = KeyValueStub.this.getDriver(MemcachedDriver.class);
+			this.driver = KeyValueStub.this.getDriver(driverClass);
 			this.transmitter = KeyValueStub.this
 					.getResponseTransmitter(KeyValueResponseTransmitter.class);
 		}

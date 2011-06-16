@@ -9,5 +9,5 @@ import mosaic.core.ops.IOperationType;
  * 
  */
 public enum MemcachedOperations implements IOperationType {
-	ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK, LIST, GET, SET;
+	ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK, LIST, GET, SET, DELETE;
 }

@@ -1,8 +1,10 @@
 package mosaic.driver.interop.kvstore.memcached;
 
 import mosaic.core.configuration.IConfiguration;
+import mosaic.core.ops.IOperationType;
 import mosaic.driver.interop.kvstore.KeyValueResponseTransmitter;
 import mosaic.driver.kvstore.KeyValueOperations;
+import mosaic.interop.idl.kvstore.CompletionToken;
 import mosaic.interop.idl.kvstore.OperationNames;
 
 /**
@@ -13,7 +15,6 @@ import mosaic.interop.idl.kvstore.OperationNames;
  * 
  */
 public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
-	// private static final String DEFAULT_QUEUE_NAME = "memcached_responses";
 
 	/**
 	 * Creates a new transmitter.
@@ -23,6 +24,28 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
 	 */
 	public MemcachedResponseTransmitter(IConfiguration config) {
 		super(config);
+	}
+
+	/**
+	 * Builds the result and sends it to the operation originator.
+	 * 
+	 * @param token
+	 *            the token identifying the operation
+	 * @param op
+	 *            the identifier of the operation
+	 * @param result
+	 *            the result
+	 * @param isError
+	 *            <code>true</code> if the result is actual an error
+	 */
+	public void sendResponse(CompletionToken token, IOperationType op,
+			Object result, boolean isError) {
+
+		if (!(op instanceof KeyValueOperations)) {
+			return;
+		}
+		KeyValueOperations mOp = (KeyValueOperations) op;
+		packAndSend(token, convertOperationType(mOp), result, isError);
 	}
 
 	private OperationNames convertOperationType(KeyValueOperations op) {

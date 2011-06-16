@@ -34,7 +34,7 @@ public class RedisOperationFactory implements IOperationFactory {
 	 * Creates a new factory.
 	 * 
 	 * @param client
-	 *            the Memcached client used for communicating with the key-value
+	 *            the Redis client used for communicating with the key-value
 	 *            system
 	 * @return the factory
 	 */
@@ -50,13 +50,23 @@ public class RedisOperationFactory implements IOperationFactory {
 	 * java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation(IOperationType type, Object... parameters) {
+	public IOperation<?> getOperation(final IOperationType type,
+			Object... parameters) {
 		IOperation<?> operation = null;
 		if (!(type instanceof KeyValueOperations)) {
-			throw new IllegalArgumentException("Unsupported operation: "
-					+ type.toString());
+			operation = new GenericOperation<Object>(new Callable<Object>() {
+
+				@Override
+				public Object call() throws Exception {
+					throw new UnsupportedOperationException(
+							"Unsupported operation: " + type.toString());
+				}
+
+			});
+			return operation;
 		}
-		KeyValueOperations mType = (KeyValueOperations) type;
+
+		final KeyValueOperations mType = (KeyValueOperations) type;
 		String key;
 		Object data;
 		final byte[] keyBytes;
@@ -135,12 +145,29 @@ public class RedisOperationFactory implements IOperationFactory {
 						});
 				break;
 			default:
-				throw new UnsupportedOperationException(
-						"Unsupported operation: " + mType.toString());
+				operation = new GenericOperation<Object>(
+						new Callable<Object>() {
+
+							@Override
+							public Object call() throws Exception {
+								throw new UnsupportedOperationException(
+										"Unsupported operation: "
+												+ mType.toString());
+							}
+
+						});
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
+			operation = new GenericOperation<Object>(
+					new Callable<Object>() {
+
+						@Override
+						public Object call() throws Exception {
+							throw e;
+						}
+
+					});
 			ExceptionTracer.traceDeferred(e);
-			// TODO send error
 		}
 		return operation;
 	}

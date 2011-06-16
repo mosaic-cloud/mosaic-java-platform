@@ -64,9 +64,6 @@ public class ResponseTransmitter {
 						config,
 						ConfigProperties.getString("ResponseTransmitter.5"), String.class, //$NON-NLS-1$
 						DEFAULT_EXCHANGE_NAME);
-		// queueName = ConfigUtils.resolveParameter(config,
-		// "interop.resp.amqp.rountingkey", String.class,
-		// DEFAULT_QUEUE_NAME);
 
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);

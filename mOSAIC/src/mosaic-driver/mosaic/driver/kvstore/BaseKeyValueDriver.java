@@ -8,7 +8,6 @@ import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.core.ops.IResult;
 import mosaic.driver.AbstractResourceDriver;
-import mosaic.driver.IResourceDriver;
 
 /**
  * Base class for key-value store drivers. Implements only the basic set, get,
