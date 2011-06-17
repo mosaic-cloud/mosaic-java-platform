@@ -79,6 +79,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 		}
 		if (db > -1) {
 			jedis.select(db);
+//			jedis.flushDB();
 		}
 
 		IOperationFactory opFactory = RedisOperationFactory.getFactory(jedis);

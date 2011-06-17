@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.core.Serial;
+import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
@@ -17,7 +19,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
 
+@RunWith(SerialJunitRunner.class)
 public class RedisDriverTest {
 	private static BaseKeyValueDriver wrapper;
 	private static String keyPrefix;
@@ -151,4 +156,8 @@ public class RedisDriverTest {
 			Assert.fail();
 		}
 	}
+	
+	public static void main(String[] args) {
+        JUnitCore.main("mosaic.driver.kvstore.tests.RedisDriverTest");
+    }
 }

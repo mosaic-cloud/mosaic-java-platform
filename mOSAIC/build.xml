@@ -170,20 +170,28 @@
 
 	<target name="redis-tests" description="Runs the Redis driver tests. Assumes a Redis store is running on localhost.">
 		<mkdir dir="${test.output.dir}" />
-		<junit fork="false">
-			<test name="mosaic.driver.kvstore.tests.RedisDriverTest" todir="${test.output.dir}">
-			</test>
-
-			<formatter type="plain" usefile="true" />
-			<classpath>
-				<fileset dir="lib">
-					<include name="**/*.jar" />
-				</fileset>
-				<fileset dir=".">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</junit>
+		<sequential>
+			<java classname="mosaic.driver.kvstore.tests.RedisDriverTest" fork="true" output="${test.output.dir}/redis-driver.test">
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+			</java>
+			<java classname="mosaic.connector.kvstore.tests.RedisConnectorTest" fork="true" output="${test.output.dir}/redis-conn.test">
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+			</java>
+		</sequential>
 	</target>
 
 	<target name="conn-tests" description="Runs the connector tests. Assumes a membase store  and a RabbitMQ server is running on localhost.">
@@ -204,6 +212,19 @@
 			</junit>
 			<junit fork="false">
 				<test name="mosaic.connector.kvstore.tests.KeyValueConnectorTest" todir="${test.output.dir}">
+				</test>
+				<formatter type="plain" usefile="true" />
+				<classpath>
+					<fileset dir="lib">
+						<include name="**/*.jar" />
+					</fileset>
+					<fileset dir=".">
+						<include name="**/*.jar" />
+					</fileset>
+				</classpath>
+			</junit>
+			<junit fork="false">
+				<test name="mosaic.connector.amqp.tests.AmqpDriverTest" todir="${test.output.dir}">
 				</test>
 				<formatter type="plain" usefile="true" />
 				<classpath>

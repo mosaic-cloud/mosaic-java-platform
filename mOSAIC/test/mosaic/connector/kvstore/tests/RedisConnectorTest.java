@@ -6,8 +6,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.connector.kvstore.KeyValueStoreConnector;
+import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
-import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
@@ -18,20 +18,20 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
 
-public class KeyValueConnectorTest {
+@RunWith(SerialJunitRunner.class)
+public class RedisConnectorTest {
 	private static KeyValueStoreConnector connector;
 	private static String keyPrefix;
 	private static KeyValueStub driverStub;
-	private static String storeType;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
 		IConfiguration config = PropertyTypeConfiguration.create(
-				KeyValueConnectorTest.class.getClassLoader(),
-				"memcached--test.prop");
-		storeType = ConfigUtils.resolveParameter(config, "kvstore.driver_name",
-				String.class, "");
+				RedisConnectorTest.class.getClassLoader(),
+				"redis-test.prop");
 		connector = KeyValueStoreConnector.create(config);
 		keyPrefix = UUID.randomUUID().toString();
 		driverStub = KeyValueStub.create(config);
@@ -133,13 +133,10 @@ public class KeyValueConnectorTest {
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
 		IResult<List<String>> r1 = connector.list(handlers, null);
 		try {
-			if (storeType.equalsIgnoreCase("memcached")) {
-				Assert.assertNull(r1.getResult());
-			} else {
-				Assert.assertNotNull(r1.getResult());
-				for (String key : r1.getResult()) {
-					System.out.println(key);
-				}
+
+			Assert.assertNotNull(r1.getResult());
+			for (String key : r1.getResult()) {
+				System.out.println(key);
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -150,10 +147,13 @@ public class KeyValueConnectorTest {
 		}
 	}
 
-	public static void main() throws Throwable {
+	public static void main(String... args) {
+		JUnitCore.main("mosaic.connector.kvstore.tests.RedisConnectorTest");
+	}
+
+	public static void _main(String... args) throws Throwable {
 		IConfiguration config = PropertyTypeConfiguration.create(
-				KeyValueConnectorTest.class.getClassLoader(),
-				"memcached-test.prop");
+				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 		KeyValueStoreConnector connector = KeyValueStoreConnector
 				.create(config);
 		String keyPrefix = UUID.randomUUID().toString();
