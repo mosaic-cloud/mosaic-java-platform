@@ -57,6 +57,14 @@ public class UserCloudlet {
 
 		}
 
+		@Override
+		public void destroySucceeded(UserCloudletState state,
+				CallbackArguments<UserCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"UserCloudlet was destroyed successfully.");
+			System.exit(0);
+		}
+
 	}
 
 	public static final class AmqpConsumerCallback extends

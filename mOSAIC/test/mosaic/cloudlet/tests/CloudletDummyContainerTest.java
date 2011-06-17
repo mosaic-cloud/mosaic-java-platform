@@ -13,27 +13,35 @@ public class CloudletDummyContainerTest {
 	public static void main(String... args) {
 		IConfiguration configuration;
 
-		for (int i = 0; i < args.length; i++) {
-			configuration = PropertyTypeConfiguration.create(
-					CloudletDummyContainerTest.class.getClassLoader(), args[i]);
-			final CloudletDummyContainer container = new CloudletDummyContainer(
-					CloudletDummyContainerTest.class.getClassLoader(),
-					configuration);
-			Runnable r = new Runnable() {
+		configuration = PropertyTypeConfiguration.create(
+				CloudletDummyContainerTest.class.getClassLoader(), args[0]);
+		final CloudletDummyContainer container = new CloudletDummyContainer(
+				CloudletDummyContainerTest.class.getClassLoader(),
+				configuration);
+		Runnable r = new Runnable() {
 
-				@Override
-				public void run() {
-					try {
-						container.start();
-					} catch (CloudletException e) {
-						ExceptionTracer.traceDeferred(e);
-					}
-
+			@Override
+			public void run() {
+				try {
+					container.start();
+				} catch (CloudletException e) {
+					ExceptionTracer.traceDeferred(e);
 				}
-			};
-			Thread t = new Thread(r);
-			t.start();
-		}
+
+			}
+		};
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				container.stop();
+				System.out
+						.println("CloudletDummyContainerTest.main(...).new Thread() {...}.run()");
+			}
+		});
+
+		Thread t = new Thread(r);
+		t.start();
 	}
 
 	public void cloudletTest() throws FileNotFoundException, IOException {

@@ -254,7 +254,7 @@
 
 	<target name="hello-cloudlet" description="Runs the logging cloudlet. Assumes a membase store  and a RabbitMQ server is running on localhost.">
 		<mkdir dir="${test.output.dir}" />
-		<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/hello-cloudlet.test">
+		<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="false" output="${test.output.dir}/hello-cloudlet.test">
 			<arg value="hello-cloudlet.prop" />
 			<classpath>
 				<fileset dir="lib">
@@ -328,9 +328,9 @@
 		<mkdir dir="${test.output.dir}" />
 		<parallel>
 			<antcall target="start-amqp-driver" />
-			<!--<antcall target="start-memcached-driver" />-->
+			<antcall target="start-memcached-driver" />
 			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/logging-cloudlet.out">
-				<arg value="simple-logging-cloudlet.prop" />
+				<arg value="logging-cloudlet.prop" />
 				<classpath>
 					<fileset dir="lib">
 						<include name="**/*.jar" />

@@ -50,6 +50,12 @@ public class PublisherCloudlet {
 					"PublisherCloudlet is being destroyed.");
 		}
 
+		@Override
+		public void destroySucceeded(PublisherCloudletState state,
+				CallbackArguments<PublisherCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+			"Publisher cloudlet was destroyed successfully.");
+		}
 	}
 
 	public static final class AmqpPublisherCallback

@@ -37,7 +37,7 @@ public class KeyValueDriverFactory {
 	 * @param config
 	 *            the configuration for the driver
 	 * @return the driver
-	 * @throws DriverNotFoundException
+	 * @throws ConnectorNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
 	public static BaseKeyValueDriver createDriver(String driverName,

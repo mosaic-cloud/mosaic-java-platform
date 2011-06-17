@@ -3,6 +3,7 @@ package mosaic.cloudlet.tests;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
+import mosaic.core.log.MosaicLogger;
 import mosaic.driver.interop.kvstore.memcached.MemcachedStub;
 
 public class MemcachedDriverStarter {
@@ -12,6 +13,14 @@ public class MemcachedDriverStarter {
 		IConfiguration kvConfiguration = configuration
 				.spliceConfiguration(ConfigurationIdentifier
 						.resolveAbsolute("kvstore"));
-		MemcachedStub.create(kvConfiguration);
+		final MemcachedStub stub = MemcachedStub.create(kvConfiguration);
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				stub.destroy();
+				MosaicLogger.getLogger().info("MemcachedDriver stopped.");
+			}
+		});
 	}
 }

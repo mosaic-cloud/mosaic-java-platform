@@ -235,22 +235,35 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 						"Unknown memcached get message: " + opName.toString());
 				break;
 			}
-		} else {
-			if (ob instanceof SetOperation) {
-				SetOperation opp = (SetOperation) ob;
-				token = (CompletionToken) opp.get(0);
-				opName = (OperationNames) opp.get(1);
-			} else if (ob instanceof ListOperation) {
-				ListOperation opp = (ListOperation) ob;
-				token = (CompletionToken) opp.get(0);
-				opName = (OperationNames) opp.get(1);
-			}
+		} else if (ob instanceof SetOperation) {
+			SetOperation opp = (SetOperation) ob;
+			token = (CompletionToken) opp.get(0);
+			opName = (OperationNames) opp.get(1);
+			key = ((CharSequence) opp.get(2)).toString();
+			ByteBuffer dataBytes = (ByteBuffer) opp.get(3);
+			Object data = SerDesUtils.toObject(dataBytes.array());
+
+			MosaicLogger.getLogger().trace(
+					"MemcachedStub - Received request for " + opName.toString()
+							+ " - request id: " + token.get(0) + " client id: "
+							+ token.get(1));
+
+			// execute operation
+			DriverOperationFinishedHandler storeCallback = new DriverOperationFinishedHandler(
+					token);
+			IResult<Boolean> resultStore = driver.invokeSetOperation(key, data,
+					storeCallback);
+			storeCallback.setDetails(KeyValueOperations.SET, resultStore);
+		} else if (ob instanceof ListOperation) {
+			ListOperation opp = (ListOperation) ob;
+			token = (CompletionToken) opp.get(0);
+			opName = (OperationNames) opp.get(1);
 
 			DriverOperationFinishedHandler callback = new DriverOperationFinishedHandler(
 					token);
 			driver.handleUnsupportedOperationError(opName.toString(), callback);
 			MosaicLogger.getLogger().error(
-					"Unknown memcached get message: " + opName.toString());
+					"Unsupported operation " + opName.toString());
 		}
 	}
 

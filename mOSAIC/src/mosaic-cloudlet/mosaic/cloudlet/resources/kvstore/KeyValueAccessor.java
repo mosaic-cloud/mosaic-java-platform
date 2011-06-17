@@ -9,7 +9,7 @@ import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.resources.ResourceStatus;
 import mosaic.connector.kvstore.IKeyValueStore;
-import mosaic.connector.kvstore.memcached.MemcachedStoreConnector;
+import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.IOperationCompletionHandler;
@@ -62,8 +62,13 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 			this.callbackProxy = this.cloudlet.buildCallbackInvoker(
 					this.callback, IKeyValueAccessorCallback.class);
 			try {
-				// FIXME select the correct connector
-				this.connector = MemcachedStoreConnector.create(configuration);
+				String connectorName = ConfigUtils.resolveParameter(
+						configuration, mosaic.cloudlet.ConfigProperties
+								.getString("KeyValueAccessor.0"), String.class, //$NON-NLS-1$
+						""); //$NON-NLS-1$
+
+				this.connector = KeyValueConnectorFactory.createConnector(
+						connectorName, configuration);// MemcachedStoreConnector.create(configuration);
 				this.status = ResourceStatus.READY;
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						KeyValueAccessor.this.cloudlet, true);
@@ -249,7 +254,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, "", error);
+							KeyValueAccessor.this.cloudlet, "", error); //$NON-NLS-1$
 					KeyValueAccessor.this.callback.deleteFailed(
 							KeyValueAccessor.this.cloudletState, arguments);
 				}

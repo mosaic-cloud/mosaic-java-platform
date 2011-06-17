@@ -51,6 +51,12 @@ public class ConsumerCloudlet {
 					"ConsumerCloudlet is being destroyed.");
 		}
 
+		public void destroySucceeded(ConsumerCloudletState state,
+				CallbackArguments<ConsumerCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+			"Consumer cloudlet was destroyed successfully.");
+		}
+
 	}
 
 	public static final class AmqpConsumerCallback extends

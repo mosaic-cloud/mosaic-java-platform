@@ -146,10 +146,12 @@ public class CloudletExecutor {
 
 		this.worker = new Worker();
 		this.worker.thread = new Thread(this.worker);
+		this.worker.thread.setDaemon(false);
 		this.worker.thread.start();
 
 		this.backupWorker = new BackupWorker();
 		this.backupWorker.thread = new Thread(this.backupWorker);
+		this.backupWorker.thread.setDaemon(false);
 		this.backupWorker.thread.start();
 		runningWorkers = 2;
 		this.runState = RUNNING;

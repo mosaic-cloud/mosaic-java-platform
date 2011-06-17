@@ -134,7 +134,6 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 		boolean destroyed = false;
 		synchronized (this) {
 			this.active = false;
-			// TODO shutdown executor
 			IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object>() {
 
 				@Override

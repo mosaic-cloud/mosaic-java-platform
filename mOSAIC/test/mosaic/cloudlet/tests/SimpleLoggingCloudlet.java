@@ -59,6 +59,14 @@ public class SimpleLoggingCloudlet {
 					.info("LoggingCloudlet is being destroyed.");
 		}
 
+		@Override
+		public void destroySucceeded(LoggingCloudletState state,
+				CallbackArguments<LoggingCloudletState> arguments) {
+			MosaicLogger.getLogger().info(
+					"LoggingCloudlet was destroyed successfully.");
+			System.exit(0);
+		}
+
 	}
 
 	public static final class AmqpConsumerCallback extends

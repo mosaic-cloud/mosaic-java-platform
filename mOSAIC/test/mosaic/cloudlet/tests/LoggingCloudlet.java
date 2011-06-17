@@ -73,6 +73,14 @@ public class LoggingCloudlet {
 			MosaicLogger.getLogger()
 					.info("LoggingCloudlet is being destroyed.");
 		}
+		
+		@Override
+		public void destroySucceeded(LoggingCloudletState state,
+				CallbackArguments<LoggingCloudletState> arguments) {
+			MosaicLogger.getLogger()
+					.info("LoggingCloudlet was destroyed successfully.");
+			System.exit(0);
+		}
 
 	}
 

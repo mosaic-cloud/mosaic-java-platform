@@ -18,6 +18,7 @@ test.token=got_it
 # configurations below will normally not be set by the cloudlet creator
 # this is just for test
 kvstore.memcached.connector_threads=1
+kvstore.kvstore.connector_name=memcached
 queue.amqp.connector_threads=1
 
 queue.interop.req.amqp.host=localhost
