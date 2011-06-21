@@ -37,11 +37,11 @@ public final class DefaultJsonMapper
 	}
 	
 	@Override
-	public final <_Object_ extends Object> _Object_ decode (final Map<String, ? extends Object> data, final Class<_Object_> clasz)
+	public final <_Object_ extends Object> _Object_ decode (final Object data, final Class<_Object_> clasz)
 	{
 		try {
 			final ObjectMapper mapper = new ObjectMapper ();
-			final JsonNode node = this.transformToNode (data);
+			final JsonNode node = this.encode (data);
 			final _Object_ object = mapper.treeToValue (node, clasz);
 			return (object);
 		} catch (final IOException exception) {
@@ -50,7 +50,7 @@ public final class DefaultJsonMapper
 	}
 	
 	@Override
-	public final <_Object_ extends Object> Map<String, ? extends Object> encode (final _Object_ object, final Class<_Object_> clasz)
+	public final <_Object_ extends Object> Object encode (final _Object_ object, final Class<_Object_> clasz)
 	{
 		try {
 			final ObjectMapper mapper = new ObjectMapper ();
@@ -59,7 +59,7 @@ public final class DefaultJsonMapper
 			final JsonParser parser = buffer.asParser ();
 			final JsonNode node = mapper.readTree (parser);
 			parser.close ();
-			final Map<String, ? extends Object> data = this.transformFromNode ((ObjectNode) node);
+			final Object data = this.transformFromNode (node);
 			return (data);
 		} catch (final IOException exception) {
 			throw (new RuntimeException (exception));

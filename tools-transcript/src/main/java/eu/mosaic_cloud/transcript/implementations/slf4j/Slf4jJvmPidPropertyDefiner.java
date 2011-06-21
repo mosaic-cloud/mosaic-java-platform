@@ -27,6 +27,5 @@ public final class Slf4jJvmPidPropertyDefiner
 	}
 	
 	private final String pid;
-	
 	public static final Slf4jJvmPidPropertyDefiner defaultInstance = new Slf4jJvmPidPropertyDefiner ();
 }
