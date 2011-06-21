@@ -1,10 +1,13 @@
 package eu.mosaic_cloud.jetty.connectors.httpg;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.UUID;
+
+import org.eclipse.jetty.servlet.DefaultServlet;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -137,6 +140,7 @@ public class ServerCommandLine {
 		String queueName = props.getProperty("queue");
 		int amqpPort = Integer.parseInt(props.getProperty("port"));
 		String amqpVirtualHost = props.getProperty("virtual-host");
+		String tmp = props.getProperty("tmp");
 		
 		/*
 		 * Setup connectors
@@ -167,6 +171,12 @@ public class ServerCommandLine {
 			webapp.setContextPath(ctxPath);
 			webapp.setWar(webAppDir);
 			webapp.setParentLoaderPriority(true);
+			webapp.addServlet(DefaultServlet.class, "/");
+			webapp.setInitParameter("dirAllowed", "false");
+			webapp.setInitParameter("welcomeServlets", "true");
+			webapp.setInitParameter("redirectWelcome", "true");
+			if (tmp != null)
+				webapp.setTempDirectory(new File(tmp));
 			jettyServer.setHandler(webapp);
 		}
 
