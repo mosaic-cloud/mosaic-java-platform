@@ -4,6 +4,7 @@
 !.hgignore
 
 target
+lib
 META-INF
 
 *#
