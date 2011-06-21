@@ -61,6 +61,7 @@ public class ServerCommandLine {
 		Option webapp = new Option("w", "webapp", true,
 				"The location of the war file");
 		Option webappContext = new Option("q", "app-context", true, "App context path");
+		Option tmp = new Option("T", "tmp", true, "temporary folder");
 
 		options.addOption(helpOption);
 		options.addOption(amqpServerOption);
@@ -75,6 +76,7 @@ public class ServerCommandLine {
 		options.addOption(jettyClassicConnector);
 		options.addOption(webapp);
 		options.addOption(webappContext);
+		options.addOption(tmp);
 		try {
 			line = parser.parse(options, args);
 		} catch (ParseException exp) {
@@ -130,7 +132,7 @@ public class ServerCommandLine {
 		return props;
 	}
 
-	public static Server startServer(Properties props) throws Exception {
+	public static Server createServer(Properties props) {
 		Server jettyServer = new Server();
 		String userName = props.getProperty("username");
 		String userPassword = props.getProperty("password");
@@ -168,6 +170,8 @@ public class ServerCommandLine {
 			final String ctxPath = props.getProperty("app-context", "/");
 			
 			WebAppContext webapp = new WebAppContext();
+			if ((tmp != null) && (!tmp.isEmpty()))
+				webapp.setTempDirectory(new File(tmp));
 			webapp.setContextPath(ctxPath);
 			webapp.setWar(webAppDir);
 			webapp.setParentLoaderPriority(true);
@@ -175,21 +179,21 @@ public class ServerCommandLine {
 			webapp.setInitParameter("dirAllowed", "false");
 			webapp.setInitParameter("welcomeServlets", "true");
 			webapp.setInitParameter("redirectWelcome", "true");
-			if (tmp != null)
-				webapp.setTempDirectory(new File(tmp));
+			webapp.setExtractWAR(false);
 			jettyServer.setHandler(webapp);
 		}
 
 		/*
 		 * Start the toy
 		 */
-		jettyServer.start();
 		return (jettyServer);
 	}
 
 	public static void main(String[] args) throws Exception {
 		Properties props = getConfig(args);
-		startServer(props).join ();
+		Server server = createServer(props);
+		server.start();
+		server.join ();
 	}
 
 }

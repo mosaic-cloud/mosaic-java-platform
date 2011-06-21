@@ -67,6 +67,7 @@ public class AmqpConnector extends AbstractConnector {
 			delivery = _consumer.nextDelivery();
 		} catch (ShutdownSignalException e) {
 			Log.warn ("Shutdown encountered...");
+			System.exit(1);
 			try {
 				Thread.sleep (1000);
 			} catch (InterruptedException e1) {}
@@ -135,7 +136,12 @@ public class AmqpConnector extends AbstractConnector {
 
 	@Override
 	public void open() throws IOException {
-		setupConnection();
+		try {
+			setupConnection();
+		} catch (IOException e) {
+			Log.warn(e);
+			System.exit(1);
+		}
 		_connection.addShutdownListener(new ShutdownListener() {
 
 			@Override
@@ -150,6 +156,7 @@ public class AmqpConnector extends AbstractConnector {
 					setupConnection();
 				} catch (IOException e) {
 					Log.warn("Faild connecting... Going to sleep and retry");
+					System.exit(1);
 					try {
 						Thread.sleep(4000);
 					} catch (InterruptedException e1) {
