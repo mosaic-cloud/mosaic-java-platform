@@ -1,0 +1,10 @@
+
+.*
+!.gitignore
+!.hgignore
+
+target
+META-INF
+
+*#
+*~
