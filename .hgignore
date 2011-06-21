@@ -1,7 +1,11 @@
-syntax: glob
 
-*.class
-*~
-target/*
-.*
-release.properties
+syntax: regexp
+
+^(.*/)?\..*$
+
+^(.*/)?target$
+^(.*/)?lib$
+^(.*/)?META-INF$
+
+^(.*/)?.*\#$
+^(.*/)?.*\~$
