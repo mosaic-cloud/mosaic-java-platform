@@ -52,7 +52,7 @@ public final class JettyComponentCallbacks
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component != null);
 			Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
-			Preconditions.checkArgument (this.pendingCallReturnFutures.containsKey (request.reference));
+			Preconditions.checkArgument (!this.pendingCallReturnFutures.containsKey (request.reference));
 			this.pendingCallReturnFutures.put (request.reference, replyFuture.trigger);
 			this.component.call (component, request);
 		}
@@ -92,7 +92,7 @@ public final class JettyComponentCallbacks
 							brokerPort = (Integer) outputs.get ("port");
 							Preconditions.checkNotNull (brokerPort);
 						} catch (final Throwable exception) {
-							this.component.terminate ();
+							this.terminate ();
 							this.exceptions.traceIgnoredException (exception, "failed resolving RabbitMQ broker endpoint: `%s`; terminating!", reply.outputsOrError);
 							throw (new IllegalStateException ());
 						}
@@ -184,6 +184,14 @@ public final class JettyComponentCallbacks
 		}
 	}
 	
+	public final void terminate ()
+	{
+		synchronized (this.monitor) {
+			Preconditions.checkState (this.component != null);
+			this.component.terminate ();
+		}
+	}
+	
 	@Override
 	public CallbackReference terminated (final Component component)
 	{
@@ -226,16 +234,25 @@ public final class JettyComponentCallbacks
 			if (JettyComponentContext.httpgRequestsAutodeclare)
 				jettyProperties.setProperty ("auto-declare", "true");
 			jettyProperties.setProperty ("webapp", JettyComponentContext.appWar.getAbsolutePath ());
+			jettyProperties.setProperty ("tmp", JettyComponentContext.appTmp.getAbsolutePath ());
 			jettyProperties.setProperty ("app-context", JettyComponentContext.appContextPath);
+			jettyProperties.setProperty ("tmp", "./temporary");
 			final Server jettyServer;
-			try {
-				jettyServer = ServerCommandLine.startServer (jettyProperties);
-			} catch (final Throwable exception) {
-				this.component.terminate ();
-				this.exceptions.traceIgnoredException (exception, "error encountered while starting Jetty; terminating!");
-				throw (new IllegalStateException ());
-			}
+			jettyServer = ServerCommandLine.createServer (jettyProperties);
 			this.jettyServer = jettyServer;
+			final Thread jettyThread = new Thread () {
+				@Override
+				public final void run ()
+				{
+					try {
+						jettyServer.start ();
+					} catch (final Throwable exception) {
+						JettyComponentCallbacks.this.terminate ();
+						JettyComponentCallbacks.this.exceptions.traceIgnoredException (exception, "error encountered while starting Jetty; terminating!");
+					}
+				}
+			};
+			jettyThread.start ();
 		}
 	}
 	
@@ -243,7 +260,8 @@ public final class JettyComponentCallbacks
 	{
 		synchronized (this.monitor) {
 			try {
-				this.jettyServer.stop ();
+				if (this.jettyServer != null)
+					this.jettyServer.stop ();
 			} catch (final Throwable exception) {
 				this.exceptions.traceIgnoredException (exception, "error encountered while stopping Jetty; ignoring!");
 			}

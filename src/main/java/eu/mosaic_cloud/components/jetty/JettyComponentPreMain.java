@@ -24,22 +24,30 @@ public final class JettyComponentPreMain
 			throws Exception
 	{
 		Preconditions.checkArgument (arguments != null);
-		if (arguments.length != 1) {
+		if ((arguments.length == 2) && !"00000000cf14614e8810102fa887b6bc90dc2a40".equals (arguments[0])) {
 			Preconditions.checkArgument (arguments.length == 2, "invalid arguments; expected: <component-identifier> <war-file>");
 			JettyComponentContext.selfIdentifier = ComponentIdentifier.resolve (arguments[0]);
 			JettyComponentContext.appWar = new File (arguments[1]);
 			Preconditions.checkArgument (JettyComponentContext.appWar.isFile (), "invalid appWar file; (does not exist)");
 			Preconditions.checkArgument (JettyComponentContext.appWar.canRead (), "invalid appWar file; (can not read)");
 			BasicComponentHarnessPreMain.main (new String[] {JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks")});
-		} else {
-			Preconditions.checkArgument (arguments.length == 1, "invalid arguments; expected: <war-file>");
-			JettyComponentContext.selfIdentifier = ComponentIdentifier.resolve ("00000000" + UUID.randomUUID ().toString ().replace ("-", ""));
-			JettyComponentContext.appWar = new File (arguments[0]);
+		} else if ((arguments.length == 1) || "00000000cf14614e8810102fa887b6bc90dc2a40".equals (arguments[0])) {
+			final String temporary;
+			if (arguments.length == 2) {
+				JettyComponentContext.selfIdentifier = ComponentIdentifier.resolve (arguments[0]);
+				JettyComponentContext.appWar = new File (arguments[1]);
+				temporary = "./temporary";
+			} else {
+				JettyComponentContext.selfIdentifier = ComponentIdentifier.resolve ("ffffffff" + UUID.randomUUID ().toString ().replace ("-", ""));
+				JettyComponentContext.appWar = new File (arguments[0]);
+				temporary = System.getProperty ("java.io.tmpdir") + "/jetty-" + JettyComponentContext.selfIdentifier.string;
+			}
 			Preconditions.checkArgument (JettyComponentContext.appWar.isFile (), "invalid appWar file; (does not exist)");
 			Preconditions.checkArgument (JettyComponentContext.appWar.canRead (), "invalid appWar file; (can not read)");
 			final Class<?> mainClass = JettyComponentPreMain.class.getClassLoader ().loadClass ("eu.mosaic_cloud.jetty.connectors.httpg.ServerCommandLine");
 			final Method mainMethod = mainClass.getMethod ("main", String[].class);
-			mainMethod.invoke (null, new Object[] {new String[] {"--server", "127.0.0.1", "--port", "21688", "--auto-declare", "true", "--webapp", JettyComponentContext.appWar.getAbsolutePath ()}});
-		}
+			mainMethod.invoke (null, new Object[] {new String[] {"--server", "127.0.0.1", "--port", "21688", "--auto-declare", "true", "--webapp", JettyComponentContext.appWar.getAbsolutePath (), "--tmp", temporary}});
+		} else
+			throw (new IllegalArgumentException ("invalid arguments; expected: <component-identifier> <war-file>"));
 	}
 }

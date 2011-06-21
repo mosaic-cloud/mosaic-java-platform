@@ -17,6 +17,7 @@ final class JettyComponentContext
 	}
 	
 	static String appContextPath = "/";
+	static File appTmp = new File ("./temporary");
 	static File appWar;
 	static ComponentIdentifier brokerGroup = ComponentIdentifier.resolve ("8cd74b5e4ecd322fd7bbfc762ed6cf7d601eede8");
 	static String brokerPassword = "guest";
