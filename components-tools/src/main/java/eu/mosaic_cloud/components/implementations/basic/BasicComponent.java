@@ -235,7 +235,7 @@ public final class BasicComponent
 									final ComponentCallReference reference = this.outboundCalls.inverse ().remove (correlation);
 									reply = ComponentCallReply.create (false, errorValue, message.data.asReadOnlyBuffer (), reference);
 								}
-								this.callbackTrigger.replied (this.facade, reply);
+								this.callbackTrigger.callReturned (this.facade, reply);
 							}
 								break;
 							case Cast : {
@@ -310,7 +310,7 @@ public final class BasicComponent
 			Preconditions.checkNotNull (request);
 			synchronized (this.monitor) {
 				Preconditions.checkArgument (!this.outboundCalls.containsKey (request.reference));
-				final String correlation = UUID.randomUUID ().toString ();
+				final String correlation = UUID.randomUUID ().toString ().replace ("-", "");
 				final HashMap<String, Object> metaData = new HashMap<String, Object> ();
 				metaData.put (Token.Action.string, Token.Call.string);
 				metaData.put (Token.Component.string, identifier.string);

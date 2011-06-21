@@ -31,4 +31,9 @@ public final class ComponentCallRequest
 	{
 		return (new ComponentCallRequest (operation, inputs, data, reference));
 	}
+	
+	public static final ComponentCallRequest create (final String operation, final Object inputs, final ComponentCallReference reference)
+	{
+		return (new ComponentCallRequest (operation, inputs, ByteBuffer.allocate (0), reference));
+	}
 }

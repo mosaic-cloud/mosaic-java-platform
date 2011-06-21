@@ -2,6 +2,8 @@
 package eu.mosaic_cloud.components.core;
 
 
+import java.util.regex.Pattern;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBiMap;
 
@@ -15,11 +17,18 @@ public final class ComponentIdentifier
 		this.string = string;
 	}
 	
+	@Override
+	public final String toString ()
+	{
+		return (this.string);
+	}
+	
 	public final String string;
 	
 	public static final ComponentIdentifier resolve (final String string)
 	{
 		Preconditions.checkNotNull (string);
+		Preconditions.checkArgument (ComponentIdentifier.stringPattern.matcher (string).matches ());
 		synchronized (ComponentIdentifier.identifiers) {
 			final ComponentIdentifier existingIdentifier = ComponentIdentifier.identifiers.get (string);
 			final ComponentIdentifier identifier;
@@ -33,5 +42,6 @@ public final class ComponentIdentifier
 		}
 	}
 	
+	public static final Pattern stringPattern = Pattern.compile ("^[0-9a-f]{40}$");
 	private static final HashBiMap<String, ComponentIdentifier> identifiers = HashBiMap.create ();
 }

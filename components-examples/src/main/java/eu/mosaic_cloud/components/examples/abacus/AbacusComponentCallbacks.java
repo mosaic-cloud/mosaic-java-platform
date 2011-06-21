@@ -69,6 +69,14 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
+	public final CallbackReference callReturned (final Component component, final ComponentCallReply reply)
+	{
+		Preconditions.checkState (this.status == Status.Initialized);
+		Preconditions.checkState (this.component == component);
+		throw (new UnsupportedOperationException ());
+	}
+	
+	@Override
 	public final CallbackReference casted (final Component component, final ComponentCastRequest request)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
@@ -87,7 +95,8 @@ public final class AbacusComponentCallbacks
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
-		throw (new UnsupportedOperationException ());
+		this.exceptions.traceIgnoredException (exception);
+		return (null);
 	}
 	
 	@Override
@@ -97,7 +106,6 @@ public final class AbacusComponentCallbacks
 		Preconditions.checkState (this.component == null);
 		this.component = component;
 		this.status = Status.Initialized;
-		this.transcript.traceInformation ("initialized;");
 		return (null);
 	}
 	
@@ -116,21 +124,12 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference replied (final Component component, final ComponentCallReply reply)
-	{
-		Preconditions.checkState (this.status == Status.Initialized);
-		Preconditions.checkState (this.component == component);
-		throw (new UnsupportedOperationException ());
-	}
-	
-	@Override
 	public final CallbackReference terminated (final Component component)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		this.component = null;
 		this.status = Status.Terminated;
-		this.transcript.traceInformation ("terminated;");
 		return (null);
 	}
 	

@@ -44,7 +44,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.components.implementations.basic.BasicComponentContainerPreMain</mainClass>
+							<mainClass>eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

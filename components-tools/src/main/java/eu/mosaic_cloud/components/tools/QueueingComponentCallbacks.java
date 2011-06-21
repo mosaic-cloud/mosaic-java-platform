@@ -46,6 +46,14 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
+	public final CallbackReference callReturned (final Component component, final ComponentCallReply reply)
+	{
+		Preconditions.checkArgument (this.component == component);
+		this.queue.add (reply);
+		return (null);
+	}
+	
+	@Override
 	public final CallbackReference casted (final Component component, final ComponentCastRequest request)
 	{
 		Preconditions.checkArgument (this.component == component);
@@ -83,14 +91,6 @@ public final class QueueingComponentCallbacks
 	@Override
 	public final void registered (final ComponentCallbacks trigger)
 	{}
-	
-	@Override
-	public final CallbackReference replied (final Component component, final ComponentCallReply reply)
-	{
-		Preconditions.checkArgument (this.component == component);
-		this.queue.add (reply);
-		return (null);
-	}
 	
 	@Override
 	public final CallbackReference terminated (final Component component)

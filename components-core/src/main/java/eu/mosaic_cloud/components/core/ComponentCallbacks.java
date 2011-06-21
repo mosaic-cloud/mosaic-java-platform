@@ -12,13 +12,13 @@ public interface ComponentCallbacks
 {
 	public abstract CallbackReference called (final Component component, final ComponentCallRequest request);
 	
+	public abstract CallbackReference callReturned (final Component component, final ComponentCallReply reply);
+	
 	public abstract CallbackReference casted (final Component component, final ComponentCastRequest request);
 	
 	public abstract CallbackReference failed (final Component component, final Throwable exception);
 	
 	public abstract CallbackReference initialized (final Component component);
-	
-	public abstract CallbackReference replied (final Component component, final ComponentCallReply reply);
 	
 	public abstract CallbackReference terminated (final Component component);
 }

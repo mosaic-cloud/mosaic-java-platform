@@ -30,4 +30,9 @@ public final class ComponentCallReply
 	{
 		return (new ComponentCallReply (ok, outputsOrError, data, reference));
 	}
+	
+	public static final ComponentCallReply create (final boolean ok, final Object outputsOrError, final ComponentCallReference reference)
+	{
+		return (new ComponentCallReply (ok, outputsOrError, ByteBuffer.allocate (0), reference));
+	}
 }

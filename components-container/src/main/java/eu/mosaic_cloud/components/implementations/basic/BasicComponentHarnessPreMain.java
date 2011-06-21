@@ -8,10 +8,10 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 
 
-public final class BasicComponentContainerPreMain
+public final class BasicComponentHarnessPreMain
 		extends Object
 {
-	private BasicComponentContainerPreMain ()
+	private BasicComponentHarnessPreMain ()
 	{
 		super ();
 		throw (new UnsupportedOperationException ());
@@ -27,7 +27,7 @@ public final class BasicComponentContainerPreMain
 	public static final void main (final String[] arguments)
 			throws Exception
 	{
-		final Class<?> mainClass = BasicComponentContainerPreMain.class.getClassLoader ().loadClass (BasicComponentContainerPreMain.class.getName ().replace ("PreMain", "Main"));
+		final Class<?> mainClass = BasicComponentHarnessPreMain.class.getClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("PreMain", "Main"));
 		final Method mainMethod = mainClass.getMethod ("main", String[].class);
 		mainMethod.invoke (null, new Object[] {arguments});
 	}

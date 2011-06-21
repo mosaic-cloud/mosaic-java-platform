@@ -24,6 +24,11 @@ public final class ComponentCastRequest
 	public final Object inputs;
 	public final String operation;
 	
+	public static final ComponentCastRequest create (final String operation, final Object inputs)
+	{
+		return (new ComponentCastRequest (operation, inputs, ByteBuffer.allocate (0)));
+	}
+	
 	public static final ComponentCastRequest create (final String operation, final Object inputs, final ByteBuffer data)
 	{
 		return (new ComponentCastRequest (operation, inputs, data));

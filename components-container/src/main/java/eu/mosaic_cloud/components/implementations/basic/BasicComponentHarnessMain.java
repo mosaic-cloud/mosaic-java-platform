@@ -24,10 +24,10 @@ import eu.mosaic_cloud.transcript.core.Transcript;
 import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
 
 
-public final class BasicComponentContainerMain
+public final class BasicComponentHarnessMain
 		extends Object
 {
-	private BasicComponentContainerMain ()
+	private BasicComponentHarnessMain ()
 	{
 		super ();
 		throw (new UnsupportedOperationException ());
@@ -44,8 +44,8 @@ public final class BasicComponentContainerMain
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (new Error (exception));
 		}
-		final Piper inputPiper = new Piper (Channels.newChannel (BasicComponentContainerPreMain.stdin), inputPipe.sink (), exceptions);
-		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (BasicComponentContainerPreMain.stdout), exceptions);
+		final Piper inputPiper = new Piper (Channels.newChannel (BasicComponentHarnessPreMain.stdin), inputPipe.sink (), exceptions);
+		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (BasicComponentHarnessPreMain.stdout), exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.create ();
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
 		final BasicChannel channel = BasicChannel.create (inputPipe.source (), outputPipe.sink (), coder, reactor, exceptions);
@@ -58,7 +58,7 @@ public final class BasicComponentContainerMain
 			if (!component.isActive ())
 				break;
 			try {
-				Thread.sleep (BasicComponentContainerMain.sleepTimeout);
+				Thread.sleep (BasicComponentHarnessMain.sleepTimeout);
 			} catch (final InterruptedException exception) {
 				exceptions.trace (ExceptionResolution.Handled, exception);
 				break;
@@ -98,7 +98,7 @@ public final class BasicComponentContainerMain
 						throw (new IllegalArgumentException (String.format ("invalid class-path URL `%s`", classpathPart)));
 					classLoaderUrls.add (classpathUrl);
 				}
-			classLoader = new URLClassLoader (classLoaderUrls.toArray (new URL[0]), BasicComponentContainerMain.class.getClassLoader ());
+			classLoader = new URLClassLoader (classLoaderUrls.toArray (new URL[0]), BasicComponentHarnessMain.class.getClassLoader ());
 		} else
 			classLoader = ClassLoader.getSystemClassLoader ();
 		final Class<?> componentClass;
@@ -114,7 +114,7 @@ public final class BasicComponentContainerMain
 		} catch (final Exception exception) {
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while instantiating)", componentClass.getName ()), exception));
 		}
-		BasicComponentContainerMain.main (callbacks, AbortingExceptionTracer.defaultInstance);
+		BasicComponentHarnessMain.main (callbacks, AbortingExceptionTracer.defaultInstance);
 	}
 	
 	public static final void main (final String[] arguments)
@@ -131,7 +131,7 @@ public final class BasicComponentContainerMain
 			classpathArgument = arguments[1];
 		} else
 			throw (new AssertionError ());
-		BasicComponentContainerMain.main (componentArgument, classpathArgument);
+		BasicComponentHarnessMain.main (componentArgument, classpathArgument);
 	}
 	
 	private static final long sleepTimeout = 100;
