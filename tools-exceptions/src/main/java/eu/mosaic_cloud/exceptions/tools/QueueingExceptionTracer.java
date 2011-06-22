@@ -41,16 +41,6 @@ public final class QueueingExceptionTracer
 	
 	public final BlockingQueue<CaughtException> queue;
 	
-	public static final QueueingExceptionTracer create ()
-	{
-		return (new QueueingExceptionTracer (new LinkedBlockingQueue<CaughtException> (), null));
-	}
-	
-	public static final QueueingExceptionTracer create (final BlockingQueue<CaughtException> queue)
-	{
-		return (new QueueingExceptionTracer (queue, null));
-	}
-	
 	public static final QueueingExceptionTracer create (final BlockingQueue<CaughtException> queue, final ExceptionTracer delegate)
 	{
 		return (new QueueingExceptionTracer (queue, delegate));

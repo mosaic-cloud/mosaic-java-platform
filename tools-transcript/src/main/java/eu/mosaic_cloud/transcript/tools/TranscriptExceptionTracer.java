@@ -39,11 +39,6 @@ public final class TranscriptExceptionTracer
 	
 	private final TranscriptBackend transcript;
 	
-	public static final TranscriptExceptionTracer create (final TranscriptBackend transcript)
-	{
-		return (new TranscriptExceptionTracer (transcript, null));
-	}
-	
 	public static final TranscriptExceptionTracer create (final TranscriptBackend transcript, final ExceptionTracer delegate)
 	{
 		return (new TranscriptExceptionTracer (transcript, delegate));

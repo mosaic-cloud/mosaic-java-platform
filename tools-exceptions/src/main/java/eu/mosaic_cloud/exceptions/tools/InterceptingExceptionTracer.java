@@ -2,6 +2,7 @@
 package eu.mosaic_cloud.exceptions.tools;
 
 
+import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 
@@ -12,6 +13,7 @@ public abstract class InterceptingExceptionTracer
 	protected InterceptingExceptionTracer (final ExceptionTracer delegate)
 	{
 		super ();
+		Preconditions.checkNotNull (delegate);
 		this.delegate = delegate;
 	}
 	
@@ -60,5 +62,5 @@ public abstract class InterceptingExceptionTracer
 	
 	protected abstract void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens);
 	
-	private final ExceptionTracer delegate;
+	protected final ExceptionTracer delegate;
 }

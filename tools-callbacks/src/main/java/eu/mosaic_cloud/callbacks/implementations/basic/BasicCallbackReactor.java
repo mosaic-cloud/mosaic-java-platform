@@ -75,11 +75,6 @@ public final class BasicCallbackReactor
 	
 	final Reactor delegate;
 	
-	public static final BasicCallbackReactor create ()
-	{
-		return (new BasicCallbackReactor (null));
-	}
-	
 	public static final BasicCallbackReactor create (final ExceptionTracer exceptions)
 	{
 		return (new BasicCallbackReactor (exceptions));

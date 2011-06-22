@@ -11,6 +11,7 @@ import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.callbacks.tools.QueueCallbacks;
 import eu.mosaic_cloud.callbacks.tools.QueueingQueueCallbacks;
+import eu.mosaic_cloud.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
 
 import org.junit.Assert;
@@ -23,7 +24,7 @@ public final class BasicCallbackReactorTest
 	public final void test ()
 			throws Exception
 	{
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
 		reactor.initialize ();
 		final LinkedList<QueueCallbacks<Integer>> triggers = new LinkedList<QueueCallbacks<Integer>> ();

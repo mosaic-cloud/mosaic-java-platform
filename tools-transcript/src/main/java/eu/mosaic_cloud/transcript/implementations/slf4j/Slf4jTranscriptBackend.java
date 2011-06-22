@@ -73,7 +73,7 @@ public final class Slf4jTranscriptBackend
 			case Handled :
 				return (TranscriptTraceType.Debugging);
 			case Deferred :
-				return (TranscriptTraceType.Debugging);
+				return (TranscriptTraceType.Warning);
 			case Ignored :
 				return (TranscriptTraceType.Warning);
 		}
