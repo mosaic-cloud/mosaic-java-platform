@@ -2,6 +2,7 @@
 package eu.mosaic_cloud.components.implementations.basic;
 
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -68,6 +69,12 @@ public final class BasicComponent
 	}
 	
 	@Override
+	public final void register (final ComponentIdentifier group, final ComponentCallReference reference)
+	{
+		this.delegate.register (group, reference);
+	}
+	
+	@Override
 	public final void reply (final ComponentCallReply reply)
 	{
 		this.delegate.reply (reply);
@@ -80,11 +87,6 @@ public final class BasicComponent
 	}
 	
 	private final Component delegate;
-	
-	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ComponentCallbacks callbacks)
-	{
-		return (new BasicComponent (channel, reactor, callbacks, null));
-	}
 	
 	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
 	{
@@ -100,7 +102,8 @@ public final class BasicComponent
 	{
 		Call (),
 		CallReturn (),
-		Cast ();
+		Cast (),
+		RegisterReturn ();
 	}
 	
 	private static final class Component
@@ -126,6 +129,7 @@ public final class BasicComponent
 				this.callbackTrigger = this.callbackReactor.register (ComponentCallbacks.class, callbacks);
 				this.inboundCalls = HashBiMap.create ();
 				this.outboundCalls = HashBiMap.create ();
+				this.registers = HashBiMap.create ();
 			}
 		}
 		
@@ -193,6 +197,8 @@ public final class BasicComponent
 							action = Action.CallReturn;
 						else if (Token.Cast.string.equals (actionValue))
 							action = Action.Cast;
+						else if (Token.RegisterReturn.string.equals (actionValue))
+							action = Action.RegisterReturn;
 						else
 							action = null;
 						Preconditions.checkNotNull (action, "invalid action attribute `%s`", actionValue);
@@ -248,6 +254,25 @@ public final class BasicComponent
 								this.callbackTrigger.casted (this.facade, request);
 							}
 								break;
+							case RegisterReturn : {
+								final Object correlationValue = message.metaData.get (Token.Correlation.string);
+								Preconditions.checkNotNull (correlationValue, "missing correlation attribute");
+								Preconditions.checkArgument (correlationValue instanceof String, "invalid correlation attribute `%s`", correlationValue);
+								final String correlation = (String) correlationValue;
+								final Object okValue = message.metaData.get (Token.Ok.string);
+								Preconditions.checkNotNull (okValue, "missing ok attribute");
+								Preconditions.checkArgument (okValue instanceof Boolean, "invalid ok attribute `%s`", okValue);
+								if (Boolean.TRUE.equals (okValue)) {
+									Preconditions.checkArgument (this.registers.inverse ().containsKey (correlation), "mismatched correlation attribute `%s`", correlation);
+									final ComponentCallReference reference = this.registers.inverse ().remove (correlation);
+									this.callbackTrigger.registerReturn (this.facade, reference, true);
+								} else {
+									Preconditions.checkArgument (this.registers.inverse ().containsKey (correlation), "mismatched correlation attribute `%s`", correlation);
+									final ComponentCallReference reference = this.registers.inverse ().remove (correlation);
+									this.callbackTrigger.registerReturn (this.facade, reference, false);
+								}
+							}
+								break;
 							default:
 								Preconditions.checkState (false);
 								break;
@@ -295,7 +320,11 @@ public final class BasicComponent
 		protected final void doStop ()
 		{
 			synchronized (this.monitor) {
+				this.channel.close (ChannelFlow.Inbound);
+				this.channel.close (ChannelFlow.Outbound);
+				this.channel.terminate ();
 				this.notifyStopped ();
+				System.exit (1);
 			}
 		}
 		
@@ -338,6 +367,23 @@ public final class BasicComponent
 			}
 		}
 		
+		final void register (final ComponentIdentifier identifier, final ComponentCallReference reference)
+		{
+			Preconditions.checkNotNull (identifier);
+			Preconditions.checkNotNull (reference);
+			synchronized (this.monitor) {
+				Preconditions.checkArgument (!this.registers.containsKey (reference));
+				final String correlation = UUID.randomUUID ().toString ().replace ("-", "");
+				final HashMap<String, Object> metaData = new HashMap<String, Object> ();
+				metaData.put (Token.Action.string, Token.Register.string);
+				metaData.put (Token.Group.string, identifier.string);
+				metaData.put (Token.Correlation.string, correlation);
+				final ChannelMessage message = ChannelMessage.create (ChannelMessageType.Exchange, metaData, ByteBuffer.allocate (0));
+				this.registers.put (reference, correlation);
+				this.channel.send (message);
+			}
+		}
+		
 		final void reply (final ComponentCallReply reply)
 		{
 			Preconditions.checkNotNull (reply);
@@ -365,6 +411,7 @@ public final class BasicComponent
 		final HashBiMap<ComponentCallReference, String> inboundCalls;
 		final Monitor monitor;
 		final HashBiMap<ComponentCallReference, String> outboundCalls;
+		final HashBiMap<ComponentCallReference, String> registers;
 		final Transcript transcript;
 	}
 	
@@ -377,10 +424,13 @@ public final class BasicComponent
 		Component ("component"),
 		Correlation ("correlation"),
 		Error ("error"),
+		Group ("group"),
 		Inputs ("inputs"),
 		Ok ("ok"),
 		Operation ("operation"),
 		Outputs ("outputs"),
+		Register ("register"),
+		RegisterReturn ("register-return"),
 		Request ("request");
 		Token (final String string)
 		{

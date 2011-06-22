@@ -10,6 +10,8 @@ public interface Component
 	
 	public abstract void cast (final ComponentIdentifier component, final ComponentCastRequest request);
 	
+	public abstract void register (final ComponentIdentifier group, final ComponentCallReference reference);
+	
 	public abstract void reply (final ComponentCallReply reply);
 	
 	public abstract void terminate ();

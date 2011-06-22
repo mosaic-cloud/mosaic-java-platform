@@ -14,6 +14,7 @@ import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponent;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
+import eu.mosaic_cloud.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
 
 import org.junit.Assert;
@@ -27,7 +28,7 @@ public final class BasicComponentTest
 			throws Exception
 	{
 		final Pipe pipe = Pipe.open ();
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;

@@ -25,8 +25,8 @@ import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
 import eu.mosaic_cloud.exceptions.core.CaughtException;
-import eu.mosaic_cloud.exceptions.core.DeferredException;
 import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.exceptions.core.IgnoredException;
 import eu.mosaic_cloud.tools.DefaultThreadPoolFactory;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.transcript.core.Transcript;
@@ -79,11 +79,6 @@ public final class BasicChannel
 	}
 	
 	final Channel delegate;
-	
-	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks)
-	{
-		return (new BasicChannel (input, output, coder, reactor, callbacks, null));
-	}
 	
 	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks, final ExceptionTracer exceptions)
 	{
@@ -261,7 +256,7 @@ public final class BasicChannel
 			try {
 				packet = this.inboundPackets.poll (this.pollTimeout, TimeUnit.MILLISECONDS);
 			} catch (final InterruptedException exception) {
-				throw (new DeferredException (exception, "unexpected error encountered while dequeueing inbound packet; aborting!"));
+				throw (new IgnoredException (exception, "unexpected error encountered while dequeueing inbound packet; aborting!"));
 			}
 			if (packet != null) {
 				this.transcript.traceDebugging ("decoding inbound message...");
@@ -270,12 +265,12 @@ public final class BasicChannel
 					message = this.coder.decode (packet);
 					Preconditions.checkNotNull (message);
 				} catch (final Throwable exception) {
-					throw (new DeferredException (exception, "unexpected error encountered while decoding the inbound packet; aborting!"));
+					throw (new IgnoredException (exception, "unexpected error encountered while decoding the inbound packet; aborting!"));
 				}
 				try {
 					this.inboundMessages.add (message);
 				} catch (final IllegalStateException exception) {
-					throw (new DeferredException (exception, "queue overflow error encountered while enqueueing inbound message; aborting!"));
+					throw (new IgnoredException (exception, "queue overflow error encountered while enqueueing inbound message; aborting!"));
 				}
 			}
 		}
@@ -318,7 +313,7 @@ public final class BasicChannel
 			try {
 				message = this.inboundMessages.poll (this.pollTimeout, TimeUnit.MILLISECONDS);
 			} catch (final InterruptedException exception) {
-				throw (new DeferredException (exception, "unexpected error encountered while dequeueing inbound message; aborting!"));
+				throw (new IgnoredException (exception, "unexpected error encountered while dequeueing inbound message; aborting!"));
 			}
 			if (message != null) {
 				if (this.inboundActive) {
@@ -326,7 +321,7 @@ public final class BasicChannel
 					try {
 						this.callbackTrigger.received (this.channel.facade, message);
 					} catch (final Throwable exception) {
-						throw (new DeferredException (exception, "unexpected error encountered while dispatching receive callback; aborting!"));
+						throw (new IgnoredException (exception, "unexpected error encountered while dispatching receive callback; aborting!"));
 					}
 				} else
 					this.transcript.traceError ("discarding receive callback due to closed inbound flow;");
@@ -337,7 +332,7 @@ public final class BasicChannel
 					try {
 						this.callbackTrigger.closed (this.channel.facade, ChannelFlow.Inbound);
 					} catch (final Throwable exception) {
-						throw (new DeferredException (exception, "unexpected error encountered while dispatching close inbound callback; aborting!"));
+						throw (new IgnoredException (exception, "unexpected error encountered while dispatching close inbound callback; aborting!"));
 					}
 				}
 			}
@@ -347,7 +342,7 @@ public final class BasicChannel
 				try {
 					this.callbackTrigger.closed (this.channel.facade, ChannelFlow.Outbound);
 				} catch (final Throwable exception) {
-					throw (new DeferredException (exception, "unexpected error encountered while dispatching close outbound callback; aborting!"));
+					throw (new IgnoredException (exception, "unexpected error encountered while dispatching close outbound callback; aborting!"));
 				}
 			}
 			if (!this.outboundActive && !this.inboundActive)
@@ -363,7 +358,7 @@ public final class BasicChannel
 			try {
 				this.callbackTrigger.terminated (this.channel.facade);
 			} catch (final Throwable exception) {
-				throw (new DeferredException (exception, "unexpected error encountered while dispatching close callback; aborting!"));
+				throw (new IgnoredException (exception, "unexpected error encountered while dispatching close callback; aborting!"));
 			}
 		}
 		
@@ -376,7 +371,7 @@ public final class BasicChannel
 			try {
 				this.callbackTrigger.initialized (this.channel.facade);
 			} catch (final Throwable exception) {
-				throw (new DeferredException (exception, "unexpected error encountered while dispatching open callback; aborting!"));
+				throw (new IgnoredException (exception, "unexpected error encountered while dispatching open callback; aborting!"));
 			}
 		}
 		
@@ -406,7 +401,7 @@ public final class BasicChannel
 			try {
 				message = this.outboundMessages.poll (this.pollTimeout, TimeUnit.MILLISECONDS);
 			} catch (final InterruptedException exception) {
-				throw (new DeferredException (exception, "unexpected error encountered while polling outbound messages; aborting!"));
+				throw (new IgnoredException (exception, "unexpected error encountered while polling outbound messages; aborting!"));
 			}
 			if (message != null) {
 				this.transcript.traceDebugging ("encoding outbound message...");
@@ -415,12 +410,12 @@ public final class BasicChannel
 					packet = this.coder.encode (message);
 					Preconditions.checkNotNull (packet);
 				} catch (final Throwable exception) {
-					throw (new DeferredException (exception, "unexpected error encountered while encoding the outbound message; aborting!"));
+					throw (new IgnoredException (exception, "unexpected error encountered while encoding the outbound message; aborting!"));
 				}
 				try {
 					this.outboundPackets.add (packet);
 				} catch (final IllegalStateException exception) {
-					throw (new DeferredException (exception, "unexpected queue overflow error encountered while enqueueing outbound packet; aborting!"));
+					throw (new IgnoredException (exception, "unexpected queue overflow error encountered while enqueueing outbound packet; aborting!"));
 				}
 				this.channel.selector.wakeup ();
 			}
@@ -493,7 +488,7 @@ public final class BasicChannel
 							Preconditions.checkArgument (packetSize == packet.remaining (), "invalid outbound packet encoding");
 							packet.reset ();
 						} catch (final IllegalArgumentException exception) {
-							throw (new DeferredException (exception, "unexpected validation error encountered while polling outbound packet; aborting!"));
+							throw (new IgnoredException (exception, "unexpected validation error encountered while polling outbound packet; aborting!"));
 						}
 						this.outputPending = packet;
 					}
@@ -518,12 +513,12 @@ public final class BasicChannel
 					this.outputKey = null;
 				}
 			} catch (final IOException exception) {
-				throw (new DeferredException (exception, "i/o error encountered while polling streams; aborting!"));
+				throw (new IgnoredException (exception, "i/o error encountered while polling streams; aborting!"));
 			}
 			try {
 				this.selector.select (this.pollTimeout);
 			} catch (final IOException exception) {
-				throw (new DeferredException (exception, "i/o error encountered while polling streams; aborting!"));
+				throw (new IgnoredException (exception, "i/o error encountered while polling streams; aborting!"));
 			}
 			final boolean inputValid;
 			final boolean outputValid;
@@ -536,7 +531,7 @@ public final class BasicChannel
 						if (outcome == -1)
 							this.input.close ();
 					} catch (final IOException exception) {
-						throw (new DeferredException (exception, "i/o error encountered while accessing input stream; aborting!"));
+						throw (new IgnoredException (exception, "i/o error encountered while accessing input stream; aborting!"));
 					}
 				}
 			} else
@@ -548,47 +543,52 @@ public final class BasicChannel
 					try {
 						this.output.write (this.outputPending);
 					} catch (final IOException exception) {
-						throw (new DeferredException (exception, "i/o error encountered while accessing output stream; aborting!"));
+						throw (new IgnoredException (exception, "i/o error encountered while accessing output stream; aborting!"));
 					}
 				}
 			} else
 				outputValid = true;
 			if (this.inputPending != null) {
-				if (this.inputPendingSize == -1) {
-					if (this.inputPending.position () >= 4) {
-						this.inputPendingSize = this.inputPending.getInt (0) + 4;
-						if (this.inputPending.capacity () < this.inputPendingSize) {
-							final ByteBuffer buffer = ByteBuffer.allocate (this.inputPendingSize);
+				while (true) {
+					if (this.inputPendingSize == -1) {
+						if (this.inputPending.position () >= 4) {
+							this.inputPendingSize = this.inputPending.getInt (0) + 4;
+							if (this.inputPending.capacity () < this.inputPendingSize) {
+								final ByteBuffer buffer = ByteBuffer.allocate (this.inputPendingSize);
+								this.inputPending.compact ();
+								buffer.put (this.inputPending);
+								this.inputPending = buffer;
+							}
+						}
+					}
+					if (this.inputPendingSize != -1) {
+						final ByteBuffer packet;
+						if (this.inputPending.position () == this.inputPendingSize) {
+							packet = this.inputPending;
+							this.inputPending = null;
+							this.inputPendingSize = -1;
+						} else if (this.inputPending.position () > this.inputPendingSize) {
+							this.inputPending.flip ();
+							packet = ByteBuffer.allocate (this.inputPendingSize);
+							final ByteBuffer inputPendingSlice = this.inputPending.asReadOnlyBuffer ();
+							inputPendingSlice.limit (this.inputPendingSize);
+							packet.put (inputPendingSlice);
+							this.inputPending.position (this.inputPendingSize);
 							this.inputPending.compact ();
-							buffer.put (this.inputPending);
-							this.inputPending = buffer;
+							this.inputPendingSize = -1;
+						} else
+							packet = null;
+						if (packet != null) {
+							packet.flip ();
+							try {
+								this.inboundPackets.add (packet.asReadOnlyBuffer ());
+							} catch (final IllegalStateException exception) {
+								throw (new IgnoredException (exception, "unexpected queue overflow error encountered while enqueueing inbound packet; aborting!"));
+							}
 						}
 					}
-				}
-				if (this.inputPendingSize != -1) {
-					final ByteBuffer packet;
-					if (this.inputPending.position () == this.inputPendingSize) {
-						packet = this.inputPending;
-						this.inputPending = null;
-						this.inputPendingSize = -1;
-					} else if (this.inputPending.position () > this.inputPendingSize) {
-						this.inputPending.flip ();
-						packet = ByteBuffer.allocate (this.inputPendingSize);
-						final ByteBuffer inputPendingSlice = this.inputPending.slice ();
-						inputPendingSlice.limit (this.inputPendingSize);
-						packet.put (inputPendingSlice);
-						this.inputPending.position (this.inputPendingSize);
-						this.inputPending.compact ();
-					} else
-						packet = null;
-					if (packet != null) {
-						packet.flip ();
-						try {
-							this.inboundPackets.add (packet.asReadOnlyBuffer ());
-						} catch (final IllegalStateException exception) {
-							throw (new DeferredException (exception, "unexpected queue overflow error encountered while enqueueing inbound packet; aborting!"));
-						}
-					}
+					if ((this.inputPending == null) || (this.inputPending.position () < 4) || ((this.inputPendingSize != -1) && (this.inputPendingSize > this.inputPending.position ())))
+						break;
 				}
 			}
 			if (this.outputPending != null) {
@@ -637,7 +637,7 @@ public final class BasicChannel
 				((SelectableChannel) this.input).configureBlocking (false);
 				((SelectableChannel) this.output).configureBlocking (false);
 			} catch (final IOException exception) {
-				throw (new DeferredException (exception, "i/o error encountered while configuring streams; aborting!"));
+				throw (new IgnoredException (exception, "i/o error encountered while configuring streams; aborting!"));
 			}
 		}
 		

@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.components.core.Component;
+import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
@@ -91,6 +92,12 @@ public final class QueueingComponentCallbacks
 	@Override
 	public final void registered (final ComponentCallbacks trigger)
 	{}
+	
+	@Override
+	public final CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok)
+	{
+		throw (new UnsupportedOperationException ());
+	}
 	
 	@Override
 	public final CallbackReference terminated (final Component component)

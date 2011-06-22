@@ -17,6 +17,7 @@ import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponent;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
+import eu.mosaic_cloud.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
 
 import org.junit.Assert;
@@ -31,7 +32,7 @@ public class AbacusTest
 	{
 		final Pipe pipe1 = Pipe.open ();
 		final Pipe pipe2 = Pipe.open ();
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
@@ -39,7 +40,7 @@ public class AbacusTest
 		final BasicChannel clientChannel = BasicChannel.create (pipe2.source (), pipe1.sink (), coder, reactor, exceptions);
 		final BasicComponent clientComponent = BasicComponent.create (clientChannel, reactor, exceptions);
 		final BasicComponent serverComponent = BasicComponent.create (serverChannel, reactor, exceptions);
-		final AbacusComponentCallbacks serverCallbacks = new AbacusComponentCallbacks ();
+		final AbacusComponentCallbacks serverCallbacks = new AbacusComponentCallbacks (exceptions);
 		final QueueingComponentCallbacks clientCallbacks = QueueingComponentCallbacks.create (clientComponent);
 		reactor.initialize ();
 		serverChannel.initialize ();

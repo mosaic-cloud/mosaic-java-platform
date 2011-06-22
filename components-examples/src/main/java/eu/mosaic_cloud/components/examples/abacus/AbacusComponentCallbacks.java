@@ -10,10 +10,13 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.components.core.Component;
+import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.transcript.core.Transcript;
 import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
@@ -27,9 +30,14 @@ public final class AbacusComponentCallbacks
 {
 	public AbacusComponentCallbacks ()
 	{
+		this (AbortingExceptionTracer.defaultInstance);
+	}
+	
+	public AbacusComponentCallbacks (final ExceptionTracer exceptions)
+	{
 		super ();
 		this.transcript = Transcript.create (this);
-		this.exceptions = TranscriptExceptionTracer.create (this.transcript);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.component = null;
 		this.status = Status.Created;
 	}
@@ -121,6 +129,12 @@ public final class AbacusComponentCallbacks
 		Preconditions.checkState (this.status == Status.Created);
 		Preconditions.checkState (this.component == null);
 		this.status = Status.Registered;
+	}
+	
+	@Override
+	public CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok)
+	{
+		throw (new IllegalStateException ());
 	}
 	
 	@Override

@@ -20,5 +20,7 @@ public interface ComponentCallbacks
 	
 	public abstract CallbackReference initialized (final Component component);
 	
+	public abstract CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok);
+	
 	public abstract CallbackReference terminated (final Component component);
 }
