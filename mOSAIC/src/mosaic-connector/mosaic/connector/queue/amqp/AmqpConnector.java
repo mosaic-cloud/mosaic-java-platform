@@ -123,7 +123,7 @@ public class AmqpConnector implements IAmqpQueueConnector {
 
 				@Override
 				public void run() {
-					proxy.declareQueue(queue, durable, exclusive, autoDelete,
+					proxy.declareQueue(queue, exclusive, durable, autoDelete,
 							passive, op.getCompletionHandlers());
 
 				}

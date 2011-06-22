@@ -19,5 +19,6 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>InCode.inCodeNature</nature>
+		<nature>com.nwire.studio.tools.nwireNature</nature>
 	</natures>
 </projectDescription>

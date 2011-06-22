@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.connector.kvstore.KeyValueStoreConnector;
+import mosaic.core.Serial;
 import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.IConfiguration;
@@ -22,6 +23,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 
 @RunWith(SerialJunitRunner.class)
+@Serial
 public class RedisConnectorTest {
 	private static KeyValueStoreConnector connector;
 	private static String keyPrefix;
@@ -30,8 +32,7 @@ public class RedisConnectorTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
 		IConfiguration config = PropertyTypeConfiguration.create(
-				RedisConnectorTest.class.getClassLoader(),
-				"redis-test.prop");
+				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 		connector = KeyValueStoreConnector.create(config);
 		keyPrefix = UUID.randomUUID().toString();
 		driverStub = KeyValueStub.create(config);
@@ -57,7 +58,6 @@ public class RedisConnectorTest {
 		return list;
 	}
 
-	@Test
 	public void testSet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
@@ -81,7 +81,6 @@ public class RedisConnectorTest {
 		}
 	}
 
-	@Test
 	public void testGet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
@@ -98,7 +97,6 @@ public class RedisConnectorTest {
 		}
 	}
 
-	@Test
 	public void testDelete() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
@@ -127,17 +125,14 @@ public class RedisConnectorTest {
 		}
 	}
 
-	@Test
 	public void testList() {
 		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
 		IResult<List<String>> r1 = connector.list(handlers, null);
 		try {
-
 			Assert.assertNotNull(r1.getResult());
-			for (String key : r1.getResult()) {
-				System.out.println(key);
-			}
+			String k2 = keyPrefix + "_key_famous";
+			Assert.assertTrue(r1.getResult().contains(k2));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -145,6 +140,15 @@ public class RedisConnectorTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+
+	@Test
+	public void testConnector() {
+		testConnection();
+		testSet();
+		testGet();
+		testList();
+		testDelete();
 	}
 
 	public static void main(String... args) {

@@ -7,6 +7,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.connector.kvstore.memcached.MemcachedStoreConnector;
+import mosaic.core.Serial;
+import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
@@ -18,7 +20,10 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SerialJunitRunner.class)
+@Serial
 public class MemcachedConnectorTest {
 	private static MemcachedStoreConnector connector;
 	private static String keyPrefix;
@@ -40,7 +45,6 @@ public class MemcachedConnectorTest {
 		driverStub.destroy();
 	}
 
-	@Test
 	public void testConnection() {
 		Assert.assertNotNull(connector);
 	}
@@ -54,7 +58,6 @@ public class MemcachedConnectorTest {
 		return list;
 	}
 
-	@Test
 	public void testSet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
@@ -79,7 +82,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testGet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
@@ -96,7 +98,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testGetBulk() {
 		String k1 = keyPrefix + "_key_fantastic";
 		String k2 = keyPrefix + "_key_famous";
@@ -121,7 +122,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testAdd() {
 		String k1 = keyPrefix + "_key_fantastic";
 		String k2 = keyPrefix + "_key_fabulous";
@@ -145,7 +145,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testReplace() {
 		String k1 = keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("replace");
@@ -177,7 +176,6 @@ public class MemcachedConnectorTest {
 
 	}
 
-	@Test
 	public void testAppend() {
 		String k1 = keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("append");
@@ -209,7 +207,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testPrepend() {
 		String k1 = keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("prepend");
@@ -240,7 +237,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testCas() {
 		String k1 = keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("cas");
@@ -270,7 +266,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testDelete() {
 		String k1 = keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
@@ -299,7 +294,6 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	@Test
 	public void testList() {
 		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
@@ -313,6 +307,21 @@ public class MemcachedConnectorTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+	
+	@Test
+	public void testConnector() {
+		testConnection();
+		testSet();
+		testGet();
+		testGetBulk();
+		testAdd();
+		testReplace();
+		testAppend();
+		testPrepend();
+		testCas();
+		testList();
+		testDelete();
 	}
 
 	public static void main(String... args) throws Throwable {

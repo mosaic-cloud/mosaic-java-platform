@@ -161,6 +161,13 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 		return true;
 	}
 
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		for (Object key : properties.keySet())
+			builder.append(key.toString());
+		return builder.toString();
+	}
+
 	/**
 	 * Implements the configuration parameter in property style configuration
 	 * object.

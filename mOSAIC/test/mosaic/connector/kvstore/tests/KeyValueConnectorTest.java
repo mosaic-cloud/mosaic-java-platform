@@ -6,6 +6,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.connector.kvstore.KeyValueStoreConnector;
+import mosaic.core.Serial;
+import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
@@ -18,7 +20,10 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SerialJunitRunner.class)
+@Serial
 public class KeyValueConnectorTest {
 	private static KeyValueStoreConnector connector;
 	private static String keyPrefix;
@@ -29,7 +34,7 @@ public class KeyValueConnectorTest {
 	public static void setUpBeforeClass() throws Throwable {
 		IConfiguration config = PropertyTypeConfiguration.create(
 				KeyValueConnectorTest.class.getClassLoader(),
-				"memcached--test.prop");
+				"memcached-test.prop");
 		storeType = ConfigUtils.resolveParameter(config, "kvstore.driver_name",
 				String.class, "");
 		connector = KeyValueStoreConnector.create(config);
@@ -43,7 +48,6 @@ public class KeyValueConnectorTest {
 		driverStub.destroy();
 	}
 
-	@Test
 	public void testConnection() {
 		Assert.assertNotNull(connector);
 	}
@@ -57,7 +61,6 @@ public class KeyValueConnectorTest {
 		return list;
 	}
 
-	@Test
 	public void testSet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
@@ -81,7 +84,6 @@ public class KeyValueConnectorTest {
 		}
 	}
 
-	@Test
 	public void testGet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
@@ -98,7 +100,6 @@ public class KeyValueConnectorTest {
 		}
 	}
 
-	@Test
 	public void testDelete() {
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
@@ -127,7 +128,6 @@ public class KeyValueConnectorTest {
 		}
 	}
 
-	@Test
 	public void testList() {
 		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
@@ -148,6 +148,15 @@ public class KeyValueConnectorTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+
+	@Test
+	public void testConnector() {
+		testConnection();
+		testSet();
+		testGet();
+		testList();
+		testDelete();
 	}
 
 	public static void main() throws Throwable {

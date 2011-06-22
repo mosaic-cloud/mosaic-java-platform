@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.connector.queue.amqp.AmqpConnector;
+import mosaic.core.Serial;
+import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
@@ -18,7 +20,10 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SerialJunitRunner.class)
+@Serial
 public class AmqpConnectorTest {
 	private static IConfiguration configuration;
 	private static AmqpConnector connector;
@@ -38,7 +43,6 @@ public class AmqpConnectorTest {
 		driverStub.destroy();
 	}
 
-	@Test
 	public void testConnector() throws InterruptedException, ExecutionException {
 		Assert.assertNotNull(connector);
 	}
@@ -52,7 +56,6 @@ public class AmqpConnectorTest {
 		return list;
 	}
 
-	@Test
 	public void testDeclareExchange() throws InterruptedException,
 			ExecutionException {
 		String exchange = ConfigUtils.resolveParameter(configuration,
@@ -64,7 +67,6 @@ public class AmqpConnectorTest {
 		Assert.assertTrue(r.getResult());
 	}
 
-	@Test
 	public void testDeclareQueue() throws InterruptedException,
 			ExecutionException {
 		String queue = ConfigUtils.resolveParameter(configuration,
@@ -75,19 +77,26 @@ public class AmqpConnectorTest {
 		Assert.assertTrue(r.getResult());
 	}
 
-	@Test
 	public void testBindQueue() throws InterruptedException, ExecutionException {
 		String exchange = ConfigUtils.resolveParameter(configuration,
 				"publisher.amqp.exchange", String.class, "");
 		String routingKey = ConfigUtils.resolveParameter(configuration,
 				"publisher.amqp.routing_key", String.class, "");
 		String queue = ConfigUtils.resolveParameter(configuration,
-				"onsumer.amqp.queue", String.class, "");
+				"consumer.amqp.queue", String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("bind queue");
 		IResult<Boolean> r = connector.bindQueue(exchange, queue, routingKey,
 				handlers, null);
 
 		Assert.assertTrue(r.getResult());
+	}
+
+	@Test
+	public void test() throws InterruptedException, ExecutionException {
+		testConnector();
+		testDeclareExchange();
+		testDeclareQueue();
+		testBindQueue();
 	}
 
 }

@@ -97,6 +97,15 @@ public class MemcachedStub extends KeyValueStub implements Runnable {
 		return stub;
 	}
 
+	@Override
+	public void destroy() {
+		// FIX this should be destroyed only if no one else is using the stub
+		DriverConnectionData cData = KeyValueStub
+				.readConnectionData(configuration);
+		stubs.remove(cData);
+		super.destroy();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

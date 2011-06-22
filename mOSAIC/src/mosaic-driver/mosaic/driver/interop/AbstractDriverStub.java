@@ -27,7 +27,7 @@ import com.rabbitmq.client.ShutdownSignalException;
  * 
  */
 public abstract class AbstractDriverStub implements Runnable {
-	private IConfiguration configuration;
+	protected IConfiguration configuration;
 	private Channel commChannel;
 	private Connection connection;
 	private QueueingConsumer consumer;

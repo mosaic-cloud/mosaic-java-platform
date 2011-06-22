@@ -8,6 +8,7 @@ import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.driver.ConfigProperties;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Protocol;
 
 /**
  * Driver class for the Redis key-value database management systems.
@@ -73,7 +74,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 		String passwd = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.4"), //$NON-NLS-1$
 				String.class, ""); //$NON-NLS-1$
-		Jedis jedis = new Jedis(host, port);
+		Jedis jedis = new Jedis(host, port, 0);
 		if (!passwd.equals("")) { //$NON-NLS-1$
 			jedis.auth(passwd);
 		}
@@ -93,7 +94,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 	 */
 	public synchronized void destroy() {
 		super.destroy();
-		this.jedisClient.bgsave();
+		// this.jedisClient.bgsave(); //TODO
 		this.jedisClient.disconnect();
 		MosaicLogger.getLogger().trace("RedisDriver destroyed."); //$NON-NLS-1$
 	}

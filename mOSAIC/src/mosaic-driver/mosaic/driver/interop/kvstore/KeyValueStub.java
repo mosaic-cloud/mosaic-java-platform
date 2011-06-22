@@ -19,6 +19,7 @@ import mosaic.driver.ConfigProperties;
 import mosaic.driver.DriverNotFoundException;
 import mosaic.driver.interop.AbstractDriverStub;
 import mosaic.driver.interop.DriverConnectionData;
+import mosaic.driver.interop.queue.amqp.AmqpStub;
 import mosaic.driver.kvstore.BaseKeyValueDriver;
 import mosaic.driver.kvstore.KeyValueDriverFactory;
 import mosaic.driver.kvstore.KeyValueOperations;
@@ -106,6 +107,14 @@ public class KeyValueStub extends AbstractDriverStub implements Runnable {
 			}
 		}
 		return stub;
+	}
+	
+	@Override
+	public void destroy() {
+		// FIX this should be destroyed only if no one else is using the stub
+		DriverConnectionData cData =KeyValueStub.readConnectionData(configuration);
+		stubs.remove(cData);
+		super.destroy();
 	}
 
 	/*

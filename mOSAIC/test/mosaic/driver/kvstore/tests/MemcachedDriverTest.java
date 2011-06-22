@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.core.Serial;
+import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
@@ -17,7 +19,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SerialJunitRunner.class)
+@Serial
 public class MemcachedDriverTest {
 	private static MemcachedDriver wrapper;
 	private static String keyPrefix;
@@ -39,12 +44,10 @@ public class MemcachedDriverTest {
 	public void setUp() {
 	}
 
-	@Test
 	public void testConnection() {
 		Assert.assertNotNull(wrapper);
 	}
 
-	@Test
 	public void testSet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
@@ -72,7 +75,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testGet() {
 		String k1 = keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<Object> handler = new TestLoggingHandler<Object>(
@@ -90,7 +92,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testGetBulk() {
 		String k1 = keyPrefix + "_key_fantastic";
 		String k2 = keyPrefix + "_key_famous";
@@ -114,7 +115,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testAdd() {
 		String k1 = keyPrefix + "_key_fantastic";
 		String k2 = keyPrefix + "_key_fabulous";
@@ -140,7 +140,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testReplace() {
 		String k1 = keyPrefix + "_key_fabulous";
 
@@ -172,7 +171,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testAppend() {
 		String k1 = keyPrefix + "_key_fabulous";
 
@@ -206,7 +204,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testPrepend() {
 		String k1 = keyPrefix + "_key_fabulous";
 
@@ -240,7 +237,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testCAS() {
 		String k1 = keyPrefix + "_key_fabulous";
 
@@ -273,7 +269,6 @@ public class MemcachedDriverTest {
 		}
 	}
 
-	@Test
 	public void testDelete() {
 		String k1 = keyPrefix + "_key_fabulous";
 
@@ -303,5 +298,18 @@ public class MemcachedDriverTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+
+	@Test
+	public void testConnector() {
+		testConnection();
+		testSet();
+		testGet();
+		testGetBulk();
+		testAdd();
+		testReplace();
+		testAppend();
+		testPrepend();
+		testDelete();
 	}
 }
