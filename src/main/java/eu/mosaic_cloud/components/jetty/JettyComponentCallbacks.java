@@ -17,6 +17,8 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.jetty.connectors.httpg.ServerCommandLine;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.tools.OutcomeFuture;
@@ -34,11 +36,16 @@ public final class JettyComponentCallbacks
 {
 	public JettyComponentCallbacks ()
 	{
+		this (AbortingExceptionTracer.defaultInstance);
+	}
+	
+	public JettyComponentCallbacks (final ExceptionTracer exceptions)
+	{
 		super ();
 		this.monitor = Monitor.create (this);
 		synchronized (this) {
 			this.transcript = Transcript.create (this);
-			this.exceptions = TranscriptExceptionTracer.create (this.transcript);
+			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			JettyComponentContext.callbacks = this;
 			this.status = Status.WaitingRegistered;
 		}
@@ -96,7 +103,12 @@ public final class JettyComponentCallbacks
 							this.exceptions.traceIgnoredException (exception, "failed resolving RabbitMQ broker endpoint: `%s`; terminating!", reply.outputsOrError);
 							throw (new IllegalStateException ());
 						}
+						this.transcript.traceInformation ("resolved RabbitMQ on `%s:%d`", brokerIp, brokerPort);
 						this.startJetty (brokerIp, brokerPort.intValue ());
+						if (JettyComponentContext.selfGroup != null) {
+							this.pendingReference = ComponentCallReference.create ();
+							this.component.register (JettyComponentContext.selfGroup, this.pendingReference);
+						}
 					}
 						break;
 					default:
@@ -184,6 +196,25 @@ public final class JettyComponentCallbacks
 		}
 	}
 	
+	@Override
+	public final CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok)
+	{
+		synchronized (this.monitor) {
+			Preconditions.checkState (this.component == component);
+			if (this.pendingReference == reference) {
+				this.pendingReference = null;
+				if (!ok) {
+					this.transcript.traceError ("failed registering to group; terminating!");
+					this.component.terminate ();
+					throw (new IllegalStateException ());
+				}
+				this.transcript.traceInformation ("registered to group");
+			} else
+				throw (new IllegalStateException ());
+		}
+		return (null);
+	}
+	
 	public final void terminate ()
 	{
 		synchronized (this.monitor) {
@@ -269,14 +300,14 @@ public final class JettyComponentCallbacks
 		}
 	}
 	
+	final TranscriptExceptionTracer exceptions;
+	final Transcript transcript;
 	private Component component;
-	private final TranscriptExceptionTracer exceptions;
 	private Server jettyServer;
 	private final Monitor monitor;
 	private final IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
 	private ComponentCallReference pendingReference;
 	private Status status;
-	private final Transcript transcript;
 	
 	private static enum Status
 	{

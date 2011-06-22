@@ -28,5 +28,6 @@ final class JettyComponentContext
 	static String httpgRequestsExchange = "mosaic-http-requests";
 	static String httpgRequestsQueue = "mosaic-http-requests";
 	static String httpgRequestsRoutingKey = "#";
+	static ComponentIdentifier selfGroup = ComponentIdentifier.resolve ("a2e40f0b2c041bc694ace68ace08420d40f9cbc0");
 	static ComponentIdentifier selfIdentifier;
 }
