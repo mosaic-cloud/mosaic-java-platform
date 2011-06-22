@@ -1,0 +1,4 @@
+cloudlet.main_class=mosaic.cloudlet.tests.HelloWorldCloudlet$LifeCycleHandler
+cloudlet.state_class=mosaic.cloudlet.tests.HelloWorldCloudlet$HelloCloudletState
+cloudlet.resource_file=hello-cloudlet.prop
+

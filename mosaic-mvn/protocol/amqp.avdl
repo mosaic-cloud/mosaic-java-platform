@@ -1,0 +1,155 @@
+@namespace("mosaic.interop.idl.amqp")
+protocol Amqp {
+	enum OperationNames {
+		DECLARE_EXCHANGE, DECLARE_QUEUE, BIND_QUEUE, 
+		CONSUME, PUBLISH, GET, ACK, CANCEL
+	}
+	
+	enum ExchangeType {
+		DIRECT, FANOUT, TOPIC
+	}
+	
+	error AmqpError {
+		string explanation;
+	}
+	
+	record CompletionToken {
+		string id;
+		string client_id;
+	}
+	
+	
+	record DeclareExchangeOperation {
+		string exchange;
+		ExchangeType type;
+		boolean durable;
+		boolean autodelete;
+		boolean passive;
+	}
+	
+	record DeclareQueueOperation {
+		string queue;
+		boolean exclusive;
+		boolean durable;
+		boolean autodelete;
+		boolean passive;
+	}
+	
+	record BindQueueOperation {
+		string exchange;
+		string queue;
+		string routing_key;
+	}
+	
+	record ConsumeOperation {
+		string queue;
+		string consumer;
+		boolean exclusive;
+		boolean autoack;
+		bytes extra;
+	}
+	
+	/*
+	record PublishOperation {
+		string callback;
+		string content_encoding;
+		string content_type;
+		string correlation;
+		bytes data;
+		boolean durable;
+		string exchange;
+		string identifier;
+		boolean immediate;
+		boolean mandatory;
+		string routingKey;
+	}*/
+	
+	record PublishOperation {
+		bytes data;
+		boolean durable;
+		string exchange;
+		boolean immediate;
+		boolean mandatory;
+		string routingKey;
+	}
+	
+	record GetOperation {
+		string queue;
+		boolean autoack;
+	}
+	
+	record AckOperation {
+		long delivery;
+		boolean multiple;
+	}
+	
+	record CancelOperation {
+		string consumer;
+	}
+	
+	record Operation {
+		CompletionToken token;
+		OperationNames name;
+		union {
+		DeclareExchangeOperation, DeclareQueueOperation, BindQueueOperation,
+		ConsumeOperation, PublishOperation, GetOperation, AckOperation, CancelOperation} operation;
+	}
+	
+	
+	record OperationResponse {
+		CompletionToken token;
+		OperationNames name;
+		boolean is_error;
+		union {AmqpError, boolean, string} response;
+	}
+	
+	record ConsumeOkMssg {
+		string consumer_tag;
+	}
+	
+	record CancelOkMssg {
+		string consumer_tag;
+	}
+	
+	record CancelMssg {
+		string consumer_tag;
+	}
+	
+	/*
+	record DeliveryMssg {
+		string consumer_tag;
+		long delivery_tag;
+		string exchange;
+		string routing_key;
+		string callback;
+		string content_encoding;
+		string content_type;
+		string correlation;
+		int deliveryMode;
+		string identifier;
+		bytes data;
+	}*/
+	
+	record DeliveryMssg {
+		string consumer_tag;
+		long delivery_tag;
+		string exchange;
+		string routing_key;
+		int deliveryMode;
+		bytes data;
+	}
+	
+	record ShutdownMssg {
+		string consumer_tag;
+		string message;
+	}
+	
+	record Response {
+		union {OperationResponse, 
+			ConsumeOkMssg, 
+			CancelOkMssg, 
+			CancelMssg,
+			DeliveryMssg, 
+			ShutdownMssg} response;
+	}
+}
