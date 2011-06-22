@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import eu.mosaic_cloud.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
@@ -19,7 +20,7 @@ public final class KvTest
 	public final void test ()
 			throws Exception
 	{
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
 		final ZeroMqChannel serverChannel = new ZeroMqChannel (serverIdentifier, exceptions);

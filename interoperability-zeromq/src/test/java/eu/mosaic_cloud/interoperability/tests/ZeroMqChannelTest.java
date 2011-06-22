@@ -5,6 +5,7 @@ package eu.mosaic_cloud.interoperability.tests;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+import eu.mosaic_cloud.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSocket;
 
@@ -18,7 +19,7 @@ public final class ZeroMqChannelTest
 	public final void test ()
 			throws Exception
 	{
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
 		final ByteBuffer header = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
