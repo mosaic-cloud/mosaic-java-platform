@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
+<!-- ====================================================================== -->
+
+<project name="mosaic-examples" default="package" basedir=".">
+
+	<!-- ====================================================================== -->
+	<!-- Import maven-build.xml into the current project                        -->
+	<!-- ====================================================================== -->
+
+	<import file="maven-build.xml" />
+
+	<!-- ====================================================================== -->
+	<!-- Define properties.                        -->
+	<!-- ====================================================================== -->
+	<property name="test.output.dir" value="examples-output" />
+
+	<!-- ====================================================================== -->
+	<!-- Help target                                                            -->
+	<!-- ====================================================================== -->
+
+	<target name="help">
+		<echo message="Please run: $ant -projecthelp" />
+	</target>
+
+	<target name="clean" description="Clean the output directory">
+		<delete dir="${maven.build.dir}" />
+		<delete dir="${test.output.dir}" />
+	</target>
+
+	<target name="hello-cloudlet" description="Runs the Hello World cloudlet.">
+		<mkdir dir="${test.output.dir}" />
+		<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="false" output="${test.output.dir}/hello-cloudlet.test">
+			<arg value="hello-cloudlet.prop" />
+			<classpath>
+				<path refid="build.test.classpath" />
+				<pathelement location="${maven.build.outputDir}" />
+				<pathelement location="${maven.build.testOutputDir}" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="start-amqp-driver" description="Starts an amqp driver.">
+		<java classname="mosaic.cloudlet.tests.AmqpDriverStarter" fork="true" output="${test.output.dir}/amqp-driver.out">
+			<arg value="amqp-driver.prop" />
+			<classpath>
+				<path refid="build.test.classpath" />
+				<pathelement location="${maven.build.outputDir}" />
+				<pathelement location="${maven.build.testOutputDir}" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="start-memcached-driver" description="Starts a memcached driver.">
+		<java classname="mosaic.cloudlet.tests.MemcachedDriverStarter" fork="true" output="${test.output.dir}/memcached-driver.out">
+			<arg value="memcached-driver.prop" />
+			<classpath>
+				<path refid="build.test.classpath" />
+				<pathelement location="${maven.build.outputDir}" />
+				<pathelement location="${maven.build.testOutputDir}" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="queue-cloudlet" description="Runs the logging cloudlet. Assumes a RabbitMQ server is running on localhost.">
+		<mkdir dir="${test.output.dir}" />
+		<parallel>
+			<antcall target="start-amqp-driver" />
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/publisher-cloudlet.out">
+				<arg value="publisher-cloudlet.prop" />
+				<classpath>
+					<path refid="build.test.classpath" />
+					<pathelement location="${maven.build.outputDir}" />
+					<pathelement location="${maven.build.testOutputDir}" />
+				</classpath>
+			</java>
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/consumer-cloudlet.out">
+				<arg value="consumer-cloudlet.prop" />
+				<classpath>
+					<path refid="build.test.classpath" />
+					<pathelement location="${maven.build.outputDir}" />
+					<pathelement location="${maven.build.testOutputDir}" />
+				</classpath>
+			</java>
+		</parallel>
+	</target>
+
+	<target name="logging-cloudlet" description="Runs the logging cloudlet. Assumes a membase store  and a RabbitMQ server is running on localhost.">
+		<mkdir dir="${test.output.dir}" />
+		<parallel>
+			<antcall target="start-amqp-driver" />
+			<antcall target="start-memcached-driver" />
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/logging-cloudlet.out">
+				<arg value="logging-cloudlet.prop" />
+				<classpath>
+					<path refid="build.test.classpath" />
+					<pathelement location="${maven.build.outputDir}" />
+					<pathelement location="${maven.build.testOutputDir}" />
+				</classpath>
+			</java>
+			<java classname="mosaic.cloudlet.tests.CloudletDummyContainerTest" fork="true" output="${test.output.dir}/user-cloudlet.out">
+				<arg value="user-cloudlet.prop" />
+				<classpath>
+					<path refid="build.test.classpath" />
+					<pathelement location="${maven.build.outputDir}" />
+					<pathelement location="${maven.build.testOutputDir}" />
+				</classpath>
+			</java>
+		</parallel>
+	</target>
+
+</project>

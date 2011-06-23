@@ -163,16 +163,20 @@ public abstract class AbstractConnectorReactor implements Runnable {
 		this.runner = Thread.currentThread();
 		while (true) {
 			try {
-				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+				QueueingConsumer.Delivery delivery = null;
+				delivery = consumer.nextDelivery();
 				synchronized (this) {
-					if (Thread.interrupted() && !this.isAlive)
+					if (Thread.interrupted() || !this.isAlive) {
+						if (delivery != null) {
+							processResponse(delivery.getBody());
+							commChannel.basicAck(delivery.getEnvelope()
+									.getDeliveryTag(), false);
+						}
 						break;
+					}
 					processResponse(delivery.getBody());
 					commChannel.basicAck(delivery.getEnvelope()
 							.getDeliveryTag(), false);
-					if (!this.isAlive)
-						break;
-
 				}
 			} catch (IOException e) {
 				ExceptionTracer.traceDeferred(e);
