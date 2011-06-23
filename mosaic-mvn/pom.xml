@@ -6,7 +6,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>mosaic.ieat</groupId>
+	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>mOSAIC-API</artifactId>
 	<name>mOSAIC API</name>
 	<version>0.0.1-SNAPSHOT</version>

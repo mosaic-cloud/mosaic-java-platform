@@ -144,6 +144,7 @@ public class CloudletExecutor {
 		this.requestQueue = new LinkedBlockingQueue<Runnable>();
 		this.responseQueue = new LinkedBlockingQueue<Runnable>();
 
+		// FIXME get threads from workers from a thread pool
 		this.worker = new Worker();
 		this.worker.thread = new Thread(this.worker);
 		this.worker.thread.setDaemon(false);

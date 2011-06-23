@@ -1,21 +1,21 @@
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpStub: create new stub.
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpProxy - Sent DECLARE_EXCHANGE request [fc65ea66-0f35-479f-bb1d-354570905e97]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpStub - Received request for DECLARE_EXCHANGE - request id: fc65ea66-0f35-479f-bb1d-354570905e97 client id: 9a969d8d-92ca-4046-8901-a28f5e30243a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpProxy - Sent DECLARE_EXCHANGE request [601c703d-d79e-4cbc-a80b-2ba3be4e2a6a]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpStub - Received request for DECLARE_EXCHANGE - request id: 601c703d-d79e-4cbc-a80b-2ba3be4e2a6a client id: b6f9f38f-a25d-4849-a86b-991701ade2ac
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpResponseTransmitter - Sending response for operation DECLARE_EXCHANGE
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpConnectorReactor - Received response for op DECLARE_EXCHANGE for request id 601c703d-d79e-4cbc-a80b-2ba3be4e2a6a
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpResponseTransmitter - Sent response for operation DECLARE_EXCHANGE
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpConnectorReactor - Received response for op DECLARE_EXCHANGE for request id fc65ea66-0f35-479f-bb1d-354570905e97
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test declare exchange finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpProxy - Sent DECLARE_QUEUE request [a2ba44e7-4a7a-4752-b1a1-02ad5e844838]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpStub - Received request for DECLARE_QUEUE - request id: a2ba44e7-4a7a-4752-b1a1-02ad5e844838 client id: 9a969d8d-92ca-4046-8901-a28f5e30243a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpProxy - Sent DECLARE_QUEUE request [15baa33b-19c8-4922-b7c7-744210557650]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpStub - Received request for DECLARE_QUEUE - request id: 15baa33b-19c8-4922-b7c7-744210557650 client id: b6f9f38f-a25d-4849-a86b-991701ade2ac
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpResponseTransmitter - Sending response for operation DECLARE_QUEUE
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpResponseTransmitter - Sent response for operation DECLARE_QUEUE
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpConnectorReactor - Received response for op DECLARE_QUEUE for request id a2ba44e7-4a7a-4752-b1a1-02ad5e844838
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpConnectorReactor - Received response for op DECLARE_QUEUE for request id 15baa33b-19c8-4922-b7c7-744210557650
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test declare queue finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpProxy - Sent BIND_QUEUE request [8e8f861f-a61a-4e2a-ac6b-c282a75aa35a]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpStub - Received request for BIND_QUEUE - request id: 8e8f861f-a61a-4e2a-ac6b-c282a75aa35a client id: 9a969d8d-92ca-4046-8901-a28f5e30243a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpProxy - Sent BIND_QUEUE request [edd47fd8-b983-45db-b8ba-c67be7922536]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpStub - Received request for BIND_QUEUE - request id: edd47fd8-b983-45db-b8ba-c67be7922536 client id: b6f9f38f-a25d-4849-a86b-991701ade2ac
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpResponseTransmitter - Sending response for operation BIND_QUEUE
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpResponseTransmitter - Sent response for operation BIND_QUEUE
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpConnectorReactor - Received response for op BIND_QUEUE for request id 8e8f861f-a61a-4e2a-ac6b-c282a75aa35a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpConnectorReactor - Received response for op BIND_QUEUE for request id edd47fd8-b983-45db-b8ba-c67be7922536
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test bind queue finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] ConnectorProxy destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpConnector was destroyed.
@@ -23,29 +23,29 @@ TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] AmqpDriver destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] ResponseTransmitter destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] DriverStub destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub: create new stub.
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [d3f20307-14f5-4f97-812c-9e6d03b5eaa3]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [714761ef-6f64-4041-baa8-3b05c431dc92]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: d3f20307-14f5-4f97-812c-9e6d03b5eaa3 client id: 829eb36e-561b-448e-98dd-abd2b3bd029a
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: 714761ef-6f64-4041-baa8-3b05c431dc92 client id: 829eb36e-561b-448e-98dd-abd2b3bd029a
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request d3f20307-14f5-4f97-812c-9e6d03b5eaa3 client id 829eb36e-561b-448e-98dd-abd2b3bd029a
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 714761ef-6f64-4041-baa8-3b05c431dc92 client id 829eb36e-561b-448e-98dd-abd2b3bd029a
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 1 finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [37e7f7b3-412d-4fef-8f92-dec56bc15bba]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [d4ad9d3b-2c64-43d9-9190-0e1460cb421f]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: d4ad9d3b-2c64-43d9-9190-0e1460cb421f client id: 50ce30cb-3fc9-4b05-b1cd-fadc40956915
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: 37e7f7b3-412d-4fef-8f92-dec56bc15bba client id: 50ce30cb-3fc9-4b05-b1cd-fadc40956915
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request d4ad9d3b-2c64-43d9-9190-0e1460cb421f client id 50ce30cb-3fc9-4b05-b1cd-fadc40956915
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 37e7f7b3-412d-4fef-8f92-dec56bc15bba client id 50ce30cb-3fc9-4b05-b1cd-fadc40956915
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 2 finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [f53660be-ad5a-4a51-937c-aea1aab1e366]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: f53660be-ad5a-4a51-937c-aea1aab1e366
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request f53660be-ad5a-4a51-937c-aea1aab1e366 client id 829eb36e-561b-448e-98dd-abd2b3bd029a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 1 finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [c553645e-805b-4e0e-b163-6c198890f3c2]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: c553645e-805b-4e0e-b163-6c198890f3c2
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request c553645e-805b-4e0e-b163-6c198890f3c2 client id 50ce30cb-3fc9-4b05-b1cd-fadc40956915
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get finished with result: fantastic
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending LIST request [73382b40-d3ec-4844-9c44-02d4b2b37726]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for LIST - id: 73382b40-d3ec-4844-9c44-02d4b2b37726
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for LIST request 73382b40-d3ec-4844-9c44-02d4b2b37726 client id 829eb36e-561b-448e-98dd-abd2b3bd029a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending LIST request [5961516e-edc8-4351-9e47-a9290b7baaaa]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for LIST - id: 5961516e-edc8-4351-9e47-a9290b7baaaa
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for LIST request 5961516e-edc8-4351-9e47-a9290b7baaaa client id 50ce30cb-3fc9-4b05-b1cd-fadc40956915
 ERROR log.MosaicLogger  (MosaicLogger.java:89) - [ERROR] Test list finished with error: Unsupported operation: LIST
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending DELETE request [08f893e7-26f9-4c14-9162-3e0a7ba9ca8c]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for DELETE - id: 08f893e7-26f9-4c14-9162-3e0a7ba9ca8c key: 97f0bd29-2fbe-4e59-b4f9-b73ad9fd6046_key_fantastic
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for DELETE request 08f893e7-26f9-4c14-9162-3e0a7ba9ca8c client id 829eb36e-561b-448e-98dd-abd2b3bd029a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending DELETE request [3ee853aa-ad59-46a7-8fd6-af1ff2a8bd90]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for DELETE - id: 3ee853aa-ad59-46a7-8fd6-af1ff2a8bd90 key: 188c9a62-e76c-494d-b9ea-91ce8f1e3d75_key_fantastic
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for DELETE request 3ee853aa-ad59-46a7-8fd6-af1ff2a8bd90 client id 50ce30cb-3fc9-4b05-b1cd-fadc40956915
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test delete finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [53fa2ffa-7fb6-4d1b-a9c0-ad93e5d7aba1]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 53fa2ffa-7fb6-4d1b-a9c0-ad93e5d7aba1
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 53fa2ffa-7fb6-4d1b-a9c0-ad93e5d7aba1 client id 829eb36e-561b-448e-98dd-abd2b3bd029a
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [476ef8ab-5bd1-448f-b561-bfa65cf8072e]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 476ef8ab-5bd1-448f-b561-bfa65cf8072e
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 476ef8ab-5bd1-448f-b561-bfa65cf8072e client id 50ce30cb-3fc9-4b05-b1cd-fadc40956915
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get after delete finished with result: null
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] ConnectorProxy destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStoreConnector destroyed.
@@ -53,70 +53,70 @@ TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedDriver destroy
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] ResponseTransmitter destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] DriverStub destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub: create new stub.
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending SET request [8f4480d2-26b2-4176-b408-ac555b01f421]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for SET - request id: 8f4480d2-26b2-4176-b408-ac555b01f421 client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending SET request [1db85ab2-2630-4f80-a00d-4ea2e1168892]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for SET - request id: 1db85ab2-2630-4f80-a00d-4ea2e1168892 client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 8f4480d2-26b2-4176-b408-ac555b01f421 client id f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 1db85ab2-2630-4f80-a00d-4ea2e1168892 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending SET request [7229878c-8327-447c-9d97-a0ad66405730]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending SET request [a4138fa1-ce32-4a7b-a81f-30f10d8ca803]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for SET - request id: 7229878c-8327-447c-9d97-a0ad66405730 client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for SET - request id: a4138fa1-ce32-4a7b-a81f-30f10d8ca803 client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 7229878c-8327-447c-9d97-a0ad66405730 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 1 finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request a4138fa1-ce32-4a7b-a81f-30f10d8ca803 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 2 finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [9b30d65a-081b-48f2-a1be-7e1af8f7f356]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 9b30d65a-081b-48f2-a1be-7e1af8f7f356
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 9b30d65a-081b-48f2-a1be-7e1af8f7f356 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [b84a7643-8a6c-4c32-bef5-f95c2c732ee2]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: b84a7643-8a6c-4c32-bef5-f95c2c732ee2
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request b84a7643-8a6c-4c32-bef5-f95c2c732ee2 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get finished with result: fantastic
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET_BULK request [80dc2951-6ce0-473e-ad2a-7c674d5cea56]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET_BULK - id: 80dc2951-6ce0-473e-ad2a-7c674d5cea56
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET_BULK request 80dc2951-6ce0-473e-ad2a-7c674d5cea56 client id f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get bulk finished with result: {aed20073-b944-47e1-b3c3-3be499c3e63b_key_famous=famous, aed20073-b944-47e1-b3c3-3be499c3e63b_key_fantastic=fantastic}
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending ADD request [4c3e634b-0058-40e0-bb44-9581a7fdf7b8]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending ADD request [d9a33b61-d661-4780-8abf-f5f8d08242ab]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for ADD - request id: 4c3e634b-0058-40e0-bb44-9581a7fdf7b8 client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for ADD request 4c3e634b-0058-40e0-bb44-9581a7fdf7b8 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET_BULK request [46b8fd08-e307-468f-96ea-35167002a63e]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET_BULK - id: 46b8fd08-e307-468f-96ea-35167002a63e
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET_BULK request 46b8fd08-e307-468f-96ea-35167002a63e client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get bulk finished with result: {802a3cd7-c7e5-442e-aa5d-9ddaf20ec30c_key_famous=famous, 802a3cd7-c7e5-442e-aa5d-9ddaf20ec30c_key_fantastic=fantastic}
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending ADD request [5892f153-c78f-431c-ac7b-2558ae177da4]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending ADD request [772d3c3a-b524-4e4e-9fcf-c37964eef058]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for ADD - request id: 5892f153-c78f-431c-ac7b-2558ae177da4 client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for ADD request 5892f153-c78f-431c-ac7b-2558ae177da4 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test add 1 finished with result: false
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for ADD - request id: d9a33b61-d661-4780-8abf-f5f8d08242ab client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for ADD request d9a33b61-d661-4780-8abf-f5f8d08242ab client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for ADD - request id: 772d3c3a-b524-4e4e-9fcf-c37964eef058 client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for ADD request 772d3c3a-b524-4e4e-9fcf-c37964eef058 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test add 2 finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending REPLACE request [5684e645-c37d-4da4-923f-8ba4165117b6]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for REPLACE - request id: 5684e645-c37d-4da4-923f-8ba4165117b6 client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for REPLACE request 5684e645-c37d-4da4-923f-8ba4165117b6 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending REPLACE request [44d19afc-4efb-4876-a242-4e4936280a7e]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for REPLACE - request id: 44d19afc-4efb-4876-a242-4e4936280a7e client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for REPLACE request 44d19afc-4efb-4876-a242-4e4936280a7e client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test replace finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [737d8c95-3724-4963-a15d-e64358e662c5]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 737d8c95-3724-4963-a15d-e64358e662c5
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 737d8c95-3724-4963-a15d-e64358e662c5 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [d50bdd70-9aa0-4748-858f-abe29a95ddaf]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: d50bdd70-9aa0-4748-858f-abe29a95ddaf
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request d50bdd70-9aa0-4748-858f-abe29a95ddaf client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get after replace finished with result: fantabulous
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending APPEND request [6637da2b-301f-4f07-b5b2-03d0be80d9b6]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for APPEND - request id: 6637da2b-301f-4f07-b5b2-03d0be80d9b6 client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for APPEND request 6637da2b-301f-4f07-b5b2-03d0be80d9b6 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending APPEND request [56ad7b06-757c-4c6e-8c7a-0b5db24623e0]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for APPEND - request id: 56ad7b06-757c-4c6e-8c7a-0b5db24623e0 client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for APPEND request 56ad7b06-757c-4c6e-8c7a-0b5db24623e0 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test append finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [08c18a46-a664-4e40-8098-946d5965e289]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 08c18a46-a664-4e40-8098-946d5965e289
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 08c18a46-a664-4e40-8098-946d5965e289 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [45ec3cb9-e143-4a7e-84cd-f5c4f9ddd612]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 45ec3cb9-e143-4a7e-84cd-f5c4f9ddd612
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 45ec3cb9-e143-4a7e-84cd-f5c4f9ddd612 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get after append finished with result: fantabulous and miraculous
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending PREPEND request [d584d671-fcc5-4894-a52d-86ab42743bf0]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for PREPEND - request id: d584d671-fcc5-4894-a52d-86ab42743bf0 client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for PREPEND request d584d671-fcc5-4894-a52d-86ab42743bf0 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending PREPEND request [51ee84ed-d37e-4323-adb6-63bf24ae4736]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for PREPEND - request id: 51ee84ed-d37e-4323-adb6-63bf24ae4736 client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for PREPEND request 51ee84ed-d37e-4323-adb6-63bf24ae4736 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test prepend finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [03563dc2-ac90-41ed-b0df-73afdb7e280c]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 03563dc2-ac90-41ed-b0df-73afdb7e280c
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 03563dc2-ac90-41ed-b0df-73afdb7e280c client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [9476db89-a788-4423-8839-17c2c3214252]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 9476db89-a788-4423-8839-17c2c3214252
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 9476db89-a788-4423-8839-17c2c3214252 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get after prepend finished with result: it is fantabulous and miraculous
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending CAS request [e44a66d9-e2c8-455e-bcdf-3956fc0f3d49]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for CAS - request id: e44a66d9-e2c8-455e-bcdf-3956fc0f3d49 client id: f36b6ede-6962-4994-abd0-54492a104454
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for CAS request e44a66d9-e2c8-455e-bcdf-3956fc0f3d49 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending CAS request [fd99fef8-000c-4a8b-a4fc-9cc0012f1cf1]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedStub - Received request for CAS - request id: fd99fef8-000c-4a8b-a4fc-9cc0012f1cf1 client id: 352006e8-4d3e-42c8-b8ff-40f9b30356f5
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for CAS request fd99fef8-000c-4a8b-a4fc-9cc0012f1cf1 client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test cas finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [edc3e60e-8213-453f-b51b-e9c55894e897]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: edc3e60e-8213-453f-b51b-e9c55894e897
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request edc3e60e-8213-453f-b51b-e9c55894e897 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [1f95c4a6-628a-443c-9fd1-75e1a9ac3eda]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 1f95c4a6-628a-443c-9fd1-75e1a9ac3eda
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 1f95c4a6-628a-443c-9fd1-75e1a9ac3eda client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get after cas finished with result: replaced by dummy
 ERROR log.MosaicLogger  (MosaicLogger.java:89) - [ERROR] Test list finished with error: The memcached protocol does not support the LIST operation.
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending DELETE request [8bb2e264-158d-4316-a06d-4f644a09c916]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for DELETE - id: 8bb2e264-158d-4316-a06d-4f644a09c916 key: aed20073-b944-47e1-b3c3-3be499c3e63b_key_fabulous
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for DELETE request 8bb2e264-158d-4316-a06d-4f644a09c916 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending DELETE request [e0506297-e5a8-4a41-a948-e646a08b1d3b]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for DELETE - id: e0506297-e5a8-4a41-a948-e646a08b1d3b key: 802a3cd7-c7e5-442e-aa5d-9ddaf20ec30c_key_fabulous
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for DELETE request e0506297-e5a8-4a41-a948-e646a08b1d3b client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test delete finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [fe797fca-b8ad-4d86-b425-73ddc1f898b9]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: fe797fca-b8ad-4d86-b425-73ddc1f898b9
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request fe797fca-b8ad-4d86-b425-73ddc1f898b9 client id f36b6ede-6962-4994-abd0-54492a104454
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [888bcac0-8b55-433f-8066-70d828d99abc]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 888bcac0-8b55-433f-8066-70d828d99abc
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 888bcac0-8b55-433f-8066-70d828d99abc client id 352006e8-4d3e-42c8-b8ff-40f9b30356f5
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get after delete finished with result: null
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] ConnectorProxy destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStoreConnector destroyed.
@@ -125,29 +125,29 @@ TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedDriver destroy
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] ResponseTransmitter destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] DriverStub destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub: create new stub.
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [6053beab-b03e-4f93-a9b3-f3b8194f6a74]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [23cd0ca5-e614-4f69-9957-06d0e55d1263]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: 23cd0ca5-e614-4f69-9957-06d0e55d1263 client id: 57d21fc1-baf0-4cde-b037-5c39060ac0c9
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: 6053beab-b03e-4f93-a9b3-f3b8194f6a74 client id: 57d21fc1-baf0-4cde-b037-5c39060ac0c9
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 23cd0ca5-e614-4f69-9957-06d0e55d1263 client id 57d21fc1-baf0-4cde-b037-5c39060ac0c9
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 2 finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 6053beab-b03e-4f93-a9b3-f3b8194f6a74 client id 57d21fc1-baf0-4cde-b037-5c39060ac0c9
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [6f695dad-9a80-4cdb-ad41-57641f9ce398]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending SET request [690d305f-841e-45bb-accd-c2f9cf7c6bda]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: 6f695dad-9a80-4cdb-ad41-57641f9ce398 client id: 15c5967a-eb20-4a16-b1a5-70c559e75c89
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStub - Received request for SET - request id: 690d305f-841e-45bb-accd-c2f9cf7c6bda client id: 15c5967a-eb20-4a16-b1a5-70c559e75c89
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 6f695dad-9a80-4cdb-ad41-57641f9ce398 client id 15c5967a-eb20-4a16-b1a5-70c559e75c89
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for SET request 690d305f-841e-45bb-accd-c2f9cf7c6bda client id 15c5967a-eb20-4a16-b1a5-70c559e75c89
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 1 finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [cf333345-c4ce-45bb-847d-1ee1f04ad68b]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: cf333345-c4ce-45bb-847d-1ee1f04ad68b
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request cf333345-c4ce-45bb-847d-1ee1f04ad68b client id 57d21fc1-baf0-4cde-b037-5c39060ac0c9
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 2 finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [6da7b673-2e47-455a-a8a4-49bf0f1c2e59]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: 6da7b673-2e47-455a-a8a4-49bf0f1c2e59
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request 6da7b673-2e47-455a-a8a4-49bf0f1c2e59 client id 15c5967a-eb20-4a16-b1a5-70c559e75c89
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get finished with result: fantastic
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending LIST request [8b965a07-f488-4f10-958e-1946911da8a1]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for LIST - id: 8b965a07-f488-4f10-958e-1946911da8a1
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for LIST request 8b965a07-f488-4f10-958e-1946911da8a1 client id 57d21fc1-baf0-4cde-b037-5c39060ac0c9
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test list finished with result: [54b67856-0ca2-425c-9702-43585fe570ff_key_famous, 54b67856-0ca2-425c-9702-43585fe570ff_key_fantastic, 755be2f3-319c-450d-9cf6-a5e30507e96c_key_famous, 8dd458a0-3700-48cb-8481-57c51669d535_key_famous]
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending DELETE request [dce27c05-c5cc-4974-a31d-8a979c2716ad]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for DELETE - id: dce27c05-c5cc-4974-a31d-8a979c2716ad key: 54b67856-0ca2-425c-9702-43585fe570ff_key_fantastic
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for DELETE request dce27c05-c5cc-4974-a31d-8a979c2716ad client id 57d21fc1-baf0-4cde-b037-5c39060ac0c9
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending LIST request [203ef7f7-93d2-4ce0-b8a9-7b0c22fba40f]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for LIST - id: 203ef7f7-93d2-4ce0-b8a9-7b0c22fba40f
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for LIST request 203ef7f7-93d2-4ce0-b8a9-7b0c22fba40f client id 15c5967a-eb20-4a16-b1a5-70c559e75c89
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test list finished with result: [356b54a4-40de-4879-997f-827736a71f78_key_famous, 356b54a4-40de-4879-997f-827736a71f78_key_fantastic]
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedProxy - Sending DELETE request [a4d4f7af-bb22-4c52-b6bb-3cb37fc1af08]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for DELETE - id: a4d4f7af-bb22-4c52-b6bb-3cb37fc1af08 key: 356b54a4-40de-4879-997f-827736a71f78_key_fantastic
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for DELETE request a4d4f7af-bb22-4c52-b6bb-3cb37fc1af08 client id 15c5967a-eb20-4a16-b1a5-70c559e75c89
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test delete finished with result: true
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [b35af63b-0dc4-4c2e-8aeb-979708c59e18]...
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: b35af63b-0dc4-4c2e-8aeb-979708c59e18
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request b35af63b-0dc4-4c2e-8aeb-979708c59e18 client id 57d21fc1-baf0-4cde-b037-5c39060ac0c9
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueProxy - Sending GET request [cdfe6388-f679-4906-9bb6-de6fe5d7c945]...
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Received request for GET - id: cdfe6388-f679-4906-9bb6-de6fe5d7c945
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueResponseTransmitter: send response for GET request cdfe6388-f679-4906-9bb6-de6fe5d7c945 client id 15c5967a-eb20-4a16-b1a5-70c559e75c89
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get after delete finished with result: null
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] ConnectorProxy destroyed.
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] KeyValueStoreConnector destroyed.

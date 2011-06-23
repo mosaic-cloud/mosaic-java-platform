@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>mOSAIC-API</artifactId>
-		<groupId>mosaic.ieat</groupId>
+		<groupId>eu.mosaic_cloud</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<groupId>mosaic.ieat</groupId>
+	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>mosaic-driver</artifactId>
 	<name>mOSAIC driver layer</name>
 	<description>mOSAIC driver layer implementation</description>
@@ -62,6 +62,10 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<organization>
+		<name>eAustria Research Institute</name>
+		<url>www.ieat.ro</url>
+	</organization>
 	<build>
 		<plugins>
 			<plugin>

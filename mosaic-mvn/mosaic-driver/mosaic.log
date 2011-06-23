@@ -2,66 +2,23 @@ TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test declare exchange f
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 1 finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 1 finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get finished with result: fantastic
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test getBulk finished with result: {e820f638-4da9-4a5a-a634-da81a3292c74_key_famous=famous, e820f638-4da9-4a5a-a634-da81a3292c74_key_fantastic=fantastic}
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test getBulk finished with result: {e6092776-3f3d-495b-8d90-28e03a86068d_key_fantastic=fantastic, e6092776-3f3d-495b-8d90-28e03a86068d_key_famous=famous}
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test add1 finished with result: false
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test add2 finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test replace finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test Get after replace finished with result: fantabulous
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test append finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test prepend finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test Get after append finished with result: fantabulous and miraculous
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test Get after prepend finished with result: it is fantabulous and miraculous
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test delete finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test Get after delete finished with result: null
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] MemcachedDriver destroyed.
-TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test Get after append finished with result: fantabulous and miraculous
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 1 finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test set 2 finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test get finished with result: fantastic
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test list finished with result: [3829706e-ed57-4c73-9e0b-bb938637fbbe_key_famous, 3829706e-ed57-4c73-9e0b-bb938637fbbe_key_fantastic]
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test delete 1 finished with result: true
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test delete 2 finished with result: true
 TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] RedisDriver destroyed.
-TRACE mosaic.exceptions (ExceptionTracer.java:42) - encountered exception
-java.util.concurrent.ExecutionException: redis.clients.jedis.exceptions.JedisDataException: ERR unknown command '$33
-E'
-	at java.util.concurrent.FutureTask$Sync.innerGet(FutureTask.java:222)
-	at java.util.concurrent.FutureTask.get(FutureTask.java:83)
-	at mosaic.core.ops.GenericOperation$GenericTask.run(GenericOperation.java:186)
-	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
-	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
-	at java.lang.Thread.run(Thread.java:662)
-Caused by: redis.clients.jedis.exceptions.JedisDataException: ERR unknown command '$33
-E'
-	at redis.clients.jedis.Protocol.processError(Protocol.java:54)
-	at redis.clients.jedis.Protocol.process(Protocol.java:61)
-	at redis.clients.jedis.Protocol.read(Protocol.java:122)
-	at redis.clients.jedis.Connection.getStatusCodeReply(Connection.java:152)
-	at redis.clients.jedis.BinaryJedis.set(BinaryJedis.java:58)
-	at mosaic.driver.kvstore.RedisOperationFactory$2.call(RedisOperationFactory.java:82)
-	at mosaic.driver.kvstore.RedisOperationFactory$2.call(RedisOperationFactory.java:1)
-	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
-	at mosaic.core.ops.GenericOperation$GenericTask.run(GenericOperation.java:183)
-	... 6 more
-TRACE mosaic.exceptions (ExceptionTracer.java:42) - encountered exception
-java.util.concurrent.ExecutionException: redis.clients.jedis.exceptions.JedisDataException: ERR unknown command 'SET
-'
-	at java.util.concurrent.FutureTask$Sync.innerGet(FutureTask.java:222)
-	at java.util.concurrent.FutureTask.get(FutureTask.java:83)
-	at mosaic.core.ops.GenericOperation$GenericTask.run(GenericOperation.java:186)
-	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
-	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
-	at java.lang.Thread.run(Thread.java:662)
-Caused by: redis.clients.jedis.exceptions.JedisDataException: ERR unknown command 'SET
-'
-	at redis.clients.jedis.Protocol.processError(Protocol.java:54)
-	at redis.clients.jedis.Protocol.process(Protocol.java:61)
-	at redis.clients.jedis.Protocol.read(Protocol.java:122)
-	at redis.clients.jedis.Connection.getStatusCodeReply(Connection.java:152)
-	at redis.clients.jedis.BinaryJedis.set(BinaryJedis.java:58)
-	at mosaic.driver.kvstore.RedisOperationFactory$2.call(RedisOperationFactory.java:82)
-	at mosaic.driver.kvstore.RedisOperationFactory$2.call(RedisOperationFactory.java:1)
-	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
-	at mosaic.core.ops.GenericOperation$GenericTask.run(GenericOperation.java:183)
-	... 6 more
+TRACE log.MosaicLogger  (MosaicLogger.java:41) - [TRACE] Test check deleted finished with result: null
