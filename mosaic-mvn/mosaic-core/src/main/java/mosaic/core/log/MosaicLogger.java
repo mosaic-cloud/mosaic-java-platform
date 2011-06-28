@@ -23,7 +23,7 @@ public class MosaicLogger {
 	 * 
 	 * @return the logger
 	 */
-	public final static MosaicLogger getLogger() {
+	public final  synchronized static MosaicLogger getLogger() {
 		if (mLogger == null) {
 			mLogger = new MosaicLogger();
 		}

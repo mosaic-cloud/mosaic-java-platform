@@ -9,6 +9,7 @@ import mosaic.core.Serial;
 import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.PropertyTypeConfiguration;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.driver.kvstore.BaseKeyValueDriver;
@@ -33,6 +34,7 @@ public class RedisDriverTest {
 		wrapper = RedisDriver.create(PropertyTypeConfiguration.create(
 				RedisDriverTest.class.getClassLoader(), "redis-test.prop"));
 		keyPrefix = UUID.randomUUID().toString();
+		MosaicLogger.getLogger().trace("KEY: "+keyPrefix);
 	}
 
 	@AfterClass
