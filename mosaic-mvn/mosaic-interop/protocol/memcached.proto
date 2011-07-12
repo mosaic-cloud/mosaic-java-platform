@@ -1,0 +1,45 @@
+package mosaic_cloud.idl.kvstore;
+
+option java_package = "mosaic.interop.idl.kvstore";
+option java_outer_classname = "MemcachedPayloads";
+option optimize_for = SPEED;
+
+import "common.proto";
+
+message AddRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string key = 2;
+	required int32 exp_time = 3;
+	required bytes value = 4;
+}
+
+message ReplaceRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string key = 2;
+	required int32 exp_time = 3;
+	required bytes value = 4;
+}
+
+message AppendRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string key = 2;
+	required int32 exp_time = 3;
+	required bytes value = 4;
+}
+
+message PrependRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string key = 2;
+	required int32 exp_time = 3;
+	required bytes value = 4;
+}
+
+message CasRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string key = 2;
+	required int32 exp_time = 3;
+	required bytes value = 4;
+}
+
+
+

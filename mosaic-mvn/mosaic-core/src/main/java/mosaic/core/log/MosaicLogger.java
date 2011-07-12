@@ -15,7 +15,7 @@ public class MosaicLogger {
 	private final Logger logger;
 
 	private MosaicLogger() {
-		logger = LoggerFactory.getLogger(MosaicLogger.class);
+		this.logger = LoggerFactory.getLogger(MosaicLogger.class);
 	}
 
 	/**
@@ -23,11 +23,11 @@ public class MosaicLogger {
 	 * 
 	 * @return the logger
 	 */
-	public final  synchronized static MosaicLogger getLogger() {
-		if (mLogger == null) {
-			mLogger = new MosaicLogger();
+	public final synchronized static MosaicLogger getLogger() {
+		if (MosaicLogger.mLogger == null) {
+			MosaicLogger.mLogger = new MosaicLogger();
 		}
-		return mLogger;
+		return MosaicLogger.mLogger;
 	}
 
 	/**
@@ -37,8 +37,8 @@ public class MosaicLogger {
 	 *            the message
 	 */
 	public void trace(String message) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("[TRACE] " + message);
+		if (this.logger.isTraceEnabled()) {
+			this.logger.trace(message);
 		}
 	}
 
@@ -49,8 +49,8 @@ public class MosaicLogger {
 	 *            the message
 	 */
 	public void debug(String message) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("[DEBUG] " + message);
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug(message);
 		}
 	}
 
@@ -61,8 +61,8 @@ public class MosaicLogger {
 	 *            the message
 	 */
 	public void info(String message) {
-		if (logger.isInfoEnabled()) {
-			logger.info("[INFO] " + message);
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info(message);
 		}
 	}
 
@@ -73,8 +73,8 @@ public class MosaicLogger {
 	 *            the message
 	 */
 	public void warn(String message) {
-		if (logger.isWarnEnabled()) {
-			logger.warn("[WARNING] " + message);
+		if (this.logger.isWarnEnabled()) {
+			this.logger.warn(message);
 		}
 	}
 
@@ -85,8 +85,8 @@ public class MosaicLogger {
 	 *            the message
 	 */
 	public void error(String message) {
-		if (logger.isErrorEnabled()) {
-			logger.error("[ERROR] " + message);
+		if (this.logger.isErrorEnabled()) {
+			this.logger.error(message);
 		}
 	}
 }

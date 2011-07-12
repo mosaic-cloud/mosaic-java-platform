@@ -18,13 +18,14 @@ public class PropertyTypeConfigurationTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		configuration = PropertyTypeConfiguration.create(
-				PropertyTypeConfigurationTest.class.getClassLoader(),
-				"configuration-test.prop");
-		fileConfiguration = PropertyTypeConfiguration
+		PropertyTypeConfigurationTest.configuration = PropertyTypeConfiguration
+				.create(PropertyTypeConfigurationTest.class.getClassLoader(),
+						"configuration-test.prop");
+		PropertyTypeConfigurationTest.fileConfiguration = PropertyTypeConfiguration
 				.create(new FileInputStream(
 						"src/test/resources/configuration-test.prop"));
-		systemConfiguration = PropertyTypeConfiguration.create(null);
+		PropertyTypeConfigurationTest.systemConfiguration = PropertyTypeConfiguration
+				.create(null);
 	}
 
 	@Test
@@ -68,14 +69,15 @@ public class PropertyTypeConfigurationTest {
 
 	@Test
 	public void testPropertyTypeConfiguration() {
-		Assert.assertNotNull(configuration);
-		Assert.assertNotNull(fileConfiguration);
-		Assert.assertNotNull(systemConfiguration);
+		Assert.assertNotNull(PropertyTypeConfigurationTest.configuration);
+		Assert.assertNotNull(PropertyTypeConfigurationTest.fileConfiguration);
+		Assert.assertNotNull(PropertyTypeConfigurationTest.systemConfiguration);
 	}
 
 	@Test
 	public void testEquals() {
-		Assert.assertTrue(configuration.equals(fileConfiguration));
+		Assert.assertTrue(PropertyTypeConfigurationTest.configuration
+				.equals(PropertyTypeConfigurationTest.fileConfiguration));
 	}
 
 	@Test
@@ -83,38 +85,39 @@ public class PropertyTypeConfigurationTest {
 		ConfigurationIdentifier id;
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/int");
-		Integer value = configuration.getParameter(id, Integer.class).getValue(
-				0);
+		Integer value = PropertyTypeConfigurationTest.configuration
+				.getParameter(id, Integer.class).getValue(0);
 		Assert.assertEquals(1, value.intValue());
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/real");
-		Double dvalue = configuration.getParameter(id, Double.class).getValue(
-				0.0);
+		Double dvalue = PropertyTypeConfigurationTest.configuration
+				.getParameter(id, Double.class).getValue(0.0);
 		Assert.assertEquals(2.0, dvalue.doubleValue(), 0.0);
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/boolean");
-		Boolean bvalue = configuration.getParameter(id, Boolean.class)
-				.getValue(false);
+		Boolean bvalue = PropertyTypeConfigurationTest.configuration
+				.getParameter(id, Boolean.class).getValue(false);
 		Assert.assertEquals(true, bvalue.booleanValue());
 
 		id = ConfigurationIdentifier.resolveAbsolute("mosaic/string");
-		String svalue = configuration.getParameter(id, String.class).getValue(
-				"");
+		String svalue = PropertyTypeConfigurationTest.configuration
+				.getParameter(id, String.class).getValue("");
 		Assert.assertEquals("abac", svalue);
 
-//		id = ConfigurationIdentifier.resolveAbsolute("os/arch");
-//		String ovalue = configuration.getParameter(id, String.class).getValue(
-//				"");
-//		Assert.assertEquals("x86", ovalue);
-//
-//		String osvalue = systemConfiguration.getParameter(id, String.class)
-//				.getValue("");
-//		Assert.assertEquals("x86", osvalue);
+		// id = ConfigurationIdentifier.resolveAbsolute("os/arch");
+		// String ovalue = configuration.getParameter(id,
+		// String.class).getValue(
+		// "");
+		// Assert.assertEquals("x86", ovalue);
+		//
+		// String osvalue = systemConfiguration.getParameter(id, String.class)
+		// .getValue("");
+		// Assert.assertEquals("x86", osvalue);
 	}
 
 	@Test
 	public void testSpliceConfiguration() {
-		IConfiguration mConfiguration = configuration
+		IConfiguration mConfiguration = PropertyTypeConfigurationTest.configuration
 				.spliceConfiguration(ConfigurationIdentifier
 						.resolveAbsolute("mosaic"));
 		int intValue = ConfigUtils.resolveParameter(mConfiguration, "int",

@@ -74,33 +74,32 @@ public class RedisOperationFactory implements IOperationFactory {
 			data = (String) parameters[1];
 			keyBytes = SafeEncoder.encode(key);
 			dataBytes = SafeEncoder.encode(data);
-			operation = new GenericOperation<Boolean>(
-					new Callable<Boolean>() {
+			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
-						@Override
-						public Boolean call() throws Exception {
-							String opResult = redisClient.set(keyBytes,
-									dataBytes);
-							opResult = opResult.trim();
-							if (opResult.equalsIgnoreCase("OK"))
-								return true;
-							return false;
-						}
+				@Override
+				public Boolean call() throws Exception {
+					String opResult = RedisOperationFactory.this.redisClient
+							.set(keyBytes, dataBytes);
+					opResult = opResult.trim();
+					if (opResult.equalsIgnoreCase("OK"))
+						return true;
+					return false;
+				}
 
-					});
+			});
 			break;
 		case GET:
 			key = (String) parameters[0];
-			operation = new GenericOperation<Object>(
-					new Callable<Object>() {
+			operation = new GenericOperation<Object>(new Callable<Object>() {
 
-						@Override
-						public Object call() throws Exception {
-							String result=redisClient.get(key);
-							return result;
-						}
+				@Override
+				public Object call() throws Exception {
+					String result = RedisOperationFactory.this.redisClient
+							.get(key);
+					return result;
+				}
 
-					});
+			});
 			break;
 		case LIST:
 			final String pattern = "*";
@@ -109,7 +108,7 @@ public class RedisOperationFactory implements IOperationFactory {
 
 						@Override
 						public List<String> call() throws Exception {
-							Set<String> opResult = redisClient
+							Set<String> opResult = RedisOperationFactory.this.redisClient
 									.keys(pattern);
 							List<String> result = new ArrayList<String>();
 							for (String key : opResult) {
@@ -123,31 +122,29 @@ public class RedisOperationFactory implements IOperationFactory {
 		case DELETE:
 			key = (String) parameters[0];
 			keyBytes = SafeEncoder.encode(key);
-			operation = new GenericOperation<Boolean>(
-					new Callable<Boolean>() {
+			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
-						@Override
-						public Boolean call() throws Exception {
-							long opResult = redisClient.del(keyBytes);
-							if (opResult == 0)
-								return false;
-							return true;
-						}
+				@Override
+				public Boolean call() throws Exception {
+					long opResult = RedisOperationFactory.this.redisClient
+							.del(keyBytes);
+					if (opResult == 0)
+						return false;
+					return true;
+				}
 
-					});
+			});
 			break;
 		default:
-			operation = new GenericOperation<Object>(
-					new Callable<Object>() {
+			operation = new GenericOperation<Object>(new Callable<Object>() {
 
-						@Override
-						public Object call() throws Exception {
-							throw new UnsupportedOperationException(
-									"Unsupported operation: "
-											+ mType.toString());
-						}
+				@Override
+				public Object call() throws Exception {
+					throw new UnsupportedOperationException(
+							"Unsupported operation: " + mType.toString());
+				}
 
-					});
+			});
 		}
 		return operation;
 	}

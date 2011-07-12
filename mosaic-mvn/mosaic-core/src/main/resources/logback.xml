@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+	<statusListener
+		class="eu.mosaic_cloud.transcript.implementations.slf4j.Slf4jStatusListener" />
+	<define name="jvm_pid"
+		class="eu.mosaic_cloud.transcript.implementations.slf4j.Slf4jJvmPidPropertyDefiner" />
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.err</target>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48logger{48}][%-32thread]%msg%n</pattern>
+		</encoder>
+	</appender>
+	<root level="info">
+		<appender-ref ref="console" />
+	</root>
+	<logger name="eu.mosaic_cloud" level="info">
+	</logger>
+	<logger name="mosaic" level="trace">
+	</logger>
+</configuration>
+
+<!-- <configuration> <appender name="A2" class="ch.qos.logback.core.FileAppender"> 
+	<Append>false</Append> <File>mosaic.log</File> <encoder> <pattern>%-5p %-17c{2} 
+	(%13F:%L) - %m%n</pattern> </encoder> </appender> <appender name="A1" class="ch.qos.logback.core.ConsoleAppender"> 
+	<encoder> <pattern>%-5p %-17c{2} (%13F:%L) - %msg%n</pattern> </encoder> 
+	</appender> <logger name="eu.mosaic_cloud" level="info"> <appender-ref ref="A2" 
+	/> </logger> <logger name="mosaic" level="trace"> <appender-ref ref="A1" 
+	/> </logger> <root> <appender-ref ref="A1" /> </root> </configuration> -->

@@ -16,10 +16,11 @@ public final class ExceptionTracer {
 
 	public ExceptionTracer(final boolean useLogger) {
 		super();
-		if (useLogger)
+		if (useLogger) {
 			this.logger = LoggerFactory.getLogger("mosaic.exceptions");
-		else
+		} else {
 			this.logger = null;
+		}
 		this.ignoredExceptions = new ConcurrentLinkedQueue<Throwable>();
 	}
 
@@ -38,24 +39,29 @@ public final class ExceptionTracer {
 		if (this.logger != null) {
 			switch (resolution) {
 			case Handled:
-				if (this.logger.isTraceEnabled())
+				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
+				}
 				break;
 			case Rethrown:
-				if (this.logger.isTraceEnabled())
+				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
+				}
 				break;
 			case Ignored:
-				if (this.logger.isWarnEnabled())
+				if (this.logger.isWarnEnabled()) {
 					this.logger.warn(message, exception);
+				}
 				break;
 			case Deferred:
-				if (this.logger.isTraceEnabled())
+				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
+				}
 				break;
 			default:
-				if (this.logger.isTraceEnabled())
+				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
+				}
 				break;
 			}
 		} else {

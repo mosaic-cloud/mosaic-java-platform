@@ -29,7 +29,7 @@ public class AmqpCallbacksMap {
 	 */
 	public synchronized void addHandlers(String consumerId,
 			IAmqpConsumerCallback callback) {
-		handlerMap.put(consumerId, callback);
+		this.handlerMap.put(consumerId, callback);
 	}
 
 	/**

@@ -94,47 +94,47 @@ public class AmqpOutboundMessage implements IAmqpMessage {
 	}
 
 	public String getCallback() {
-		return callback;
+		return this.callback;
 	}
 
 	public String getContentEncoding() {
-		return contentEncoding;
+		return this.contentEncoding;
 	}
 
 	public String getContentType() {
-		return contentType;
+		return this.contentType;
 	}
 
 	public String getCorrelation() {
-		return correlation;
+		return this.correlation;
 	}
 
 	public byte[] getData() {
-		return data;
+		return this.data;
 	}
 
 	public boolean isDurable() {
-		return durable;
+		return this.durable;
 	}
 
 	public String getExchange() {
-		return exchange;
+		return this.exchange;
 	}
 
 	public String getIdentifier() {
-		return identifier;
+		return this.identifier;
 	}
 
 	public boolean isImmediate() {
-		return immediate;
+		return this.immediate;
 	}
 
 	public boolean isMandatory() {
-		return mandatory;
+		return this.mandatory;
 	}
 
 	public String getRoutingKey() {
-		return routingKey;
+		return this.routingKey;
 	}
 
 }

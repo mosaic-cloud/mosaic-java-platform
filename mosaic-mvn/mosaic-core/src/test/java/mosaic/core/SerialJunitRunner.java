@@ -19,25 +19,28 @@ public class SerialJunitRunner extends BlockJUnit4ClassRunner {
 			ExecutorService executorService = Executors.newFixedThreadPool(1,
 					new NamedThreadFactory(klass.getSimpleName()));
 			CompletionService<Void> completionService = new ExecutorCompletionService<Void>(
-					executorService);
+					this.executorService);
 			Queue<Future<Void>> tasks = new LinkedList<Future<Void>>();
 
 			@Override
 			public void schedule(Runnable childStatement) {
-				tasks.offer(completionService.submit(childStatement, null));
+				this.tasks.offer(this.completionService.submit(childStatement,
+						null));
 			}
 
 			@Override
 			public void finished() {
 				try {
-					while (!tasks.isEmpty())
-						tasks.remove(completionService.take());
+					while (!this.tasks.isEmpty()) {
+						this.tasks.remove(this.completionService.take());
+					}
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				} finally {
-					while (!tasks.isEmpty())
-						tasks.poll().cancel(true);
-					executorService.shutdownNow();
+					while (!this.tasks.isEmpty()) {
+						this.tasks.poll().cancel(true);
+					}
+					this.executorService.shutdownNow();
 				}
 			}
 		});

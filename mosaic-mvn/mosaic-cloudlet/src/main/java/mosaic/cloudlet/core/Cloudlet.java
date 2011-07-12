@@ -79,14 +79,14 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				public void onSuccess(Object result) {
 					Cloudlet.this.controllerCallback.initializeSucceeded(
 							Cloudlet.this.state, new CallbackArguments<S>(
-									controller));
+									Cloudlet.this.controller));
 				}
 
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					Cloudlet.this.controllerCallback.initializeFailed(
 							Cloudlet.this.state, new CallbackArguments<S>(
-									controller));
+									Cloudlet.this.controller));
 
 				}
 
@@ -105,7 +105,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 					// call the user defined init
 					Cloudlet.this.controllerCallback.initialize(
 							Cloudlet.this.state, new CallbackArguments<S>(
-									controller));
+									Cloudlet.this.controller));
 					List<IOperationCompletionHandler<Object>> handlers = initOperation
 							.getCompletionHandlers();
 					for (IOperationCompletionHandler<Object> handler : handlers) {
@@ -140,14 +140,14 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				public void onSuccess(Object result) {
 					Cloudlet.this.controllerCallback.destroySucceeded(
 							Cloudlet.this.state, new CallbackArguments<S>(
-									controller));
+									Cloudlet.this.controller));
 				}
 
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					Cloudlet.this.controllerCallback.destroyFailed(
 							Cloudlet.this.state, new CallbackArguments<S>(
-									controller));
+									Cloudlet.this.controller));
 
 				}
 
@@ -166,7 +166,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 					// call the user defined init
 					Cloudlet.this.controllerCallback.destroy(
 							Cloudlet.this.state, new CallbackArguments<S>(
-									controller));
+									Cloudlet.this.controller));
 					List<IOperationCompletionHandler<Object>> handlers = destroyOperation
 							.getCompletionHandlers();
 					for (IOperationCompletionHandler<Object> handler : handlers) {
@@ -187,7 +187,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 
 	@Override
 	public boolean isActive() {
-		return active;
+		return this.active;
 	}
 
 	private synchronized void destroyResource(IResourceAccessor<S> accessor,
@@ -344,6 +344,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 
 		}
 
+		@Override
 		public CompletionInvocationHandler<T> createHandler(
 				IOperationCompletionHandler<T> handler) {
 			return new CloudletResponseInvocationHandler<T>(handler);

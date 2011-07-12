@@ -91,29 +91,30 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	public final PropertyTypeConfiguration spliceConfiguration(
 			final ConfigurationIdentifier relative) {
 		final ConfigurationIdentifier root;
-		if (relative.isAbsolute())
+		if (relative.isAbsolute()) {
 			root = relative;
-		else
+		} else {
 			root = this.root.resolve(relative);
+		}
 		return (new PropertyTypeConfiguration(this.properties, root));
 	}
 
 	private <T extends Object> T decodeValue(Class<T> valueClass,
 			String encodedValue) {
 		T value;
-		if (valueClass == String.class)
+		if (valueClass == String.class) {
 			value = valueClass.cast(encodedValue);
-		else if (valueClass == Boolean.class)
+		} else if (valueClass == Boolean.class) {
 			value = valueClass.cast(Boolean.parseBoolean(encodedValue));
-		else if (valueClass == Integer.class)
+		} else if (valueClass == Integer.class) {
 			value = valueClass.cast(Integer.parseInt(encodedValue));
-		else if (valueClass == Long.class)
+		} else if (valueClass == Long.class) {
 			value = valueClass.cast(Long.parseLong(encodedValue));
-		else if (valueClass == Double.class)
+		} else if (valueClass == Double.class) {
 			value = valueClass.cast(Double.parseDouble(encodedValue));
-		else if (valueClass == Float.class)
+		} else if (valueClass == Float.class) {
 			value = valueClass.cast(Float.parseFloat(encodedValue));
-		else if (valueClass == Character.class) {
+		} else if (valueClass == Character.class) {
 			if (encodedValue.length() != 1)
 				throw (new IllegalArgumentException());
 			value = valueClass.cast(encodedValue.charAt(0));
@@ -126,12 +127,14 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 			final ConfigurationIdentifier identifier) {
 		final String key_;
 		if (identifier.isAbsolute())
-			if (identifier == ConfigurationIdentifier.root)
+			if (identifier == ConfigurationIdentifier.root) {
 				key_ = "";
-			else
+			} else {
 				key_ = identifier.getIdentifier();
-		else
+			}
+		else {
 			key_ = this.root.resolve(identifier).getIdentifier();
+		}
 		final String key = key_.substring(1).replace('/', '.');
 		synchronized (this) {
 			final String encodedValue = this.properties.getProperty(key, null);
@@ -144,27 +147,31 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object config) {
 		if (config == null)
 			return false;
 		if (!(config instanceof PropertyTypeConfiguration))
 			return false;
 		PropertyTypeConfiguration otherConfig = (PropertyTypeConfiguration) config;
-		if (root != null && !root.equals(otherConfig.root))
+		if ((this.root != null) && !this.root.equals(otherConfig.root))
 			return false;
-		if (root == null && otherConfig.root != null)
+		if ((this.root == null) && (otherConfig.root != null))
 			return false;
-		if (properties != null && !properties.equals(otherConfig.properties))
+		if ((this.properties != null)
+				&& !this.properties.equals(otherConfig.properties))
 			return false;
-		if (properties == null && otherConfig.properties != null)
+		if ((this.properties == null) && (otherConfig.properties != null))
 			return false;
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (Object key : properties.keySet())
-			builder.append(key.toString());
+		for (Object key : this.properties.keySet()) {
+			builder.append(key.toString() + "\n");
+		}
 		return builder.toString();
 	}
 
@@ -200,23 +207,25 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 			final T value;
 
 			if (this.value == null) {
-				if (this.valueClass == IConfiguration.class)
+				if (this.valueClass == IConfiguration.class) {
 					this.value = this.valueClass
 							.cast(PropertyTypeConfiguration.this
 									.spliceConfiguration(this.identifier));
-				else {
+				} else {
 					final String encodedValue = PropertyTypeConfiguration.this
 							.selectEncodedValue(this.identifier);
-					if (encodedValue != null)
+					if (encodedValue != null) {
 						this.value = PropertyTypeConfiguration.this
 								.decodeValue(this.valueClass, encodedValue);
+					}
 				}
 			}
 
-			if (this.value != null)
+			if (this.value != null) {
 				value = this.value;
-			else
+			} else {
 				value = defaultValue;
+			}
 			return (value);
 		}
 

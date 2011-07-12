@@ -52,13 +52,13 @@ public class CloudletExecutor {
 	 * until the main worker unblocks. This is a wait condition used to awake
 	 * the backup worker when the main worker gets blocked.
 	 */
-	private final Condition mainWorkerBlocked = mainLock.newCondition();
+	private final Condition mainWorkerBlocked = this.mainLock.newCondition();
 
 	/**
 	 * Used for notifying the workers that there is a request or a response to a
 	 * previously submitted request that is ready for processing.
 	 */
-	private final Condition queuesNotEmpty = mainLock.newCondition();
+	private final Condition queuesNotEmpty = this.mainLock.newCondition();
 
 	/**
 	 * The thread running the cloudlet. Must be volatile, to ensure visibility
@@ -140,7 +140,7 @@ public class CloudletExecutor {
 	 */
 	public CloudletExecutor() {
 		super();
-		this.runState = INITIALIZING;
+		this.runState = CloudletExecutor.INITIALIZING;
 		this.requestQueue = new LinkedBlockingQueue<Runnable>();
 		this.responseQueue = new LinkedBlockingQueue<Runnable>();
 
@@ -154,8 +154,8 @@ public class CloudletExecutor {
 		this.backupWorker.thread = new Thread(this.backupWorker);
 		this.backupWorker.thread.setDaemon(false);
 		this.backupWorker.thread.start();
-		runningWorkers = 2;
-		this.runState = RUNNING;
+		this.runningWorkers = 2;
+		this.runState = CloudletExecutor.RUNNING;
 		MosaicLogger.getLogger().trace("CloudletExecutor started.");
 	}
 
@@ -201,32 +201,35 @@ public class CloudletExecutor {
 		 */
 
 		SecurityManager security = System.getSecurityManager();
-		if (security != null)
-			security.checkPermission(shutdownPerm);
+		if (security != null) {
+			security.checkPermission(CloudletExecutor.shutdownPerm);
+		}
 
-		mainLock.lock();
+		this.mainLock.lock();
 		try {
 			if (security != null) { // Check if caller can modify our threads
 				security.checkAccess(this.worker.thread);
 				security.checkAccess(this.backupWorker.thread);
 			}
 
-			int state = runState;
-			if (state < SHUTDOWN)
-				runState = SHUTDOWN;
+			int state = this.runState;
+			if (state < CloudletExecutor.SHUTDOWN) {
+				this.runState = CloudletExecutor.SHUTDOWN;
+			}
 
 			try {
 				this.worker.interruptIfIdle();
-				if (!this.worker.isActive())
+				if (!this.worker.isActive()) {
 					this.backupWorker.interruptIfIdle();
+				}
 			} catch (SecurityException se) { // Try to back out
-				runState = state;
+				this.runState = state;
 				throw se;
 			}
 
 			tryTerminate(); // Terminate now if queues empty
 		} finally {
-			mainLock.unlock();
+			this.mainLock.unlock();
 		}
 	}
 
@@ -238,6 +241,7 @@ public class CloudletExecutor {
 	 * Invokes {@link CloudletExecutor#shutdown()} when this executor is no
 	 * longer referenced.
 	 */
+	@Override
 	protected void finalize() {
 		shutdown();
 	}
@@ -252,8 +256,9 @@ public class CloudletExecutor {
 		final ReentrantLock mainLock = this.mainLock;
 		mainLock.lock();
 		try {
-			if (--runningWorkers == 0)
+			if (--this.runningWorkers == 0) {
 				tryTerminate();
+			}
 		} finally {
 			mainLock.unlock();
 		}
@@ -280,10 +285,11 @@ public class CloudletExecutor {
 	 */
 	private void tryTerminate() {
 
-		int state = runState;
-		if (runningWorkers == 0) {
-			if (state == STOP || state == SHUTDOWN) {
-				runState = TERMINATED;
+		int state = this.runState;
+		if (this.runningWorkers == 0) {
+			if ((state == CloudletExecutor.STOP)
+					|| (state == CloudletExecutor.SHUTDOWN)) {
+				this.runState = CloudletExecutor.TERMINATED;
 				this.terminationLatch.countDown();
 			}
 		}
@@ -296,14 +302,15 @@ public class CloudletExecutor {
 	 * queue, even if core timeouts are allowed.
 	 */
 	private boolean workerCanExit() {
-		mainLock.lock();
+		this.mainLock.lock();
 		boolean canExit;
 		try {
-			canExit = runState >= STOP
-					|| (runState == SHUTDOWN && requestQueue.isEmpty() && responseQueue
+			canExit = (this.runState >= CloudletExecutor.STOP)
+					|| ((this.runState == CloudletExecutor.SHUTDOWN)
+							&& this.requestQueue.isEmpty() && this.responseQueue
 							.isEmpty());
 		} finally {
-			mainLock.unlock();
+			this.mainLock.unlock();
 		}
 		return canExit;
 		// TODO
@@ -333,14 +340,16 @@ public class CloudletExecutor {
 		// } else
 		// reject(request); // is shutdown
 
-		mainLock.lock();
+		this.mainLock.lock();
 		try {
-			if ((runState == RUNNING) && requestQueue.offer(request)) {
-				queuesNotEmpty.signal();
-			} else
+			if ((this.runState == CloudletExecutor.RUNNING)
+					&& this.requestQueue.offer(request)) {
+				this.queuesNotEmpty.signal();
+			} else {
 				reject(request); // is shutdown
+			}
 		} finally {
-			mainLock.unlock();
+			this.mainLock.unlock();
 		}
 	}
 
@@ -358,19 +367,22 @@ public class CloudletExecutor {
 	 *            the request
 	 */
 	private void ensureQueuedRequestHandled(Runnable request) {
-		mainLock.lock();
+		this.mainLock.lock();
 		boolean reject = false;
 		try {
-			int state = runState;
-			if ((state != RUNNING) && requestQueue.remove(request))
+			int state = this.runState;
+			if ((state != CloudletExecutor.RUNNING)
+					&& this.requestQueue.remove(request)) {
 				reject = true;
+			}
 
-			if (reject)
+			if (reject) {
 				reject(request);
-			else
-				queuesNotEmpty.signal();
+			} else {
+				this.queuesNotEmpty.signal();
+			}
 		} finally {
-			mainLock.unlock();
+			this.mainLock.unlock();
 		}
 	}
 
@@ -394,14 +406,16 @@ public class CloudletExecutor {
 	public void handleResponse(Runnable response) {
 		if (response == null)
 			throw new NullPointerException();
-		mainLock.lock();
+		this.mainLock.lock();
 		try {
-			if (runState < STOP && responseQueue.offer(response))
-				if (worker.isBlocked())
-					mainWorkerBlocked.signal();
-			queuesNotEmpty.signal();
+			if ((this.runState < CloudletExecutor.STOP)
+					&& this.responseQueue.offer(response))
+				if (this.worker.isBlocked()) {
+					this.mainWorkerBlocked.signal();
+				}
+			this.queuesNotEmpty.signal();
 		} finally {
-			mainLock.unlock();
+			this.mainLock.unlock();
 		}
 	}
 
@@ -422,37 +436,40 @@ public class CloudletExecutor {
 	Runnable getTask() {
 		for (;;) {
 			try {
-				int state = runState;
-				if (state > SHUTDOWN)
+				int state = this.runState;
+				if (state > CloudletExecutor.SHUTDOWN)
 					return null;
 				Runnable r;
-				mainLock.lock();
-				if (state == SHUTDOWN) // Help drain queues
-					if (!responseQueue.isEmpty())
-						r = responseQueue.poll();
-					else
-						r = requestQueue.poll();
-				else {
-					while (responseQueue.isEmpty() && requestQueue.isEmpty()) {
-						queuesNotEmpty.await();
+				this.mainLock.lock();
+				if (state == CloudletExecutor.SHUTDOWN) // Help drain queues
+					if (!this.responseQueue.isEmpty()) {
+						r = this.responseQueue.poll();
+					} else {
+						r = this.requestQueue.poll();
 					}
-					if (!responseQueue.isEmpty())
-						r = responseQueue.take();
-					else {
-						r = requestQueue.poll();
+				else {
+					while (this.responseQueue.isEmpty()
+							&& this.requestQueue.isEmpty()) {
+						this.queuesNotEmpty.await();
+					}
+					if (!this.responseQueue.isEmpty()) {
+						r = this.responseQueue.take();
+					} else {
+						r = this.requestQueue.poll();
 					}
 				}
 				if (r != null)
 					return r;
 				if (workerCanExit()) {
-					if (runState >= SHUTDOWN) // interrupt backup thread
+					if (this.runState >= CloudletExecutor.SHUTDOWN) {
 						interruptBackupWorker();
+					}
 					return null;
 				}
 			} catch (InterruptedException ie) {
 				// On interruption, re-check runState
 			} finally {
-				mainLock.unlock();
+				this.mainLock.unlock();
 			}
 		}
 	}
@@ -473,24 +490,27 @@ public class CloudletExecutor {
 	Runnable getBackupTask() {
 		for (;;) {
 			try {
-				int state = runState;
-				if (state > SHUTDOWN)
+				int state = this.runState;
+				if (state > CloudletExecutor.SHUTDOWN)
 					return null;
 				Runnable r;
-				mainLock.lock();
+				this.mainLock.lock();
 				// wait until the main worker blocks
-				while (!worker.isBlocked())
-					mainWorkerBlocked.await();
+				while (!this.worker.isBlocked()) {
+					this.mainWorkerBlocked.await();
+				}
 
-				if (state >= SHUTDOWN) { // Help drain queues
-					if (worker.isBlocked() && !responseQueue.isEmpty())
-						r = responseQueue.poll();
-					else
+				if (state >= CloudletExecutor.SHUTDOWN) { // Help drain queues
+					if (this.worker.isBlocked()
+							&& !this.responseQueue.isEmpty()) {
+						r = this.responseQueue.poll();
+					} else {
 						r = null;
+					}
 				} else {
-					if (worker.isBlocked())
-						r = responseQueue.take();
-					else {
+					if (this.worker.isBlocked()) {
+						r = this.responseQueue.take();
+					} else {
 						r = null;
 					}
 				}
@@ -500,7 +520,7 @@ public class CloudletExecutor {
 				// On interruption, re-check runState
 				// ie.printStackTrace();
 			} finally {
-				mainLock.unlock();
+				this.mainLock.unlock();
 			}
 		}
 	}
@@ -510,11 +530,11 @@ public class CloudletExecutor {
 	 * check for termination.
 	 */
 	private void interruptBackupWorker() {
-		mainLock.lock();
+		this.mainLock.lock();
 		try {
 			this.backupWorker.interruptIfIdle();
 		} finally {
-			mainLock.unlock();
+			this.mainLock.unlock();
 		}
 	}
 
@@ -559,19 +579,20 @@ public class CloudletExecutor {
 		}
 
 		protected boolean isActive() {
-			return runLock.isLocked();
+			return this.runLock.isLocked();
 		}
 
 		/**
 		 * Interrupts thread if not running a task.
 		 */
 		protected void interruptIfIdle() {
-			if (runLock.tryLock()) {
+			if (this.runLock.tryLock()) {
 				try {
-					if (thread != Thread.currentThread())
-						thread.interrupt();
+					if (this.thread != Thread.currentThread()) {
+						this.thread.interrupt();
+					}
 				} finally {
-					runLock.unlock();
+					this.runLock.unlock();
 				}
 			}
 		}
@@ -580,14 +601,14 @@ public class CloudletExecutor {
 		 * Interrupts thread even if running a task.
 		 */
 		protected void interruptNow() {
-			thread.interrupt();
+			this.thread.interrupt();
 		}
 
 		/**
 		 * Runs a single task.
 		 */
 		private void runTask(Runnable task) {
-			runLock.lock();
+			this.runLock.lock();
 			try {
 				/*
 				 * Ensure that unless cloudlet executor is stopping, this thread
@@ -595,12 +616,15 @@ public class CloudletExecutor {
 				 * of state in case the interrupt was cleared concurrently with
 				 * a shutdownNow -- if so, the interrupt is re-enabled.
 				 */
-				if (runState < STOP && Thread.interrupted() && runState >= STOP)
-					thread.interrupt();
+				if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
+						&& Thread.interrupted()
+						&& (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
+					this.thread.interrupt();
+				}
 
 				task.run();
 			} finally {
-				runLock.unlock();
+				this.runLock.unlock();
 			}
 		}
 
@@ -609,6 +633,7 @@ public class CloudletExecutor {
 		 * 
 		 * @see java.lang.Runnable#run()
 		 */
+		@Override
 		public void run() {
 			try {
 				Runnable task = null;
@@ -626,7 +651,7 @@ public class CloudletExecutor {
 		 * asynchronous operation in a request.
 		 */
 		public boolean isBlocked() {
-			if (isActive() && thread.getState() == State.WAITING)
+			if (isActive() && (this.thread.getState() == State.WAITING))
 				return true;
 			return false;
 		}
@@ -655,7 +680,7 @@ public class CloudletExecutor {
 		 * Runs a single task.
 		 */
 		private void runTask(Runnable task) {
-			runLock.lock();
+			this.runLock.lock();
 			try {
 				/*
 				 * Ensure that unless cloudlet executor is stopping, this thread
@@ -663,12 +688,15 @@ public class CloudletExecutor {
 				 * of state in case the interrupt was cleared concurrently with
 				 * a shutdownNow -- if so, the interrupt is re-enabled.
 				 */
-				if (runState < STOP && Thread.interrupted() && runState >= STOP)
-					thread.interrupt();
+				if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
+						&& Thread.interrupted()
+						&& (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
+					this.thread.interrupt();
+				}
 
 				task.run();
 			} finally {
-				runLock.unlock();
+				this.runLock.unlock();
 			}
 		}
 	}

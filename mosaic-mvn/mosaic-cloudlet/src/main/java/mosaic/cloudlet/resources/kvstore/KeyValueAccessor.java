@@ -63,17 +63,17 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 					this.callback, IKeyValueAccessorCallback.class);
 			try {
 				String connectorName = ConfigUtils.resolveParameter(
-						configuration, mosaic.cloudlet.ConfigProperties
+						this.configuration, mosaic.cloudlet.ConfigProperties
 								.getString("KeyValueAccessor.0"), String.class, //$NON-NLS-1$
 						""); //$NON-NLS-1$
 
 				this.connector = KeyValueConnectorFactory.createConnector(
-						connectorName, configuration);// MemcachedStoreConnector.create(configuration);
+						connectorName, this.configuration);// MemcachedStoreConnector.create(configuration);
 				this.status = ResourceStatus.READY;
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						KeyValueAccessor.this.cloudlet, true);
-				this.callbackProxy
-						.initializeSucceeded(cloudletState, arguments);
+				this.callbackProxy.initializeSucceeded(this.cloudletState,
+						arguments);
 			} catch (Throwable e) {
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						this.cloudlet, e);
@@ -92,11 +92,12 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				this.status = ResourceStatus.DESTROYED;
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						KeyValueAccessor.this.cloudlet, true);
-				this.callbackProxy.destroySucceeded(cloudletState, arguments);
+				this.callbackProxy.destroySucceeded(this.cloudletState,
+						arguments);
 			} catch (Throwable e) {
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						this.cloudlet, e);
-				this.callbackProxy.destroyFailed(cloudletState, arguments);
+				this.callbackProxy.destroyFailed(this.cloudletState, arguments);
 				ExceptionTracer.traceDeferred(e);
 			}
 		}

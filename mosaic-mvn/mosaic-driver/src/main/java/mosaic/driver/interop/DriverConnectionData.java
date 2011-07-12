@@ -7,6 +7,7 @@ package mosaic.driver.interop;
  * 
  */
 public class DriverConnectionData {
+
 	private final String host;
 	private final int port;
 	private String user = "";
@@ -52,23 +53,23 @@ public class DriverConnectionData {
 	}
 
 	public String getHost() {
-		return host;
+		return this.host;
 	}
 
 	public int getPort() {
-		return port;
+		return this.port;
 	}
 
 	public String getUser() {
-		return user;
+		return this.user;
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public String getDriverName() {
-		return driverName;
+		return this.driverName;
 	}
 
 	@Override
@@ -76,12 +77,14 @@ public class DriverConnectionData {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((driverName == null) ? 0 : driverName.hashCode());
-		result = prime * result + ((host == null) ? 0 : host.hashCode());
+				+ ((this.driverName == null) ? 0 : this.driverName.hashCode());
 		result = prime * result
-				+ ((password == null) ? 0 : password.hashCode());
-		result = prime * result + port;
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
+				+ ((this.host == null) ? 0 : this.host.hashCode());
+		result = prime * result
+				+ ((this.password == null) ? 0 : this.password.hashCode());
+		result = prime * result + this.port;
+		result = prime * result
+				+ ((this.user == null) ? 0 : this.user.hashCode());
 		return result;
 	}
 
@@ -94,27 +97,27 @@ public class DriverConnectionData {
 		if (getClass() != obj.getClass())
 			return false;
 		DriverConnectionData other = (DriverConnectionData) obj;
-		if (driverName == null) {
+		if (this.driverName == null) {
 			if (other.driverName != null)
 				return false;
-		} else if (!driverName.equals(other.driverName))
+		} else if (!this.driverName.equals(other.driverName))
 			return false;
-		if (host == null) {
+		if (this.host == null) {
 			if (other.host != null)
 				return false;
-		} else if (!host.equals(other.host))
+		} else if (!this.host.equals(other.host))
 			return false;
-		if (password == null) {
+		if (this.password == null) {
 			if (other.password != null)
 				return false;
-		} else if (!password.equals(other.password))
+		} else if (!this.password.equals(other.password))
 			return false;
-		if (port != other.port)
+		if (this.port != other.port)
 			return false;
-		if (user == null) {
+		if (this.user == null) {
 			if (other.user != null)
 				return false;
-		} else if (!user.equals(other.user))
+		} else if (!this.user.equals(other.user))
 			return false;
 		return true;
 	}

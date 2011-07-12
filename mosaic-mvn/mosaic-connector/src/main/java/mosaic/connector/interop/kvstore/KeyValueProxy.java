@@ -1,11 +1,11 @@
 package mosaic.connector.interop.kvstore;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import mosaic.connector.interop.AbstractConnectorReactor;
 import mosaic.connector.interop.ConnectorProxy;
 import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.core.configuration.IConfiguration;
@@ -14,13 +14,18 @@ import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.SerDesUtils;
-import mosaic.interop.idl.kvstore.CompletionToken;
-import mosaic.interop.idl.kvstore.DeleteOperation;
-import mosaic.interop.idl.kvstore.GetOperation;
-import mosaic.interop.idl.kvstore.ListOperation;
-import mosaic.interop.idl.kvstore.Operation;
-import mosaic.interop.idl.kvstore.OperationNames;
-import mosaic.interop.idl.kvstore.SetOperation;
+import mosaic.interop.idl.IdlCommon.CompletionToken;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.DeleteRequest;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.GetRequest;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.ListRequest;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.SetRequest;
+import mosaic.interop.kvstore.KeyValueMessage;
+import mosaic.interop.kvstore.KeyValueSession;
+
+import com.google.protobuf.ByteString;
+
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used
@@ -31,8 +36,6 @@ import mosaic.interop.idl.kvstore.SetOperation;
  * 
  */
 public class KeyValueProxy extends ConnectorProxy {
-	private static final String DEFAULT_QUEUE_NAME = "kvstore_requests";
-	private static final String DEFAULT_EXCHANGE_NAME = "kvstore";
 
 	/**
 	 * Creates a proxy for key-value distributed storage systems.
@@ -43,12 +46,14 @@ public class KeyValueProxy extends ConnectorProxy {
 	 *            the identifier of this connector's proxy
 	 * @param reactor
 	 *            the response reactor
+	 * @param channel
+	 *            the channel on which to communicate with the driver
 	 * @throws Throwable
 	 */
 	protected KeyValueProxy(IConfiguration config, String connectorId,
-			KeyValueConnectorReactor reactor) throws Throwable {
-		super(config, connectorId, DEFAULT_EXCHANGE_NAME, DEFAULT_QUEUE_NAME,
-				reactor);
+			AbstractConnectorReactor reactor, ZeroMqChannel channel)
+			throws Throwable {
+		super(config, connectorId, reactor, channel);
 	}
 
 	/**
@@ -56,59 +61,74 @@ public class KeyValueProxy extends ConnectorProxy {
 	 * 
 	 * @param config
 	 *            the configurations required to initialize the proxy
+	 * @param connectorIdentifier
+	 *            the identifier of this connector
+	 * @param driverIdentifier
+	 *            the identifier of the driver to which request will be sent
+	 * @param channel
+	 *            the channel on which to communicate with the driver
 	 * @return the proxy
 	 * @throws Throwable
 	 */
-	public static KeyValueProxy create(IConfiguration config) throws Throwable {
-		String connectorId = UUID.randomUUID().toString(); // FIXME this should
-															// be
-		// replaced
-		KeyValueConnectorReactor reactor = new KeyValueConnectorReactor(config,
-				connectorId);
-		return new KeyValueProxy(config, connectorId, reactor);
+	public static KeyValueProxy create(IConfiguration config,
+			String connectorIdentifier, String driverIdentifier,
+			ZeroMqChannel channel) throws Throwable {
+		String connectorId = connectorIdentifier;
+		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(config);
+		KeyValueProxy proxy = new KeyValueProxy(config, connectorId, reactor,
+				channel);
+		proxy.connect(driverIdentifier, KeyValueSession.CONNECTOR, new Message(
+				KeyValueMessage.ACCESS, null));
+		return proxy;
+	}
+
+	@Override
+	public synchronized void destroy() throws Throwable {
+		super.sendRequest(getResponseReactor(KeyValueConnectorReactor.class)
+				.getSession(), new Message(KeyValueMessage.ABORTED, null));
+		super.destroy();
 	}
 
 	public void set(String key, Object data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
-		sendSetMessage(OperationNames.SET, key, data, handlers);
+		sendSetMessage(key, data, handlers);
 	}
 
 	public void get(String key,
 			List<IOperationCompletionHandler<Object>> handlers) {
 		List<String> keys = new ArrayList<String>();
 		keys.add(key);
-		sendGetMessage(OperationNames.GET, keys, handlers);
+		sendGetMessage(keys, handlers);
 	}
 
 	public void delete(String key,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
-		byte[] message;
-		String id;
+		Message message;
 
-		// build token
-		id = UUID.randomUUID().toString();
-		CompletionToken token = new CompletionToken();
-		token.put(0, id);
-		token.put(1, super.getConnectorId());
+		String id = UUID.randomUUID().toString();
 
 		MosaicLogger.getLogger().trace(
-				"MemcachedProxy - Sending " + OperationNames.DELETE.toString()
-						+ " request [" + id + "]...");
+				"MemcachedProxy - Sending DELETE request [" + id + "]...");
+
+		// build token
+		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+		tokenBuilder.setMessageId(id);
+		tokenBuilder.setClientId(getConnectorId());
+		// build request
+		DeleteRequest.Builder requestBuilder = DeleteRequest.newBuilder();
+		requestBuilder.setToken(tokenBuilder.build());
+		requestBuilder.setKey(key);
+
+		message = new Message(KeyValueMessage.DELETE_REQUEST,
+				requestBuilder.build());
+
+		// store token and completion handlers
+		super.registerHandlers(id, handlers);
 
 		try {
-			// store token and completion handlers
-			super.registerHandlers(id, handlers);
-
-			DeleteOperation op = new DeleteOperation();
-			op.put(0, token);
-			op.put(1, OperationNames.DELETE);
-			op.put(2, key);
-			Operation enclosingOperation = new Operation();
-			enclosingOperation.put(0, op);
-
-			// send request
-			message = SerDesUtils.serializeWithSchema(enclosingOperation);
-			super.sendRequest(message);
+			super.sendRequest(
+					getResponseReactor(KeyValueConnectorReactor.class)
+							.getSession(), message);
 		} catch (IOException e) {
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e);
@@ -120,35 +140,28 @@ public class KeyValueProxy extends ConnectorProxy {
 	}
 
 	public void list(List<IOperationCompletionHandler<List<String>>> handlers) {
-		sendListMessage(OperationNames.LIST, handlers);
-	}
-
-	protected void sendListMessage(OperationNames operation,
-			List<IOperationCompletionHandler<List<String>>> handlers) {
-		byte[] message;
-		String id;
+		String id = UUID.randomUUID().toString();
+		MosaicLogger.getLogger().trace(
+				"KeyValueProxy - Sending LIST request [" + id + "]...");
 
 		// build token
-		id = UUID.randomUUID().toString();
-		CompletionToken token = new CompletionToken();
-		token.put(0, id);
-		token.put(1, super.getConnectorId());
-		MosaicLogger.getLogger().trace(
-				"KeyValueProxy - Sending " + operation.toString()
-						+ " request [" + id + "]...");
+		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+		tokenBuilder.setMessageId(id);
+		tokenBuilder.setClientId(getConnectorId());
+
+		// build request
+		ListRequest.Builder requestBuilder = ListRequest.newBuilder();
+		requestBuilder.setToken(tokenBuilder.build());
+
+		Message message = new Message(KeyValueMessage.LIST_REQUEST,
+				requestBuilder.build());
+
+		// store token and completion handlers
+		super.registerHandlers(id, handlers);
 		try {
-			// store token and completion handlers
-			super.registerHandlers(id, handlers);
-
-			ListOperation op = new ListOperation();
-			op.put(0, token);
-			op.put(1, operation);
-			Operation enclosingOperation = new Operation();
-			enclosingOperation.put(0, op);
-
-			// send request
-			message = SerDesUtils.serializeWithSchema(enclosingOperation);
-			super.sendRequest(message);
+			super.sendRequest(
+					getResponseReactor(KeyValueConnectorReactor.class)
+							.getSession(), message);
 		} catch (IOException e) {
 			for (IOperationCompletionHandler<List<String>> handler : handlers) {
 				handler.onFailure(e);
@@ -158,41 +171,40 @@ public class KeyValueProxy extends ConnectorProxy {
 							"Cannot send list request to driver: "
 									+ e.getMessage(), e));
 		}
-
 	}
 
-	protected void sendSetMessage(OperationNames operation, String key,
-			Object data, List<IOperationCompletionHandler<Boolean>> handlers) {
-		byte[] dataBytes;
-		byte[] message;
-		String id;
-		ByteBuffer buff;
+	protected void sendSetMessage(String key, Object data,
+			List<IOperationCompletionHandler<Boolean>> handlers, Integer... exp) {
+		String id = UUID.randomUUID().toString();
+		MosaicLogger.getLogger().trace(
+				"KeyValueProxy - Sending SET request [" + id + "]...");
 
 		// build token
-		id = UUID.randomUUID().toString();
-		CompletionToken token = new CompletionToken();
-		token.put(0, id);
-		token.put(1, super.getConnectorId());
-		MosaicLogger.getLogger().trace(
-				"KeyValueProxy - Sending " + operation.toString()
-						+ " request [" + id + "]...");
+		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+		tokenBuilder.setMessageId(id);
+		tokenBuilder.setClientId(getConnectorId());
+
 		try {
+			// build request
+			SetRequest.Builder requestBuilder = SetRequest.newBuilder();
+			requestBuilder.setToken(tokenBuilder.build());
+			requestBuilder.setKey(key);
+			if (exp.length > 0) {
+				requestBuilder.setExpTime(exp[0]);
+			}
+
+			byte[] dataBytes = SerDesUtils.toBytes(data);
+			requestBuilder.setValue(ByteString.copyFrom(dataBytes));
+
+			Message message = new Message(KeyValueMessage.SET_REQUEST,
+					requestBuilder.build());
+
 			// store token and completion handlers
 			super.registerHandlers(id, handlers);
 
-			dataBytes = SerDesUtils.toBytes(data);
-			buff = ByteBuffer.wrap(dataBytes);
-			SetOperation op = new SetOperation();
-			op.put(0, token);
-			op.put(1, operation);
-			op.put(2, key);
-			op.put(3, buff);
-			Operation enclosingOperation = new Operation();
-			enclosingOperation.put(0, op);
-
-			// send request
-			message = SerDesUtils.serializeWithSchema(enclosingOperation);
-			super.sendRequest(message);
+			super.sendRequest(
+					getResponseReactor(KeyValueConnectorReactor.class)
+							.getSession(), message);
 		} catch (IOException e) {
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e);
@@ -202,35 +214,32 @@ public class KeyValueProxy extends ConnectorProxy {
 		}
 	}
 
-	protected <T extends Object> void sendGetMessage(OperationNames operation,
-			List<String> keys, List<IOperationCompletionHandler<T>> handlers) {
-		byte[] message;
-		String id;
+	protected <T extends Object> void sendGetMessage(List<String> keys,
+			List<IOperationCompletionHandler<T>> handlers) {
+		String id = UUID.randomUUID().toString();
+		MosaicLogger.getLogger().trace(
+				"KeyValueProxy - Sending GET request [" + id + "]...");
 
 		// build token
-		id = UUID.randomUUID().toString();
-		CompletionToken token = new CompletionToken();
-		token.put(0, id);
-		token.put(1, super.getConnectorId());
+		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+		tokenBuilder.setMessageId(id);
+		tokenBuilder.setClientId(getConnectorId());
 
-		MosaicLogger.getLogger().trace(
-				"KeyValueProxy - Sending " + operation.toString()
-						+ " request [" + id + "]...");
+		// build request
+		GetRequest.Builder requestBuilder = GetRequest.newBuilder();
+		requestBuilder.setToken(tokenBuilder.build());
+		requestBuilder.addAllKey(keys);
+
+		Message message = new Message(KeyValueMessage.GET_REQUEST,
+				requestBuilder.build());
+
+		// store token and completion handlers
+		super.registerHandlers(id, handlers);
 
 		try {
-			// store token and completion handlers
-			super.registerHandlers(id, handlers);
-
-			GetOperation op = new GetOperation();
-			op.put(0, token);
-			op.put(1, operation);
-			op.put(2, keys);
-			Operation enclosingOperation = new Operation();
-			enclosingOperation.put(0, op);
-
-			// send request
-			message = SerDesUtils.serializeWithSchema(enclosingOperation);
-			super.sendRequest(message);
+			super.sendRequest(
+					getResponseReactor(KeyValueConnectorReactor.class)
+							.getSession(), message);
 		} catch (IOException e) {
 			for (IOperationCompletionHandler<T> handler : handlers) {
 				handler.onFailure(e);

@@ -37,7 +37,7 @@ public class AmqpQueuePublishCallbackArguments<S, D> extends
 	 * @return information about the publish request
 	 */
 	public AmqpQueuePublishMessage<D> getMessage() {
-		return message;
+		return this.message;
 	}
 
 }

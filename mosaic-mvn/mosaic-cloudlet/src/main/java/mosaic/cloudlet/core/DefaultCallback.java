@@ -27,8 +27,9 @@ public class DefaultCallback<S> implements ICallback {
 	protected void handleUnhandledCallback(CallbackArguments<S> arguments,
 			String callbackType, boolean positive, boolean couldDestroy) {
 		this.traceUnhandledCallback(arguments, callbackType, positive);
-		if (!positive && couldDestroy)
+		if (!positive && couldDestroy) {
 			arguments.getCloudlet().destroy();
+		}
 	}
 
 	/**

@@ -65,6 +65,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	 * mosaic.cloudlet.resources.amqp.AmqpQueueAccessor#initialize(mosaic.cloudlet
 	 * .resources.IResourceAccessorCallback, java.lang.Object)
 	 */
+	@Override
 	public void initialize(IResourceAccessorCallback<S> callback, S state) {
 		synchronized (this) {
 			if (callback instanceof IAmqpQueuePublisherCallback) {
@@ -91,7 +92,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	public void register() {
 		synchronized (this) {
 			// declare queue and in case of success register as consumer
-			startRegister(callback);
+			startRegister(this.callback);
 		}
 	}
 
@@ -173,14 +174,14 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 		@Override
 		public void onSuccess(Boolean result) {
-			callback.publishSucceeded(AmqpQueuePublisher.super.cloudletState,
-					this.arguments);
+			AmqpQueuePublisher.this.callback.publishSucceeded(
+					AmqpQueuePublisher.super.cloudletState, this.arguments);
 		}
 
 		@Override
 		public <E extends Throwable> void onFailure(E error) {
-			callback.publishFailed(AmqpQueuePublisher.super.cloudletState,
-					this.arguments);
+			AmqpQueuePublisher.this.callback.publishFailed(
+					AmqpQueuePublisher.super.cloudletState, this.arguments);
 		}
 	}
 

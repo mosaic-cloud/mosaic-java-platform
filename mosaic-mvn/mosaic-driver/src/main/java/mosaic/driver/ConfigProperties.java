@@ -7,14 +7,14 @@ public class ConfigProperties {
 	private static final String BUNDLE_NAME = "mosaic.driver.config"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
+			.getBundle(ConfigProperties.BUNDLE_NAME);
 
 	private ConfigProperties() {
 	}
 
 	public static String getString(String key) {
 		try {
-			return RESOURCE_BUNDLE.getString(key);
+			return ConfigProperties.RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
 			return '!' + key + '!';
 		}

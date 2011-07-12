@@ -94,8 +94,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 		AmqpDriver driver = new AmqpDriver(configuration, noThreads);
 		// open connection
 		driver.openConnection();
-		if (!driver.connected)
+		if (!driver.connected) {
 			driver = null;
+		}
 		return driver;
 	}
 
@@ -145,8 +146,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 		// close any existing connection
 		if (this.connected) {
 			try {
-				for (Channel channel : AmqpDriver.this.channels)
+				for (Channel channel : AmqpDriver.this.channels) {
 					channel.close();
+				}
 				this.connection.close();
 				this.connected = false;
 			} catch (IOException e) {
@@ -367,8 +369,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 	}
 
 	private Channel getDefaultChannel() {
-		if (this.defaultChannel == null)
+		if (this.defaultChannel == null) {
 			this.defaultChannel = this.openChannel();
+		}
 		return this.defaultChannel;
 	}
 
@@ -643,14 +646,15 @@ public class AmqpDriver extends AbstractResourceDriver {
 											.getDefaultChannel();
 									if (channel != null) {
 										AMQP.Exchange.DeclareOk outcome = null;
-										if (passive)
+										if (passive) {
 											outcome = channel
 													.exchangeDeclarePassive(exchange);
-										else
+										} else {
 											outcome = channel.exchangeDeclare(
 													exchange,
 													eType.getAmqpName(),
 													durable, autoDelete, null);
+										}
 										succeeded = (outcome != null);
 									}
 								}
@@ -677,13 +681,14 @@ public class AmqpDriver extends AbstractResourceDriver {
 											.getDefaultChannel();
 									if (channel != null) {
 										AMQP.Queue.DeclareOk outcome = null;
-										if (passive)
+										if (passive) {
 											outcome = channel
 													.queueDeclarePassive(queue);
-										else
+										} else {
 											outcome = channel.queueDeclare(
 													queue, durable, exclusive,
 													autoDelete, null);
+										}
 										succeeded = (outcome != null);
 									}
 								}
@@ -927,11 +932,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 			this.maxReconnectionTries = ConfigUtils.resolveParameter(
 					AmqpDriver.this.configuration,
 					ConfigProperties.getString("AmqpDriver.6"), Integer.class, //$NON-NLS-1$
-					DEFAULT_MAX_RECONNECTION_TRIES);
+					ConnectionShutdownListener.DEFAULT_MAX_RECONNECTION_TRIES);
 			this.minReconnectionTime = ConfigUtils.resolveParameter(
 					AmqpDriver.this.configuration,
 					ConfigProperties.getString("AmqpDriver.7"), Long.class, //$NON-NLS-1$
-					DEFAULT_MIN_RECONNECTION_TIME);
+					ConnectionShutdownListener.DEFAULT_MIN_RECONNECTION_TIME);
 		}
 
 		@Override
@@ -945,21 +950,23 @@ public class AmqpDriver extends AbstractResourceDriver {
 				AmqpDriver.this.connected = false;
 				int tries = 0;
 				while (!AmqpDriver.this.connected
-						&& tries < maxReconnectionTries) {
+						&& (tries < this.maxReconnectionTries)) {
 					try {
-						Thread.sleep(minReconnectionTime);
+						Thread.sleep(this.minReconnectionTime);
 						AmqpDriver.this.openConnection();
 						tries++;
 					} catch (InterruptedException e) {
-						if (AmqpDriver.super.isDestroyed())
+						if (AmqpDriver.super.isDestroyed()) {
 							break;
+						}
 						ExceptionTracer.traceDeferred(e);
 					}
 				}
 				if (!AmqpDriver.this.connected
-						&& !AmqpDriver.super.isDestroyed())
+						&& !AmqpDriver.super.isDestroyed()) {
 					MosaicLogger.getLogger().error(
 							"Could not reconnect to AMQP resource."); //$NON-NLS-1$
+				}
 			}
 		}
 

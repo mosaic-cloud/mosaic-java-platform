@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user -->
+<!-- -->
+<!-- For professional support please see -->
+<!-- http://www.qos.ch/shop/products/professionalSupport -->
+<!-- -->
+<configuration>
+	<appender name="A2" class="ch.qos.logback.core.FileAppender">
+		<Append>false</Append>
+		<File>mosaic.log</File>
+		<encoder>
+			<pattern>%-5p %-17c{2} (%13F:%L) - %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="A1" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%-5p %-17c{2} (%13F:%L) - %m%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="eu.mosaic_cloud" level="info">
+		<appender-ref ref="A2" />
+	</logger>
+	<logger name="mosaic" level="trace">
+		<appender-ref ref="A2" />
+	</logger>
+	<root>
+		<appender-ref ref="A1" />
+	</root>
+</configuration>

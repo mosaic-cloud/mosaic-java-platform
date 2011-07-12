@@ -53,7 +53,7 @@ public class OperationResultCallbackArguments<S, T> extends
 	 * @return the result of the operation
 	 */
 	public T getResult() {
-		return result;
+		return this.result;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class OperationResultCallbackArguments<S, T> extends
 	 * @return the exception thrown by the operation
 	 */
 	public Throwable getError() {
-		return error;
+		return this.error;
 	}
 
 }

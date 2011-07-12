@@ -1,6 +1,7 @@
 package mosaic.connector.kvstore;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,6 +15,9 @@ import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.interop.kvstore.KeyValueSession;
+import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
  * Connector for key-value distributed storage systems .
@@ -43,11 +47,23 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	 */
 	public static KeyValueStoreConnector create(IConfiguration config)
 			throws Throwable {
+		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KeyValueStoreConnector.0"), Integer.class, 1); //$NON-NLS-1$
-		KeyValueProxy proxy = KeyValueProxy.create(config);
+		String driverChannel = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AllConnector.0"), String.class, "");
+		String driverIdentifier = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AllConnector.1"), String.class, "");
+		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
+				AbortingExceptionTracer.defaultInstance);
+		channel.register(KeyValueSession.CONNECTOR);
+		channel.connect(driverChannel);
+		KeyValueProxy proxy = KeyValueProxy.create(config, connectorIdentifier,
+				driverIdentifier, channel);
+		MosaicLogger.getLogger().debug(
+				"KeyValueConnector connecting to " + driverChannel);
 		return new KeyValueStoreConnector(proxy, noThreads);
 	}
 
@@ -56,9 +72,10 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	 * 
 	 * @see mosaic.connector.IResourceConnector#destroy()
 	 */
+	@Override
 	public void destroy() throws Throwable {
-		proxy.destroy();
-		executor.shutdown();
+		this.proxy.destroy();
+		this.executor.shutdown();
 		MosaicLogger.getLogger().trace("KeyValueStoreConnector destroyed.");
 	}
 
@@ -73,7 +90,8 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 
 			@Override
 			public void run() {
-				proxy.get(key, op.getCompletionHandlers());
+				KeyValueStoreConnector.this.proxy.get(key,
+						op.getCompletionHandlers());
 
 			}
 		});
@@ -94,7 +112,8 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 
 			@Override
 			public void run() {
-				proxy.delete(key, op.getCompletionHandlers());
+				KeyValueStoreConnector.this.proxy.delete(key,
+						op.getCompletionHandlers());
 
 			}
 		});
@@ -115,7 +134,8 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 
 			@Override
 			public void run() {
-				proxy.set(key, data, op.getCompletionHandlers());
+				KeyValueStoreConnector.this.proxy.set(key, data,
+						op.getCompletionHandlers());
 
 			}
 		});
@@ -136,7 +156,8 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 
 			@Override
 			public void run() {
-				proxy.list(op.getCompletionHandlers());
+				KeyValueStoreConnector.this.proxy.list(op
+						.getCompletionHandlers());
 
 			}
 		});
@@ -166,7 +187,7 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	 *            the operation
 	 */
 	protected synchronized void submitOperation(Runnable op) {
-		executor.submit(op);
+		this.executor.submit(op);
 	}
 
 }

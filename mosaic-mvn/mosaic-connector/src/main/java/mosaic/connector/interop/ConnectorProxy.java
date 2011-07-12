@@ -3,34 +3,28 @@ package mosaic.connector.interop;
 import java.io.IOException;
 import java.util.List;
 
-import mosaic.connector.ConfigProperties;
-import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
-import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
-
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+import eu.mosaic_cloud.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Session;
+import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
+import eu.mosaic_cloud.interoperability.core.SessionSpecification;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
- * Dummy base class for connector proxys.
- * <p>
- * Note: This will probably be replaced when the real interoperability layer
- * will be integrated.
+ * Base class for connector proxys.
  * 
  * @author Georgiana Macariu
  * 
  */
-public class ConnectorProxy {
+public class ConnectorProxy implements SessionCallbacks {
+
 	private IConfiguration configuration;
-	private Channel commChannel;
-	private Connection connection;
-	private String exchange;
-	private String routingKey;
 	private String connectorId;
+	private ZeroMqChannel commChannel;
 
 	private ResponseHandlerMap handlerMap;
 	private AbstractConnectorReactor responseReactor;
@@ -40,85 +34,30 @@ public class ConnectorProxy {
 	 * 
 	 * @param config
 	 *            the configurations required to initialize the proxy
-	 * @param defaultExchange
-	 *            the default exchange to be used by the proxy (in case one is
-	 *            not given in the configuration data)
-	 * @param defaultQueue
-	 *            default queue to be used by the proxy (in case one is not
-	 *            given in the configuration data)
+	 * @param connectorId
+	 *            identifier of this connector
 	 * @param reactor
 	 *            the response reactor
+	 * @param channel
+	 *            the channel on which to communicate with the driver
 	 * @throws Throwable
 	 */
-	public ConnectorProxy(IConfiguration config, String connectorId,
-			String defaultExchange, String defaultQueue,
-			AbstractConnectorReactor reactor) throws Throwable {
+	protected ConnectorProxy(IConfiguration config, String connectorId,
+			AbstractConnectorReactor reactor, ZeroMqChannel channel)
+			throws Throwable {
 		this.configuration = config;
 		this.connectorId = connectorId;
+		this.commChannel = channel;
 
-		// read connection details from the configuration
-		String amqpServerHost = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ConnectorProxy.0"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_HOST);
-		int amqpServerPort = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ConnectorProxy.1"), Integer.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_AMQP_PORT);
-		String amqpServerUser = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ConnectorProxy.2"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_USER);
-		String amqpServerPasswd = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("ConnectorProxy.3"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_PASS);
-		exchange = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("ConnectorProxy.4"), String.class, defaultExchange); //$NON-NLS-1$
-		routingKey = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("ConnectorProxy.5"), String.class, defaultQueue); //$NON-NLS-1$
+		// start also the response reactor for this proxy
+		this.handlerMap = new ResponseHandlerMap();
+		this.responseReactor = reactor;
+		this.responseReactor.setDispatcher(this.handlerMap);
+	}
 
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(amqpServerHost);
-		factory.setPort(amqpServerPort);
-		if (!amqpServerUser.equals("")) { //$NON-NLS-1$
-			factory.setUsername(amqpServerUser);
-			factory.setPassword(amqpServerPasswd);
-		}
-
-		try {
-			// create communication channel
-			connection = factory.newConnection();
-			commChannel = connection.createChannel();
-
-			// create exchange and queue
-			commChannel.exchangeDeclare(exchange, "direct", false, false, null); //$NON-NLS-1$
-			// commChannel.queueDeclare(routingKey, true, false, false, null);
-			String queueName = commChannel.queueDeclare().getQueue();
-			commChannel.queueBind(queueName, exchange, routingKey);
-
-			// start also the response reactor for this proxy
-			handlerMap = new ResponseHandlerMap();
-			responseReactor = reactor;
-			responseReactor.setDispatcher(handlerMap);
-			Thread reactorThread = new Thread(responseReactor);
-			reactorThread.start();
-		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(e);
-			// close connections
-			try {
-				if (commChannel != null && commChannel.isOpen()) {
-					commChannel.close();
-				}
-				if (connection != null && connection.isOpen()) {
-					connection.close();
-				}
-			} catch (IOException e1) {
-				ExceptionTracer.traceRethrown(new ConnectionException(
-						"The proxy cannot connect to the driver: " //$NON-NLS-1$
-								+ e1.getMessage(), e1));
-			}
-		}
+	protected void connect(String driverIdentifier,
+			SessionSpecification session, Message initMessage) {
+		this.commChannel.connect(driverIdentifier, session, initMessage, this);
 	}
 
 	/**
@@ -127,32 +66,23 @@ public class ConnectorProxy {
 	 * @throws Throwable
 	 */
 	public synchronized void destroy() throws Throwable {
-		// close connection
-		try {
-			if (commChannel != null && commChannel.isOpen()) {
-				commChannel.close();
-			}
-			if (connection != null && connection.isOpen()) {
-				connection.close();
-			}
-		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(new ConnectionException(
-					"The proxy cannot close connection to the driver: " //$NON-NLS-1$
-							+ e.getMessage(), e));
-		}
-		responseReactor.destroy();
+		this.responseReactor.destroy();
+		this.commChannel.terminate(500);
 		MosaicLogger.getLogger().trace("ConnectorProxy destroyed.");
 	}
 
 	/**
 	 * Sends a request to the driver.
 	 * 
+	 * @param session
+	 *            the session to which the request belongs
 	 * @param request
 	 *            the request
 	 * @throws IOException
 	 */
-	protected synchronized void sendRequest(byte[] request) throws IOException {
-		commChannel.basicPublish(exchange, routingKey, null, request);
+	protected synchronized void sendRequest(Session session, Message request)
+			throws IOException {
+		session.send(request);
 	}
 
 	/**
@@ -161,12 +91,12 @@ public class ConnectorProxy {
 	 * @param <T>
 	 *            the type of the response reactor
 	 * @param reactorClass
-	 *            the class of the response Freactor
+	 *            the class of the response reactor
 	 * @return the response reactor
 	 */
 	public <T extends AbstractConnectorReactor> T getResponseReactor(
 			Class<T> reactorClass) {
-		return reactorClass.cast(responseReactor);
+		return reactorClass.cast(this.responseReactor);
 	}
 
 	/**
@@ -175,7 +105,7 @@ public class ConnectorProxy {
 	 * @return the ID of the connector's proxy
 	 */
 	protected String getConnectorId() {
-		return connectorId;
+		return this.connectorId;
 	}
 
 	/**
@@ -191,5 +121,33 @@ public class ConnectorProxy {
 	protected <T extends Object> void registerHandlers(String requestId,
 			List<IOperationCompletionHandler<T>> handlers) {
 		this.handlerMap.addHandlers(requestId, handlers);
+	}
+
+	@Override
+	public CallbackReference created(Session session) {
+		this.responseReactor.sessionCreated(session);
+		return null;
+	}
+
+	@Override
+	public CallbackReference destroyed(Session session) {
+		this.responseReactor.sessionDestroyed(session);
+		return null;
+	}
+
+	@Override
+	public CallbackReference failed(Session session, Throwable exception) {
+		this.responseReactor.sessionFailed(session, exception);
+		return null;
+	}
+
+	@Override
+	public CallbackReference received(Session session, Message message) {
+		try {
+			this.responseReactor.processResponse(message);
+		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+		}
+		return null;
 	}
 }

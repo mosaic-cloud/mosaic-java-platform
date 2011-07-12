@@ -1,11 +1,17 @@
 package mosaic.driver.interop.kvstore.memcached;
 
 import mosaic.core.configuration.IConfiguration;
-import mosaic.core.ops.IOperationType;
+import mosaic.core.log.MosaicLogger;
 import mosaic.driver.interop.kvstore.KeyValueResponseTransmitter;
 import mosaic.driver.kvstore.KeyValueOperations;
-import mosaic.interop.idl.kvstore.CompletionToken;
-import mosaic.interop.idl.kvstore.OperationNames;
+import mosaic.interop.idl.IdlCommon;
+import mosaic.interop.idl.IdlCommon.CompletionToken;
+import mosaic.interop.idl.IdlCommon.Error.Builder;
+import mosaic.interop.idl.IdlCommon.NotOk;
+import mosaic.interop.idl.IdlCommon.Ok;
+import mosaic.interop.kvstore.KeyValueMessage;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Session;
 
 /**
  * Serializes responses for memcached operation requests and sends them to the
@@ -26,59 +32,49 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
 		super(config);
 	}
 
-	/**
-	 * Builds the result and sends it to the operation originator.
-	 * 
-	 * @param token
-	 *            the token identifying the operation
-	 * @param op
-	 *            the identifier of the operation
-	 * @param result
-	 *            the result
-	 * @param isError
-	 *            <code>true</code> if the result is actual an error
-	 */
-	public void sendResponse(CompletionToken token, IOperationType op,
-			Object result, boolean isError) {
+	@Override
+	protected void packAndSend(Session session, CompletionToken token,
+			KeyValueOperations op, Object result, boolean isError) {
+		Message message = null;
 
-		if (!(op instanceof KeyValueOperations)) {
-			return;
+		MosaicLogger.getLogger().trace(
+				"MemcachedTransmitter: send response for " + op + " request "
+						+ token.getMessageId() + " client id "
+						+ token.getClientId());
+
+		if (isError) {
+			// create error message
+			Builder errorPayload = IdlCommon.Error.newBuilder();
+			errorPayload.setToken(token);
+			errorPayload.setErrorMessage(result.toString());
+			message = new Message(KeyValueMessage.ERROR, errorPayload.build());
+		} else {
+			switch (op) {
+			case ADD:
+			case APPEND:
+			case REPLACE:
+			case PREPEND:
+			case CAS:
+				boolean ok = (Boolean) result;
+				if (ok) {
+					Ok.Builder okPayload = IdlCommon.Ok.newBuilder();
+					okPayload.setToken(token);
+					message = new Message(KeyValueMessage.OK, okPayload.build());
+				} else {
+					NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder();
+					nokPayload.setToken(token);
+					message = new Message(KeyValueMessage.NOK,
+							nokPayload.build());
+				}
+				break;
+			default:
+				message = super.buildKeyValueResponse(op, token, result);
+				break;
+			}
 		}
-		KeyValueOperations mOp = (KeyValueOperations) op;
-		packAndSend(token, convertOperationType(mOp), result, isError);
+
+		// send response
+		publishResponse(session, message);
 	}
 
-	private OperationNames convertOperationType(KeyValueOperations op) {
-		OperationNames cOp = null;
-		switch (op) {
-		case ADD:
-			cOp = OperationNames.ADD;
-			break;
-		case APPEND:
-			cOp = OperationNames.APPEND;
-			break;
-		case CAS:
-			cOp = OperationNames.CAS;
-			break;
-		case DELETE:
-			cOp = OperationNames.DELETE;
-			break;
-		case GET:
-			cOp = OperationNames.GET;
-			break;
-		case GET_BULK:
-			cOp = OperationNames.GET_BULK;
-			break;
-		case PREPEND:
-			cOp = OperationNames.PREPEND;
-			break;
-		case REPLACE:
-			cOp = OperationNames.REPLACE;
-			break;
-		case SET:
-			cOp = OperationNames.SET;
-			break;
-		}
-		return cOp;
-	}
 }

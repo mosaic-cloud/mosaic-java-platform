@@ -16,9 +16,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.avro</groupId>
-			<artifactId>avro</artifactId>
-			<version>1.5.1</version>
+			<groupId>eu.mosaic_cloud</groupId>
+			<artifactId>interoperability-core</artifactId>
+			<version>0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud</groupId>
+			<artifactId>interoperability-tools</artifactId>
+			<version>0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud</groupId>
+			<artifactId>interoperability-zeromq</artifactId>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -79,4 +89,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	<inceptionYear>March 2011</inceptionYear>
 </project>

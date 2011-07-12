@@ -15,12 +15,16 @@ import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.driver.interop.kvstore.KeyValueStub;
+import mosaic.interop.kvstore.KeyValueSession;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
@@ -33,23 +37,32 @@ public class KeyValueConnectorTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
 		IConfiguration config = PropertyTypeConfiguration.create(
-				KeyValueConnectorTest.class.getClassLoader(),
-				"memcached-test.prop");
-		storeType = ConfigUtils.resolveParameter(config, "kvstore.driver_name",
-				String.class, "");
-		connector = KeyValueStoreConnector.create(config);
-		keyPrefix = UUID.randomUUID().toString();
-		driverStub = KeyValueStub.create(config);
+				KeyValueConnectorTest.class.getClassLoader(), "kv-test.prop");
+		KeyValueConnectorTest.storeType = ConfigUtils.resolveParameter(config,
+				"kvstore.driver_name", String.class, "");
+
+		ZeroMqChannel driverChannel = new ZeroMqChannel(
+				ConfigUtils.resolveParameter(config,
+						"interop.driver.identifier", String.class, ""),
+				AbortingExceptionTracer.defaultInstance);
+		driverChannel.register(KeyValueSession.DRIVER);
+		driverChannel.accept(ConfigUtils.resolveParameter(config,
+				"interop.channel.address", String.class, ""));
+
+		KeyValueConnectorTest.driverStub = KeyValueStub.create(config,
+				driverChannel);
+		KeyValueConnectorTest.connector = KeyValueStoreConnector.create(config);
+		KeyValueConnectorTest.keyPrefix = UUID.randomUUID().toString();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
-		connector.destroy();
-		driverStub.destroy();
+		KeyValueConnectorTest.connector.destroy();
+		KeyValueConnectorTest.driverStub.destroy();
 	}
 
 	public void testConnection() {
-		Assert.assertNotNull(connector);
+		Assert.assertNotNull(KeyValueConnectorTest.connector);
 	}
 
 	private static <T> List<IOperationCompletionHandler<T>> getHandlers(
@@ -62,14 +75,16 @@ public class KeyValueConnectorTest {
 	}
 
 	public void testSet() {
-		String k1 = keyPrefix + "_key_fantastic";
+		String k1 = KeyValueConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
-		IResult<Boolean> r1 = connector.set(k1, "fantastic", handlers1, null);
+		IResult<Boolean> r1 = KeyValueConnectorTest.connector.set(k1,
+				"fantastic", handlers1, null);
 		Assert.assertNotNull(r1);
 
-		String k2 = keyPrefix + "_key_famous";
+		String k2 = KeyValueConnectorTest.keyPrefix + "_key_famous";
 		List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers("set 2");
-		IResult<Boolean> r2 = connector.set(k2, "famous", handlers2, null);
+		IResult<Boolean> r2 = KeyValueConnectorTest.connector.set(k2, "famous",
+				handlers2, null);
 		Assert.assertNotNull(r2);
 
 		try {
@@ -85,9 +100,10 @@ public class KeyValueConnectorTest {
 	}
 
 	public void testGet() {
-		String k1 = keyPrefix + "_key_fantastic";
+		String k1 = KeyValueConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
-		IResult<Object> r1 = connector.get(k1, handlers, null);
+		IResult<Object> r1 = KeyValueConnectorTest.connector.get(k1, handlers,
+				null);
 
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().toString());
@@ -101,9 +117,10 @@ public class KeyValueConnectorTest {
 	}
 
 	public void testDelete() {
-		String k1 = keyPrefix + "_key_fantastic";
+		String k1 = KeyValueConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
-		IResult<Boolean> r1 = connector.delete(k1, handlers, null);
+		IResult<Boolean> r1 = KeyValueConnectorTest.connector.delete(k1,
+				handlers, null);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -115,7 +132,8 @@ public class KeyValueConnectorTest {
 		}
 
 		List<IOperationCompletionHandler<Object>> handlers1 = getHandlers("get after delete");
-		IResult<Object> r2 = connector.get(k1, handlers1, null);
+		IResult<Object> r2 = KeyValueConnectorTest.connector.get(k1, handlers1,
+				null);
 
 		try {
 			Assert.assertNull(r2.getResult());
@@ -131,9 +149,10 @@ public class KeyValueConnectorTest {
 	public void testList() {
 		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
-		IResult<List<String>> r1 = connector.list(handlers, null);
+		IResult<List<String>> r1 = KeyValueConnectorTest.connector.list(
+				handlers, null);
 		try {
-			if (storeType.equalsIgnoreCase("memcached")) {
+			if (KeyValueConnectorTest.storeType.equalsIgnoreCase("memcached")) {
 				Assert.assertNull(r1.getResult());
 			} else {
 				Assert.assertNotNull(r1.getResult());
@@ -166,7 +185,14 @@ public class KeyValueConnectorTest {
 		KeyValueStoreConnector connector = KeyValueStoreConnector
 				.create(config);
 		String keyPrefix = UUID.randomUUID().toString();
-		KeyValueStub driverStub = KeyValueStub.create(config);
+		ZeroMqChannel driverChannel = new ZeroMqChannel(
+				ConfigUtils.resolveParameter(config,
+						"interop.driver.identifier", String.class, ""),
+				AbortingExceptionTracer.defaultInstance);
+		driverChannel.register(KeyValueSession.DRIVER);
+		driverChannel.accept(ConfigUtils.resolveParameter(config,
+				"interop.channel.address", String.class, ""));
+		KeyValueStub driverStub = KeyValueStub.create(config, driverChannel);
 
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("add 1");
@@ -182,10 +208,11 @@ public class KeyValueConnectorTest {
 		handlersl.add(new TestLoggingHandler<List<String>>("list"));
 		IResult<List<String>> r4 = connector.list(handlersl, null);
 		List<String> list = r4.getResult();
-		if (list != null)
+		if (list != null) {
 			for (String key : list) {
 				System.out.println(key);
 			}
+		}
 
 		List<IOperationCompletionHandler<Boolean>> handlersd = getHandlers("delete");
 		IResult<Boolean> r5 = connector.delete(k1, handlersd, null);

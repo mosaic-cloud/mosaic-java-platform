@@ -1,206 +1,134 @@
 package mosaic.driver.interop;
 
 import java.io.IOException;
-import java.util.concurrent.CountDownLatch;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
-import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
-import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
-import mosaic.driver.ConfigProperties;
 import mosaic.driver.IResourceDriver;
-
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.QueueingConsumer;
-import com.rabbitmq.client.ShutdownSignalException;
+import eu.mosaic_cloud.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Session;
+import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
- * Dummy base class for driver stubs.
- * <p>
- * Note: This will probably be replaced when the real interoperability layer
- * will be integrated.
+ * Base class for driver stubs.
  * 
  * @author Georgiana Macariu
  * 
  */
-public abstract class AbstractDriverStub implements Runnable {
+public abstract class AbstractDriverStub implements SessionCallbacks {
+
 	protected IConfiguration configuration;
-	private Channel commChannel;
-	private Connection connection;
-	private QueueingConsumer consumer;
-	private String exchange;
-	private String routingKey;
+
 	private ResponseTransmitter transmitter;
 	private IResourceDriver driver;
-	private Thread runner;
-
-	protected boolean isAlive;
-	protected CountDownLatch cleanupSignal;
+	private List<Session> sessions;
+	private ZeroMqChannel commChannel;
 
 	protected static final Object lock = new Object();
+	private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer>();
 
 	/**
 	 * Builds a driver stub.
 	 * 
 	 * @param config
 	 *            configuration data for the driver and its stub
-	 * @param defaultExchange
-	 *            the default exchange to be used by the stub (in case one is
-	 *            not given in the configuration data)
-	 * @param defaultQueue
-	 *            default queue to be used by the stub (in case one is not given
-	 *            in the configuration data)
 	 * @param transmitter
 	 *            the transmitter which will serialize and send responses back
 	 *            to the connector
 	 * @param driver
 	 *            the driver which will handle requests received by the stub
+	 * @param commChannel
+	 *            the channel for communicating with connectors
 	 */
-	protected AbstractDriverStub(IConfiguration config, String defaultExchange,
-			String defaultQueue, ResponseTransmitter transmitter,
-			IResourceDriver driver) {
+	protected AbstractDriverStub(IConfiguration config,
+			ResponseTransmitter transmitter, IResourceDriver driver,
+			ZeroMqChannel commChannel) {
 		super();
 		this.configuration = config;
+		this.sessions = new ArrayList<Session>();
+		this.commChannel = commChannel;
 
-		// read connection details from the configuration
-		String amqpServerHost = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.0"), String.class, //$NON-NLS-1$
-						ConnectionFactory.DEFAULT_HOST);
-		int amqpServerPort = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.1"), Integer.class, //$NON-NLS-1$
-						ConnectionFactory.DEFAULT_AMQP_PORT);
-		String amqpServerUser = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.2"), String.class, //$NON-NLS-1$
-						ConnectionFactory.DEFAULT_USER);
-		String amqpServerPasswd = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.3"), String.class, //$NON-NLS-1$
-						ConnectionFactory.DEFAULT_PASS);
-		exchange = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.4"), String.class, defaultExchange); //$NON-NLS-1$
-		routingKey = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("AbstractDriverStub.5"), String.class, defaultQueue); //$NON-NLS-1$
-		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost(amqpServerHost);
-		factory.setPort(amqpServerPort);
-		if (!amqpServerUser.isEmpty()) {
-			factory.setUsername(amqpServerUser);
-			factory.setPassword(amqpServerPasswd);
-		}
-
-		try {
-			// create communication channel
-			connection = factory.newConnection();
-			commChannel = connection.createChannel();
-
-			// create exchange and queue
-			commChannel.exchangeDeclare(exchange, "direct", false, false, null); //$NON-NLS-1$
-			// commChannel.queueDeclare(routingKey, true, false, false, null);
-
-			String queueName = commChannel.queueDeclare("", false, true, true,
-					null).getQueue();
-			commChannel.queueBind(queueName, exchange, routingKey);
-
-			// create consumer
-			consumer = new QueueingConsumer(commChannel);
-			commChannel.basicConsume(queueName, false, consumer);
-
-			this.transmitter = transmitter;
-			this.driver = driver;
-			isAlive = true;
-			cleanupSignal = new CountDownLatch(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-			// close connections
-			try {
-				if (commChannel != null && commChannel.isOpen()) {
-					commChannel.close();
-				}
-				if (connection != null && connection.isOpen()) {
-					connection.close();
-				}
-			} catch (IOException e1) {
-				ExceptionTracer.traceDeferred(new ConnectionException(
-						"The proxy cannot connect to the driver: " //$NON-NLS-1$
-								+ e1.getMessage()));
-			}
-		}
+		this.transmitter = transmitter;
+		this.driver = driver;
 	}
 
 	/**
 	 * Destroys this stub.
+	 * 
 	 */
 	public synchronized void destroy() {
-		isAlive = false;
-
-		// close connection
+		this.driver.destroy();
+		this.transmitter.destroy();
 		try {
-			this.runner.interrupt();
-			cleanupSignal.await();
-			if (commChannel != null && commChannel.isOpen()) {
-				commChannel.close();
-			}
-			if (connection != null && connection.isOpen()) {
-				connection.close();
-			}
-		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(new ConnectionException(
-					"The proxy cannot close connection to the driver: " //$NON-NLS-1$
-							+ e.getMessage()));
+			this.commChannel.terminate(500);
 		} catch (InterruptedException e) {
-			ExceptionTracer.traceDeferred(new ConnectionException(
-					"The proxy cannot close connection to the driver: " //$NON-NLS-1$
-							+ e.getMessage()));
+			ExceptionTracer.traceDeferred(e);
 		}
-		driver.destroy();
-		transmitter.destroy();
 		MosaicLogger.getLogger().trace("DriverStub destroyed.");
 	}
 
-	@Override
-	public void run() {
-		this.runner = Thread.currentThread();
-		while (true) {
-			try {
-				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-				synchronized (this) {
-					if (Thread.interrupted() && !this.isAlive)
-						break;
-					startOperation(delivery.getBody());
-					commChannel.basicAck(delivery.getEnvelope()
-							.getDeliveryTag(), false);
-					if (!isAlive)
-						break;
-				}
-			} catch (IOException e) {
-				ExceptionTracer.traceDeferred(e);
-			} catch (ShutdownSignalException e) {
-				if (!isAlive)
-					break;
-				ExceptionTracer.traceDeferred(e);
-			} catch (InterruptedException e) {
-				if (!isAlive)
-					break;
-				ExceptionTracer.traceDeferred(e);
-			} catch (ClassNotFoundException e) {
-				ExceptionTracer.traceDeferred(e);
-			}
+	protected static synchronized void incDriverReference(
+			AbstractDriverStub stub) {
+		Integer ref = AbstractDriverStub.references.get(stub);
+		if (ref == null) {
+			ref = 0;
 		}
-		cleanupSignal.countDown();
+		ref++;
+		AbstractDriverStub.references.put(stub, ref);
+	}
+
+	protected static synchronized int decDriverReference(AbstractDriverStub stub) {
+		Integer ref = AbstractDriverStub.references.get(stub);
+		if (ref == null) {
+			ref = 0;
+		}
+		ref--;
+		if (ref == 0) {
+			AbstractDriverStub.references.remove(stub);
+		}
+		return ref;
+	}
+
+	@Override
+	public CallbackReference received(Session session, Message message) {
+		try {
+			startOperation(message, session);
+		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+		} catch (ClassNotFoundException e) {
+			ExceptionTracer.traceDeferred(e);
+		}
+		return null;
+	}
+
+	@Override
+	public CallbackReference created(Session session) {
+		// TODO handle session created
+		if (!this.sessions.contains(session)) {
+			this.sessions.add(session);
+		}
+		return null;
+	}
+
+	@Override
+	public CallbackReference destroyed(Session session) {
+		// handle session destroyed
+		MosaicLogger.getLogger().trace("Session destroyed.");
+		this.sessions.remove(session);
+		return null;
+	}
+
+	@Override
+	public CallbackReference failed(Session session, Throwable exception) {
+		// TODO handle session fail
+		return null;
 	}
 
 	/**
@@ -230,16 +158,17 @@ public abstract class AbstractDriverStub implements Runnable {
 		return driverClass.cast(this.driver);
 	}
 
-
 	/**
 	 * Deserializes a message received by the stub and starts the operation
 	 * requested in the message.
 	 * 
 	 * @param message
 	 *            the received message
+	 * @param session
+	 *            the session
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	protected abstract void startOperation(byte[] message) throws IOException,
-			ClassNotFoundException;
+	protected abstract void startOperation(Message message, Session session)
+			throws IOException, ClassNotFoundException;
 }

@@ -133,6 +133,7 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	 * Destroys the driver. After this call no other method should be invoked on
 	 * the driver object.
 	 */
+	@Override
 	public synchronized void destroy() {
 		super.destroy();
 		this.mcClient.shutdown(30, TimeUnit.SECONDS);

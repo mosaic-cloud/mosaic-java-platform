@@ -15,8 +15,7 @@ import mosaic.driver.kvstore.memcached.MemcachedDriver;
  */
 public class KeyValueDriverFactory {
 	public enum DriverType {
-		REDIS(RedisDriver.class), MEMCACHED(
-				MemcachedDriver.class);
+		REDIS(RedisDriver.class), MEMCACHED(MemcachedDriver.class);
 
 		private final Class<? extends BaseKeyValueDriver> driverClass;
 
@@ -41,7 +40,7 @@ public class KeyValueDriverFactory {
 	 *             if driver cannot be instantiated for any reason
 	 */
 	public static BaseKeyValueDriver createDriver(String driverName,
-			IConfiguration config) throws DriverNotFoundException  {
+			IConfiguration config) throws DriverNotFoundException {
 		DriverType type = null;
 		BaseKeyValueDriver driver = null;
 
@@ -53,16 +52,15 @@ public class KeyValueDriverFactory {
 		}
 		if (type != null) {
 			try {
-				Class<?> driverClass = 
-								type.getDriverClass();
+				Class<?> driverClass = type.getDriverClass();
 				Method createMethod = driverClass.getMethod("create",
 						IConfiguration.class);
 				driver = (BaseKeyValueDriver) createMethod.invoke(null, config);
 			} catch (Exception e) {
 				ExceptionTracer.traceDeferred(e);
-				DriverNotFoundException ex=new DriverNotFoundException(e);
+				DriverNotFoundException ex = new DriverNotFoundException(e);
 				throw ex;
-			} 
+			}
 		}
 		return driver;
 	}

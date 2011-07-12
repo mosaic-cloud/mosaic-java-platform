@@ -15,12 +15,16 @@ import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.driver.interop.queue.amqp.AmqpStub;
 import mosaic.driver.queue.amqp.AmqpExchangeType;
+import mosaic.interop.amqp.AmqpSession;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
@@ -31,20 +35,32 @@ public class AmqpConnectorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
-		configuration = PropertyTypeConfiguration.create(
+		AmqpConnectorTest.configuration = PropertyTypeConfiguration.create(
 				AmqpConnectorTest.class.getClassLoader(), "amqp-test.prop");
-		connector = AmqpConnector.create(configuration);
-		driverStub = AmqpStub.create(configuration);
+
+		ZeroMqChannel driverChannel = new ZeroMqChannel(
+				ConfigUtils.resolveParameter(AmqpConnectorTest.configuration,
+						"interop.driver.identifier", String.class, ""),
+				AbortingExceptionTracer.defaultInstance);
+		driverChannel.register(AmqpSession.DRIVER);
+		driverChannel.accept(ConfigUtils.resolveParameter(
+				AmqpConnectorTest.configuration, "interop.channel.address",
+				String.class, ""));
+
+		AmqpConnectorTest.driverStub = AmqpStub.create(
+				AmqpConnectorTest.configuration, driverChannel);
+		AmqpConnectorTest.connector = AmqpConnector
+				.create(AmqpConnectorTest.configuration);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
-		connector.destroy();
-		driverStub.destroy();
+		AmqpConnectorTest.connector.destroy();
+		AmqpConnectorTest.driverStub.destroy();
 	}
 
 	public void testConnector() throws InterruptedException, ExecutionException {
-		Assert.assertNotNull(connector);
+		Assert.assertNotNull(AmqpConnectorTest.connector);
 	}
 
 	private List<IOperationCompletionHandler<Boolean>> getHandlers(
@@ -58,35 +74,41 @@ public class AmqpConnectorTest {
 
 	public void testDeclareExchange() throws InterruptedException,
 			ExecutionException {
-		String exchange = ConfigUtils.resolveParameter(configuration,
-				"publisher.amqp.exchange", String.class, "");
+		String exchange = ConfigUtils.resolveParameter(
+				AmqpConnectorTest.configuration, "publisher.amqp.exchange",
+				String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("declare exchange");
 
-		IResult<Boolean> r = connector.declareExchange(exchange,
-				AmqpExchangeType.DIRECT, false, false, false, handlers, null);
+		IResult<Boolean> r = AmqpConnectorTest.connector.declareExchange(
+				exchange, AmqpExchangeType.DIRECT, false, false, false,
+				handlers, null);
 		Assert.assertTrue(r.getResult());
 	}
 
 	public void testDeclareQueue() throws InterruptedException,
 			ExecutionException {
-		String queue = ConfigUtils.resolveParameter(configuration,
-				"consumer.amqp.queue", String.class, "");
+		String queue = ConfigUtils.resolveParameter(
+				AmqpConnectorTest.configuration, "consumer.amqp.queue",
+				String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("declare queue");
-		IResult<Boolean> r = connector.declareQueue(queue, true, false, true,
-				false, handlers, null);
+		IResult<Boolean> r = AmqpConnectorTest.connector.declareQueue(queue,
+				true, false, true, false, handlers, null);
 		Assert.assertTrue(r.getResult());
 	}
 
 	public void testBindQueue() throws InterruptedException, ExecutionException {
-		String exchange = ConfigUtils.resolveParameter(configuration,
-				"publisher.amqp.exchange", String.class, "");
-		String routingKey = ConfigUtils.resolveParameter(configuration,
-				"publisher.amqp.routing_key", String.class, "");
-		String queue = ConfigUtils.resolveParameter(configuration,
-				"consumer.amqp.queue", String.class, "");
+		String exchange = ConfigUtils.resolveParameter(
+				AmqpConnectorTest.configuration, "publisher.amqp.exchange",
+				String.class, "");
+		String routingKey = ConfigUtils.resolveParameter(
+				AmqpConnectorTest.configuration, "publisher.amqp.routing_key",
+				String.class, "");
+		String queue = ConfigUtils.resolveParameter(
+				AmqpConnectorTest.configuration, "consumer.amqp.queue",
+				String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("bind queue");
-		IResult<Boolean> r = connector.bindQueue(exchange, queue, routingKey,
-				handlers, null);
+		IResult<Boolean> r = AmqpConnectorTest.connector.bindQueue(exchange,
+				queue, routingKey, handlers, null);
 
 		Assert.assertTrue(r.getResult());
 	}

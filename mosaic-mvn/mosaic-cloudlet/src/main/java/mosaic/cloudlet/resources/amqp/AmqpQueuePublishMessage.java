@@ -30,11 +30,11 @@ public class AmqpQueuePublishMessage<D extends Object> {
 	 * @return the publisher object
 	 */
 	public AmqpQueuePublisher<?, D> getPublisher() {
-		return publisher;
+		return this.publisher;
 	}
 
 	AmqpOutboundMessage getMessage() {
-		return message;
+		return this.message;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class AmqpQueuePublishMessage<D extends Object> {
 	 * @return the additional information required for publishing the message
 	 */
 	public Object getToken() {
-		return token;
+		return this.token;
 	}
 
 }

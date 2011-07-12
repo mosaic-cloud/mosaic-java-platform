@@ -34,6 +34,7 @@ public class GenericResult<T> implements IResult<T> {
 	 * 
 	 * @see mosaic.core.IResult#getResult()
 	 */
+	@Override
 	public T getResult() throws InterruptedException, ExecutionException {
 		return this.operation.get();
 	}
@@ -43,6 +44,7 @@ public class GenericResult<T> implements IResult<T> {
 	 * 
 	 * @see mosaic.core.ops.IResult#isDone()
 	 */
+	@Override
 	public final boolean isDone() {
 		return this.operation.isDone();
 	}
@@ -52,6 +54,7 @@ public class GenericResult<T> implements IResult<T> {
 	 * 
 	 * @see mosaic.core.ops.IResult#cancel()
 	 */
+	@Override
 	public final boolean cancel() {
 		boolean done = false;
 

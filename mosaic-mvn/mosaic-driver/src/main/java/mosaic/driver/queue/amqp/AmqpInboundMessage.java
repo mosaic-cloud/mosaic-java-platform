@@ -106,46 +106,46 @@ public class AmqpInboundMessage implements IAmqpMessage {
 	}
 
 	public String getCallback() {
-		return callback;
+		return this.callback;
 	}
 
 	public String getConsumer() {
-		return consumer;
+		return this.consumer;
 	}
 
 	public String getContentEncoding() {
-		return contentEncoding;
+		return this.contentEncoding;
 	}
 
 	public String getContentType() {
-		return contentType;
+		return this.contentType;
 	}
 
 	public String getCorrelation() {
-		return correlation;
+		return this.correlation;
 	}
 
 	public byte[] getData() {
-		return data;
+		return this.data;
 	}
 
 	public long getDelivery() {
-		return delivery;
+		return this.delivery;
 	}
 
 	public boolean isDurable() {
-		return durable;
+		return this.durable;
 	}
 
 	public String getExchange() {
-		return exchange;
+		return this.exchange;
 	}
 
 	public String getIdentifier() {
-		return identifier;
+		return this.identifier;
 	}
 
 	public String getRoutingKey() {
-		return routingKey;
+		return this.routingKey;
 	}
 }

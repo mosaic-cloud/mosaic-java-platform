@@ -48,23 +48,22 @@ public class MemcachedOperationFactory implements IOperationFactory {
 	 * java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation(final IOperationType type, Object... parameters) {
+	public IOperation<?> getOperation(final IOperationType type,
+			Object... parameters) {
 		IOperation<?> operation = null;
 		if (!(type instanceof KeyValueOperations)) {
-			operation = new GenericOperation<Object>(
-					new Callable<Object>() {
+			operation = new GenericOperation<Object>(new Callable<Object>() {
 
-						@Override
-						public Object call() throws Exception {
-							throw new UnsupportedOperationException(
-									"Unsupported operation: "
-											+ type.toString());
-						}
+				@Override
+				public Object call() throws Exception {
+					throw new UnsupportedOperationException(
+							"Unsupported operation: " + type.toString());
+				}
 
-					});
+			});
 			return operation;
 		}
-		
+
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		final String key;
 		final int exp;
@@ -84,7 +83,8 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Boolean call() throws Exception {
-					Future<Boolean> opResult = mcClient.set(key, exp, data);
+					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+							.set(key, exp, data);
 					Boolean result = opResult.get();
 					return result;
 				}
@@ -99,7 +99,8 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Boolean call() throws Exception {
-					Future<Boolean> opResult = mcClient.add(key, exp, data);
+					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+							.add(key, exp, data);
 					Boolean result = opResult.get();
 					return result;
 				}
@@ -114,7 +115,8 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Boolean call() throws Exception {
-					Future<Boolean> opResult = mcClient.replace(key, exp, data);
+					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+							.replace(key, exp, data);
 					Boolean result = opResult.get();
 					return result;
 				}
@@ -128,8 +130,10 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Boolean call() throws Exception {
-					long cas = mcClient.gets(key).getCas();
-					Future<Boolean> opResult = mcClient.append(cas, key, data);
+					long cas = MemcachedOperationFactory.this.mcClient
+							.gets(key).getCas();
+					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+							.append(cas, key, data);
 					Boolean result = opResult.get();
 					return result;
 				}
@@ -143,8 +147,10 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Boolean call() throws Exception {
-					long cas = mcClient.gets(key).getCas();
-					Future<Boolean> opResult = mcClient.prepend(cas, key, data);
+					long cas = MemcachedOperationFactory.this.mcClient
+							.gets(key).getCas();
+					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+							.prepend(cas, key, data);
 					Boolean result = opResult.get();
 					return result;
 				}
@@ -158,9 +164,10 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Boolean call() throws Exception {
-					long cas = mcClient.gets(key).getCas();
-					Future<CASResponse> opResult = mcClient.asyncCAS(key, cas,
-							data);
+					long cas = MemcachedOperationFactory.this.mcClient
+							.gets(key).getCas();
+					Future<CASResponse> opResult = MemcachedOperationFactory.this.mcClient
+							.asyncCAS(key, cas, data);
 					Boolean result = (opResult.get() == CASResponse.OK);
 					return result;
 				}
@@ -173,7 +180,8 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Object call() throws Exception {
-					Future<Object> opResult = mcClient.asyncGet(key);
+					Future<Object> opResult = MemcachedOperationFactory.this.mcClient
+							.asyncGet(key);
 					Object result = opResult.get();
 					return result;
 				}
@@ -187,7 +195,7 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 						@Override
 						public Map<String, Object> call() throws Exception {
-							Future<Map<String, Object>> opResult = mcClient
+							Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient
 									.asyncGetBulk(keys);
 							Map<String, Object> result = opResult.get();
 							return result;
@@ -201,7 +209,8 @@ public class MemcachedOperationFactory implements IOperationFactory {
 
 				@Override
 				public Boolean call() throws Exception {
-					Future<Boolean> opResult = mcClient.delete(key);
+					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+							.delete(key);
 					Boolean result = opResult.get();
 					return result;
 				}

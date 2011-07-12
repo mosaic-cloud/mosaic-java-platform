@@ -39,6 +39,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * 
 	 * @return <code>true</code> if operation was cancelled
 	 */
+	@Override
 	public boolean cancel() {
 		boolean cancelled = true;
 		if (this.operation != null) {
@@ -58,6 +59,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * 
 	 * @return <code>true</code> if this task was cancelled before it completed
 	 */
+	@Override
 	public boolean isCancelled() {
 		boolean cancelled = true;
 		if (this.operation != null) {
@@ -73,6 +75,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * 
 	 * @return <code>true</code> if this task completed
 	 */
+	@Override
 	public boolean isDone() {
 		boolean done = false;
 		if (this.operation != null) {
@@ -91,6 +94,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * @throws ExecutionException
 	 *             if the computation threw an exception
 	 */
+	@Override
 	public T get() throws InterruptedException, ExecutionException {
 		T result = null;
 		if (this.operation != null) {
@@ -122,6 +126,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * @throws TimeoutException
 	 *             if the wait timed out
 	 */
+	@Override
 	public T get(long timeout, TimeUnit unit) throws InterruptedException,
 			ExecutionException, TimeoutException {
 		T result = null;
@@ -165,7 +170,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 * @return the enclosed {@link FutureTask} object
 	 */
 	public FutureTask<T> getOperation() {
-		return operation;
+		return this.operation;
 	}
 
 	private final class GenericTask extends FutureTask<T> {
@@ -179,19 +184,21 @@ public class GenericOperation<T> implements IOperation<T> {
 		 * 
 		 * @see java.util.concurrent.FutureTask#run()
 		 */
+		@Override
 		public void run() {
 			super.run();
 			try {
-				cHandlerSet.await();
-				complHandler.onSuccess(this.get());
+				GenericOperation.this.cHandlerSet.await();
+				GenericOperation.this.complHandler.onSuccess(this.get());
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceHandled(e);
 			} catch (ExecutionException e) {
 				// TODO customize exception
 				if (e.getCause() instanceof UnsupportedOperationException) {
 					getHandler().onFailure(e.getCause());
-				} else
+				} else {
 					ExceptionTracer.traceHandled(e);
+				}
 			}
 		}
 
@@ -200,6 +207,7 @@ public class GenericOperation<T> implements IOperation<T> {
 		 * 
 		 * @see java.util.concurrent.FutureTask#set(java.lang.Object)
 		 */
+		@Override
 		protected void set(T t) {
 			super.set(t);
 		}
@@ -210,14 +218,15 @@ public class GenericOperation<T> implements IOperation<T> {
 		 * @see
 		 * java.util.concurrent.FutureTask#setException(java.lang.Throwable)
 		 */
+		@Override
 		protected void setException(Throwable t) {
 			super.setException(t);
 			try {
-				cHandlerSet.await();
+				GenericOperation.this.cHandlerSet.await();
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceHandled(e);
 			}
-			complHandler.onFailure(t);
+			GenericOperation.this.complHandler.onFailure(t);
 		}
 
 	}

@@ -37,7 +37,7 @@ public class AmqpQueueConsumeCallbackArguments<S, D> extends
 	 * @return information about the consume request
 	 */
 	public AmqpQueueConsumeMessage<D> getMessage() {
-		return message;
+		return this.message;
 	}
 
 }

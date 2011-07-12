@@ -39,8 +39,9 @@ public class ResponseHandlerMap {
 			eHandlers.addAll(handlers);
 		} else {
 			eHandlers = new ArrayList<IOperationCompletionHandler<?>>();
-			for (IOperationCompletionHandler<T> handler : handlers)
+			for (IOperationCompletionHandler<T> handler : handlers) {
 				eHandlers.add(handler);
+			}
 			this.handlerMap.put(requestId, eHandlers);
 		}
 	}
@@ -69,5 +70,12 @@ public class ResponseHandlerMap {
 	public synchronized List<IOperationCompletionHandler<?>> getRequestHandlers(
 			String requestId) {
 		return this.handlerMap.get(requestId);
+	}
+
+	/**
+	 * Removes from the handler map all pending requests.
+	 */
+	public synchronized void cancelAllRequests() {
+		this.handlerMap.clear();
 	}
 }

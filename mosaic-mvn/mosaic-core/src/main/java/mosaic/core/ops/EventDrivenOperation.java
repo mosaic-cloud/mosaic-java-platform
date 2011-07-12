@@ -41,12 +41,12 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	public EventDrivenOperation(
 			List<IOperationCompletionHandler<T>> complHandlers) {
 		super();
-		doneSignal = new CountDownLatch(1);
-		result = new AtomicReference<T>();
-		exception = new AtomicReference<Throwable>();
-		completionHandlers = new ArrayList<IOperationCompletionHandler<T>>();
-		completionHandlers.add(this);
-		completionHandlers.addAll(complHandlers);
+		this.doneSignal = new CountDownLatch(1);
+		this.result = new AtomicReference<T>();
+		this.exception = new AtomicReference<Throwable>();
+		this.completionHandlers = new ArrayList<IOperationCompletionHandler<T>>();
+		this.completionHandlers.add(this);
+		this.completionHandlers.addAll(complHandlers);
 	}
 
 	/**
@@ -99,47 +99,48 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 
 	@Override
 	public T get() throws InterruptedException, ExecutionException {
-		doneSignal.await();
+		this.doneSignal.await();
 		return this.result.get();
 	}
 
 	@Override
 	public T get(long timeout, TimeUnit unit) throws InterruptedException,
 			ExecutionException, TimeoutException {
-		doneSignal.await(timeout, unit);
+		this.doneSignal.await(timeout, unit);
 		return this.result.get();
 	}
 
 	public Runnable getOperation() {
-		return operation;
+		return this.operation;
 	}
 
 	public void setOperation(Runnable operation) {
-		if (this.operation == null)
+		if (this.operation == null) {
 			this.operation = operation;
+		}
 	}
 
 	@Override
 	public void onSuccess(T response) {
-		if (!result.compareAndSet(null, ((T) response))) {
+		if (!this.result.compareAndSet(null, (response))) {
 			ExceptionTracer.traceDeferred(new ResultSetException(
 					"Operation result cannot be set."));
 		}
-		doneSignal.countDown();
+		this.doneSignal.countDown();
 	}
 
 	@Override
 	public <E extends Throwable> void onFailure(E error) {
-		if (!exception.compareAndSet(null, error)) {
+		if (!this.exception.compareAndSet(null, error)) {
 			ExceptionTracer.traceDeferred(new ResultSetException(
 					"Operation result cannot be set."));
 		}
-		doneSignal.countDown();
+		this.doneSignal.countDown();
 
 	}
 
 	public List<IOperationCompletionHandler<T>> getCompletionHandlers() {
-		return completionHandlers;
+		return this.completionHandlers;
 	}
 
 	// private abstract class Task<V> implements Runnable {

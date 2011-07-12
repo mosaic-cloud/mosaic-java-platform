@@ -20,7 +20,7 @@ public enum AmqpOperations implements IOperationType {
 	 * @return <code>true</code> if operation is supported
 	 */
 	public static boolean isOperation(String operation) {
-		for (AmqpOperations op : copyOfValues) {
+		for (AmqpOperations op : AmqpOperations.copyOfValues) {
 			if (op.name().equalsIgnoreCase(operation))
 				return true;
 		}

@@ -38,11 +38,11 @@ public class AmqpQueueConsumeMessage<D extends Object> {
 	 * @return the data in the consumed message
 	 */
 	public D getData() {
-		return data;
+		return this.data;
 	}
 
 	AmqpInboundMessage getMessage() {
-		return message;
+		return this.message;
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class AmqpQueueConsumeMessage<D extends Object> {
 	 * @return the consumer object
 	 */
 	public AmqpQueueConsumer<? extends Object, D> getConsumer() {
-		return consumer;
+		return this.consumer;
 	}
 
 }

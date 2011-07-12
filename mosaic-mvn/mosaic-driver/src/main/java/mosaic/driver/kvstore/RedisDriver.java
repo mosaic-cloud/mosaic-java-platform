@@ -8,7 +8,6 @@ import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.driver.ConfigProperties;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Protocol;
 
 /**
  * Driver class for the Redis key-value database management systems.
@@ -80,7 +79,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 		}
 		if (db > -1) {
 			jedis.select(db);
-//			jedis.flushDB();
+			// jedis.flushDB();
 		}
 
 		IOperationFactory opFactory = RedisOperationFactory.getFactory(jedis);
@@ -92,6 +91,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 	 * Destroys the driver. After this call no other method should be invoked on
 	 * the driver object.
 	 */
+	@Override
 	public synchronized void destroy() {
 		super.destroy();
 		// this.jedisClient.bgsave(); //TODO

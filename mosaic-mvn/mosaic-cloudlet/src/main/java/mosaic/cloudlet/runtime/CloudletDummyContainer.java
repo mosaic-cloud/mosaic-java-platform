@@ -69,8 +69,9 @@ public class CloudletDummyContainer {
 	public final void stop() {
 		synchronized (this) {
 			for (ICloudlet cloudlet : this.cloudletPool) {
-				if (cloudlet.isActive())
+				if (cloudlet.isActive()) {
 					cloudlet.destroy();
+				}
 			}
 		}
 	}
@@ -90,31 +91,29 @@ public class CloudletDummyContainer {
 
 			String cloudletClass = ConfigUtils
 					.resolveParameter(
-							configuration,
+							this.configuration,
 							ConfigProperties
 									.getString("CloudletDummyContainer.0"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-			if (cloudletClass.equals("")) { //$NON-NLS-1$
+			if (cloudletClass.equals(""))
 				throw new CloudletException("The configuration file " //$NON-NLS-1$
-						+ configuration.toString()
+						+ this.configuration.toString()
 						+ " does not specify a handler class for cloudlet " //$NON-NLS-1$
 						+ cloudletClass + "."); //$NON-NLS-1$
-			}
 
 			String cloudletStateClass = ConfigUtils
 					.resolveParameter(
-							configuration,
+							this.configuration,
 							ConfigProperties
 									.getString("CloudletDummyContainer.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-			if (cloudletStateClass.equals("")) { //$NON-NLS-1$
+			if (cloudletStateClass.equals(""))
 				throw new CloudletException("The configuration file " //$NON-NLS-1$
-						+ configuration.toString()
+						+ this.configuration.toString()
 						+ " does not specify a state class for cloudlet " //$NON-NLS-1$
 						+ cloudletClass + "."); //$NON-NLS-1$
-			}
 
 			String resourceFile = ConfigUtils
 					.resolveParameter(
-							configuration,
+							this.configuration,
 							ConfigProperties
 									.getString("CloudletDummyContainer.2"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 

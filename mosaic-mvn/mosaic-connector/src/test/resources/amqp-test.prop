@@ -1,4 +1,6 @@
 amqp.connector_threads=10
+interop.channel.address=tcp://127.0.0.1:31028
+interop.driver.identifier=driver.amqp.1
 
 amqp.host=localhost
 amqp.driver_threads=10
@@ -14,17 +16,3 @@ publisher.amqp.manadatory=true
 publisher.amqp.immediate=true
 publisher.amqp.durable=false
 
-interop.req.amqp.host=localhost
-interop.req.amqp.port=5672
-interop.req.amqp.user=
-interop.req.amqp.passwd=
-interop.req.amqp.exchange=amqp-test-conn
-interop.req.amqp.queue=amqp_requests
-
-
-interop.resp.amqp.host=localhost
-interop.resp.amqp.port=5672
-interop.resp.amqp.user=
-interop.resp.amqp.passwd=
-interop.resp.amqp.exchange=amqp-test-conn
-interop.resp.amqp.queue=amqp_responses

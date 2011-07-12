@@ -9,12 +9,13 @@ final class NamedThreadFactory implements ThreadFactory {
 	final ThreadGroup group;
 
 	NamedThreadFactory(String poolName) {
-		group = new ThreadGroup(poolName + "-" + poolNumber.getAndIncrement());
+		this.group = new ThreadGroup(poolName + "-"
+				+ NamedThreadFactory.poolNumber.getAndIncrement());
 	}
 
 	@Override
 	public Thread newThread(Runnable r) {
-		return new Thread(group, r, group.getName() + "-thread-"
-				+ threadNumber.getAndIncrement(), 0);
+		return new Thread(this.group, r, this.group.getName() + "-thread-"
+				+ this.threadNumber.getAndIncrement(), 0);
 	}
 }

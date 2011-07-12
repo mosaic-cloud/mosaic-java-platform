@@ -1,22 +1,6 @@
-kvstore.connector_threads=10
-
 kvstore.host=localhost
 kvstore.port=6379
-kvstore.bucket=10
-kvstore.driver_threads=10
+kvstore.bucket=12
+kvstore.driver_threads=1
 kvstore.driver_name=REDIS
 
-interop.req.amqp.host=localhost
-interop.req.amqp.port=5672
-interop.req.amqp.user=
-interop.req.amqp.passwd=
-interop.req.amqp.exchange=kvstore
-interop.req.amqp.queue=kvstore_requests
-
-
-interop.resp.amqp.host=localhost
-interop.resp.amqp.port=5672
-interop.resp.amqp.user=
-interop.resp.amqp.passwd=
-interop.resp.amqp.exchange=kvstore
-interop.resp.amqp.queue=kvstore_responses

@@ -88,7 +88,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	public void register() {
 		synchronized (this) {
 			// declare queue and in case of success register as consumer
-			startRegister(callback);
+			startRegister(this.callback);
 		}
 	}
 
@@ -127,8 +127,8 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 		IAmqpConsumerCallback consumerCallback = new AmqpConsumerCallback();
 		getConnector().consume(
-				queue,
-				consumer,
+				this.queue,
+				this.consumer,
 				false,
 				false,
 				null,
@@ -163,13 +163,13 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				public <E extends Throwable> void onFailure(E error) {
 					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 							AmqpQueueConsumer.super.cloudlet, error);
-					callback.unregisterFailed(
+					AmqpQueueConsumer.this.callback.unregisterFailed(
 							AmqpQueueConsumer.super.cloudletState, arguments);
 				}
 			};
 			List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 			cHandlers.add(cHandler);
-			super.getConnector().cancel(consumer, cHandlers,
+			super.getConnector().cancel(this.consumer, cHandlers,
 					this.cloudlet.getResponseInvocationHandler(cHandler));
 		}
 	}
@@ -180,6 +180,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	 * @param message
 	 *            the message to acknowledge
 	 */
+	@Override
 	public void acknowledge(AmqpQueueConsumeMessage<D> message) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
@@ -188,7 +189,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				public void onSuccess(Boolean result) {
 					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 							AmqpQueueConsumer.super.cloudlet, result);
-					callback.acknowledgeSucceeded(
+					AmqpQueueConsumer.this.callback.acknowledgeSucceeded(
 							AmqpQueueConsumer.super.cloudletState, arguments);
 				}
 
@@ -196,7 +197,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				public <E extends Throwable> void onFailure(E error) {
 					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 							AmqpQueueConsumer.super.cloudlet, error);
-					callback.acknowledgeFailed(
+					AmqpQueueConsumer.this.callback.acknowledgeFailed(
 							AmqpQueueConsumer.super.cloudletState, arguments);
 				}
 			};

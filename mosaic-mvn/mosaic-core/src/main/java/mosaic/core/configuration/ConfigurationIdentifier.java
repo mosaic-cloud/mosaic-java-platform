@@ -40,18 +40,19 @@ public final class ConfigurationIdentifier {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object identifier) {
 		if (identifier == null)
 			return false;
 		if (!(identifier instanceof ConfigurationIdentifier))
 			return false;
 		ConfigurationIdentifier otherId = (ConfigurationIdentifier) identifier;
-		if (absolute != otherId.absolute)
+		if (this.absolute != otherId.absolute)
 			return false;
-		if (this.identifier != null
+		if ((this.identifier != null)
 				&& !this.identifier.equals(otherId.identifier))
 			return false;
-		if (this.identifier == null && otherId.identifier != null)
+		if ((this.identifier == null) && (otherId.identifier != null))
 			return false;
 		return true;
 	}
@@ -95,7 +96,7 @@ public final class ConfigurationIdentifier {
 	 * @return <code>true</code> if it is absolute
 	 */
 	public boolean isAbsolute() {
-		return absolute;
+		return this.absolute;
 	}
 
 	/**
@@ -104,7 +105,7 @@ public final class ConfigurationIdentifier {
 	 * @return the string identifier
 	 */
 	public String getIdentifier() {
-		return identifier;
+		return this.identifier;
 	}
 
 	/**
@@ -170,16 +171,18 @@ public final class ConfigurationIdentifier {
 		// ConfigurationIdentifier parentConfigurationIdentifier;
 
 		if (reference == null) {
-			if (specification.startsWith("/"))
+			if (specification.startsWith("/")) {
 				isAbsolute = true;
+			}
 
 			identifier_ = specification;
 		} else if (reference.absolute) {
 			isAbsolute = true;
 			if (reference.identifier != null) {
 				identifier_ = reference.identifier + "/" + specification;
-			} else
+			} else {
 				identifier_ = "/" + specification;
+			}
 			identifier_ = identifier_.replaceAll("//", "/");
 		} else {
 			identifier_ = reference.identifier + "/" + specification;
@@ -192,10 +195,10 @@ public final class ConfigurationIdentifier {
 		identifier = identifier_.intern();
 
 		synchronized (ConfigurationIdentifier.identifiers) {
-			if (ConfigurationIdentifier.identifiers.containsKey(identifier))
+			if (ConfigurationIdentifier.identifiers.containsKey(identifier)) {
 				parameterIdentifier = ConfigurationIdentifier.identifiers
 						.get(identifier);
-			else {
+			} else {
 				// slashIndex = identifier.lastIndexOf("/");
 
 				// if (slashIndex >= 0)

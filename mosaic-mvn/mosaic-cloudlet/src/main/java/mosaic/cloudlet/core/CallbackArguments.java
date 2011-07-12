@@ -29,6 +29,6 @@ public class CallbackArguments<S> {
 	 * @return the cloudlet controller
 	 */
 	public ICloudletController<S> getCloudlet() {
-		return cloudlet;
+		return this.cloudlet;
 	}
 }

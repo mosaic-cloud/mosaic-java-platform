@@ -1,7 +1,6 @@
 package mosaic.connector.interop.kvstore.memcached;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +8,17 @@ import java.util.Map;
 import mosaic.connector.interop.kvstore.KeyValueConnectorReactor;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
-import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.SerDesUtils;
-import mosaic.interop.idl.kvstore.CompletionToken;
-import mosaic.interop.idl.kvstore.MemcachedError;
-import mosaic.interop.idl.kvstore.OperationNames;
-import mosaic.interop.idl.kvstore.OperationResponse;
+import mosaic.interop.idl.IdlCommon.CompletionToken;
+import mosaic.interop.idl.kvstore.KeyValuePayloads;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.GetReply;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.KVEntry;
+import mosaic.interop.kvstore.KeyValueMessage;
+
+import com.google.common.base.Preconditions;
+
+import eu.mosaic_cloud.interoperability.core.Message;
 
 /**
  * Implements a reactor for processing asynchronous requests issued by the
@@ -31,102 +34,53 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 	 * 
 	 * @param config
 	 *            the configurations required to initialize the proxy
-	 * @param bindingKey
-	 *            queue binding key
 	 * @throws Throwable
 	 */
-	protected MemcachedConnectorReactor(IConfiguration config, String bindingKey)
-			throws Throwable {
-		super(config, bindingKey);
+	protected MemcachedConnectorReactor(IConfiguration config) throws Throwable {
+		super(config);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * mosaic.connector.interop.AbstractConnectorReactor#processResponse(byte[])
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
-	protected void processResponse(byte[] message) throws IOException {
-		OperationResponse response = new OperationResponse();
-		response = SerDesUtils.deserializeWithSchema(message, response);
-		CompletionToken token = (CompletionToken) response.get(0);
-		OperationNames op = (OperationNames) response.get(1);
-		boolean isError = (Boolean) response.get(2);
-		String id = ((CharSequence) token.get(0)).toString();
+	protected void processResponse(Message message) throws IOException {
+		Preconditions
+				.checkArgument(message.specification instanceof KeyValueMessage);
 
-		List<IOperationCompletionHandler<?>> handlers = super.getDispatcher()
-				.removeRequestHandlers(id);
-		if (handlers == null) {
-			MosaicLogger.getLogger().error(
-					"No handler found for request token: " + id);
-			return;
-		}
-		ByteBuffer buff;
+		KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
+		CompletionToken token = null;
 		Object data;
+		List<IOperationCompletionHandler<?>> handlers;
+		boolean handled = false;
 
-		if (isError) {
-			MemcachedError error = (MemcachedError) response.get(3);
-			for (IOperationCompletionHandler<?> handler : handlers) {
-				handler.onFailure(new Exception(((CharSequence) error.get(0))
-						.toString()));
+		if (kvMessage == KeyValueMessage.GET_REPLY) {
+			KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
+			List<KVEntry> resultEntries = getPayload.getResultsList();
+			if (resultEntries.size() > 1) {
+				token = getPayload.getToken();
+				handlers = getHandlers(token);
+				if (handlers != null) {
+					Map<String, Object> resMap = new HashMap<String, Object>();
+					try {
+						for (KVEntry entry : resultEntries) {
+							data = SerDesUtils.toObject(entry.getValue()
+									.toByteArray());
+							resMap.put(entry.getKey(), data);
+						}
+
+						for (IOperationCompletionHandler<?> handler : handlers) {
+							((IOperationCompletionHandler<Map<String, Object>>) handler)
+									.onSuccess(resMap);
+						}
+						handled = true;
+					} catch (ClassNotFoundException e) {
+						ExceptionTracer.traceDeferred(e);
+					}
+				}
 			}
-			return;
 		}
 
-		switch (op) {
-		case ADD:
-		case SET:
-		case APPEND:
-		case PREPEND:
-		case CAS:
-		case REPLACE:
-		case DELETE:
-			Boolean resultB = (Boolean) response.get(3);
-			for (IOperationCompletionHandler<?> handler : handlers) {
-				((IOperationCompletionHandler<Boolean>) handler)
-						.onSuccess(resultB);
-			}
-			break;
-		case GET:
-			Map<CharSequence, ByteBuffer> resultO = (Map<CharSequence, ByteBuffer>) response
-					.get(3);
-			buff = resultO.values().toArray(new ByteBuffer[0])[0];
-
-			try {
-				data = null;
-				if (buff != null)
-					data = SerDesUtils.toObject(buff.array());
-				for (IOperationCompletionHandler<?> handler : handlers) {
-					((IOperationCompletionHandler<Object>) handler)
-							.onSuccess(data);
-				}
-			} catch (ClassNotFoundException e) {
-				ExceptionTracer.traceDeferred(e);
-			}
-
-			break;
-		case GET_BULK:
-			Map<CharSequence, ByteBuffer> resultM = (Map<CharSequence, ByteBuffer>) response
-					.get(3);
-			Map<String, Object> resMap = new HashMap<String, Object>();
-			try {
-				for (Map.Entry<CharSequence, ByteBuffer> entry : resultM
-						.entrySet()) {
-					buff = entry.getValue();
-					data = SerDesUtils.toObject(buff.array());
-					resMap.put(entry.getKey().toString(), data);
-				}
-				for (IOperationCompletionHandler<?> handler : handlers) {
-					((IOperationCompletionHandler<Map<String, Object>>) handler)
-							.onSuccess(resMap);
-				}
-			} catch (ClassNotFoundException e) {
-				ExceptionTracer.traceDeferred(e);
-			}
-			break;
-		default:
-			break;
+		if (!handled) {
+			super.processResponse(message);
 		}
 	}
 }

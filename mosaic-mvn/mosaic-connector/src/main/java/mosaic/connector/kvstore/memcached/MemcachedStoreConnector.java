@@ -2,6 +2,7 @@ package mosaic.connector.kvstore.memcached;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import mosaic.connector.ConfigProperties;
 import mosaic.connector.interop.kvstore.memcached.MemcachedProxy;
@@ -14,6 +15,10 @@ import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.interop.kvstore.KeyValueSession;
+import mosaic.interop.kvstore.MemcachedSession;
+import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
  * Connector for key-value distributed storage systems implementing the
@@ -41,11 +46,22 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 	 */
 	public static MemcachedStoreConnector create(IConfiguration config)
 			throws Throwable {
+		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KeyValueStoreConnector.0"), Integer.class, 1); //$NON-NLS-1$
-		MemcachedProxy proxy = MemcachedProxy.create(config);
+		String driverChannel = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AllConnector.0"), String.class, "");
+		String driverIdentifier = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AllConnector.1"), String.class, "");
+		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
+				AbortingExceptionTracer.defaultInstance);
+		channel.register(KeyValueSession.CONNECTOR);
+		channel.register(MemcachedSession.CONNECTOR);
+		channel.connect(driverChannel);
+		MemcachedProxy proxy = MemcachedProxy.create(config,
+				connectorIdentifier, driverIdentifier, channel);
 		return new MemcachedStoreConnector(proxy, noThreads);
 	}
 
@@ -54,6 +70,7 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 	 * 
 	 * @see mosaic.connector.IResourceConnector#destroy()
 	 */
+	@Override
 	public void destroy() throws Throwable {
 		super.destroy();
 		MosaicLogger.getLogger().trace("MemcachedConnector destroyed.");

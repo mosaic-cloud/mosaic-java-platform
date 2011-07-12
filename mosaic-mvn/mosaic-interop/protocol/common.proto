@@ -1,0 +1,31 @@
+package mosaic_cloud.idl.common;
+
+option java_package = "mosaic.interop.idl";
+option java_outer_classname = "IdlCommon";
+option optimize_for = SPEED;
+
+message CompletionToken {
+		required string message_id = 1;
+		optional string client_id = 2;
+}
+
+message Ok {
+	required CompletionToken token = 1;
+}	
+
+message NotOk {
+	required CompletionToken token = 1;
+}	
+
+message Error {
+	required CompletionToken token = 1;
+	required string error_message = 2;
+}
+
+message AccessRequest {
+	required CompletionToken token = 1;
+}
+
+message AbortRequest {
+	required CompletionToken token = 1;
+}
