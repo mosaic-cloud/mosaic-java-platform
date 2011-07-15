@@ -24,7 +24,11 @@ mkdir "${_outputs}/package/bin"
 mkdir "${_outputs}/package/lib"
 
 mkdir "${_outputs}/package/lib/java"
-cp -t "${_outputs}/package/lib/java" ./target/components-container-0.2-SNAPSHOT-jar-with-dependencies.jar
+cp -t "${_outputs}/package/lib/java" ./umbrella/mosaic-java-components/components-container/target/components-container-0.2-SNAPSHOT-jar-with-dependencies.jar
+find ./umbrella/lib -xtype f -name "*.so" -print \
+| while read _source ; do
+	cp -t "${_outputs}/package/lib/java" "${_source}"
+done
 
 mkdir "${_outputs}/package/lib/scripts"
 
@@ -50,7 +54,9 @@ if test -z "${_java}" ; then
 fi
 
 _java_jars="${_package}/lib/java"
-_java_args=()
+_java_args=(
+	"-Djava.library.path=${_java_jars}"
+)
 _java_env=(
 	PATH="${_PATH}"
 )
