@@ -38,7 +38,7 @@ public final class ClasspathExporter
 	public void handle (final String path, final HttpServletRequest request, final HttpServletResponse response, final int dispatch)
 	{
 		try {
-			this.transcript.traceInformation ("serving resource `%s`...", path);
+			this.transcript.traceDebugging ("serving resource `%s`...", path);
 			final InputStream input = this.loader.getResourceAsStream (path.substring (1));
 			if (input != null) {
 				final byte[] data = ByteStreams.toByteArray (input);
