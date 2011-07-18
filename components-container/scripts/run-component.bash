@@ -1,20 +1,18 @@
 #!/dev/null
 
-if ! test "${#}" -eq 3 ; then
+if ! test "${#}" -ge 1 ; then
 	echo "[ee] invalid arguments; aborting!" >&2
 	exit 1
 fi
 
 _identifier="${1:-00000000c7f30eeefd9bd86d356ceb10754aec4c}"
-_class_name="${2}"
-_class_path="${3}"
+shift 1
 
 _jar="${_java_jars:-${_workbench}/target}/components-container-0.2-SNAPSHOT-jar-with-dependencies.jar"
 
 _java_args+=(
 		-jar "${_jar}"
-		"${_class_name}"
-		"${_class_path}"
+		"${@}"
 )
 
 mkdir -p "/tmp/mosaic/components/${_identifier}"

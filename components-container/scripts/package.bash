@@ -25,7 +25,7 @@ mkdir "${_outputs}/package/lib"
 
 mkdir "${_outputs}/package/lib/java"
 cp -t "${_outputs}/package/lib/java" ./umbrella/mosaic-java-components/components-container/target/components-container-0.2-SNAPSHOT-jar-with-dependencies.jar
-find ./umbrella/lib -xtype f -name "*.so" -print \
+find ./umbrella/lib -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -print \
 | while read _source ; do
 	cp -t "${_outputs}/package/lib/java" "${_source}"
 done
@@ -45,7 +45,8 @@ _package="$( readlink -e -- . )"
 cmp -s -- "${_package}/lib/scripts/do.sh" "${_self_realpath}"
 test -e "${_package}/lib/scripts/${_self_basename}.bash"
 
-_PATH="${_package}/bin:${_package}/lib/applications-elf:${PATH}"
+_PATH="${_package}/bin:${_package}/lib/applications-elf:${PATH:-}"
+_LD_LIBRARY_PATH="${_package}/lib/java:${LD_LIBRARY_PATH:-}"
 
 _java="$( PATH="${_PATH}" type -P -- java || true )"
 if test -z "${_java}" ; then
@@ -55,10 +56,11 @@ fi
 
 _java_jars="${_package}/lib/java"
 _java_args=(
-	"-Djava.library.path=${_java_jars}"
+	"-Djava.library.path=${_LD_LIBRARY_PATH}"
 )
 _java_env=(
 	PATH="${_PATH}"
+	LD_LIBRARY_PATH="${_LD_LIBRARY_PATH}"
 )
 
 if test "${#}" -eq 0 ; then

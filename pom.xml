@@ -12,6 +12,7 @@
 		<module>components-container</module>
 		<module>components-core</module>
 		<module>components-examples</module>
+		<module>components-launcher</module>
 		<module>components-tools</module>
 	</modules>
 	<dependencies>

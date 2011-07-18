@@ -13,6 +13,10 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.LinkedList;
 
+import eu.mosaic_cloud.transcript.implementations.slf4j.Slf4jTranscriptBackend;
+
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.net.SocketAppender;
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
@@ -22,6 +26,7 @@ import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.transcript.core.Transcript;
 import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
+import org.slf4j.LoggerFactory;
 
 
 public final class BasicComponentHarnessMain
@@ -79,9 +84,24 @@ public final class BasicComponentHarnessMain
 		}
 	}
 	
-	public static final void main (final String componentArgument, final String classpathArgument)
+	public static final void main (final String componentArgument, final String classpathArgument, final String loggerArgument)
 	{
+		final Logger logger = (Logger) LoggerFactory.getLogger (org.slf4j.Logger.ROOT_LOGGER_NAME);
 		Preconditions.checkNotNull (componentArgument);
+		if (loggerArgument != null) {
+			logger.info ("starting remote appender...");
+			final String[] loggerParts = loggerArgument.split (":");
+			Preconditions.checkArgument (loggerParts.length == 2);
+			final SocketAppender appender = new SocketAppender ();
+			appender.setName ("remote");
+			appender.setContext (logger.getLoggerContext ());
+			appender.setRemoteHost (loggerParts[0]);
+			appender.setPort (Integer.parseInt (loggerParts[1]));
+			appender.start ();
+			appender.setReconnectionDelay (1000);
+			logger.addAppender (appender);
+		}
+		logger.info ("booting...");
 		final ClassLoader classLoader;
 		if (classpathArgument != null) {
 			final LinkedList<URL> classLoaderUrls = new LinkedList<URL> ();
@@ -120,18 +140,25 @@ public final class BasicComponentHarnessMain
 	public static final void main (final String[] arguments)
 	{
 		Preconditions.checkNotNull (arguments);
-		Preconditions.checkArgument ((arguments.length >= 1) && (arguments.length <= 2), "invalid arguments; aborting! (expected `<component-callbacks-class-name> <class-path-urls>`");
+		Preconditions.checkArgument ((arguments.length >= 1) && (arguments.length <= 3), "invalid arguments; aborting! (expected `<component-callbacks-class-name> <class-path-urls> <logger-address>`");
 		final String componentArgument;
 		final String classpathArgument;
+		final String loggerArgument;
 		if (arguments.length == 1) {
 			componentArgument = arguments[0];
 			classpathArgument = null;
+			loggerArgument = null;
 		} else if (arguments.length == 2) {
 			componentArgument = arguments[0];
 			classpathArgument = arguments[1];
+			loggerArgument = null;
+		} else if (arguments.length == 3) {
+			componentArgument = arguments[0];
+			classpathArgument = arguments[1];
+			loggerArgument = arguments[2];
 		} else
 			throw (new AssertionError ());
-		BasicComponentHarnessMain.main (componentArgument, classpathArgument);
+		BasicComponentHarnessMain.main (componentArgument, classpathArgument, loggerArgument);
 	}
 	
 	private static final long sleepTimeout = 100;
