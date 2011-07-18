@@ -52,7 +52,7 @@ public final class MosBasicComponentLauncher
 			public final void run ()
 			{
 				shouldStop[0] = true;
-				logger.info ("starting safety hook...");
+				logger.debug ("starting safety hook...");
 				new Thread () {
 					@Override
 					public final void run ()
@@ -63,7 +63,7 @@ public final class MosBasicComponentLauncher
 						Runtime.getRuntime ().halt (1);
 					}
 				}.start ();
-				logger.info ("stopping component...");
+				logger.debug ("stopping component...");
 				if (identifier[0] != null)
 					try {
 						final URL stopUrl = new URL (controller, String.format ("/processes/stop?key=%s", identifier[0]));
@@ -71,13 +71,13 @@ public final class MosBasicComponentLauncher
 					} catch (final Throwable exception) {
 						logger.error ("failed stopping component", exception);
 					}
-				logger.info ("stopping exporter...");
+				logger.debug ("stopping exporter...");
 				try {
 					exporter.stopServer ();
 				} catch (final Throwable exception) {
 					logger.error ("failed stopping exporter", exception);
 				}
-				logger.info ("sopping appender...");
+				logger.debug ("sopping appender...");
 				try {
 					appender.close ();
 				} catch (final Throwable exception) {
@@ -85,7 +85,7 @@ public final class MosBasicComponentLauncher
 				}
 			}
 		});
-		logger.info ("starting exporter...");
+		logger.debug ("starting exporter...");
 		try {
 			exporter.startServer ();
 		} catch (final Throwable exception) {
@@ -93,7 +93,7 @@ public final class MosBasicComponentLauncher
 			Runtime.getRuntime ().halt (1);
 			return;
 		}
-		logger.info ("starting appender...");
+		logger.debug ("starting appender...");
 		try {
 			appender.start ();
 		} catch (final Throwable exception) {
@@ -101,12 +101,12 @@ public final class MosBasicComponentLauncher
 			Runtime.getRuntime ().halt (1);
 			return;
 		}
-		logger.info ("creating component...");
+		logger.debug ("creating component...");
 		try {
 			final List<String> configuration = Arrays.asList (clasz, String.format ("http://%s:%d/", httpAddress.getAddress ().getHostAddress (), Integer.valueOf (httpAddress.getPort ())), String.format ("%s:%d", logbackAddress.getAddress ().getHostAddress (), Integer.valueOf (logbackAddress.getPort ())));
 			final String[] createParameters = new String[] {String.format ("type=%s", URLEncoder.encode ("#mosaic-components:java-container", "UTF-8")), String.format ("configuration=%s", DefaultJsonCoder.defaultInstance.encodeToString (configuration)), "count=1"};
 			final URL createUrl = new URL (controller, String.format ("/processes/create?%s", Joiner.on ("&").join (Arrays.asList (createParameters))));
-			logger.info ("{}", createUrl.toString ());
+			logger.debug ("{}", createUrl.toString ());
 			try {
 				final InputStream createStream = createUrl.openStream ();
 				final String createResponse = new String (ByteStreams.toByteArray (createStream), Charset.forName ("UTF-8"));
@@ -131,7 +131,7 @@ public final class MosBasicComponentLauncher
 			Runtime.getRuntime ().halt (1);
 			return;
 		}
-		logger.info ("started component: {}", identifier);
+		logger.info ("started: {}", identifier);
 		new BufferedReader (new InputStreamReader (System.in)).readLine ();
 		System.exit (0);
 	}

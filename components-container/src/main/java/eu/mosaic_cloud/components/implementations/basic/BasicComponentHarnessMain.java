@@ -86,10 +86,10 @@ public final class BasicComponentHarnessMain
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String loggerArgument)
 	{
-		final Logger logger = (Logger) LoggerFactory.getLogger (org.slf4j.Logger.ROOT_LOGGER_NAME);
+		final Logger logger = (Logger) LoggerFactory.getLogger (BasicComponentHarnessMain.class);
 		Preconditions.checkNotNull (componentArgument);
 		if (loggerArgument != null) {
-			logger.info ("starting remote appender...");
+			logger.debug ("starting remote appender...");
 			final String[] loggerParts = loggerArgument.split (":");
 			Preconditions.checkArgument (loggerParts.length == 2);
 			final SocketAppender appender = new SocketAppender ();
@@ -101,7 +101,7 @@ public final class BasicComponentHarnessMain
 			appender.setReconnectionDelay (1000);
 			logger.addAppender (appender);
 		}
-		logger.info ("booting...");
+		logger.debug ("booting...");
 		final ClassLoader classLoader;
 		if (classpathArgument != null) {
 			final LinkedList<URL> classLoaderUrls = new LinkedList<URL> ();
