@@ -224,7 +224,7 @@
 				</classpath>
 			</junit>
 			<junit fork="false">
-				<test name="mosaic.connector.amqp.tests.AmqpDriverTest" todir="${test.output.dir}">
+				<test name="mosaic.connector.amqp.tests.AmqpConnectorTest" todir="${test.output.dir}">
 				</test>
 				<formatter type="plain" usefile="true" />
 				<classpath>
