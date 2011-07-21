@@ -8,6 +8,13 @@ import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 
+/**
+ * Defines the AMQP session: the messages that can be exchanged and the roles of
+ * the participants.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
 public enum AmqpSession implements SessionSpecification {
 
 	CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(AmqpRole.DRIVER,

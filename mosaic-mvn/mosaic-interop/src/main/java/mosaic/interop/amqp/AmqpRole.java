@@ -3,6 +3,12 @@ package mosaic.interop.amqp;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
+/**
+ * Enum of the possible role of the participants in an AMQP session.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
 public enum AmqpRole implements RoleSpecification {
 	CONNECTOR(), DRIVER();
 

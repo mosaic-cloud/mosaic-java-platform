@@ -44,7 +44,7 @@ import com.rabbitmq.client.ShutdownSignalException;
 public class AmqpDriver extends AbstractResourceDriver {
 
 	private boolean connected;
-	private IConfiguration configuration;
+	IConfiguration configuration;
 	private AmqpOperationFactory opFactory;
 
 	private Connection connection;
@@ -92,15 +92,15 @@ public class AmqpDriver extends AbstractResourceDriver {
 		int noThreads = ConfigUtils.resolveParameter(configuration,
 				ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
 		AmqpDriver driver = new AmqpDriver(configuration, noThreads);
-		// open connection
-		driver.openConnection();
+		// open connection - moved to the stub
+		driver.connectResource();
 		if (!driver.connected) {
 			driver = null;
 		}
 		return driver;
 	}
 
-	private void openConnection() {
+	private void connectResource() {
 		String amqpServerHost = ConfigUtils.resolveParameter(
 				this.configuration,
 				ConfigProperties.getString("AmqpDriver.1"), String.class, //$NON-NLS-1$
@@ -122,7 +122,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);
 		factory.setPort(amqpServerPort);
-		factory.setVirtualHost(amqpVirtualHost);
+		if (!amqpVirtualHost.equals(""))
+			factory.setVirtualHost(amqpVirtualHost);
 		if (!amqpServerUser.isEmpty()) {
 			factory.setUsername(amqpServerUser);
 			factory.setPassword(amqpServerPasswd);
@@ -133,6 +134,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 			this.connection.addShutdownListener(this.shutdownListener);
 			this.channels = new LinkedList<Channel>();
 			this.connected = true;
+			MosaicLogger.getLogger().debug("AMQP driver connected to "+amqpServerHost+":"+amqpServerPort);
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 			this.connection = null;
@@ -953,7 +955,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 						&& (tries < this.maxReconnectionTries)) {
 					try {
 						Thread.sleep(this.minReconnectionTime);
-						AmqpDriver.this.openConnection();
+						AmqpDriver.this.connectResource();
 						tries++;
 					} catch (InterruptedException e) {
 						if (AmqpDriver.super.isDestroyed()) {

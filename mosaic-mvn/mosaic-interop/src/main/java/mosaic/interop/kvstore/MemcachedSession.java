@@ -8,6 +8,14 @@ import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 
+/**
+ * Defines the Memcached session: the messages that can be exchanged and the
+ * roles of the participants. The messages exchanged here can be either of type
+ * {@linkplain KeyValueMessage} or {@linkplain MemcachedMessage}.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
 public enum MemcachedSession implements SessionSpecification {
 
 	CONNECTOR(MemcachedRole.CONNECTOR, MemcachedRole.DRIVER), DRIVER(

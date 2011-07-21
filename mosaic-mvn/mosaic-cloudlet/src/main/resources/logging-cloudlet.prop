@@ -1,0 +1,27 @@
+cloudlet.main_class=mosaic.cloudlet.component.tests.LoggingCloudlet$LifeCycleHandler
+cloudlet.state_class=mosaic.cloudlet.component.tests.LoggingCloudlet$LoggingCloudletState
+cloudlet.resource_file=logging-cloudlet.prop
+
+queue.consumer.amqp.exchange=exchange-test
+queue.consumer.amqp.routing_key=rk-1
+queue.consumer.amqp.queue=logging-queue
+
+queue.publisher.amqp.exchange=exchange-test
+queue.publisher.amqp.routing_key=rk-2
+queue.publisher.amqp.queue=user-queue
+
+# just some test data
+test.user=dummy
+test.password=mOsAiC
+test.token=got_it
+
+# configurations below will normally not be set by the cloudlet creator
+# this is just for test
+kvstore.kvstore.connector_threads=1
+kvstore.kvstore.connector_name=KVSTORE
+
+queue.amqp.connector_threads=1
+
+
+
+

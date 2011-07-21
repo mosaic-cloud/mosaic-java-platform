@@ -31,4 +31,26 @@ public interface IConfiguration {
 	 * @return the configuration object
 	 */
 	IConfiguration spliceConfiguration(final ConfigurationIdentifier relative);
+
+	/**
+	 * Adds a parameter to the configuration.
+	 * 
+	 * @param identifier
+	 *            the identifier of the parameter
+	 * @param value
+	 *            the value of the parameter
+	 */
+	<T extends Object> void addParameter(
+			final ConfigurationIdentifier identifier, final T value);
+	
+	/**
+	 * Adds a parameter to the configuration.
+	 * 
+	 * @param property
+	 *            the identifier of the parameter
+	 * @param value
+	 *            the value of the parameter
+	 */
+	<T extends Object> void addParameter(
+			final String property, final T value);
 }

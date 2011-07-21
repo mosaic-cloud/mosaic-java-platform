@@ -10,11 +10,26 @@ import com.google.protobuf.GeneratedMessage;
 
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 
+/**
+ * Encodes an object (request for operation or response to operation) using the
+ * Google Protocol Buffers encoding.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
 public class DefaultPBPayloadCoder implements PayloadCoder {
 
 	private final Class<? extends GeneratedMessage> clasz;
 	private final boolean nullAllowed;
 
+	/**
+	 * Creates a new encoder.
+	 * 
+	 * @param clasz
+	 *            the message class
+	 * @param nullAllowed
+	 *            <code>true</code> if null objects can also be encoded
+	 */
 	public DefaultPBPayloadCoder(Class<? extends GeneratedMessage> clasz,
 			boolean nullAllowed) {
 		super();

@@ -15,7 +15,8 @@ import mosaic.driver.kvstore.memcached.MemcachedDriver;
  */
 public class KeyValueDriverFactory {
 	public enum DriverType {
-		REDIS(RedisDriver.class), MEMCACHED(MemcachedDriver.class);
+		REDIS(RedisDriver.class), MEMCACHED(MemcachedDriver.class), RIAKREST(
+				RiakRestDriver.class), RIAKPB(RiakPBDriver.class);
 
 		private final Class<? extends BaseKeyValueDriver> driverClass;
 

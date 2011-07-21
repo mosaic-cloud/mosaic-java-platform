@@ -8,6 +8,13 @@ import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 
+/**
+ * Defines the Key-Value session: the messages that can be exchanged and the roles of
+ * the participants.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
 public enum KeyValueSession implements SessionSpecification {
 
 	CONNECTOR(KeyValueRole.CONNECTOR, KeyValueRole.DRIVER), DRIVER(

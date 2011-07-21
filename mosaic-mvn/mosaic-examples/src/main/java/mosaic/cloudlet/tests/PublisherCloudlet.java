@@ -1,5 +1,6 @@
 package mosaic.cloudlet.tests;
 
+import mosaic.cloudlet.component.tests.AuthenticationToken;
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.DefaultCloudletCallback;
 import mosaic.cloudlet.core.ICloudletController;

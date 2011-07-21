@@ -1,0 +1,13 @@
+amqp.connector_threads=10
+
+consumer.amqp.queue=queue-x
+consumer.amqp.consumer_id=consumer-x
+consumer.amqp.auto_ack=true
+consumer.amqp.exclusive=false
+
+publisher.amqp.exchange=exchange
+publisher.amqp.routing_key=rk-x
+publisher.amqp.manadatory=true
+publisher.amqp.immediate=true
+publisher.amqp.durable=false
+

@@ -19,17 +19,6 @@ test.token=got_it
 # this is just for test
 queue.amqp.connector_threads=1
 
-queue.interop.req.amqp.host=localhost
-queue.interop.req.amqp.port=5672
-queue.interop.req.amqp.user=
-queue.interop.req.amqp.passwd=
-queue.interop.req.amqp.exchange=amqp_test
-queue.interop.req.amqp.queue=amqp_requests
+queue.interop.channel.address=tcp://127.0.0.1:31028
+queue.interop.driver.identifier=driver.amqp.1
 
-
-queue.interop.resp.amqp.host=localhost
-queue.interop.resp.amqp.port=5672
-queue.interop.resp.amqp.user=
-queue.interop.resp.amqp.passwd=
-queue.interop.resp.amqp.exchange=amqp_test
-queue.interop.resp.amqp.queue=amqp_responses

@@ -309,7 +309,7 @@ public class MemcachedDriverTest {
 	}
 
 	@Test
-	public void testConnector() {
+	public void testDriver() {
 		testConnection();
 		testSet();
 		testGet();

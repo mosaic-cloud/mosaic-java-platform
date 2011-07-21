@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mosaic.cloudlet.core.CallbackArguments;
+import mosaic.cloudlet.core.ContainerException;
 import mosaic.cloudlet.core.ICloudletController;
 import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.resources.ResourceStatus;
+import mosaic.cloudlet.runtime.ResourceFinder;
+import mosaic.cloudlet.runtime.ContainerComponentCallbacks.ResourceType;
 import mosaic.connector.kvstore.IKeyValueStore;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
@@ -66,7 +69,16 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 						this.configuration, mosaic.cloudlet.ConfigProperties
 								.getString("KeyValueAccessor.0"), String.class, //$NON-NLS-1$
 						""); //$NON-NLS-1$
+				ResourceType type = ResourceType.KEY_VALUE;
+				if (connectorName
+						.equalsIgnoreCase(KeyValueConnectorFactory.ConnectorType.MEMCACHED
+								.toString()))
+					type = ResourceType.MEMCACHED;
 
+				if (!ResourceFinder.getResourceFinder().findResource(type,
+						configuration))
+					throw new ContainerException(
+							"Cannot find a resource of type " + type.toString());
 				this.connector = KeyValueConnectorFactory.createConnector(
 						connectorName, this.configuration);// MemcachedStoreConnector.create(configuration);
 				this.status = ResourceStatus.READY;

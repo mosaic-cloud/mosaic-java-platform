@@ -18,11 +18,3 @@
 	<logger name="mosaic" level="trace">
 	</logger>
 </configuration>
-
-<!-- <configuration> <appender name="A2" class="ch.qos.logback.core.FileAppender"> 
-	<Append>false</Append> <File>mosaic.log</File> <encoder> <pattern>%-5p %-17c{2} 
-	(%13F:%L) - %m%n</pattern> </encoder> </appender> <appender name="A1" class="ch.qos.logback.core.ConsoleAppender"> 
-	<encoder> <pattern>%-5p %-17c{2} (%13F:%L) - %msg%n</pattern> </encoder> 
-	</appender> <logger name="eu.mosaic_cloud" level="info"> <appender-ref ref="A2" 
-	/> </logger> <logger name="mosaic" level="trace"> <appender-ref ref="A1" 
-	/> </logger> <root> <appender-ref ref="A1" /> </root> </configuration> -->

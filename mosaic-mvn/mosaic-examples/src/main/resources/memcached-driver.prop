@@ -1,19 +1,7 @@
-kvstore.interop.req.amqp.host=localhost
-kvstore.interop.req.amqp.port=5672
-kvstore.interop.req.amqp.user=
-kvstore.interop.req.amqp.passwd=
-kvstore.interop.req.amqp.exchange=memcached
-kvstore.interop.req.amqp.queue=memcached_requests
+kvstore.interop.channel.address=tcp://127.0.0.1:31029
+kvstore.interop.driver.identifier=driver.memcached.1
 
-
-kvstore.interop.resp.amqp.host=localhost
-kvstore.interop.resp.amqp.port=5672
-kvstore.interop.resp.amqp.user=
-kvstore.interop.resp.amqp.passwd=
-kvstore.interop.resp.amqp.exchange=memcached
-kvstore.interop.resp.amqp.queue=memcached_responses
-
-kvstore.memcached.host_1=nanosim-g.ieat.ro
+kvstore.memcached.host_1=localhost
 kvstore.memcached.port_1=11211
 kvstore.kvstore.driver_threads=10
 kvstore.kvstore.user=mosaic

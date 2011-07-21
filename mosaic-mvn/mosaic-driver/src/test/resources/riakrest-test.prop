@@ -1,0 +1,5 @@
+kvstore.host=localhost
+kvstore.port=8098
+kvstore.bucket=10
+kvstore.driver_threads=2
+kvstore.driver_name=RIAKREST

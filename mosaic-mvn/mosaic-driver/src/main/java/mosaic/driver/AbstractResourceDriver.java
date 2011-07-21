@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import mosaic.core.configuration.IConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 
@@ -20,6 +21,8 @@ public class AbstractResourceDriver implements IResourceDriver {
 	private List<IResult<?>> pendingResults;
 	private ExecutorService executor;
 	private boolean destroyed = false;
+	
+	public static IConfiguration driverConfiguration;
 
 	/**
 	 * Constructs a driver.

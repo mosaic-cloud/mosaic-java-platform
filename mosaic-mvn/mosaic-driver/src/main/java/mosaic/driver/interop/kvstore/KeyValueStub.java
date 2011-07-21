@@ -105,8 +105,6 @@ public class KeyValueStub extends AbstractDriverStub {
 					KeyValueStub.stubs.put(cData, stub);
 					incDriverReference(stub);
 					channel.accept(KeyValueSession.DRIVER, stub);
-					MosaicLogger.getLogger().debug(
-							"KeyValue stub accepting on " + channel.toString());
 				} else {
 					MosaicLogger.getLogger().trace(
 							"KeyValueStub: use existing stub."); //$NON-NLS-1$

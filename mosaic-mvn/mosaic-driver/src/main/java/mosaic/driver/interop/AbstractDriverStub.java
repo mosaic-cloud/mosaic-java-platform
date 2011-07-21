@@ -154,7 +154,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	 *            the class object of the driver
 	 * @return the driver
 	 */
-	protected <T extends IResourceDriver> T getDriver(Class<T> driverClass) {
+	public <T extends IResourceDriver> T getDriver(Class<T> driverClass) {
 		return driverClass.cast(this.driver);
 	}
 

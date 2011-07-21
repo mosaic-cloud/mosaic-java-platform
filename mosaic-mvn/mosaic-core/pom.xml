@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>mOSAIC-API</artifactId>
 		<groupId>eu.mosaic_cloud</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<groupId>eu.mosaic_cloud</groupId>

@@ -1,5 +1,6 @@
 package mosaic.driver;
 
+
 /**
  * Generic interface that should be implemented by all resource drivers.
  * 
@@ -7,6 +8,7 @@ package mosaic.driver;
  * 
  */
 public interface IResourceDriver {
+
 	/**
 	 * Destroy the connection with the resource.
 	 */

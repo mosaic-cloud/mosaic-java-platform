@@ -108,7 +108,7 @@ public class KeyValueProxy extends ConnectorProxy {
 		String id = UUID.randomUUID().toString();
 
 		MosaicLogger.getLogger().trace(
-				"MemcachedProxy - Sending DELETE request [" + id + "]...");
+				"KeyValueProxy - Sending DELETE request [" + id + "]...");
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();

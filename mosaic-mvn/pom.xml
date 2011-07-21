@@ -9,7 +9,7 @@
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>mOSAIC-API</artifactId>
 	<name>mOSAIC API</name>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 	<url>http://www.mosaic-cloud.eu/</url>
 	<packaging>pom</packaging>
 	

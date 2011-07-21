@@ -67,6 +67,9 @@ public class AmqpConnector implements IAmqpQueueConnector {
 				ConfigProperties.getString("AllConnector.0"), String.class, "");
 		String driverIdentifier = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("AllConnector.1"), String.class, "");
+		MosaicLogger.getLogger().debug(
+				"Connector working with driver on " + driverIdentifier + "("
+						+ driverChannel + ")");
 		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
 				AbortingExceptionTracer.defaultInstance);
 		channel.register(AmqpSession.CONNECTOR);

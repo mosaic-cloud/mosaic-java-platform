@@ -6,10 +6,13 @@ import java.util.List;
 
 import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CallbackArguments;
+import mosaic.cloudlet.core.ContainerException;
 import mosaic.cloudlet.core.ICloudletController;
 import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.resources.ResourceStatus;
+import mosaic.cloudlet.runtime.ContainerComponentCallbacks.ResourceType;
+import mosaic.cloudlet.runtime.ResourceFinder;
 import mosaic.connector.queue.amqp.AmqpConnector;
 import mosaic.connector.queue.amqp.IAmqpQueueConnector;
 import mosaic.core.configuration.ConfigUtils;
@@ -99,6 +102,8 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 			try {
 				this.status = ResourceStatus.INITIALIZING;
 				this.cloudletState = state;
+				if (!ResourceFinder.getResourceFinder().findResource(ResourceType.AMQP, configuration))
+					throw new ContainerException("Cannot find a resource of type "+ResourceType.AMQP.toString());
 				this.connector = AmqpConnector.create(this.configuration);
 
 				// IOperationCompletionHandler<Boolean> cHandler = new
@@ -116,6 +121,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 						arguments);
 				this.status = ResourceStatus.INITIALIZED;
 			} catch (Throwable e) {
+				e.printStackTrace();
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.initializeFailed(state, arguments);
