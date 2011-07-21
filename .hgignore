@@ -2,4 +2,29 @@ syntax: glob
 
 *.bak
 *.class
+*.log
+*.eap
 
+syntax: regexp
+^mOSAIC/build-tests$
+syntax: regexp
+^mOSAIC/test-output$
+syntax: regexp
+^mOSAIC/mosaic\.all\.jar$
+
+syntax: regexp
+^mosaic-mvn/mosaic-examples/examples-output$
+syntax: regexp
+^mosaic-mvn/mosaic-mvn/target$
+syntax: regexp
+^mosaic-mvn/mosaic-cloudlet/target$
+syntax: regexp
+^mosaic-mvn/mosaic-connector/target$
+syntax: regexp
+^mosaic-mvn/mosaic-core/target$
+syntax: regexp
+^mosaic-mvn/mosaic-driver/target$
+syntax: regexp
+^mosaic-mvn/mosaic-examples/target$
+syntax: regexp
+^mosaic-mvn/mosaic-interop/target$
