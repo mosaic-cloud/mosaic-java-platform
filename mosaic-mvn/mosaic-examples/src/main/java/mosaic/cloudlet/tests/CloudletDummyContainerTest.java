@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import mosaic.cloudlet.core.CloudletException;
-import mosaic.cloudlet.runtime.CloudletDummyContainer;
+import mosaic.cloudlet.runtime.CloudletManager;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
@@ -15,7 +15,7 @@ public class CloudletDummyContainerTest {
 
 		configuration = PropertyTypeConfiguration.create(
 				CloudletDummyContainerTest.class.getClassLoader(), args[0]);
-		final CloudletDummyContainer container = new CloudletDummyContainer(
+		final CloudletManager container = new CloudletManager(
 				CloudletDummyContainerTest.class.getClassLoader(),
 				configuration);
 		Runnable r = new Runnable() {
@@ -133,7 +133,7 @@ public class CloudletDummyContainerTest {
 		configuration = PropertyTypeConfiguration
 				.create(CloudletDummyContainerTest.class.getClassLoader(),
 						"cloud.prop");
-		CloudletDummyContainer container = new CloudletDummyContainer(
+		CloudletManager container = new CloudletManager(
 				CloudletDummyContainerTest.class.getClassLoader(),
 				configuration);
 

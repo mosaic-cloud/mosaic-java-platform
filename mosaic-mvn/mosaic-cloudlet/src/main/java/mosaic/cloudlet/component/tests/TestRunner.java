@@ -1,61 +1,61 @@
 package mosaic.cloudlet.component.tests;
 
 import mosaic.cloudlet.core.CloudletException;
-import mosaic.cloudlet.runtime.CloudletDummyContainer;
+import mosaic.cloudlet.runtime.CloudletManager;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 
 public class TestRunner {
 
-	public static CloudletDummyContainer runHelloWorld() {
+	public static CloudletManager runHelloWorld() {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
 				TestRunner.class.getClassLoader(), "hello-cloudlet.prop");
-		final CloudletDummyContainer container = startCloudlet(configuration);
+		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
 
-	public static CloudletDummyContainer runSimpleQueueConsumer() {
+	public static CloudletManager runSimpleQueueConsumer() {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
 				TestRunner.class.getClassLoader(), "consumer-cloudlet.prop");
-		final CloudletDummyContainer container = startCloudlet(configuration);
+		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
 
-	public static CloudletDummyContainer runSimpleQueuePublisher() {
+	public static CloudletManager runSimpleQueuePublisher() {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
 				TestRunner.class.getClassLoader(), "publisher-cloudlet.prop");
-		final CloudletDummyContainer container = startCloudlet(configuration);
+		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
 
-	public static CloudletDummyContainer runLoggingCloudlet() {
+	public static CloudletManager runLoggingCloudlet() {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
 				TestRunner.class.getClassLoader(), "logging-cloudlet.prop");
-		final CloudletDummyContainer container = startCloudlet(configuration);
+		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
 
-	public static CloudletDummyContainer runUserCloudlet() {
+	public static CloudletManager runUserCloudlet() {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
 				TestRunner.class.getClassLoader(), "user-cloudlet.prop");
-		final CloudletDummyContainer container = startCloudlet(configuration);
+		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
 
-	private static CloudletDummyContainer startCloudlet(
+	private static CloudletManager startCloudlet(
 			IConfiguration configuration) {
-		final CloudletDummyContainer container = new CloudletDummyContainer(
+		final CloudletManager container = new CloudletManager(
 				TestRunner.class.getClassLoader(), configuration);
 
 		try {

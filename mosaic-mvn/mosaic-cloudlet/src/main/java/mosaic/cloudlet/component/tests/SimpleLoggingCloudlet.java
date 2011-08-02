@@ -64,7 +64,6 @@ public class SimpleLoggingCloudlet {
 				CallbackArguments<LoggingCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet was destroyed successfully.");
-			System.exit(0);
 		}
 
 	}

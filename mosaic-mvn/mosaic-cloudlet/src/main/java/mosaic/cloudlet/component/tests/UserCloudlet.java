@@ -62,7 +62,6 @@ public class UserCloudlet {
 				CallbackArguments<UserCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
 					"UserCloudlet was destroyed successfully.");
-			System.exit(0);
 		}
 
 	}

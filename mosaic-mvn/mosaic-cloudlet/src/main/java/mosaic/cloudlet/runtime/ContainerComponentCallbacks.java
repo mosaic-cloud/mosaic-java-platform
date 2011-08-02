@@ -76,7 +76,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	private ComponentIdentifier kvGroup;
 	private ComponentIdentifier mcGroup;
 	private ComponentIdentifier selfGroup;
-	private List<CloudletDummyContainer> cloudletRunners = new ArrayList<CloudletDummyContainer>();
+	private List<CloudletManager> cloudletRunners = new ArrayList<CloudletManager>();
 
 	/**
 	 * Creates a callback which is used by the mOSAIC platform to communicate
@@ -122,7 +122,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	@Override
 	public CallbackReference called(Component component,
 			ComponentCallRequest request) {
-		CloudletDummyContainer container = null;
+		CloudletManager container = null;
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
@@ -222,7 +222,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			Preconditions.checkState((this.status != Status.Terminated)
 					&& (this.status != Status.Unregistered));
 			// also stop and destroy connector & cloudlets
-			for (CloudletDummyContainer container : cloudletRunners)
+			for (CloudletManager container : cloudletRunners)
 				container.stop();
 			this.component = null;
 			this.status = Status.Terminated;
@@ -280,7 +280,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			Preconditions.checkState((this.status != Status.Terminated)
 					&& (this.status != Status.Unregistered));
 			// also stop and destroy connector & cloudlets
-			for (CloudletDummyContainer container : cloudletRunners)
+			for (CloudletManager container : cloudletRunners)
 				container.stop();
 			this.component = null;
 			this.status = Status.Terminated;
@@ -343,12 +343,12 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			break;
 		}
 
+		this.pendingReferences.put(callReference, replyFuture.trigger);
 		this.component
 				.call(componentId,
 						ComponentCallRequest.create(
 								ConfigProperties
 										.getString("ContainerComponentCallbacks.7"), null, callReference)); //$NON-NLS-1$
-		this.pendingReferences.put(callReference, replyFuture.trigger);
 
 		try {
 			reply = replyFuture.get();

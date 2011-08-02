@@ -1,7 +1,5 @@
 package mosaic.driver;
 
-import mosaic.driver.queue.amqp.AmqpDriverComponentCallbacks;
-import eu.mosaic_cloud.components.core.ComponentCallbacks;
 
 /**
  * Enums of component callbacks for resource drivers.
@@ -10,15 +8,16 @@ import eu.mosaic_cloud.components.core.ComponentCallbacks;
  * 
  */
 public enum DriverCallbackType {
-	AMQP(AmqpDriverComponentCallbacks.class);
+	AMQP("mosaic.driver.queue.amqp.AmqpDriverComponentCallbacks"), KV(
+			"mosaic.driver.kvstore.KVDriverComponentCallbacks");
 
-	private final Class<? extends ComponentCallbacks> callbackClass;
+	private final String callbackClass;
 
-	DriverCallbackType(Class<? extends ComponentCallbacks> canonicalClassName) {
+	DriverCallbackType(String canonicalClassName) {
 		this.callbackClass = canonicalClassName;
 	}
 
-	public Class<? extends ComponentCallbacks> getCallbackClass() {
+	public String getCallbackClass() {
 		return this.callbackClass;
 	}
 }

@@ -308,7 +308,7 @@ public class CloudletExecutor {
 			canExit = (this.runState >= CloudletExecutor.STOP)
 					|| ((this.runState == CloudletExecutor.SHUTDOWN)
 							&& this.requestQueue.isEmpty() && this.responseQueue
-							.isEmpty());
+								.isEmpty());
 		} finally {
 			this.mainLock.unlock();
 		}
@@ -346,6 +346,9 @@ public class CloudletExecutor {
 					&& this.requestQueue.offer(request)) {
 				this.queuesNotEmpty.signal();
 			} else {
+				MosaicLogger.getLogger().info(
+						"CloudletExecutor rejects requests execution. Cloudlet state is "
+								+ this.runState);
 				reject(request); // is shutdown
 			}
 		} finally {
@@ -377,6 +380,9 @@ public class CloudletExecutor {
 			}
 
 			if (reject) {
+				MosaicLogger.getLogger().info(
+						"CloudletExecutor rejects requests execution. Cloudlet state is "
+								+ this.runState);
 				reject(request);
 			} else {
 				this.queuesNotEmpty.signal();

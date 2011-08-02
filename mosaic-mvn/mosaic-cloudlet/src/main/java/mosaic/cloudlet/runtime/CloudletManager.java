@@ -22,7 +22,7 @@ import mosaic.core.log.MosaicLogger;
  * @author Georgiana Macariu
  * 
  */
-public class CloudletDummyContainer {
+public class CloudletManager {
 
 	/**
 	 * Pool containing all cloudlet instances of the cloudlet. Accessed only
@@ -43,7 +43,7 @@ public class CloudletDummyContainer {
 	 * @param configuration
 	 *            configuration object of the cloudlet
 	 */
-	public CloudletDummyContainer(ClassLoader classLoader,
+	public CloudletManager(ClassLoader classLoader,
 			IConfiguration configuration) {
 		super();
 		this.classLoader = classLoader;
