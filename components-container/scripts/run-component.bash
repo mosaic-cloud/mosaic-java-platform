@@ -8,7 +8,7 @@ fi
 _identifier="${1:-00000000c7f30eeefd9bd86d356ceb10754aec4c}"
 shift 1
 
-_jar="${_java_jars:-${_workbench}/target}/components-container-0.2-SNAPSHOT-jar-with-dependencies.jar"
+_jar="${_java_jars:-${_workbench}/target}/${_package_jar_name}"
 
 _java_args+=(
 		-jar "${_jar}"

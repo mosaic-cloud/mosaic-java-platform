@@ -24,11 +24,8 @@ mkdir "${_outputs}/package/bin"
 mkdir "${_outputs}/package/lib"
 
 mkdir "${_outputs}/package/lib/java"
-cp -t "${_outputs}/package/lib/java" ./umbrella/mosaic-java-components/components-container/target/components-container-0.2-SNAPSHOT-jar-with-dependencies.jar
-find ./umbrella/lib -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -print \
-| while read _source ; do
-	cp -t "${_outputs}/package/lib/java" "${_source}"
-done
+find ./umbrella/*/ -xtype f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" {} \;
+find ./umbrella/lib/ -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" {} \;
 
 mkdir "${_outputs}/package/lib/scripts"
 
@@ -63,6 +60,8 @@ _java_env=(
 	LD_LIBRARY_PATH="${_LD_LIBRARY_PATH}"
 )
 
+_package_jar_name='@package_jar_name@'
+
 if test "${#}" -eq 0 ; then
 	. "${_package}/lib/scripts/${_self_basename}.bash"
 else
@@ -72,6 +71,8 @@ fi
 echo "[ee] script \`${_self_main}\` should have exited..." >&2
 exit 1
 EOS
+
+sed -r -e 's|@package_jar_name@|'"${_package_jar_name}"'|g' -i -- "${_outputs}/package/lib/scripts/do.sh"
 
 chmod +x -- "${_outputs}/package/lib/scripts/do.sh"
 
