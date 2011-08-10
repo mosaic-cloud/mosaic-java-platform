@@ -79,9 +79,9 @@ public class RiakPBDriver extends BaseKeyValueDriver {
 				String.class, "");
 		// String address="http://"+host+":"+port+"/riak";
 		RiakClient riakClient = new RiakClient(host, port);
-		if (riakClient == null)
-			throw new ConnectionException("Cannot connect to driver: " + host
-					+ ":" + port);
+//		if (riakClient == null)
+//			throw new ConnectionException("Cannot connect to driver: " + host
+//					+ ":" + port);
 		IOperationFactory opFactory = RiakPBOperationFactory.getFactory(
 				riakClient, bucket);
 		RiakPBDriver wrapper = new RiakPBDriver(riakClient, noThreads,
