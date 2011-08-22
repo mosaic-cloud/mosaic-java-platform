@@ -46,6 +46,11 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	protected String exchange;
 	protected String routingKey;
 	protected String queue;
+	protected boolean exclusive = true;
+	protected boolean autoDelete = true;
+	protected boolean passive = false;
+	protected boolean durable = false;
+	protected AmqpExchangeType exchangeType = AmqpExchangeType.DIRECT;
 	protected boolean registered;
 
 	/**
@@ -74,6 +79,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 		IConfiguration accessorConfig = config
 				.spliceConfiguration(ConfigurationIdentifier
 						.resolveRelative(specification));
+		this.configuration = accessorConfig;
 		this.exchange = ConfigUtils
 				.resolveParameter(
 						accessorConfig,
@@ -86,6 +92,28 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 				.resolveParameter(
 						accessorConfig,
 						ConfigProperties.getString("AmqpQueueAccessor.2"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+		String type = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.5"), String.class, "").toUpperCase();//$NON-NLS-1$ //$NON-NLS-2$
+		if (!type.equals("") && AmqpExchangeType.valueOf(type) != null)
+			this.exchangeType = AmqpExchangeType.valueOf(type);
+		this.exclusive = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.6"), Boolean.class, true); //$NON-NLS-1$ 
+		this.autoDelete = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.7"), Boolean.class, true); //$NON-NLS-1$
+		this.passive = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.8"), Boolean.class, false); //$NON-NLS-1$ 
+		this.durable = ConfigUtils
+				.resolveParameter(
+						accessorConfig,
+						ConfigProperties.getString("AmqpQueueAccessor.9"), Boolean.class, false); //$NON-NLS-1$ 
 		MosaicLogger.getLogger().trace(
 				"Queue accessor for exchange '" + this.exchange
 						+ "', routing key '" + this.routingKey
@@ -102,8 +130,11 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 			try {
 				this.status = ResourceStatus.INITIALIZING;
 				this.cloudletState = state;
-				if (!ResourceFinder.getResourceFinder().findResource(ResourceType.AMQP, configuration))
-					throw new ContainerException("Cannot find a resource of type "+ResourceType.AMQP.toString());
+				if (!ResourceFinder.getResourceFinder().findResource(
+						ResourceType.AMQP, configuration))
+					throw new ContainerException(
+							"Cannot find a resource of type "
+									+ ResourceType.AMQP.toString());
 				this.connector = AmqpConnector.create(this.configuration);
 
 				// IOperationCompletionHandler<Boolean> cHandler = new
@@ -198,8 +229,8 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 		List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		cHandlers.add(cHandler);
 
-		getConnector().declareExchange(this.exchange, AmqpExchangeType.DIRECT,
-				false, true, false, cHandlers,
+		getConnector().declareExchange(this.exchange, this.exchangeType,
+				this.durable, this.autoDelete, this.passive, cHandlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler));
 
 	}
@@ -223,9 +254,9 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 		List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		cHandlers.add(cHandler);
 
-		getConnector()
-				.declareQueue(this.queue, true, false, false, false, cHandlers,
-						this.cloudlet.getResponseInvocationHandler(cHandler));
+		getConnector().declareQueue(this.queue, this.exclusive, this.durable,
+				this.autoDelete, this.passive, cHandlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
 
 	}
 

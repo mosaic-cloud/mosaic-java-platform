@@ -120,6 +120,7 @@ public class PropertyTypeConfigurationTest {
 		IConfiguration mConfiguration = PropertyTypeConfigurationTest.configuration
 				.spliceConfiguration(ConfigurationIdentifier
 						.resolveAbsolute("mosaic"));
+		System.out.println(mConfiguration.getRootIdentifier().getIdentifier());
 		int intValue = ConfigUtils.resolveParameter(mConfiguration, "int",
 				Integer.class, 0);
 		Assert.assertEquals(1, intValue);

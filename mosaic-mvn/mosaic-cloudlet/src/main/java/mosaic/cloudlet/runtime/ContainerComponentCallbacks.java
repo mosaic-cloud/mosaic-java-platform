@@ -1,14 +1,19 @@
 package mosaic.cloudlet.runtime;
 
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.component.tests.TestRunner;
+import mosaic.cloudlet.core.CloudletException;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
@@ -27,6 +32,7 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.tools.OutcomeFuture;
 import eu.mosaic_cloud.tools.OutcomeFuture.OutcomeTrigger;
@@ -173,11 +179,73 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 							request.reference);
 					component.reply(reply);
 					return null;
+				} else if (request.operation.equals(ConfigProperties
+						.getString("ContainerComponentCallbacks.10"))) {
+					// TODO
+					List<?> operands = DefaultJsonMapper.defaultInstance
+							.decode(request.inputs, List.class);
+					ClassLoader loader = getCloudletClassLoader(operands.get(0)
+							.toString());
+					MosaicLogger.getLogger().debug(
+							"Loading cloudlet in JAR " + operands.get(0)
+									+ " with configuration " + operands.get(1));
+					container = startCloudlet(loader, operands.get(1)
+							.toString());
+					ComponentCallReply reply = ComponentCallReply.create(true,
+							new Boolean(true), ByteBuffer.allocate(0),
+							request.reference);
+					component.reply(reply);
+					return null;
 				} else
 					throw new UnsupportedOperationException();
-			} else
-				throw new UnsupportedOperationException();
+			}
+			throw new UnsupportedOperationException();
 		}
+	}
+
+	private CloudletManager startCloudlet(ClassLoader loader,
+			String configurationFile) {
+		final IConfiguration configuration = PropertyTypeConfiguration.create(
+				loader, configurationFile);
+		final CloudletManager container = new CloudletManager(loader,
+				configuration);
+
+		try {
+			container.start();
+		} catch (CloudletException e) {
+			ExceptionTracer.traceDeferred(e);
+		}
+		return container;
+	}
+
+	private ClassLoader getCloudletClassLoader(String classpathArgument) {
+		final ClassLoader classLoader;
+		if (classpathArgument != null) {
+			final LinkedList<URL> classLoaderUrls = new LinkedList<URL>();
+			for (final String classpathPart : classpathArgument.split(";"))
+				if (classpathPart.length() > 0) {
+					final URL classpathUrl;
+					if (classpathPart.startsWith("http:")
+							|| classpathPart.startsWith("file:"))
+						try {
+							classpathUrl = new URL(classpathPart);
+						} catch (final Exception exception) {
+							throw (new IllegalArgumentException(String.format(
+									"invalid class-path URL `%s`",
+									classpathPart), exception));
+						}
+					else
+						throw (new IllegalArgumentException(String.format(
+								"invalid class-path URL `%s`", classpathPart)));
+					classLoaderUrls.add(classpathUrl);
+					System.out.println("classpathurl: " + classpathUrl);
+				}
+			classLoader = new URLClassLoader(
+					classLoaderUrls.toArray(new URL[0]),
+					ContainerComponentCallbacks.class.getClassLoader());
+		} else
+			classLoader = ClassLoader.getSystemClassLoader();
+		return classLoader;
 	}
 
 	@Override

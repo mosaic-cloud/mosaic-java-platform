@@ -170,7 +170,8 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		for (Object key : this.properties.keySet()) {
-			builder.append(key.toString() + ": "+this.properties.getProperty(key.toString())+"\n");
+			builder.append(key.toString() + ": "
+					+ this.properties.getProperty(key.toString()) + "\n");
 		}
 		return builder.toString();
 	}
@@ -246,5 +247,10 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	@Override
 	public <T> void addParameter(String property, T value) {
 		this.properties.put(property, value);
+	}
+
+	@Override
+	public ConfigurationIdentifier getRootIdentifier() {
+		return root;
 	}
 }

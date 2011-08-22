@@ -42,7 +42,7 @@ public interface IConfiguration {
 	 */
 	<T extends Object> void addParameter(
 			final ConfigurationIdentifier identifier, final T value);
-	
+
 	/**
 	 * Adds a parameter to the configuration.
 	 * 
@@ -51,6 +51,12 @@ public interface IConfiguration {
 	 * @param value
 	 *            the value of the parameter
 	 */
-	<T extends Object> void addParameter(
-			final String property, final T value);
+	<T extends Object> void addParameter(final String property, final T value);
+
+	/**
+	 * Returns the root identifier.
+	 * 
+	 * @return the root identifier
+	 */
+	ConfigurationIdentifier getRootIdentifier();
 }

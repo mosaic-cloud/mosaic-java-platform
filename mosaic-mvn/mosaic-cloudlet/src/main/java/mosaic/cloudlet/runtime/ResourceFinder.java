@@ -49,25 +49,25 @@ public class ResourceFinder {
 		MosaicLogger.getLogger().trace(
 				"ResourceFinder - found resource " + channel);
 		if (channel != null) {
-			configuration
-					.addParameter(
-							ConfigurationIdentifier
-									.resolveRelative(type.getConfigPrefix()
-											+ "."
-											+ ConfigProperties
-													.getString("ContainerComponentCallbacks.6")),
-							channel.getChannelIdentifier());
-			configuration
-					.addParameter(
-							ConfigurationIdentifier
-									.resolveRelative(type.getConfigPrefix()
-											+ "."
-											+ ConfigProperties
-													.getString("ContainerComponentCallbacks.5")),
-							channel.getChannelEndpoint());
+			String prefix = (configuration.getRootIdentifier().getIdentifier() + ".")
+					.substring(1).replace('/', '.');
+
+			ConfigurationIdentifier id1 = ConfigurationIdentifier
+					.resolveRelative(prefix
+							+ ConfigProperties
+									.getString("ContainerComponentCallbacks.6"));
+			ConfigurationIdentifier id2 = ConfigurationIdentifier
+					.resolveRelative(prefix
+							+ ConfigProperties
+									.getString("ContainerComponentCallbacks.5"));
+
+			configuration.addParameter(id1, channel.getChannelIdentifier());
+			configuration.addParameter(id2, channel.getChannelEndpoint());
+//			MosaicLogger.getLogger().debug(
+//					"ResourceFinder - config: " + configuration);
 			found = true;
 		}
-		
+
 		return found;
 	}
 
