@@ -97,7 +97,7 @@ public class LoggingCloudlet {
 					.getConfiguration(), "test.user", String.class, "error");
 			String pass = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.password", String.class, "");
-			state.kvStore.set(user, pass);
+			state.kvStore.set(user, pass, null);
 		}
 
 		@Override
@@ -190,7 +190,7 @@ public class LoggingCloudlet {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet received logging message for user "
 							+ data.user);
-			IResult<Object> result = state.kvStore.get(data.user);
+			IResult<Object> result = state.kvStore.get(data.user, null);
 			Object passOb;
 			String token = null;
 			try {
@@ -201,7 +201,7 @@ public class LoggingCloudlet {
 						token = ConfigUtils.resolveParameter(arguments
 								.getCloudlet().getConfiguration(),
 								"test.token", String.class, "token");
-						state.kvStore.set(data.user, token);
+						state.kvStore.set(data.user, token, null);
 					}
 				}
 				AuthenticationToken aToken = new AuthenticationToken(token);

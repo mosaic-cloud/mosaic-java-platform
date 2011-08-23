@@ -36,7 +36,8 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	}
 
 	@Override
-	public IResult<Boolean> set(final String key, final Object value, int exp) {
+	public IResult<Boolean> set(final String key, final Object value, int exp,
+			final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -44,7 +45,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, value);
+							MemcachedAccessor.this.cloudlet, key, value, extra);
 					getCallback(IMemcachedAccessorCallback.class).setSucceeded(
 							MemcachedAccessor.this.cloudletState, arguments);
 
@@ -54,7 +55,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, error);
+							MemcachedAccessor.this.cloudlet, key, error, extra);
 					getCallback(IMemcachedAccessorCallback.class).setFailed(
 							MemcachedAccessor.this.cloudletState, arguments);
 				}
@@ -68,7 +69,8 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	}
 
 	@Override
-	public IResult<Boolean> add(final String key, final Object value, int exp) {
+	public IResult<Boolean> add(final String key, final Object value, int exp,
+			final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -76,7 +78,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, value);
+							MemcachedAccessor.this.cloudlet, key, value, extra);
 					getCallback(IMemcachedAccessorCallback.class).addSucceeded(
 							MemcachedAccessor.this.cloudletState, arguments);
 
@@ -86,7 +88,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, error);
+							MemcachedAccessor.this.cloudlet, key, error, extra);
 					(getCallback(IMemcachedAccessorCallback.class)).addFailed(
 							MemcachedAccessor.this.cloudletState, arguments);
 				}
@@ -100,7 +102,8 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	}
 
 	@Override
-	public IResult<Boolean> append(final String key, final Object value) {
+	public IResult<Boolean> append(final String key, final Object value,
+			final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -108,7 +111,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, value);
+							MemcachedAccessor.this.cloudlet, key, value, extra);
 					getCallback(IMemcachedAccessorCallback.class)
 							.appendSucceeded(
 									MemcachedAccessor.this.cloudletState,
@@ -120,7 +123,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, error);
+							MemcachedAccessor.this.cloudlet, key, error, extra);
 					(getCallback(IMemcachedAccessorCallback.class))
 							.appendFailed(MemcachedAccessor.this.cloudletState,
 									arguments);
@@ -135,7 +138,8 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	}
 
 	@Override
-	public IResult<Boolean> prepend(final String key, final Object value) {
+	public IResult<Boolean> prepend(final String key, final Object value,
+			final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -143,7 +147,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, value);
+							MemcachedAccessor.this.cloudlet, key, value, extra);
 					getCallback(IMemcachedAccessorCallback.class)
 							.prependSucceeded(
 									MemcachedAccessor.this.cloudletState,
@@ -155,7 +159,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, error);
+							MemcachedAccessor.this.cloudlet, key, error, extra);
 					(getCallback(IMemcachedAccessorCallback.class))
 							.prependFailed(
 									MemcachedAccessor.this.cloudletState,
@@ -171,7 +175,8 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	}
 
 	@Override
-	public IResult<Boolean> cas(final String key, final Object value) {
+	public IResult<Boolean> cas(final String key, final Object value,
+			final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -179,7 +184,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, value);
+							MemcachedAccessor.this.cloudlet, key, value, extra);
 					getCallback(IMemcachedAccessorCallback.class).casSucceeded(
 							MemcachedAccessor.this.cloudletState, arguments);
 
@@ -189,7 +194,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, error);
+							MemcachedAccessor.this.cloudlet, key, error, extra);
 					(getCallback(IMemcachedAccessorCallback.class)).casFailed(
 							MemcachedAccessor.this.cloudletState, arguments);
 				}
@@ -204,7 +209,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 
 	@Override
 	public IResult<Boolean> replace(final String key, final Object value,
-			int exp) {
+			int exp, final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -212,7 +217,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, value);
+							MemcachedAccessor.this.cloudlet, key, value, extra);
 					getCallback(IMemcachedAccessorCallback.class)
 							.replaceSucceeded(
 									MemcachedAccessor.this.cloudletState,
@@ -224,7 +229,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, key, error);
+							MemcachedAccessor.this.cloudlet, key, error, extra);
 					(getCallback(IMemcachedAccessorCallback.class))
 							.replaceFailed(
 									MemcachedAccessor.this.cloudletState,
@@ -240,7 +245,8 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	}
 
 	@Override
-	public IResult<Map<String, Object>> getBulk(final List<String> keys) {
+	public IResult<Map<String, Object>> getBulk(final List<String> keys,
+			final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Map<String, Object>> cHandler = new IOperationCompletionHandler<Map<String, Object>>() {
 
@@ -248,7 +254,8 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public void onSuccess(Map<String, Object> result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, keys, result);
+							MemcachedAccessor.this.cloudlet, keys, result,
+							extra);
 					getCallback(IMemcachedAccessorCallback.class)
 							.getBulkSucceeded(
 									MemcachedAccessor.this.cloudletState,
@@ -260,7 +267,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							MemcachedAccessor.this.cloudlet, keys, error);
+							MemcachedAccessor.this.cloudlet, keys, error, extra);
 					(getCallback(IMemcachedAccessorCallback.class))
 							.getBulkFailed(
 									MemcachedAccessor.this.cloudletState,

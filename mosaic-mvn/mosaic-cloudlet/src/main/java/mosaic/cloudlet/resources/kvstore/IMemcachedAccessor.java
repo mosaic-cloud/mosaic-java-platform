@@ -31,9 +31,11 @@ public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
 	 *            Unix time value rather than an offset from current time.
 	 * @param data
 	 *            the data
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> set(String key, Object value, int exp);
+	IResult<Boolean> set(String key, Object value, int exp, Object extra);
 
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data
@@ -53,9 +55,11 @@ public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
 	 *            Unix time value rather than an offset from current time.
 	 * @param data
 	 *            the data
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> add(String key, Object value, int exp);
+	IResult<Boolean> add(String key, Object value, int exp, Object extra);
 
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -64,9 +68,11 @@ public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
 	 *            the key associated with the stored data
 	 * @param data
 	 *            the appended data
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> append(String key, Object value);
+	IResult<Boolean> append(String key, Object value, Object extra);
 
 	/**
 	 * Adds specified data to an existing key before existing data.
@@ -75,9 +81,11 @@ public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
 	 *            the key associated with the stored data
 	 * @param data
 	 *            the pre-appended data
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> prepend(String key, Object value);
+	IResult<Boolean> prepend(String key, Object value, Object extra);
 
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -87,9 +95,11 @@ public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
 	 *            the key associated with the stored data
 	 * @param data
 	 *            the data
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> cas(String key, Object value);
+	IResult<Boolean> cas(String key, Object value, Object extra);
 
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -109,16 +119,20 @@ public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
 	 *            Unix time value rather than an offset from current time.
 	 * @param data
 	 *            the data
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> replace(String key, Object value, int exp);
+	IResult<Boolean> replace(String key, Object value, int exp, Object extra);
 
 	/**
 	 * Gets data associated with several keys.
 	 * 
 	 * @param keys
 	 *            the keys
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Map<String, Object>> getBulk(List<String> keys);
+	IResult<Map<String, Object>> getBulk(List<String> keys, Object extra);
 }

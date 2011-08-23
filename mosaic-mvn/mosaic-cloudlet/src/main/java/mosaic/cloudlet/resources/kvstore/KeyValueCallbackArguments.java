@@ -18,6 +18,7 @@ import mosaic.cloudlet.core.ICloudletController;
 public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	private final List<String> keys;
 	private final Object value;
+	private final Object extra;
 
 	/**
 	 * Creates a new argument.
@@ -29,13 +30,16 @@ public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	 * @param value
 	 *            the value associated with the key (if this callback is used
 	 *            for failed operations this value should contain the error)
+	 * @param extra
+	 *            some application specific object
 	 */
 	public KeyValueCallbackArguments(ICloudletController<S> cloudlet,
-			String key, Object value) {
+			String key, Object value, Object extra) {
 		super(cloudlet);
 		this.keys = new ArrayList<String>();
 		this.keys.add(key);
 		this.value = value;
+		this.extra = extra;
 	}
 
 	/**
@@ -49,12 +53,15 @@ public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	 * @param value
 	 *            the value associated with the key (if this callback is used
 	 *            for failed operations this value should contain the error)
+	 * @param extra
+	 *            some application specific object
 	 */
 	public KeyValueCallbackArguments(ICloudletController<S> cloudlet,
-			List<String> keys, Object value) {
+			List<String> keys, Object value, Object extra) {
 		super(cloudlet);
 		this.keys = keys;
 		this.value = value;
+		this.extra = extra;
 	}
 
 	/**
@@ -82,6 +89,17 @@ public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	 */
 	public List<String> getKeys() {
 		return this.keys;
+	}
+
+	/**
+	 * Returns any application specific data used for the key-value store
+	 * operation.
+	 * 
+	 * @return ny application specific data used for the key-value store
+	 *         operation
+	 */
+	public Object getExtra() {
+		return extra;
 	}
 
 }

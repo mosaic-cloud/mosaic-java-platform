@@ -21,33 +21,40 @@ public interface IKeyValueAccessor<S> extends IResourceAccessor<S> {
 	 *            the key under which this data should be stored
 	 * @param data
 	 *            the data
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> set(String key, Object value);
+	IResult<Boolean> set(String key, Object value, Object extra);
 
 	/**
 	 * Gets data associated with a single key.
 	 * 
 	 * @param key
 	 *            the key
-	 * 
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Object> get(String key);
+	IResult<Object> get(String key, Object extra);
 
 	/**
 	 * Deletes the given key.
 	 * 
 	 * @param key
 	 *            the key to delete
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> delete(String key);
+	IResult<Boolean> delete(String key, Object extra);
 
 	/**
 	 * Lists the keys in the bucket associated with the accessor.
 	 * 
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<List<String>> list();
+	IResult<List<String>> list(Object extra);
 }

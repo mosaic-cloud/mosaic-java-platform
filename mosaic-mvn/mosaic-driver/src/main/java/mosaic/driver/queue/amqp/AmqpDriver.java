@@ -134,7 +134,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 			this.connection.addShutdownListener(this.shutdownListener);
 			this.channels = new LinkedList<Channel>();
 			this.connected = true;
-			MosaicLogger.getLogger().debug("AMQP driver connected to "+amqpServerHost+":"+amqpServerPort);
+			MosaicLogger.getLogger().debug(
+					"AMQP driver connected to " + amqpServerHost + ":"
+							+ amqpServerPort);
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 			this.connection = null;
@@ -488,10 +490,14 @@ public class AmqpDriver extends AbstractResourceDriver {
 		@Override
 		public final void handleDelivery(String consumer, Envelope envelope,
 				AMQP.BasicProperties properties, byte[] data) {
+			MosaicLogger.getLogger().trace(
+					"Received envelope: " + envelope + " properties: "
+							+ properties);
 			final AmqpInboundMessage message = new AmqpInboundMessage(consumer,
 					envelope.getDeliveryTag(), envelope.getExchange(),
 					envelope.getRoutingKey(), data,
-					properties.getDeliveryMode() == 2 ? true : false);
+					(properties.getDeliveryMode() != null && properties
+							.getDeliveryMode() == 2) ? true : false);
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
 			if (consumeCallback != null) {

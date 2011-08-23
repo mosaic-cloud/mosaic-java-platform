@@ -164,14 +164,15 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	}
 
 	@Override
-	public IResult<Boolean> set(final String key, final Object value) {
+	public IResult<Boolean> set(final String key, final Object value,
+			final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, value);
+							KeyValueAccessor.this.cloudlet, key, value, extra);
 					KeyValueAccessor.this.callback.setSucceeded(
 							KeyValueAccessor.this.cloudletState, arguments);
 
@@ -180,7 +181,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, error);
+							KeyValueAccessor.this.cloudlet, key, error, extra);
 					KeyValueAccessor.this.callback.setFailed(
 							KeyValueAccessor.this.cloudletState, arguments);
 				}
@@ -193,14 +194,14 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	}
 
 	@Override
-	public IResult<Object> get(final String key) {
+	public IResult<Object> get(final String key, final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Object> cHandler = new IOperationCompletionHandler<Object>() {
 
 				@Override
 				public void onSuccess(Object result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, result);
+							KeyValueAccessor.this.cloudlet, key, result, extra);
 					KeyValueAccessor.this.callback.getSucceeded(
 							KeyValueAccessor.this.cloudletState, arguments);
 
@@ -209,7 +210,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, error);
+							KeyValueAccessor.this.cloudlet, key, error, extra);
 					KeyValueAccessor.this.callback.getFailed(
 							KeyValueAccessor.this.cloudletState, arguments);
 				}
@@ -222,14 +223,14 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	}
 
 	@Override
-	public IResult<Boolean> delete(final String key) {
+	public IResult<Boolean> delete(final String key, final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 				@Override
 				public void onSuccess(Boolean result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, null);
+							KeyValueAccessor.this.cloudlet, key, null, extra);
 					KeyValueAccessor.this.callback.deleteSucceeded(
 							KeyValueAccessor.this.cloudletState, arguments);
 
@@ -238,7 +239,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, error);
+							KeyValueAccessor.this.cloudlet, key, error, extra);
 					KeyValueAccessor.this.callback.deleteFailed(
 							KeyValueAccessor.this.cloudletState, arguments);
 				}
@@ -251,14 +252,14 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	}
 
 	@Override
-	public IResult<List<String>> list() {
+	public IResult<List<String>> list(final Object extra) {
 		synchronized (this) {
 			IOperationCompletionHandler<List<String>> cHandler = new IOperationCompletionHandler<List<String>>() {
 
 				@Override
 				public void onSuccess(List<String> result) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, result, null);
+							KeyValueAccessor.this.cloudlet, result, null, extra);
 					KeyValueAccessor.this.callback.deleteSucceeded(
 							KeyValueAccessor.this.cloudletState, arguments);
 
@@ -267,7 +268,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, "", error); //$NON-NLS-1$
+							KeyValueAccessor.this.cloudlet, "", error, extra); //$NON-NLS-1$
 					KeyValueAccessor.this.callback.deleteFailed(
 							KeyValueAccessor.this.cloudletState, arguments);
 				}
