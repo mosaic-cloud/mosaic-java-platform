@@ -35,9 +35,11 @@ public class AmqpInboundMessage implements IAmqpMessage {
 	 *            the message body
 	 * @param durable
 	 *            <code>true</code> if delivery mode should be 2
+	 * @param contentType
+	 *            the type of the content
 	 */
 	public AmqpInboundMessage(String consumer, long delivery, String exchange,
-			String routingKey, byte[] data, boolean durable) {
+			String routingKey, byte[] data, boolean durable, String contentType) {
 		super();
 		this.consumer = consumer;
 		this.delivery = delivery;
@@ -46,7 +48,7 @@ public class AmqpInboundMessage implements IAmqpMessage {
 		this.identifier = "";
 		this.correlation = "";
 		this.callback = "";
-		this.contentType = "";
+		this.contentType = contentType;
 		this.contentEncoding = "";
 		this.data = data;
 		this.durable = durable;

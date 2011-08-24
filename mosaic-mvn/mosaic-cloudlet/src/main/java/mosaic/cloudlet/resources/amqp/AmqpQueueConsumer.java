@@ -256,16 +256,14 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 		@Override
 		public void handleDelivery(AmqpInboundMessage message) {
-			MosaicLogger.getLogger().trace(
-					"AmqpQueueConsumer: received delivered message.");
-			D data = AmqpQueueConsumer.this.deserializeMessage(message
-					.getData());
-			AmqpQueueConsumeMessage<D> mssg = new AmqpQueueConsumeMessage<D>(
-					AmqpQueueConsumer.this, message, data);
-			AmqpQueueConsumeCallbackArguments<S, D> arguments = new AmqpQueueConsumeCallbackArguments<S, D>(
-					AmqpQueueConsumer.this.cloudlet, mssg);
-			AmqpQueueConsumer.this.callback.consume(
-					AmqpQueueConsumer.this.cloudletState, arguments);
+				D data = AmqpQueueConsumer.this.deserializeMessage(
+						message.getData(), message.getContentType());
+				AmqpQueueConsumeMessage<D> mssg = new AmqpQueueConsumeMessage<D>(
+						AmqpQueueConsumer.this, message, data);
+				AmqpQueueConsumeCallbackArguments<S, D> arguments = new AmqpQueueConsumeCallbackArguments<S, D>(
+						AmqpQueueConsumer.this.cloudlet, mssg);
+				AmqpQueueConsumer.this.callback.consume(
+						AmqpQueueConsumer.this.cloudletState, arguments);
 		}
 
 		@Override

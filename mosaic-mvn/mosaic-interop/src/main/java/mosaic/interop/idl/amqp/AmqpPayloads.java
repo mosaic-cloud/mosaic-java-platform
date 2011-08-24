@@ -3782,6 +3782,10 @@ public final class AmqpPayloads {
     // required string routing_key = 7;
     boolean hasRoutingKey();
     String getRoutingKey();
+    
+    // required string content_type = 8;
+    boolean hasContentType();
+    String getContentType();
   }
   public static final class PublishRequest extends
       com.google.protobuf.GeneratedMessage
@@ -3929,6 +3933,38 @@ public final class AmqpPayloads {
       }
     }
     
+    // required string content_type = 8;
+    public static final int CONTENT_TYPE_FIELD_NUMBER = 8;
+    private java.lang.Object contentType_;
+    public boolean hasContentType() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    public String getContentType() {
+      java.lang.Object ref = contentType_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          contentType_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getContentTypeBytes() {
+      java.lang.Object ref = contentType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        contentType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
     private void initFields() {
       token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       data_ = com.google.protobuf.ByteString.EMPTY;
@@ -3937,6 +3973,7 @@ public final class AmqpPayloads {
       immediate_ = true;
       mandatory_ = true;
       routingKey_ = "";
+      contentType_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3956,6 +3993,10 @@ public final class AmqpPayloads {
         return false;
       }
       if (!hasRoutingKey()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasContentType()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -3990,6 +4031,9 @@ public final class AmqpPayloads {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeBytes(7, getRoutingKeyBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeBytes(8, getContentTypeBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -4027,6 +4071,10 @@ public final class AmqpPayloads {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(7, getRoutingKeyBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(8, getContentTypeBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4171,6 +4219,8 @@ public final class AmqpPayloads {
         bitField0_ = (bitField0_ & ~0x00000020);
         routingKey_ = "";
         bitField0_ = (bitField0_ & ~0x00000040);
+        contentType_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
       
@@ -4241,6 +4291,10 @@ public final class AmqpPayloads {
           to_bitField0_ |= 0x00000040;
         }
         result.routingKey_ = routingKey_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.contentType_ = contentType_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4278,6 +4332,9 @@ public final class AmqpPayloads {
         if (other.hasRoutingKey()) {
           setRoutingKey(other.getRoutingKey());
         }
+        if (other.hasContentType()) {
+          setContentType(other.getContentType());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -4296,6 +4353,10 @@ public final class AmqpPayloads {
           return false;
         }
         if (!hasRoutingKey()) {
+          
+          return false;
+        }
+        if (!hasContentType()) {
           
           return false;
         }
@@ -4366,6 +4427,11 @@ public final class AmqpPayloads {
             case 58: {
               bitField0_ |= 0x00000040;
               routingKey_ = input.readBytes();
+              break;
+            }
+            case 66: {
+              bitField0_ |= 0x00000080;
+              contentType_ = input.readBytes();
               break;
             }
           }
@@ -4620,6 +4686,42 @@ public final class AmqpPayloads {
       void setRoutingKey(com.google.protobuf.ByteString value) {
         bitField0_ |= 0x00000040;
         routingKey_ = value;
+        onChanged();
+      }
+      
+      // required string content_type = 8;
+      private java.lang.Object contentType_ = "";
+      public boolean hasContentType() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      public String getContentType() {
+        java.lang.Object ref = contentType_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          contentType_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setContentType(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        contentType_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearContentType() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        contentType_ = getDefaultInstance().getContentType();
+        onChanged();
+        return this;
+      }
+      void setContentType(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000080;
+        contentType_ = value;
         onChanged();
       }
       
@@ -7520,6 +7622,10 @@ public final class AmqpPayloads {
     // required bytes data = 6;
     boolean hasData();
     com.google.protobuf.ByteString getData();
+    
+    // required string content_type = 7;
+    boolean hasContentType();
+    String getContentType();
   }
   public static final class DeliveryMessage extends
       com.google.protobuf.GeneratedMessage
@@ -7676,6 +7782,38 @@ public final class AmqpPayloads {
       return data_;
     }
     
+    // required string content_type = 7;
+    public static final int CONTENT_TYPE_FIELD_NUMBER = 7;
+    private java.lang.Object contentType_;
+    public boolean hasContentType() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    public String getContentType() {
+      java.lang.Object ref = contentType_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          contentType_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getContentTypeBytes() {
+      java.lang.Object ref = contentType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        contentType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
     private void initFields() {
       consumerTag_ = "";
       deliveryTag_ = 0L;
@@ -7683,6 +7821,7 @@ public final class AmqpPayloads {
       routingKey_ = "";
       deliveryMode_ = 0;
       data_ = com.google.protobuf.ByteString.EMPTY;
+      contentType_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -7713,6 +7852,10 @@ public final class AmqpPayloads {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasContentType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -7737,6 +7880,9 @@ public final class AmqpPayloads {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBytes(6, data_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBytes(7, getContentTypeBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -7770,6 +7916,10 @@ public final class AmqpPayloads {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, data_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getContentTypeBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7907,6 +8057,8 @@ public final class AmqpPayloads {
         bitField0_ = (bitField0_ & ~0x00000010);
         data_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000020);
+        contentType_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
       
@@ -7969,6 +8121,10 @@ public final class AmqpPayloads {
           to_bitField0_ |= 0x00000020;
         }
         result.data_ = data_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.contentType_ = contentType_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -8003,6 +8159,9 @@ public final class AmqpPayloads {
         if (other.hasData()) {
           setData(other.getData());
         }
+        if (other.hasContentType()) {
+          setContentType(other.getContentType());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -8029,6 +8188,10 @@ public final class AmqpPayloads {
           return false;
         }
         if (!hasData()) {
+          
+          return false;
+        }
+        if (!hasContentType()) {
           
           return false;
         }
@@ -8086,6 +8249,11 @@ public final class AmqpPayloads {
             case 50: {
               bitField0_ |= 0x00000020;
               data_ = input.readBytes();
+              break;
+            }
+            case 58: {
+              bitField0_ |= 0x00000040;
+              contentType_ = input.readBytes();
               break;
             }
           }
@@ -8266,6 +8434,42 @@ public final class AmqpPayloads {
         data_ = getDefaultInstance().getData();
         onChanged();
         return this;
+      }
+      
+      // required string content_type = 7;
+      private java.lang.Object contentType_ = "";
+      public boolean hasContentType() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      public String getContentType() {
+        java.lang.Object ref = contentType_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          contentType_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setContentType(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        contentType_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearContentType() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        contentType_ = getDefaultInstance().getContentType();
+        onChanged();
+        return this;
+      }
+      void setContentType(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000040;
+        contentType_ = value;
+        onChanged();
       }
       
       // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.DeliveryMessage)
@@ -8866,29 +9070,30 @@ public final class AmqpPayloads {
       "\004 \001(\010:\004true\022\026\n\010auto_ack\030\005 \001(\010:\004true\022\r\n\005e" +
       "xtra\030\006 \002(\014\"]\n\014ConsumeReply\0227\n\005token\030\001 \002(" +
       "\0132(.mosaic_cloud.idl.common.CompletionTo" +
-      "ken\022\024\n\014consumer_tag\030\002 \002(\t\"\310\001\n\016PublishReq" +
+      "ken\022\024\n\014consumer_tag\030\002 \002(\t\"\336\001\n\016PublishReq" +
       "uest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.c" +
       "ommon.CompletionToken\022\014\n\004data\030\002 \002(\014\022\026\n\007d" +
       "urable\030\003 \001(\010:\005false\022\020\n\010exchange\030\004 \002(\t\022\027\n" +
       "\timmediate\030\005 \001(\010:\004true\022\027\n\tmandatory\030\006 \001(" +
-      "\010:\004true\022\023\n\013routing_key\030\007 \002(\t\"l\n\nGetReque" +
-      "st\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.com",
-      "mon.CompletionToken\022\r\n\005queue\030\002 \002(\t\022\026\n\010au" +
-      "to_ack\030\003 \001(\010:\004true\"b\n\003Ack\0227\n\005token\030\001 \002(\013" +
-      "2(.mosaic_cloud.idl.common.CompletionTok" +
-      "en\022\020\n\010delivery\030\002 \002(\003\022\020\n\010multiple\030\003 \002(\010\"Z" +
-      "\n\rCancelRequest\0227\n\005token\030\001 \002(\0132(.mosaic_" +
-      "cloud.idl.common.CompletionToken\022\020\n\010cons" +
-      "umer\030\002 \002(\t\"(\n\020ConsumeOkMessage\022\024\n\014consum" +
-      "er_tag\030\001 \002(\t\"\'\n\017CancelOkMessage\022\024\n\014consu" +
-      "mer_tag\030\001 \002(\t\"+\n\023ServerCancelRequest\022\024\n\014" +
-      "consumer_tag\030\001 \002(\t\"\211\001\n\017DeliveryMessage\022\024",
-      "\n\014consumer_tag\030\001 \002(\t\022\024\n\014delivery_tag\030\002 \002" +
-      "(\003\022\020\n\010exchange\030\003 \002(\t\022\023\n\013routing_key\030\004 \002(" +
-      "\t\022\025\n\rdelivery_mode\030\005 \002(\005\022\014\n\004data\030\006 \002(\014\"8" +
-      "\n\017ShutdownMessage\022\024\n\014consumer_tag\030\001 \002(\t\022" +
-      "\017\n\007message\030\002 \002(\tB)\n\027mosaic.interop.idl.a" +
-      "mqpB\014AmqpPayloadsH\001"
+      "\010:\004true\022\023\n\013routing_key\030\007 \002(\t\022\024\n\014content_" +
+      "type\030\010 \002(\t\"l\n\nGetRequest\0227\n\005token\030\001 \002(\0132",
+      "(.mosaic_cloud.idl.common.CompletionToke" +
+      "n\022\r\n\005queue\030\002 \002(\t\022\026\n\010auto_ack\030\003 \001(\010:\004true" +
+      "\"b\n\003Ack\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.id" +
+      "l.common.CompletionToken\022\020\n\010delivery\030\002 \002" +
+      "(\003\022\020\n\010multiple\030\003 \002(\010\"Z\n\rCancelRequest\0227\n" +
+      "\005token\030\001 \002(\0132(.mosaic_cloud.idl.common.C" +
+      "ompletionToken\022\020\n\010consumer\030\002 \002(\t\"(\n\020Cons" +
+      "umeOkMessage\022\024\n\014consumer_tag\030\001 \002(\t\"\'\n\017Ca" +
+      "ncelOkMessage\022\024\n\014consumer_tag\030\001 \002(\t\"+\n\023S" +
+      "erverCancelRequest\022\024\n\014consumer_tag\030\001 \002(\t",
+      "\"\237\001\n\017DeliveryMessage\022\024\n\014consumer_tag\030\001 \002" +
+      "(\t\022\024\n\014delivery_tag\030\002 \002(\003\022\020\n\010exchange\030\003 \002" +
+      "(\t\022\023\n\013routing_key\030\004 \002(\t\022\025\n\rdelivery_mode" +
+      "\030\005 \002(\005\022\014\n\004data\030\006 \002(\014\022\024\n\014content_type\030\007 \002" +
+      "(\t\"8\n\017ShutdownMessage\022\024\n\014consumer_tag\030\001 " +
+      "\002(\t\022\017\n\007message\030\002 \002(\tB)\n\027mosaic.interop.i" +
+      "dl.amqpB\014AmqpPayloadsH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -8940,7 +9145,7 @@ public final class AmqpPayloads {
           internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor,
-              new java.lang.String[] { "Token", "Data", "Durable", "Exchange", "Immediate", "Mandatory", "RoutingKey", },
+              new java.lang.String[] { "Token", "Data", "Durable", "Exchange", "Immediate", "Mandatory", "RoutingKey", "ContentType", },
               mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest.class,
               mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest.Builder.class);
           internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor =
@@ -8996,7 +9201,7 @@ public final class AmqpPayloads {
           internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor,
-              new java.lang.String[] { "ConsumerTag", "DeliveryTag", "Exchange", "RoutingKey", "DeliveryMode", "Data", },
+              new java.lang.String[] { "ConsumerTag", "DeliveryTag", "Exchange", "RoutingKey", "DeliveryMode", "Data", "ContentType", },
               mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage.class,
               mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage.Builder.class);
           internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor =

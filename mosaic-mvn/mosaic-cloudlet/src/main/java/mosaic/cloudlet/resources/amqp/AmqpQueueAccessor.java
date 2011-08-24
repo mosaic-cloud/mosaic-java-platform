@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+
 import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.ContainerException;
@@ -292,13 +294,19 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	protected abstract void finishRegister(
 			IAmqpQueueAccessorCallback<S> callback);
 
-	protected D deserializeMessage(byte[] data) {
+	protected D deserializeMessage(byte[] data, String contentType) {
 		D ob = null;
 		try {
-			ob = this.dataClass.cast(SerDesUtils.toObject(data));
+			if (contentType != null
+					&& contentType.equalsIgnoreCase("application/json"))
+				ob = this.dataClass.cast(SerDesUtils.toJSONObject(data));
+			else
+				ob = this.dataClass.cast(SerDesUtils.toObject(data));
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 		} catch (ClassNotFoundException e) {
+			ExceptionTracer.traceDeferred(e);
+		} catch (JSONException e) {
 			ExceptionTracer.traceDeferred(e);
 		}
 		return ob;

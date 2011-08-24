@@ -87,7 +87,7 @@ public class AmqpStub extends AbstractDriverStub {
 				AmqpDriver driver = AmqpDriver.create(config);
 				stub = new AmqpStub(config, transmitter, driver, channel);
 				incDriverReference(stub);
-				channel.accept(AmqpSession.DRIVER, stub); 
+				channel.accept(AmqpSession.DRIVER, stub);
 				MosaicLogger.getLogger().trace("AmqpStub: created new stub."); //$NON-NLS-1$
 			} else {
 				MosaicLogger.getLogger().trace("AmqpStub: use existing stub."); //$NON-NLS-1$
@@ -201,28 +201,29 @@ public class AmqpStub extends AbstractDriverStub {
 			bindHandler.setDetails(AmqpOperations.BIND_QUEUE, resultBool);
 			break;
 		case PUBLISH_REQUEST:
-			AmqpPayloads.PublishRequest publish = (PublishRequest) message.payload;
-			token = publish.getToken();
-			dataBytes = publish.getData().toByteArray();
-			durable = publish.getDurable();
-			exchange = publish.getExchange();
-			boolean immediate = publish.getImmediate();
-			boolean mandatory = publish.getMandatory();
-			routingKey = publish.getRoutingKey();
-			AmqpOutboundMessage mssg = new AmqpOutboundMessage(exchange,
-					routingKey, dataBytes, mandatory, immediate, durable);
+				AmqpPayloads.PublishRequest publish = (PublishRequest) message.payload;
+				token = publish.getToken();
+				dataBytes = publish.getData().toByteArray();
+				durable = publish.getDurable();
+				exchange = publish.getExchange();
+				boolean immediate = publish.getImmediate();
+				boolean mandatory = publish.getMandatory();
+				routingKey = publish.getRoutingKey();
+				AmqpOutboundMessage mssg = new AmqpOutboundMessage(exchange,
+						routingKey, dataBytes, mandatory, immediate, durable,
+						publish.getContentType());
 
-			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for PUBLISH " //$NON-NLS-1$
-							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-							+ " client id: " + token.getClientId()); //$NON-NLS-1$
+				MosaicLogger.getLogger().trace(
+						"AmqpStub - Received request for PUBLISH " //$NON-NLS-1$
+								+ " - request id: " + token.getMessageId() //$NON-NLS-1$
+								+ " client id: " + token.getClientId()); //$NON-NLS-1$
 
-			// execute operation
-			DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
-					token, session);
+				// execute operation
+				DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
+						token, session);
 
-			resultBool = driver.basicPublish(mssg, pubHandler);
-			pubHandler.setDetails(AmqpOperations.PUBLISH, resultBool);
+				resultBool = driver.basicPublish(mssg, pubHandler);
+				pubHandler.setDetails(AmqpOperations.PUBLISH, resultBool);
 			break;
 		case CONSUME_REQUEST:
 			AmqpPayloads.ConsumeRequest cop = (ConsumeRequest) message.payload;
@@ -481,5 +482,4 @@ public class AmqpStub extends AbstractDriverStub {
 		}
 	}
 
-	
 }

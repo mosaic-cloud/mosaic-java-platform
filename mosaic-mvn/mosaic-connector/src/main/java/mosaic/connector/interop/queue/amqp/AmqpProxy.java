@@ -154,6 +154,7 @@ public class AmqpProxy extends ConnectorProxy {
 		requestBuilder.setImmediate(message.isImmediate());
 		requestBuilder.setMandatory(message.isMandatory());
 		requestBuilder.setRoutingKey(message.getRoutingKey());
+		requestBuilder.setContentType(message.getContentType());
 
 		Message mssg = new Message(AmqpMessage.PUBLISH_REQUEST,
 				requestBuilder.build());

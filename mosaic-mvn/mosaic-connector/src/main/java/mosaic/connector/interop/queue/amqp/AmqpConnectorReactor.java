@@ -189,7 +189,8 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor {
 			int deliveryMode = delivery.getDeliveryMode();
 			byte[] data = delivery.getData().toByteArray();
 			AmqpInboundMessage mssg = new AmqpInboundMessage(consumerId,
-					deliveryTag, exchange, routingKey, data, deliveryMode == 2);
+					deliveryTag, exchange, routingKey, data, deliveryMode == 2,
+					delivery.getContentType());
 			callback = this.callbacksMap.getRequestHandlers(consumerId);
 			callback.handleDelivery(mssg);
 			break;

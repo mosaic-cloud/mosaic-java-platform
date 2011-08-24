@@ -54,7 +54,7 @@ public class PublisherCloudlet {
 		public void destroySucceeded(PublisherCloudletState state,
 				CallbackArguments<PublisherCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
-			"Publisher cloudlet was destroyed successfully.");
+					"Publisher cloudlet was destroyed successfully.");
 		}
 	}
 
@@ -67,7 +67,7 @@ public class PublisherCloudlet {
 				CallbackArguments<PublisherCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
 					"PublisherCloudlet publisher registered successfully.");
-			state.publisher.publish("TEST MESSAGE!!!!", null);
+			state.publisher.publish("TEST MESSAGE!!!!", null, "text/plain");
 		}
 
 		@Override

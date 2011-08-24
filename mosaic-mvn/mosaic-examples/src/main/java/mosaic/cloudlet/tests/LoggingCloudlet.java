@@ -199,7 +199,7 @@ public class LoggingCloudlet {
 					}
 				}
 				AuthenticationToken aToken = new AuthenticationToken(token);
-				state.publisher.publish(aToken, null);
+				state.publisher.publish(aToken, null, null);
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceHandled(e);
 			} catch (ExecutionException e) {

@@ -150,7 +150,7 @@ public class UserCloudlet {
 			String pass = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.password", String.class, "");
 			LoggingData data = new LoggingData(user, pass);
-			state.publisher.publish(data, null);
+			state.publisher.publish(data, null, null);
 		}
 
 		@Override

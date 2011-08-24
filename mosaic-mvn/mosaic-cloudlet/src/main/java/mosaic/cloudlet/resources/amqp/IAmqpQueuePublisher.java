@@ -18,6 +18,9 @@ public interface IAmqpQueuePublisher<S, D> extends IAmqpQueueAccessor<S> {
 	 *            the data to publish
 	 * @param token
 	 *            extra info specific to the published data
+	 * @param contentType
+	 *            the RFC-2046 MIME type for the Message content (such as
+	 *            "text/plain")
 	 */
-	void publish(D data, Object token);
+	void publish(D data, Object token, String contentType);
 }

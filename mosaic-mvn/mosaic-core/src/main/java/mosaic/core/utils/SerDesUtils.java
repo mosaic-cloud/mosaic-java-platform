@@ -3,8 +3,13 @@ package mosaic.core.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * Defines utility methods for serializing and deserializing messages.
@@ -129,5 +134,11 @@ public class SerDesUtils {
 		object = stream.readObject();
 		stream.close();
 		return object;
+	}
+
+	public static JSONObject toJSONObject(byte[] bytes) throws JSONException {
+		ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+		JSONTokener tokener = new JSONTokener(new InputStreamReader(stream));
+		return new JSONObject(tokener);
 	}
 }

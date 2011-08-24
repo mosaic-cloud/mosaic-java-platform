@@ -126,13 +126,13 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	}
 
 	@Override
-	public void publish(D data, final Object token) {
+	public void publish(D data, final Object token, String contentType) {
 		synchronized (this) {
 			try {
 				byte[] sData = SerDesUtils.toBytes(data);
 				final AmqpOutboundMessage message = new AmqpOutboundMessage(
 						this.exchange, this.routingKey, sData, true, true,
-						false);
+						false, contentType);
 
 				IOperationCompletionHandler<Boolean> cHandler = new PublishCompletionHandler(
 						message, token);

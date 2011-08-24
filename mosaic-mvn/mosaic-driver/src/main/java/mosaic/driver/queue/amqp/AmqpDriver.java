@@ -497,7 +497,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 					envelope.getDeliveryTag(), envelope.getExchange(),
 					envelope.getRoutingKey(), data,
 					(properties.getDeliveryMode() != null && properties
-							.getDeliveryMode() == 2) ? true : false);
+							.getDeliveryMode() == 2) ? true : false,
+					properties.getContentType());
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
 			if (consumeCallback != null) {

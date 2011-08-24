@@ -33,11 +33,15 @@ public class AmqpOutboundMessage implements IAmqpMessage {
 	 *            <code>true</code> if we are requesting an immediate publish
 	 * @param durable
 	 *            <code>true</code> if delivery mode should be 2
+	 * @param contentType
+	 *            the RFC-2046 MIME type for the Message content (such as
+	 *            "text/plain")
 	 */
 	public AmqpOutboundMessage(String exchange, String routingKey, byte[] data,
-			boolean mandatory, boolean immediate, boolean durable) {
+			boolean mandatory, boolean immediate, boolean durable,
+			String contentType) {
 		this(exchange, routingKey, data, mandatory, immediate, durable, null,
-				null, null, null, null);
+				null, contentType, null, null);
 	}
 
 	/**
@@ -59,7 +63,7 @@ public class AmqpOutboundMessage implements IAmqpMessage {
 	 *            the address of the Node to send replies to
 	 * @param contentEncoding
 	 * @param contentType
-	 *            tThe RFC-2046 MIME type for the Message content (such as
+	 *            the RFC-2046 MIME type for the Message content (such as
 	 *            "text/plain")
 	 * @param correlation
 	 *            this is a client-specific id that may be used to mark or

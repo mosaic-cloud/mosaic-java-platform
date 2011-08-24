@@ -186,6 +186,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		deliveryPayload.setRoutingKey(message.getRoutingKey());
 		deliveryPayload.setDeliveryMode(message.isDurable() ? 2 : 1);
 		deliveryPayload.setData(ByteString.copyFrom(message.getData()));
+		deliveryPayload.setContentType(message.getContentType());
 		Message mssg = new Message(AmqpMessage.DELIVERY,
 				deliveryPayload.build());
 

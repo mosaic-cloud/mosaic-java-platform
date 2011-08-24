@@ -108,6 +108,7 @@ public class ConsumerCloudlet {
 		public void consume(
 				ConsumerCloudletState state,
 				AmqpQueueConsumeCallbackArguments<ConsumerCloudletState, String> arguments) {
+			
 			AmqpQueueConsumeMessage<String> message = arguments.getMessage();
 			String data = message.getData();
 			MosaicLogger.getLogger().info(
