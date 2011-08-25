@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.omg.CORBA._PolicyStub;
 
 import eu.mosaic_cloud.jetty.connectors.httpg.MessageHandler.MessageFormatException;
 

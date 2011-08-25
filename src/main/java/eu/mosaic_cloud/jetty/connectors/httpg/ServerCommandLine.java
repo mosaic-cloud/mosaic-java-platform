@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.UUID;
-
 import org.eclipse.jetty.servlet.DefaultServlet;
 
 import org.apache.commons.cli.CommandLine;
@@ -16,9 +14,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.eclipse.jetty.deploy.DeploymentManager;
-import org.eclipse.jetty.deploy.DeploymentManager.AppEntry;
-import org.eclipse.jetty.deploy.providers.WebAppProvider;
+
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
