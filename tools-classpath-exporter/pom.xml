@@ -32,17 +32,5 @@
 			<version>6.1.26</version>
 		</dependency>
 	</dependencies>
-		<distributionManagement>
 
-		<repository>
-			<id>developers.mosaic-cloud.eu</id>
-			<name>developers.mosaic-cloud.eu-releases</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
-		</repository>
-		<snapshotRepository>
-			<id>developers.mosaic-cloud.eu</id>
-			<name>developers.mosaic-cloud.eu-snapshots</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
