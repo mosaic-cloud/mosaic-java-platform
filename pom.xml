@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-		xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>tools-parent</artifactId>
@@ -44,5 +42,37 @@
 	</build>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<license.licenseName>apache_v2</license.licenseName>
 	</properties>
+	<name>mosaic-java-tools</name>
+	<url>http://www.mosaic-cloud.eu/</url>
+	<scm>
+		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/ciprian/mosaic-java-tools/</connection>
+		<developerConnection>scm:hg:file://${basedir}</developerConnection>
+	</scm>
+	<organization>
+		<name>mOSAIC Project</name>
+		<url>http://www.mosaic-cloud.eu</url>
+	</organization>
+	<distributionManagement>
+
+		<repository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-releases</name>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</repository>
+		<snapshotRepository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-snapshots</name>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</snapshotRepository>
+	</distributionManagement>
+	<issueManagement>
+		<system>jira</system>
+		<url>http://developers.mosaic-cloud.eu/jira/</url>
+	</issueManagement>
+	<ciManagement>
+		<system>bamboo</system>
+		<url>http://developers.mosaic-cloud.eu/bamboo</url>
+	</ciManagement>
 </project>
