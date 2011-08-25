@@ -1,13 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>jetty-httpg-connector</artifactId>
 	<version>0.1.4-SNAPSHOT</version>
 	<name>jetty-httpg-connector</name>
 	<url>http://www.mosaic-cloud.eu/</url>
 	<packaging>jar</packaging>
-	
+	<inceptionYear>2010</inceptionYear>
+
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -61,7 +65,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -107,32 +111,59 @@
 					<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<executions>
+					<execution>
+						<id>download-licenses</id>
+						<goals>
+							<goal>download-licenses</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
+
+
 	</build>
-	
+
 	<organization>
-		<name>Research Institute eAustria</name>
-		<url>http://www.ieat.ro</url>
+		<name>mOSAIC Project</name>
+		<url>http://www.mosaic-cloud.eu</url>
 	</organization>
-	
+
 	<distributionManagement>
 		<site>
 			<id>mojo.website</id>
 			<name>mOSAIC Jetty HTTPG Connector</name>
 			<url>file:///srv/sites/mosaic-jetty-httpg-connector</url>
 		</site>
+		<repository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-releases</name>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</repository>
+		<snapshotRepository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-snapshots</name>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<scm>
 		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector</connection>
 		<developerConnection>scm:hg:file://${basedir}</developerConnection>
 	</scm>
-	
+
 	<issueManagement>
-		<system>trac</system>
-		<url>http://mosaic.ieat.ro/</url>
+		<system>jira</system>
+		<url>http://developers.mosaic-cloud.eu/jira/</url>
 	</issueManagement>
-	
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -152,9 +183,15 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<license.licenseName>apache_v2</license.licenseName>
 	</properties>
-	
+
+	<ciManagement>
+		<system>bamboo</system>
+		<url>http://developers.mosaic-cloud.eu/bamboo</url>
+	</ciManagement>
+	<description>Mosaic Jetty2httpg connector</description>
 </project>
