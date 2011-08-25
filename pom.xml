@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-		xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>interoperability-parent</artifactId>
@@ -15,6 +13,18 @@
 		<module>interoperability-zeromq</module>
 		<module>zeromq</module>
 	</modules>
+	<repositories>
+		<repository>
+			<id>mosaic</id>
+			<name>Mosaic Maven Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -49,6 +59,20 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+
+		<repository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-releases</name>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</repository>
+		<snapshotRepository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-snapshots</name>
+			<uniqueVersion>false</uniqueVersion>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
