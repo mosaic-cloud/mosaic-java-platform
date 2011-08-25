@@ -3,7 +3,7 @@
 	
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>jetty-httpg-connector</artifactId>
-	<version>0.1.3</version>
+	<version>0.1.4-SNAPSHOT</version>
 	<name>jetty-httpg-connector</name>
 	<url>http://www.mosaic-cloud.eu/</url>
 	<packaging>jar</packaging>
