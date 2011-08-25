@@ -82,6 +82,7 @@
 		<snapshotRepository>
 			<id>developers.mosaic-cloud.eu</id>
 			<name>developers.mosaic-cloud.eu-snapshots</name>
+			<uniqueVersion>false</uniqueVersion>
 			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
 		</snapshotRepository>
 	</distributionManagement>
