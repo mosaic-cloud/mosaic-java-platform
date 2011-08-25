@@ -23,6 +23,16 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>mosaic</id>
+			<name>Mosaic Maven Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
 
 	<modules>
@@ -73,7 +83,7 @@
 		</plugins>
 	</reporting>
 
-	<inceptionYear>March 2011</inceptionYear>
+	<inceptionYear>2011</inceptionYear>
 
 	<organization>
 		<name>eAustria Research Institute</name>
@@ -88,5 +98,20 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+		<distributionManagement>
+
+		<repository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-releases</name>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</repository>
+		<snapshotRepository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu-snapshots</name>
+			<uniqueVersion>false</uniqueVersion>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
