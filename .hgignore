@@ -5,3 +5,10 @@ syntax: glob
 *.log
 *.eap
 
+
+syntax: regexp
+^target$
+syntax: regexp
+^\.settings$
+syntax: regexp
+^\.classpath$
