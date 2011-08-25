@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.IOperation;
 import mosaic.core.ops.IOperationFactory;
@@ -30,25 +31,36 @@ public class RiakPBOperationFactory implements IOperationFactory {
 	private RiakClient riakcl = null;
 	private String bucket;
 
-	private RiakPBOperationFactory(RiakClient client, String bucket) {
+	private RiakPBOperationFactory(String riakHost, int port, String bucket)
+			throws IOException {
 		super();
-		this.riakcl = client;
+		this.riakcl = new RiakClient(riakHost, port);
 		this.bucket = bucket;
 	}
 
 	/**
 	 * Creates a new factory.
 	 * 
-	 * @param client
-	 *            the Riak client used for communicating with the key-value
-	 *            system
+	 * @param riakHost
+	 *            the hostname of the Riak server
+	 * @param port
+	 *            the port for the Riak server
 	 * @param bucket
-	 *            the bucket associted with the connection
+	 *            the bucket associated with the connection
 	 * @return the factory
 	 */
-	public final static RiakPBOperationFactory getFactory(RiakClient client,
-			String bucket) {
-		return new RiakPBOperationFactory(client, bucket);
+	public final static RiakPBOperationFactory getFactory(String riakHost,
+			int port, String bucket) {
+		RiakPBOperationFactory factory = null;
+		try {
+			factory = new RiakPBOperationFactory(riakHost, port, bucket);
+			MosaicLogger.getLogger().trace(
+					"Created Riak PB factory for " + riakHost + ":" + port
+							+ " bucket " + bucket);
+		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+		}
+		return factory;
 	}
 
 	@Override
@@ -111,10 +123,13 @@ public class RiakPBOperationFactory implements IOperationFactory {
 							public Object call() throws Exception {
 								RiakObject[] riakobj = RiakPBOperationFactory.this.riakcl
 										.fetch(bucket, key);
-								if (riakobj.length == 1)
-									return SerDesUtils.toObject(riakobj[0]
-											.getValue().toByteArray());
-								else
+								if (riakobj.length == 1) {
+									return riakobj[0].getValue();
+									// return
+									// SerDesUtils.toObject(riakobj[0]
+									// .getValue().toStringUtf8()
+									// .getBytes());
+								} else
 									return null;
 							}
 
@@ -183,5 +198,10 @@ public class RiakPBOperationFactory implements IOperationFactory {
 			ExceptionTracer.traceDeferred(e);
 		}
 		return operation;
+	}
+
+	@Override
+	public void destroy() {
+
 	}
 }

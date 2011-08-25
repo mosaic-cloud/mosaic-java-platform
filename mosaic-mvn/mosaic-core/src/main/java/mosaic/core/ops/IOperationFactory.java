@@ -20,4 +20,9 @@ public interface IOperationFactory {
 	 */
 	IOperation<?> getOperation(IOperationType type, Object... parameters);
 
+	/**
+	 * Destroys a facory..
+	 */
+	void destroy();
+
 }

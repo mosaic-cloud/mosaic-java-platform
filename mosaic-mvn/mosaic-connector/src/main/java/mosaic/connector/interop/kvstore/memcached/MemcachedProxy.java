@@ -15,6 +15,7 @@ import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.SerDesUtils;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
 import mosaic.interop.idl.kvstore.MemcachedPayloads;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import mosaic.interop.kvstore.KeyValueMessage;
 import mosaic.interop.kvstore.MemcachedMessage;
 import mosaic.interop.kvstore.MemcachedSession;
@@ -43,6 +44,7 @@ public class MemcachedProxy extends KeyValueProxy {
 	 *            the identifier of this connector's proxy
 	 * @param reactor
 	 *            the response reactor
+	 * 
 	 * @param channel
 	 *            the channel on which to communicate with the driver
 	 * @throws Throwable
@@ -62,21 +64,34 @@ public class MemcachedProxy extends KeyValueProxy {
 	 *            the identifier of this connector
 	 * @param driverIdentifier
 	 *            the identifier of the driver to which request will be sent
+	 * @param bucket
+	 *            the name of the bucket where the connector will operate
 	 * @param channel
 	 *            the channel on which to communicate with the driver
 	 * @return the proxy
 	 * @throws Throwable
 	 */
 	public static MemcachedProxy create(IConfiguration config,
-			String connectorIdentifier, String driverIdentifier,
+			String connectorIdentifier, String driverIdentifier, String bucket,
 			ZeroMqChannel channel) throws Throwable {
 		String connectorId = connectorIdentifier;
 		MemcachedConnectorReactor reactor = new MemcachedConnectorReactor(
 				config);
 		MemcachedProxy proxy = new MemcachedProxy(config, connectorId, reactor,
 				channel);
+
+		// build token
+		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+		tokenBuilder.setMessageId(UUID.randomUUID().toString());
+		tokenBuilder.setClientId(proxy.getConnectorId());
+
+		// build request
+		InitRequest.Builder requestBuilder = InitRequest.newBuilder();
+		requestBuilder.setToken(tokenBuilder.build());
+		requestBuilder.setBucket(bucket);
+
 		proxy.connect(driverIdentifier, MemcachedSession.CONNECTOR,
-				new Message(KeyValueMessage.ACCESS, null));
+				new Message(KeyValueMessage.ACCESS, requestBuilder.build()));
 		return proxy;
 	}
 

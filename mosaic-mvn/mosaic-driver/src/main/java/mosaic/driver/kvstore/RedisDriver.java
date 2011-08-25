@@ -7,7 +7,6 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.driver.ConfigProperties;
-import redis.clients.jedis.Jedis;
 
 /**
  * Driver class for the Redis key-value database management systems.
@@ -16,23 +15,48 @@ import redis.clients.jedis.Jedis;
  * 
  */
 public class RedisDriver extends BaseKeyValueDriver {
-
-	private Jedis jedisClient;
+	private String host;
+	private int port;
+	private String username;
+	private String password;
 
 	/**
 	 * Creates a new Redis driver.
 	 * 
-	 * @param client
-	 *            the Redis client object
 	 * @param noThreads
 	 *            number of threads to be used for serving requests
-	 * @param opFactory
-	 *            factory for handling key-value stores operations
+	 * @param host
+	 *            the hostname of the Redis server
+	 * @param port
+	 *            the port for the Redis server
 	 */
-	private RedisDriver(Jedis client, int noThreads, IOperationFactory opFactory) {
-		super(noThreads, opFactory);
-		this.jedisClient = client;
-		this.jedisClient.connect();
+	private RedisDriver(int noThreads, String host, int port) {
+		super(noThreads);
+		this.host = host;
+		this.port = port;
+	}
+
+	/**
+	 * Creates a new Redis driver.
+	 * 
+	 * @param noThreads
+	 *            number of threads to be used for serving requests
+	 * @param host
+	 *            the hostname of the Redis server
+	 * @param port
+	 *            the port for the Redis server
+	 * @param user
+	 *            the username for connecting to the server
+	 * @param passwd
+	 *            the password for connecting to the server
+	 */
+	private RedisDriver(int noThreads, String host, int port, String user,
+			String password) {
+		super(noThreads);
+		this.host = host;
+		this.port = port;
+		this.username = user;
+		this.password = password;
 	}
 
 	/**
@@ -67,23 +91,14 @@ public class RedisDriver extends BaseKeyValueDriver {
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		int db = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
-				Integer.class, (-1));
+		// int db = ConfigUtils.resolveParameter(config,
+		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
+		// Integer.class, (-1));
 		String passwd = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.4"), //$NON-NLS-1$
 				String.class, ""); //$NON-NLS-1$
-		Jedis jedis = new Jedis(host, port, 0);
-		if (!passwd.equals("")) { //$NON-NLS-1$
-			jedis.auth(passwd);
-		}
-		if (db > -1) {
-			jedis.select(db);
-			// jedis.flushDB();
-		}
 
-		IOperationFactory opFactory = RedisOperationFactory.getFactory(jedis);
-		RedisDriver wrapper = new RedisDriver(jedis, noThreads, opFactory);
+		RedisDriver wrapper = new RedisDriver(noThreads, host, port, "", passwd);
 		return wrapper;
 	}
 
@@ -94,9 +109,15 @@ public class RedisDriver extends BaseKeyValueDriver {
 	@Override
 	public synchronized void destroy() {
 		super.destroy();
-		// this.jedisClient.bgsave(); //TODO
-		this.jedisClient.disconnect();
 		MosaicLogger.getLogger().trace("RedisDriver destroyed."); //$NON-NLS-1$
+	}
+
+	@Override
+	protected IOperationFactory createOperationFactory(Object... params) {
+		String bucket = params[0].toString();
+		IOperationFactory opFactory = RedisOperationFactory.getFactory(
+				this.host, this.port, this.username, this.password, bucket);
+		return opFactory;
 	}
 
 }

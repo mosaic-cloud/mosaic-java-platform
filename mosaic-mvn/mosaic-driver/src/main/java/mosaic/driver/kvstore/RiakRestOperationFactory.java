@@ -32,23 +32,28 @@ public class RiakRestOperationFactory implements IOperationFactory {
 	private RiakClient riakcl = null;
 	private String bucket;
 
-	private RiakRestOperationFactory(RiakClient client, String bucket) {
+	private RiakRestOperationFactory(String riakHost, int riakPort,
+			String bucket) {
 		super();
-		this.riakcl = client;
+		String address = "http://" + riakHost + ":" + riakPort + "/riak";
+		this.riakcl = new RiakClient(address);
 		this.bucket = bucket;
 	}
 
 	/**
 	 * Creates a new factory.
 	 * 
-	 * @param client
-	 *            the Riak client used for communicating with the key-value
-	 *            system
+	 * @param riakHost
+	 *            the hostname of the Riak server
+	 * @param port
+	 *            the port for the Riak server
+	 * @param bucket
+	 *            the bucket associated with the connection
 	 * @return the factory
 	 */
-	public final static RiakRestOperationFactory getFactory(RiakClient client,
-			String bucket) {
-		return new RiakRestOperationFactory(client, bucket);
+	public final static RiakRestOperationFactory getFactory(String riakHost,
+			int port, String bucket) {
+		return new RiakRestOperationFactory(riakHost, port, bucket);
 	}
 
 	@Override
@@ -103,19 +108,24 @@ public class RiakRestOperationFactory implements IOperationFactory {
 
 							@Override
 							public Object call() throws Exception {
-								FetchResponse res = RiakRestOperationFactory.this.riakcl
-										.fetch(RiakRestOperationFactory.this.bucket,
-												key);
-								if (res.hasObject()) {
-									final RiakObject riakobj = res.getObject();
-									// System.out.println("Driver Get value "+SerDesUtils.toObject(riakobj.getValueAsBytes()));
-									return SerDesUtils.toObject(riakobj
-											.getValueAsBytes());
-								} else
-									// System.out.println("Driver Get value "+SerDesUtils.toObject(riakobj.getValueAsBytes()));
-									return null;
-							}
+								try {
+									FetchResponse res = RiakRestOperationFactory.this.riakcl
+											.fetch(RiakRestOperationFactory.this.bucket,
+													key);
+									if (res.hasObject()) {
+										final RiakObject riakobj = res
+												.getObject();
+										// System.out.println("Driver Get value "+SerDesUtils.toObject(riakobj.getValueAsBytes()));
+										return riakobj.getValue();
+									} else
+										// System.out.println("Driver Get value "+SerDesUtils.toObject(riakobj.getValueAsBytes()));
+										return null;
 
+								} catch (Throwable e) {
+									e.printStackTrace();
+								}
+								return null;
+							}
 						});
 				break;
 			case LIST:
@@ -180,6 +190,11 @@ public class RiakRestOperationFactory implements IOperationFactory {
 			ExceptionTracer.traceDeferred(e);
 		}
 		return operation;
+	}
+
+	@Override
+	public void destroy() {
+
 	}
 
 }

@@ -17,11 +17,11 @@ import mosaic.core.ops.IResult;
  * @author Georgiana Macariu
  * 
  */
-public class AbstractResourceDriver implements IResourceDriver {
+public abstract class AbstractResourceDriver implements IResourceDriver {
 	private List<IResult<?>> pendingResults;
 	private ExecutorService executor;
 	private boolean destroyed = false;
-	
+
 	public static IConfiguration driverConfiguration;
 
 	/**
@@ -117,4 +117,6 @@ public class AbstractResourceDriver implements IResourceDriver {
 	protected synchronized boolean isDestroyed() {
 		return this.destroyed;
 	}
+
+
 }

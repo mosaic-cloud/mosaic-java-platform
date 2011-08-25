@@ -52,6 +52,10 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KeyValueStoreConnector.0"), Integer.class, 1); //$NON-NLS-1$
+		String bucket = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("KeyValueStoreConnector.1"), String.class, ""); //$NON-NLS-1$
 		String driverChannel = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("AllConnector.0"), String.class, "");
 		String driverIdentifier = ConfigUtils.resolveParameter(config,
@@ -61,9 +65,10 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.connect(driverChannel);
 		KeyValueProxy proxy = KeyValueProxy.create(config, connectorIdentifier,
-				driverIdentifier, channel);
+				driverIdentifier, bucket, channel);
 		MosaicLogger.getLogger().debug(
-				"KeyValueConnector connecting to " + driverChannel);
+				"KeyValueConnector connecting to " + driverChannel + " bucket "
+						+ bucket);
 		return new KeyValueStoreConnector(proxy, noThreads);
 	}
 

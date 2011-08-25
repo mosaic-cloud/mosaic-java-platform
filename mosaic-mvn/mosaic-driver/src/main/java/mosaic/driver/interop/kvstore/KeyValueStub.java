@@ -22,10 +22,12 @@ import mosaic.driver.kvstore.BaseKeyValueDriver;
 import mosaic.driver.kvstore.KeyValueDriverFactory;
 import mosaic.driver.kvstore.KeyValueOperations;
 import mosaic.interop.idl.IdlCommon;
+import mosaic.interop.idl.IdlCommon.AbortRequest;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
 import mosaic.interop.idl.kvstore.KeyValuePayloads;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.DeleteRequest;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.GetRequest;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.ListRequest;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import mosaic.interop.kvstore.KeyValueMessage;
@@ -46,7 +48,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  */
 public class KeyValueStub extends AbstractDriverStub {
 
-	private static Map<KVDriverConnectionData, KeyValueStub> stubs = new HashMap<KVDriverConnectionData, KeyValueStub>();
+	private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub>();
 
 	private Class<? extends BaseKeyValueDriver> driverClass;
 
@@ -80,7 +82,7 @@ public class KeyValueStub extends AbstractDriverStub {
 	 */
 	public static KeyValueStub create(IConfiguration config,
 			ZeroMqChannel channel) {
-		KVDriverConnectionData cData = KeyValueStub.readConnectionData(config);
+		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
 		KeyValueStub stub = null;
 		synchronized (AbstractDriverStub.lock) {
 			stub = KeyValueStub.stubs.get(cData);
@@ -138,7 +140,6 @@ public class KeyValueStub extends AbstractDriverStub {
 			throws IOException, ClassNotFoundException {
 		Preconditions
 				.checkArgument(message.specification instanceof KeyValueMessage);
-
 		BaseKeyValueDriver driver = super.getDriver(this.driverClass);
 		handleKVOperation(message, session, driver,
 				KeyValueResponseTransmitter.class);
@@ -172,9 +173,16 @@ public class KeyValueStub extends AbstractDriverStub {
 		switch (kvMessage) {
 		case ACCESS:
 			MosaicLogger.getLogger().trace("Received initiation message");
+			KeyValuePayloads.InitRequest initRequest = (InitRequest) message.payload;
+			token = initRequest.getToken();
+			String bucket = initRequest.getBucket();
+			driver.registerClient(token.getClientId(), bucket);
 			break;
 		case ABORTED:
 			MosaicLogger.getLogger().trace("Received termination message");
+			IdlCommon.AbortRequest abortRequest = (AbortRequest) message.payload;
+			token = abortRequest.getToken();
+			driver.unregisterClient(token.getClientId());
 			break;
 		case SET_REQUEST:
 			KeyValuePayloads.SetRequest setRequest = (SetRequest) message.payload;
@@ -191,8 +199,8 @@ public class KeyValueStub extends AbstractDriverStub {
 			// execute operation
 			DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
 					token, session, driver.getClass(), transmitterClass);
-			IResult<Boolean> resultSet = driver.invokeSetOperation(key, data,
-					setCallback);
+			IResult<Boolean> resultSet = driver.invokeSetOperation(
+					token.getClientId(), key, data, setCallback);
 			setCallback.setDetails(KeyValueOperations.SET, resultSet);
 			break;
 		case GET_REQUEST:
@@ -217,8 +225,8 @@ public class KeyValueStub extends AbstractDriverStub {
 							+ " - request id: " + token.getMessageId()
 							+ " client id: " + token.getClientId());
 
-			IResult<Object> resultGet = driver.invokeGetOperation(key,
-					getCallback);
+			IResult<Object> resultGet = driver.invokeGetOperation(
+					token.getClientId(), key, getCallback);
 			getCallback.setDetails(KeyValueOperations.GET, resultGet);
 			break;
 		case DELETE_REQUEST:
@@ -234,8 +242,8 @@ public class KeyValueStub extends AbstractDriverStub {
 
 			DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler(
 					token, session, driver.getClass(), transmitterClass);
-			IResult<Boolean> resultDelete = driver.invokeDeleteOperation(key,
-					delCallback);
+			IResult<Boolean> resultDelete = driver.invokeDeleteOperation(
+					token.getClientId(), key, delCallback);
 			delCallback.setDetails(KeyValueOperations.DELETE, resultDelete);
 			break;
 		case LIST_REQUEST:
@@ -250,8 +258,8 @@ public class KeyValueStub extends AbstractDriverStub {
 
 			DriverOperationFinishedHandler listCallback = new DriverOperationFinishedHandler(
 					token, session, driver.getClass(), transmitterClass);
-			IResult<List<String>> resultList = driver
-					.invokeListOperation(listCallback);
+			IResult<List<String>> resultList = driver.invokeListOperation(
+					token.getClientId(), listCallback);
 			listCallback.setDetails(KeyValueOperations.LIST, resultList);
 			break;
 		case ERROR:
@@ -297,7 +305,7 @@ public class KeyValueStub extends AbstractDriverStub {
 	 *            the configuration data
 	 * @return resource connection data
 	 */
-	protected static KVDriverConnectionData readConnectionData(
+	protected static DriverConnectionData readConnectionData(
 			IConfiguration config) {
 		String resourceHost = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.0"), String.class, //$NON-NLS-1$
@@ -318,13 +326,12 @@ public class KeyValueStub extends AbstractDriverStub {
 		String bucket = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.3"), String.class, //$NON-NLS-1$
 				"");
-		KVDriverConnectionData cData = null;
+		DriverConnectionData cData = null;
 		if (user.equals("") && passwd.equals("")) {
-			cData = new KVDriverConnectionData(resourceHost, resourcePort,
-					driver, bucket);
+			cData = new DriverConnectionData(resourceHost, resourcePort, driver);
 		} else {
-			cData = new KVDriverConnectionData(resourceHost, resourcePort,
-					driver, user, passwd, bucket);
+			cData = new DriverConnectionData(resourceHost, resourcePort,
+					driver, user, passwd);
 		}
 		return cData;
 	}

@@ -51,6 +51,10 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KeyValueStoreConnector.0"), Integer.class, 1); //$NON-NLS-1$
+		String bucket = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("KeyValueStoreConnector.1"), String.class, ""); //$NON-NLS-1$
 		String driverChannel = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("AllConnector.0"), String.class, "");
 		String driverIdentifier = ConfigUtils.resolveParameter(config,
@@ -61,7 +65,7 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 		channel.register(MemcachedSession.CONNECTOR);
 		channel.connect(driverChannel);
 		MemcachedProxy proxy = MemcachedProxy.create(config,
-				connectorIdentifier, driverIdentifier, channel);
+				connectorIdentifier, driverIdentifier, bucket, channel);
 		return new MemcachedStoreConnector(proxy, noThreads);
 	}
 

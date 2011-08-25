@@ -6,7 +6,7 @@ memcached.host_1=localhost
 memcached.port_1=11210
 kvstore.user=
 kvstore.passwd=
-kvstore.bucket=
+kvstore.bucket=test
 kvstore.driver_threads=10
 kvstore.driver_name=memcached
 

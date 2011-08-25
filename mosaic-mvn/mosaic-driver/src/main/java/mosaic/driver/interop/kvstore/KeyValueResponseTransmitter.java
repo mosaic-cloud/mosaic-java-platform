@@ -144,8 +144,12 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 				KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry.newBuilder();
 				kvEntry.setKey(entry.getKey());
 				try {
-					dataBytes = SerDesUtils.toBytes(entry.getValue());
-					kvEntry.setValue(ByteString.copyFrom(dataBytes));
+					if (entry.getValue() instanceof ByteString) 
+						kvEntry.setValue((ByteString) entry.getValue());
+					else {
+						dataBytes = SerDesUtils.toBytes(entry.getValue());
+						kvEntry.setValue(ByteString.copyFrom(dataBytes));
+					}
 					getResults.add(kvEntry.build());
 				} catch (IOException e) {
 					MosaicLogger.getLogger().error(e.getMessage());

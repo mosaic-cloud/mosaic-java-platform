@@ -6,6 +6,12 @@ option optimize_for = SPEED;
 
 import "common.proto";
 
+
+message InitRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string bucket = 2;
+}
+
 message KVEntry {
 	required string key = 1;
 	required bytes value = 2;

@@ -92,4 +92,19 @@ public class MosaicLogger {
 			this.logger.error(message);
 		}
 	}
+
+	public void trace(String message, Throwable exception) {
+		if (this.logger.isTraceEnabled()) {
+			this.logger.trace(message);
+			exception.printStackTrace();
+		}
+	}
+
+	public void warn(String message, Throwable exception) {
+		if (this.logger.isWarnEnabled()) {
+			this.logger.warn(message);
+			exception.printStackTrace();
+		}
+
+	}
 }

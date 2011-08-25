@@ -14,9 +14,11 @@ import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.SerDesUtils;
+import mosaic.interop.idl.IdlCommon.AbortRequest;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.DeleteRequest;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.GetRequest;
+import mosaic.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.ListRequest;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import mosaic.interop.kvstore.KeyValueMessage;
@@ -65,27 +67,50 @@ public class KeyValueProxy extends ConnectorProxy {
 	 *            the identifier of this connector
 	 * @param driverIdentifier
 	 *            the identifier of the driver to which request will be sent
+	 * @param bucket
+	 *            the name of the bucket where the connector will operate
 	 * @param channel
 	 *            the channel on which to communicate with the driver
 	 * @return the proxy
 	 * @throws Throwable
 	 */
 	public static KeyValueProxy create(IConfiguration config,
-			String connectorIdentifier, String driverIdentifier,
+			String connectorIdentifier, String driverIdentifier, String bucket,
 			ZeroMqChannel channel) throws Throwable {
 		String connectorId = connectorIdentifier;
 		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(config);
 		KeyValueProxy proxy = new KeyValueProxy(config, connectorId, reactor,
 				channel);
+
+		// build token
+		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+		tokenBuilder.setMessageId(UUID.randomUUID().toString());
+		tokenBuilder.setClientId(proxy.getConnectorId());
+
+		// build request
+		InitRequest.Builder requestBuilder = InitRequest.newBuilder();
+		requestBuilder.setToken(tokenBuilder.build());
+		requestBuilder.setBucket(bucket);
+
 		proxy.connect(driverIdentifier, KeyValueSession.CONNECTOR, new Message(
-				KeyValueMessage.ACCESS, null));
+				KeyValueMessage.ACCESS, requestBuilder.build()));
 		return proxy;
 	}
 
 	@Override
 	public synchronized void destroy() throws Throwable {
+		// build token
+		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+		tokenBuilder.setMessageId(UUID.randomUUID().toString());
+		tokenBuilder.setClientId(getConnectorId());
+
+		// build request
+		AbortRequest.Builder requestBuilder = AbortRequest.newBuilder();
+		requestBuilder.setToken(tokenBuilder.build());
+
 		super.sendRequest(getResponseReactor(KeyValueConnectorReactor.class)
-				.getSession(), new Message(KeyValueMessage.ABORTED, null));
+				.getSession(), new Message(KeyValueMessage.ABORTED,
+				requestBuilder.build()));
 		super.destroy();
 	}
 

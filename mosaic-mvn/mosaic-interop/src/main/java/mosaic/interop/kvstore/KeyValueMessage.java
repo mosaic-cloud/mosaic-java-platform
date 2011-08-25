@@ -18,7 +18,8 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * 
  */
 public enum KeyValueMessage implements MessageSpecification {
-	ABORTED(MessageType.Termination, null), ACCESS(MessageType.Initiation, null), ERROR(
+	ABORTED(MessageType.Termination, IdlCommon.AbortRequest.class), ACCESS(
+			MessageType.Initiation, KeyValuePayloads.InitRequest.class), ERROR(
 			MessageType.Exchange, IdlCommon.Error.class), OK(
 			MessageType.Exchange, IdlCommon.Ok.class), NOK(
 			MessageType.Exchange, IdlCommon.NotOk.class), GET_REQUEST(

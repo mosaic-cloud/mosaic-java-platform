@@ -19,6 +19,7 @@ test.token=got_it
 # this is just for test
 kvstore.kvstore.connector_threads=1
 kvstore.kvstore.connector_name=KVSTORE
+kvstore.kvstore.bucket=logging-test
 
 queue.amqp.connector_threads=1
 

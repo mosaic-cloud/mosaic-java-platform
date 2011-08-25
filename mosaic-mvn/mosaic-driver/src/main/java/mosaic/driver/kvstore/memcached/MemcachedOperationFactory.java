@@ -1,14 +1,20 @@
 package mosaic.driver.kvstore.memcached;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.IOperation;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.core.ops.IOperationType;
 import mosaic.driver.kvstore.KeyValueOperations;
+import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.CASResponse;
 import net.spy.memcached.MemcachedClient;
 
@@ -22,22 +28,38 @@ import net.spy.memcached.MemcachedClient;
 public class MemcachedOperationFactory implements IOperationFactory {
 	private MemcachedClient mcClient = null;
 
-	private MemcachedOperationFactory(MemcachedClient mcClient) {
+	private MemcachedOperationFactory(List<InetSocketAddress> servers,
+			String user, String password, String bucket) throws IOException {
 		super();
-		this.mcClient = mcClient;
+		// mcClient=new MemcachedClient(
+		// nodes, bucket, user, passwd);
+		this.mcClient = new MemcachedClient(new BinaryConnectionFactory(),
+				servers);
 	}
 
 	/**
 	 * Creates a new factory.
 	 * 
-	 * @param client
-	 *            the Memcached client used for communicating with the key-value
-	 *            system
+	 * @param hosts
+	 *            the hostname and port of the Memcached servers
+	 * @param user
+	 *            the username for connecting to the server
+	 * @param passwd
+	 *            the password for connecting to the server
+	 * @param bucket
+	 *            the bucket where all operations are applied
 	 * @return the factory
 	 */
 	public final static MemcachedOperationFactory getFactory(
-			MemcachedClient client) {
-		return new MemcachedOperationFactory(client);
+			List<InetSocketAddress> hosts, String user, String password,
+			String bucket) {
+		try {
+			return new MemcachedOperationFactory(hosts, user, password,
+					bucket);
+		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+		}
+		return null;
 	}
 
 	/*
@@ -231,6 +253,11 @@ public class MemcachedOperationFactory implements IOperationFactory {
 		}
 
 		return operation;
+	}
+
+	@Override
+	public void destroy() {
+		this.mcClient.shutdown(30, TimeUnit.SECONDS);
 	}
 
 }

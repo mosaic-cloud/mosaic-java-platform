@@ -37,6 +37,7 @@ import eu.mosaic_cloud.tools.Monitor;
  */
 public final class KVDriverComponentCallbacks extends
 		AbstractDriverComponentCallbacks {
+	private String driverName;
 
 	/**
 	 * Creates a driver callback.
@@ -61,6 +62,10 @@ public final class KVDriverComponentCallbacks extends
 							ConfigProperties
 									.getString("KVDriverComponentCallbacks.1"), //$NON-NLS-1$
 							String.class, "")); //$NON-NLS-1$
+			this.driverName = ConfigUtils.resolveParameter(
+					AbstractResourceDriver.driverConfiguration,
+					ConfigProperties.getString("KVStoreDriver.6"), //$NON-NLS-1$
+					String.class, ""); //$NON-NLS-1$
 
 			synchronized (this.monitor) {
 				this.status = Status.Created;
@@ -172,10 +177,18 @@ public final class KVDriverComponentCallbacks extends
 			this.component = component;
 			final ComponentCallReference callReference = ComponentCallReference
 					.create();
-			this.component.call(this.resourceGroup, ComponentCallRequest
-					.create(ConfigProperties
-							.getString("KVDriverComponentCallbacks.2"), null, //$NON-NLS-1$
-							callReference));
+			String operation;
+			if (driverName
+					.equalsIgnoreCase(KeyValueDriverFactory.DriverType.RIAKPB
+							.toString()))
+				operation = ConfigProperties
+						.getString("KVDriverComponentCallbacks.2");//$NON-NLS-1$
+			else
+				operation = ConfigProperties
+						.getString("KVDriverComponentCallbacks.6");//$NON-NLS-1$
+			this.component
+					.call(this.resourceGroup, ComponentCallRequest.create(
+							operation, null, callReference));
 			this.pendingReference = callReference;
 			this.status = Status.WaitingResourceResolved;
 			MosaicLogger.getLogger().trace(
@@ -212,10 +225,10 @@ public final class KVDriverComponentCallbacks extends
 				stub = KeyValueStub.create(
 						AbstractResourceDriver.driverConfiguration,
 						driverChannel);
+
 			} else
 				throw (new IllegalStateException());
 		}
 		return null;
 	}
-
 }

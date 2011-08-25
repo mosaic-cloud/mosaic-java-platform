@@ -4,9 +4,11 @@ interop.driver.identifier=driver.kv.1
 
 memcached.host_1=localhost
 memcached.port_1=11210
+kvstore.host=localhost
+kvstore.port=8087
 kvstore.user=
 kvstore.passwd=
-kvstore.bucket=
+kvstore.bucket=test
 kvstore.driver_threads=10
-kvstore.driver_name=memcached
+kvstore.driver_name=RIAKPB
 

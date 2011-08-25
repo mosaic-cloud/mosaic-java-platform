@@ -12,7 +12,6 @@ import mosaic.core.ops.IResult;
 import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.interop.AbstractDriverStub;
 import mosaic.driver.interop.DriverConnectionData;
-import mosaic.driver.interop.kvstore.KVDriverConnectionData;
 import mosaic.driver.interop.kvstore.KeyValueResponseTransmitter;
 import mosaic.driver.interop.kvstore.KeyValueStub;
 import mosaic.driver.kvstore.BaseKeyValueDriver;
@@ -49,7 +48,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  */
 public class MemcachedStub extends KeyValueStub {
 
-	private static Map<KVDriverConnectionData, MemcachedStub> stubs = new HashMap<KVDriverConnectionData, MemcachedStub>();
+	private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub>();
 
 	/**
 	 * Creates a new stub for the Memcached driver.
@@ -82,7 +81,7 @@ public class MemcachedStub extends KeyValueStub {
 	 */
 	public static MemcachedStub create(IConfiguration config,
 			ZeroMqChannel channel) {
-		KVDriverConnectionData cData = KeyValueStub.readConnectionData(config);
+		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
 		MemcachedStub stub = null;
 		synchronized (AbstractDriverStub.lock) {
 			stub = MemcachedStub.stubs.get(cData);
@@ -167,8 +166,8 @@ public class MemcachedStub extends KeyValueStub {
 					callback = new DriverOperationFinishedHandler(token,
 							session, MemcachedDriver.class,
 							MemcachedResponseTransmitter.class);
-					resultStore = driver.invokeSetOperation(key, exp, data,
-							callback);
+					resultStore = driver.invokeSetOperation(
+							token.getClientId(), key, exp, data, callback);
 					callback.setDetails(KeyValueOperations.SET, resultStore);
 					handle = true;
 				}
@@ -186,8 +185,8 @@ public class MemcachedStub extends KeyValueStub {
 							session, MemcachedDriver.class,
 							MemcachedResponseTransmitter.class);
 					IResult<Map<String, Object>> resultGet = driver
-							.invokeGetBulkOperation(getRequest.getKeyList(),
-									callback);
+							.invokeGetBulkOperation(token.getClientId(),
+									getRequest.getKeyList(), callback);
 
 					callback.setDetails(KeyValueOperations.GET, resultGet);
 					handle = true;
@@ -220,7 +219,8 @@ public class MemcachedStub extends KeyValueStub {
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
-			resultStore = driver.invokeAddOperation(key, exp, data, callback);
+			resultStore = driver.invokeAddOperation(token.getClientId(), key,
+					exp, data, callback);
 			callback.setDetails(KeyValueOperations.ADD, resultStore);
 			break;
 		case APPEND_REQUEST:
@@ -239,7 +239,8 @@ public class MemcachedStub extends KeyValueStub {
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
-			resultStore = driver.invokeAppendOperation(key, data, callback);
+			resultStore = driver.invokeAppendOperation(token.getClientId(),
+					key, data, callback);
 			callback.setDetails(KeyValueOperations.APPEND, resultStore);
 			break;
 		case PREPEND_REQUEST:
@@ -259,7 +260,8 @@ public class MemcachedStub extends KeyValueStub {
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
-			resultStore = driver.invokePrependOperation(key, data, callback);
+			resultStore = driver.invokePrependOperation(token.getClientId(),
+					key, data, callback);
 			callback.setDetails(KeyValueOperations.PREPEND, resultStore);
 			break;
 		case REPLACE_REQUEST:
@@ -279,8 +281,8 @@ public class MemcachedStub extends KeyValueStub {
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
-			resultStore = driver.invokeReplaceOperation(key, exp, data,
-					callback);
+			resultStore = driver.invokeReplaceOperation(token.getClientId(),
+					key, exp, data, callback);
 			callback.setDetails(KeyValueOperations.REPLACE, resultStore);
 			break;
 		case CAS_REQUEST:
@@ -299,7 +301,8 @@ public class MemcachedStub extends KeyValueStub {
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
-			resultStore = driver.invokeCASOperation(key, data, callback);
+			resultStore = driver.invokeCASOperation(token.getClientId(), key,
+					data, callback);
 			callback.setDetails(KeyValueOperations.CAS, resultStore);
 			break;
 		}

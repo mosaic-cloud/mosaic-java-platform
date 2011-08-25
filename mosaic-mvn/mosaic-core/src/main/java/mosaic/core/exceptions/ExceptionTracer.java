@@ -2,13 +2,15 @@ package mosaic.core.exceptions;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import mosaic.core.log.MosaicLogger;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ExceptionTracer {
 
 	private final ConcurrentLinkedQueue<Throwable> ignoredExceptions;
-	private final Logger logger;
+	private final MosaicLogger logger;
 
 	public static final ExceptionTracer defaultInstance = new ExceptionTracer(
 			ExceptionTracer.defaultInstanceUseLogger);
@@ -17,7 +19,7 @@ public final class ExceptionTracer {
 	public ExceptionTracer(final boolean useLogger) {
 		super();
 		if (useLogger) {
-			this.logger = LoggerFactory.getLogger("mosaic.exceptions");
+			this.logger = MosaicLogger.getLogger();// LoggerFactory.getLogger("mosaic.exceptions");
 		} else {
 			this.logger = null;
 		}
@@ -39,29 +41,19 @@ public final class ExceptionTracer {
 		if (this.logger != null) {
 			switch (resolution) {
 			case Handled:
-				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
-				}
 				break;
 			case Rethrown:
-				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
-				}
 				break;
 			case Ignored:
-				if (this.logger.isWarnEnabled()) {
 					this.logger.warn(message, exception);
-				}
 				break;
 			case Deferred:
-				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
-				}
 				break;
 			default:
-				if (this.logger.isTraceEnabled()) {
 					this.logger.trace(message, exception);
-				}
 				break;
 			}
 		} else {

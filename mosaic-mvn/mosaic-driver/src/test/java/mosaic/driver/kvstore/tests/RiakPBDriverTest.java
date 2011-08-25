@@ -31,10 +31,12 @@ public class RiakPBDriverTest {
 		wrapper = RiakPBDriver.create(PropertyTypeConfiguration.create(
 				RiakPBDriverTest.class.getClassLoader(), "riakpb-test.prop"));
 		keyPrefix = UUID.randomUUID().toString();
+		wrapper.registerClient(keyPrefix, "test");
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		wrapper.unregisterClient(keyPrefix);
 		wrapper.destroy();
 	}
 
@@ -46,15 +48,15 @@ public class RiakPBDriverTest {
 		String k1 = keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"set 1");
-		IResult<Boolean> r1 = wrapper.invokeSetOperation(k1, "fantastic",
-				handler1);
+		IResult<Boolean> r1 = wrapper.invokeSetOperation(keyPrefix, k1,
+				"fantastic", handler1);
 		Assert.assertNotNull(r1);
 
 		String k2 = keyPrefix + "_key_famous";
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"set 2");
-		IResult<Boolean> r2 = wrapper
-				.invokeSetOperation(k2, "famous", handler2);
+		IResult<Boolean> r2 = wrapper.invokeSetOperation(keyPrefix, k2,
+				"famous", handler2);
 		Assert.assertNotNull(r2);
 
 		try {
@@ -73,7 +75,7 @@ public class RiakPBDriverTest {
 		String k1 = keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<Object> handler = new TestLoggingHandler<Object>(
 				"get");
-		IResult<Object> r1 = wrapper.invokeGetOperation(k1, handler);
+		IResult<Object> r1 = wrapper.invokeGetOperation(keyPrefix, k1, handler);
 
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().toString());
@@ -94,7 +96,8 @@ public class RiakPBDriverTest {
 		// keys.add(k2);
 		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
 				"list");
-		IResult<List<String>> r1 = wrapper.invokeListOperation(handler);
+		IResult<List<String>> r1 = wrapper.invokeListOperation(keyPrefix,
+				handler);
 
 		try {
 			List<String> lresult = r1.getResult();
@@ -119,8 +122,10 @@ public class RiakPBDriverTest {
 				"delete 1");
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"delete 2");
-		IResult<Boolean> r1 = wrapper.invokeDeleteOperation(k1, handler1);
-		IResult<Boolean> r2 = wrapper.invokeDeleteOperation(k2, handler2);
+		IResult<Boolean> r1 = wrapper.invokeDeleteOperation(keyPrefix, k1,
+				handler1);
+		IResult<Boolean> r2 = wrapper.invokeDeleteOperation(keyPrefix, k2,
+				handler2);
 		try {
 			Assert.assertTrue(r1.getResult());
 			Assert.assertTrue(r2.getResult());
@@ -134,7 +139,8 @@ public class RiakPBDriverTest {
 
 		IOperationCompletionHandler<Object> handler3 = new TestLoggingHandler<Object>(
 				"check deleted");
-		IResult<Object> r3 = wrapper.invokeGetOperation(k1, handler3);
+		IResult<Object> r3 = wrapper
+				.invokeGetOperation(keyPrefix, k1, handler3);
 
 		try {
 			Assert.assertNull(r3.getResult());
@@ -156,7 +162,7 @@ public class RiakPBDriverTest {
 		testDelete();
 	}
 
-//	public static void main(String[] args) {
-//		JUnitCore.main("mosaic.driver.kvstore.tests.RiakPBDriverTest");
-//	}
+	// public static void main(String[] args) {
+	// JUnitCore.main("mosaic.driver.kvstore.tests.RiakPBDriverTest");
+	// }
 }

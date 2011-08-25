@@ -201,29 +201,29 @@ public class AmqpStub extends AbstractDriverStub {
 			bindHandler.setDetails(AmqpOperations.BIND_QUEUE, resultBool);
 			break;
 		case PUBLISH_REQUEST:
-				AmqpPayloads.PublishRequest publish = (PublishRequest) message.payload;
-				token = publish.getToken();
-				dataBytes = publish.getData().toByteArray();
-				durable = publish.getDurable();
-				exchange = publish.getExchange();
-				boolean immediate = publish.getImmediate();
-				boolean mandatory = publish.getMandatory();
-				routingKey = publish.getRoutingKey();
-				AmqpOutboundMessage mssg = new AmqpOutboundMessage(exchange,
-						routingKey, dataBytes, mandatory, immediate, durable,
-						publish.getContentType());
+			AmqpPayloads.PublishRequest publish = (PublishRequest) message.payload;
+			token = publish.getToken();
+			dataBytes = publish.getData().toByteArray();
+			durable = publish.getDurable();
+			exchange = publish.getExchange();
+			boolean immediate = publish.getImmediate();
+			boolean mandatory = publish.getMandatory();
+			routingKey = publish.getRoutingKey();
+			AmqpOutboundMessage mssg = new AmqpOutboundMessage(exchange,
+					routingKey, dataBytes, mandatory, immediate, durable,
+					publish.getContentType());
 
-				MosaicLogger.getLogger().trace(
-						"AmqpStub - Received request for PUBLISH " //$NON-NLS-1$
-								+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-								+ " client id: " + token.getClientId()); //$NON-NLS-1$
+			MosaicLogger.getLogger().trace(
+					"AmqpStub - Received request for PUBLISH " //$NON-NLS-1$
+							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
+							+ " client id: " + token.getClientId()); //$NON-NLS-1$
 
-				// execute operation
-				DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
-						token, session);
+			// execute operation
+			DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
+					token, session);
 
-				resultBool = driver.basicPublish(mssg, pubHandler);
-				pubHandler.setDetails(AmqpOperations.PUBLISH, resultBool);
+			resultBool = driver.basicPublish(mssg, pubHandler);
+			pubHandler.setDetails(AmqpOperations.PUBLISH, resultBool);
 			break;
 		case CONSUME_REQUEST:
 			AmqpPayloads.ConsumeRequest cop = (ConsumeRequest) message.payload;
@@ -397,7 +397,7 @@ public class AmqpStub extends AbstractDriverStub {
 			try {
 				this.signal.await();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceDeferred(e);
 			}
 			this.driver.removePendingOperation(this.result);
 			// result is error

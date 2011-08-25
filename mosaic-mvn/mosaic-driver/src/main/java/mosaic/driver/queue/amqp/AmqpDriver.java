@@ -921,6 +921,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 
 			return operation;
 		}
+
+		@Override
+		public void destroy() {
+
+		}
 	}
 
 	/**
@@ -980,4 +985,5 @@ public class AmqpDriver extends AbstractResourceDriver {
 		}
 
 	}
+
 }

@@ -22,21 +22,39 @@ import redis.clients.util.SafeEncoder;
 public class RedisOperationFactory implements IOperationFactory {
 	private Jedis redisClient = null;
 
-	private RedisOperationFactory(Jedis mcClient) {
+	private RedisOperationFactory(String host, int port, String user,
+			String passwd, String bucket) {
 		super();
-		this.redisClient = mcClient;
+		this.redisClient = new Jedis(host, port, 0);
+		if (!passwd.equals("")) { //$NON-NLS-1$
+			redisClient.auth(passwd);
+		}
+		int db = Integer.parseInt(bucket);
+		if (db > -1) {
+			redisClient.select(db);
+			// jedis.flushDB();
+		}
+		this.redisClient.connect();
 	}
 
 	/**
 	 * Creates a new factory.
 	 * 
-	 * @param client
-	 *            the Redis client used for communicating with the key-value
-	 *            system
+	 * @param host
+	 *            the hostname of the Redis server
+	 * @param port
+	 *            the port for the Redis server
+	 * @param user
+	 *            the username for connecting to the server
+	 * @param passwd
+	 *            the password for connecting to the serve
+	 * @param bucket
+	 *            the bucket where all operations are applied
 	 * @return the factory
 	 */
-	public final static RedisOperationFactory getFactory(Jedis client) {
-		return new RedisOperationFactory(client);
+	public final static RedisOperationFactory getFactory(String host, int port,
+			String user, String passwd, String bucket) {
+		return new RedisOperationFactory(host, port, user, passwd, bucket);
 	}
 
 	/*
@@ -147,6 +165,12 @@ public class RedisOperationFactory implements IOperationFactory {
 			});
 		}
 		return operation;
+	}
+
+	@Override
+	public void destroy() {
+		// this.redisClient.bgsave(); //TODO
+		this.redisClient.disconnect();
 	}
 
 }
