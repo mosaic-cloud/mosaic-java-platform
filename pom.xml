@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>tools-parent</artifactId>
-	<version>0.2</version>
+	<version>0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>tools-callbacks</module>
