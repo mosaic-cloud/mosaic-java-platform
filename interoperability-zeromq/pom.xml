@@ -26,11 +26,6 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
-			<artifactId>tools-transcript</artifactId>
-			<version>0.3-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>zeromq</artifactId>
 			<version>${project.version}</version>
 		</dependency>
