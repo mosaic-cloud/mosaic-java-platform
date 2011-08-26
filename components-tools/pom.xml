@@ -34,10 +34,5 @@
 			<artifactId>tools-transcript</artifactId>
 			<version>${mosaic.tools.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>net.minidev</groupId>
-			<artifactId>json-smart</artifactId>
-			<version>1.0.9</version>
-		</dependency>
 	</dependencies>
 </project>
