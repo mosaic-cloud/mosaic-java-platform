@@ -1,6 +1,5 @@
 package mosaic.driver.interop.kvstore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Map;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationType;
-import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.interop.ResponseTransmitter;
 import mosaic.driver.kvstore.KeyValueOperations;
 import mosaic.interop.idl.IdlCommon;
@@ -106,61 +104,56 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 	protected Message buildKeyValueResponse(KeyValueOperations op,
 			CompletionToken token, Object result) {
 		Message message = null;
-		byte[] dataBytes;
-
-		switch (op) {
-		case SET:
-		case DELETE:
-			boolean ok = (Boolean) result;
-			if (ok) {
-				Ok.Builder okPayload = IdlCommon.Ok.newBuilder();
-				okPayload.setToken(token);
-				message = new Message(KeyValueMessage.OK, okPayload.build());
-			} else {
-				NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder();
-				nokPayload.setToken(token);
-				message = new Message(KeyValueMessage.NOK, nokPayload.build());
-			}
-			break;
-		case LIST:
-			ListReply.Builder listPayload = KeyValuePayloads.ListReply
-					.newBuilder();
-			listPayload.setToken(token);
-			@SuppressWarnings("unchecked")
-			List<String> resList = (List<String>) result;
-			listPayload.addAllKeys(resList);
-			message = new Message(KeyValueMessage.LIST_REPLY,
-					listPayload.build());
-			break;
-		case GET:
-			GetReply.Builder getPayload = KeyValuePayloads.GetReply
-					.newBuilder();
-			getPayload.setToken(token);
-
-			@SuppressWarnings("unchecked")
-			Map<String, Object> resMap = (Map<String, Object>) result;
-			List<KVEntry> getResults = new ArrayList<KVEntry>();
-			for (Map.Entry<String, Object> entry : resMap.entrySet()) {
-				KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry.newBuilder();
-				kvEntry.setKey(entry.getKey());
-				try {
-					if (entry.getValue() instanceof ByteString) 
-						kvEntry.setValue((ByteString) entry.getValue());
-					else {
-						dataBytes = SerDesUtils.toBytes(entry.getValue());
-						kvEntry.setValue(ByteString.copyFrom(dataBytes));
-					}
-					getResults.add(kvEntry.build());
-				} catch (IOException e) {
-					MosaicLogger.getLogger().error(e.getMessage());
+		try {
+			switch (op) {
+			case SET:
+			case DELETE:
+				boolean ok = (Boolean) result;
+				if (ok) {
+					Ok.Builder okPayload = IdlCommon.Ok.newBuilder();
+					okPayload.setToken(token);
+					message = new Message(KeyValueMessage.OK, okPayload.build());
+				} else {
+					NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder();
+					nokPayload.setToken(token);
+					message = new Message(KeyValueMessage.NOK,
+							nokPayload.build());
 				}
+				break;
+			case LIST:
+				ListReply.Builder listPayload = KeyValuePayloads.ListReply
+						.newBuilder();
+				listPayload.setToken(token);
+				@SuppressWarnings("unchecked")
+				List<String> resList = (List<String>) result;
+				listPayload.addAllKeys(resList);
+				message = new Message(KeyValueMessage.LIST_REPLY,
+						listPayload.build());
+				break;
+			case GET:
+				GetReply.Builder getPayload = KeyValuePayloads.GetReply
+						.newBuilder();
+				getPayload.setToken(token);
 
+				@SuppressWarnings("unchecked")
+				Map<String, byte[]> resMap = (Map<String, byte[]>) result;
+				List<KVEntry> getResults = new ArrayList<KVEntry>();
+				for (Map.Entry<String, byte[]> entry : resMap.entrySet()) {
+					KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry
+							.newBuilder();
+					kvEntry.setKey(entry.getKey());
+					kvEntry.setValue(ByteString.copyFrom(entry.getValue()));
+					getResults.add(kvEntry.build());
+				}
+				getPayload.addAllResults(getResults);
+				message = new Message(KeyValueMessage.GET_REPLY,
+						getPayload.build());
+				break;
+			default:
+				break;
 			}
-			getPayload.addAllResults(getResults);
-			message = new Message(KeyValueMessage.GET_REPLY, getPayload.build());
-			break;
-		default:
-			break;
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 		return message;
 	}

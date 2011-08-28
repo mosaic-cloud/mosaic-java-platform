@@ -1,5 +1,6 @@
 package mosaic.driver.kvstore.tests;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.kvstore.BaseKeyValueDriver;
 import mosaic.driver.kvstore.RedisDriver;
 
@@ -35,13 +37,13 @@ public class RedisDriverTest {
 				.create(RedisDriverTest.class.getClassLoader(),
 						"redis-test.prop"));
 		RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
-		wrapper.registerClient(keyPrefix, "1");
+		RedisDriverTest.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
 		MosaicLogger.getLogger().trace("KEY: " + RedisDriverTest.keyPrefix);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		wrapper.unregisterClient(keyPrefix);
+		RedisDriverTest.wrapper.unregisterClient(RedisDriverTest.keyPrefix);
 		RedisDriverTest.wrapper.destroy();
 	}
 
@@ -53,19 +55,21 @@ public class RedisDriverTest {
 		Assert.assertNotNull(RedisDriverTest.wrapper);
 	}
 
-	public void testSet() {
+	public void testSet() throws IOException {
 		String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
+		byte[] b1 = SerDesUtils.pojoToBytes("fantastic");
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"set 1");
 		IResult<Boolean> r1 = RedisDriverTest.wrapper.invokeSetOperation(
-				keyPrefix, k1, "fantastic", handler1);
+				RedisDriverTest.keyPrefix, k1, b1, handler1);
 		Assert.assertNotNull(r1);
 
 		String k2 = RedisDriverTest.keyPrefix + "_key_famous";
+		byte[] b2 = SerDesUtils.pojoToBytes("famous");
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"set 2");
 		IResult<Boolean> r2 = RedisDriverTest.wrapper.invokeSetOperation(
-				keyPrefix, k2, "famous", handler2);
+				RedisDriverTest.keyPrefix, k2, b2, handler2);
 		Assert.assertNotNull(r2);
 
 		try {
@@ -80,15 +84,16 @@ public class RedisDriverTest {
 		}
 	}
 
-	public void testGet() {
+	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
-		IOperationCompletionHandler<Object> handler = new TestLoggingHandler<Object>(
+		IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>(
 				"get");
-		IResult<Object> r1 = RedisDriverTest.wrapper.invokeGetOperation(
-				keyPrefix, k1, handler);
+		IResult<byte[]> r1 = RedisDriverTest.wrapper.invokeGetOperation(
+				RedisDriverTest.keyPrefix, k1, handler);
 
 		try {
-			Assert.assertEquals("fantastic", r1.getResult().toString());
+			Assert.assertEquals("fantastic",
+					SerDesUtils.toObject(r1.getResult()).toString());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -107,7 +112,7 @@ public class RedisDriverTest {
 		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
 				"list");
 		IResult<List<String>> r1 = RedisDriverTest.wrapper.invokeListOperation(
-				keyPrefix, handler);
+				RedisDriverTest.keyPrefix, handler);
 
 		try {
 			List<String> lresult = r1.getResult();
@@ -132,9 +137,9 @@ public class RedisDriverTest {
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"delete 2");
 		IResult<Boolean> r1 = RedisDriverTest.wrapper.invokeDeleteOperation(
-				keyPrefix, k1, handler1);
+				RedisDriverTest.keyPrefix, k1, handler1);
 		IResult<Boolean> r2 = RedisDriverTest.wrapper.invokeDeleteOperation(
-				keyPrefix, k2, handler2);
+				RedisDriverTest.keyPrefix, k2, handler2);
 		try {
 			Assert.assertTrue(r1.getResult());
 			Assert.assertTrue(r2.getResult());
@@ -146,10 +151,10 @@ public class RedisDriverTest {
 			Assert.fail();
 		}
 
-		IOperationCompletionHandler<Object> handler3 = new TestLoggingHandler<Object>(
+		IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
 				"check deleted");
-		IResult<Object> r3 = RedisDriverTest.wrapper.invokeGetOperation(
-				keyPrefix, k1, handler3);
+		IResult<byte[]> r3 = RedisDriverTest.wrapper.invokeGetOperation(
+				RedisDriverTest.keyPrefix, k1, handler3);
 
 		try {
 			Assert.assertNull(r3.getResult());
@@ -163,7 +168,7 @@ public class RedisDriverTest {
 	}
 
 	@Test
-	public void testDriver() {
+	public void testDriver() throws IOException, ClassNotFoundException {
 		testConnection();
 		testSet();
 		testGet();

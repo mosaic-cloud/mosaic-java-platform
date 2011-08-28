@@ -10,8 +10,10 @@ import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.connector.queue.amqp.IAmqpConsumerCallback;
 import mosaic.core.configuration.IConfiguration;
+import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
+import mosaic.core.utils.DataEncoder;
 import mosaic.driver.queue.amqp.AmqpInboundMessage;
 
 /**
@@ -50,10 +52,13 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	 *            the cloudlet controller of the cloudlet using the accessor
 	 * @param dataClass
 	 *            the type of the consumed messages
+	 * @param encoder
+	 *            encoder used for serializing data
 	 */
 	public AmqpQueueConsumer(IConfiguration config,
-			ICloudletController<S> cloudlet, Class<D> dataClass) {
-		super(config, cloudlet, dataClass, true);
+			ICloudletController<S> cloudlet, Class<D> dataClass,
+			DataEncoder<D> encoder) {
+		super(config, cloudlet, dataClass, true, encoder);
 	}
 
 	@Override
@@ -256,14 +261,19 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 		@Override
 		public void handleDelivery(AmqpInboundMessage message) {
-				D data = AmqpQueueConsumer.this.deserializeMessage(
-						message.getData(), message.getContentType());
+			D data;
+			try {
+				data = AmqpQueueConsumer.this.dataEncoder.decode(message
+						.getData());
 				AmqpQueueConsumeMessage<D> mssg = new AmqpQueueConsumeMessage<D>(
 						AmqpQueueConsumer.this, message, data);
 				AmqpQueueConsumeCallbackArguments<S, D> arguments = new AmqpQueueConsumeCallbackArguments<S, D>(
 						AmqpQueueConsumer.this.cloudlet, mssg);
 				AmqpQueueConsumer.this.callback.consume(
 						AmqpQueueConsumer.this.cloudletState, arguments);
+			} catch (Exception e) {
+				ExceptionTracer.traceDeferred(e);
+			}
 		}
 
 		@Override

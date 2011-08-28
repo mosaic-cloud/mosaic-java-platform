@@ -1,5 +1,6 @@
 package mosaic.connector.kvstore.tests;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.PojoDataEncoder;
 import mosaic.driver.interop.kvstore.KeyValueStub;
 import mosaic.interop.kvstore.KeyValueSession;
 
@@ -49,7 +51,8 @@ public class RedisConnectorTest {
 
 		RedisConnectorTest.driverStub = KeyValueStub.create(config,
 				driverChannel);
-		RedisConnectorTest.connector = KeyValueStoreConnector.create(config);
+		RedisConnectorTest.connector = KeyValueStoreConnector.create(config,
+				new PojoDataEncoder<String>(String.class));
 		RedisConnectorTest.keyPrefix = UUID.randomUUID().toString();
 	}
 
@@ -73,7 +76,7 @@ public class RedisConnectorTest {
 		return list;
 	}
 
-	public void testSet() {
+	public void testSet() throws IOException {
 		String k1 = RedisConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
 		IResult<Boolean> r1 = RedisConnectorTest.connector.set(k1, "fantastic",
@@ -98,7 +101,7 @@ public class RedisConnectorTest {
 		}
 	}
 
-	public void testGet() {
+	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = RedisConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
 		IResult<Object> r1 = RedisConnectorTest.connector.get(k1, handlers,
@@ -164,7 +167,7 @@ public class RedisConnectorTest {
 	}
 
 	@Test
-	public void testConnector() {
+	public void testConnector() throws IOException, ClassNotFoundException {
 		testConnection();
 		testSet();
 		testGet();
@@ -179,8 +182,8 @@ public class RedisConnectorTest {
 	public static void _main(String... args) throws Throwable {
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
-		KeyValueStoreConnector connector = KeyValueStoreConnector
-				.create(config);
+		KeyValueStoreConnector connector = KeyValueStoreConnector.create(
+				config, new PojoDataEncoder<String>(String.class));
 		String keyPrefix = UUID.randomUUID().toString();
 
 		ZeroMqChannel driverChannel = new ZeroMqChannel(

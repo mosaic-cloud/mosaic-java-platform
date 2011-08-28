@@ -15,6 +15,7 @@ import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.DataEncoder;
 import mosaic.interop.kvstore.KeyValueSession;
 import mosaic.interop.kvstore.MemcachedSession;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
@@ -30,8 +31,9 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 		IMemcachedStore {
 
-	private MemcachedStoreConnector(MemcachedProxy proxy, int noThreads) {
-		super(proxy, noThreads);
+	private MemcachedStoreConnector(MemcachedProxy proxy, int noThreads,
+			DataEncoder encoder) {
+		super(proxy, noThreads, encoder);
 	}
 
 	/**
@@ -41,11 +43,14 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 	 *            the configuration parameters required by the connector. This
 	 *            should also include configuration settings for the
 	 *            corresponding driver.
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static MemcachedStoreConnector create(IConfiguration config)
-			throws Throwable {
+	public static MemcachedStoreConnector create(IConfiguration config,
+			DataEncoder encoder) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -64,9 +69,10 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.register(MemcachedSession.CONNECTOR);
 		channel.connect(driverChannel);
-		MemcachedProxy proxy = MemcachedProxy.create(config,
-				connectorIdentifier, driverIdentifier, bucket, channel);
-		return new MemcachedStoreConnector(proxy, noThreads);
+		MemcachedProxy proxy = MemcachedProxy
+				.create(config, connectorIdentifier, driverIdentifier, bucket,
+						channel, encoder);
+		return new MemcachedStoreConnector(proxy, noThreads, encoder);
 	}
 
 	/*

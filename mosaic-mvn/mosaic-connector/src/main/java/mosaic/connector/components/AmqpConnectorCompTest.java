@@ -60,7 +60,7 @@ public class AmqpConnectorCompTest {
 	public void testDeclareExchange() throws InterruptedException,
 			ExecutionException {
 		String exchange = ConfigUtils.resolveParameter(this.configuration,
-				"publisher.amqp.exchange", String.class, "");
+				"queue.publisher.amqp.exchange", String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("declare exchange");
 
 		IResult<Boolean> r = this.connector.declareExchange(exchange,
@@ -73,7 +73,7 @@ public class AmqpConnectorCompTest {
 	public void testDeclareQueue() throws InterruptedException,
 			ExecutionException {
 		String queue = ConfigUtils.resolveParameter(this.configuration,
-				"consumer.amqp.queue", String.class, "");
+				"queue.consumer.amqp.queue", String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("declare queue");
 		IResult<Boolean> r = this.connector.declareQueue(queue, true, false,
 				true, false, handlers, null);
@@ -83,11 +83,11 @@ public class AmqpConnectorCompTest {
 
 	public void testBindQueue() throws InterruptedException, ExecutionException {
 		String exchange = ConfigUtils.resolveParameter(this.configuration,
-				"publisher.amqp.exchange", String.class, "");
+				"queue.publisher.amqp.exchange", String.class, "");
 		String routingKey = ConfigUtils.resolveParameter(this.configuration,
-				"publisher.amqp.routing_key", String.class, "");
+				"queue.publisher.amqp.routing_key", String.class, "");
 		String queue = ConfigUtils.resolveParameter(this.configuration,
-				"consumer.amqp.queue", String.class, "");
+				"queue.consumer.amqp.queue", String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("bind queue");
 		IResult<Boolean> r = this.connector.bindQueue(exchange, queue,
 				routingKey, handlers, null);
@@ -105,6 +105,7 @@ public class AmqpConnectorCompTest {
 	}
 
 	public static void test() throws Throwable {
+		@SuppressWarnings("unused")
 		AmqpConnectorCompTest test = new AmqpConnectorCompTest();
 	}
 

@@ -1,6 +1,5 @@
 package mosaic.cloudlet.resources.amqp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.utils.SerDesUtils;
+import mosaic.core.utils.DataEncoder;
 import mosaic.driver.queue.amqp.AmqpOutboundMessage;
 
 /**
@@ -52,10 +51,13 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	 *            the cloudlet controller of the cloudlet using the accessor
 	 * @param dataClass
 	 *            the type of the published messages
+	 * @param encoder
+	 *            encoder used for serializing data
 	 */
 	public AmqpQueuePublisher(IConfiguration config,
-			ICloudletController<S> cloudlet, Class<D> dataClass) {
-		super(config, cloudlet, dataClass, false);
+			ICloudletController<S> cloudlet, Class<D> dataClass,
+			DataEncoder<D> encoder) {
+		super(config, cloudlet, dataClass, false, encoder);
 	}
 
 	/*
@@ -129,7 +131,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	public void publish(D data, final Object token, String contentType) {
 		synchronized (this) {
 			try {
-				byte[] sData = SerDesUtils.toBytes(data);
+				byte[] sData = this.dataEncoder.encode(data);
 				final AmqpOutboundMessage message = new AmqpOutboundMessage(
 						this.exchange, this.routingKey, sData, true, true,
 						false, contentType);
@@ -143,7 +145,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 						this.cloudlet.getResponseInvocationHandler(cHandler));
 				MosaicLogger.getLogger().trace(
 						"AmqpQueuePublisher - published message " + data);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				@SuppressWarnings("unchecked")
 				IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
 						.buildCallbackInvoker(this.callback,

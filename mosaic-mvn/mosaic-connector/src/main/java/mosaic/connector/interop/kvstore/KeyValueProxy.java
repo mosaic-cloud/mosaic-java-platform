@@ -13,7 +13,7 @@ import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.utils.SerDesUtils;
+import mosaic.core.utils.DataEncoder;
 import mosaic.interop.idl.IdlCommon.AbortRequest;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.DeleteRequest;
@@ -39,6 +39,8 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  */
 public class KeyValueProxy extends ConnectorProxy {
 
+	protected DataEncoder dataEncoder;
+
 	/**
 	 * Creates a proxy for key-value distributed storage systems.
 	 * 
@@ -50,12 +52,16 @@ public class KeyValueProxy extends ConnectorProxy {
 	 *            the response reactor
 	 * @param channel
 	 *            the channel on which to communicate with the driver
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 * @throws Throwable
 	 */
 	protected KeyValueProxy(IConfiguration config, String connectorId,
-			AbstractConnectorReactor reactor, ZeroMqChannel channel)
-			throws Throwable {
+			AbstractConnectorReactor reactor, ZeroMqChannel channel,
+			DataEncoder encoder) throws Throwable {
 		super(config, connectorId, reactor, channel);
+		this.dataEncoder = encoder;
 	}
 
 	/**
@@ -71,16 +77,20 @@ public class KeyValueProxy extends ConnectorProxy {
 	 *            the name of the bucket where the connector will operate
 	 * @param channel
 	 *            the channel on which to communicate with the driver
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 * @return the proxy
 	 * @throws Throwable
 	 */
 	public static KeyValueProxy create(IConfiguration config,
 			String connectorIdentifier, String driverIdentifier, String bucket,
-			ZeroMqChannel channel) throws Throwable {
+			ZeroMqChannel channel, DataEncoder encoder) throws Throwable {
 		String connectorId = connectorIdentifier;
-		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(config);
+		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(config,
+				encoder);
 		KeyValueProxy proxy = new KeyValueProxy(config, connectorId, reactor,
-				channel);
+				channel, encoder);
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
@@ -218,7 +228,7 @@ public class KeyValueProxy extends ConnectorProxy {
 				requestBuilder.setExpTime(exp[0]);
 			}
 
-			byte[] dataBytes = SerDesUtils.toBytes(data);
+			byte[] dataBytes = this.dataEncoder.encode(data);
 			requestBuilder.setValue(ByteString.copyFrom(dataBytes));
 
 			Message message = new Message(KeyValueMessage.SET_REQUEST,
@@ -230,7 +240,7 @@ public class KeyValueProxy extends ConnectorProxy {
 			super.sendRequest(
 					getResponseReactor(KeyValueConnectorReactor.class)
 							.getSession(), message);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e);
 			}

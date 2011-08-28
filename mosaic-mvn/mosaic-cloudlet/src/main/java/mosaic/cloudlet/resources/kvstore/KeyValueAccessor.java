@@ -17,6 +17,7 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.DataEncoder;
 import mosaic.core.utils.Miscellaneous;
 
 /**
@@ -33,6 +34,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	private IConfiguration configuration;
 	protected ICloudletController<S> cloudlet;
 	protected S cloudletState;
+	protected DataEncoder<?> dataEncoder;
 	private ResourceStatus status;
 	private IKeyValueStore connector;
 	private IKeyValueAccessorCallback<S> callback;
@@ -45,11 +47,14 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	 *            configuration data required by the accessor
 	 * @param cloudlet
 	 *            the cloudlet controller of the cloudlet using the accessor
+	 * @param encoder
+	 *            encoder used for serializing data
 	 */
 	public KeyValueAccessor(IConfiguration config,
-			ICloudletController<S> cloudlet) {
+			ICloudletController<S> cloudlet, DataEncoder<?> encoder) {
 		this.configuration = config;
 		this.cloudlet = cloudlet;
+		this.dataEncoder = encoder;
 		this.status = ResourceStatus.CREATED;
 	}
 
@@ -80,7 +85,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 					throw new ContainerException(
 							"Cannot find a resource of type " + type.toString());
 				this.connector = KeyValueConnectorFactory.createConnector(
-						connectorName, this.configuration);// MemcachedStoreConnector.create(configuration);
+						connectorName, this.configuration, this.dataEncoder);// MemcachedStoreConnector.create(configuration);
 				this.status = ResourceStatus.READY;
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						KeyValueAccessor.this.cloudlet, true);

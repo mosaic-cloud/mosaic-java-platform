@@ -2,6 +2,7 @@ package mosaic.driver.kvstore.memcached;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -54,8 +55,7 @@ public class MemcachedOperationFactory implements IOperationFactory {
 			List<InetSocketAddress> hosts, String user, String password,
 			String bucket) {
 		try {
-			return new MemcachedOperationFactory(hosts, user, password,
-					bucket);
+			return new MemcachedOperationFactory(hosts, user, password, bucket);
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 		}
@@ -89,17 +89,17 @@ public class MemcachedOperationFactory implements IOperationFactory {
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		final String key;
 		final int exp;
-		final Object data;
+		final byte[] data;
 
 		switch (mType) {
 		case SET:
 			key = (String) parameters[0];
 			if (parameters.length == 3) {
 				exp = (Integer) parameters[1];
-				data = parameters[2];
+				data = (byte[]) parameters[2];
 			} else {
 				exp = 0;
-				data = parameters[1];
+				data = (byte[]) parameters[1];
 			}
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
@@ -116,7 +116,7 @@ public class MemcachedOperationFactory implements IOperationFactory {
 		case ADD:
 			key = (String) parameters[0];
 			exp = (Integer) parameters[1];
-			data = parameters[2];
+			data = (byte[]) parameters[2];
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
 				@Override
@@ -132,7 +132,7 @@ public class MemcachedOperationFactory implements IOperationFactory {
 		case REPLACE:
 			key = (String) parameters[0];
 			exp = (Integer) parameters[1];
-			data = parameters[2];
+			data = (byte[]) parameters[2];
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
 				@Override
@@ -147,7 +147,7 @@ public class MemcachedOperationFactory implements IOperationFactory {
 			break;
 		case APPEND:
 			key = (String) parameters[0];
-			data = parameters[1];
+			data = (byte[]) parameters[1];
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
 				@Override
@@ -164,7 +164,7 @@ public class MemcachedOperationFactory implements IOperationFactory {
 			break;
 		case PREPEND:
 			key = (String) parameters[0];
-			data = parameters[1];
+			data = (byte[]) parameters[1];
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
 				@Override
@@ -181,7 +181,7 @@ public class MemcachedOperationFactory implements IOperationFactory {
 			break;
 		case CAS:
 			key = (String) parameters[0];
-			data = parameters[1];
+			data = (byte[]) parameters[1];
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
 				@Override
@@ -198,13 +198,13 @@ public class MemcachedOperationFactory implements IOperationFactory {
 			break;
 		case GET:
 			key = (String) parameters[0];
-			operation = new GenericOperation<Object>(new Callable<Object>() {
+			operation = new GenericOperation<byte[]>(new Callable<byte[]>() {
 
 				@Override
-				public Object call() throws Exception {
+				public byte[] call() throws Exception {
 					Future<Object> opResult = MemcachedOperationFactory.this.mcClient
 							.asyncGet(key);
-					Object result = opResult.get();
+					byte[] result = (byte[]) opResult.get();
 					return result;
 				}
 
@@ -212,14 +212,19 @@ public class MemcachedOperationFactory implements IOperationFactory {
 			break;
 		case GET_BULK:
 			final String[] keys = (String[]) parameters;
-			operation = new GenericOperation<Map<String, Object>>(
-					new Callable<Map<String, Object>>() {
+			operation = new GenericOperation<Map<String, byte[]>>(
+					new Callable<Map<String, byte[]>>() {
 
 						@Override
-						public Map<String, Object> call() throws Exception {
+						public Map<String, byte[]> call() throws Exception {
 							Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient
 									.asyncGetBulk(keys);
-							Map<String, Object> result = opResult.get();
+							Map<String, byte[]> result = new HashMap<String, byte[]>();
+							for (Map.Entry<String, Object> entry : opResult
+									.get().entrySet()) {
+								result.put(entry.getKey(),
+										(byte[]) entry.getValue());
+							}
 							return result;
 						}
 

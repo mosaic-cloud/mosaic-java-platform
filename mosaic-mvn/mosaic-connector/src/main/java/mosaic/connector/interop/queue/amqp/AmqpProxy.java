@@ -177,7 +177,7 @@ public class AmqpProxy extends ConnectorProxy {
 		requestBuilder.setAutoAck(autoAck);
 		try {
 			requestBuilder.setExtra(ByteString.copyFrom(SerDesUtils
-					.toBytes(extra)));
+					.pojoToBytes(extra)));
 
 			AmqpConnectorReactor reactor = super
 					.getResponseReactor(AmqpConnectorReactor.class);

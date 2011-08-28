@@ -118,5 +118,4 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 		return this.destroyed;
 	}
 
-
 }

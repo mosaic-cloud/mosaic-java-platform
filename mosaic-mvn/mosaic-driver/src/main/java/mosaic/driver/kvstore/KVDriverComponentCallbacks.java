@@ -178,14 +178,15 @@ public final class KVDriverComponentCallbacks extends
 			final ComponentCallReference callReference = ComponentCallReference
 					.create();
 			String operation;
-			if (driverName
+			if (this.driverName
 					.equalsIgnoreCase(KeyValueDriverFactory.DriverType.RIAKPB
-							.toString()))
+							.toString())) {
 				operation = ConfigProperties
 						.getString("KVDriverComponentCallbacks.2");//$NON-NLS-1$
-			else
+			} else {
 				operation = ConfigProperties
 						.getString("KVDriverComponentCallbacks.6");//$NON-NLS-1$
+			}
 			this.component
 					.call(this.resourceGroup, ComponentCallRequest.create(
 							operation, null, callReference));
@@ -222,7 +223,7 @@ public final class KVDriverComponentCallbacks extends
 						ConfigProperties
 								.getString("KVDriverComponentCallbacks.3"),
 						KeyValueSession.DRIVER);
-				stub = KeyValueStub.create(
+				this.stub = KeyValueStub.create(
 						AbstractResourceDriver.driverConfiguration,
 						driverChannel);
 

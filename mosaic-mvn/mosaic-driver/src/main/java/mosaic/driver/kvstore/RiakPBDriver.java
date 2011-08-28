@@ -96,7 +96,7 @@ public class RiakPBDriver extends BaseKeyValueDriver {
 	protected IOperationFactory createOperationFactory(Object... params) {
 		String bucket = params[0].toString();
 		IOperationFactory opFactory = RiakPBOperationFactory.getFactory(
-				riakHost, riakPort, bucket);
+				this.riakHost, this.riakPort, bucket);
 		return opFactory;
 	}
 

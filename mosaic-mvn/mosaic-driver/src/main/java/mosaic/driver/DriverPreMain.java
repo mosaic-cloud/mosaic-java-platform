@@ -8,14 +8,16 @@ public class DriverPreMain {
 
 	/**
 	 * @param args
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static void main(String[] arguments) throws Exception {
-		Preconditions.checkArgument (arguments != null);
-		Preconditions.checkArgument (arguments.length == 1, "invalid arguments; expected: <resource type: amqp | kv | memcached>");
+		Preconditions.checkArgument(arguments != null);
+		Preconditions
+				.checkArgument(arguments.length == 1,
+						"invalid arguments; expected: <resource type: amqp | kv | memcached>");
 		String clasz = DriverCallbackType.valueOf(arguments[0].toUpperCase())
 				.getCallbackClass();
-		BasicComponentHarnessPreMain.main (new String[] {clasz});
+		BasicComponentHarnessPreMain.main(new String[] { clasz });
 
 	}
 

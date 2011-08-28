@@ -1,6 +1,5 @@
 package mosaic.connector.interop.kvstore.memcached;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,10 +11,10 @@ import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.utils.SerDesUtils;
+import mosaic.core.utils.DataEncoder;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
-import mosaic.interop.idl.kvstore.MemcachedPayloads;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.InitRequest;
+import mosaic.interop.idl.kvstore.MemcachedPayloads;
 import mosaic.interop.kvstore.KeyValueMessage;
 import mosaic.interop.kvstore.MemcachedMessage;
 import mosaic.interop.kvstore.MemcachedSession;
@@ -47,12 +46,15 @@ public class MemcachedProxy extends KeyValueProxy {
 	 * 
 	 * @param channel
 	 *            the channel on which to communicate with the driver
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 * @throws Throwable
 	 */
 	private MemcachedProxy(IConfiguration config, String connectorId,
-			MemcachedConnectorReactor reactor, ZeroMqChannel channel)
-			throws Throwable {
-		super(config, connectorId, reactor, channel);
+			MemcachedConnectorReactor reactor, ZeroMqChannel channel,
+			DataEncoder encoder) throws Throwable {
+		super(config, connectorId, reactor, channel, encoder);
 	}
 
 	/**
@@ -68,17 +70,20 @@ public class MemcachedProxy extends KeyValueProxy {
 	 *            the name of the bucket where the connector will operate
 	 * @param channel
 	 *            the channel on which to communicate with the driver
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 * @return the proxy
 	 * @throws Throwable
 	 */
 	public static MemcachedProxy create(IConfiguration config,
 			String connectorIdentifier, String driverIdentifier, String bucket,
-			ZeroMqChannel channel) throws Throwable {
+			ZeroMqChannel channel, DataEncoder encoder) throws Throwable {
 		String connectorId = connectorIdentifier;
 		MemcachedConnectorReactor reactor = new MemcachedConnectorReactor(
-				config);
+				config, encoder);
 		MemcachedProxy proxy = new MemcachedProxy(config, connectorId, reactor,
-				channel);
+				channel, encoder);
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
@@ -147,8 +152,8 @@ public class MemcachedProxy extends KeyValueProxy {
 			int exp, Object data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		try {
-			ByteString dataBytes = ByteString.copyFrom(SerDesUtils
-					.toBytes(data));
+			ByteString dataBytes = ByteString.copyFrom(this.dataEncoder
+					.encode(data));
 			Message message = null;
 
 			String id = UUID.randomUUID().toString();
@@ -221,7 +226,7 @@ public class MemcachedProxy extends KeyValueProxy {
 			super.sendRequest(
 					getResponseReactor(MemcachedConnectorReactor.class)
 							.getSession(), message);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e);
 			}

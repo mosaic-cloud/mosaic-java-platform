@@ -81,20 +81,21 @@ public class AmqpStub extends AbstractDriverStub {
 	 */
 	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel) {
 		synchronized (AbstractDriverStub.lock) {
-			if (stub == null) {
+			if (AmqpStub.stub == null) {
 				AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter(
 						config);
 				AmqpDriver driver = AmqpDriver.create(config);
-				stub = new AmqpStub(config, transmitter, driver, channel);
-				incDriverReference(stub);
-				channel.accept(AmqpSession.DRIVER, stub);
+				AmqpStub.stub = new AmqpStub(config, transmitter, driver,
+						channel);
+				incDriverReference(AmqpStub.stub);
+				channel.accept(AmqpSession.DRIVER, AmqpStub.stub);
 				MosaicLogger.getLogger().trace("AmqpStub: created new stub."); //$NON-NLS-1$
 			} else {
 				MosaicLogger.getLogger().trace("AmqpStub: use existing stub."); //$NON-NLS-1$
-				incDriverReference(stub);
+				incDriverReference(AmqpStub.stub);
 			}
 		}
-		return stub;
+		return AmqpStub.stub;
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import mosaic.core.exceptions.ConnectionException;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IResult;
-import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.interop.AbstractDriverStub;
 import mosaic.driver.interop.DriverConnectionData;
 import mosaic.driver.interop.kvstore.KeyValueResponseTransmitter;
@@ -135,7 +134,7 @@ public class MemcachedStub extends KeyValueStub {
 				.checkArgument((message.specification instanceof KeyValueMessage)
 						|| (message.specification instanceof MemcachedMessage));
 
-		Object data;
+		byte[] data;
 		CompletionToken token = null;
 		String key;
 		int exp;
@@ -160,8 +159,7 @@ public class MemcachedStub extends KeyValueStub {
 									+ token.getClientId());
 
 					exp = setRequest.getExpTime();
-					data = SerDesUtils.toObject(setRequest.getValue()
-							.toByteArray());
+					data = setRequest.getValue().toByteArray();
 
 					callback = new DriverOperationFinishedHandler(token,
 							session, MemcachedDriver.class,
@@ -184,7 +182,7 @@ public class MemcachedStub extends KeyValueStub {
 					callback = new DriverOperationFinishedHandler(token,
 							session, MemcachedDriver.class,
 							MemcachedResponseTransmitter.class);
-					IResult<Map<String, Object>> resultGet = driver
+					IResult<Map<String, byte[]>> resultGet = driver
 							.invokeGetBulkOperation(token.getClientId(),
 									getRequest.getKeyList(), callback);
 
@@ -215,7 +213,7 @@ public class MemcachedStub extends KeyValueStub {
 							+ " client id: " + token.getClientId());
 
 			exp = addRequest.getExpTime();
-			data = SerDesUtils.toObject(addRequest.getValue().toByteArray());
+			data = addRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -235,7 +233,7 @@ public class MemcachedStub extends KeyValueStub {
 							+ " client id: " + token.getClientId());
 
 			exp = appendRequest.getExpTime();
-			data = SerDesUtils.toObject(appendRequest.getValue().toByteArray());
+			data = appendRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -255,8 +253,7 @@ public class MemcachedStub extends KeyValueStub {
 							+ " client id: " + token.getClientId());
 
 			exp = prependRequest.getExpTime();
-			data = SerDesUtils
-					.toObject(prependRequest.getValue().toByteArray());
+			data = prependRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -276,8 +273,7 @@ public class MemcachedStub extends KeyValueStub {
 							+ " client id: " + token.getClientId());
 
 			exp = replaceRequest.getExpTime();
-			data = SerDesUtils
-					.toObject(replaceRequest.getValue().toByteArray());
+			data = replaceRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -297,7 +293,7 @@ public class MemcachedStub extends KeyValueStub {
 							+ " client id: " + token.getClientId());
 
 			exp = casRequest.getExpTime();
-			data = SerDesUtils.toObject(casRequest.getValue().toByteArray());
+			data = casRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,
 					MemcachedDriver.class, MemcachedResponseTransmitter.class);

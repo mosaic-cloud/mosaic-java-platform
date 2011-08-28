@@ -122,8 +122,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);
 		factory.setPort(amqpServerPort);
-		if (!amqpVirtualHost.equals(""))
+		if (!amqpVirtualHost.equals("")) {
 			factory.setVirtualHost(amqpVirtualHost);
+		}
 		if (!amqpServerUser.isEmpty()) {
 			factory.setUsername(amqpServerUser);
 			factory.setPassword(amqpServerPasswd);
@@ -496,8 +497,8 @@ public class AmqpDriver extends AbstractResourceDriver {
 			final AmqpInboundMessage message = new AmqpInboundMessage(consumer,
 					envelope.getDeliveryTag(), envelope.getExchange(),
 					envelope.getRoutingKey(), data,
-					(properties.getDeliveryMode() != null && properties
-							.getDeliveryMode() == 2) ? true : false,
+					((properties.getDeliveryMode() != null) && (properties
+							.getDeliveryMode() == 2)) ? true : false,
 					properties.getContentType());
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);

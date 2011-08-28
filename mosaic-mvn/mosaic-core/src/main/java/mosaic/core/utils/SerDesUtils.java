@@ -3,13 +3,11 @@ package mosaic.core.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 
 /**
  * Defines utility methods for serializing and deserializing messages.
@@ -18,87 +16,13 @@ import org.json.JSONTokener;
  * 
  */
 public class SerDesUtils {
-	// private final static DecoderFactory DIRECT_DECODER = new
-	// DecoderFactory();
-	//
-	// private final static EncoderFactory DIRECT_ENCODER = new
-	// EncoderFactory();
-	//
-	// /**
-	// * Serializes a single operation object.
-	// *
-	// * @param op
-	// * operation to serialize
-	// * @throws IOException
-	// */
-	// public static <T extends SpecificRecord> byte[] serialize(T t)
-	// throws IOException {
-	// ByteArrayOutputStream out = new ByteArrayOutputStream();
-	// BinaryEncoder enc = DIRECT_ENCODER.binaryEncoder(out, null);
-	// SpecificDatumWriter<T> writer = new SpecificDatumWriter<T>(
-	// t.getSchema());
-	// writer.write(t, enc);
-	// enc.flush();
-	// return out.toByteArray();
-	// }
-	//
-	// /**
-	// * Serializes a single object along with its Schema. For performance
-	// * critical areas, it is <b>much</b> more efficient to store the Schema
-	// * independently.
-	// *
-	// * @param o
-	// * object to serialize
-	// */
-	// public static <T extends SpecificRecord> byte[] serializeWithSchema(T o)
-	// throws IOException {
-	// ByteArrayOutputStream out = new ByteArrayOutputStream();
-	// BinaryEncoder enc = DIRECT_ENCODER.binaryEncoder(out, null);
-	// enc.writeString(new Utf8(o.getSchema().toString()));
-	// SpecificDatumWriter<T> writer = new SpecificDatumWriter<T>(
-	// o.getSchema());
-	// writer.write(o, enc);
-	// enc.flush();
-	// return out.toByteArray();
-	// }
-	//
-	// /**
-	// * Deserializes a single object based on the given Schema.
-	// *
-	// * @param writer
-	// * writer's schema
-	// * @param bytes
-	// * array to deserialize from
-	// * @param ob
-	// * an empty object to deserialize into (must not be null).
-	// * @throws IOException
-	// */
-	// public static <T extends SpecificRecord> T deserialize(Schema writer,
-	// byte[] bytes, T ob) throws IOException {
-	// BinaryDecoder dec = DIRECT_DECODER.binaryDecoder(bytes, null);
-	// SpecificDatumReader<T> reader = new SpecificDatumReader<T>(writer);
-	// reader.setExpected(ob.getSchema());
-	// return reader.read(ob, dec);
-	// }
-	//
-	// /**
-	// * Deserializes a single object as stored along with its Schema by
-	// * serialize(T).
-	// *
-	// * @param ob
-	// * an empty object to deserialize into (must not be null).
-	// * @param bytes
-	// * array to deserialize from
-	// * @throws IOException
-	// */
-	// public static <T extends SpecificRecord> T deserializeWithSchema(
-	// byte[] bytes, T ob) throws IOException {
-	// BinaryDecoder dec = DIRECT_DECODER.binaryDecoder(bytes, null);
-	// Schema writer = Schema.parse(dec.readString(new Utf8()).toString());
-	// SpecificDatumReader<T> reader = new SpecificDatumReader<T>(writer);
-	// reader.setExpected(ob.getSchema());
-	// return reader.read(ob, dec);
-	// }
+
+	private static ObjectMapper objectMapper = new ObjectMapper();
+
+	static {
+		objectMapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS,
+				false);
+	}
 
 	/**
 	 * Converts an object to an array of bytes .
@@ -107,7 +31,7 @@ public class SerDesUtils {
 	 *            the object to convert.
 	 * @return the associated byte array.
 	 */
-	public static byte[] toBytes(Object object) throws IOException {
+	public static byte[] pojoToBytes(Object object) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(object);
@@ -129,6 +53,8 @@ public class SerDesUtils {
 	public static Object toObject(byte[] bytes) throws IOException,
 			ClassNotFoundException {
 		Object object = null;
+		if (bytes.length == 0)
+			return null;
 		ObjectInputStream stream = new ObjectInputStream(
 				new ByteArrayInputStream(bytes));
 		object = stream.readObject();
@@ -136,9 +62,39 @@ public class SerDesUtils {
 		return object;
 	}
 
-	public static JSONObject toJSONObject(byte[] bytes) throws JSONException {
-		ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-		JSONTokener tokener = new JSONTokener(new InputStreamReader(stream));
-		return new JSONObject(tokener);
+	/**
+	 * Converts an array of bytes corresponding to a JSON object back to its
+	 * constituent Java Bean object. The input array is assumed to have been
+	 * created from the original object.
+	 * 
+	 * @param bytes
+	 *            the byte array to convert.
+	 * @param valueClass
+	 *            the class of the bean object
+	 * @return the associated object.
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public static <T extends Object> T jsonToObject(byte[] bytes,
+			Class<T> valueClass) throws IOException, ClassNotFoundException {
+		T object = null;
+		if (bytes.length > 0)
+			object = SerDesUtils.objectMapper.readValue(bytes, 0, bytes.length,
+					valueClass);
+		return object;
+	}
+
+	/**
+	 * Converts an object (Java Bean) to an array of bytes corresponding to the
+	 * JSON encoding of the bean..
+	 * 
+	 * @param object
+	 *            the object to convert.
+	 * @return the associated byte array.
+	 */
+	public static byte[] toJsonBytes(Object object) throws IOException {
+		byte[] bytes = SerDesUtils.objectMapper.writeValueAsString(object)
+				.getBytes();
+		return bytes;
 	}
 }

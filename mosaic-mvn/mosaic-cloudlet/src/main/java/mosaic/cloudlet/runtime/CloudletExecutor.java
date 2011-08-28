@@ -137,8 +137,11 @@ public class CloudletExecutor {
 
 	/**
 	 * Creates a new CloudletExecutor.
+	 * 
+	 * @param loader
+	 *            the class loader used for loading cloudlet classes
 	 */
-	public CloudletExecutor() {
+	public CloudletExecutor(ClassLoader loader) {
 		super();
 		this.runState = CloudletExecutor.INITIALIZING;
 		this.requestQueue = new LinkedBlockingQueue<Runnable>();
@@ -147,11 +150,13 @@ public class CloudletExecutor {
 		// FIXME get threads from workers from a thread pool
 		this.worker = new Worker();
 		this.worker.thread = new Thread(this.worker);
+		this.worker.thread.setContextClassLoader(loader);
 		this.worker.thread.setDaemon(false);
 		this.worker.thread.start();
 
 		this.backupWorker = new BackupWorker();
 		this.backupWorker.thread = new Thread(this.backupWorker);
+		this.backupWorker.thread.setContextClassLoader(loader);
 		this.backupWorker.thread.setDaemon(false);
 		this.backupWorker.thread.start();
 		this.runningWorkers = 2;

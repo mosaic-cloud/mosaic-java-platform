@@ -76,14 +76,14 @@ public class DriverConnectionData {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
+		result = (prime * result)
 				+ ((this.driverName == null) ? 0 : this.driverName.hashCode());
-		result = prime * result
+		result = (prime * result)
 				+ ((this.host == null) ? 0 : this.host.hashCode());
-		result = prime * result
+		result = (prime * result)
 				+ ((this.password == null) ? 0 : this.password.hashCode());
-		result = prime * result + this.port;
-		result = prime * result
+		result = (prime * result) + this.port;
+		result = (prime * result)
 				+ ((this.user == null) ? 0 : this.user.hashCode());
 		return result;
 	}
