@@ -43,6 +43,7 @@ public class IndexWorkflow {
 		this.parser = new FeedParser();
 		this.currentFeedMetaData = new JSONObject();
 		this.newFeedTask = new JSONObject();
+		this.newFeedItems = new JSONArray();
 		this.state = state;
 		this.recvMessage = recvMessage;
 		this.indexMessage = recvMessage.getData();
@@ -77,7 +78,6 @@ public class IndexWorkflow {
 	 * 
 	 */
 	private void fetchLatestFeed() {
-		// get data from the feeds-data bucket
 		try {
 			MosaicLogger.getLogger().info(
 					"indexing " + this.indexMessage.getString("url")
@@ -111,7 +111,7 @@ public class IndexWorkflow {
 			MosaicLogger.getLogger().trace(
 					"indexing " + this.indexMessage.getString("url")
 							+ " (from data) step 2 (parsing latest data)...");
-			byte[] data = fetchedData.toString().getBytes();
+			byte[] data = (byte[]) fetchedData;
 			this.currentTimeline = this.parser.parseFeed(data);
 			indexFeed();
 		} catch (IOException e) {
@@ -120,6 +120,8 @@ public class IndexWorkflow {
 			handleError(e);
 		} catch (JSONException e) {
 			handleError(e);
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -128,7 +130,8 @@ public class IndexWorkflow {
 				.getString("url"));
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 1 (fetching latest meta-data)...");
+						+ " step 3 (fetching latest meta-data)...");
+		// FIXME
 		this.state.metadataStore.get(feedKey, this.key);
 	}
 
@@ -139,13 +142,14 @@ public class IndexWorkflow {
 	private void doFeedDiff(Object fetchedData) {
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 2 (diff-ing latest feed)...");
-		this.previousFeedMetaData = (JSONObject) fetchedData;
+						+ " step 4 (diff-ing latest feed)...");
+
 		String currentKey, currentURL, currentFeed, currentFeedId;
 		long currentTimestamp;
 		int currentSequence;
 
 		try {
+			this.previousFeedMetaData = (JSONObject) fetchedData;
 			int previousSequence = this.previousFeedMetaData.getInt("sequence");
 			long minItemTimestamp = -1;
 			try {
@@ -240,13 +244,17 @@ public class IndexWorkflow {
 	}
 
 	public static void updateFeedMetadata(Object extra) {
-		getIndexer((UUID) extra).handleMetadataUpdate();
+		try {
+			getIndexer((UUID) extra).handleMetadataUpdate();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void handleMetadataUpdate() {
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 3 (updating meta-data)...");
+						+ " step 5 (updating meta-data)...");
 		try {
 			this.state.metadataStore.set(
 					this.currentFeedMetaData.getString("key"),
@@ -274,7 +282,7 @@ public class IndexWorkflow {
 	private void storeIndexOutcome() {
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 4 (updating index task)...");
+						+ " step 6 (updating index task)...");
 
 		try {
 			String feedTaskKey = StoreUtils.generateFeedTaskKey(
@@ -293,11 +301,13 @@ public class IndexWorkflow {
 			this.state.taskStore.set(feedTaskKey, this.newFeedTask, this.key);
 		} catch (JSONException e) {
 			ExceptionTracer.traceDeferred(e);
+			e.printStackTrace();
 		}
 	}
 
 	public static void sendAcknowledge(Object extra) {
 		getIndexer((UUID) extra).recvMessage.acknowledge();
+		MosaicLogger.getLogger().trace("finished indexing...");
 	}
 
 	private void handleError(Exception e) {
@@ -317,4 +327,5 @@ public class IndexWorkflow {
 		MosaicLogger.getLogger().error(errorBuilder.toString());
 		getIndexer((UUID) extra).recvMessage.acknowledge();
 	}
+
 }

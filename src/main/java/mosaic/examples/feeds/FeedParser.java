@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.sun.syndication.feed.atom.Feed;
+import com.sun.syndication.feed.atom.Link;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -26,8 +27,8 @@ public class FeedParser {
 	public Timeline parseFeed(byte[] xmlEntry) throws IOException,
 			FeedException {
 		// Load the feed, regardless of RSS or Atom type
-		SyndFeed feed = this.input.build(new XmlReader(
-				new ByteArrayInputStream(xmlEntry)));
+		XmlReader reader = new XmlReader(new ByteArrayInputStream(xmlEntry));
+		SyndFeed feed = this.input.build(reader);
 
 		// check feed type, only ATOM is accepted
 		Feed atomFeed = null;
@@ -66,9 +67,15 @@ public class FeedParser {
 			// + " " + titleType + "\n\t" + content + " " + contentType
 			// + "\n\t" + entry.getUpdatedDate().getTime() + "\n\t"
 			// + authorName + " " + authorEmail + " " + authorURI);
-			timeline.addEntry(entry.getUri(), title, titleType, content,
+			Timeline.Entry tEntry=timeline.addEntry(entry.getUri(), title, titleType, content,
 					contentType, entry.getUpdatedDate().getTime(), authorName,
 					authorEmail, authorURI);
+			
+			@SuppressWarnings("unchecked")
+			List<Link> links=entry.getLinks();
+			for(Link link:links) {
+				tEntry.addLink(link.getRel(), link.getHref());
+			}
 		}
 		return timeline;
 	}

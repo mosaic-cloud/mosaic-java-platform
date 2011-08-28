@@ -1,7 +1,5 @@
 package mosaic.examples.feeds;
 
-import org.json.JSONObject;
-
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.DefaultCloudletCallback;
 import mosaic.cloudlet.core.ICloudletController;
@@ -11,6 +9,9 @@ import mosaic.cloudlet.resources.kvstore.KeyValueAccessor;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
+import mosaic.core.utils.DataEncoder;
+
+import org.json.JSONObject;
 
 public class IndexerCloudlet {
 
@@ -28,39 +29,43 @@ public class IndexerCloudlet {
 			IConfiguration metadataConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("metadata"));
+			DataEncoder<byte[]> nopEncoder = new NopDataEncoder();
+			DataEncoder<JSONObject> jsonEncoder = new JSONDataEncoder();
 			state.metadataStore = new KeyValueAccessor<IndexerCloudletState>(
-					metadataConfiguration, cloudlet);
+					metadataConfiguration, cloudlet, jsonEncoder);
 			IConfiguration dataConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("data"));
 			state.dataStore = new KeyValueAccessor<IndexerCloudletState>(
-					dataConfiguration, cloudlet);
+					dataConfiguration, cloudlet, nopEncoder);
 			IConfiguration timelinesConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("timelines"));
 			state.timelinesStore = new KeyValueAccessor<IndexerCloudletState>(
-					timelinesConfiguration, cloudlet);
+					timelinesConfiguration, cloudlet, jsonEncoder);
 			IConfiguration itemsConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("items"));
 			state.itemsStore = new KeyValueAccessor<IndexerCloudletState>(
-					itemsConfiguration, cloudlet);
+					itemsConfiguration, cloudlet, jsonEncoder);
 			IConfiguration tasksConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("tasks"));
 			state.taskStore = new KeyValueAccessor<IndexerCloudletState>(
-					tasksConfiguration, cloudlet);
+					tasksConfiguration, cloudlet, jsonEncoder);
 
 			IConfiguration urgentQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("urgent.queue"));
 			state.urgentConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletState, JSONObject>(
-					urgentQueueConfiguration, cloudlet, JSONObject.class);
+					urgentQueueConfiguration, cloudlet, JSONObject.class,
+					jsonEncoder);
 			IConfiguration batchQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("batch.queue"));
 			state.batchConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletState, JSONObject>(
-					batchQueueConfiguration, cloudlet, JSONObject.class);
+					batchQueueConfiguration, cloudlet, JSONObject.class,
+					jsonEncoder);
 
 		}
 

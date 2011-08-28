@@ -43,7 +43,7 @@ public class StoreUtils {
 	public static final String generateFeedTimelineKey(String url, int sequence) {
 		// return (new crypto.Hash ("md5") .update (_url) .update ("#") .update
 		// (printf ("%08x", _sequence)) .digest ("hex"));
-		String seq = String.format("%1$08x", sequence + "").toLowerCase();
+		String seq = String.format("%1$08x", sequence).toLowerCase();
 		return generateTwoStringKey(url, seq);
 	}
 

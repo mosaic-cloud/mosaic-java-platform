@@ -1,13 +1,13 @@
 package mosaic.examples.feeds;
 
+import org.json.JSONObject;
+
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.resources.amqp.AmqpQueueConsumeCallbackArguments;
 import mosaic.cloudlet.resources.amqp.AmqpQueueConsumeMessage;
 import mosaic.cloudlet.resources.amqp.DefaultAmqpConsumerCallback;
 import mosaic.core.log.MosaicLogger;
 import mosaic.examples.feeds.IndexerCloudlet.IndexerCloudletState;
-
-import org.json.JSONObject;
 
 public class QueueConsumerCallback extends
 		DefaultAmqpConsumerCallback<IndexerCloudletState, JSONObject> {

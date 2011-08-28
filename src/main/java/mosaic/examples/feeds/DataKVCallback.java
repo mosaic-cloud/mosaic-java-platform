@@ -24,10 +24,10 @@ public class DataKVCallback extends
 	public void getSucceeded(IndexerCloudletState state,
 			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
 		try {
-		String key = arguments.getKey();
-		MosaicLogger.getLogger().trace(
-				"succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key
-						+ ", " + arguments.getValue() + ")");
+			String key = arguments.getKey();
+			MosaicLogger.getLogger().trace(
+					"succeeded fetch (" + DataKVCallback.BUCKET_NAME + ","
+							+ key + ")");
 			IndexWorkflow.parseLatestFeed(arguments.getValue(),
 					arguments.getExtra());
 		} catch (Throwable e) {

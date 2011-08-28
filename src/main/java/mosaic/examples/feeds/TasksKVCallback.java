@@ -23,7 +23,11 @@ public class TasksKVCallback extends
 	@Override
 	public void setSucceeded(IndexerCloudletState state,
 			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		IndexWorkflow.sendAcknowledge(arguments.getExtra());
+		try {
+			IndexWorkflow.sendAcknowledge(arguments.getExtra());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
