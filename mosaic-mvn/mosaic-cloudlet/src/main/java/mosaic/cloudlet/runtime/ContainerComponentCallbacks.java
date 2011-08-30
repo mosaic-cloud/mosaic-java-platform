@@ -1,6 +1,5 @@
 package mosaic.cloudlet.runtime;
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
@@ -186,11 +185,16 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 							.decode(request.inputs, List.class);
 					ClassLoader loader = getCloudletClassLoader(operands.get(0)
 							.toString());
-					MosaicLogger.getLogger().debug(
-							"Loading cloudlet in JAR " + operands.get(0)
-									+ " with configuration " + operands.get(1));
-					container = startCloudlet(loader, operands.get(1)
-							.toString());
+					for (int i = 1; i < operands.size(); i++) {
+						MosaicLogger.getLogger().debug(
+								"Loading cloudlet in JAR " + operands.get(0)
+										+ " with configuration "
+										+ operands.get(i));
+						container = startCloudlet(loader, operands.get(i)
+								.toString());
+						if (container != null)
+							cloudletRunners.add(container);
+					}
 					ComponentCallReply reply = ComponentCallReply.create(true,
 							new Boolean(true), ByteBuffer.allocate(0),
 							request.reference);
