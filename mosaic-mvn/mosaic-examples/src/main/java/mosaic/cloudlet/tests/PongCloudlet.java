@@ -1,4 +1,4 @@
-package mosaic.cloudlet.component.tests;
+package mosaic.cloudlet.tests;
 
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.DefaultCloudletCallback;
@@ -19,7 +19,6 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.utils.JsonDataEncoder;
-import mosaic.core.utils.PojoDataEncoder;
 
 public class PongCloudlet {
 
@@ -38,8 +37,8 @@ public class PongCloudlet {
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("kvstore"));
 			state.kvStore = new KeyValueAccessor<PongCloudletState>(
-					kvConfiguration, cloudlet, new PojoDataEncoder<String>(
-							String.class));
+					kvConfiguration, cloudlet, new JsonDataEncoder<PingPongData>(
+							PingPongData.class));
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
@@ -111,7 +110,7 @@ public class PongCloudlet {
 
 			// send reply to Ping Cloudlet
 			PongMessage pong = new PongMessage(arguments.getKey(),
-					(String) arguments.getValue());
+					 (PingPongData) arguments.getValue());
 			state.publisher.publish(pong, null, "");
 
 			ICloudletController<PongCloudletState> cloudlet = arguments

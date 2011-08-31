@@ -1,4 +1,4 @@
-package mosaic.cloudlet.component.tests;
+package mosaic.cloudlet.tests;
 
 public class PingMessage {
 

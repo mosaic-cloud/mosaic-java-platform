@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.cloudlet.ConfigProperties;
-import mosaic.cloudlet.component.tests.TestRunner;
 import mosaic.cloudlet.core.CloudletException;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
@@ -134,52 +133,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					&& (this.status != Status.Unregistered));
 			if (this.status == Status.Ready) {
 				if (request.operation.equals(ConfigProperties
-						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
-					MosaicLogger.getLogger().debug(
-							"mOSAIC container - running test cloudlets");
-					container = TestRunner.runHelloWorld();
-					if (container != null)
-						cloudletRunners.add(container);
-
-					ComponentCallReply reply = ComponentCallReply.create(true,
-							new Boolean(true), ByteBuffer.allocate(0),
-							request.reference);
-					component.reply(reply);
-					return null;
-				} else if (request.operation.equals(ConfigProperties
-						.getString("ContainerComponentCallbacks.8"))) { //$NON-NLS-1$
-					container = TestRunner.runSimpleQueueConsumer();
-					if (container != null)
-						cloudletRunners.add(container);
-
-					container = null;
-					container = TestRunner.runSimpleQueuePublisher();
-					if (container != null)
-						cloudletRunners.add(container);
-
-					ComponentCallReply reply = ComponentCallReply.create(true,
-							new Boolean(true), ByteBuffer.allocate(0),
-							request.reference);
-					component.reply(reply);
-					return null;
-				} else if (request.operation.equals(ConfigProperties
-						.getString("ContainerComponentCallbacks.9"))) { //$NON-NLS-1$
-					container = TestRunner.runUserCloudlet();
-					if (container != null)
-						cloudletRunners.add(container);
-
-					container = null;
-					container = TestRunner.runLoggingCloudlet();
-					if (container != null)
-						cloudletRunners.add(container);
-
-					ComponentCallReply reply = ComponentCallReply.create(true,
-							new Boolean(true), ByteBuffer.allocate(0),
-							request.reference);
-					component.reply(reply);
-					return null;
-				} else if (request.operation.equals(ConfigProperties
-						.getString("ContainerComponentCallbacks.10"))) {
+						.getString("ContainerComponentCallbacks.4"))) {
 					// TODO
 					List<?> operands = DefaultJsonMapper.defaultInstance
 							.decode(request.inputs, List.class);
@@ -200,7 +154,22 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 							request.reference);
 					component.reply(reply);
 					return null;
-				} else
+				} 
+//				else  if (request.operation.equals(ConfigProperties
+//						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
+//					MosaicLogger.getLogger().debug(
+//							"mOSAIC container - running test cloudlets");
+//					container = TestRunner.runHelloWorld();
+//					if (container != null)
+//						cloudletRunners.add(container);
+//
+//					ComponentCallReply reply = ComponentCallReply.create(true,
+//							new Boolean(true), ByteBuffer.allocate(0),
+//							request.reference);
+//					component.reply(reply);
+//					return null;
+//				}
+				else
 					throw new UnsupportedOperationException();
 			}
 			throw new UnsupportedOperationException();

@@ -1,4 +1,4 @@
-package mosaic.cloudlet.component.tests;
+package mosaic.cloudlet.tests;
 
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.DefaultCloudletCallback;
@@ -124,7 +124,7 @@ public class PingCloudlet {
 					.getMessage();
 			PongMessage data = message.getData();
 			String key = data.getKey();
-			String value = data.getValue();
+			PingPongData value = data.getValue();
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet received key-value pair: (" + key + ", "
 							+ value + ")");

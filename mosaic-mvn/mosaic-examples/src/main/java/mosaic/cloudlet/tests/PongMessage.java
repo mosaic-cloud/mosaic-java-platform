@@ -1,15 +1,15 @@
-package mosaic.cloudlet.component.tests;
+package mosaic.cloudlet.tests;
 
 public class PongMessage {
 
 	private String key;
-	private String value;
+	private PingPongData value;
 
 	public PongMessage() {
 
 	}
 
-	public PongMessage(String key, String value) {
+	public PongMessage(String key, PingPongData value) {
 		this.key = key;
 		this.value = value;
 	}
@@ -22,11 +22,12 @@ public class PongMessage {
 		this.key = key;
 	}
 
-	public String getValue() {
+	public PingPongData getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(PingPongData value) {
 		this.value = value;
 	}
+
 }

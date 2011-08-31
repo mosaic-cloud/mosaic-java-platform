@@ -41,8 +41,7 @@
 		<module>mosaic-driver</module>
 		<module>mosaic-connector</module>
 		<module>mosaic-cloudlet</module>
-		<!-- 
-		<module>mosaic-examples</module> -->
+		<module>mosaic-examples</module>
 	</modules>
 
 	<properties>

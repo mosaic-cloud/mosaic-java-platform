@@ -22,6 +22,7 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.PojoDataEncoder;
 
 public class LoggingCloudlet {
 
@@ -40,14 +41,18 @@ public class LoggingCloudlet {
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("kvstore"));
 			state.kvStore = new KeyValueAccessor<LoggingCloudletState>(
-					kvConfiguration, cloudlet);
+					kvConfiguration, cloudlet, new PojoDataEncoder<String>(
+							String.class));
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
 			state.consumer = new AmqpQueueConsumer<LoggingCloudlet.LoggingCloudletState, LoggingData>(
-					queueConfiguration, cloudlet, LoggingData.class);
+					queueConfiguration, cloudlet, LoggingData.class,
+					new PojoDataEncoder<LoggingData>(LoggingData.class));
 			state.publisher = new AmqpQueuePublisher<LoggingCloudlet.LoggingCloudletState, AuthenticationToken>(
-					queueConfiguration, cloudlet, AuthenticationToken.class);
+					queueConfiguration, cloudlet, AuthenticationToken.class,
+					new PojoDataEncoder<AuthenticationToken>(
+							AuthenticationToken.class));
 
 		}
 
@@ -79,7 +84,6 @@ public class LoggingCloudlet {
 				CallbackArguments<LoggingCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet was destroyed successfully.");
-			System.exit(0);
 		}
 
 	}
@@ -119,7 +123,13 @@ public class LoggingCloudlet {
 			if (sets == 2) {
 				ICloudletController<LoggingCloudletState> cloudlet = arguments
 						.getCloudlet();
-				cloudlet.destroyResource(state.kvStore, this);
+				try {
+					cloudlet.destroyResource(state.kvStore, this);
+				} catch (Exception e) {
+					MosaicLogger.getLogger().error(
+							"LoggingCloudlet.KeyValueCallback.setSucceeded() - caught exception "
+									+ e.getClass().getCanonicalName());
+				}
 			}
 		}
 
@@ -199,7 +209,7 @@ public class LoggingCloudlet {
 					}
 				}
 				AuthenticationToken aToken = new AuthenticationToken(token);
-				state.publisher.publish(aToken, null, null);
+				state.publisher.publish(aToken, null, "");
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceHandled(e);
 			} catch (ExecutionException e) {

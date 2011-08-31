@@ -10,6 +10,8 @@ import mosaic.cloudlet.resources.amqp.DefaultAmqpConsumerCallback;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
+import mosaic.core.utils.DataEncoder;
+import mosaic.core.utils.PojoDataEncoder;
 
 public class ConsumerCloudlet {
 
@@ -27,8 +29,10 @@ public class ConsumerCloudlet {
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
+			DataEncoder<String> encoder = new PojoDataEncoder<String>(
+					String.class);
 			state.consumer = new AmqpQueueConsumer<ConsumerCloudlet.ConsumerCloudletState, String>(
-					queueConfiguration, cloudlet, String.class);
+					queueConfiguration, cloudlet, String.class, encoder);
 
 		}
 
@@ -54,7 +58,7 @@ public class ConsumerCloudlet {
 		public void destroySucceeded(ConsumerCloudletState state,
 				CallbackArguments<ConsumerCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
-			"Consumer cloudlet was destroyed successfully.");
+					"Consumer cloudlet was destroyed successfully.");
 		}
 
 	}
@@ -108,6 +112,7 @@ public class ConsumerCloudlet {
 		public void consume(
 				ConsumerCloudletState state,
 				AmqpQueueConsumeCallbackArguments<ConsumerCloudletState, String> arguments) {
+
 			AmqpQueueConsumeMessage<String> message = arguments.getMessage();
 			String data = message.getData();
 			MosaicLogger.getLogger().info(
