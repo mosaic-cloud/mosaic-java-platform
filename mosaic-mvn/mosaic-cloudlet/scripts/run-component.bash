@@ -8,6 +8,14 @@ fi
 _identifier="${1:-000000009bd607dfc15147519d8cb1daf64e932d}"
 shift 1
 
+if test -n "${mosaic_component_temporary:-}" ; then
+	_tmp="${mosaic_component_temporary:-}"
+elif test -n "${mosaic_node_temporary:-}" ; then
+	_tmp="${mosaic_node_temporary}/components/${_identifier}"
+else
+	_tmp="/tmp/mosaic/components/${_identifier}"
+fi
+
 _jar="${_java_jars:-${_workbench}/target}/${_package_jar_name}"
 
 _java_args+=(
@@ -15,7 +23,7 @@ _java_args+=(
 		"${@}"
 )
 
-mkdir -p "/tmp/mosaic/components/${_identifier}"
-cd "/tmp/mosaic/components/${_identifier}"
+mkdir -p "${_tmp}"
+cd "${_tmp}"
 
 exec env "${_java_env[@]}" "${_java}" "${_java_args[@]}"
