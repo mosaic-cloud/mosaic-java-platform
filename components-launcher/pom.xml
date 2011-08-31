@@ -24,22 +24,22 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-classpath-exporter</artifactId>
-			<version>${project.version}</version>
+			<version>${mosaic.tools.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-miscellaneous</artifactId>
-			<version>${project.version}</version>
+			<version>${mosaic.tools.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-transcript</artifactId>
-			<version>${project.version}</version>
+			<version>${mosaic.tools.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-json</artifactId>
-			<version>${project.version}</version>
+			<version>${mosaic.tools.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
