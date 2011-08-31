@@ -24,7 +24,7 @@ mkdir "${_outputs}/package/bin"
 mkdir "${_outputs}/package/lib"
 
 mkdir "${_outputs}/package/lib/java"
-find "$( readlink -e -- ./umbrella )" \( -type d -path "${_outputs}/package" -prune \) -o \( -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" {} \; \)
+find "$( readlink -e -- ./umbrella )"/*/ \( -type d -path "${_outputs}/package" -prune \) -o \( -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" {} \; \)
 find "$( readlink -e -- ./umbrella/lib )" \( -type d -path "${_outputs}/package" -prune \) -o \( -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" {} \; \)
 
 mkdir "${_outputs}/package/lib/scripts"

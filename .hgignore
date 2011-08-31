@@ -4,6 +4,7 @@ syntax: glob
 *.class
 *.log
 *.eap
+.*
 
 syntax: regexp
 ^mOSAIC/build-tests$
@@ -30,6 +31,7 @@ syntax: regexp
 ^mosaic-mvn/mosaic-interop/target$
 syntax: regexp
 ^mosaic-mvn/lib$
+^mosaic-mvn/umbrella/lib$
 syntax: regexp
 \.classpath$
 syntax: regexp
