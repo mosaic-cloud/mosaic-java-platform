@@ -1,6 +1,5 @@
 package mosaic.driver.kvstore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -10,7 +9,6 @@ import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.IOperation;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.core.ops.IOperationType;
-import mosaic.core.utils.SerDesUtils;
 
 import com.basho.riak.client.RiakBucketInfo;
 import com.basho.riak.client.RiakClient;
@@ -75,15 +73,14 @@ public class RiakRestOperationFactory implements IOperationFactory {
 
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		final String key;
-		Object data;
 		final byte[] dataBytes;
 		try {
 			switch (mType) {
 			case SET:
 				// to change
 				key = (String) parameters[0];
-				data = parameters[1];
-				dataBytes = SerDesUtils.toBytes(data);
+				// data = parameters[1];
+				dataBytes = (byte[]) parameters[1];// SerDesUtils.toBytes(data);
 				final RiakObject riakobj = new RiakObject(this.bucket, key,
 						dataBytes);
 				operation = new GenericOperation<Boolean>(
@@ -91,11 +88,15 @@ public class RiakRestOperationFactory implements IOperationFactory {
 
 							@Override
 							public Boolean call() throws Exception {
-								// System.out.println("Driver Set value "+dataBytes+" "+SerDesUtils.toObject(dataBytes));
-								StoreResponse response = RiakRestOperationFactory.this.riakcl
-										.store(riakobj);
-								if (response.isSuccess())
-									return true;
+								try {
+									// System.out.println("Driver Set value "+dataBytes+" "+SerDesUtils.toObject(dataBytes));
+									StoreResponse response = RiakRestOperationFactory.this.riakcl
+											.store(riakobj);
+									if (response.isSuccess())
+										return true;
+								} catch (Throwable e) {
+									e.printStackTrace();
+								}
 								return false;
 							}
 
@@ -103,11 +104,11 @@ public class RiakRestOperationFactory implements IOperationFactory {
 				break;
 			case GET:
 				key = (String) parameters[0];
-				operation = new GenericOperation<Object>(
-						new Callable<Object>() {
+				operation = new GenericOperation<byte[]>(
+						new Callable<byte[]>() {
 
 							@Override
-							public Object call() throws Exception {
+							public byte[] call() throws Exception {
 								try {
 									FetchResponse res = RiakRestOperationFactory.this.riakcl
 											.fetch(RiakRestOperationFactory.this.bucket,
@@ -115,10 +116,8 @@ public class RiakRestOperationFactory implements IOperationFactory {
 									if (res.hasObject()) {
 										final RiakObject riakobj = res
 												.getObject();
-										// System.out.println("Driver Get value "+SerDesUtils.toObject(riakobj.getValueAsBytes()));
-										return riakobj.getValue();
+										return riakobj.getValueAsBytes();
 									} else
-										// System.out.println("Driver Get value "+SerDesUtils.toObject(riakobj.getValueAsBytes()));
 										return null;
 
 								} catch (Throwable e) {
@@ -178,7 +177,7 @@ public class RiakRestOperationFactory implements IOperationFactory {
 
 						});
 			}
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			operation = new GenericOperation<Object>(new Callable<Object>() {
 
 				@Override

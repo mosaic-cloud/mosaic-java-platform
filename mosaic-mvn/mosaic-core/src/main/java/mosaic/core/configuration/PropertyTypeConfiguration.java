@@ -251,6 +251,6 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 
 	@Override
 	public ConfigurationIdentifier getRootIdentifier() {
-		return root;
+		return this.root;
 	}
 }

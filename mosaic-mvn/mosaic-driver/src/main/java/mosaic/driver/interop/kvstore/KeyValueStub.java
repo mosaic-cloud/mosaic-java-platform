@@ -13,7 +13,6 @@ import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
-import mosaic.core.utils.SerDesUtils;
 import mosaic.driver.ConfigProperties;
 import mosaic.driver.DriverNotFoundException;
 import mosaic.driver.interop.AbstractDriverStub;
@@ -164,7 +163,7 @@ public class KeyValueStub extends AbstractDriverStub {
 			BaseKeyValueDriver driver,
 			Class<? extends KeyValueResponseTransmitter> transmitterClass)
 			throws IOException, ClassNotFoundException {
-		Object data;
+		byte[] data;
 		boolean unknownMessage = false;
 		KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
 		CompletionToken token = null;
@@ -188,7 +187,9 @@ public class KeyValueStub extends AbstractDriverStub {
 			KeyValuePayloads.SetRequest setRequest = (SetRequest) message.payload;
 			token = setRequest.getToken();
 			key = setRequest.getKey();
-			data = SerDesUtils.toObject(setRequest.getValue().toByteArray());
+			// data = SerDesUtils.toObject(setRequest.getValue().toByteArray(),
+			// Object.class);
+			data = setRequest.getValue().toByteArray();
 
 			MosaicLogger.getLogger().trace(
 					"KeyValueStub - Received request for "
@@ -225,7 +226,7 @@ public class KeyValueStub extends AbstractDriverStub {
 							+ " - request id: " + token.getMessageId()
 							+ " client id: " + token.getClientId());
 
-			IResult<Object> resultGet = driver.invokeGetOperation(
+			IResult<byte[]> resultGet = driver.invokeGetOperation(
 					token.getClientId(), key, getCallback);
 			getCallback.setDetails(KeyValueOperations.GET, resultGet);
 			break;
@@ -323,9 +324,9 @@ public class KeyValueStub extends AbstractDriverStub {
 		String passwd = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.4"), String.class, //$NON-NLS-1$
 				""); //$NON-NLS-1$
-		String bucket = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("KVStoreDriver.3"), String.class, //$NON-NLS-1$
-				"");
+//		String bucket = ConfigUtils.resolveParameter(config,
+//				ConfigProperties.getString("KVStoreDriver.3"), String.class, //$NON-NLS-1$
+//				"");
 		DriverConnectionData cData = null;
 		if (user.equals("") && passwd.equals("")) {
 			cData = new DriverConnectionData(resourceHost, resourcePort, driver);

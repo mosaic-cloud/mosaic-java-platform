@@ -14,6 +14,7 @@ import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
+import mosaic.core.utils.PojoDataEncoder;
 
 public class UserCloudlet {
 
@@ -31,9 +32,12 @@ public class UserCloudlet {
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
 			state.consumer = new AmqpQueueConsumer<UserCloudlet.UserCloudletState, AuthenticationToken>(
-					queueConfiguration, cloudlet, AuthenticationToken.class);
+					queueConfiguration, cloudlet, AuthenticationToken.class,
+					new PojoDataEncoder<AuthenticationToken>(
+							AuthenticationToken.class));
 			state.publisher = new AmqpQueuePublisher<UserCloudlet.UserCloudletState, LoggingData>(
-					queueConfiguration, cloudlet, LoggingData.class);
+					queueConfiguration, cloudlet, LoggingData.class,
+					new PojoDataEncoder<LoggingData>(LoggingData.class));
 
 		}
 

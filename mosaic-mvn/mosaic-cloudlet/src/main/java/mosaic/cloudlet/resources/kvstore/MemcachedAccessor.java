@@ -9,6 +9,7 @@ import mosaic.connector.kvstore.memcached.IMemcachedStore;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.DataEncoder;
 
 /**
  * Ccloudlet-level accessor for memcached-based key value storages. Cloudlets
@@ -29,10 +30,12 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	 *            configuration data required by the accessor
 	 * @param cloudlet
 	 *            the cloudlet controller of the cloudlet using the accessor
+	 * @param encoder
+	 *            encoder used for serializing data
 	 */
 	public MemcachedAccessor(IConfiguration config,
-			ICloudletController<S> cloudlet) {
-		super(config, cloudlet);
+			ICloudletController<S> cloudlet, DataEncoder<?> encoder) {
+		super(config, cloudlet, encoder);
 	}
 
 	@Override

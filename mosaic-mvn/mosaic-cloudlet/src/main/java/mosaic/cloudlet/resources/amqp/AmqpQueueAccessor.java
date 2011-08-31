@@ -1,10 +1,7 @@
 package mosaic.cloudlet.resources.amqp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
 
 import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CallbackArguments;
@@ -23,7 +20,7 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.utils.SerDesUtils;
+import mosaic.core.utils.DataEncoder;
 import mosaic.driver.queue.amqp.AmqpExchangeType;
 
 /**
@@ -43,7 +40,8 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	protected S cloudletState;
 	private ResourceStatus status;
 	private IAmqpQueueConnector connector;
-	private Class<D> dataClass;
+	protected Class<D> dataClass;
+	protected DataEncoder<D> dataEncoder;
 
 	protected String exchange;
 	protected String routingKey;
@@ -64,14 +62,19 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	 *            the cloudlet controller of the cloudlet using the accessor
 	 * @param dataClass
 	 *            the type of the consumed or produced messages
+	 * @param consumer
+	 *            whether to create a consumer or a producer
+	 * @param encoder
+	 *            encoder used for serializing data
 	 */
 	public AmqpQueueAccessor(IConfiguration config,
 			ICloudletController<S> cloudlet, Class<D> dataClass,
-			boolean consumer) {
+			boolean consumer, DataEncoder<D> encoder) {
 		this.configuration = config;
 		this.cloudlet = cloudlet;
 		this.status = ResourceStatus.CREATED;
 		this.dataClass = dataClass;
+		this.dataEncoder = encoder;
 		this.registered = false;
 		String specification = ConfigProperties
 				.getString("AmqpQueueAccessor.3"); //$NON-NLS-1$
@@ -293,34 +296,6 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 
 	protected abstract void finishRegister(
 			IAmqpQueueAccessorCallback<S> callback);
-
-	protected D deserializeMessage(byte[] data, String contentType) {
-		D ob = null;
-		try {
-			if (contentType != null
-					&& contentType.equalsIgnoreCase("application/json"))
-				ob = this.dataClass.cast(SerDesUtils.toJSONObject(data));
-			else
-				ob = this.dataClass.cast(SerDesUtils.toObject(data));
-		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
-		} catch (ClassNotFoundException e) {
-			ExceptionTracer.traceDeferred(e);
-		} catch (JSONException e) {
-			ExceptionTracer.traceDeferred(e);
-		}
-		return ob;
-	}
-
-	protected byte[] serializeMessage(D message) throws Throwable {
-		byte[] bytes = null;
-		try {
-			bytes = SerDesUtils.toBytes(message);
-		} catch (IOException e) {
-			ExceptionTracer.traceRethrown(e);
-		}
-		return bytes;
-	}
 
 	/**
 	 * A callback handler for the open connection request.

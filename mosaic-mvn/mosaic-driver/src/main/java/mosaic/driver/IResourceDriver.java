@@ -1,6 +1,5 @@
 package mosaic.driver;
 
-
 /**
  * Generic interface that should be implemented by all resource drivers.
  * 

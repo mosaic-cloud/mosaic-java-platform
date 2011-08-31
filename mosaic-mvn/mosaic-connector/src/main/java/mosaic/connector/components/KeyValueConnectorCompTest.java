@@ -1,5 +1,6 @@
 package mosaic.connector.components;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.PojoDataEncoder;
 import mosaic.interop.idl.ChannelData;
 
 import com.google.common.base.Preconditions;
@@ -48,7 +50,7 @@ public class KeyValueConnectorCompTest {
 		return list;
 	}
 
-	public void testSet() {
+	public void testSet() throws IOException {
 		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
 		IResult<Boolean> r1 = connector.set(k1, "fantastic", handlers1, null);
@@ -71,7 +73,7 @@ public class KeyValueConnectorCompTest {
 		}
 	}
 
-	public void testGet() {
+	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
 		IResult<Object> r1 = connector.get(k1, handlers, null);
@@ -142,7 +144,7 @@ public class KeyValueConnectorCompTest {
 		}
 	}
 
-	public void testConnector() {
+	public void testConnector() throws IOException, ClassNotFoundException {
 		testConnection();
 		testSet();
 		testGet();
@@ -151,6 +153,7 @@ public class KeyValueConnectorCompTest {
 	}
 
 	public static void test() throws Throwable {
+		@SuppressWarnings("unused")
 		KeyValueConnectorCompTest test = new KeyValueConnectorCompTest();
 	}
 
@@ -170,7 +173,8 @@ public class KeyValueConnectorCompTest {
 			KeyValueConnectorCompTest.this.configuration.addParameter(
 					"interop.channel.address", channel.getChannelEndpoint());
 			KeyValueConnectorCompTest.this.connector = KeyValueStoreConnector
-					.create(KeyValueConnectorCompTest.this.configuration);
+					.create(KeyValueConnectorCompTest.this.configuration,
+							new PojoDataEncoder<String>(String.class));
 			KeyValueConnectorCompTest.this.testConnector();
 			KeyValueConnectorCompTest.this.connector.destroy();
 		}

@@ -1,5 +1,6 @@
 package mosaic.connector.kvstore.tests;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.PojoDataEncoder;
 import mosaic.driver.interop.kvstore.memcached.MemcachedStub;
 import mosaic.interop.kvstore.KeyValueSession;
 import mosaic.interop.kvstore.MemcachedSession;
@@ -52,8 +54,8 @@ public class MemcachedConnectorTest {
 
 		MemcachedConnectorTest.driverStub = MemcachedStub.create(config,
 				driverChannel);
-		MemcachedConnectorTest.connector = MemcachedStoreConnector
-				.create(config);
+		MemcachedConnectorTest.connector = MemcachedStoreConnector.create(
+				config, new PojoDataEncoder<String>(String.class));
 		MemcachedConnectorTest.keyPrefix = UUID.randomUUID().toString();
 	}
 
@@ -76,7 +78,7 @@ public class MemcachedConnectorTest {
 		return list;
 	}
 
-	public void testSet() {
+	public void testSet() throws IOException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
 		IResult<Boolean> r1 = MemcachedConnectorTest.connector.set(k1, 30,
@@ -101,7 +103,7 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	public void testGet() {
+	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
 		IResult<Object> r1 = MemcachedConnectorTest.connector.get(k1, handlers,
@@ -118,7 +120,7 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	public void testGetBulk() {
+	public void testGetBulk() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fantastic";
 		String k2 = MemcachedConnectorTest.keyPrefix + "_key_famous";
 		List<String> keys = new ArrayList<String>();
@@ -142,7 +144,7 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	public void testAdd() {
+	public void testAdd() throws IOException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fantastic";
 		String k2 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 
@@ -166,7 +168,7 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	public void testReplace() {
+	public void testReplace() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("replace");
 
@@ -198,7 +200,7 @@ public class MemcachedConnectorTest {
 
 	}
 
-	public void testAppend() {
+	public void testAppend() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("append");
 
@@ -230,7 +232,7 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	public void testPrepend() {
+	public void testPrepend() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("prepend");
 
@@ -262,7 +264,7 @@ public class MemcachedConnectorTest {
 		}
 	}
 
-	public void testCas() {
+	public void testCas() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("cas");
 		IResult<Boolean> r1 = MemcachedConnectorTest.connector.cas(k1,
@@ -339,7 +341,7 @@ public class MemcachedConnectorTest {
 	}
 
 	@Test
-	public void testConnector() {
+	public void testConnector() throws IOException, ClassNotFoundException {
 		testConnection();
 		testSet();
 		testGet();
@@ -357,8 +359,8 @@ public class MemcachedConnectorTest {
 		IConfiguration config = PropertyTypeConfiguration.create(
 				MemcachedConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
-		MemcachedStoreConnector connector = MemcachedStoreConnector
-				.create(config);
+		MemcachedStoreConnector connector = MemcachedStoreConnector.create(
+				config, new PojoDataEncoder<String>(String.class));
 		String keyPrefix = UUID.randomUUID().toString();
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(config,

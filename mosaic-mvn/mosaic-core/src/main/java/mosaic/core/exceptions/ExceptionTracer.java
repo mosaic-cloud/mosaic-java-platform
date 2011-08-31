@@ -4,9 +4,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import mosaic.core.log.MosaicLogger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public final class ExceptionTracer {
 
 	private final ConcurrentLinkedQueue<Throwable> ignoredExceptions;
@@ -41,19 +38,19 @@ public final class ExceptionTracer {
 		if (this.logger != null) {
 			switch (resolution) {
 			case Handled:
-					this.logger.trace(message, exception);
+				this.logger.trace(message, exception);
 				break;
 			case Rethrown:
-					this.logger.trace(message, exception);
+				this.logger.trace(message, exception);
 				break;
 			case Ignored:
-					this.logger.warn(message, exception);
+				this.logger.warn(message, exception);
 				break;
 			case Deferred:
-					this.logger.trace(message, exception);
+				this.logger.trace(message, exception);
 				break;
 			default:
-					this.logger.trace(message, exception);
+				this.logger.trace(message, exception);
 				break;
 			}
 		} else {

@@ -2,7 +2,6 @@ package mosaic.driver.kvstore.memcached;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +70,10 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	 */
 	public static synchronized MemcachedDriver create(IConfiguration config)
 			throws IOException {
-		List<URI> nodes = new ArrayList<URI>();
+//		List<URI> nodes = new ArrayList<URI>();
 		List<InetSocketAddress> nodes2 = new ArrayList<InetSocketAddress>();
 		int noNodes = 0;
-		URI address;
+//		URI address;
 		InetSocketAddress address2;
 		int port, noThreads;
 
@@ -133,7 +132,7 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeSetOperation(String clientId,
-			String key, int exp, Object data,
+			String key, int exp, byte[] data,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) super
@@ -145,7 +144,7 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeAddOperation(String clientId,
-			String key, int exp, Object data,
+			String key, int exp, byte[] data,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) super
@@ -157,7 +156,7 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeReplaceOperation(
-			String clientId, String key, int exp, Object data,
+			String clientId, String key, int exp, byte[] data,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) super
@@ -169,7 +168,7 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeAppendOperation(String clientId,
-			String key, Object data,
+			String key, byte[] data,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) super
@@ -181,7 +180,7 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	}
 
 	public synchronized IResult<Boolean> invokePrependOperation(
-			String clientId, String key, Object data,
+			String clientId, String key, byte[] data,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) super
@@ -193,7 +192,7 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeCASOperation(String clientId,
-			String key, Object data,
+			String key, byte[] data,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) super
@@ -204,17 +203,17 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 		return iResult;
 	}
 
-	public synchronized IResult<Map<String, Object>> invokeGetBulkOperation(
+	public synchronized IResult<Map<String, byte[]>> invokeGetBulkOperation(
 			String clientId, List<String> keys,
-			IOperationCompletionHandler<Map<String, Object>> complHandler) {
+			IOperationCompletionHandler<Map<String, byte[]>> complHandler) {
 		String[] aKeys = keys.toArray(new String[0]);
 
 		@SuppressWarnings("unchecked")
-		GenericOperation<Map<String, Object>> op = (GenericOperation<Map<String, Object>>) super
+		GenericOperation<Map<String, byte[]>> op = (GenericOperation<Map<String, byte[]>>) super
 				.getOperationFactory(clientId, MemcachedOperationFactory.class)
 				.getOperation(KeyValueOperations.GET_BULK, (Object[]) aKeys);
 
-		IResult<Map<String, Object>> iResult = startOperation(op, complHandler);
+		IResult<Map<String, byte[]>> iResult = startOperation(op, complHandler);
 		return iResult;
 	}
 

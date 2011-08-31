@@ -71,8 +71,9 @@ public abstract class AbstractDriverComponentCallbacks implements
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
 					&& (this.status != Status.Unregistered));
-			if (stub != null)
+			if (this.stub != null) {
 				this.stub.destroy();
+			}
 			this.component = null;
 			this.status = Status.Terminated;
 			ExceptionTracer.traceIgnored(exception);
@@ -86,7 +87,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
 					&& (this.status != Status.Unregistered));
-			if (stub != null) {
+			if (this.stub != null) {
 				this.stub.destroy();
 				MosaicLogger.getLogger().trace("Driver callbacks terminated.");
 			}
@@ -128,8 +129,8 @@ public abstract class AbstractDriverComponentCallbacks implements
 				AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(role);
 		driverChannel.accept(ConfigUtils.resolveParameter(
-				AbstractResourceDriver.driverConfiguration, channelEndpointProp,
-				String.class, ""));
+				AbstractResourceDriver.driverConfiguration,
+				channelEndpointProp, String.class, ""));
 		return driverChannel;
 	}
 

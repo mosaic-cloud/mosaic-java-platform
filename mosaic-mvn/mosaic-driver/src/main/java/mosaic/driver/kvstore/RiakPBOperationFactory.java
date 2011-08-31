@@ -13,7 +13,6 @@ import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.IOperation;
 import mosaic.core.ops.IOperationFactory;
 import mosaic.core.ops.IOperationType;
-import mosaic.core.utils.SerDesUtils;
 
 import com.basho.riak.pbc.KeySource;
 import com.basho.riak.pbc.RiakClient;
@@ -82,17 +81,16 @@ public class RiakPBOperationFactory implements IOperationFactory {
 
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		final String key;
-		final Object data;
 		final byte[] dataBytes;
 		try {
 			switch (mType) {
 			case SET:
 				key = (String) parameters[0];
-				data = parameters[1];
-				dataBytes = SerDesUtils.toBytes(data);
+				// data = parameters[1];
+				dataBytes = (byte[]) parameters[1];// SerDesUtils.toBytes(data);
 
 				ByteString keyBS = ByteString.copyFromUtf8(key);
-				ByteString bucketBS = ByteString.copyFromUtf8(bucket);
+				ByteString bucketBS = ByteString.copyFromUtf8(this.bucket);
 				ByteString dataBS = ByteString.copyFrom(dataBytes);
 
 				final RiakObject riakobj = new RiakObject(bucketBS, keyBS,
@@ -104,7 +102,8 @@ public class RiakPBOperationFactory implements IOperationFactory {
 							@Override
 							public Boolean call() throws Exception {
 								RiakObject[] fetched = RiakPBOperationFactory.this.riakcl
-										.fetch(bucket, key);
+										.fetch(RiakPBOperationFactory.this.bucket,
+												key);
 								if (fetched.length == 0) {
 									RiakPBOperationFactory.this.riakcl
 											.store(riakobj);
@@ -116,21 +115,19 @@ public class RiakPBOperationFactory implements IOperationFactory {
 				break;
 			case GET:
 				key = (String) parameters[0];
-				operation = new GenericOperation<Object>(
-						new Callable<Object>() {
+				operation = new GenericOperation<byte[]>(
+						new Callable<byte[]>() {
 
 							@Override
-							public Object call() throws Exception {
+							public byte[] call() throws Exception {
+								byte[] result = new byte[0];
 								RiakObject[] riakobj = RiakPBOperationFactory.this.riakcl
-										.fetch(bucket, key);
-								if (riakobj.length == 1) {
-									return riakobj[0].getValue();
-									// return
-									// SerDesUtils.toObject(riakobj[0]
-									// .getValue().toStringUtf8()
-									// .getBytes());
-								} else
-									return null;
+										.fetch(RiakPBOperationFactory.this.bucket,
+												key);
+								if (riakobj.length == 1)
+									result = riakobj[0].getValue()
+											.toByteArray();
+								return result;
 							}
 
 						});
@@ -143,7 +140,7 @@ public class RiakPBOperationFactory implements IOperationFactory {
 							public List<String> call() throws Exception {
 								KeySource ks;
 								ks = RiakPBOperationFactory.this.riakcl
-										.listKeys(copyFromUtf8(bucket));
+										.listKeys(copyFromUtf8(RiakPBOperationFactory.this.bucket));
 								List<String> keys = new ArrayList<String>();
 								while (ks.hasNext()) {
 									keys.add(ks.next().toStringUtf8());
@@ -161,10 +158,12 @@ public class RiakPBOperationFactory implements IOperationFactory {
 							@Override
 							public Boolean call() throws Exception {
 								RiakObject[] res = RiakPBOperationFactory.this.riakcl
-										.fetch(bucket, key);
+										.fetch(RiakPBOperationFactory.this.bucket,
+												key);
 								if (res.length == 1) {
 									RiakPBOperationFactory.this.riakcl.delete(
-											bucket, key);
+											RiakPBOperationFactory.this.bucket,
+											key);
 									return true;
 								} else
 									return false;
@@ -186,7 +185,7 @@ public class RiakPBOperationFactory implements IOperationFactory {
 
 						});
 			}
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			operation = new GenericOperation<Object>(new Callable<Object>() {
 
 				@Override

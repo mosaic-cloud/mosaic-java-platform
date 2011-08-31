@@ -8,6 +8,7 @@ import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.connector.kvstore.memcached.MemcachedStoreConnector;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.utils.DataEncoder;
 
 /**
  * A factory for key-value connectors.
@@ -38,12 +39,15 @@ public class KeyValueConnectorFactory {
 	 *            the name of the connector
 	 * @param config
 	 *            the configuration for the connector
+	 * @param encoder
+	 *            encoder used for serializing data
 	 * @return the connector
 	 * @throws ConnectorNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
 	public static IKeyValueStore createConnector(String connectorName,
-			IConfiguration config) throws ConnectorNotFoundException {
+			IConfiguration config, DataEncoder<?> encoder)
+			throws ConnectorNotFoundException {
 		ConnectorType type = null;
 		IKeyValueStore connector = null;
 
@@ -57,8 +61,9 @@ public class KeyValueConnectorFactory {
 			try {
 				Class<?> connectorClass = type.getDriverClass();
 				Method createMethod = connectorClass.getMethod("create",
-						IConfiguration.class);
-				connector = (IKeyValueStore) createMethod.invoke(null, config);
+						IConfiguration.class, DataEncoder.class);
+				connector = (IKeyValueStore) createMethod.invoke(null, config,
+						encoder);
 			} catch (Exception e) {
 				ExceptionTracer.traceDeferred(e);
 				ConnectorNotFoundException ex = new ConnectorNotFoundException(

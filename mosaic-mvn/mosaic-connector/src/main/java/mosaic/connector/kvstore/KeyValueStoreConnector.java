@@ -15,6 +15,7 @@ import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.DataEncoder;
 import mosaic.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
@@ -29,10 +30,13 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 
 	private KeyValueProxy proxy;
 	private ExecutorService executor;
+	protected DataEncoder dataEncoder;
 
-	protected KeyValueStoreConnector(KeyValueProxy proxy, int noThreads) {
+	protected KeyValueStoreConnector(KeyValueProxy proxy, int noThreads,
+			DataEncoder encoder) {
 		this.proxy = proxy;
 		this.executor = Executors.newFixedThreadPool(noThreads);
+		this.dataEncoder = encoder;
 	}
 
 	/**
@@ -42,11 +46,14 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	 *            the configuration parameters required by the connector. This
 	 *            should also include configuration settings for the
 	 *            corresponding driver.
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static KeyValueStoreConnector create(IConfiguration config)
-			throws Throwable {
+	public static KeyValueStoreConnector create(IConfiguration config,
+			DataEncoder encoder) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -65,11 +72,11 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.connect(driverChannel);
 		KeyValueProxy proxy = KeyValueProxy.create(config, connectorIdentifier,
-				driverIdentifier, bucket, channel);
+				driverIdentifier, bucket, channel, encoder);
 		MosaicLogger.getLogger().debug(
 				"KeyValueConnector connecting to " + driverChannel + " bucket "
 						+ bucket);
-		return new KeyValueStoreConnector(proxy, noThreads);
+		return new KeyValueStoreConnector(proxy, noThreads, encoder);
 	}
 
 	/*

@@ -44,14 +44,16 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 	 * @param config
 	 *            configuration data required for configuring and initializing
 	 *            the cloudlet instance
+	 * @param loader
+	 *            the class loader used for loading cloudlet classes
 	 * @throws CloudletException
 	 */
-	public Cloudlet(S state, ICloudletCallback<S> callback)
+	public Cloudlet(S state, ICloudletCallback<S> callback, ClassLoader loader)
 			throws CloudletException {
 		synchronized (this) {
 			this.state = state;
 			this.active = false;
-			this.executor = new CloudletExecutor();
+			this.executor = new CloudletExecutor(loader);
 			this.controller = new CloudletController();
 
 			this.controllerCallback = callback;

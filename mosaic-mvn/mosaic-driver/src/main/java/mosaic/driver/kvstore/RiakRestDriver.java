@@ -84,6 +84,7 @@ public class RiakRestDriver extends BaseKeyValueDriver {
 	 * Destroys the driver. After this call no other method should be invoked on
 	 * the driver object.
 	 */
+	@Override
 	public synchronized void destroy() {
 		super.destroy();
 		MosaicLogger.getLogger().trace("RiakDriver destroyed."); //$NON-NLS-1$
@@ -93,7 +94,7 @@ public class RiakRestDriver extends BaseKeyValueDriver {
 	protected IOperationFactory createOperationFactory(Object... params) {
 		String bucket = (String) params[0];
 		IOperationFactory opFactory = RiakRestOperationFactory.getFactory(
-				riakHost, riakPort, bucket);
+				this.riakHost, this.riakPort, bucket);
 		return opFactory;
 	}
 

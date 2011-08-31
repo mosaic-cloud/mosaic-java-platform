@@ -124,7 +124,7 @@ public class CloudletManager {
 
 			ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
 			Object cloudletState = invokeConstructor(stateClasz);
-			Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler);
+			Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler,this.classLoader);
 			cloudlet.initialize(resourceConfig);
 			this.cloudletPool.add(cloudlet);
 		} catch (ClassNotFoundException e) {

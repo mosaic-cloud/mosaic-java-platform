@@ -135,14 +135,17 @@ public final class AmqpDriverComponentCallbacks extends
 						brokerPort = (Integer) outputs.get("port"); //$NON-NLS-1$
 						Preconditions.checkNotNull(brokerPort);
 						user = (String) outputs.get("username"); //$NON-NLS-1$
-						if (user == null)
+						if (user == null) {
 							user = ""; //$NON-NLS-1$
+						}
 						password = (String) outputs.get("password"); //$NON-NLS-1$
-						if (password == null)
+						if (password == null) {
 							password = ""; //$NON-NLS-1$
+						}
 						virtualHost = (String) outputs.get("virtualHost"); //$NON-NLS-1$
-						if (virtualHost == null)
+						if (virtualHost == null) {
 							virtualHost = ""; //$NON-NLS-1$
+						}
 					} catch (final Throwable exception) {
 						this.terminate();
 						ExceptionTracer
@@ -235,7 +238,7 @@ public final class AmqpDriverComponentCallbacks extends
 				ZeroMqChannel driverChannel = createDriverChannel(channelId,
 						channelEndpoint, AmqpSession.DRIVER);
 
-				stub = AmqpStub.create(
+				this.stub = AmqpStub.create(
 						AbstractResourceDriver.driverConfiguration,
 						driverChannel);
 			} else

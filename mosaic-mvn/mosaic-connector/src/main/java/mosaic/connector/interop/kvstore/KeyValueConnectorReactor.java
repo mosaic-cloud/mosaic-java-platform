@@ -7,7 +7,7 @@ import mosaic.connector.interop.AbstractConnectorReactor;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.utils.SerDesUtils;
+import mosaic.core.utils.DataEncoder;
 import mosaic.interop.idl.IdlCommon;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
 import mosaic.interop.idl.IdlCommon.Error;
@@ -31,15 +31,21 @@ import eu.mosaic_cloud.interoperability.core.Message;
  * 
  */
 public class KeyValueConnectorReactor extends AbstractConnectorReactor {
+	protected DataEncoder dataEncoder;
 
 	/**
 	 * Creates the reactor for the key-value store connector proxy.
 	 * 
 	 * @param config
 	 *            the configurations required to initialize the proxy
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 */
-	protected KeyValueConnectorReactor(IConfiguration config) {
+	protected KeyValueConnectorReactor(IConfiguration config,
+			DataEncoder encoder) {
 		super(config);
+		this.dataEncoder = encoder;
 	}
 
 	@Override
@@ -99,23 +105,27 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 			}
 			break;
 		case GET_REPLY:
-			KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
-			token = getPayload.getToken();
-			handlers = getHandlers(token);
-			if (handlers != null) {
-				List<KVEntry> resultEntries = getPayload.getResultsList();
-				if (resultEntries.size() > 0) {
-					try {
-						data = SerDesUtils.toObject(resultEntries.get(0)
-								.getValue().toByteArray());
-						for (IOperationCompletionHandler<?> handler : handlers) {
-							((IOperationCompletionHandler<Object>) handler)
-									.onSuccess(data);
+			try {
+				KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
+				token = getPayload.getToken();
+				handlers = getHandlers(token);
+				if (handlers != null) {
+					List<KVEntry> resultEntries = getPayload.getResultsList();
+					if (resultEntries.size() > 0) {
+						try {
+							data = this.dataEncoder.decode(resultEntries.get(0)
+									.getValue().toByteArray());
+							for (IOperationCompletionHandler<?> handler : handlers) {
+								((IOperationCompletionHandler<Object>) handler)
+										.onSuccess(data);
+							}
+						} catch (Exception e) {
+							ExceptionTracer.traceDeferred(e);
 						}
-					} catch (ClassNotFoundException e) {
-						ExceptionTracer.traceDeferred(e);
 					}
 				}
+			} catch (Throwable e) {
+				e.printStackTrace();
 			}
 			break;
 		case ACCESS:

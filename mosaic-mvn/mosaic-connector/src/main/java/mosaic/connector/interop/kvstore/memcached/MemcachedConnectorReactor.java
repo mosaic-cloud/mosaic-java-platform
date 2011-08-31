@@ -9,7 +9,7 @@ import mosaic.connector.interop.kvstore.KeyValueConnectorReactor;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.utils.SerDesUtils;
+import mosaic.core.utils.DataEncoder;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
 import mosaic.interop.idl.kvstore.KeyValuePayloads;
 import mosaic.interop.idl.kvstore.KeyValuePayloads.GetReply;
@@ -34,10 +34,14 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 	 * 
 	 * @param config
 	 *            the configurations required to initialize the proxy
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
 	 * @throws Throwable
 	 */
-	protected MemcachedConnectorReactor(IConfiguration config) throws Throwable {
-		super(config);
+	protected MemcachedConnectorReactor(IConfiguration config,
+			DataEncoder encoder) throws Throwable {
+		super(config, encoder);
 	}
 
 	@Override
@@ -59,10 +63,10 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 				token = getPayload.getToken();
 				handlers = getHandlers(token);
 				if (handlers != null) {
-					Map<String, Object> resMap = new HashMap<String, Object>();
 					try {
+						Map<String, Object> resMap = new HashMap<String, Object>();
 						for (KVEntry entry : resultEntries) {
-							data = SerDesUtils.toObject(entry.getValue()
+							data = this.dataEncoder.decode(entry.getValue()
 									.toByteArray());
 							resMap.put(entry.getKey(), data);
 						}
@@ -72,7 +76,7 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 									.onSuccess(resMap);
 						}
 						handled = true;
-					} catch (ClassNotFoundException e) {
+					} catch (Exception e) {
 						ExceptionTracer.traceDeferred(e);
 					}
 				}

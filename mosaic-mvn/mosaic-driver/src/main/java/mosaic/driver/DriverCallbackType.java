@@ -1,6 +1,5 @@
 package mosaic.driver;
 
-
 /**
  * Enums of component callbacks for resource drivers.
  * 

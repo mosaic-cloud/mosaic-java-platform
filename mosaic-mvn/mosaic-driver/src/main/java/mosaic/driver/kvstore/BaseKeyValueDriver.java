@@ -92,7 +92,7 @@ public abstract class BaseKeyValueDriver extends AbstractResourceDriver {
 	}
 
 	public synchronized IResult<Boolean> invokeSetOperation(String clientId,
-			String key, Object data,
+			String key, byte[] data,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		IOperationFactory opFactory = getOperationFactory(clientId);
 		@SuppressWarnings("unchecked")
@@ -103,14 +103,14 @@ public abstract class BaseKeyValueDriver extends AbstractResourceDriver {
 		return iResult;
 	}
 
-	public synchronized IResult<Object> invokeGetOperation(String clientId,
-			String key, IOperationCompletionHandler<Object> complHandler) {
+	public synchronized IResult<byte[]> invokeGetOperation(String clientId,
+			String key, IOperationCompletionHandler<byte[]> complHandler) {
 		IOperationFactory opFactory = getOperationFactory(clientId);
 		@SuppressWarnings("unchecked")
-		GenericOperation<Object> op = (GenericOperation<Object>) opFactory
+		GenericOperation<byte[]> op = (GenericOperation<byte[]>) opFactory
 				.getOperation(KeyValueOperations.GET, key);
 
-		IResult<Object> iResult = startOperation(op, complHandler);
+		IResult<byte[]> iResult = startOperation(op, complHandler);
 		return iResult;
 	}
 
@@ -192,9 +192,10 @@ public abstract class BaseKeyValueDriver extends AbstractResourceDriver {
 		private IOperationFactory opFactory;
 
 		public BucketData(String bucket) {
-			bucketName = bucket;
-			noClients = new AtomicInteger(0);
-			opFactory = BaseKeyValueDriver.this.createOperationFactory(bucket);
+			this.bucketName = bucket;
+			this.noClients = new AtomicInteger(0);
+			this.opFactory = BaseKeyValueDriver.this
+					.createOperationFactory(bucket);
 		}
 
 		private void destroy() {

@@ -27,11 +27,11 @@ public class RedisOperationFactory implements IOperationFactory {
 		super();
 		this.redisClient = new Jedis(host, port, 0);
 		if (!passwd.equals("")) { //$NON-NLS-1$
-			redisClient.auth(passwd);
+			this.redisClient.auth(passwd);
 		}
 		int db = Integer.parseInt(bucket);
 		if (db > -1) {
-			redisClient.select(db);
+			this.redisClient.select(db);
 			// jedis.flushDB();
 		}
 		this.redisClient.connect();
@@ -83,15 +83,14 @@ public class RedisOperationFactory implements IOperationFactory {
 
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		final String key;
-		String data;
 		final byte[] keyBytes;
 		final byte[] dataBytes;
 		switch (mType) {
 		case SET:
 			key = (String) parameters[0];
-			data = (String) parameters[1];
+			// data = (String) parameters[1];
 			keyBytes = SafeEncoder.encode(key);
-			dataBytes = SafeEncoder.encode(data);
+			dataBytes = (byte[]) parameters[1];// SafeEncoder.encode(data);
 			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
 
 				@Override
@@ -108,12 +107,13 @@ public class RedisOperationFactory implements IOperationFactory {
 			break;
 		case GET:
 			key = (String) parameters[0];
-			operation = new GenericOperation<Object>(new Callable<Object>() {
+			keyBytes = SafeEncoder.encode(key);
+			operation = new GenericOperation<byte[]>(new Callable<byte[]>() {
 
 				@Override
-				public Object call() throws Exception {
-					String result = RedisOperationFactory.this.redisClient
-							.get(key);
+				public byte[] call() throws Exception {
+					byte[] result = RedisOperationFactory.this.redisClient
+							.get(keyBytes);
 					return result;
 				}
 

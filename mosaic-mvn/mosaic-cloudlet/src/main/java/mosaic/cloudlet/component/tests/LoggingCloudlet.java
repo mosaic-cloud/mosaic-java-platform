@@ -22,6 +22,7 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IResult;
+import mosaic.core.utils.PojoDataEncoder;
 
 public class LoggingCloudlet {
 
@@ -40,14 +41,18 @@ public class LoggingCloudlet {
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("kvstore"));
 			state.kvStore = new KeyValueAccessor<LoggingCloudletState>(
-					kvConfiguration, cloudlet);
+					kvConfiguration, cloudlet, new PojoDataEncoder<String>(
+							String.class));
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
 			state.consumer = new AmqpQueueConsumer<LoggingCloudlet.LoggingCloudletState, LoggingData>(
-					queueConfiguration, cloudlet, LoggingData.class);
+					queueConfiguration, cloudlet, LoggingData.class,
+					new PojoDataEncoder<LoggingData>(LoggingData.class));
 			state.publisher = new AmqpQueuePublisher<LoggingCloudlet.LoggingCloudletState, AuthenticationToken>(
-					queueConfiguration, cloudlet, AuthenticationToken.class);
+					queueConfiguration, cloudlet, AuthenticationToken.class,
+					new PojoDataEncoder<AuthenticationToken>(
+							AuthenticationToken.class));
 
 		}
 
