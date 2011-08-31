@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+		xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>interoperability-parent</artifactId>
 	<version>0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<url>http://www.mosaic-cloud.eu/</url>
+	
 	<modules>
 		<module>interoperability-core</module>
 		<module>interoperability-examples</module>
@@ -13,18 +19,7 @@
 		<module>interoperability-zeromq</module>
 		<module>zeromq</module>
 	</modules>
-	<repositories>
-		<repository>
-			<id>mosaic</id>
-			<name>Mosaic Maven Repository</name>
-			<layout>default</layout>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
-			<snapshots>
-				<updatePolicy>always</updatePolicy>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -38,6 +33,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -51,6 +47,11 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.8.1</version>
 				<configuration>
@@ -59,8 +60,37 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<license.licenseName>apache_v2</license.licenseName>
+		<mosaic.tools.version>0.3-SNAPSHOT</mosaic.tools.version>
+	</properties>
+	
+	<repositories>
+		<repository>
+			<id>mosaic</id>
+			<name>Mosaic Maven Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	
+	<organization>
+		<name>mOSAIC Project</name>
+		<url>http://www.mosaic-cloud.eu/</url>
+	</organization>
+	
+	<scm>
+		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/ciprian/mosaic-java-interoperability</connection>
+		<developerConnection>scm:hg:file://${basedir}</developerConnection>
+	</scm>
+	
 	<distributionManagement>
-
 		<repository>
 			<id>developers.mosaic-cloud.eu</id>
 			<name>developers.mosaic-cloud.eu-releases</name>
@@ -73,7 +103,15 @@
 			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
 		</snapshotRepository>
 	</distributionManagement>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	
+	<issueManagement>
+		<system>jira</system>
+		<url>http://developers.mosaic-cloud.eu/jira</url>
+	</issueManagement>
+	
+	<ciManagement>
+		<system>bamboo</system>
+		<url>http://developers.mosaic-cloud.eu/bamboo</url>
+	</ciManagement>
+	
 </project>
