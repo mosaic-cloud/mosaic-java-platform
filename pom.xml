@@ -13,18 +13,6 @@
 		<module>components-launcher</module>
 		<module>components-tools</module>
 	</modules>
-	<repositories>
-		<repository>
-			<id>mosaic</id>
-			<name>Mosaic Maven Repository</name>
-			<layout>default</layout>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
-			<snapshots>
-				<updatePolicy>always</updatePolicy>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -51,8 +39,23 @@
 			</plugin>
 		</plugins>
 	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mosaic.tools.version>0.3-SNAPSHOT</mosaic.tools.version>
+	</properties>
+	<repositories>
+		<repository>
+			<id>mosaic</id>
+			<name>mOSAIC Maven Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<distributionManagement>
-
 		<repository>
 			<id>developers.mosaic-cloud.eu</id>
 			<name>developers.mosaic-cloud.eu-releases</name>
@@ -65,8 +68,4 @@
 			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
 		</snapshotRepository>
 	</distributionManagement>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mosaic.tools.version>0.3-SNAPSHOT</mosaic.tools.version>
-	</properties>
 </project>
