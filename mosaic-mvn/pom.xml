@@ -36,6 +36,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mosaic.tools.version>0.3-SNAPSHOT</mosaic.tools.version>
 	</properties>
 	<reporting>
 		<plugins>
