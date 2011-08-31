@@ -12,7 +12,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<url>http://www.mosaic-cloud.eu/</url>
 	<packaging>pom</packaging>
-	
+
 	<repositories>
 		<repository>
 			<id>spy</id>
@@ -31,8 +31,7 @@
 		<module>mosaic-driver</module>
 		<module>mosaic-connector</module>
 		<module>mosaic-cloudlet</module>
-		<!-- 
-		<module>mosaic-examples</module> -->
+		<module>mosaic-examples</module>
 	</modules>
 
 	<properties>
