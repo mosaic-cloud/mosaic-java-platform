@@ -6,8 +6,3 @@ queue.publisher.amqp.exchange=simple-exchange
 queue.publisher.amqp.routing_key=simple-rk
 queue.publisher.amqp.queue=simple-queue
 
-# configurations below will normally not be set by the cloudlet creator
-# this is just for test
-queue.amqp.connector_threads=1
-queue.interop.channel.address=tcp://127.0.0.1:31028
-queue.interop.driver.identifier=driver.amqp.1

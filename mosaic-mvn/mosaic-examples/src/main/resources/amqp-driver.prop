@@ -1,9 +1,0 @@
-queue.amqp.driver_threads=1
-queue.amqp.host=localhost
-queue.amqp.port=5672
-queue.amqp.user=
-queue.amqp.passwd=
-#queue.amqp.virtual_host=/
-
-queue.interop.channel.address=tcp://127.0.0.1:31028
-queue.interop.driver.identifier=driver.amqp.1

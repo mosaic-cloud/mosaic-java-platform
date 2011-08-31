@@ -14,6 +14,7 @@ import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
+import mosaic.core.utils.PojoDataEncoder;
 
 public class SimpleLoggingCloudlet {
 
@@ -32,9 +33,12 @@ public class SimpleLoggingCloudlet {
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
 			state.consumer = new AmqpQueueConsumer<SimpleLoggingCloudlet.LoggingCloudletState, LoggingData>(
-					queueConfiguration, cloudlet, LoggingData.class);
+					queueConfiguration, cloudlet, LoggingData.class,
+					new PojoDataEncoder<LoggingData>(LoggingData.class));
 			state.publisher = new AmqpQueuePublisher<SimpleLoggingCloudlet.LoggingCloudletState, AuthenticationToken>(
-					queueConfiguration, cloudlet, AuthenticationToken.class);
+					queueConfiguration, cloudlet, AuthenticationToken.class,
+					new PojoDataEncoder<AuthenticationToken>(
+							AuthenticationToken.class));
 
 		}
 
@@ -64,7 +68,6 @@ public class SimpleLoggingCloudlet {
 				CallbackArguments<LoggingCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet was destroyed successfully.");
-			System.exit(0);
 		}
 
 	}
@@ -132,7 +135,7 @@ public class SimpleLoggingCloudlet {
 			String token = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.token", String.class, "error");
 			AuthenticationToken aToken = new AuthenticationToken(token);
-			state.publisher.publish(aToken, null, null);
+			state.publisher.publish(aToken, null, "");
 
 			message.acknowledge();
 		}

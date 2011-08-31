@@ -17,15 +17,9 @@ test.token=got_it
 
 # configurations below will normally not be set by the cloudlet creator
 # this is just for test
-kvstore.memcached.connector_threads=1
-kvstore.kvstore.connector_name=memcached
+kvstore.kvstore.connector_threads=1
+kvstore.kvstore.connector_name=KVSTORE
+kvstore.kvstore.bucket=logging-test
 
-queue.amqp.connector_threads=1
-
-kvstore.interop.channel.address=tcp://127.0.0.1:31029
-kvstore.interop.driver.identifier=driver.memcached.1
-
-queue.interop.channel.address=tcp://127.0.0.1:31028
-queue.interop.driver.identifier=driver.amqp.1
 
 

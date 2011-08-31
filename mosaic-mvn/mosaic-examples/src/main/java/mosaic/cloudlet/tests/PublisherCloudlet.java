@@ -1,6 +1,5 @@
 package mosaic.cloudlet.tests;
 
-import mosaic.cloudlet.component.tests.AuthenticationToken;
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.DefaultCloudletCallback;
 import mosaic.cloudlet.core.ICloudletController;
@@ -10,6 +9,7 @@ import mosaic.cloudlet.resources.amqp.DefaultAmqpPublisherCallback;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
+import mosaic.core.utils.PojoDataEncoder;
 
 public class PublisherCloudlet {
 
@@ -28,7 +28,8 @@ public class PublisherCloudlet {
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
 			state.publisher = new AmqpQueuePublisher<PublisherCloudlet.PublisherCloudletState, String>(
-					queueConfiguration, cloudlet, String.class);
+					queueConfiguration, cloudlet, String.class,
+					new PojoDataEncoder<String>(String.class));
 
 		}
 
@@ -68,7 +69,7 @@ public class PublisherCloudlet {
 				CallbackArguments<PublisherCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
 					"PublisherCloudlet publisher registered successfully.");
-			state.publisher.publish("TEST MESSAGE!!!!", null, null);
+			state.publisher.publish("TEST MESSAGE!!!!", null, "text/plain");
 		}
 
 		@Override
