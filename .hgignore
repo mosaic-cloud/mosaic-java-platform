@@ -4,4 +4,4 @@ syntax: glob
 *.class
 *.log
 *.eap
-
+.*
