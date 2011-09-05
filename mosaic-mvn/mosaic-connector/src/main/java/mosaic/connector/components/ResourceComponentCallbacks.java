@@ -72,7 +72,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ResourceComponentCallbacks.callbacks = this;
-		try {
+//		try {
 			IConfiguration configuration = PropertyTypeConfiguration.create(
 					ResourceComponentCallbacks.class.getClassLoader(),
 					"resource-conn.properties"); //$NON-NLS-1$
@@ -105,9 +105,9 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 			synchronized (this) {
 				this.status = Status.Created;
 			}
-		} catch (Throwable e) {
-			e.printStackTrace(System.err);
-		}
+//		} catch (Throwable e) {
+//			e.printStackTrace(System.err);
+//		}
 	}
 
 	@Override

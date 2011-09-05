@@ -50,7 +50,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public DeclareExchangeRequest getDefaultInstanceForType() {
+    @Override
+	public DeclareExchangeRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -59,7 +60,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_fieldAccessorTable;
     }
@@ -76,7 +78,8 @@ public final class AmqpPayloads {
       public static final int TOPIC_VALUE = 2;
       
       
-      public final int getNumber() { return value; }
+      @Override
+	public final int getNumber() { return value; }
       
       public static ExchangeType valueOf(int value) {
         switch (value) {
@@ -94,16 +97,19 @@ public final class AmqpPayloads {
       private static com.google.protobuf.Internal.EnumLiteMap<ExchangeType>
           internalValueMap =
             new com.google.protobuf.Internal.EnumLiteMap<ExchangeType>() {
-              public ExchangeType findValueByNumber(int number) {
+              @Override
+			public ExchangeType findValueByNumber(int number) {
                 return ExchangeType.valueOf(number);
               }
             };
       
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+      @Override
+	public final com.google.protobuf.Descriptors.EnumValueDescriptor
           getValueDescriptor() {
         return getDescriptor().getValues().get(index);
       }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
+      @Override
+	public final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptorForType() {
         return getDescriptor();
       }
@@ -140,23 +146,28 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required string exchange = 2;
     public static final int EXCHANGE_FIELD_NUMBER = 2;
     private java.lang.Object exchange_;
-    public boolean hasExchange() {
+    @Override
+	public boolean hasExchange() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getExchange() {
+    @Override
+	public String getExchange() {
       java.lang.Object ref = exchange_;
       if (ref instanceof String) {
         return (String) ref;
@@ -185,40 +196,48 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType type = 3;
     public static final int TYPE_FIELD_NUMBER = 3;
     private mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType type_;
-    public boolean hasType() {
+    @Override
+	public boolean hasType() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType() {
+    @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType() {
       return type_;
     }
     
     // optional bool durable = 4 [default = false];
     public static final int DURABLE_FIELD_NUMBER = 4;
     private boolean durable_;
-    public boolean hasDurable() {
+    @Override
+	public boolean hasDurable() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public boolean getDurable() {
+    @Override
+	public boolean getDurable() {
       return durable_;
     }
     
     // optional bool auto_delete = 5 [default = true];
     public static final int AUTO_DELETE_FIELD_NUMBER = 5;
     private boolean autoDelete_;
-    public boolean hasAutoDelete() {
+    @Override
+	public boolean hasAutoDelete() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public boolean getAutoDelete() {
+    @Override
+	public boolean getAutoDelete() {
       return autoDelete_;
     }
     
     // optional bool passive = 6 [default = true];
     public static final int PASSIVE_FIELD_NUMBER = 6;
     private boolean passive_;
-    public boolean hasPassive() {
+    @Override
+	public boolean hasPassive() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
-    public boolean getPassive() {
+    @Override
+	public boolean getPassive() {
       return passive_;
     }
     
@@ -231,7 +250,8 @@ public final class AmqpPayloads {
       passive_ = true;
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -255,7 +275,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -280,7 +301,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -389,11 +411,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -409,7 +433,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_fieldAccessorTable;
       }
@@ -432,7 +457,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -453,20 +479,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -484,7 +514,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -521,7 +552,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest)other);
         } else {
@@ -554,7 +586,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -574,7 +607,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -647,10 +681,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -712,7 +748,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -735,10 +772,12 @@ public final class AmqpPayloads {
       
       // required string exchange = 2;
       private java.lang.Object exchange_ = "";
-      public boolean hasExchange() {
+      @Override
+	public boolean hasExchange() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getExchange() {
+      @Override
+	public String getExchange() {
         java.lang.Object ref = exchange_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -771,10 +810,12 @@ public final class AmqpPayloads {
       
       // required .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType type = 3;
       private mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType type_ = mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType.DIRECT;
-      public boolean hasType() {
+      @Override
+	public boolean hasType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType() {
         return type_;
       }
       public Builder setType(mosaic.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType value) {
@@ -795,10 +836,12 @@ public final class AmqpPayloads {
       
       // optional bool durable = 4 [default = false];
       private boolean durable_ ;
-      public boolean hasDurable() {
+      @Override
+	public boolean hasDurable() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public boolean getDurable() {
+      @Override
+	public boolean getDurable() {
         return durable_;
       }
       public Builder setDurable(boolean value) {
@@ -816,10 +859,12 @@ public final class AmqpPayloads {
       
       // optional bool auto_delete = 5 [default = true];
       private boolean autoDelete_ = true;
-      public boolean hasAutoDelete() {
+      @Override
+	public boolean hasAutoDelete() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public boolean getAutoDelete() {
+      @Override
+	public boolean getAutoDelete() {
         return autoDelete_;
       }
       public Builder setAutoDelete(boolean value) {
@@ -837,10 +882,12 @@ public final class AmqpPayloads {
       
       // optional bool passive = 6 [default = true];
       private boolean passive_ = true;
-      public boolean hasPassive() {
+      @Override
+	public boolean hasPassive() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public boolean getPassive() {
+      @Override
+	public boolean getPassive() {
         return passive_;
       }
       public Builder setPassive(boolean value) {
@@ -909,7 +956,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public DeclareQueueRequest getDefaultInstanceForType() {
+    @Override
+	public DeclareQueueRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -918,7 +966,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_fieldAccessorTable;
     }
@@ -927,23 +976,28 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required string queue = 2;
     public static final int QUEUE_FIELD_NUMBER = 2;
     private java.lang.Object queue_;
-    public boolean hasQueue() {
+    @Override
+	public boolean hasQueue() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getQueue() {
+    @Override
+	public String getQueue() {
       java.lang.Object ref = queue_;
       if (ref instanceof String) {
         return (String) ref;
@@ -972,40 +1026,48 @@ public final class AmqpPayloads {
     // optional bool exclusive = 3 [default = true];
     public static final int EXCLUSIVE_FIELD_NUMBER = 3;
     private boolean exclusive_;
-    public boolean hasExclusive() {
+    @Override
+	public boolean hasExclusive() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public boolean getExclusive() {
+    @Override
+	public boolean getExclusive() {
       return exclusive_;
     }
     
     // optional bool durable = 4 [default = false];
     public static final int DURABLE_FIELD_NUMBER = 4;
     private boolean durable_;
-    public boolean hasDurable() {
+    @Override
+	public boolean hasDurable() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public boolean getDurable() {
+    @Override
+	public boolean getDurable() {
       return durable_;
     }
     
     // optional bool auto_delete = 5 [default = true];
     public static final int AUTO_DELETE_FIELD_NUMBER = 5;
     private boolean autoDelete_;
-    public boolean hasAutoDelete() {
+    @Override
+	public boolean hasAutoDelete() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public boolean getAutoDelete() {
+    @Override
+	public boolean getAutoDelete() {
       return autoDelete_;
     }
     
     // optional bool passive = 6 [default = true];
     public static final int PASSIVE_FIELD_NUMBER = 6;
     private boolean passive_;
-    public boolean hasPassive() {
+    @Override
+	public boolean hasPassive() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
-    public boolean getPassive() {
+    @Override
+	public boolean getPassive() {
       return passive_;
     }
     
@@ -1018,7 +1080,8 @@ public final class AmqpPayloads {
       passive_ = true;
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -1038,7 +1101,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1063,7 +1127,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -1172,11 +1237,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -1192,7 +1259,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_fieldAccessorTable;
       }
@@ -1215,7 +1283,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -1236,20 +1305,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -1267,7 +1340,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -1304,7 +1378,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest)other);
         } else {
@@ -1337,7 +1412,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -1353,7 +1429,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -1420,10 +1497,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -1485,7 +1564,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -1508,10 +1588,12 @@ public final class AmqpPayloads {
       
       // required string queue = 2;
       private java.lang.Object queue_ = "";
-      public boolean hasQueue() {
+      @Override
+	public boolean hasQueue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getQueue() {
+      @Override
+	public String getQueue() {
         java.lang.Object ref = queue_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -1544,10 +1626,12 @@ public final class AmqpPayloads {
       
       // optional bool exclusive = 3 [default = true];
       private boolean exclusive_ = true;
-      public boolean hasExclusive() {
+      @Override
+	public boolean hasExclusive() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public boolean getExclusive() {
+      @Override
+	public boolean getExclusive() {
         return exclusive_;
       }
       public Builder setExclusive(boolean value) {
@@ -1565,10 +1649,12 @@ public final class AmqpPayloads {
       
       // optional bool durable = 4 [default = false];
       private boolean durable_ ;
-      public boolean hasDurable() {
+      @Override
+	public boolean hasDurable() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public boolean getDurable() {
+      @Override
+	public boolean getDurable() {
         return durable_;
       }
       public Builder setDurable(boolean value) {
@@ -1586,10 +1672,12 @@ public final class AmqpPayloads {
       
       // optional bool auto_delete = 5 [default = true];
       private boolean autoDelete_ = true;
-      public boolean hasAutoDelete() {
+      @Override
+	public boolean hasAutoDelete() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public boolean getAutoDelete() {
+      @Override
+	public boolean getAutoDelete() {
         return autoDelete_;
       }
       public Builder setAutoDelete(boolean value) {
@@ -1607,10 +1695,12 @@ public final class AmqpPayloads {
       
       // optional bool passive = 6 [default = true];
       private boolean passive_ = true;
-      public boolean hasPassive() {
+      @Override
+	public boolean hasPassive() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public boolean getPassive() {
+      @Override
+	public boolean getPassive() {
         return passive_;
       }
       public Builder setPassive(boolean value) {
@@ -1671,7 +1761,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public BindQueueRequest getDefaultInstanceForType() {
+    @Override
+	public BindQueueRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -1680,7 +1771,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_fieldAccessorTable;
     }
@@ -1689,23 +1781,28 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required string exchange = 2;
     public static final int EXCHANGE_FIELD_NUMBER = 2;
     private java.lang.Object exchange_;
-    public boolean hasExchange() {
+    @Override
+	public boolean hasExchange() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getExchange() {
+    @Override
+	public String getExchange() {
       java.lang.Object ref = exchange_;
       if (ref instanceof String) {
         return (String) ref;
@@ -1734,10 +1831,12 @@ public final class AmqpPayloads {
     // required string queue = 3;
     public static final int QUEUE_FIELD_NUMBER = 3;
     private java.lang.Object queue_;
-    public boolean hasQueue() {
+    @Override
+	public boolean hasQueue() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public String getQueue() {
+    @Override
+	public String getQueue() {
       java.lang.Object ref = queue_;
       if (ref instanceof String) {
         return (String) ref;
@@ -1766,10 +1865,12 @@ public final class AmqpPayloads {
     // required string routing_key = 4;
     public static final int ROUTING_KEY_FIELD_NUMBER = 4;
     private java.lang.Object routingKey_;
-    public boolean hasRoutingKey() {
+    @Override
+	public boolean hasRoutingKey() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public String getRoutingKey() {
+    @Override
+	public String getRoutingKey() {
       java.lang.Object ref = routingKey_;
       if (ref instanceof String) {
         return (String) ref;
@@ -1802,7 +1903,8 @@ public final class AmqpPayloads {
       routingKey_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -1830,7 +1932,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1849,7 +1952,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -1950,11 +2054,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -1970,7 +2076,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_fieldAccessorTable;
       }
@@ -1993,7 +2100,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -2010,20 +2118,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -2041,7 +2153,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -2070,7 +2183,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.BindQueueRequest)other);
         } else {
@@ -2097,7 +2211,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -2121,7 +2236,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -2178,10 +2294,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -2243,7 +2361,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -2266,10 +2385,12 @@ public final class AmqpPayloads {
       
       // required string exchange = 2;
       private java.lang.Object exchange_ = "";
-      public boolean hasExchange() {
+      @Override
+	public boolean hasExchange() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getExchange() {
+      @Override
+	public String getExchange() {
         java.lang.Object ref = exchange_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -2302,10 +2423,12 @@ public final class AmqpPayloads {
       
       // required string queue = 3;
       private java.lang.Object queue_ = "";
-      public boolean hasQueue() {
+      @Override
+	public boolean hasQueue() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getQueue() {
+      @Override
+	public String getQueue() {
         java.lang.Object ref = queue_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -2338,10 +2461,12 @@ public final class AmqpPayloads {
       
       // required string routing_key = 4;
       private java.lang.Object routingKey_ = "";
-      public boolean hasRoutingKey() {
+      @Override
+	public boolean hasRoutingKey() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public String getRoutingKey() {
+      @Override
+	public String getRoutingKey() {
         java.lang.Object ref = routingKey_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -2425,7 +2550,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public ConsumeRequest getDefaultInstanceForType() {
+    @Override
+	public ConsumeRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -2434,7 +2560,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_fieldAccessorTable;
     }
@@ -2443,23 +2570,28 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required string queue = 2;
     public static final int QUEUE_FIELD_NUMBER = 2;
     private java.lang.Object queue_;
-    public boolean hasQueue() {
+    @Override
+	public boolean hasQueue() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getQueue() {
+    @Override
+	public String getQueue() {
       java.lang.Object ref = queue_;
       if (ref instanceof String) {
         return (String) ref;
@@ -2488,10 +2620,12 @@ public final class AmqpPayloads {
     // required string consumer = 3;
     public static final int CONSUMER_FIELD_NUMBER = 3;
     private java.lang.Object consumer_;
-    public boolean hasConsumer() {
+    @Override
+	public boolean hasConsumer() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public String getConsumer() {
+    @Override
+	public String getConsumer() {
       java.lang.Object ref = consumer_;
       if (ref instanceof String) {
         return (String) ref;
@@ -2520,30 +2654,36 @@ public final class AmqpPayloads {
     // optional bool exclusive = 4 [default = true];
     public static final int EXCLUSIVE_FIELD_NUMBER = 4;
     private boolean exclusive_;
-    public boolean hasExclusive() {
+    @Override
+	public boolean hasExclusive() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public boolean getExclusive() {
+    @Override
+	public boolean getExclusive() {
       return exclusive_;
     }
     
     // optional bool auto_ack = 5 [default = true];
     public static final int AUTO_ACK_FIELD_NUMBER = 5;
     private boolean autoAck_;
-    public boolean hasAutoAck() {
+    @Override
+	public boolean hasAutoAck() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public boolean getAutoAck() {
+    @Override
+	public boolean getAutoAck() {
       return autoAck_;
     }
     
     // required bytes extra = 6;
     public static final int EXTRA_FIELD_NUMBER = 6;
     private com.google.protobuf.ByteString extra_;
-    public boolean hasExtra() {
+    @Override
+	public boolean hasExtra() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
-    public com.google.protobuf.ByteString getExtra() {
+    @Override
+	public com.google.protobuf.ByteString getExtra() {
       return extra_;
     }
     
@@ -2556,7 +2696,8 @@ public final class AmqpPayloads {
       extra_ = com.google.protobuf.ByteString.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -2584,7 +2725,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2609,7 +2751,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -2718,11 +2861,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -2738,7 +2883,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_fieldAccessorTable;
       }
@@ -2761,7 +2907,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -2782,20 +2929,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -2813,7 +2964,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -2850,7 +3002,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.ConsumeRequest)other);
         } else {
@@ -2883,7 +3036,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -2907,7 +3061,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -2974,10 +3129,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -3039,7 +3196,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -3062,10 +3220,12 @@ public final class AmqpPayloads {
       
       // required string queue = 2;
       private java.lang.Object queue_ = "";
-      public boolean hasQueue() {
+      @Override
+	public boolean hasQueue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getQueue() {
+      @Override
+	public String getQueue() {
         java.lang.Object ref = queue_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -3098,10 +3258,12 @@ public final class AmqpPayloads {
       
       // required string consumer = 3;
       private java.lang.Object consumer_ = "";
-      public boolean hasConsumer() {
+      @Override
+	public boolean hasConsumer() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getConsumer() {
+      @Override
+	public String getConsumer() {
         java.lang.Object ref = consumer_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -3134,10 +3296,12 @@ public final class AmqpPayloads {
       
       // optional bool exclusive = 4 [default = true];
       private boolean exclusive_ = true;
-      public boolean hasExclusive() {
+      @Override
+	public boolean hasExclusive() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public boolean getExclusive() {
+      @Override
+	public boolean getExclusive() {
         return exclusive_;
       }
       public Builder setExclusive(boolean value) {
@@ -3155,10 +3319,12 @@ public final class AmqpPayloads {
       
       // optional bool auto_ack = 5 [default = true];
       private boolean autoAck_ = true;
-      public boolean hasAutoAck() {
+      @Override
+	public boolean hasAutoAck() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public boolean getAutoAck() {
+      @Override
+	public boolean getAutoAck() {
         return autoAck_;
       }
       public Builder setAutoAck(boolean value) {
@@ -3176,10 +3342,12 @@ public final class AmqpPayloads {
       
       // required bytes extra = 6;
       private com.google.protobuf.ByteString extra_ = com.google.protobuf.ByteString.EMPTY;
-      public boolean hasExtra() {
+      @Override
+	public boolean hasExtra() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public com.google.protobuf.ByteString getExtra() {
+      @Override
+	public com.google.protobuf.ByteString getExtra() {
         return extra_;
       }
       public Builder setExtra(com.google.protobuf.ByteString value) {
@@ -3235,7 +3403,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public ConsumeReply getDefaultInstanceForType() {
+    @Override
+	public ConsumeReply getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -3244,7 +3413,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_fieldAccessorTable;
     }
@@ -3253,23 +3423,28 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required string consumer_tag = 2;
     public static final int CONSUMER_TAG_FIELD_NUMBER = 2;
     private java.lang.Object consumerTag_;
-    public boolean hasConsumerTag() {
+    @Override
+	public boolean hasConsumerTag() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getConsumerTag() {
+    @Override
+	public String getConsumerTag() {
       java.lang.Object ref = consumerTag_;
       if (ref instanceof String) {
         return (String) ref;
@@ -3300,7 +3475,8 @@ public final class AmqpPayloads {
       consumerTag_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -3320,7 +3496,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3333,7 +3510,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -3426,11 +3604,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -3446,7 +3626,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_fieldAccessorTable;
       }
@@ -3469,7 +3650,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -3482,20 +3664,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply build() {
         mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -3513,7 +3699,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply result = new mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -3534,7 +3721,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.ConsumeReply)other);
         } else {
@@ -3555,7 +3743,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -3571,7 +3760,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -3618,10 +3808,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -3683,7 +3875,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -3706,10 +3899,12 @@ public final class AmqpPayloads {
       
       // required string consumer_tag = 2;
       private java.lang.Object consumerTag_ = "";
-      public boolean hasConsumerTag() {
+      @Override
+	public boolean hasConsumerTag() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getConsumerTag() {
+      @Override
+	public String getConsumerTag() {
         java.lang.Object ref = consumerTag_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -3801,7 +3996,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public PublishRequest getDefaultInstanceForType() {
+    @Override
+	public PublishRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -3810,7 +4006,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable;
     }
@@ -3819,43 +4016,52 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required bytes data = 2;
     public static final int DATA_FIELD_NUMBER = 2;
     private com.google.protobuf.ByteString data_;
-    public boolean hasData() {
+    @Override
+	public boolean hasData() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public com.google.protobuf.ByteString getData() {
+    @Override
+	public com.google.protobuf.ByteString getData() {
       return data_;
     }
     
     // optional bool durable = 3 [default = false];
     public static final int DURABLE_FIELD_NUMBER = 3;
     private boolean durable_;
-    public boolean hasDurable() {
+    @Override
+	public boolean hasDurable() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public boolean getDurable() {
+    @Override
+	public boolean getDurable() {
       return durable_;
     }
     
     // required string exchange = 4;
     public static final int EXCHANGE_FIELD_NUMBER = 4;
     private java.lang.Object exchange_;
-    public boolean hasExchange() {
+    @Override
+	public boolean hasExchange() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public String getExchange() {
+    @Override
+	public String getExchange() {
       java.lang.Object ref = exchange_;
       if (ref instanceof String) {
         return (String) ref;
@@ -3884,30 +4090,36 @@ public final class AmqpPayloads {
     // optional bool immediate = 5 [default = true];
     public static final int IMMEDIATE_FIELD_NUMBER = 5;
     private boolean immediate_;
-    public boolean hasImmediate() {
+    @Override
+	public boolean hasImmediate() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public boolean getImmediate() {
+    @Override
+	public boolean getImmediate() {
       return immediate_;
     }
     
     // optional bool mandatory = 6 [default = true];
     public static final int MANDATORY_FIELD_NUMBER = 6;
     private boolean mandatory_;
-    public boolean hasMandatory() {
+    @Override
+	public boolean hasMandatory() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
-    public boolean getMandatory() {
+    @Override
+	public boolean getMandatory() {
       return mandatory_;
     }
     
     // required string routing_key = 7;
     public static final int ROUTING_KEY_FIELD_NUMBER = 7;
     private java.lang.Object routingKey_;
-    public boolean hasRoutingKey() {
+    @Override
+	public boolean hasRoutingKey() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
-    public String getRoutingKey() {
+    @Override
+	public String getRoutingKey() {
       java.lang.Object ref = routingKey_;
       if (ref instanceof String) {
         return (String) ref;
@@ -3936,10 +4148,12 @@ public final class AmqpPayloads {
     // required string content_type = 8;
     public static final int CONTENT_TYPE_FIELD_NUMBER = 8;
     private java.lang.Object contentType_;
-    public boolean hasContentType() {
+    @Override
+	public boolean hasContentType() {
       return ((bitField0_ & 0x00000080) == 0x00000080);
     }
-    public String getContentType() {
+    @Override
+	public String getContentType() {
       java.lang.Object ref = contentType_;
       if (ref instanceof String) {
         return (String) ref;
@@ -3976,7 +4190,8 @@ public final class AmqpPayloads {
       contentType_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -4008,7 +4223,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -4039,7 +4255,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -4156,11 +4373,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -4176,7 +4395,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable;
       }
@@ -4199,7 +4419,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -4224,20 +4445,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -4255,7 +4480,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -4300,7 +4526,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.PublishRequest)other);
         } else {
@@ -4339,7 +4566,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -4367,7 +4595,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -4444,10 +4673,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -4509,7 +4740,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -4532,10 +4764,12 @@ public final class AmqpPayloads {
       
       // required bytes data = 2;
       private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
-      public boolean hasData() {
+      @Override
+	public boolean hasData() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public com.google.protobuf.ByteString getData() {
+      @Override
+	public com.google.protobuf.ByteString getData() {
         return data_;
       }
       public Builder setData(com.google.protobuf.ByteString value) {
@@ -4556,10 +4790,12 @@ public final class AmqpPayloads {
       
       // optional bool durable = 3 [default = false];
       private boolean durable_ ;
-      public boolean hasDurable() {
+      @Override
+	public boolean hasDurable() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public boolean getDurable() {
+      @Override
+	public boolean getDurable() {
         return durable_;
       }
       public Builder setDurable(boolean value) {
@@ -4577,10 +4813,12 @@ public final class AmqpPayloads {
       
       // required string exchange = 4;
       private java.lang.Object exchange_ = "";
-      public boolean hasExchange() {
+      @Override
+	public boolean hasExchange() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public String getExchange() {
+      @Override
+	public String getExchange() {
         java.lang.Object ref = exchange_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -4613,10 +4851,12 @@ public final class AmqpPayloads {
       
       // optional bool immediate = 5 [default = true];
       private boolean immediate_ = true;
-      public boolean hasImmediate() {
+      @Override
+	public boolean hasImmediate() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public boolean getImmediate() {
+      @Override
+	public boolean getImmediate() {
         return immediate_;
       }
       public Builder setImmediate(boolean value) {
@@ -4634,10 +4874,12 @@ public final class AmqpPayloads {
       
       // optional bool mandatory = 6 [default = true];
       private boolean mandatory_ = true;
-      public boolean hasMandatory() {
+      @Override
+	public boolean hasMandatory() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public boolean getMandatory() {
+      @Override
+	public boolean getMandatory() {
         return mandatory_;
       }
       public Builder setMandatory(boolean value) {
@@ -4655,10 +4897,12 @@ public final class AmqpPayloads {
       
       // required string routing_key = 7;
       private java.lang.Object routingKey_ = "";
-      public boolean hasRoutingKey() {
+      @Override
+	public boolean hasRoutingKey() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
-      public String getRoutingKey() {
+      @Override
+	public String getRoutingKey() {
         java.lang.Object ref = routingKey_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -4691,10 +4935,12 @@ public final class AmqpPayloads {
       
       // required string content_type = 8;
       private java.lang.Object contentType_ = "";
-      public boolean hasContentType() {
+      @Override
+	public boolean hasContentType() {
         return ((bitField0_ & 0x00000080) == 0x00000080);
       }
-      public String getContentType() {
+      @Override
+	public String getContentType() {
         java.lang.Object ref = contentType_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -4766,7 +5012,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public GetRequest getDefaultInstanceForType() {
+    @Override
+	public GetRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -4775,7 +5022,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_fieldAccessorTable;
     }
@@ -4784,23 +5032,28 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required string queue = 2;
     public static final int QUEUE_FIELD_NUMBER = 2;
     private java.lang.Object queue_;
-    public boolean hasQueue() {
+    @Override
+	public boolean hasQueue() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getQueue() {
+    @Override
+	public String getQueue() {
       java.lang.Object ref = queue_;
       if (ref instanceof String) {
         return (String) ref;
@@ -4829,10 +5082,12 @@ public final class AmqpPayloads {
     // optional bool auto_ack = 3 [default = true];
     public static final int AUTO_ACK_FIELD_NUMBER = 3;
     private boolean autoAck_;
-    public boolean hasAutoAck() {
+    @Override
+	public boolean hasAutoAck() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public boolean getAutoAck() {
+    @Override
+	public boolean getAutoAck() {
       return autoAck_;
     }
     
@@ -4842,7 +5097,8 @@ public final class AmqpPayloads {
       autoAck_ = true;
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -4862,7 +5118,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -4878,7 +5135,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -4975,11 +5233,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.GetRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -4995,7 +5255,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_fieldAccessorTable;
       }
@@ -5018,7 +5279,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -5033,20 +5295,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.GetRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.GetRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.GetRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.GetRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.GetRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.GetRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.GetRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -5064,7 +5330,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.GetRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.GetRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.GetRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.GetRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -5089,7 +5356,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.GetRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.GetRequest)other);
         } else {
@@ -5113,7 +5381,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -5129,7 +5398,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -5181,10 +5451,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -5246,7 +5518,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -5269,10 +5542,12 @@ public final class AmqpPayloads {
       
       // required string queue = 2;
       private java.lang.Object queue_ = "";
-      public boolean hasQueue() {
+      @Override
+	public boolean hasQueue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getQueue() {
+      @Override
+	public String getQueue() {
         java.lang.Object ref = queue_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -5305,10 +5580,12 @@ public final class AmqpPayloads {
       
       // optional bool auto_ack = 3 [default = true];
       private boolean autoAck_ = true;
-      public boolean hasAutoAck() {
+      @Override
+	public boolean hasAutoAck() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public boolean getAutoAck() {
+      @Override
+	public boolean getAutoAck() {
         return autoAck_;
       }
       public Builder setAutoAck(boolean value) {
@@ -5365,7 +5642,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public Ack getDefaultInstanceForType() {
+    @Override
+	public Ack getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -5374,7 +5652,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_fieldAccessorTable;
     }
@@ -5383,33 +5662,40 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required int64 delivery = 2;
     public static final int DELIVERY_FIELD_NUMBER = 2;
     private long delivery_;
-    public boolean hasDelivery() {
+    @Override
+	public boolean hasDelivery() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public long getDelivery() {
+    @Override
+	public long getDelivery() {
       return delivery_;
     }
     
     // required bool multiple = 3;
     public static final int MULTIPLE_FIELD_NUMBER = 3;
     private boolean multiple_;
-    public boolean hasMultiple() {
+    @Override
+	public boolean hasMultiple() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public boolean getMultiple() {
+    @Override
+	public boolean getMultiple() {
       return multiple_;
     }
     
@@ -5419,7 +5705,8 @@ public final class AmqpPayloads {
       multiple_ = false;
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -5443,7 +5730,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5459,7 +5747,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -5556,11 +5845,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.Ack prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -5576,7 +5867,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_fieldAccessorTable;
       }
@@ -5599,7 +5891,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -5614,20 +5907,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.Ack.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.Ack getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.Ack getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.Ack.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.Ack build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.Ack build() {
         mosaic.interop.idl.amqp.AmqpPayloads.Ack result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -5645,7 +5942,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.Ack buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.Ack buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.Ack result = new mosaic.interop.idl.amqp.AmqpPayloads.Ack(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -5670,7 +5968,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.Ack) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.Ack)other);
         } else {
@@ -5694,7 +5993,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -5714,7 +6014,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -5766,10 +6067,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -5831,7 +6134,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -5854,10 +6158,12 @@ public final class AmqpPayloads {
       
       // required int64 delivery = 2;
       private long delivery_ ;
-      public boolean hasDelivery() {
+      @Override
+	public boolean hasDelivery() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public long getDelivery() {
+      @Override
+	public long getDelivery() {
         return delivery_;
       }
       public Builder setDelivery(long value) {
@@ -5875,10 +6181,12 @@ public final class AmqpPayloads {
       
       // required bool multiple = 3;
       private boolean multiple_ ;
-      public boolean hasMultiple() {
+      @Override
+	public boolean hasMultiple() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public boolean getMultiple() {
+      @Override
+	public boolean getMultiple() {
         return multiple_;
       }
       public Builder setMultiple(boolean value) {
@@ -5931,7 +6239,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public CancelRequest getDefaultInstanceForType() {
+    @Override
+	public CancelRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -5940,7 +6249,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_fieldAccessorTable;
     }
@@ -5949,23 +6259,28 @@ public final class AmqpPayloads {
     // required .mosaic_cloud.idl.common.CompletionToken token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private mosaic.interop.idl.IdlCommon.CompletionToken token_;
-    public boolean hasToken() {
+    @Override
+	public boolean hasToken() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
       return token_;
     }
-    public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+    @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
       return token_;
     }
     
     // required string consumer = 2;
     public static final int CONSUMER_FIELD_NUMBER = 2;
     private java.lang.Object consumer_;
-    public boolean hasConsumer() {
+    @Override
+	public boolean hasConsumer() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getConsumer() {
+    @Override
+	public String getConsumer() {
       java.lang.Object ref = consumer_;
       if (ref instanceof String) {
         return (String) ref;
@@ -5996,7 +6311,8 @@ public final class AmqpPayloads {
       consumer_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -6016,7 +6332,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -6029,7 +6346,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -6122,11 +6440,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -6142,7 +6462,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_fieldAccessorTable;
       }
@@ -6165,7 +6486,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         if (tokenBuilder_ == null) {
           token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
@@ -6178,20 +6500,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -6209,7 +6535,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -6230,7 +6557,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.CancelRequest)other);
         } else {
@@ -6251,7 +6579,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasToken()) {
           
           return false;
@@ -6267,7 +6596,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -6314,10 +6644,12 @@ public final class AmqpPayloads {
       private mosaic.interop.idl.IdlCommon.CompletionToken token_ = mosaic.interop.idl.IdlCommon.CompletionToken.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           mosaic.interop.idl.IdlCommon.CompletionToken, mosaic.interop.idl.IdlCommon.CompletionToken.Builder, mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-      public boolean hasToken() {
+      @Override
+	public boolean hasToken() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionToken getToken() {
         if (tokenBuilder_ == null) {
           return token_;
         } else {
@@ -6379,7 +6711,8 @@ public final class AmqpPayloads {
         onChanged();
         return getTokenFieldBuilder().getBuilder();
       }
-      public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+      @Override
+	public mosaic.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
         if (tokenBuilder_ != null) {
           return tokenBuilder_.getMessageOrBuilder();
         } else {
@@ -6402,10 +6735,12 @@ public final class AmqpPayloads {
       
       // required string consumer = 2;
       private java.lang.Object consumer_ = "";
-      public boolean hasConsumer() {
+      @Override
+	public boolean hasConsumer() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getConsumer() {
+      @Override
+	public String getConsumer() {
         java.lang.Object ref = consumer_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -6468,7 +6803,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public ConsumeOkMessage getDefaultInstanceForType() {
+    @Override
+	public ConsumeOkMessage getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -6477,7 +6813,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_fieldAccessorTable;
     }
@@ -6486,10 +6823,12 @@ public final class AmqpPayloads {
     // required string consumer_tag = 1;
     public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
     private java.lang.Object consumerTag_;
-    public boolean hasConsumerTag() {
+    @Override
+	public boolean hasConsumerTag() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getConsumerTag() {
+    @Override
+	public String getConsumerTag() {
       java.lang.Object ref = consumerTag_;
       if (ref instanceof String) {
         return (String) ref;
@@ -6519,7 +6858,8 @@ public final class AmqpPayloads {
       consumerTag_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -6531,7 +6871,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -6541,7 +6882,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -6630,11 +6972,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -6650,7 +6994,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_fieldAccessorTable;
       }
@@ -6672,27 +7017,32 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         consumerTag_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage build() {
         mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -6710,7 +7060,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage result = new mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -6723,7 +7074,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage)other);
         } else {
@@ -6741,7 +7093,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasConsumerTag()) {
           
           return false;
@@ -6749,7 +7102,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -6785,10 +7139,12 @@ public final class AmqpPayloads {
       
       // required string consumer_tag = 1;
       private java.lang.Object consumerTag_ = "";
-      public boolean hasConsumerTag() {
+      @Override
+	public boolean hasConsumerTag() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getConsumerTag() {
+      @Override
+	public String getConsumerTag() {
         java.lang.Object ref = consumerTag_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -6851,7 +7207,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public CancelOkMessage getDefaultInstanceForType() {
+    @Override
+	public CancelOkMessage getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -6860,7 +7217,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_fieldAccessorTable;
     }
@@ -6869,10 +7227,12 @@ public final class AmqpPayloads {
     // required string consumer_tag = 1;
     public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
     private java.lang.Object consumerTag_;
-    public boolean hasConsumerTag() {
+    @Override
+	public boolean hasConsumerTag() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getConsumerTag() {
+    @Override
+	public String getConsumerTag() {
       java.lang.Object ref = consumerTag_;
       if (ref instanceof String) {
         return (String) ref;
@@ -6902,7 +7262,8 @@ public final class AmqpPayloads {
       consumerTag_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -6914,7 +7275,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -6924,7 +7286,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -7013,11 +7376,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -7033,7 +7398,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_fieldAccessorTable;
       }
@@ -7055,27 +7421,32 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         consumerTag_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage build() {
         mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -7093,7 +7464,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage result = new mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -7106,7 +7478,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.CancelOkMessage)other);
         } else {
@@ -7124,7 +7497,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasConsumerTag()) {
           
           return false;
@@ -7132,7 +7506,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -7168,10 +7543,12 @@ public final class AmqpPayloads {
       
       // required string consumer_tag = 1;
       private java.lang.Object consumerTag_ = "";
-      public boolean hasConsumerTag() {
+      @Override
+	public boolean hasConsumerTag() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getConsumerTag() {
+      @Override
+	public String getConsumerTag() {
         java.lang.Object ref = consumerTag_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -7234,7 +7611,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public ServerCancelRequest getDefaultInstanceForType() {
+    @Override
+	public ServerCancelRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -7243,7 +7621,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_fieldAccessorTable;
     }
@@ -7252,10 +7631,12 @@ public final class AmqpPayloads {
     // required string consumer_tag = 1;
     public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
     private java.lang.Object consumerTag_;
-    public boolean hasConsumerTag() {
+    @Override
+	public boolean hasConsumerTag() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getConsumerTag() {
+    @Override
+	public String getConsumerTag() {
       java.lang.Object ref = consumerTag_;
       if (ref instanceof String) {
         return (String) ref;
@@ -7285,7 +7666,8 @@ public final class AmqpPayloads {
       consumerTag_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -7297,7 +7679,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -7307,7 +7690,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -7396,11 +7780,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -7416,7 +7802,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_fieldAccessorTable;
       }
@@ -7438,27 +7825,32 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         consumerTag_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest build() {
         mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -7476,7 +7868,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest result = new mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -7489,7 +7882,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.ServerCancelRequest)other);
         } else {
@@ -7507,7 +7901,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasConsumerTag()) {
           
           return false;
@@ -7515,7 +7910,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -7551,10 +7947,12 @@ public final class AmqpPayloads {
       
       // required string consumer_tag = 1;
       private java.lang.Object consumerTag_ = "";
-      public boolean hasConsumerTag() {
+      @Override
+	public boolean hasConsumerTag() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getConsumerTag() {
+      @Override
+	public String getConsumerTag() {
         java.lang.Object ref = consumerTag_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -7641,7 +8039,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public DeliveryMessage getDefaultInstanceForType() {
+    @Override
+	public DeliveryMessage getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -7650,7 +8049,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable;
     }
@@ -7659,10 +8059,12 @@ public final class AmqpPayloads {
     // required string consumer_tag = 1;
     public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
     private java.lang.Object consumerTag_;
-    public boolean hasConsumerTag() {
+    @Override
+	public boolean hasConsumerTag() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getConsumerTag() {
+    @Override
+	public String getConsumerTag() {
       java.lang.Object ref = consumerTag_;
       if (ref instanceof String) {
         return (String) ref;
@@ -7691,20 +8093,24 @@ public final class AmqpPayloads {
     // required int64 delivery_tag = 2;
     public static final int DELIVERY_TAG_FIELD_NUMBER = 2;
     private long deliveryTag_;
-    public boolean hasDeliveryTag() {
+    @Override
+	public boolean hasDeliveryTag() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public long getDeliveryTag() {
+    @Override
+	public long getDeliveryTag() {
       return deliveryTag_;
     }
     
     // required string exchange = 3;
     public static final int EXCHANGE_FIELD_NUMBER = 3;
     private java.lang.Object exchange_;
-    public boolean hasExchange() {
+    @Override
+	public boolean hasExchange() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public String getExchange() {
+    @Override
+	public String getExchange() {
       java.lang.Object ref = exchange_;
       if (ref instanceof String) {
         return (String) ref;
@@ -7733,10 +8139,12 @@ public final class AmqpPayloads {
     // required string routing_key = 4;
     public static final int ROUTING_KEY_FIELD_NUMBER = 4;
     private java.lang.Object routingKey_;
-    public boolean hasRoutingKey() {
+    @Override
+	public boolean hasRoutingKey() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public String getRoutingKey() {
+    @Override
+	public String getRoutingKey() {
       java.lang.Object ref = routingKey_;
       if (ref instanceof String) {
         return (String) ref;
@@ -7765,30 +8173,36 @@ public final class AmqpPayloads {
     // required int32 delivery_mode = 5;
     public static final int DELIVERY_MODE_FIELD_NUMBER = 5;
     private int deliveryMode_;
-    public boolean hasDeliveryMode() {
+    @Override
+	public boolean hasDeliveryMode() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public int getDeliveryMode() {
+    @Override
+	public int getDeliveryMode() {
       return deliveryMode_;
     }
     
     // required bytes data = 6;
     public static final int DATA_FIELD_NUMBER = 6;
     private com.google.protobuf.ByteString data_;
-    public boolean hasData() {
+    @Override
+	public boolean hasData() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
-    public com.google.protobuf.ByteString getData() {
+    @Override
+	public com.google.protobuf.ByteString getData() {
       return data_;
     }
     
     // required string content_type = 7;
     public static final int CONTENT_TYPE_FIELD_NUMBER = 7;
     private java.lang.Object contentType_;
-    public boolean hasContentType() {
+    @Override
+	public boolean hasContentType() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
-    public String getContentType() {
+    @Override
+	public String getContentType() {
       java.lang.Object ref = contentType_;
       if (ref instanceof String) {
         return (String) ref;
@@ -7824,7 +8238,8 @@ public final class AmqpPayloads {
       contentType_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -7860,7 +8275,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -7888,7 +8304,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -8001,11 +8418,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -8021,7 +8440,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable;
       }
@@ -8043,7 +8463,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         consumerTag_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -8062,20 +8483,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage build() {
         mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -8093,7 +8518,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage result = new mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -8130,7 +8556,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.DeliveryMessage)other);
         } else {
@@ -8166,7 +8593,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasConsumerTag()) {
           
           return false;
@@ -8198,7 +8626,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -8264,10 +8693,12 @@ public final class AmqpPayloads {
       
       // required string consumer_tag = 1;
       private java.lang.Object consumerTag_ = "";
-      public boolean hasConsumerTag() {
+      @Override
+	public boolean hasConsumerTag() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getConsumerTag() {
+      @Override
+	public String getConsumerTag() {
         java.lang.Object ref = consumerTag_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -8300,10 +8731,12 @@ public final class AmqpPayloads {
       
       // required int64 delivery_tag = 2;
       private long deliveryTag_ ;
-      public boolean hasDeliveryTag() {
+      @Override
+	public boolean hasDeliveryTag() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public long getDeliveryTag() {
+      @Override
+	public long getDeliveryTag() {
         return deliveryTag_;
       }
       public Builder setDeliveryTag(long value) {
@@ -8321,10 +8754,12 @@ public final class AmqpPayloads {
       
       // required string exchange = 3;
       private java.lang.Object exchange_ = "";
-      public boolean hasExchange() {
+      @Override
+	public boolean hasExchange() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getExchange() {
+      @Override
+	public String getExchange() {
         java.lang.Object ref = exchange_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -8357,10 +8792,12 @@ public final class AmqpPayloads {
       
       // required string routing_key = 4;
       private java.lang.Object routingKey_ = "";
-      public boolean hasRoutingKey() {
+      @Override
+	public boolean hasRoutingKey() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public String getRoutingKey() {
+      @Override
+	public String getRoutingKey() {
         java.lang.Object ref = routingKey_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -8393,10 +8830,12 @@ public final class AmqpPayloads {
       
       // required int32 delivery_mode = 5;
       private int deliveryMode_ ;
-      public boolean hasDeliveryMode() {
+      @Override
+	public boolean hasDeliveryMode() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public int getDeliveryMode() {
+      @Override
+	public int getDeliveryMode() {
         return deliveryMode_;
       }
       public Builder setDeliveryMode(int value) {
@@ -8414,10 +8853,12 @@ public final class AmqpPayloads {
       
       // required bytes data = 6;
       private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
-      public boolean hasData() {
+      @Override
+	public boolean hasData() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public com.google.protobuf.ByteString getData() {
+      @Override
+	public com.google.protobuf.ByteString getData() {
         return data_;
       }
       public Builder setData(com.google.protobuf.ByteString value) {
@@ -8438,10 +8879,12 @@ public final class AmqpPayloads {
       
       // required string content_type = 7;
       private java.lang.Object contentType_ = "";
-      public boolean hasContentType() {
+      @Override
+	public boolean hasContentType() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
-      public String getContentType() {
+      @Override
+	public String getContentType() {
         java.lang.Object ref = contentType_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -8508,7 +8951,8 @@ public final class AmqpPayloads {
       return defaultInstance;
     }
     
-    public ShutdownMessage getDefaultInstanceForType() {
+    @Override
+	public ShutdownMessage getDefaultInstanceForType() {
       return defaultInstance;
     }
     
@@ -8517,7 +8961,8 @@ public final class AmqpPayloads {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
     }
     
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+    @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_fieldAccessorTable;
     }
@@ -8526,10 +8971,12 @@ public final class AmqpPayloads {
     // required string consumer_tag = 1;
     public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
     private java.lang.Object consumerTag_;
-    public boolean hasConsumerTag() {
+    @Override
+	public boolean hasConsumerTag() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getConsumerTag() {
+    @Override
+	public String getConsumerTag() {
       java.lang.Object ref = consumerTag_;
       if (ref instanceof String) {
         return (String) ref;
@@ -8558,10 +9005,12 @@ public final class AmqpPayloads {
     // required string message = 2;
     public static final int MESSAGE_FIELD_NUMBER = 2;
     private java.lang.Object message_;
-    public boolean hasMessage() {
+    @Override
+	public boolean hasMessage() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getMessage() {
+    @Override
+	public String getMessage() {
       java.lang.Object ref = message_;
       if (ref instanceof String) {
         return (String) ref;
@@ -8592,7 +9041,8 @@ public final class AmqpPayloads {
       message_ = "";
     }
     private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
+    @Override
+	public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
@@ -8608,7 +9058,8 @@ public final class AmqpPayloads {
       return true;
     }
     
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
+    @Override
+	public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -8621,7 +9072,8 @@ public final class AmqpPayloads {
     }
     
     private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
+    @Override
+	public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
     
@@ -8714,11 +9166,13 @@ public final class AmqpPayloads {
     }
     
     public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
+    @Override
+	public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
-    public Builder toBuilder() { return newBuilder(this); }
+    @Override
+	public Builder toBuilder() { return newBuilder(this); }
     
     @java.lang.Override
     protected Builder newBuilderForType(
@@ -8734,7 +9188,8 @@ public final class AmqpPayloads {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
       }
       
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      @Override
+	protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return mosaic.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_fieldAccessorTable;
       }
@@ -8756,7 +9211,8 @@ public final class AmqpPayloads {
         return new Builder();
       }
       
-      public Builder clear() {
+      @Override
+	public Builder clear() {
         super.clear();
         consumerTag_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -8765,20 +9221,24 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public Builder clone() {
+      @Override
+	public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
       
-      public com.google.protobuf.Descriptors.Descriptor
+      @Override
+	public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage.getDescriptor();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage getDefaultInstanceForType() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage getDefaultInstanceForType() {
         return mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage.getDefaultInstance();
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage build() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage build() {
         mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
@@ -8796,7 +9256,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage buildPartial() {
+      @Override
+	public mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage buildPartial() {
         mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage result = new mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
@@ -8813,7 +9274,8 @@ public final class AmqpPayloads {
         return result;
       }
       
-      public Builder mergeFrom(com.google.protobuf.Message other) {
+      @Override
+	public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage) {
           return mergeFrom((mosaic.interop.idl.amqp.AmqpPayloads.ShutdownMessage)other);
         } else {
@@ -8834,7 +9296,8 @@ public final class AmqpPayloads {
         return this;
       }
       
-      public final boolean isInitialized() {
+      @Override
+	public final boolean isInitialized() {
         if (!hasConsumerTag()) {
           
           return false;
@@ -8846,7 +9309,8 @@ public final class AmqpPayloads {
         return true;
       }
       
-      public Builder mergeFrom(
+      @Override
+	public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -8887,10 +9351,12 @@ public final class AmqpPayloads {
       
       // required string consumer_tag = 1;
       private java.lang.Object consumerTag_ = "";
-      public boolean hasConsumerTag() {
+      @Override
+	public boolean hasConsumerTag() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getConsumerTag() {
+      @Override
+	public String getConsumerTag() {
         java.lang.Object ref = consumerTag_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -8923,10 +9389,12 @@ public final class AmqpPayloads {
       
       // required string message = 2;
       private java.lang.Object message_ = "";
-      public boolean hasMessage() {
+      @Override
+	public boolean hasMessage() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getMessage() {
+      @Override
+	public String getMessage() {
         java.lang.Object ref = message_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
@@ -9097,7 +9565,8 @@ public final class AmqpPayloads {
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-        public com.google.protobuf.ExtensionRegistry assignDescriptors(
+        @Override
+		public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
           internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor =

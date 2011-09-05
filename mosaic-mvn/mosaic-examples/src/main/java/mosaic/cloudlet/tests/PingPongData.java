@@ -24,6 +24,7 @@ public class PingPongData {
 		this.pong = pong;
 	}
 
+	@Override
 	public String toString() {
 		return "(" + ping + ", " + pong + ")";
 	}

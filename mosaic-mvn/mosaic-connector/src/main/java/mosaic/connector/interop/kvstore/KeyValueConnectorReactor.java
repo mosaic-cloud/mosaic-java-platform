@@ -31,7 +31,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
  * 
  */
 public class KeyValueConnectorReactor extends AbstractConnectorReactor {
-	protected DataEncoder dataEncoder;
+	protected DataEncoder<?> dataEncoder;
 
 	/**
 	 * Creates the reactor for the key-value store connector proxy.
@@ -43,7 +43,7 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 	 *            the key-value store
 	 */
 	protected KeyValueConnectorReactor(IConfiguration config,
-			DataEncoder encoder) {
+			DataEncoder<?> encoder) {
 		super(config);
 		this.dataEncoder = encoder;
 	}
@@ -58,7 +58,6 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 		CompletionToken token = null;
 		Object data;
 		List<IOperationCompletionHandler<?>> handlers;
-
 		switch (kvMessage) {
 		case OK:
 			IdlCommon.Ok okPayload = (Ok) message.payload;
@@ -105,27 +104,23 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 			}
 			break;
 		case GET_REPLY:
-			try {
-				KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
-				token = getPayload.getToken();
-				handlers = getHandlers(token);
-				if (handlers != null) {
-					List<KVEntry> resultEntries = getPayload.getResultsList();
-					if (resultEntries.size() > 0) {
-						try {
-							data = this.dataEncoder.decode(resultEntries.get(0)
-									.getValue().toByteArray());
-							for (IOperationCompletionHandler<?> handler : handlers) {
-								((IOperationCompletionHandler<Object>) handler)
-										.onSuccess(data);
-							}
-						} catch (Exception e) {
-							ExceptionTracer.traceDeferred(e);
+			KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
+			token = getPayload.getToken();
+			handlers = getHandlers(token);
+			if (handlers != null) {
+				List<KVEntry> resultEntries = getPayload.getResultsList();
+				if (resultEntries.size() > 0) {
+					try {
+						data = this.dataEncoder.decode(resultEntries.get(0)
+								.getValue().toByteArray());
+						for (IOperationCompletionHandler<?> handler : handlers) {
+							((IOperationCompletionHandler<Object>) handler)
+									.onSuccess(data);
 						}
+					} catch (Exception e) {
+						ExceptionTracer.traceDeferred(e);
 					}
 				}
-			} catch (Throwable e) {
-				e.printStackTrace();
 			}
 			break;
 		case ACCESS:

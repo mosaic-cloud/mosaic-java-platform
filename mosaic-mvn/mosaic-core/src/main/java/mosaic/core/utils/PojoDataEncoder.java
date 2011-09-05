@@ -22,7 +22,7 @@ public class PojoDataEncoder<T> implements DataEncoder<T> {
 	public T decode(byte[] dataBytes) {
 		T ob = null;
 		try {
-			ob = dataClass.cast(SerDesUtils.toObject(dataBytes));
+			ob = this.dataClass.cast(SerDesUtils.toObject(dataBytes));
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 		} catch (ClassNotFoundException e) {

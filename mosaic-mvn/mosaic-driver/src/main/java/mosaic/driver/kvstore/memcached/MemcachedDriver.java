@@ -70,10 +70,10 @@ public class MemcachedDriver extends BaseKeyValueDriver {
 	 */
 	public static synchronized MemcachedDriver create(IConfiguration config)
 			throws IOException {
-//		List<URI> nodes = new ArrayList<URI>();
+		// List<URI> nodes = new ArrayList<URI>();
 		List<InetSocketAddress> nodes2 = new ArrayList<InetSocketAddress>();
 		int noNodes = 0;
-//		URI address;
+		// URI address;
 		InetSocketAddress address2;
 		int port, noThreads;
 

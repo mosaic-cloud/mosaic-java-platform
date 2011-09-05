@@ -99,7 +99,7 @@ public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	 *         operation
 	 */
 	public Object getExtra() {
-		return extra;
+		return this.extra;
 	}
 
 }

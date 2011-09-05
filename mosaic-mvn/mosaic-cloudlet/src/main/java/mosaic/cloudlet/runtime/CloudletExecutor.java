@@ -529,7 +529,6 @@ public class CloudletExecutor {
 
 			} catch (InterruptedException ie) {
 				// On interruption, re-check runState
-				// ie.printStackTrace();
 			} finally {
 				this.mainLock.unlock();
 			}

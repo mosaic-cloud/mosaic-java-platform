@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.cloudlet.CloudletContainerPreMain.CloudletContainerParameters;
 import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CloudletException;
 import mosaic.core.configuration.ConfigUtils;
@@ -60,7 +61,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		// NOTE: MEMCACHED is not yet supported, but will be in the near future
 		AMQP("queue"), KEY_VALUE("kvstore"), MEMCACHED("kvstore");
 		public String getConfigPrefix() {
-			return configPrefix;
+			return this.configPrefix;
 		}
 
 		private final String configPrefix;
@@ -91,7 +92,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ContainerComponentCallbacks.callbacks = this;
-		try {
+//		try {
 			IConfiguration configuration = PropertyTypeConfiguration.create(
 					ContainerComponentCallbacks.class.getClassLoader(),
 					"resource-container.properties"); //$NON-NLS-1$
@@ -118,9 +119,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			synchronized (this) {
 				this.status = Status.Created;
 			}
-		} catch (Throwable e) {
-			e.printStackTrace(System.err);
-		}
+//		} catch (Throwable e) {
+//			e.printStackTrace(System.err);
+//		}
 	}
 
 	@Override
@@ -146,29 +147,30 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 										+ operands.get(i));
 						container = startCloudlet(loader, operands.get(i)
 								.toString());
-						if (container != null)
-							cloudletRunners.add(container);
+						if (container != null) {
+							this.cloudletRunners.add(container);
+						}
 					}
 					ComponentCallReply reply = ComponentCallReply.create(true,
 							new Boolean(true), ByteBuffer.allocate(0),
 							request.reference);
 					component.reply(reply);
 					return null;
-				} 
-//				else  if (request.operation.equals(ConfigProperties
-//						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
-//					MosaicLogger.getLogger().debug(
-//							"mOSAIC container - running test cloudlets");
-//					container = TestRunner.runHelloWorld();
-//					if (container != null)
-//						cloudletRunners.add(container);
-//
-//					ComponentCallReply reply = ComponentCallReply.create(true,
-//							new Boolean(true), ByteBuffer.allocate(0),
-//							request.reference);
-//					component.reply(reply);
-//					return null;
-//				}
+				}
+				// else if (request.operation.equals(ConfigProperties
+				//						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
+				// MosaicLogger.getLogger().debug(
+				// "mOSAIC container - running test cloudlets");
+				// container = TestRunner.runHelloWorld();
+				// if (container != null)
+				// cloudletRunners.add(container);
+				//
+				// ComponentCallReply reply = ComponentCallReply.create(true,
+				// new Boolean(true), ByteBuffer.allocate(0),
+				// request.reference);
+				// component.reply(reply);
+				// return null;
+				// }
 				else
 					throw new UnsupportedOperationException();
 			}
@@ -199,7 +201,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				if (classpathPart.length() > 0) {
 					final URL classpathUrl;
 					if (classpathPart.startsWith("http:")
-							|| classpathPart.startsWith("file:"))
+							|| classpathPart.startsWith("file:")) {
 						try {
 							classpathUrl = new URL(classpathPart);
 						} catch (final Exception exception) {
@@ -207,7 +209,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 									"invalid class-path URL `%s`",
 									classpathPart), exception));
 						}
-					else
+					} else
 						throw (new IllegalArgumentException(String.format(
 								"invalid class-path URL `%s`", classpathPart)));
 					classLoaderUrls.add(classpathUrl);
@@ -216,8 +218,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			classLoader = new URLClassLoader(
 					classLoaderUrls.toArray(new URL[0]),
 					ContainerComponentCallbacks.class.getClassLoader());
-		} else
+		} else {
 			classLoader = ClassLoader.getSystemClassLoader();
+		}
 		return classLoader;
 	}
 
@@ -263,8 +266,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			Preconditions.checkState((this.status != Status.Terminated)
 					&& (this.status != Status.Unregistered));
 			// also stop and destroy connector & cloudlets
-			for (CloudletManager container : cloudletRunners)
+			for (CloudletManager container : this.cloudletRunners) {
 				container.stop();
+			}
 			this.component = null;
 			this.status = Status.Terminated;
 			ExceptionTracer.traceDeferred(exception);
@@ -307,6 +311,22 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				MosaicLogger
 						.getLogger()
 						.info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
+
+				if ((CloudletContainerParameters.classpath != null)
+						&& (CloudletContainerParameters.configFile != null)) {
+					ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
+
+					CloudletManager container = startCloudlet(loader,
+							CloudletContainerParameters.configFile);
+					if (container != null) {
+						this.cloudletRunners.add(container);
+					}
+					MosaicLogger.getLogger().debug(
+							"Loaded cloudlet in JAR "
+									+ CloudletContainerParameters.classpath
+									+ " with configuration "
+									+ CloudletContainerParameters.configFile);
+				}
 				this.status = Status.Ready;
 			} else
 				throw (new IllegalStateException());
@@ -321,8 +341,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			Preconditions.checkState((this.status != Status.Terminated)
 					&& (this.status != Status.Unregistered));
 			// also stop and destroy connector & cloudlets
-			for (CloudletManager container : cloudletRunners)
+			for (CloudletManager container : this.cloudletRunners) {
 				container.stop();
+			}
 			this.component = null;
 			this.status = Status.Terminated;
 			MosaicLogger.getLogger().info(

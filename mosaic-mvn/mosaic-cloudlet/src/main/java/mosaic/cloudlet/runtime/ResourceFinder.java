@@ -63,8 +63,8 @@ public class ResourceFinder {
 
 			configuration.addParameter(id1, channel.getChannelIdentifier());
 			configuration.addParameter(id2, channel.getChannelEndpoint());
-//			MosaicLogger.getLogger().debug(
-//					"ResourceFinder - config: " + configuration);
+			// MosaicLogger.getLogger().debug(
+			// "ResourceFinder - config: " + configuration);
 			found = true;
 		}
 

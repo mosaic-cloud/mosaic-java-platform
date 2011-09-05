@@ -169,117 +169,124 @@ public class KeyValueStub extends AbstractDriverStub {
 		CompletionToken token = null;
 		String key;
 
-		switch (kvMessage) {
-		case ACCESS:
-			MosaicLogger.getLogger().trace("Received initiation message");
-			KeyValuePayloads.InitRequest initRequest = (InitRequest) message.payload;
-			token = initRequest.getToken();
-			String bucket = initRequest.getBucket();
-			driver.registerClient(token.getClientId(), bucket);
-			break;
-		case ABORTED:
-			MosaicLogger.getLogger().trace("Received termination message");
-			IdlCommon.AbortRequest abortRequest = (AbortRequest) message.payload;
-			token = abortRequest.getToken();
-			driver.unregisterClient(token.getClientId());
-			break;
-		case SET_REQUEST:
-			KeyValuePayloads.SetRequest setRequest = (SetRequest) message.payload;
-			token = setRequest.getToken();
-			key = setRequest.getKey();
-			// data = SerDesUtils.toObject(setRequest.getValue().toByteArray(),
-			// Object.class);
-			data = setRequest.getValue().toByteArray();
+//		try {
+			switch (kvMessage) {
+			case ACCESS:
+				MosaicLogger.getLogger().trace("Received initiation message");
+				KeyValuePayloads.InitRequest initRequest = (InitRequest) message.payload;
+				token = initRequest.getToken();
+				String bucket = initRequest.getBucket();
+				driver.registerClient(token.getClientId(), bucket);
+				break;
+			case ABORTED:
+				MosaicLogger.getLogger().trace("Received termination message");
+				IdlCommon.AbortRequest abortRequest = (AbortRequest) message.payload;
+				token = abortRequest.getToken();
+				driver.unregisterClient(token.getClientId());
+				break;
+			case SET_REQUEST:
+				KeyValuePayloads.SetRequest setRequest = (SetRequest) message.payload;
+				token = setRequest.getToken();
+				key = setRequest.getKey();
+				// data =
+				// SerDesUtils.toObject(setRequest.getValue().toByteArray(),
+				// Object.class);
+				data = setRequest.getValue().toByteArray();
 
-			MosaicLogger.getLogger().trace(
-					"KeyValueStub - Received request for "
-							+ kvMessage.toString() + " key: " + key
-							+ " - request id: " + token.getMessageId()
-							+ " client id: " + token.getClientId());
+				MosaicLogger.getLogger().trace(
+						"KeyValueStub - Received request for "
+								+ kvMessage.toString() + " key: " + key);
+				// + " - request id: " + token.getMessageId()
+				// + " client id: " + token.getClientId());
 
-			// execute operation
-			DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
-					token, session, driver.getClass(), transmitterClass);
-			IResult<Boolean> resultSet = driver.invokeSetOperation(
-					token.getClientId(), key, data, setCallback);
-			setCallback.setDetails(KeyValueOperations.SET, resultSet);
-			break;
-		case GET_REQUEST:
-			KeyValuePayloads.GetRequest getRequest = (GetRequest) message.payload;
-			token = getRequest.getToken();
-			DriverOperationFinishedHandler getCallback = new DriverOperationFinishedHandler(
-					token, session, driver.getClass(), transmitterClass);
+				// execute operation
+				DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
+						token, session, driver.getClass(), transmitterClass);
+				IResult<Boolean> resultSet = driver.invokeSetOperation(
+						token.getClientId(), key, data, setCallback);
+				setCallback.setDetails(KeyValueOperations.SET, resultSet);
+				break;
+			case GET_REQUEST:
+				KeyValuePayloads.GetRequest getRequest = (GetRequest) message.payload;
+				token = getRequest.getToken();
+				DriverOperationFinishedHandler getCallback = new DriverOperationFinishedHandler(
+						token, session, driver.getClass(), transmitterClass);
 
-			if (getRequest.getKeyCount() != 1) {
-				// error - the simple driver can handle only single-key get
-				MosaicLogger.getLogger().error(
-						"Basic driver can handle only single-key GET.");
-				driver.handleUnsupportedOperationError(kvMessage.toString(),
-						getCallback);
+				if (getRequest.getKeyCount() != 1) {
+					// error - the simple driver can handle only single-key get
+					MosaicLogger.getLogger().error(
+							"Basic driver can handle only single-key GET.");
+					driver.handleUnsupportedOperationError(
+							kvMessage.toString(), getCallback);
+					break;
+				}
+				key = getRequest.getKey(0);
+
+				MosaicLogger.getLogger().trace(
+						"KeyValueStub - Received request for "
+								+ kvMessage.toString() + " key: " + key);
+				// + " - request id: " + token.getMessageId()
+				// + " client id: " + token.getClientId());
+
+				IResult<byte[]> resultGet = driver.invokeGetOperation(
+						token.getClientId(), key, getCallback);
+				getCallback.setDetails(KeyValueOperations.GET, resultGet);
+				break;
+			case DELETE_REQUEST:
+				KeyValuePayloads.DeleteRequest delRequest = (DeleteRequest) message.payload;
+				token = delRequest.getToken();
+				key = delRequest.getKey();
+
+				MosaicLogger.getLogger().trace(
+						"KeyValueStub - Received request for "
+								+ kvMessage.toString() + " key: " + key);
+				// + " - request id: " + token.getMessageId()
+				// + " client id: " + token.getClientId());
+
+				DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler(
+						token, session, driver.getClass(), transmitterClass);
+				IResult<Boolean> resultDelete = driver.invokeDeleteOperation(
+						token.getClientId(), key, delCallback);
+				delCallback.setDetails(KeyValueOperations.DELETE, resultDelete);
+				break;
+			case LIST_REQUEST:
+				KeyValuePayloads.ListRequest listRequest = (ListRequest) message.payload;
+				token = listRequest.getToken();
+
+				MosaicLogger.getLogger().trace(
+						"KeyValueStub - Received request for "
+								+ kvMessage.toString() + " - request id: "
+								+ token.getMessageId() + " client id: "
+								+ token.getClientId());
+
+				DriverOperationFinishedHandler listCallback = new DriverOperationFinishedHandler(
+						token, session, driver.getClass(), transmitterClass);
+				IResult<List<String>> resultList = driver.invokeListOperation(
+						token.getClientId(), listCallback);
+				listCallback.setDetails(KeyValueOperations.LIST, resultList);
+				break;
+			case ERROR:
+				token = ((IdlCommon.Error) message.payload).getToken();
+				unknownMessage = true;
+				break;
+			case OK:
+				token = ((IdlCommon.Ok) message.payload).getToken();
+				unknownMessage = true;
+				break;
+			case GET_REPLY:
+				token = ((KeyValuePayloads.GetReply) message.payload)
+						.getToken();
+				unknownMessage = true;
+				break;
+			case LIST_REPLY:
+				token = ((KeyValuePayloads.ListReply) message.payload)
+						.getToken();
+				unknownMessage = true;
 				break;
 			}
-			key = getRequest.getKey(0);
-
-			MosaicLogger.getLogger().trace(
-					"KeyValueStub - Received request for "
-							+ kvMessage.toString() + " key: " + key
-							+ " - request id: " + token.getMessageId()
-							+ " client id: " + token.getClientId());
-
-			IResult<byte[]> resultGet = driver.invokeGetOperation(
-					token.getClientId(), key, getCallback);
-			getCallback.setDetails(KeyValueOperations.GET, resultGet);
-			break;
-		case DELETE_REQUEST:
-			KeyValuePayloads.DeleteRequest delRequest = (DeleteRequest) message.payload;
-			token = delRequest.getToken();
-			key = delRequest.getKey();
-
-			MosaicLogger.getLogger().trace(
-					"KeyValueStub - Received request for "
-							+ kvMessage.toString() + " key: " + key
-							+ " - request id: " + token.getMessageId()
-							+ " client id: " + token.getClientId());
-
-			DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler(
-					token, session, driver.getClass(), transmitterClass);
-			IResult<Boolean> resultDelete = driver.invokeDeleteOperation(
-					token.getClientId(), key, delCallback);
-			delCallback.setDetails(KeyValueOperations.DELETE, resultDelete);
-			break;
-		case LIST_REQUEST:
-			KeyValuePayloads.ListRequest listRequest = (ListRequest) message.payload;
-			token = listRequest.getToken();
-
-			MosaicLogger.getLogger().trace(
-					"KeyValueStub - Received request for "
-							+ kvMessage.toString() + " - request id: "
-							+ token.getMessageId() + " client id: "
-							+ token.getClientId());
-
-			DriverOperationFinishedHandler listCallback = new DriverOperationFinishedHandler(
-					token, session, driver.getClass(), transmitterClass);
-			IResult<List<String>> resultList = driver.invokeListOperation(
-					token.getClientId(), listCallback);
-			listCallback.setDetails(KeyValueOperations.LIST, resultList);
-			break;
-		case ERROR:
-			token = ((IdlCommon.Error) message.payload).getToken();
-			unknownMessage = true;
-			break;
-		case OK:
-			token = ((IdlCommon.Ok) message.payload).getToken();
-			unknownMessage = true;
-			break;
-		case GET_REPLY:
-			token = ((KeyValuePayloads.GetReply) message.payload).getToken();
-			unknownMessage = true;
-			break;
-		case LIST_REPLY:
-			token = ((KeyValuePayloads.ListReply) message.payload).getToken();
-			unknownMessage = true;
-			break;
-		}
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
 
 		if (unknownMessage) {
 			handleUnknownMessage(session, driver, kvMessage.toString(), token,
@@ -324,9 +331,9 @@ public class KeyValueStub extends AbstractDriverStub {
 		String passwd = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.4"), String.class, //$NON-NLS-1$
 				""); //$NON-NLS-1$
-//		String bucket = ConfigUtils.resolveParameter(config,
-//				ConfigProperties.getString("KVStoreDriver.3"), String.class, //$NON-NLS-1$
-//				"");
+		// String bucket = ConfigUtils.resolveParameter(config,
+		//				ConfigProperties.getString("KVStoreDriver.3"), String.class, //$NON-NLS-1$
+		// "");
 		DriverConnectionData cData = null;
 		if (user.equals("") && passwd.equals("")) {
 			cData = new DriverConnectionData(resourceHost, resourcePort, driver);
