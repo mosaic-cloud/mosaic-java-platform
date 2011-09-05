@@ -101,8 +101,9 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 				.resolveParameter(
 						accessorConfig,
 						ConfigProperties.getString("AmqpQueueAccessor.5"), String.class, "").toUpperCase();//$NON-NLS-1$ //$NON-NLS-2$
-		if (!type.equals("") && AmqpExchangeType.valueOf(type) != null)
+		if (!type.equals("") && (AmqpExchangeType.valueOf(type) != null)) {
 			this.exchangeType = AmqpExchangeType.valueOf(type);
+		}
 		this.exclusive = ConfigUtils
 				.resolveParameter(
 						accessorConfig,
@@ -136,7 +137,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 				this.status = ResourceStatus.INITIALIZING;
 				this.cloudletState = state;
 				if (!ResourceFinder.getResourceFinder().findResource(
-						ResourceType.AMQP, configuration))
+						ResourceType.AMQP, this.configuration))
 					throw new ContainerException(
 							"Cannot find a resource of type "
 									+ ResourceType.AMQP.toString());
@@ -157,7 +158,6 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 						arguments);
 				this.status = ResourceStatus.INITIALIZED;
 			} catch (Throwable e) {
-				e.printStackTrace();
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.initializeFailed(state, arguments);

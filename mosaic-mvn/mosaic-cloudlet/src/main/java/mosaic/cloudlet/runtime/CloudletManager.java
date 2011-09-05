@@ -43,8 +43,7 @@ public class CloudletManager {
 	 * @param configuration
 	 *            configuration object of the cloudlet
 	 */
-	public CloudletManager(ClassLoader classLoader,
-			IConfiguration configuration) {
+	public CloudletManager(ClassLoader classLoader, IConfiguration configuration) {
 		super();
 		this.classLoader = classLoader;
 		this.configuration = configuration;
@@ -124,7 +123,8 @@ public class CloudletManager {
 
 			ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
 			Object cloudletState = invokeConstructor(stateClasz);
-			Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler,this.classLoader);
+			Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler,
+					this.classLoader);
 			cloudlet.initialize(resourceConfig);
 			this.cloudletPool.add(cloudlet);
 		} catch (ClassNotFoundException e) {

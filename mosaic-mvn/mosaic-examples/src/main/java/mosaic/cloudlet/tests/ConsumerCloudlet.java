@@ -55,6 +55,7 @@ public class ConsumerCloudlet {
 					"ConsumerCloudlet is being destroyed.");
 		}
 
+		@Override
 		public void destroySucceeded(ConsumerCloudletState state,
 				CallbackArguments<ConsumerCloudletState> arguments) {
 			MosaicLogger.getLogger().info(

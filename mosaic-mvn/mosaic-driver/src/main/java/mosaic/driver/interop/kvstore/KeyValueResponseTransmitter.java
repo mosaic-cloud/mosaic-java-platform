@@ -104,7 +104,7 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 	protected Message buildKeyValueResponse(KeyValueOperations op,
 			CompletionToken token, Object result) {
 		Message message = null;
-		try {
+//		try {
 			switch (op) {
 			case SET:
 			case DELETE:
@@ -152,9 +152,9 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 			default:
 				break;
 			}
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
 		return message;
 	}
 

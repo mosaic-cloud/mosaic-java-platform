@@ -22,7 +22,7 @@ public class JsonDataEncoder<T> implements DataEncoder<T> {
 	public T decode(byte[] dataBytes) {
 		T ob = null;
 		try {
-			ob = dataClass.cast(SerDesUtils.jsonToObject(dataBytes,
+			ob = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes,
 					this.dataClass));
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);

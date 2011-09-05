@@ -491,9 +491,6 @@ public class AmqpDriver extends AbstractResourceDriver {
 		@Override
 		public final void handleDelivery(String consumer, Envelope envelope,
 				AMQP.BasicProperties properties, byte[] data) {
-			MosaicLogger.getLogger().trace(
-					"Received envelope: " + envelope + " properties: "
-							+ properties);
 			final AmqpInboundMessage message = new AmqpInboundMessage(consumer,
 					envelope.getDeliveryTag(), envelope.getExchange(),
 					envelope.getRoutingKey(), data,

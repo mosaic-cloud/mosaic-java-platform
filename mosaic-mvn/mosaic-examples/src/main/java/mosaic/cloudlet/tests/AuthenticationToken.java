@@ -16,6 +16,7 @@ public final class AuthenticationToken implements Serializable {
 		return token;
 	}
 
+	@Override
 	public String toString() {
 		return token;
 	}

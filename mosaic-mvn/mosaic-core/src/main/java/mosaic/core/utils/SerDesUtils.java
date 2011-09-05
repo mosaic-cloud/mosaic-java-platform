@@ -20,8 +20,8 @@ public class SerDesUtils {
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
 	static {
-		objectMapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS,
-				false);
+		SerDesUtils.objectMapper.configure(
+				SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 	}
 
 	/**
@@ -78,9 +78,10 @@ public class SerDesUtils {
 	public static <T extends Object> T jsonToObject(byte[] bytes,
 			Class<T> valueClass) throws IOException, ClassNotFoundException {
 		T object = null;
-		if (bytes.length > 0)
+		if (bytes.length > 0) {
 			object = SerDesUtils.objectMapper.readValue(bytes, 0, bytes.length,
 					valueClass);
+		}
 		return object;
 	}
 

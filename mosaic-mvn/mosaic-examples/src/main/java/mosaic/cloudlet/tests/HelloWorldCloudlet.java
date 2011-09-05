@@ -34,6 +34,7 @@ public class HelloWorldCloudlet {
 					"HelloWorld cloudlet is being destroyed.");
 		}
 
+		@Override
 		public void destroySucceeded(HelloCloudletState state,
 				CallbackArguments<HelloCloudletState> arguments) {
 			MosaicLogger.getLogger().info(

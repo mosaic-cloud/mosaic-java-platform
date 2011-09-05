@@ -98,7 +98,6 @@ public abstract class BaseKeyValueDriver extends AbstractResourceDriver {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> op = (GenericOperation<Boolean>) opFactory
 				.getOperation(KeyValueOperations.SET, key, data);
-
 		IResult<Boolean> iResult = startOperation(op, complHandler);
 		return iResult;
 	}

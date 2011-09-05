@@ -9,8 +9,8 @@ import mosaic.cloudlet.core.ICloudletController;
 import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.resources.ResourceStatus;
-import mosaic.cloudlet.runtime.ResourceFinder;
 import mosaic.cloudlet.runtime.ContainerComponentCallbacks.ResourceType;
+import mosaic.cloudlet.runtime.ResourceFinder;
 import mosaic.connector.kvstore.IKeyValueStore;
 import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
@@ -77,11 +77,12 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				ResourceType type = ResourceType.KEY_VALUE;
 				if (connectorName
 						.equalsIgnoreCase(KeyValueConnectorFactory.ConnectorType.MEMCACHED
-								.toString()))
+								.toString())) {
 					type = ResourceType.MEMCACHED;
+				}
 
 				if (!ResourceFinder.getResourceFinder().findResource(type,
-						configuration))
+						this.configuration))
 					throw new ContainerException(
 							"Cannot find a resource of type " + type.toString());
 				this.connector = KeyValueConnectorFactory.createConnector(

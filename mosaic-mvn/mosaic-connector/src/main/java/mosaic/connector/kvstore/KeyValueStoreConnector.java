@@ -30,10 +30,10 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 
 	private KeyValueProxy proxy;
 	private ExecutorService executor;
-	protected DataEncoder dataEncoder;
+	protected DataEncoder<?> dataEncoder;
 
 	protected KeyValueStoreConnector(KeyValueProxy proxy, int noThreads,
-			DataEncoder encoder) {
+			DataEncoder<?> encoder) {
 		this.proxy = proxy;
 		this.executor = Executors.newFixedThreadPool(noThreads);
 		this.dataEncoder = encoder;
@@ -53,7 +53,7 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	 * @throws Throwable
 	 */
 	public static KeyValueStoreConnector create(IConfiguration config,
-			DataEncoder encoder) throws Throwable {
+			DataEncoder<?> encoder) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -148,7 +148,6 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 			public void run() {
 				KeyValueStoreConnector.this.proxy.set(key, data,
 						op.getCompletionHandlers());
-
 			}
 		});
 		result = new EventDrivenResult<Boolean>(op);

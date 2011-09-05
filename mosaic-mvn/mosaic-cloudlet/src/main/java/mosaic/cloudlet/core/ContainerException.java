@@ -1,8 +1,8 @@
 package mosaic.cloudlet.core;
 
 /**
- * Defines a general exception a container operation can throw when it encounters
- * difficulty.
+ * Defines a general exception a container operation can throw when it
+ * encounters difficulty.
  * 
  * @author Georgiana Macariu
  * 

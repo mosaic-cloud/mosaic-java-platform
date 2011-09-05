@@ -88,15 +88,10 @@ public class RiakRestOperationFactory implements IOperationFactory {
 
 							@Override
 							public Boolean call() throws Exception {
-								try {
-									// System.out.println("Driver Set value "+dataBytes+" "+SerDesUtils.toObject(dataBytes));
-									StoreResponse response = RiakRestOperationFactory.this.riakcl
-											.store(riakobj);
-									if (response.isSuccess())
-										return true;
-								} catch (Throwable e) {
-									e.printStackTrace();
-								}
+								StoreResponse response = RiakRestOperationFactory.this.riakcl
+										.store(riakobj);
+								if (response.isSuccess())
+									return true;
 								return false;
 							}
 
@@ -109,21 +104,14 @@ public class RiakRestOperationFactory implements IOperationFactory {
 
 							@Override
 							public byte[] call() throws Exception {
-								try {
-									FetchResponse res = RiakRestOperationFactory.this.riakcl
-											.fetch(RiakRestOperationFactory.this.bucket,
-													key);
-									if (res.hasObject()) {
-										final RiakObject riakobj = res
-												.getObject();
-										return riakobj.getValueAsBytes();
-									} else
-										return null;
-
-								} catch (Throwable e) {
-									e.printStackTrace();
-								}
-								return null;
+								FetchResponse res = RiakRestOperationFactory.this.riakcl
+										.fetch(RiakRestOperationFactory.this.bucket,
+												key);
+								if (res.hasObject()) {
+									final RiakObject riakobj = res.getObject();
+									return riakobj.getValueAsBytes();
+								} else
+									return null;
 							}
 						});
 				break;
@@ -139,7 +127,6 @@ public class RiakRestOperationFactory implements IOperationFactory {
 								if (res.isSuccess()) {
 									RiakBucketInfo info = res.getBucketInfo();
 									keys = (List<String>) info.getKeys();
-									// System.out.println("Driver List value "+keys);
 									return keys;
 								} else
 									return keys;
