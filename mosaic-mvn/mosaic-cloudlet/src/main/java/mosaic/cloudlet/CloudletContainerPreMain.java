@@ -21,9 +21,7 @@ public class CloudletContainerPreMain {
 		Preconditions.checkArgument(arguments != null);
 		Preconditions.checkArgument(arguments.length == 2,
 				"invalid arguments: <clodlet jar> <cloudlet descriptor>");
-		MosaicLogger.getLogger().debug(
-				"Container callbacks created with " + arguments[0] + " and "
-						+ arguments[1]);
+
 		CloudletContainerPreMain.CloudletContainerParameters.classpath = arguments[0];
 		CloudletContainerPreMain.CloudletContainerParameters.configFile = arguments[1];
 		BasicComponentHarnessPreMain
