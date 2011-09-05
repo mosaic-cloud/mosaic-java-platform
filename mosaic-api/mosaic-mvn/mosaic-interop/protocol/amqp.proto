@@ -1,0 +1,108 @@
+package mosaic_cloud.idl.amqp;
+
+option java_package = "mosaic.interop.idl.amqp";
+option java_outer_classname = "AmqpPayloads";
+option optimize_for = SPEED;
+
+import "common.proto";
+
+message DeclareExchangeRequest {
+	enum ExchangeType {
+		DIRECT = 0;
+		FANOUT = 1;
+		TOPIC = 2;
+	}
+
+	required mosaic_cloud.idl.common.CompletionToken token = 1;	
+	required string exchange = 2;
+	required ExchangeType type = 3;
+	optional bool durable = 4 [default  = false];
+	optional bool auto_delete = 5 [default = true] ;
+	optional bool passive = 6 [default = true];
+}
+
+message DeclareQueueRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string queue = 2;
+	optional bool exclusive = 3 [default = true];
+	optional bool durable = 4 [default = false];
+	optional bool auto_delete = 5 [default = true];
+	optional bool passive = 6 [default = true];
+}
+	
+message BindQueueRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string exchange = 2;
+	required string queue = 3;
+	required string routing_key = 4;
+}
+	
+message ConsumeRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string queue = 2;
+	required string consumer = 3;
+	optional bool exclusive = 4 [default = true];
+	optional bool auto_ack = 5 [default = true];
+	required bytes extra = 6;
+}
+
+message ConsumeReply {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string consumer_tag = 2;
+}
+	
+message PublishRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required bytes data = 2;
+	optional bool durable = 3 [default = false];
+	required string exchange = 4;
+	optional bool immediate = 5 [default = true];
+	optional bool mandatory = 6 [default = true];
+	required string routing_key = 7;
+	required string content_type = 8;
+}
+	
+message GetRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string queue = 2;
+	optional bool auto_ack = 3 [default = true] ;
+}
+	
+message Ack {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required int64 delivery = 2;
+	required bool multiple = 3;
+}
+	
+message CancelRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string consumer = 2;
+}
+
+message ConsumeOkMessage {
+	required string consumer_tag = 1;
+}
+	
+message CancelOkMessage {
+	required string consumer_tag = 1;
+}
+
+message ServerCancelRequest {
+	required string consumer_tag = 1;
+}
+	
+message DeliveryMessage {
+	required string consumer_tag = 1;
+	required int64 delivery_tag = 2;
+	required string exchange = 3;
+	required string routing_key = 4;
+	required int32 delivery_mode = 5;
+	required bytes data = 6;
+	required string content_type = 7;
+}
+	
+message ShutdownMessage {
+	required string consumer_tag = 1;
+	required string message = 2;
+}
+	

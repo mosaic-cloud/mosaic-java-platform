@@ -1,0 +1,8 @@
+cloudlet.main_class=mosaic.cloudlet.tests.PublisherCloudlet$LifeCycleHandler
+cloudlet.state_class=mosaic.cloudlet.tests.PublisherCloudlet$PublisherCloudletState
+cloudlet.resource_file=publisher-cloudlet.prop
+
+queue.publisher.amqp.exchange=simple-exchange
+queue.publisher.amqp.routing_key=simple-rk
+queue.publisher.amqp.queue=simple-queue
+

@@ -1,0 +1,12 @@
+cloudlet.main_class=mosaic.cloudlet.component.tests.PublisherCloudlet$LifeCycleHandler
+cloudlet.state_class=mosaic.cloudlet.component.tests.PublisherCloudlet$PublisherCloudletState
+cloudlet.resource_file=publisher-cloudlet.prop
+
+queue.publisher.amqp.exchange=simple-exchange
+queue.publisher.amqp.routing_key=simple-rk
+queue.publisher.amqp.queue=simple-queue
+
+# configurations below will normally not be set by the cloudlet creator
+# this is just for test
+queue.amqp.connector_threads=1
+

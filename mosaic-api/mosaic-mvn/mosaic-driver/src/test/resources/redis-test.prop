@@ -1,0 +1,6 @@
+kvstore.host=localhost
+kvstore.port=6379
+kvstore.bucket=12
+kvstore.driver_threads=1
+kvstore.driver_name=REDIS
+

@@ -1,0 +1,123 @@
+package mosaic.driver.kvstore;
+
+import java.io.IOException;
+
+import mosaic.core.configuration.ConfigUtils;
+import mosaic.core.configuration.IConfiguration;
+import mosaic.core.log.MosaicLogger;
+import mosaic.core.ops.IOperationFactory;
+import mosaic.driver.ConfigProperties;
+
+/**
+ * Driver class for the Redis key-value database management systems.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
+public class RedisDriver extends BaseKeyValueDriver {
+	private String host;
+	private int port;
+	private String username;
+	private String password;
+
+	/**
+	 * Creates a new Redis driver.
+	 * 
+	 * @param noThreads
+	 *            number of threads to be used for serving requests
+	 * @param host
+	 *            the hostname of the Redis server
+	 * @param port
+	 *            the port for the Redis server
+	 */
+	private RedisDriver(int noThreads, String host, int port) {
+		super(noThreads);
+		this.host = host;
+		this.port = port;
+	}
+
+	/**
+	 * Creates a new Redis driver.
+	 * 
+	 * @param noThreads
+	 *            number of threads to be used for serving requests
+	 * @param host
+	 *            the hostname of the Redis server
+	 * @param port
+	 *            the port for the Redis server
+	 * @param user
+	 *            the username for connecting to the server
+	 * @param passwd
+	 *            the password for connecting to the server
+	 */
+	private RedisDriver(int noThreads, String host, int port, String user,
+			String password) {
+		super(noThreads);
+		this.host = host;
+		this.port = port;
+		this.username = user;
+		this.password = password;
+	}
+
+	/**
+	 * Returns a Redis driver.
+	 * 
+	 * @param config
+	 *            the configuration parameters required by the driver:
+	 *            <ol>
+	 *            <il>there should be two parameters: <i>kvstore.host</i> and
+	 *            <i>kvstore.port</i> indicating the hostname and the port where
+	 *            the Redis server is listening </il>
+	 *            <il><i>kvstore.driver_threads</i> specifies the maximum number
+	 *            of threads that shall be created by the driver for serving
+	 *            requests </il>
+	 *            </ol>
+	 * @return the driver
+	 * @throws IOException
+	 */
+	public static synchronized RedisDriver create(IConfiguration config)
+			throws IOException {
+		int port, noThreads;
+
+		String host = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.0"), //$NON-NLS-1$
+				String.class, ""); //$NON-NLS-1$
+
+		port = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.1"), //$NON-NLS-1$
+				Integer.class, 0);
+
+		noThreads = ConfigUtils
+				.resolveParameter(
+						config,
+						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
+		// int db = ConfigUtils.resolveParameter(config,
+		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
+		// Integer.class, (-1));
+		String passwd = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("KVStoreDriver.4"), //$NON-NLS-1$
+				String.class, ""); //$NON-NLS-1$
+
+		RedisDriver wrapper = new RedisDriver(noThreads, host, port, "", passwd);
+		return wrapper;
+	}
+
+	/**
+	 * Destroys the driver. After this call no other method should be invoked on
+	 * the driver object.
+	 */
+	@Override
+	public synchronized void destroy() {
+		super.destroy();
+		MosaicLogger.getLogger().trace("RedisDriver destroyed."); //$NON-NLS-1$
+	}
+
+	@Override
+	protected IOperationFactory createOperationFactory(Object... params) {
+		String bucket = params[0].toString();
+		IOperationFactory opFactory = RedisOperationFactory.getFactory(
+				this.host, this.port, this.username, this.password, bucket);
+		return opFactory;
+	}
+
+}

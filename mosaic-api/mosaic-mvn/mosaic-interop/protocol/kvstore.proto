@@ -1,0 +1,49 @@
+package mosaic_cloud.idl.kvstore;
+
+option java_package = "mosaic.interop.idl.kvstore";
+option java_outer_classname = "KeyValuePayloads";
+option optimize_for = SPEED;
+
+import "common.proto";
+
+
+message InitRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string bucket = 2;
+}
+
+message KVEntry {
+	required string key = 1;
+	required bytes value = 2;
+}
+
+message SetRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string key = 2;
+	optional int32 exp_time = 3 [default = 0];
+	required bytes value = 4;
+}
+
+message GetRequest {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	repeated string key = 2;
+}
+
+message GetReply {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	repeated KVEntry results = 2;
+}
+
+message DeleteRequest {
+		required mosaic_cloud.idl.common.CompletionToken token = 1;
+		required string key = 2;
+}
+	
+message ListRequest {
+		required mosaic_cloud.idl.common.CompletionToken token = 1;
+}
+
+message ListReply {
+		required mosaic_cloud.idl.common.CompletionToken token = 1;
+		repeated string keys = 2;
+}
