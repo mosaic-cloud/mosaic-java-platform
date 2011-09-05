@@ -1,0 +1,12 @@
+
+.*
+!.gitignore
+!.hgignore
+!.hgtags
+
+target
+lib
+META-INF
+
+*#
+*~
