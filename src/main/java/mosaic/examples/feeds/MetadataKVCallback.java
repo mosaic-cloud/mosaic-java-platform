@@ -40,11 +40,7 @@ public final class MetadataKVCallback extends
 	@Override
 	public void setSucceeded(IndexerCloudletState state,
 			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		try {
-			IndexWorkflow.onMetadataStored(arguments);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		IndexWorkflow.onMetadataStored(arguments);
 	}
 
 	@Override
@@ -56,21 +52,16 @@ public final class MetadataKVCallback extends
 	@Override
 	public void getSucceeded(IndexerCloudletState state,
 			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		try {
-			String key = arguments.getKey();
-			MosaicLogger.getLogger().trace(
-					"succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + ","
-							+ key + ")");
-			Object value = arguments.getValue();
-			if (value == null) {
-				createFeedMetaData(state, key, arguments.getExtra());
-			} else {
-				System.out.println("MetadataKVCallback.getSucceeded() "+arguments.getValue());
-				IndexWorkflow.findNewFeeds(arguments.getValue(),
-						arguments.getExtra());
-			}
-		} catch (Throwable e) {
-			e.printStackTrace();
+		String key = arguments.getKey();
+		MosaicLogger.getLogger().trace(
+				"succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + ","
+						+ key + ")");
+		Object value = arguments.getValue();
+		if (value == null) {
+			createFeedMetaData(state, key, arguments.getExtra());
+		} else {
+			IndexWorkflow.findNewFeeds(arguments.getValue(),
+					arguments.getExtra());
 		}
 	}
 

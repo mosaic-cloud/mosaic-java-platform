@@ -4,7 +4,9 @@ import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.DefaultCloudletCallback;
 import mosaic.cloudlet.core.ICloudletController;
 import mosaic.cloudlet.resources.amqp.AmqpQueueConsumer;
+import mosaic.cloudlet.resources.amqp.IAmqpQueueConsumerCallback;
 import mosaic.cloudlet.resources.kvstore.IKeyValueAccessor;
+import mosaic.cloudlet.resources.kvstore.IKeyValueAccessorCallback;
 import mosaic.cloudlet.resources.kvstore.KeyValueAccessor;
 import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
@@ -76,21 +78,34 @@ public class IndexerCloudlet {
 					"Feeds IndexerCloudlet initialized successfully.");
 			ICloudletController<IndexerCloudletState> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.initializeResource(state.metadataStore,
-					new MetadataKVCallback(), state);
-			cloudlet.initializeResource(state.dataStore, new DataKVCallback(),
-					state);
-			cloudlet.initializeResource(state.timelinesStore,
-					new TimelinesKVCallback(), state);
-			cloudlet.initializeResource(state.itemsStore,
-					new ItemsKVCallback(), state);
-			cloudlet.initializeResource(state.taskStore, new TasksKVCallback(),
-					state);
 
+			state.metadataStoreCallback = new MetadataKVCallback();
+			cloudlet.initializeResource(state.metadataStore,
+					state.metadataStoreCallback, state);
+
+			state.dataStoreCallback = new DataKVCallback();
+			cloudlet.initializeResource(state.dataStore,
+					state.dataStoreCallback, state);
+
+			state.timelinesStoreCallback = new TimelinesKVCallback();
+			cloudlet.initializeResource(state.timelinesStore,
+					state.timelinesStoreCallback, state);
+
+			state.itemsStoreCallback = new ItemsKVCallback();
+			cloudlet.initializeResource(state.itemsStore,
+					state.itemsStoreCallback, state);
+
+			state.tasksStoreCallback = new TasksKVCallback();
+			cloudlet.initializeResource(state.taskStore,
+					state.tasksStoreCallback, state);
+
+			state.urgentConsumerCallback = new UrgentConsumerCallback();
 			cloudlet.initializeResource(state.urgentConsumer,
-					new UrgentConsumerCallback(), state);
+					state.urgentConsumerCallback, state);
+
+			state.batchConsumerCallback = new BatchConsumerCallback();
 			cloudlet.initializeResource(state.batchConsumer,
-					new BatchConsumerCallback(), state);
+					state.batchConsumerCallback, state);
 		}
 
 		@Override
@@ -98,7 +113,34 @@ public class IndexerCloudlet {
 				CallbackArguments<IndexerCloudletState> arguments) {
 			MosaicLogger.getLogger().info(
 					"Feeds IndexerCloudlet is being destroyed.");
-
+			ICloudletController<IndexerCloudletState> cloudlet = arguments
+					.getCloudlet();
+			if (state.metadataStore != null) {
+				cloudlet.destroyResource(state.metadataStore,
+						state.metadataStoreCallback);
+			}
+			if (state.dataStore != null) {
+				cloudlet.destroyResource(state.dataStore,
+						state.dataStoreCallback);
+			}
+			if (state.timelinesStore != null) {
+				cloudlet.destroyResource(state.timelinesStore,
+						state.timelinesStoreCallback);
+			}
+			if (state.itemsStore != null) {
+				cloudlet.destroyResource(state.itemsStore,
+						state.itemsStoreCallback);
+			}
+			if (state.taskStore != null) {
+				cloudlet.destroyResource(state.taskStore,
+						state.tasksStoreCallback);
+			}
+			if (state.urgentConsumer != null) {
+				state.urgentConsumer.unregister();
+			}
+			if (state.batchConsumer != null) {
+				state.batchConsumer.unregister();
+			}
 		}
 	}
 
@@ -111,6 +153,13 @@ public class IndexerCloudlet {
 		IKeyValueAccessor<IndexerCloudletState> timelinesStore;
 		IKeyValueAccessor<IndexerCloudletState> itemsStore;
 		IKeyValueAccessor<IndexerCloudletState> taskStore;
+		IAmqpQueueConsumerCallback<IndexerCloudletState, JSONObject> urgentConsumerCallback;
+		IAmqpQueueConsumerCallback<IndexerCloudletState, JSONObject> batchConsumerCallback;
+		IKeyValueAccessorCallback<IndexerCloudletState> metadataStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletState> dataStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletState> timelinesStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletState> itemsStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletState> tasksStoreCallback;
 	}
 
 }

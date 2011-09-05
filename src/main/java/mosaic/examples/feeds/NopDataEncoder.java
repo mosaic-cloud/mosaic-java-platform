@@ -2,14 +2,14 @@ package mosaic.examples.feeds;
 
 import mosaic.core.utils.DataEncoder;
 
-public class NopDataEncoder  implements DataEncoder<byte[]> {
-	
+public class NopDataEncoder implements DataEncoder<byte[]> {
+
 	public NopDataEncoder() {
 	}
 
 	@Override
 	public byte[] encode(byte[] data) throws Exception {
-		return (byte[]) data;
+		return data;
 	}
 
 	@Override

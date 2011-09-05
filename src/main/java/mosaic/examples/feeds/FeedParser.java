@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.util.List;
 
 import com.sun.syndication.feed.atom.Feed;
-import com.sun.syndication.feed.atom.Link;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndLink;
 import com.sun.syndication.feed.synd.SyndPerson;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
@@ -63,17 +63,13 @@ public class FeedParser {
 			String title = entry.getTitleEx().getValue();
 			String titleType = entry.getTitleEx().getType();
 
-			// System.out.println("Feed:\n\t" + entry.getUri() + "\n\t" + title
-			// + " " + titleType + "\n\t" + content + " " + contentType
-			// + "\n\t" + entry.getUpdatedDate().getTime() + "\n\t"
-			// + authorName + " " + authorEmail + " " + authorURI);
-			Timeline.Entry tEntry=timeline.addEntry(entry.getUri(), title, titleType, content,
-					contentType, entry.getUpdatedDate().getTime(), authorName,
-					authorEmail, authorURI);
-			
+			Timeline.Entry tEntry = timeline.addEntry(entry.getUri(), title,
+					titleType, content, contentType, entry.getUpdatedDate()
+							.getTime(), authorName, authorEmail, authorURI);
+
 			@SuppressWarnings("unchecked")
-			List<Link> links=entry.getLinks();
-			for(Link link:links) {
+			List<SyndLink> links = entry.getLinks();
+			for (SyndLink link : links) {
 				tEntry.addLink(link.getRel(), link.getHref());
 			}
 		}

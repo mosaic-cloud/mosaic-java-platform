@@ -120,8 +120,6 @@ public class IndexWorkflow {
 			handleError(e);
 		} catch (JSONException e) {
 			handleError(e);
-		} catch (Throwable e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -158,9 +156,8 @@ public class IndexWorkflow {
 			} catch (JSONException e) {
 			}
 			long maxItemTimestamp = -1;
-			if (minItemTimestamp != -1) {
-				maxItemTimestamp = minItemTimestamp;
-			}
+			maxItemTimestamp = minItemTimestamp;
+
 			List<Timeline.Entry> currentItems = new ArrayList<Timeline.Entry>();
 			for (Timeline.Entry item : this.currentTimeline.getEntries()) {
 				if ((minItemTimestamp == -1)
@@ -213,8 +210,12 @@ public class IndexWorkflow {
 					this.state.itemsStore.set(itemKey, json, this.key);
 				}
 				this.newTimeline.put("items", items);
-				this.currentFeedMetaData.put("timelines", this.newTimeline);
+				this.currentFeedMetaData.put("timelines",
+						this.newTimeline.getString("key"));
 
+				MosaicLogger.getLogger().trace(
+						"Current timeline has  " + items.length()
+								+ " new items.");
 				JSONArray prevTimelines = null;
 				try {
 					prevTimelines = this.previousFeedMetaData
@@ -234,6 +235,7 @@ public class IndexWorkflow {
 				this.state.timelinesStore.set(newTimelineKey, this.newTimeline,
 						this.key);
 			} else {
+				this.currentFeedMetaData = this.previousFeedMetaData;
 				storeIndexOutcome();
 			}
 
@@ -244,11 +246,7 @@ public class IndexWorkflow {
 	}
 
 	public static void updateFeedMetadata(Object extra) {
-		try {
-			getIndexer((UUID) extra).handleMetadataUpdate();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		getIndexer((UUID) extra).handleMetadataUpdate();
 	}
 
 	private void handleMetadataUpdate() {
@@ -295,13 +293,18 @@ public class IndexWorkflow {
 			this.newFeedTask.put("currentMetaData", this.currentFeedMetaData);
 			this.newFeedTask.put("previousMetaData", this.previousFeedMetaData);
 			this.newFeedTask.put("timeline", this.newTimeline);
-			this.newFeedTask.put("items", this.newFeedItems);
+
+			JSONArray items = new JSONArray();
+			for (int i = 0; i < this.newFeedItems.length(); i++) {
+				JSONObject item = this.newFeedItems.getJSONObject(i);
+				items.put(item.getString("key"));
+			}
+			this.newFeedTask.put("items", items);
 			Object error = null;
 			this.newFeedTask.put("error", error);
 			this.state.taskStore.set(feedTaskKey, this.newFeedTask, this.key);
 		} catch (JSONException e) {
 			ExceptionTracer.traceDeferred(e);
-			e.printStackTrace();
 		}
 	}
 
@@ -325,7 +328,7 @@ public class IndexWorkflow {
 			errorBuilder.append(entry.getKey() + ": " + entry.getValue());
 		}
 		MosaicLogger.getLogger().error(errorBuilder.toString());
-		getIndexer((UUID) extra).recvMessage.acknowledge();
+		// getIndexer((UUID) extra).recvMessage.acknowledge();
 	}
 
 }
