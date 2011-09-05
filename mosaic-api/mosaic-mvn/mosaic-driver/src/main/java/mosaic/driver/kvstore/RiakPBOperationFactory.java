@@ -101,15 +101,9 @@ public class RiakPBOperationFactory implements IOperationFactory {
 
 							@Override
 							public Boolean call() throws Exception {
-								RiakObject[] fetched = RiakPBOperationFactory.this.riakcl
-										.fetch(RiakPBOperationFactory.this.bucket,
-												key);
-								if (fetched.length == 0) {
-									RiakPBOperationFactory.this.riakcl
-											.store(riakobj);
-									return true;
-								} else
-									return false;
+								RiakPBOperationFactory.this.riakcl
+										.store(riakobj);
+								return true;
 							}
 						});
 				break;
@@ -124,9 +118,10 @@ public class RiakPBOperationFactory implements IOperationFactory {
 								RiakObject[] riakobj = RiakPBOperationFactory.this.riakcl
 										.fetch(RiakPBOperationFactory.this.bucket,
 												key);
-								if (riakobj.length == 1)
+								if (riakobj.length == 1) {
 									result = riakobj[0].getValue()
 											.toByteArray();
+								}
 								return result;
 							}
 

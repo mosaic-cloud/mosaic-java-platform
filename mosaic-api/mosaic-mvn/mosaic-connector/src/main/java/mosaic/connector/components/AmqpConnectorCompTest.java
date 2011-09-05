@@ -22,9 +22,9 @@ public class AmqpConnectorCompTest {
 	private AmqpConnector connector;
 
 	public AmqpConnectorCompTest() throws Throwable {
-		this.configuration = PropertyTypeConfiguration
-				.create(AmqpConnectorCompTest.class
-						.getClassLoader(),"amqp-conn-test.prop");
+		this.configuration = PropertyTypeConfiguration.create(
+				AmqpConnectorCompTest.class.getClassLoader(),
+				"amqp-conn-test.prop");
 
 		MosaicLogger.getLogger().info(
 				"AMQP Connector test: configuration loaded. "

@@ -26,11 +26,11 @@ public class KeyValueConnectorCompTest {
 	private static String storeType;
 
 	public KeyValueConnectorCompTest() throws Throwable {
-		configuration = PropertyTypeConfiguration.create(
+		this.configuration = PropertyTypeConfiguration.create(
 				KeyValueConnectorCompTest.class.getClassLoader(),
 				"kv-conn-test.prop");
 		KeyValueConnectorCompTest.storeType = ConfigUtils.resolveParameter(
-				configuration, "kvstore.driver_name", String.class, "");
+				this.configuration, "kvstore.driver_name", String.class, "");
 		KeyValueConnectorCompTest.keyPrefix = UUID.randomUUID().toString();
 		ResourceFinder.getResourceFinder().findResource(ResourceType.KEY_VALUE,
 				new Callback());
@@ -38,7 +38,7 @@ public class KeyValueConnectorCompTest {
 	}
 
 	public void testConnection() {
-		Preconditions.checkNotNull(connector, "Connector not created");
+		Preconditions.checkNotNull(this.connector, "Connector not created");
 	}
 
 	private static <T> List<IOperationCompletionHandler<T>> getHandlers(
@@ -53,12 +53,13 @@ public class KeyValueConnectorCompTest {
 	public void testSet() throws IOException {
 		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
-		IResult<Boolean> r1 = connector.set(k1, "fantastic", handlers1, null);
+		IResult<Boolean> r1 = this.connector.set(k1, "fantastic", handlers1,
+				null);
 		Preconditions.checkNotNull(r1);
 
 		String k2 = KeyValueConnectorCompTest.keyPrefix + "_key_famous";
 		List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers("set 2");
-		IResult<Boolean> r2 = connector.set(k2, "famous", handlers2, null);
+		IResult<Boolean> r2 = this.connector.set(k2, "famous", handlers2, null);
 		Preconditions.checkNotNull(r2);
 
 		try {
@@ -76,7 +77,7 @@ public class KeyValueConnectorCompTest {
 	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
-		IResult<Object> r1 = connector.get(k1, handlers, null);
+		IResult<Object> r1 = this.connector.get(k1, handlers, null);
 
 		try {
 			Preconditions.checkState(
@@ -94,7 +95,7 @@ public class KeyValueConnectorCompTest {
 	public void testDelete() {
 		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
-		IResult<Boolean> r1 = connector.delete(k1, handlers, null);
+		IResult<Boolean> r1 = this.connector.delete(k1, handlers, null);
 		try {
 			Preconditions.checkState(r1.getResult(), "Object not deleted.");
 		} catch (InterruptedException e) {
@@ -106,7 +107,7 @@ public class KeyValueConnectorCompTest {
 		}
 
 		List<IOperationCompletionHandler<Object>> handlers1 = getHandlers("get after delete");
-		IResult<Object> r2 = connector.get(k1, handlers1, null);
+		IResult<Object> r2 = this.connector.get(k1, handlers1, null);
 
 		try {
 			Preconditions.checkState(r2.getResult() == null,
@@ -123,7 +124,7 @@ public class KeyValueConnectorCompTest {
 	public void testList() {
 		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
-		IResult<List<String>> r1 = connector.list(handlers, null);
+		IResult<List<String>> r1 = this.connector.list(handlers, null);
 		try {
 			if (KeyValueConnectorCompTest.storeType
 					.equalsIgnoreCase("memcached")) {

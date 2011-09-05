@@ -21,6 +21,7 @@ public final class LoggingData implements Serializable {
 		return password;
 	}
 
+	@Override
 	public String toString() {
 		return user + "(" + password + ")";
 	}

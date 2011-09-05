@@ -71,6 +71,7 @@ public class ChannelData {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return channelIdentifier + "(" + channelEndpoint + ")";
 	}
