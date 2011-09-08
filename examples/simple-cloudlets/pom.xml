@@ -7,21 +7,15 @@
 		<version>0.4-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
-	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>mosaic-examples</artifactId>
-	<name>mOSAIC cloudlet examples</name>
-	<description>Examples for components</description>
-	<url>http://www.mosaic-cloud.eu/</url>
-	<packaging>jar</packaging>
-
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>mosaic-cloudlet</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>mosaic-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -29,24 +23,10 @@
 			<groupId>spy</groupId>
 			<artifactId>spymemcached</artifactId>
 			<version>2.6</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	<organization>
-		<name>eAustria Research Institute</name>
-		<url>www.ieat.ro</url>
-	</organization>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -67,5 +47,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<inceptionYear>March 2011</inceptionYear>
 </project>
