@@ -102,6 +102,44 @@
 		<name>mOSAIC Project</name>
 		<url>http://www.mosaic-cloud.eu/</url>
 	</organization>
+
+	<developers>
+		<developer>
+			<id>georgiana</id>
+			<name>Georgiana Macariu</name>
+			<email>georgiana@ieat.ro</email>
+			<organization>Research Institute eAustria</organization>
+			<organizationUrl>http://www.ieat.ro</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+3</timezone>
+		</developer>
+                <developer>
+                        <id>ccraciun</id>
+                        <name>Ciprian Craciun</name>
+                        <email>ccraciun@ieat.ro</email>
+                        <organization>Research Institute eAustria</organization>
+                        <organizationUrl>http://www.ieat.ro</organizationUrl>
+                        <roles>
+                                <role>developer</role>
+				<role>architect</role>
+                        </roles>
+                        <timezone>+3</timezone>
+                </developer>
+                <developer>
+                        <id>marian</id>
+                        <name>Marian Neagul</name>
+                        <email>marian@ieat.ro</email>
+                        <organization>Research Institute eAustria</organization>
+                        <organizationUrl>http://www.ieat.ro</organizationUrl>
+                        <roles>
+                                <role>developer</role>
+                        </roles>
+                        <timezone>+3</timezone>
+                </developer>
+
+	</developers>
 	
 	<scm>
 		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/ciprian/mosaic-java-components</connection>
