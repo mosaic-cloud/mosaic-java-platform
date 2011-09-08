@@ -32,7 +32,7 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 		IMemcachedStore {
 
 	private MemcachedStoreConnector(MemcachedProxy proxy, int noThreads,
-			DataEncoder encoder) {
+			DataEncoder<?> encoder) {
 		super(proxy, noThreads, encoder);
 	}
 
@@ -50,7 +50,7 @@ public class MemcachedStoreConnector extends KeyValueStoreConnector implements
 	 * @throws Throwable
 	 */
 	public static MemcachedStoreConnector create(IConfiguration config,
-			DataEncoder encoder) throws Throwable {
+			DataEncoder<?> encoder) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
