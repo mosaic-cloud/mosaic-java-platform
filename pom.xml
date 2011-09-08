@@ -63,6 +63,11 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.3.2</version>
+			</plugin>
 		</plugins>
 	</build>
 	
@@ -130,5 +135,21 @@
 		<system>bamboo</system>
 		<url>http://developers.mosaic-cloud.eu/bamboo</url>
 	</ciManagement>
-	
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.3.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>	
 </project>
