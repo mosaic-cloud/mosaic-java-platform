@@ -7,16 +7,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.mosaic_cloud</groupId>
-	<artifactId>mOSAIC-API</artifactId>
-	<name>mOSAIC API</name>
-	<version>0.1-SNAPSHOT</version>
+	<artifactId>java-parent</artifactId>
+	<name>mOSAIC Java parent</name>
+	<version>0.4-SNAPSHOT</version>
 	<url>http://www.mosaic-cloud.eu/</url>
 	<packaging>pom</packaging>
 
 	<repositories>
 		<repository>
-			<id>spy</id>
-			<name>Spy Repository</name>
+			<id>couchbase</id>
+			<name>Couchbase Repository</name>
 			<layout>default</layout>
 			<url>http://files.couchbase.com/maven2/</url>
 			<snapshots>
@@ -36,17 +36,21 @@
 	</repositories>
 
 	<modules>
-		<module>mosaic-core</module>
-		<module>mosaic-interop</module>
-		<module>mosaic-driver</module>
-		<module>mosaic-connector</module>
-		<module>mosaic-cloudlet</module>
-		<module>mosaic-examples</module>
+		<module>platform/mosaic-core</module>
+		<module>platform/mosaic-interop</module>
+		<module>drivers</module>
+		<module>connectors</module>
+		<module>cloudlets</module>
+		<module>interoperability</module>
+		<module>infrastructure</module>
+		<module>tools</module>
+		<module>examples/simple-cloudlets</module>
+		<module>examples/simple-components</module>
+		<module>examples/interoperability</module>
 	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mosaic.tools.version>0.3-SNAPSHOT</mosaic.tools.version>
 	</properties>
 	<reporting>
 		<plugins>

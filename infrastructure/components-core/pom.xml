@@ -7,14 +7,14 @@
 	<parent>
 		<groupId>eu.mosaic_cloud</groupId>
 		<artifactId>components-parent</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>components-core</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-callbacks</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -2,9 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>mOSAIC-API</artifactId>
+		<artifactId>java-parent</artifactId>
 		<groupId>eu.mosaic_cloud</groupId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
 	</parent>
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>mosaic-interop</artifactId>
@@ -16,17 +17,17 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>interoperability-core</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>interoperability-tools</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>interoperability-zeromq</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
@@ -51,5 +52,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	<inceptionYear>March 2011</inceptionYear>
+	<inceptionYear>2011</inceptionYear>
 </project>

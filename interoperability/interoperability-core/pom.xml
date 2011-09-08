@@ -7,14 +7,14 @@
 	<parent>
 		<groupId>eu.mosaic_cloud</groupId>
 		<artifactId>interoperability-parent</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>interoperability-core</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-callbacks</artifactId>
-			<version>0.3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

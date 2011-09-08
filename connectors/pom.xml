@@ -2,10 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>mOSAIC-API</artifactId>
+		<artifactId>java-parent</artifactId>
 		<groupId>eu.mosaic_cloud</groupId>
-		<version>0.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>mosaic-connector</artifactId>
@@ -41,17 +40,17 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>interoperability-core</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>interoperability-tools</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>interoperability-zeromq</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
@@ -73,12 +72,12 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>components-core</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>components-container</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<organization>

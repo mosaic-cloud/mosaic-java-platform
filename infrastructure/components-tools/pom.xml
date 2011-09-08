@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud</groupId>
 		<artifactId>components-parent</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>components-tools</artifactId>
 	<dependencies>
@@ -19,22 +19,22 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-exceptions</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-json</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-miscellaneous</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-transcript</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

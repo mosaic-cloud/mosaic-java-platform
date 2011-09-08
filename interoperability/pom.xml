@@ -6,15 +6,20 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	
+        <parent>
+                <artifactId>java-parent</artifactId>
+                <groupId>eu.mosaic_cloud</groupId>
+                <version>0.4-SNAPSHOT</version>
+        </parent>
+		
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>interoperability-parent</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>http://www.mosaic-cloud.eu/</url>
 	
 	<modules>
 		<module>interoperability-core</module>
-		<module>interoperability-examples</module>
 		<module>interoperability-tools</module>
 		<module>interoperability-zeromq</module>
 		<module>zeromq</module>
@@ -64,7 +69,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<license.licenseName>apache_v2</license.licenseName>
-		<mosaic.tools.version>0.3-SNAPSHOT</mosaic.tools.version>
 	</properties>
 	
 	<repositories>

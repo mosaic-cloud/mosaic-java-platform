@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud</groupId>
 		<artifactId>interoperability-parent</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>interoperability-zeromq</artifactId>
 	<dependencies>
@@ -19,12 +19,12 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-miscellaneous</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-exceptions</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>

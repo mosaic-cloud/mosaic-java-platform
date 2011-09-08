@@ -6,8 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>eu.mosaic_cloud</groupId>
-		<artifactId>components-parent</artifactId>
-		<version>0.2-SNAPSHOT</version>
+		<artifactId>java-parent</artifactId>
+		<version>0.4-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
 	</parent>
 	<artifactId>components-examples</artifactId>
 	<dependencies>
@@ -34,7 +35,7 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>tools-classpath-exporter</artifactId>
-			<version>${mosaic.tools.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
