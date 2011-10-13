@@ -6,7 +6,6 @@ import java.util.List;
 import mosaic.connector.interop.AbstractConnectorReactor;
 import mosaic.connector.queue.amqp.AmqpCallbacksMap;
 import mosaic.connector.queue.amqp.IAmqpConsumerCallback;
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.driver.queue.amqp.AmqpInboundMessage;
@@ -35,9 +34,9 @@ import eu.mosaic_cloud.interoperability.core.Message;
  * @author Georgiana Macariu
  * 
  */
-public class AmqpConnectorReactor extends AbstractConnectorReactor {
+public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by georgiana on 10/13/11 2:45 PM
 
-	private final  AmqpCallbacksMap callbacksMap;
+	private final AmqpCallbacksMap callbacksMap;
 
 	/**
 	 * Creates the reactor for the AMQP connector proxy.
@@ -75,23 +74,24 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void processResponse(Message message) throws IOException {
+	protected void processResponse(Message message) throws IOException { // NOPMD by georgiana on 10/13/11 2:44 PM
 		Preconditions
 				.checkArgument(message.specification instanceof AmqpMessage);
 
 		AmqpMessage amqpMessage = (AmqpMessage) message.specification;
-		CompletionToken token = null;
+		CompletionToken token;
 		String consumerId;
 		IAmqpConsumerCallback callback;
 		List<IOperationCompletionHandler<?>> handlers;
 
+		String mssgPrefix = "AmqpConnectorReactor - Received response ";
 		switch (amqpMessage) {
 		case OK:
 			IdlCommon.Ok okPayload = (Ok) message.payload;
 			token = okPayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpConnectorReactor - Received response "
+					mssgPrefix
 							+ amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
@@ -108,7 +108,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor {
 			token = nokPayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpConnectorReactor - Received response "
+					mssgPrefix
 							+ amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
@@ -125,15 +125,16 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor {
 			token = errorPayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpConnectorReactor - Received response "
+					mssgPrefix
 							+ amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
 			handlers = getHandlers(token);
 			if (handlers != null) {
+				Exception exception = new Exception( // NOPMD by georgiana on 10/13/11 2:44 PM
+						errorPayload.getErrorMessage());
 				for (IOperationCompletionHandler<?> handler : handlers) {
-					handler.onFailure(new Exception(errorPayload
-							.getErrorMessage()));
+					handler.onFailure(exception);
 				}
 			}
 			break;
@@ -142,13 +143,13 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor {
 			token = consumePayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpConnectorReactor - Received response "
+					mssgPrefix
 							+ amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
 			handlers = getHandlers(token);
 			if (handlers != null) {
-				String resultStr = consumePayload.getConsumerTag();
+				String resultStr = consumePayload.getConsumerTag(); // NOPMD by georgiana on 10/13/11 2:44 PM
 				for (IOperationCompletionHandler<?> handler : handlers) {
 					((IOperationCompletionHandler<String>) handler)
 							.onSuccess(resultStr);

@@ -319,11 +319,11 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					if (container != null) {
 						this.cloudletRunners.add(container);
 					}
-					MosaicLogger.getLogger().debug(
-							"Loaded cloudlet in JAR "
-									+ CloudletContainerParameters.classpath
-									+ " with configuration "
-									+ CloudletContainerParameters.configFile);
+//					MosaicLogger.getLogger().debug(
+//							"Loaded cloudlet in JAR "
+//									+ CloudletContainerParameters.classpath
+//									+ " with configuration "
+//									+ CloudletContainerParameters.configFile);
 				}
 				this.status = Status.Ready;
 			} else
