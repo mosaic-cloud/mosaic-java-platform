@@ -29,7 +29,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
  * @author Georgiana Macariu
  * 
  */
-public class KeyValueConnectorReactor extends AbstractConnectorReactor {
+public class KeyValueConnectorReactor extends AbstractConnectorReactor { // NOPMD by georgiana on 10/13/11 12:41 PM
 
 	protected DataEncoder<?> dataEncoder;
 
@@ -55,13 +55,12 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void processResponse(Message message) throws IOException {
+	protected void processResponse(Message message) throws IOException { // NOPMD by georgiana on 10/13/11 12:41 PM
 		Preconditions
 				.checkArgument(message.specification instanceof KeyValueMessage);
 
 		KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
-		CompletionToken token = null;
-		Object data;
+		CompletionToken token;
 		List<IOperationCompletionHandler<?>> handlers;
 		switch (kvMessage) {
 		case OK:
@@ -91,9 +90,9 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 			token = errorPayload.getToken();
 			handlers = getHandlers(token);
 			if (handlers != null) {
+				Exception exception = new Exception(errorPayload.getErrorMessage()); // NOPMD by georgiana on 10/13/11 12:40 PM
 				for (IOperationCompletionHandler<?> handler : handlers) {
-					handler.onFailure(new Exception(errorPayload
-							.getErrorMessage()));
+					handler.onFailure(exception);
 				}
 			}
 			break;
@@ -116,8 +115,8 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 				List<KVEntry> resultEntries = getPayload.getResultsList();
 				if (!resultEntries.isEmpty()) {
 					try {
-						data = this.dataEncoder.decode(resultEntries.get(0)
-								.getValue().toByteArray());
+						Object data = this.dataEncoder.decode(resultEntries // NOPMD by georgiana on 10/13/11 12:41 PM
+								.get(0).getValue().toByteArray());
 						for (IOperationCompletionHandler<?> handler : handlers) {
 							((IOperationCompletionHandler<Object>) handler)
 									.onSuccess(data);

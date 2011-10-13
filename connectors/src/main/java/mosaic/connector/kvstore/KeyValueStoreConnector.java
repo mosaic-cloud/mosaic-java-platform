@@ -27,10 +27,11 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  * @param <T>
  *            type of stored data
  */
-public class KeyValueStoreConnector<T extends Object> implements IKeyValueStore<T> {
+public class KeyValueStoreConnector<T extends Object> implements
+		IKeyValueStore<T> {
 
-	private KeyValueProxy<T> proxy;
-	private ExecutorService executor;
+	private final KeyValueProxy<T> proxy;
+	private final ExecutorService executor;
 	protected DataEncoder<?> dataEncoder;
 
 	protected KeyValueStoreConnector(KeyValueProxy<T> proxy, int noThreads,
@@ -53,8 +54,8 @@ public class KeyValueStoreConnector<T extends Object> implements IKeyValueStore<
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static <T extends Object>  KeyValueStoreConnector<T> create(IConfiguration config,
-			DataEncoder<T> encoder) throws Throwable {
+	public static <T extends Object> KeyValueStoreConnector<T> create(
+			IConfiguration config, DataEncoder<T> encoder) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -72,8 +73,9 @@ public class KeyValueStoreConnector<T extends Object> implements IKeyValueStore<
 				AbortingExceptionTracer.defaultInstance);
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.connect(driverChannel);
-		KeyValueProxy<T> proxy = KeyValueProxy.create(config, connectorIdentifier,
-				driverIdentifier, bucket, channel, encoder);
+		KeyValueProxy<T> proxy = KeyValueProxy
+				.create(config, connectorIdentifier, driverIdentifier, bucket,
+						channel, encoder);
 		MosaicLogger.getLogger().debug(
 				"KeyValueConnector connecting to " + driverChannel + " bucket "
 						+ bucket);
@@ -161,7 +163,7 @@ public class KeyValueStoreConnector<T extends Object> implements IKeyValueStore<
 	public IResult<List<String>> list(
 			List<IOperationCompletionHandler<List<String>>> handlers,
 			CompletionInvocationHandler<List<String>> iHandler) {
-		IResult<List<String>> result = null;
+		IResult<List<String>> result;
 		final EventDrivenOperation<List<String>> op = new EventDrivenOperation<List<String>>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -198,8 +200,10 @@ public class KeyValueStoreConnector<T extends Object> implements IKeyValueStore<
 	 * @param op
 	 *            the operation
 	 */
-	protected synchronized void submitOperation(Runnable op) {
-		this.executor.submit(op);
+	protected void submitOperation(Runnable op) {
+		synchronized (this) {
+			this.executor.submit(op);
+		}
 	}
 
 }

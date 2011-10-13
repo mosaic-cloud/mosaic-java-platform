@@ -34,7 +34,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  *            type of stored data
  * 
  */
-public class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
+public final class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 
 	/**
 	 * Creates a proxy for key-value distributed storage systems.
@@ -103,7 +103,7 @@ public class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 		return proxy;
 	}
 
-	public synchronized void set(String key, int exp, T data,
+	public void set(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendSetMessage(key, data, handlers, exp);
 	}
@@ -113,7 +113,7 @@ public class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 		sendStoreMessage(MemcachedMessage.ADD_REQUEST, key, exp, data, handlers);
 	}
 
-	public synchronized void replace(String key, int exp, T data,
+	public void replace(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(MemcachedMessage.REPLACE_REQUEST, key, exp, data,
 				handlers);
@@ -143,10 +143,10 @@ public class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 
 	@Override
 	public void list(List<IOperationCompletionHandler<List<String>>> handlers) {
-		Exception e = new UnsupportedOperationException(
+		Exception exception = new UnsupportedOperationException( // NOPMD by georgiana on 10/13/11 12:42 PM
 				"The memcached protocol does not support the LIST operation.");
 		for (IOperationCompletionHandler<List<String>> handler : handlers) {
-			handler.onFailure(e);
+			handler.onFailure(exception);
 		}
 		// ExceptionTracer.traceDeferred(e);
 	}
@@ -154,18 +154,18 @@ public class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 	private void sendStoreMessage(MemcachedMessage mcMessage, String key,
 			int exp, T data, List<IOperationCompletionHandler<Boolean>> handlers) {
 		try {
-			ByteString dataBytes = ByteString.copyFrom(this.dataEncoder
+			ByteString dataBytes = ByteString.copyFrom(this.dataEncoder // NOPMD by georgiana on 10/13/11 12:42 PM
 					.encode(data));
-			Message message = null;
+			Message message;
 
-			String id = UUID.randomUUID().toString();
+			String identifier = UUID.randomUUID().toString();
 			MosaicLogger.getLogger().trace(
 					"KeyValueProxy - Sending " + mcMessage.toString()
-							+ " request [" + id + "]...");
+							+ " request [" + identifier + "]...");
 
 			// build token
 			CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
-			tokenBuilder.setMessageId(id);
+			tokenBuilder.setMessageId(identifier);
 			tokenBuilder.setClientId(getConnectorId());
 
 			// build message
@@ -220,10 +220,13 @@ public class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 				message = new Message(MemcachedMessage.REPLACE_REQUEST,
 						replaceBuilder.build());
 				break;
+			default:
+				message = null; // NOPMD by georgiana on 10/13/11 12:46 PM
+				break;
 			}
 
 			// store token and completion handlers
-			super.registerHandlers(id, handlers);
+			super.registerHandlers(identifier, handlers);
 
 			super.sendRequest(
 					getResponseReactor(MemcachedConnectorReactor.class)

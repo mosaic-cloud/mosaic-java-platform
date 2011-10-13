@@ -90,8 +90,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 			String driverIdentifier, String bucket, ZeroMqChannel channel,
 			DataEncoder<T> encoder) throws Throwable {
 		String connectorId = connectorIdentifier;
-		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(
-				encoder);
+		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(encoder);
 		KeyValueProxy<T> proxy = new KeyValueProxy<T>(config, connectorId,
 				reactor, channel, encoder);
 
@@ -111,7 +110,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 	}
 
 	@Override
-	public synchronized void destroy() throws Throwable {
+	public void destroy() throws Throwable {
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
 		tokenBuilder.setMessageId(UUID.randomUUID().toString());
@@ -121,10 +120,13 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 		AbortRequest.Builder requestBuilder = AbortRequest.newBuilder();
 		requestBuilder.setToken(tokenBuilder.build());
 
-		super.sendRequest(getResponseReactor(KeyValueConnectorReactor.class)
-				.getSession(), new Message(KeyValueMessage.ABORTED,
-				requestBuilder.build()));
-		super.destroy();
+		synchronized (this) {
+			super.sendRequest(
+					getResponseReactor(KeyValueConnectorReactor.class)
+							.getSession(), new Message(KeyValueMessage.ABORTED,
+							requestBuilder.build()));
+			super.destroy();
+		}
 	}
 
 	public void set(String key, T data,
@@ -142,14 +144,15 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		Message message;
 
-		String id = UUID.randomUUID().toString();
+		String identifier = UUID.randomUUID().toString();
 
 		MosaicLogger.getLogger().trace(
-				"KeyValueProxy - Sending DELETE request [" + id + "]...");
+				"KeyValueProxy - Sending DELETE request [" + identifier
+						+ "]..."); // NOPMD by georgiana on 10/13/11 12:36 PM
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
-		tokenBuilder.setMessageId(id);
+		tokenBuilder.setMessageId(identifier);
 		tokenBuilder.setClientId(getConnectorId());
 		// build request
 		DeleteRequest.Builder requestBuilder = DeleteRequest.newBuilder();
@@ -160,7 +163,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 				requestBuilder.build());
 
 		// store token and completion handlers
-		super.registerHandlers(id, handlers);
+		super.registerHandlers(identifier, handlers);
 
 		try {
 			super.sendRequest(
@@ -177,13 +180,13 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 	}
 
 	public void list(List<IOperationCompletionHandler<List<String>>> handlers) {
-		String id = UUID.randomUUID().toString();
+		String identifier = UUID.randomUUID().toString();
 		MosaicLogger.getLogger().trace(
-				"KeyValueProxy - Sending LIST request [" + id + "]...");
+				"KeyValueProxy - Sending LIST request [" + identifier + "]...");
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
-		tokenBuilder.setMessageId(id);
+		tokenBuilder.setMessageId(identifier);
 		tokenBuilder.setClientId(getConnectorId());
 
 		// build request
@@ -194,7 +197,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 				requestBuilder.build());
 
 		// store token and completion handlers
-		super.registerHandlers(id, handlers);
+		super.registerHandlers(identifier, handlers);
 		try {
 			super.sendRequest(
 					getResponseReactor(KeyValueConnectorReactor.class)
@@ -212,13 +215,13 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 
 	protected void sendSetMessage(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers, Integer... exp) {
-		String id = UUID.randomUUID().toString();
+		String identifier = UUID.randomUUID().toString();
 		MosaicLogger.getLogger().trace(
-				"KeyValueProxy - Sending SET request [" + id + "]...");
+				"KeyValueProxy - Sending SET request [" + identifier + "]...");
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
-		tokenBuilder.setMessageId(id);
+		tokenBuilder.setMessageId(identifier);
 		tokenBuilder.setClientId(getConnectorId());
 
 		try {
@@ -237,7 +240,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 					requestBuilder.build());
 
 			// store token and completion handlers
-			super.registerHandlers(id, handlers);
+			super.registerHandlers(identifier, handlers);
 
 			super.sendRequest(
 					getResponseReactor(KeyValueConnectorReactor.class)
@@ -253,13 +256,13 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 
 	protected <D extends Object> void sendGetMessage(List<String> keys,
 			List<IOperationCompletionHandler<D>> handlers) {
-		String id = UUID.randomUUID().toString();
+		String identifier = UUID.randomUUID().toString();
 		MosaicLogger.getLogger().trace(
-				"KeyValueProxy - Sending GET request [" + id + "]...");
+				"KeyValueProxy - Sending GET request [" + identifier + "]...");
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
-		tokenBuilder.setMessageId(id);
+		tokenBuilder.setMessageId(identifier);
 		tokenBuilder.setClientId(getConnectorId());
 
 		// build request
@@ -271,7 +274,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 				requestBuilder.build());
 
 		// store token and completion handlers
-		super.registerHandlers(id, handlers);
+		super.registerHandlers(identifier, handlers);
 
 		try {
 			super.sendRequest(

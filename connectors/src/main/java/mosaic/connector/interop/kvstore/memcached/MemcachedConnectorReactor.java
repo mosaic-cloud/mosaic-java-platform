@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import mosaic.connector.interop.kvstore.KeyValueConnectorReactor;
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.DataEncoder;
@@ -49,43 +48,39 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 				.checkArgument(message.specification instanceof KeyValueMessage);
 
 		KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
-		CompletionToken token = null;
+		CompletionToken token;
 		Object data;
 		List<IOperationCompletionHandler<?>> handlers;
-		boolean handled = false;
-		try {
-			if (kvMessage == KeyValueMessage.GET_REPLY) {
-				KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
-				List<KVEntry> resultEntries = getPayload.getResultsList();
-				if (resultEntries.size() > 1) {
-					token = getPayload.getToken();
-					handlers = getHandlers(token);
-					if (handlers != null) {
-						try {
-							Map<String, Object> resMap = new HashMap<String, Object>();
-							for (KVEntry entry : resultEntries) {
-								data = this.dataEncoder.decode(entry.getValue()
-										.toByteArray());
-								resMap.put(entry.getKey(), data);
-							}
-
-							for (IOperationCompletionHandler<?> handler : handlers) {
-								((IOperationCompletionHandler<Map<String, Object>>) handler)
-										.onSuccess(resMap);
-							}
-							handled = true;
-						} catch (Exception e) {
-							ExceptionTracer.traceDeferred(e);
+		boolean handled = false; // NOPMD by georgiana on 10/13/11 12:48 PM
+		if (kvMessage == KeyValueMessage.GET_REPLY) {
+			KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
+			List<KVEntry> resultEntries = getPayload.getResultsList();
+			if (resultEntries.size() > 1) {
+				token = getPayload.getToken();
+				handlers = getHandlers(token);
+				if (handlers != null) { // NOPMD by georgiana on 10/13/11 12:49 PM
+					try {
+						Map<String, Object> resMap = new HashMap<String, Object>(); // NOPMD 
+						for (KVEntry entry : resultEntries) {
+							data = this.dataEncoder.decode(entry.getValue()
+									.toByteArray());
+							resMap.put(entry.getKey(), data);
 						}
+
+						for (IOperationCompletionHandler<?> handler : handlers) {
+							((IOperationCompletionHandler<Map<String, Object>>) handler)
+									.onSuccess(resMap);
+						}
+						handled = true;
+					} catch (Exception e) {
+						ExceptionTracer.traceDeferred(e);
 					}
 				}
 			}
+		}
 
-			if (!handled) {
-				super.processResponse(message);
-			}
-		} catch (Throwable e) {
-			e.printStackTrace();
+		if (!handled) {
+			super.processResponse(message);
 		}
 	}
 }
