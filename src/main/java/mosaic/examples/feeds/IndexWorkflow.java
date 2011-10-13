@@ -43,6 +43,7 @@ public class IndexWorkflow {
 		this.parser = new FeedParser();
 		this.currentFeedMetaData = new JSONObject();
 		this.newFeedTask = new JSONObject();
+		this.newFeedItems = new JSONArray();
 		this.state = state;
 		this.recvMessage = recvMessage;
 		this.indexMessage = recvMessage.getData();
@@ -77,7 +78,6 @@ public class IndexWorkflow {
 	 * 
 	 */
 	private void fetchLatestFeed() {
-		// get data from the feeds-data bucket
 		try {
 			MosaicLogger.getLogger().info(
 					"indexing " + this.indexMessage.getString("url")
@@ -111,7 +111,7 @@ public class IndexWorkflow {
 			MosaicLogger.getLogger().trace(
 					"indexing " + this.indexMessage.getString("url")
 							+ " (from data) step 2 (parsing latest data)...");
-			byte[] data = fetchedData.toString().getBytes();
+			byte[] data = (byte[]) fetchedData;
 			this.currentTimeline = this.parser.parseFeed(data);
 			indexFeed();
 		} catch (IOException e) {
@@ -128,7 +128,8 @@ public class IndexWorkflow {
 				.getString("url"));
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 1 (fetching latest meta-data)...");
+						+ " step 3 (fetching latest meta-data)...");
+		// FIXME
 		this.state.metadataStore.get(feedKey, this.key);
 	}
 
@@ -139,13 +140,14 @@ public class IndexWorkflow {
 	private void doFeedDiff(Object fetchedData) {
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 2 (diff-ing latest feed)...");
-		this.previousFeedMetaData = (JSONObject) fetchedData;
+						+ " step 4 (diff-ing latest feed)...");
+
 		String currentKey, currentURL, currentFeed, currentFeedId;
 		long currentTimestamp;
 		int currentSequence;
 
 		try {
+			this.previousFeedMetaData = (JSONObject) fetchedData;
 			int previousSequence = this.previousFeedMetaData.getInt("sequence");
 			long minItemTimestamp = -1;
 			try {
@@ -154,9 +156,8 @@ public class IndexWorkflow {
 			} catch (JSONException e) {
 			}
 			long maxItemTimestamp = -1;
-			if (minItemTimestamp != -1) {
-				maxItemTimestamp = minItemTimestamp;
-			}
+			maxItemTimestamp = minItemTimestamp;
+
 			List<Timeline.Entry> currentItems = new ArrayList<Timeline.Entry>();
 			for (Timeline.Entry item : this.currentTimeline.getEntries()) {
 				if ((minItemTimestamp == -1)
@@ -209,8 +210,12 @@ public class IndexWorkflow {
 					this.state.itemsStore.set(itemKey, json, this.key);
 				}
 				this.newTimeline.put("items", items);
-				this.currentFeedMetaData.put("timelines", this.newTimeline);
+				this.currentFeedMetaData.put("timelines",
+						this.newTimeline.getString("key"));
 
+				MosaicLogger.getLogger().trace(
+						"Current timeline has  " + items.length()
+								+ " new items.");
 				JSONArray prevTimelines = null;
 				try {
 					prevTimelines = this.previousFeedMetaData
@@ -230,6 +235,7 @@ public class IndexWorkflow {
 				this.state.timelinesStore.set(newTimelineKey, this.newTimeline,
 						this.key);
 			} else {
+				this.currentFeedMetaData = this.previousFeedMetaData;
 				storeIndexOutcome();
 			}
 
@@ -246,7 +252,7 @@ public class IndexWorkflow {
 	private void handleMetadataUpdate() {
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 3 (updating meta-data)...");
+						+ " step 5 (updating meta-data)...");
 		try {
 			this.state.metadataStore.set(
 					this.currentFeedMetaData.getString("key"),
@@ -274,7 +280,7 @@ public class IndexWorkflow {
 	private void storeIndexOutcome() {
 		MosaicLogger.getLogger().trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
-						+ " step 4 (updating index task)...");
+						+ " step 6 (updating index task)...");
 
 		try {
 			String feedTaskKey = StoreUtils.generateFeedTaskKey(
@@ -287,7 +293,13 @@ public class IndexWorkflow {
 			this.newFeedTask.put("currentMetaData", this.currentFeedMetaData);
 			this.newFeedTask.put("previousMetaData", this.previousFeedMetaData);
 			this.newFeedTask.put("timeline", this.newTimeline);
-			this.newFeedTask.put("items", this.newFeedItems);
+
+			JSONArray items = new JSONArray();
+			for (int i = 0; i < this.newFeedItems.length(); i++) {
+				JSONObject item = this.newFeedItems.getJSONObject(i);
+				items.put(item.getString("key"));
+			}
+			this.newFeedTask.put("items", items);
 			Object error = null;
 			this.newFeedTask.put("error", error);
 			this.state.taskStore.set(feedTaskKey, this.newFeedTask, this.key);
@@ -298,6 +310,7 @@ public class IndexWorkflow {
 
 	public static void sendAcknowledge(Object extra) {
 		getIndexer((UUID) extra).recvMessage.acknowledge();
+		MosaicLogger.getLogger().trace("finished indexing...");
 	}
 
 	private void handleError(Exception e) {
@@ -315,6 +328,7 @@ public class IndexWorkflow {
 			errorBuilder.append(entry.getKey() + ": " + entry.getValue());
 		}
 		MosaicLogger.getLogger().error(errorBuilder.toString());
-		getIndexer((UUID) extra).recvMessage.acknowledge();
+		// getIndexer((UUID) extra).recvMessage.acknowledge();
 	}
+
 }

@@ -2,7 +2,6 @@ package mosaic.examples.feeds;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.resources.kvstore.DefaultKeyValueAccessorCallback;

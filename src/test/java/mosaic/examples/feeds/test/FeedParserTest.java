@@ -42,7 +42,6 @@ public class FeedParserTest {
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
 			}
-			System.out.println("[1] Received: " + builder.toString());
 			bytes = builder.toString().getBytes();// toBytes(builder.toString());
 		} catch (Exception e) {
 			e.printStackTrace();

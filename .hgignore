@@ -1,7 +1,11 @@
-syntax: glob
 
-*.bak
-*.class
-*.log
-*.eap
-.*
+syntax: regexp
+
+^(.*/)?\..*$
+
+^(.*/)?target$
+^(.*/)?lib$
+^(.*/)?META-INF$
+
+^(.*/)?.*\#$
+^(.*/)?.*\~$

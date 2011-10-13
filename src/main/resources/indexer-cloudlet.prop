@@ -20,30 +20,21 @@ batch.queue.consumer.amqp.auto_delete=false
 batch.queue.consumer.amqp.passive=false
 batch.queue.consumer.amqp.exclusive=false
 
-
-# configurations below will normally not be set by the cloudlet creator
-# this is just for test
-metadata.kvstore.connector_threads=1
 metadata.kvstore.connector_name=KVSTORE
 metadata.kvstore.bucket=feed-metadata
 
-timelines.kvstore.connector_threads=1
 timelines.kvstore.connector_name=KVSTORE
 timelines.kvstore.bucket=feed-timelines
 
-items.kvstore.connector_threads=1
 items.kvstore.connector_name=KVSTORE
 items.kvstore.bucket=feed-items
 
-data.kvstore.connector_threads=1
 data.kvstore.connector_name=KVSTORE
 data.kvstore.bucket=feed-data
 
-tasks.kvstore.connector_threads=1
 tasks.kvstore.connector_name=KVSTORE
 tasks.kvstore.bucket=feed-tasks
 
-queue.amqp.connector_threads=1
 
 
 

@@ -26,12 +26,13 @@ public class Timeline {
 		this.entries = new ArrayList<Entry>();
 	}
 
-	public void addEntry(String entryId, String title, String titleType,
+	public Entry addEntry(String entryId, String title, String titleType,
 			String content, String contentType, long entryTimestamp,
 			String authorName, String authorEmail, String authorURI) {
 		Entry entry = new Entry(entryId, title, titleType, content,
 				contentType, entryTimestamp, authorName, authorEmail, authorURI);
 		this.entries.add(entry);
+		return entry;
 	}
 
 	public List<Entry> getEntries() {
@@ -142,7 +143,7 @@ public class Timeline {
 				json.put("title", this.title);
 				json.put("title:type", this.titleType);
 				json.put("content", this.content);
-				json.put("contentType", this.contentType);
+				json.put("content:type", this.contentType);
 				json.put("timestamp", this.timestamp);
 				json.put("author:name", this.authorName);
 				json.put("author:email", this.authorEmail);
