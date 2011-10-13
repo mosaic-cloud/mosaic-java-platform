@@ -14,14 +14,11 @@ public class IndexerCloudletPreMain {
 	 */
 	public static void main(String[] arguments) throws Exception {
 		Preconditions.checkArgument(arguments != null);
-		Preconditions.checkArgument(arguments.length == 2,
-				"invalid arguments: <clodlet jar> <cloudlet descriptor>");
-
+		Preconditions.checkArgument(arguments.length == 0, "invalid arguments");
 		CloudletContainerParameters.classpath = null;
 		CloudletContainerParameters.configFile = "indexer-cloudlet.prop";
 		BasicComponentHarnessPreMain
 				.main(new String[] { "mosaic.cloudlet.runtime.ContainerComponentCallbacks" });
-
 	}
 
 }
