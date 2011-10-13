@@ -1,4 +1,4 @@
-package mosaic.driver.interop.queue.amqp;
+package mosaic.driver.interop.queue.amqp; // NOPMD by georgiana on 10/12/11 3:32 PM
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -48,7 +48,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  * @author Georgiana Macariu
  * 
  */
-public class AmqpStub extends AbstractDriverStub {
+public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/12/11 3:32 PM
 
 	private static AmqpStub stub;
 
@@ -80,10 +80,9 @@ public class AmqpStub extends AbstractDriverStub {
 	 * @return the AMQP driver stub
 	 */
 	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel) {
-		synchronized (AbstractDriverStub.lock) {
+		synchronized (AbstractDriverStub.LOCK) {
 			if (AmqpStub.stub == null) {
-				AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter(
-						config);
+				AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
 				AmqpDriver driver = AmqpDriver.create(config);
 				AmqpStub.stub = new AmqpStub(config, transmitter, driver,
 						channel);
@@ -100,7 +99,7 @@ public class AmqpStub extends AbstractDriverStub {
 
 	@Override
 	public void destroy() {
-		synchronized (AbstractDriverStub.lock) {
+		synchronized (AbstractDriverStub.LOCK) {
 			decDriverReference(this);
 		}
 		super.destroy();
@@ -108,13 +107,13 @@ public class AmqpStub extends AbstractDriverStub {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void startOperation(Message message, Session session)
+	protected void startOperation(Message message, Session session) // NOPMD by georgiana on 10/12/11 3:31 PM
 			throws IOException, ClassNotFoundException {
 		Preconditions
 				.checkArgument(message.specification instanceof AmqpMessage);
 		AmqpMessage amqpMessage = (AmqpMessage) message.specification;
 
-		CompletionToken token = null;
+		CompletionToken token;
 		IResult<Boolean> resultBool;
 		IResult<String> resultString;
 		String queue;
@@ -127,7 +126,7 @@ public class AmqpStub extends AbstractDriverStub {
 		String consumer;
 		String routingKey;
 		byte[] dataBytes;
-		AmqpDriver driver = super.getDriver(AmqpDriver.class);
+		AmqpDriver driver = super.getDriver(AmqpDriver.class); // NOPMD by georgiana on 10/12/11 3:24 PM
 
 		switch (amqpMessage) {
 		case ACCESS:
@@ -146,9 +145,7 @@ public class AmqpStub extends AbstractDriverStub {
 			passive = declExchange.getPassive();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for DECLARE EXCHANGE " //$NON-NLS-1$
-							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-							+ " client id: " + token.getClientId()); //$NON-NLS-1$
+					"AmqpStub - Received request for DECLARE EXCHANGE ");//$NON-NLS-1$
 
 			// execute operation
 			DriverOperationFinishedHandler exchHandler = new DriverOperationFinishedHandler(
@@ -169,9 +166,7 @@ public class AmqpStub extends AbstractDriverStub {
 			passive = declQueue.getPassive();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for DECLARE QUEUE" //$NON-NLS-1$
-							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-							+ " client id: " + token.getClientId()); //$NON-NLS-1$
+					"AmqpStub - Received request for DECLARE QUEUE");//$NON-NLS-1$
 
 			// execute operation
 			DriverOperationFinishedHandler queueHandler = new DriverOperationFinishedHandler(
@@ -189,9 +184,7 @@ public class AmqpStub extends AbstractDriverStub {
 			routingKey = bindQueue.getRoutingKey();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for BIND QUEUE " //$NON-NLS-1$
-							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-							+ " client id: " + token.getClientId()); //$NON-NLS-1$
+					"AmqpStub - Received request for BIND QUEUE");//$NON-NLS-1$
 
 			// execute operation
 			DriverOperationFinishedHandler bindHandler = new DriverOperationFinishedHandler(
@@ -215,9 +208,7 @@ public class AmqpStub extends AbstractDriverStub {
 					publish.getContentType());
 
 			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for PUBLISH " //$NON-NLS-1$
-							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-							+ " client id: " + token.getClientId()); //$NON-NLS-1$
+					"AmqpStub - Received request for PUBLISH"); //$NON-NLS-1$
 
 			// execute operation
 			DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
@@ -237,9 +228,7 @@ public class AmqpStub extends AbstractDriverStub {
 			Object extra = SerDesUtils.toObject(dataBytes);
 
 			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for CONSUME " //$NON-NLS-1$
-							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-							+ " client id: " + token.getClientId()); //$NON-NLS-1$
+					"AmqpStub - Received request for CONSUME"); //$NON-NLS-1$
 
 			// execute operation
 			DriverOperationFinishedHandler consHandler = new DriverOperationFinishedHandler(
@@ -257,9 +246,7 @@ public class AmqpStub extends AbstractDriverStub {
 			autoAck = gop.getAutoAck();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for GET " + " - request id: " //$NON-NLS-1$ //$NON-NLS-2$
-							+ token.getMessageId() + " client id: " //$NON-NLS-1$
-							+ token.getClientId());
+					"AmqpStub - Received request for GET"); //$NON-NLS-1$
 
 			// execute operation
 			DriverOperationFinishedHandler getHandler = new DriverOperationFinishedHandler(
@@ -274,9 +261,7 @@ public class AmqpStub extends AbstractDriverStub {
 			consumer = clop.getConsumer();
 
 			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received request for CANCEL " //$NON-NLS-1$
-							+ " - request id: " + token.getMessageId() //$NON-NLS-1$
-							+ " client id: " + token.getClientId()); //$NON-NLS-1$
+					"AmqpStub - Received request for CANCEL"); //$NON-NLS-1$
 
 			// execute operation
 			DriverOperationFinishedHandler cancelHandler = new DriverOperationFinishedHandler(
@@ -290,10 +275,7 @@ public class AmqpStub extends AbstractDriverStub {
 			long delivery = aop.getDelivery();
 			boolean multiple = aop.getMultiple();
 
-			MosaicLogger.getLogger().trace(
-					"AmqpStub - Received  ACK " + " - request id: " //$NON-NLS-1$ //$NON-NLS-2$
-							+ token.getMessageId() + " client id: " //$NON-NLS-1$
-							+ token.getClientId());
+			MosaicLogger.getLogger().trace("AmqpStub - Received  ACK "); //$NON-NLS-1$ 
 
 			// execute operation
 			DriverOperationFinishedHandler ackHandler = new DriverOperationFinishedHandler(
@@ -303,7 +285,7 @@ public class AmqpStub extends AbstractDriverStub {
 			break;
 		default:
 			DriverOperationFinishedHandler errHandler = new DriverOperationFinishedHandler(
-					token, session);
+					null, session);
 			driver.handleUnsupportedOperationError(amqpMessage.toString(),
 					errHandler);
 			MosaicLogger.getLogger().error(
@@ -334,7 +316,7 @@ public class AmqpStub extends AbstractDriverStub {
 				"", String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_PASS);
 
-		DriverConnectionData cData = null;
+		DriverConnectionData cData;
 		if (amqpServerUser.equals(ConnectionFactory.DEFAULT_USER)
 				&& amqpServerPasswd.equals(ConnectionFactory.DEFAULT_PASS)) {
 			cData = new DriverConnectionData(resourceHost, resourcePort, "AMQP"); //$NON-NLS-1$
@@ -359,10 +341,10 @@ public class AmqpStub extends AbstractDriverStub {
 		private IResult<?> result;
 		private AmqpOperations operation;
 		private final CompletionToken complToken;
-		private CountDownLatch signal;
-		private AmqpDriver driver;
-		private AmqpResponseTransmitter transmitter;
-		private Session session;
+		private final CountDownLatch signal;
+		private final AmqpDriver driver;
+		private final AmqpResponseTransmitter transmitter;
+		private final Session session;
 
 		public DriverOperationFinishedHandler(CompletionToken complToken,
 				Session session) {
@@ -374,8 +356,8 @@ public class AmqpStub extends AbstractDriverStub {
 			this.session = session;
 		}
 
-		public void setDetails(AmqpOperations op, IResult<?> result) {
-			this.operation = op;
+		public void setDetails(AmqpOperations operation, IResult<?> result) {
+			this.operation = operation;
 			this.result = result;
 			this.signal.countDown();
 		}
@@ -409,7 +391,7 @@ public class AmqpStub extends AbstractDriverStub {
 
 	final class ConsumerHandler implements IAmqpConsumer {
 
-		private Session session;
+		private final Session session;
 
 		public ConsumerHandler(Session session) {
 			super();

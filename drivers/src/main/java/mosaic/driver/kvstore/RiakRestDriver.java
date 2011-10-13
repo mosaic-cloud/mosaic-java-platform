@@ -16,9 +16,9 @@ import mosaic.driver.ConfigProperties;
  * @author Carmine Di Biase
  * 
  */
-public class RiakRestDriver extends BaseKeyValueDriver {
-	private String riakHost;
-	private int riakPort;
+public final class RiakRestDriver extends AbstractKeyValueDriver {
+	private final String riakHost;
+	private final int riakPort;
 
 	/**
 	 * Creates a new Riak driver.
@@ -53,7 +53,7 @@ public class RiakRestDriver extends BaseKeyValueDriver {
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static synchronized RiakRestDriver create(IConfiguration config)
+	public static RiakRestDriver create(IConfiguration config)
 			throws IOException {
 		int port, noThreads;
 
@@ -74,10 +74,9 @@ public class RiakRestDriver extends BaseKeyValueDriver {
 		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
 		// String.class, "");
 
-		RiakRestDriver wrapper = new RiakRestDriver(noThreads, host, port);
 		MosaicLogger.getLogger().trace(
 				"Created Riak REST driver for host " + host + ":" + port);
-		return wrapper;
+		return new RiakRestDriver(noThreads, host, port);
 	}
 
 	/**
@@ -85,7 +84,7 @@ public class RiakRestDriver extends BaseKeyValueDriver {
 	 * the driver object.
 	 */
 	@Override
-	public synchronized void destroy() {
+	public void destroy() {
 		super.destroy();
 		MosaicLogger.getLogger().trace("RiakDriver destroyed."); //$NON-NLS-1$
 	}

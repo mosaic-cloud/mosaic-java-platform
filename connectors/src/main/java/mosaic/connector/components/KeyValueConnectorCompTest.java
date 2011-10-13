@@ -21,17 +21,17 @@ import com.google.common.base.Preconditions;
 
 public class KeyValueConnectorCompTest {
 	private IConfiguration configuration;
-	private KeyValueStoreConnector connector;
-	private static String keyPrefix;
-	private static String storeType;
+	private KeyValueStoreConnector<String> connector;
+	private String keyPrefix;
+	private String storeType;
 
 	public KeyValueConnectorCompTest() throws Throwable {
 		this.configuration = PropertyTypeConfiguration.create(
 				KeyValueConnectorCompTest.class.getClassLoader(),
 				"kv-conn-test.prop");
-		KeyValueConnectorCompTest.storeType = ConfigUtils.resolveParameter(
-				this.configuration, "kvstore.driver_name", String.class, "");
-		KeyValueConnectorCompTest.keyPrefix = UUID.randomUUID().toString();
+		storeType = ConfigUtils.resolveParameter(this.configuration,
+				"kvstore.driver_name", String.class, "");
+		keyPrefix = UUID.randomUUID().toString();
 		ResourceFinder.getResourceFinder().findResource(ResourceType.KEY_VALUE,
 				new Callback());
 
@@ -51,13 +51,13 @@ public class KeyValueConnectorCompTest {
 	}
 
 	public void testSet() throws IOException {
-		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
+		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
 		IResult<Boolean> r1 = this.connector.set(k1, "fantastic", handlers1,
 				null);
 		Preconditions.checkNotNull(r1);
 
-		String k2 = KeyValueConnectorCompTest.keyPrefix + "_key_famous";
+		String k2 = keyPrefix + "_key_famous";
 		List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers("set 2");
 		IResult<Boolean> r2 = this.connector.set(k2, "famous", handlers2, null);
 		Preconditions.checkNotNull(r2);
@@ -67,17 +67,17 @@ public class KeyValueConnectorCompTest {
 			Preconditions.checkState(r2.getResult(), "Set 2 returned false.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		}
 	}
 
 	public void testGet() throws IOException, ClassNotFoundException {
-		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
-		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
-		IResult<Object> r1 = this.connector.get(k1, handlers, null);
+		String k1 = keyPrefix + "_key_fantastic";
+		List<IOperationCompletionHandler<String>> handlers = getHandlers("get");
+		IResult<String> r1 = this.connector.get(k1, handlers, null);
 
 		try {
 			Preconditions.checkState(
@@ -85,39 +85,39 @@ public class KeyValueConnectorCompTest {
 					"Get returned something wrong");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		}
 	}
 
 	public void testDelete() {
-		String k1 = KeyValueConnectorCompTest.keyPrefix + "_key_fantastic";
+		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
 		IResult<Boolean> r1 = this.connector.delete(k1, handlers, null);
 		try {
 			Preconditions.checkState(r1.getResult(), "Object not deleted.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		}
 
-		List<IOperationCompletionHandler<Object>> handlers1 = getHandlers("get after delete");
-		IResult<Object> r2 = this.connector.get(k1, handlers1, null);
+		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after delete");
+		IResult<String> r2 = this.connector.get(k1, handlers1, null);
 
 		try {
 			Preconditions.checkState(r2.getResult() == null,
 					"Object still exists after delete");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		}
 	}
 
@@ -126,22 +126,19 @@ public class KeyValueConnectorCompTest {
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
 		IResult<List<String>> r1 = this.connector.list(handlers, null);
 		try {
-			if (KeyValueConnectorCompTest.storeType
-					.equalsIgnoreCase("memcached")) {
+			if (storeType.equalsIgnoreCase("memcached")) {
 				Preconditions.checkState(r1.getResult() == null);
 			} else {
 				Preconditions
 						.checkNotNull(r1.getResult(), "List returned null");
-				for (String key : r1.getResult()) {
-					System.out.println(key);
-				}
+
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		} catch (ExecutionException e) {
 			e.printStackTrace();
-			Preconditions.checkNotNull(null);
+			Preconditions.checkArgument(false);
 		}
 	}
 
@@ -154,8 +151,7 @@ public class KeyValueConnectorCompTest {
 	}
 
 	public static void test() throws Throwable {
-		@SuppressWarnings("unused")
-		KeyValueConnectorCompTest test = new KeyValueConnectorCompTest();
+		new KeyValueConnectorCompTest();
 	}
 
 	class Callback implements IFinderCallback {

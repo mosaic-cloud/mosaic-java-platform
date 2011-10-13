@@ -29,7 +29,7 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	private PropertyTypeConfiguration(Properties properties) {
 		super();
 		this.properties = properties;
-		this.root = ConfigurationIdentifier.root;
+		this.root = ConfigurationIdentifier.ROOT;
 	}
 
 	/**
@@ -42,10 +42,11 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	 *            the name of the configuration file
 	 * @return the configuration object
 	 */
-	public final static PropertyTypeConfiguration create(
-			ClassLoader classLoader, String resource) {
+	public static PropertyTypeConfiguration create(ClassLoader classLoader,
+			String resource) {
 		final InputStream stream = classLoader.getResourceAsStream(resource);
-		PropertyTypeConfiguration configuration = null;
+		PropertyTypeConfiguration configuration = null; // NOPMD by georgiana on
+														// 9/27/11 2:26 PM
 		if (stream != null) {
 			final Properties properties = new Properties(System.getProperties());
 			try {
@@ -69,7 +70,7 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	 * @throws IOException
 	 *             if an error occurred when reading from the input stream
 	 */
-	public final static PropertyTypeConfiguration create(InputStream stream)
+	public static PropertyTypeConfiguration create(InputStream stream)
 			throws IOException {
 		final Properties properties = new Properties(System.getProperties());
 		if (stream != null) {
@@ -82,21 +83,21 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public final <T extends Object> PropertyTypeParameter<T> getParameter(
+	public <T extends Object> PropertyTypeParameter<T> getParameter(
 			final ConfigurationIdentifier identifier, final Class<T> valueClass) {
-		return (new PropertyTypeParameter<T>(identifier, valueClass));
+		return new PropertyTypeParameter<T>(identifier, valueClass);
 	}
 
 	@Override
-	public final PropertyTypeConfiguration spliceConfiguration(
+	public PropertyTypeConfiguration spliceConfiguration(
 			final ConfigurationIdentifier relative) {
-		final ConfigurationIdentifier root;
+		ConfigurationIdentifier root;
 		if (relative.isAbsolute()) {
 			root = relative;
 		} else {
 			root = this.root.resolve(relative);
 		}
-		return (new PropertyTypeConfiguration(this.properties, root));
+		return new PropertyTypeConfiguration(this.properties, root);
 	}
 
 	private <T extends Object> T decodeValue(Class<T> valueClass,
@@ -115,30 +116,30 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 		} else if (valueClass == Float.class) {
 			value = valueClass.cast(Float.parseFloat(encodedValue));
 		} else if (valueClass == Character.class) {
-			if (encodedValue.length() != 1)
-				throw (new IllegalArgumentException());
+			if (encodedValue.length() != 1) {
+				throw new IllegalArgumentException();
+			}
 			value = valueClass.cast(encodedValue.charAt(0));
-		} else
-			throw (new IllegalAccessError());
-		return (value);
+		} else {
+			throw new IllegalAccessError();
+		}
+		return value;
 	}
 
-	private final String selectEncodedValue(
-			final ConfigurationIdentifier identifier) {
-		final String key_;
-		if (identifier.isAbsolute())
-			if (identifier == ConfigurationIdentifier.root) {
+	private String selectEncodedValue(final ConfigurationIdentifier identifier) {
+		String key_;
+		if (identifier.isAbsolute()) {
+			if (identifier == ConfigurationIdentifier.ROOT) {
 				key_ = "";
 			} else {
 				key_ = identifier.getIdentifier();
 			}
-		else {
+		} else {
 			key_ = this.root.resolve(identifier).getIdentifier();
 		}
 		final String key = key_.substring(1).replace('/', '.');
 		synchronized (this) {
-			final String encodedValue = this.properties.getProperty(key, null);
-			return (encodedValue);
+			return this.properties.getProperty(key, null);
 		}
 	}
 
@@ -149,21 +150,35 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	 */
 	@Override
 	public boolean equals(Object config) {
-		if (config == null)
-			return false;
-		if (!(config instanceof PropertyTypeConfiguration))
-			return false;
-		PropertyTypeConfiguration otherConfig = (PropertyTypeConfiguration) config;
-		if ((this.root != null) && !this.root.equals(otherConfig.root))
-			return false;
-		if ((this.root == null) && (otherConfig.root != null))
-			return false;
-		if ((this.properties != null)
-				&& !this.properties.equals(otherConfig.properties))
-			return false;
-		if ((this.properties == null) && (otherConfig.properties != null))
-			return false;
-		return true;
+		boolean isEqual;
+		if (config == null) {
+			isEqual = false;
+		} else if (config instanceof PropertyTypeConfiguration) {
+			PropertyTypeConfiguration otherConfig = (PropertyTypeConfiguration) config;
+			isEqual = ((this.root != null) && !this.root
+					.equals(otherConfig.root))
+					|| ((this.root == null) && (otherConfig.root != null))
+					|| ((this.properties != null) && !this.properties
+							.equals(otherConfig.properties))
+					|| ((this.properties == null) && (otherConfig.properties != null));
+			isEqual ^= true;
+		} else {
+			isEqual = false;
+		}
+		return isEqual;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31; // NOPMD by georgiana on 9/27/11 2:26 PM
+		int result = 1; // NOPMD by georgiana on 9/27/11 2:26 PM
+		result = prime * result
+				+ ((properties == null) ? 0 : properties.hashCode());
+		result = prime * result + ((root == null) ? 0 : root.hashCode());
+		return result;
 	}
 
 	@Override
@@ -187,6 +202,7 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	 */
 	public final class PropertyTypeParameter<T> implements
 			IConfigurationParameter<T> {
+
 		private final ConfigurationIdentifier identifier;
 		private T value;
 		private final Class<T> valueClass;
@@ -199,13 +215,13 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 		}
 
 		@Override
-		public final ConfigurationIdentifier getIdentifier() {
-			return (this.identifier);
+		public ConfigurationIdentifier getIdentifier() {
+			return this.identifier;
 		}
 
 		@Override
-		public final T getValue(final T defaultValue) {
-			final T value;
+		public T getValue(final T defaultValue) {
+			T value;
 
 			if (this.value == null) {
 				if (this.valueClass == IConfiguration.class) {
@@ -222,17 +238,17 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 				}
 			}
 
-			if (this.value != null) {
-				value = this.value;
-			} else {
+			if (this.value == null) {
 				value = defaultValue;
+			} else {
+				value = this.value;
 			}
-			return (value);
+			return value;
 		}
 
 		@Override
-		public final Class<T> getValueClass() {
-			return (this.valueClass);
+		public Class<T> getValueClass() {
+			return this.valueClass;
 		}
 
 	}
@@ -253,4 +269,5 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 	public ConfigurationIdentifier getRootIdentifier() {
 		return this.root;
 	}
+
 }

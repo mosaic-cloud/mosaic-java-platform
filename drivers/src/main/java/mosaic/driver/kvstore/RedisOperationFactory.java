@@ -19,19 +19,20 @@ import redis.clients.util.SafeEncoder;
  * @author Georgiana Macariu
  * 
  */
-public class RedisOperationFactory implements IOperationFactory {
-	private Jedis redisClient = null;
+public final class RedisOperationFactory implements IOperationFactory { // NOPMD by georgiana on 10/12/11 1:07 PM
 
-	private RedisOperationFactory(String host, int port, String user,
-			String passwd, String bucket) {
+	private final Jedis redisClient;
+
+	private RedisOperationFactory(String host, int port, String passwd,
+			String bucket) {
 		super();
 		this.redisClient = new Jedis(host, port, 0);
-		if (!passwd.equals("")) { //$NON-NLS-1$
+		if (!"".equals(passwd)) { //$NON-NLS-1$
 			this.redisClient.auth(passwd);
 		}
-		int db = Integer.parseInt(bucket);
-		if (db > -1) {
-			this.redisClient.select(db);
+		int iBucket = Integer.parseInt(bucket);
+		if (iBucket > -1) {
+			this.redisClient.select(iBucket);
 			// jedis.flushDB();
 		}
 		this.redisClient.connect();
@@ -52,9 +53,9 @@ public class RedisOperationFactory implements IOperationFactory {
 	 *            the bucket where all operations are applied
 	 * @return the factory
 	 */
-	public final static RedisOperationFactory getFactory(String host, int port,
-			String user, String passwd, String bucket) {
-		return new RedisOperationFactory(host, port, user, passwd, bucket);
+	public static RedisOperationFactory getFactory(String host, int port,
+			String passwd, String bucket) {
+		return new RedisOperationFactory(host, port, passwd, bucket);
 	}
 
 	/*
@@ -67,104 +68,115 @@ public class RedisOperationFactory implements IOperationFactory {
 	@Override
 	public IOperation<?> getOperation(final IOperationType type,
 			Object... parameters) {
-		IOperation<?> operation = null;
+		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
-			operation = new GenericOperation<Object>(new Callable<Object>() {
-
-				@Override
-				public Object call() throws Exception {
-					throw new UnsupportedOperationException(
-							"Unsupported operation: " + type.toString());
-				}
-
-			});
-			return operation;
-		}
-
-		final KeyValueOperations mType = (KeyValueOperations) type;
-		final String key;
-		final byte[] keyBytes;
-		final byte[] dataBytes;
-		switch (mType) {
-		case SET:
-			key = (String) parameters[0];
-			// data = (String) parameters[1];
-			keyBytes = SafeEncoder.encode(key);
-			dataBytes = (byte[]) parameters[1];// SafeEncoder.encode(data);
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					String opResult = RedisOperationFactory.this.redisClient
-							.set(keyBytes, dataBytes);
-					opResult = opResult.trim();
-					if (opResult.equalsIgnoreCase("OK"))
-						return true;
-					return false;
-				}
-
-			});
-			break;
-		case GET:
-			key = (String) parameters[0];
-			keyBytes = SafeEncoder.encode(key);
-			operation = new GenericOperation<byte[]>(new Callable<byte[]>() {
-
-				@Override
-				public byte[] call() throws Exception {
-					byte[] result = RedisOperationFactory.this.redisClient
-							.get(keyBytes);
-					return result;
-				}
-
-			});
-			break;
-		case LIST:
-			final String pattern = "*";
-			operation = new GenericOperation<List<String>>(
-					new Callable<List<String>>() {
+			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 12:59 PM
 
 						@Override
-						public List<String> call() throws Exception {
-							Set<String> opResult = RedisOperationFactory.this.redisClient
-									.keys(pattern);
-							List<String> result = new ArrayList<String>();
-							for (String key : opResult) {
-								result.add(key);
-							}
-							return result;
+						public Object call()
+								throws UnsupportedOperationException {
+							throw new UnsupportedOperationException(
+									"Unsupported operation: " + type.toString());
 						}
 
 					});
+		}
+
+		final KeyValueOperations mType = (KeyValueOperations) type;
+		switch (mType) {
+		case SET:
+			operation = buildSetOperation(parameters);
+			break;
+		case GET:
+			operation = buildGetOperation(parameters);
+			break;
+		case LIST:
+			operation = buildListOperation();
 			break;
 		case DELETE:
-			key = (String) parameters[0];
-			keyBytes = SafeEncoder.encode(key);
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					long opResult = RedisOperationFactory.this.redisClient
-							.del(keyBytes);
-					if (opResult == 0)
-						return false;
-					return true;
-				}
-
-			});
+			operation = buildDeleteOperation(parameters);
 			break;
 		default:
-			operation = new GenericOperation<Object>(new Callable<Object>() {
+			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 1:03 PM
 
-				@Override
-				public Object call() throws Exception {
-					throw new UnsupportedOperationException(
-							"Unsupported operation: " + mType.toString());
-				}
+						@Override
+						public Object call()
+								throws UnsupportedOperationException {
+							throw new UnsupportedOperationException(
+									"Unsupported operation: "
+											+ mType.toString());
+						}
 
-			});
+					});
 		}
 		return operation;
+	}
+
+	private IOperation<?> buildDeleteOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() {
+				byte[] keyBytes = SafeEncoder.encode((String) parameters[0]);
+				long opResult = RedisOperationFactory.this.redisClient
+						.del(keyBytes);
+				if (opResult == 0) {
+					return false;
+				}
+				return true;
+			}
+
+		});
+	}
+
+	private IOperation<?> buildListOperation() {
+		return new GenericOperation<List<String>>(new Callable<List<String>>() {
+
+			@Override
+			public List<String> call() {
+				Set<String> opResult = RedisOperationFactory.this.redisClient
+						.keys("*");
+				List<String> result = new ArrayList<String>();
+				for (String key : opResult) {
+					result.add(key);
+				}
+				return result;
+			}
+
+		});
+	}
+
+	private IOperation<?> buildGetOperation(final Object... parameters) {
+		return new GenericOperation<byte[]>(new Callable<byte[]>() {
+
+			@Override
+			public byte[] call() {
+				byte[] keyBytes = SafeEncoder.encode((String) parameters[0]);
+				byte[] result = RedisOperationFactory.this.redisClient
+						.get(keyBytes);
+				return result;
+			}
+
+		});
+	}
+
+	private IOperation<?> buildSetOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() {
+				byte[] keyBytes = SafeEncoder.encode((String) parameters[0]);
+				byte[] dataBytes = (byte[]) parameters[1];
+				String opResult = RedisOperationFactory.this.redisClient.set(
+						keyBytes, dataBytes);
+				opResult = opResult.trim();
+				if (opResult.equalsIgnoreCase("OK")) {
+					return true;
+				}
+				return false;
+			}
+
+		});
 	}
 
 	@Override

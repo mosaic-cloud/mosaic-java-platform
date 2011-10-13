@@ -28,7 +28,7 @@ public class NullCompletionCallback extends Exception {
 	 *            the detail message. The detail message is saved for later
 	 *            retrieval by the {@link Throwable#getMessage()} method
 	 */
-	public NullCompletionCallback(String message) {
+	public NullCompletionCallback(final String message) {
 		super(message);
 	}
 
@@ -44,7 +44,7 @@ public class NullCompletionCallback extends Exception {
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public NullCompletionCallback(Throwable cause) {
+	public NullCompletionCallback(final Throwable cause) {
 		super(cause);
 	}
 
@@ -62,7 +62,7 @@ public class NullCompletionCallback extends Exception {
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public NullCompletionCallback(String message, Throwable cause) {
+	public NullCompletionCallback(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

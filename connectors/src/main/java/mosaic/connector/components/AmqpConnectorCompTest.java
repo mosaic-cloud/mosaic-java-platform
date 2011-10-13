@@ -105,8 +105,7 @@ public class AmqpConnectorCompTest {
 	}
 
 	public static void test() throws Throwable {
-		@SuppressWarnings("unused")
-		AmqpConnectorCompTest test = new AmqpConnectorCompTest();
+		new AmqpConnectorCompTest();
 	}
 
 	class Callback implements IFinderCallback {

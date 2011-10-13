@@ -24,7 +24,7 @@ public enum MemcachedMessage implements MessageSpecification {
 			MessageType.Exchange, MemcachedPayloads.ReplaceRequest.class), CAS_REQUEST(
 			MessageType.Exchange, MemcachedPayloads.CasRequest.class);
 
-	public final PayloadCoder coder;
+	public PayloadCoder coder = null;
 	public final String identifier;
 	public final MessageType type;
 
@@ -41,24 +41,22 @@ public enum MemcachedMessage implements MessageSpecification {
 		this.type = type;
 		if (clasz != null) {
 			this.coder = new DefaultPBPayloadCoder(clasz, false);
-		} else {
-			this.coder = null;
 		}
 	}
 
 	@Override
 	public String getIdentifier() {
-		return (this.identifier);
+		return this.identifier;
 	}
 
 	@Override
 	public PayloadCoder getPayloadCoder() {
-		return (this.coder);
+		return this.coder;
 	}
 
 	@Override
 	public MessageType getType() {
-		return (this.type);
+		return this.type;
 	}
 
 }

@@ -26,12 +26,12 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 
 	protected IConfiguration configuration;
 
-	private ResponseTransmitter transmitter;
-	private IResourceDriver driver;
-	private List<Session> sessions;
-	private ZeroMqChannel commChannel;
+	private final ResponseTransmitter transmitter;
+	private final IResourceDriver driver;
+	private final List<Session> sessions;
+	private final ZeroMqChannel commChannel;
 
-	protected static final Object lock = new Object();
+	protected static final Object LOCK = new Object();
 	private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer>();
 
 	/**
@@ -63,37 +63,42 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	 * Destroys this stub.
 	 * 
 	 */
-	public synchronized void destroy() {
-		this.driver.destroy();
-		this.transmitter.destroy();
-		try {
-			this.commChannel.terminate(500);
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceDeferred(e);
+	public void destroy() {
+		synchronized (this) {
+			this.driver.destroy();
+			this.transmitter.destroy();
+			try {
+				this.commChannel.terminate(500);
+			} catch (InterruptedException e) {
+				ExceptionTracer.traceDeferred(e);
+			}
+			MosaicLogger.getLogger().trace("DriverStub destroyed.");
 		}
-		MosaicLogger.getLogger().trace("DriverStub destroyed.");
 	}
 
-	protected static synchronized void incDriverReference(
-			AbstractDriverStub stub) {
-		Integer ref = AbstractDriverStub.references.get(stub);
-		if (ref == null) {
-			ref = 0;
+	protected static void incDriverReference(AbstractDriverStub stub) {
+		synchronized (AbstractDriverStub.class) {
+			Integer ref = AbstractDriverStub.references.get(stub);
+			if (ref == null) {
+				ref = 0; // NOPMD by georgiana on 10/12/11 3:14 PM
+			}
+			ref++;
+			AbstractDriverStub.references.put(stub, ref);
 		}
-		ref++;
-		AbstractDriverStub.references.put(stub, ref);
 	}
 
-	protected static synchronized int decDriverReference(AbstractDriverStub stub) {
-		Integer ref = AbstractDriverStub.references.get(stub);
-		if (ref == null) {
-			ref = 0;
+	protected static int decDriverReference(AbstractDriverStub stub) {
+		synchronized (AbstractDriverStub.class) {
+			Integer ref = AbstractDriverStub.references.get(stub);
+			if (ref == null) {
+				ref = 0; // NOPMD by georgiana on 10/12/11 3:15 PM
+			}
+			ref--;
+			if (ref == 0) {
+				AbstractDriverStub.references.remove(stub);
+			}
+			return ref;
 		}
-		ref--;
-		if (ref == 0) {
-			AbstractDriverStub.references.remove(stub);
-		}
-		return ref;
 	}
 
 	@Override
@@ -127,7 +132,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 
 	@Override
 	public CallbackReference failed(Session session, Throwable exception) {
-		// TODO handle session fail
+		MosaicLogger.getLogger().error("Session failed");
 		return null;
 	}
 

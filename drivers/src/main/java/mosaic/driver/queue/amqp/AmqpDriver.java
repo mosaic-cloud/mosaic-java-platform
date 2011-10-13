@@ -3,7 +3,6 @@ package mosaic.driver.queue.amqp;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,10 +13,7 @@ import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.GenericResult;
-import mosaic.core.ops.IOperation;
 import mosaic.core.ops.IOperationCompletionHandler;
-import mosaic.core.ops.IOperationFactory;
-import mosaic.core.ops.IOperationType;
 import mosaic.core.ops.IResult;
 import mosaic.driver.AbstractResourceDriver;
 import mosaic.driver.ConfigProperties;
@@ -30,7 +26,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.FlowListener;
-import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.ReturnListener;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
@@ -41,20 +36,20 @@ import com.rabbitmq.client.ShutdownSignalException;
  * @author Georgiana Macariu
  * 
  */
-public class AmqpDriver extends AbstractResourceDriver {
+public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana on 10/12/11 4:24 PM
 
 	private boolean connected;
-	IConfiguration configuration;
-	private AmqpOperationFactory opFactory;
+	private final IConfiguration configuration;
+	private final AmqpOperationFactory opFactory;
 
 	private Connection connection;
 	private List<Channel> channels;
 	private Channel defaultChannel;
-	private FlowCallback flowCallback;
-	private ReturnCallback returnCallback;
-	private ShutdownListener shutdownListener;
-	private ConcurrentHashMap<String, IAmqpConsumer> consumers;
-	private ExecutorService executor;
+	private final FlowCallback flowCallback;
+	private final ReturnCallback returnCallback;
+	private final ShutdownListener shutdownListener;
+	protected final ConcurrentHashMap<String, IAmqpConsumer> consumers;
+	private final ExecutorService executor;
 
 	/**
 	 * Creates a new driver.
@@ -69,14 +64,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 		this.configuration = configuration;
 		this.connected = false;
 
-		this.opFactory = new AmqpOperationFactory();
+		this.opFactory = new AmqpOperationFactory(this);
 
 		this.returnCallback = new ReturnCallback();
 		this.flowCallback = new FlowCallback();
 		this.shutdownListener = new ConnectionShutdownListener();
-		this.connection = null;
-		this.channels = null;
-		this.defaultChannel = null;
 		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
 		this.executor = Executors.newFixedThreadPool(1);
 	}
@@ -88,14 +80,16 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 *            configuration data required for starting the driver
 	 * @return an AMQP driver
 	 */
-	public static AmqpDriver create(IConfiguration configuration) {
+	public static AmqpDriver create(IConfiguration configuration) { // NOPMD by georgiana on 10/12/11 4:19 PM
 		int noThreads = ConfigUtils.resolveParameter(configuration,
 				ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
 		AmqpDriver driver = new AmqpDriver(configuration, noThreads);
 		// open connection - moved to the stub
 		driver.connectResource();
-		if (!driver.connected) {
-			driver = null;
+		synchronized (driver) {
+			if (!driver.connected) {
+				driver = null; // NOPMD by georgiana on 10/12/11 3:38 PM
+			}
 		}
 		return driver;
 	}
@@ -112,54 +106,60 @@ public class AmqpDriver extends AbstractResourceDriver {
 				this.configuration,
 				ConfigProperties.getString("AmqpDriver.3"), String.class, //$NON-NLS-1$
 				ConnectionFactory.DEFAULT_USER);
-		String amqpServerPasswd = ConfigUtils.resolveParameter(
-				this.configuration,
-				ConfigProperties.getString("AmqpDriver.4"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_PASS);
 		String amqpVirtualHost = ConfigUtils.resolveParameter(
 				this.configuration, ConfigProperties.getString("AmqpDriver.5"), //$NON-NLS-1$
 				String.class, ConnectionFactory.DEFAULT_VHOST);
+
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(amqpServerHost);
 		factory.setPort(amqpServerPort);
-		if (!amqpVirtualHost.equals("")) {
+		if (!"".equals(amqpVirtualHost)) {
 			factory.setVirtualHost(amqpVirtualHost);
 		}
 		if (!amqpServerUser.isEmpty()) {
+			String amqpServerPasswd = ConfigUtils.resolveParameter(
+					this.configuration,
+					ConfigProperties.getString("AmqpDriver.4"), String.class, //$NON-NLS-1$
+					ConnectionFactory.DEFAULT_PASS);
+
 			factory.setUsername(amqpServerUser);
 			factory.setPassword(amqpServerPasswd);
 		}
 
-		try {
-			this.connection = factory.newConnection();
-			this.connection.addShutdownListener(this.shutdownListener);
-			this.channels = new LinkedList<Channel>();
-			this.connected = true;
-			MosaicLogger.getLogger().debug(
-					"AMQP driver connected to " + amqpServerHost + ":"
-							+ amqpServerPort);
-		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
-			this.connection = null;
+		synchronized (this) {
+			try {
+				this.connection = factory.newConnection();
+				this.connection.addShutdownListener(this.shutdownListener);
+				this.channels = new LinkedList<Channel>();
+				this.connected = true;
+				MosaicLogger.getLogger().debug(
+						"AMQP driver connected to " + amqpServerHost + ":"
+								+ amqpServerPort);
+			} catch (IOException e) {
+				ExceptionTracer.traceDeferred(e);
+				this.connection = null; // NOPMD by georgiana on 10/12/11 3:38 PM
+			}
 		}
 	}
 
 	@Override
-	public synchronized void destroy() {
+	public void destroy() {
 		super.destroy();
 
-		// close any existing connection
-		if (this.connected) {
-			try {
-				for (Channel channel : AmqpDriver.this.channels) {
-					channel.close();
+		synchronized (this) {
+			// close any existing connection
+			if (this.connected) {
+				try {
+					for (Channel channel : AmqpDriver.this.channels) {
+						channel.close();
+					}
+					this.connection.close();
+					this.connected = false;
+				} catch (IOException e) {
+					MosaicLogger.getLogger().error(
+							"AMQP cannot close connection with server."); //$NON-NLS-1$
+					ExceptionTracer.traceDeferred(e);
 				}
-				this.connection.close();
-				this.connected = false;
-			} catch (IOException e) {
-				MosaicLogger.getLogger().error(
-						"AMQP cannot close connection with server."); //$NON-NLS-1$
-				ExceptionTracer.traceDeferred(e);
 			}
 		}
 		MosaicLogger.getLogger().trace("AmqpDriver destroyed."); //$NON-NLS-1$
@@ -189,12 +189,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 			boolean durable, boolean autoDelete, boolean passive,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
+		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.DECLARE_EXCHANGE, name, type,
 						durable, autoDelete, passive);
 
-		IResult<Boolean> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
 	/**
@@ -222,12 +221,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 			boolean durable, boolean autoDelete, boolean passive,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
+		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.DECLARE_QUEUE, queue, exclusive,
 						durable, autoDelete, passive);
 
-		IResult<Boolean> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
 	/**
@@ -246,12 +244,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 	public IResult<Boolean> bindQueue(String exchange, String queue,
 			String routingKey, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
+		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.BIND_QUEUE, exchange, queue,
 						routingKey);
 
-		IResult<Boolean> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
 	/**
@@ -266,11 +263,10 @@ public class AmqpDriver extends AbstractResourceDriver {
 	public IResult<Boolean> basicPublish(AmqpOutboundMessage message,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
+		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.PUBLISH, message);
 
-		IResult<Boolean> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
 	/**
@@ -299,12 +295,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 			IAmqpConsumer consumeCallback,
 			IOperationCompletionHandler<String> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<String> op = (GenericOperation<String>) this.opFactory
+		GenericOperation<String> operation = (GenericOperation<String>) this.opFactory
 				.getOperation(AmqpOperations.CONSUME, queue, consumer,
 						exclusive, autoAck, extra, consumeCallback);
 
-		IResult<String> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
 	/**
@@ -323,11 +318,10 @@ public class AmqpDriver extends AbstractResourceDriver {
 	public IResult<Boolean> basicAck(long delivery, boolean multiple,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
+		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.ACK, delivery, multiple);
 
-		IResult<Boolean> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
 	/**
@@ -346,11 +340,10 @@ public class AmqpDriver extends AbstractResourceDriver {
 	public IResult<Boolean> basicGet(String queue, boolean autoAck,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
+		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.GET, queue, autoAck);
 
-		IResult<Boolean> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
 	/**
@@ -366,14 +359,13 @@ public class AmqpDriver extends AbstractResourceDriver {
 	public IResult<Boolean> basicCancel(String consumer,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
-		GenericOperation<Boolean> op = (GenericOperation<Boolean>) this.opFactory
+		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.CANCEL, consumer);
 
-		IResult<Boolean> iResult = startOperation(op, complHandler);
-		return iResult;
+		return startOperation(operation, complHandler);
 	}
 
-	private Channel getDefaultChannel() {
+	protected Channel getDefaultChannel() {
 		if (this.defaultChannel == null) {
 			this.defaultChannel = this.openChannel();
 		}
@@ -381,7 +373,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 	}
 
 	private Channel openChannel() {
-		Channel channel = null;
+		Channel channel = null; // NOPMD by georgiana on 10/12/11 4:21 PM
 		synchronized (this) {
 			try {
 				if (this.connected) {
@@ -401,12 +393,13 @@ public class AmqpDriver extends AbstractResourceDriver {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T extends Object> IResult<T> startOperation(
-			GenericOperation<T> op, IOperationCompletionHandler complHandler) {
-		IResult<T> iResult = new GenericResult<T>(op);
-		op.setHandler(complHandler);
+			GenericOperation<T> operation,
+			IOperationCompletionHandler complHandler) {
+		IResult<T> iResult = new GenericResult<T>(operation);
+		operation.setHandler(complHandler);
 		super.addPendingOperation(iResult);
 
-		super.submitOperation(op.getOperation());
+		super.submitOperation(operation.getOperation());
 		return iResult;
 	}
 
@@ -420,6 +413,7 @@ public class AmqpDriver extends AbstractResourceDriver {
 
 		@Override
 		public void handleFlow(boolean active) {
+			// nothing to do here
 		}
 	}
 
@@ -435,8 +429,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 	 * @author Georgiana Macariu
 	 * 
 	 */
-	private final class ConsumerCallback implements Consumer {
-		private Object extra;
+	final class ConsumerCallback implements Consumer { // NOPMD by georgiana on 10/12/11 4:24 PM
+
+		private final Object extra;
 
 		ConsumerCallback(Object extra) {
 			super();
@@ -444,12 +439,11 @@ public class AmqpDriver extends AbstractResourceDriver {
 		}
 
 		@Override
-		public final void handleCancelOk(final String consumer) {
+		public void handleCancelOk(final String consumer) {
 			MosaicLogger
 					.getLogger()
 					.trace("AmqpDriver - Received CANCEL Ok callback for consumer " + consumer //$NON-NLS-1$
 							+ "."); //$NON-NLS-1$
-			;
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
 					.remove(consumer);
 			if (cancelCallback != null) {
@@ -465,14 +459,18 @@ public class AmqpDriver extends AbstractResourceDriver {
 		}
 
 		@Override
-		public final void handleConsumeOk(final String consumer) {
+		public void handleConsumeOk(final String consumer) {
 			MosaicLogger
 					.getLogger()
 					.trace("AmqpDriver - Received CONSUME Ok callback for consumer " + consumer //$NON-NLS-1$
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
-			if (consumeCallback != null) {
+			if (consumeCallback == null) {
+				MosaicLogger
+						.getLogger()
+						.error("AmqpDriver - no callback to handle CONSUME Ok message"); //$NON-NLS-1$
+			} else {
 				Runnable task = new Runnable() {
 
 					@Override
@@ -481,22 +479,13 @@ public class AmqpDriver extends AbstractResourceDriver {
 					}
 				};
 				AmqpDriver.this.executor.execute(task);
-			} else {
-				MosaicLogger
-						.getLogger()
-						.error("AmqpDriver - no callback to handle CONSUME Ok message"); //$NON-NLS-1$
 			}
 		}
 
 		@Override
-		public final void handleDelivery(String consumer, Envelope envelope,
-				AMQP.BasicProperties properties, byte[] data) {
-			final AmqpInboundMessage message = new AmqpInboundMessage(consumer,
-					envelope.getDeliveryTag(), envelope.getExchange(),
-					envelope.getRoutingKey(), data,
-					((properties.getDeliveryMode() != null) && (properties
-							.getDeliveryMode() == 2)) ? true : false,
-					properties.getContentType());
+		public void handleDelivery(final String consumer,
+				final Envelope envelope, final AMQP.BasicProperties properties,
+				final byte[] data) {
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
 			if (consumeCallback != null) {
@@ -504,6 +493,15 @@ public class AmqpDriver extends AbstractResourceDriver {
 
 					@Override
 					public void run() {
+						AmqpInboundMessage message = new AmqpInboundMessage(
+								consumer,
+								envelope.getDeliveryTag(),
+								envelope.getExchange(),
+								envelope.getRoutingKey(),
+								data,
+								((properties.getDeliveryMode() != null) && (properties
+										.getDeliveryMode() == 2)) ? true
+										: false, properties.getContentType());
 						consumeCallback.handleDelivery(message);
 					}
 				};
@@ -512,11 +510,12 @@ public class AmqpDriver extends AbstractResourceDriver {
 		}
 
 		@Override
-		public final void handleRecoverOk() {
+		public void handleRecoverOk() {
+			// nothing to do here
 		}
 
 		@Override
-		public final void handleShutdownSignal(final String consumer,
+		public void handleShutdownSignal(final String consumer,
 				final ShutdownSignalException signal) {
 			MosaicLogger.getLogger().trace(
 					"AmqpDriver - Received SHUTDOWN callback for consumer " //$NON-NLS-1$
@@ -542,7 +541,6 @@ public class AmqpDriver extends AbstractResourceDriver {
 					.getLogger()
 					.trace("AmqpDriver - Received CANCEL callback for consumer " + consumer //$NON-NLS-1$
 							+ "."); //$NON-NLS-1$
-			;
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
 					.remove(consumer);
 			if (cancelCallback != null) {
@@ -585,348 +583,6 @@ public class AmqpDriver extends AbstractResourceDriver {
 	}
 
 	/**
-	 * Factory class which builds the asynchronous calls for the operations
-	 * defined for the AMQP protocol.
-	 * 
-	 * @author Georgiana Macariu
-	 * 
-	 */
-	final class AmqpOperationFactory implements IOperationFactory {
-
-		AmqpOperationFactory() {
-			super();
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * mosaic.core.IOperationFactory#getOperation(mosaic.core.IOperationType
-		 * , java.lang.Object[])
-		 */
-		@Override
-		public IOperation<?> getOperation(final IOperationType type,
-				Object... parameters) {
-			IOperation<?> operation = null;
-			if (!(type instanceof AmqpOperations)) {
-				operation = new GenericOperation<Object>(
-						new Callable<Object>() {
-
-							@Override
-							public Object call() throws Exception {
-								throw new UnsupportedOperationException(
-										"Unsupported operation: "
-												+ type.toString());
-							}
-
-						});
-				return operation;
-			}
-
-			final AmqpOperations mType = (AmqpOperations) type;
-			final String queue;
-			final String exchange;
-			final boolean durable;
-			final boolean autoDelete;
-			final boolean passive;
-			final boolean autoAck;
-			final boolean exclusive;
-			final String consumer;
-
-			switch (mType) {
-			case DECLARE_EXCHANGE:
-				exchange = (String) parameters[0];
-				final AmqpExchangeType eType = (AmqpExchangeType) parameters[1];
-				durable = (Boolean) parameters[2];
-				autoDelete = (Boolean) parameters[3];
-				passive = (Boolean) parameters[4];
-
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								boolean succeeded = false;
-
-								synchronized (AmqpDriver.this) {
-									Channel channel = AmqpDriver.this
-											.getDefaultChannel();
-									if (channel != null) {
-										AMQP.Exchange.DeclareOk outcome = null;
-										if (passive) {
-											outcome = channel
-													.exchangeDeclarePassive(exchange);
-										} else {
-											outcome = channel.exchangeDeclare(
-													exchange,
-													eType.getAmqpName(),
-													durable, autoDelete, null);
-										}
-										succeeded = (outcome != null);
-									}
-								}
-								return succeeded;
-							}
-
-						});
-				break;
-			case DECLARE_QUEUE:
-				queue = (String) parameters[0];
-				exclusive = (Boolean) parameters[1];
-				durable = (Boolean) parameters[2];
-				autoDelete = (Boolean) parameters[3];
-				passive = (Boolean) parameters[4];
-
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								boolean succeeded = false;
-								synchronized (AmqpDriver.this) {
-									Channel channel = AmqpDriver.this
-											.getDefaultChannel();
-									if (channel != null) {
-										AMQP.Queue.DeclareOk outcome = null;
-										if (passive) {
-											outcome = channel
-													.queueDeclarePassive(queue);
-										} else {
-											outcome = channel.queueDeclare(
-													queue, durable, exclusive,
-													autoDelete, null);
-										}
-										succeeded = (outcome != null);
-									}
-								}
-								return succeeded;
-							}
-
-						});
-				break;
-			case BIND_QUEUE:
-				exchange = (String) parameters[0];
-				queue = (String) parameters[1];
-				final String routingKey = (String) parameters[2];
-
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								boolean succeeded = false;
-								synchronized (AmqpDriver.this) {
-
-									try {
-										Channel channel = AmqpDriver.this
-												.getDefaultChannel();
-										if (channel != null) {
-											AMQP.Queue.BindOk outcome = channel
-													.queueBind(queue, exchange,
-															routingKey, null);
-											succeeded = (outcome != null);
-										}
-									} catch (IOException e) {
-										ExceptionTracer.traceDeferred(e);
-									}
-								}
-								return succeeded;
-							}
-
-						});
-				break;
-			case PUBLISH:
-				final AmqpOutboundMessage message = (AmqpOutboundMessage) parameters[0];
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								boolean succeeded = false;
-								synchronized (AmqpDriver.this) {
-									Channel channel = AmqpDriver.this
-											.getDefaultChannel();
-
-									if (channel != null) {
-										AMQP.BasicProperties properties = new AMQP.BasicProperties(
-												message.getContentType(),
-												message.getContentEncoding(),
-												null, message.isDurable() ? 2
-														: 1, 0, message
-														.getCorrelation(),
-												message.getCallback(), null,
-												message.getIdentifier(), null,
-												null, null, null, null);
-										channel.basicPublish(
-												message.getExchange(),
-												message.getRoutingKey(),
-												properties, message.getData());
-										succeeded = true;
-									}
-								}
-								return succeeded;
-							}
-
-						});
-				break;
-			case CONSUME:
-				queue = (String) parameters[0];
-				consumer = (String) parameters[1];
-				exclusive = (Boolean) parameters[2];
-				autoAck = (Boolean) parameters[3];
-				final Object extra = parameters[4];
-				final IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
-
-				operation = new GenericOperation<String>(
-						new Callable<String>() {
-
-							@Override
-							public String call() throws Exception {
-								String consumerTag = null;
-								synchronized (AmqpDriver.this) {
-									Channel channel = AmqpDriver.this
-											.getDefaultChannel();
-									if (channel != null) {
-										AmqpDriver.this.consumers.put(consumer,
-												consumeCallback);
-										consumerTag = channel.basicConsume(
-												queue, autoAck, consumer, true,
-												exclusive, null,
-												new ConsumerCallback(extra));
-									}
-								}
-								return consumerTag;
-							}
-
-						});
-				break;
-			case GET:
-				queue = (String) parameters[0];
-				autoAck = (Boolean) parameters[1];
-				operation = new GenericOperation<AmqpInboundMessage>(
-						new Callable<AmqpInboundMessage>() {
-
-							@Override
-							public AmqpInboundMessage call() throws Exception {
-								AmqpInboundMessage message = null;
-								synchronized (AmqpDriver.this) {
-
-									final Channel channel = AmqpDriver.this
-											.getDefaultChannel();
-									if (channel != null) {
-										GetResponse outcome = null;
-										try {
-											outcome = channel.basicGet(queue,
-													autoAck);
-											if (outcome != null) {
-												final Envelope envelope = outcome
-														.getEnvelope();
-												final AMQP.BasicProperties properties = outcome
-														.getProps();
-												message = new AmqpInboundMessage(
-														null,
-														envelope.getDeliveryTag(),
-														envelope.getExchange(),
-														envelope.getRoutingKey(),
-														outcome.getBody(),
-														properties
-																.getDeliveryMode() == 2 ? true
-																: false,
-														properties.getReplyTo(),
-														properties
-																.getContentEncoding(),
-														properties
-																.getContentType(),
-														properties
-																.getCorrelationId(),
-														properties
-																.getMessageId());
-											}
-										} catch (IOException e) {
-											ExceptionTracer.traceDeferred(e);
-										}
-									}
-								}
-								return message;
-							}
-
-						});
-				break;
-			case ACK:
-				final long delivery = (Long) parameters[0];
-				final boolean multiple = (Boolean) parameters[1];
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								boolean succeeded = false;
-								synchronized (AmqpDriver.this) {
-									final Channel channel = AmqpDriver.this
-											.getDefaultChannel();
-									if (channel != null) {
-										try {
-											channel.basicAck(delivery, multiple);
-											succeeded = true;
-										} catch (IOException e) {
-											ExceptionTracer.traceDeferred(e);
-										}
-									}
-								}
-								return succeeded;
-							}
-
-						});
-				break;
-			case CANCEL:
-				consumer = (String) parameters[0];
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								boolean succeeded = false;
-								synchronized (AmqpDriver.this) {
-									final Channel channel = AmqpDriver.this
-											.getDefaultChannel();
-									if (channel != null) {
-										try {
-											channel.basicCancel(consumer);
-											succeeded = true;
-										} catch (IOException e) {
-											ExceptionTracer.traceDeferred(e);
-										}
-									}
-								}
-								return succeeded;
-							}
-
-						});
-				break;
-			default:
-				operation = new GenericOperation<Object>(
-						new Callable<Object>() {
-
-							@Override
-							public Object call() throws Exception {
-								throw new UnsupportedOperationException(
-										"Unsupported operation: "
-												+ mType.toString());
-							}
-
-						});
-			}
-
-			return operation;
-		}
-
-		@Override
-		public void destroy() {
-
-		}
-	}
-
-	/**
 	 * Listener for connection shutdown signals.
 	 * 
 	 * @author Georgiana Macariu
@@ -954,8 +610,9 @@ public class AmqpDriver extends AbstractResourceDriver {
 		@Override
 		public void shutdownCompleted(ShutdownSignalException arg0) {
 			synchronized (AmqpDriver.this) {
-				if (AmqpDriver.super.isDestroyed())
+				if (AmqpDriver.super.isDestroyed()) {
 					return;
+				}
 				MosaicLogger
 						.getLogger()
 						.trace("AMQP server closed connection with driver. Trying to reconnect..."); //$NON-NLS-1$
@@ -964,9 +621,10 @@ public class AmqpDriver extends AbstractResourceDriver {
 				while (!AmqpDriver.this.connected
 						&& (tries < this.maxReconnectionTries)) {
 					try {
-						Thread.sleep(this.minReconnectionTime);
+						// Thread.sleep(this.minReconnectionTime);
+						AmqpDriver.this.wait(this.minReconnectionTime);
 						AmqpDriver.this.connectResource();
-						tries++;
+						tries++; // NOPMD by georgiana on 10/12/11 4:23 PM
 					} catch (InterruptedException e) {
 						if (AmqpDriver.super.isDestroyed()) {
 							break;

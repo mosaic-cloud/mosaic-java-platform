@@ -10,6 +10,7 @@ package mosaic.core.ops;
  *            the type of the result of the operation
  */
 public interface IOperationCompletionHandler<T> {
+
 	/**
 	 * Handles the result of the operation. This shall be called when operation
 	 * finishes successfully.

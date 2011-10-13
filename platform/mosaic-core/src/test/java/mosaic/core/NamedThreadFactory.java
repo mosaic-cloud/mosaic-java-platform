@@ -4,18 +4,19 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 final class NamedThreadFactory implements ThreadFactory {
-	static final AtomicInteger poolNumber = new AtomicInteger(1);
-	final AtomicInteger threadNumber = new AtomicInteger(1);
-	final ThreadGroup group;
 
-	NamedThreadFactory(String poolName) {
+	private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
+	private final AtomicInteger threadNumber = new AtomicInteger(1);
+	private final ThreadGroup group;
+
+	NamedThreadFactory(final String poolName) {
 		this.group = new ThreadGroup(poolName + "-"
-				+ NamedThreadFactory.poolNumber.getAndIncrement());
+				+ NamedThreadFactory.POOL_NUMBER.getAndIncrement());
 	}
 
 	@Override
-	public Thread newThread(Runnable r) {
-		return new Thread(this.group, r, this.group.getName() + "-thread-"
+	public Thread newThread(final Runnable runner) {
+		return new Thread(this.group, runner, this.group.getName() + "-thread-"
 				+ this.threadNumber.getAndIncrement(), 0);
 	}
 }

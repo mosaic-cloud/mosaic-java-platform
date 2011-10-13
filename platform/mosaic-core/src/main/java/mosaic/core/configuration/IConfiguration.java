@@ -7,6 +7,7 @@ package mosaic.core.configuration;
  * 
  */
 public interface IConfiguration {
+
 	/**
 	 * Returns a configuration parameter.
 	 * 

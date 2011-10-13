@@ -11,9 +11,10 @@ import mosaic.core.ops.IResult;
  * Interface for working with key-value stores.
  * 
  * @author Georgiana Macariu
- * 
+ * @param <T>
+ *            type of stored data
  */
-public interface IKeyValueStore extends IResourceConnector {
+public interface IKeyValueStore<T extends Object> extends IResourceConnector {
 	/**
 	 * Stores the given data and associates it with the specified key.
 	 * 
@@ -30,7 +31,7 @@ public interface IKeyValueStore extends IResourceConnector {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> set(String key, Object data,
+	IResult<Boolean> set(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
 
@@ -48,9 +49,8 @@ public interface IKeyValueStore extends IResourceConnector {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Object> get(String key,
-			List<IOperationCompletionHandler<Object>> handlers,
-			CompletionInvocationHandler<Object> iHandler);
+	IResult<T> get(String key, List<IOperationCompletionHandler<T>> handlers,
+			CompletionInvocationHandler<T> iHandler);
 
 	/**
 	 * Deletes the given key.

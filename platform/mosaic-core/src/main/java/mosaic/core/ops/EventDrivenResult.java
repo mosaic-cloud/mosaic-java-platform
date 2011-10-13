@@ -22,9 +22,10 @@ import java.util.concurrent.ExecutionException;
  *            The type of the actual result of the asynchronous operation.
  */
 public class EventDrivenResult<T> implements IResult<T> {
-	private EventDrivenOperation<T> operation;
 
-	public EventDrivenResult(EventDrivenOperation<T> operation) {
+	private final EventDrivenOperation<T> operation;
+
+	public EventDrivenResult(final EventDrivenOperation<T> operation) {
 		super();
 		this.operation = operation;
 	}

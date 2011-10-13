@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutionException;
  * 
  */
 public interface IResult<T> {
+
 	/**
 	 * Tests if the operation which will produce this result is completed and
 	 * its result is ready for further processing.
@@ -41,5 +42,5 @@ public interface IResult<T> {
 	 * @throws ExecutionException
 	 *             if the operation threw an exception
 	 */
-	public T getResult() throws InterruptedException, ExecutionException;
+	T getResult() throws InterruptedException, ExecutionException;
 }

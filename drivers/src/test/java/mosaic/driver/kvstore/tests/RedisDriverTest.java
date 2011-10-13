@@ -14,7 +14,7 @@ import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.core.utils.SerDesUtils;
-import mosaic.driver.kvstore.BaseKeyValueDriver;
+import mosaic.driver.kvstore.AbstractKeyValueDriver;
 import mosaic.driver.kvstore.RedisDriver;
 
 import org.junit.AfterClass;
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 @RunWith(SerialJunitRunner.class)
 @Serial
 public class RedisDriverTest {
-	private static BaseKeyValueDriver wrapper;
+	private static AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;
 
 	@BeforeClass

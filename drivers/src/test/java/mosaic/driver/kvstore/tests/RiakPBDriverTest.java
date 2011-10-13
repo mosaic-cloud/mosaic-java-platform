@@ -135,6 +135,11 @@ public class RiakPBDriverTest {
 			Assert.fail();
 		}
 
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
 				"check deleted");
 		IResult<byte[]> r3 = RiakPBDriverTest.wrapper.invokeGetOperation(

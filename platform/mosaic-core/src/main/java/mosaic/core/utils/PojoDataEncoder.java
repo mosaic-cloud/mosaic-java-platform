@@ -4,32 +4,31 @@ import java.io.IOException;
 
 import mosaic.core.exceptions.ExceptionTracer;
 
-public class PojoDataEncoder<T> implements DataEncoder<T> {
+public class PojoDataEncoder<T extends Object> implements DataEncoder<T> {
 
-	private Class<T> dataClass;;
+	private final Class<T> dataClass;;
 
-	public PojoDataEncoder(Class<T> dataClass) {
+	public PojoDataEncoder(final Class<T> dataClass) {
 		this.dataClass = dataClass;
 	}
 
 	@Override
-	public byte[] encode(T data) throws Exception {
-		byte[] bytes = SerDesUtils.pojoToBytes(data);
-		return bytes;
+	public byte[] encode(T data) throws Exception { // NOPMD by georgiana on 10/12/11 5:03 PM
+		return SerDesUtils.pojoToBytes(data);
 	}
 
 	@Override
 	public T decode(byte[] dataBytes) {
-		T ob = null;
+		T object = null; // NOPMD by georgiana on 10/12/11 5:03 PM
 		try {
-			ob = this.dataClass.cast(SerDesUtils.toObject(dataBytes));
+			object = this.dataClass.cast(SerDesUtils.toObject(dataBytes));
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 		} catch (ClassNotFoundException e) {
 			ExceptionTracer.traceDeferred(e);
 		}
 
-		return ob;
+		return object;
 	}
 
 }

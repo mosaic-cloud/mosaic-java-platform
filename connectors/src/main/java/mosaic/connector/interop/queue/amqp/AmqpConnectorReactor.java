@@ -42,13 +42,19 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor {
 	/**
 	 * Creates the reactor for the AMQP connector proxy.
 	 * 
-	 * @param config
-	 *            the configurations required to initialize the proxy
 	 * @throws Throwable
 	 */
-	public AmqpConnectorReactor(IConfiguration config) throws Throwable {
-		super(config);
+	public AmqpConnectorReactor() throws Throwable {
+		super();
 		this.callbacksMap = new AmqpCallbacksMap();
+	}
+
+	/**
+	 * Destroys this reactor.
+	 */
+	public void destroy() {
+		// nothing to do here
+		// if it does something don'y forget synchronized
 	}
 
 	/**

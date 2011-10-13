@@ -1,6 +1,7 @@
 package mosaic.driver;
 
 import mosaic.core.configuration.ConfigUtils;
+import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.driver.interop.AbstractDriverStub;
@@ -41,10 +42,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	protected AbstractDriverStub stub;
 	protected ComponentIdentifier resourceGroup;
 	protected ComponentIdentifier selfGroup;
-
-	public AbstractDriverComponentCallbacks() {
-		super();
-	}
+	protected IConfiguration driverConfiguration;
 
 	public void terminate() {
 		synchronized (this.monitor) {
@@ -60,7 +58,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
 					&& (this.status != Status.Unregistered));
-			throw (new UnsupportedOperationException());
+			throw new UnsupportedOperationException();
 		}
 	}
 
@@ -74,7 +72,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 			if (this.stub != null) {
 				this.stub.destroy();
 			}
-			this.component = null;
+			this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
 			this.status = Status.Terminated;
 			ExceptionTracer.traceIgnored(exception);
 		}
@@ -91,47 +89,43 @@ public abstract class AbstractDriverComponentCallbacks implements
 				this.stub.destroy();
 				MosaicLogger.getLogger().trace("Driver callbacks terminated.");
 			}
-			this.component = null;
+			this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
 			this.status = Status.Terminated;
 		}
 		return null;
 	}
 
-	@Override
-	public void deassigned(ComponentCallbacks trigger,
-			ComponentCallbacks newCallbacks) {
+	public abstract void deassigned(ComponentCallbacks trigger,
+			ComponentCallbacks newCallbacks);
 
-	}
+	public abstract void reassigned(ComponentCallbacks trigger,
+			ComponentCallbacks oldCallbacks);
 
-	@Override
-	public void reassigned(ComponentCallbacks trigger,
-			ComponentCallbacks oldCallbacks) {
+	public abstract void registered(ComponentCallbacks trigger);
 
-	}
-
-	@Override
-	public void registered(ComponentCallbacks trigger) {
-
-	}
-
-	@Override
-	public void unregistered(ComponentCallbacks trigger) {
-
-	}
+	public abstract void unregistered(ComponentCallbacks trigger);
 
 	protected ZeroMqChannel createDriverChannel(String channelIdentifierProp,
 			String channelEndpointProp, SessionSpecification role) {
 		// create stub and interop channel
+		Preconditions.checkNotNull(this.driverConfiguration);
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
-				ConfigUtils.resolveParameter(
-						AbstractResourceDriver.driverConfiguration,
+				ConfigUtils.resolveParameter(this.driverConfiguration,
 						channelIdentifierProp, String.class, ""),
 				AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(role);
-		driverChannel.accept(ConfigUtils.resolveParameter(
-				AbstractResourceDriver.driverConfiguration,
-				channelEndpointProp, String.class, ""));
+		driverChannel.accept(ConfigUtils
+				.resolveParameter(this.driverConfiguration,
+						channelEndpointProp, String.class, ""));
 		return driverChannel;
+	}
+
+	protected IConfiguration getDriverConfiguration() {
+		return driverConfiguration;
+	}
+
+	protected void setDriverConfiguration(IConfiguration driverConfiguration) {
+		this.driverConfiguration = driverConfiguration;
 	}
 
 }

@@ -6,7 +6,11 @@ package mosaic.core.utils;
  * @author Georgiana Macariu
  * 
  */
-public class Miscellaneous {
+public final class Miscellaneous {
+
+	private Miscellaneous() {
+	}
+
 	/**
 	 * Casts an object to a specified type.
 	 * 
@@ -18,7 +22,8 @@ public class Miscellaneous {
 	 *            the object to cast
 	 * @return the casted object
 	 */
-	public static <T> T cast(Class<T> classToCast, Object valueToCast) {
+	public static <T> T cast(final Class<T> classToCast,
+			final Object valueToCast) {
 		return classToCast.cast(valueToCast);
 	}
 }

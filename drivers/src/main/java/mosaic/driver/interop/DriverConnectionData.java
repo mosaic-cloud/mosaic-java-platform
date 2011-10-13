@@ -73,9 +73,9 @@ public class DriverConnectionData {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
+	public int hashCode() { // NOPMD by georgiana on 10/12/11 3:11 PM
+		final int prime = 31; // NOPMD by georgiana on 10/12/11 3:09 PM
+		int result = 1; // NOPMD by georgiana on 10/12/11 3:11 PM
 		result = (prime * result)
 				+ ((this.driverName == null) ? 0 : this.driverName.hashCode());
 		result = (prime * result)
@@ -90,36 +90,26 @@ public class DriverConnectionData {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DriverConnectionData other = (DriverConnectionData) obj;
-		if (this.driverName == null) {
-			if (other.driverName != null)
-				return false;
-		} else if (!this.driverName.equals(other.driverName))
-			return false;
-		if (this.host == null) {
-			if (other.host != null)
-				return false;
-		} else if (!this.host.equals(other.host))
-			return false;
-		if (this.password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!this.password.equals(other.password))
-			return false;
-		if (this.port != other.port)
-			return false;
-		if (this.user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!this.user.equals(other.user))
-			return false;
-		return true;
-	}
+		boolean isEqual;
 
+		isEqual = (this == obj);
+		if (!isEqual && (obj instanceof DriverConnectionData)) {
+			DriverConnectionData other = (DriverConnectionData) obj;
+			isEqual = (obj == null)
+					|| (getClass() != obj.getClass())
+					|| ((this.driverName == null) && (other.driverName != null))
+					|| ((this.driverName != null) && (!this.driverName
+							.equals(other.driverName)))
+					|| ((this.host == null) && (other.host != null))
+					|| ((this.host != null) && (!this.host.equals(other.host)))
+					|| ((this.password == null) && (other.password != null))
+					|| ((this.password != null) && (other.password == null))
+					|| ((this.password != null) && ((other.password != null) && !this.password
+							.equals(other.password)))
+					|| ((this.user == null) && (other.user != null))
+					|| ((this.user != null) && (!this.user.equals(other.user)));
+			isEqual ^= true;
+		}
+		return isEqual;
+	}
 }

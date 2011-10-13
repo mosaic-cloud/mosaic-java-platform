@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 @RunWith(SerialJunitRunner.class)
 @Serial
 public class AmqpDriverTest {
+
 	private static IConfiguration configuration;
 	private static AmqpDriver wrapper;
 

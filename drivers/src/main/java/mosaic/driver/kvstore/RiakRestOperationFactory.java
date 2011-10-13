@@ -26,9 +26,10 @@ import com.basho.riak.client.response.StoreResponse;
  * 
  */
 
-public class RiakRestOperationFactory implements IOperationFactory {
-	private RiakClient riakcl = null;
-	private String bucket;
+public final class RiakRestOperationFactory implements IOperationFactory { // NOPMD by georgiana on 10/12/11 4:46 PM
+
+	private final RiakClient riakcl;
+	private final String bucket;
 
 	private RiakRestOperationFactory(String riakHost, int riakPort,
 			String bucket) {
@@ -49,114 +50,50 @@ public class RiakRestOperationFactory implements IOperationFactory {
 	 *            the bucket associated with the connection
 	 * @return the factory
 	 */
-	public final static RiakRestOperationFactory getFactory(String riakHost,
+	public static RiakRestOperationFactory getFactory(String riakHost,
 			int port, String bucket) {
 		return new RiakRestOperationFactory(riakHost, port, bucket);
 	}
 
 	@Override
-	public IOperation<?> getOperation(final IOperationType type,
+	public IOperation<?> getOperation(final IOperationType type, // NOPMD by georgiana on 10/12/11 4:46 PM
 			Object... parameters) {
-		IOperation<?> operation = null;
+		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
-			operation = new GenericOperation<Object>(new Callable<Object>() {
+			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:46 PM
 
-				@Override
-				public Object call() throws Exception {
-					throw new UnsupportedOperationException(
-							"Unsupported operation: " + type.toString());
-				}
+						@Override
+						public Object call()
+								throws UnsupportedOperationException {
+							throw new UnsupportedOperationException(
+									"Unsupported operation: " + type.toString());
+						}
 
-			});
-			return operation;
+					});
 		}
 
 		final KeyValueOperations mType = (KeyValueOperations) type;
-		final String key;
-		final byte[] dataBytes;
 		try {
 			switch (mType) {
 			case SET:
-				// to change
-				key = (String) parameters[0];
-				// data = parameters[1];
-				dataBytes = (byte[]) parameters[1];// SerDesUtils.toBytes(data);
-				final RiakObject riakobj = new RiakObject(this.bucket, key,
-						dataBytes);
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								StoreResponse response = RiakRestOperationFactory.this.riakcl
-										.store(riakobj);
-								if (response.isSuccess())
-									return true;
-								return false;
-							}
-
-						});
+				operation = buildSetOperation(parameters); // NOPMD by georgiana on 10/12/11 4:46 PM
 				break;
 			case GET:
-				key = (String) parameters[0];
-				operation = new GenericOperation<byte[]>(
-						new Callable<byte[]>() {
-
-							@Override
-							public byte[] call() throws Exception {
-								FetchResponse res = RiakRestOperationFactory.this.riakcl
-										.fetch(RiakRestOperationFactory.this.bucket,
-												key);
-								if (res.hasObject()) {
-									final RiakObject riakobj = res.getObject();
-									return riakobj.getValueAsBytes();
-								} else
-									return null;
-							}
-						});
+				operation = buildGetOperation(parameters); // NOPMD by georgiana on 10/12/11 4:45 PM
 				break;
 			case LIST:
-				operation = new GenericOperation<List<String>>(
-						new Callable<List<String>>() {
-
-							@Override
-							public List<String> call() throws Exception {
-								BucketResponse res = RiakRestOperationFactory.this.riakcl
-										.listBucket(RiakRestOperationFactory.this.bucket);
-								List<String> keys = new ArrayList<String>();
-								if (res.isSuccess()) {
-									RiakBucketInfo info = res.getBucketInfo();
-									keys = (List<String>) info.getKeys();
-									return keys;
-								} else
-									return keys;
-							}
-
-						});
+				operation = buildListOperation(); // NOPMD by georgiana on 10/12/11 4:45 PM
 				break;
 			case DELETE:
-				key = (String) parameters[0];
-				operation = new GenericOperation<Boolean>(
-						new Callable<Boolean>() {
-
-							@Override
-							public Boolean call() throws Exception {
-								HttpResponse res = RiakRestOperationFactory.this.riakcl
-										.delete(RiakRestOperationFactory.this.bucket,
-												key);
-								if (res.getStatusCode() == 404)
-									return false;
-								return true;
-							}
-
-						});
+				operation = buildDeleteOperation(parameters); // NOPMD by georgiana on 10/12/11 4:45 PM
 				break;
 			default:
-				operation = new GenericOperation<Object>(
+				operation = new GenericOperation<Object>( // NOPMD by georgiana on 10/12/11 4:45 PM
 						new Callable<Object>() {
 
 							@Override
-							public Object call() throws Exception {
+							public Object call()
+									throws UnsupportedOperationException {
 								throw new UnsupportedOperationException(
 										"Unsupported operation: "
 												+ mType.toString());
@@ -165,22 +102,100 @@ public class RiakRestOperationFactory implements IOperationFactory {
 						});
 			}
 		} catch (final Exception e) {
-			operation = new GenericOperation<Object>(new Callable<Object>() {
+			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:45 PM
 
-				@Override
-				public Object call() throws Exception {
-					throw e;
-				}
+						@Override
+						public Object call() throws Exception { // NOPMD by georgiana on 10/12/11 4:46 PM
+							throw e;
+						}
 
-			});
+					});
 			ExceptionTracer.traceDeferred(e);
 		}
 		return operation;
 	}
 
+	private IOperation<?> buildDeleteOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() {
+				String key = (String) parameters[0];
+
+				HttpResponse res = RiakRestOperationFactory.this.riakcl.delete(
+						RiakRestOperationFactory.this.bucket, key);
+				if (res.getStatusCode() == 404) {
+					return false;
+				}
+				return true;
+			}
+
+		});
+	}
+
+	private IOperation<?> buildListOperation() {
+		return new GenericOperation<List<String>>(new Callable<List<String>>() {
+
+			@Override
+			public List<String> call() {
+				BucketResponse res = RiakRestOperationFactory.this.riakcl
+						.listBucket(RiakRestOperationFactory.this.bucket);
+				List<String> keys = new ArrayList<String>();
+				if (res.isSuccess()) {
+					RiakBucketInfo info = res.getBucketInfo();
+					keys = (List<String>) info.getKeys();
+					return keys;
+				} else {
+					return keys;
+				}
+			}
+
+		});
+	}
+
+	private IOperation<?> buildGetOperation(final Object... parameters) {
+		return new GenericOperation<byte[]>(new Callable<byte[]>() {
+
+			@Override
+			public byte[] call() {
+				String key = (String) parameters[0];
+
+				FetchResponse res = RiakRestOperationFactory.this.riakcl.fetch(
+						RiakRestOperationFactory.this.bucket, key);
+				if (res.hasObject()) {
+					final RiakObject riakobj = res.getObject();
+					return riakobj.getValueAsBytes();
+				} else {
+					return null;
+				}
+			}
+		});
+	}
+
+	private IOperation<?> buildSetOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() {
+				String key = (String) parameters[0];
+				byte[] dataBytes = (byte[]) parameters[1];
+				RiakObject riakobj = new RiakObject(
+						RiakRestOperationFactory.this.bucket, key, dataBytes);
+
+				StoreResponse response = RiakRestOperationFactory.this.riakcl
+						.store(riakobj);
+				if (response.isSuccess()) {
+					return true;
+				}
+				return false;
+			}
+
+		});
+	}
+
 	@Override
 	public void destroy() {
-
+		// nothing to do here
 	}
 
 }

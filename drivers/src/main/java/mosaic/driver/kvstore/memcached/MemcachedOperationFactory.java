@@ -2,10 +2,12 @@ package mosaic.driver.kvstore.memcached;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -26,16 +28,24 @@ import net.spy.memcached.MemcachedClient;
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedOperationFactory implements IOperationFactory {
-	private MemcachedClient mcClient = null;
+public final class MemcachedOperationFactory implements IOperationFactory { // NOPMD by georgiana on 10/12/11 4:57 PM
 
-	private MemcachedOperationFactory(List<InetSocketAddress> servers,
-			String user, String password, String bucket) throws IOException {
+	private final MemcachedClient mcClient;
+
+	private MemcachedOperationFactory(List<?> servers, String user,
+			String password, String bucket, boolean useBucket)
+			throws IOException {
 		super();
-		// mcClient=new MemcachedClient(
-		// nodes, bucket, user, passwd);
-		this.mcClient = new MemcachedClient(new BinaryConnectionFactory(),
-				servers);
+		if (useBucket) {
+			@SuppressWarnings("unchecked")
+			List<URI> nodes = (List<URI>) servers;
+			this.mcClient = new MemcachedClient(nodes, bucket, user, password);
+		} else {
+			@SuppressWarnings("unchecked")
+			List<InetSocketAddress> nodes = (List<InetSocketAddress>) servers;
+			this.mcClient = new MemcachedClient(new BinaryConnectionFactory(),
+					nodes);
+		}
 	}
 
 	/**
@@ -49,13 +59,15 @@ public class MemcachedOperationFactory implements IOperationFactory {
 	 *            the password for connecting to the server
 	 * @param bucket
 	 *            the bucket where all operations are applied
+	 * @param useBucket
+	 *            whether to connect to the specified bucket or to the default
 	 * @return the factory
 	 */
-	public final static MemcachedOperationFactory getFactory(
-			List<InetSocketAddress> hosts, String user, String password,
-			String bucket) {
+	public static MemcachedOperationFactory getFactory(List<?> hosts,
+			String user, String password, String bucket, boolean useBucket) {
 		try {
-			return new MemcachedOperationFactory(hosts, user, password, bucket);
+			return new MemcachedOperationFactory(hosts, user, password, bucket, // NOPMD by georgiana on 10/12/11 4:56 PM
+					useBucket);
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 		}
@@ -70,194 +82,233 @@ public class MemcachedOperationFactory implements IOperationFactory {
 	 * java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation(final IOperationType type,
+	public IOperation<?> getOperation(final IOperationType type, // NOPMD by georgiana on 10/12/11 4:57 PM
 			Object... parameters) {
-		IOperation<?> operation = null;
+		IOperation<?> operation = null; // NOPMD by georgiana on 10/12/11 4:56 PM
 		if (!(type instanceof KeyValueOperations)) {
-			operation = new GenericOperation<Object>(new Callable<Object>() {
-
-				@Override
-				public Object call() throws Exception {
-					throw new UnsupportedOperationException(
-							"Unsupported operation: " + type.toString());
-				}
-
-			});
-			return operation;
-		}
-
-		final KeyValueOperations mType = (KeyValueOperations) type;
-		final String key;
-		final int exp;
-		final byte[] data;
-
-		switch (mType) {
-		case SET:
-			key = (String) parameters[0];
-			if (parameters.length == 3) {
-				exp = (Integer) parameters[1];
-				data = (byte[]) parameters[2];
-			} else {
-				exp = 0;
-				data = (byte[]) parameters[1];
-			}
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
-							.set(key, exp, data);
-					Boolean result = opResult.get();
-					return result;
-				}
-
-			});
-			break;
-		case ADD:
-			key = (String) parameters[0];
-			exp = (Integer) parameters[1];
-			data = (byte[]) parameters[2];
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
-							.add(key, exp, data);
-					Boolean result = opResult.get();
-					return result;
-				}
-
-			});
-			break;
-		case REPLACE:
-			key = (String) parameters[0];
-			exp = (Integer) parameters[1];
-			data = (byte[]) parameters[2];
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
-							.replace(key, exp, data);
-					Boolean result = opResult.get();
-					return result;
-				}
-
-			});
-			break;
-		case APPEND:
-			key = (String) parameters[0];
-			data = (byte[]) parameters[1];
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					long cas = MemcachedOperationFactory.this.mcClient
-							.gets(key).getCas();
-					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
-							.append(cas, key, data);
-					Boolean result = opResult.get();
-					return result;
-				}
-
-			});
-			break;
-		case PREPEND:
-			key = (String) parameters[0];
-			data = (byte[]) parameters[1];
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					long cas = MemcachedOperationFactory.this.mcClient
-							.gets(key).getCas();
-					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
-							.prepend(cas, key, data);
-					Boolean result = opResult.get();
-					return result;
-				}
-
-			});
-			break;
-		case CAS:
-			key = (String) parameters[0];
-			data = (byte[]) parameters[1];
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					long cas = MemcachedOperationFactory.this.mcClient
-							.gets(key).getCas();
-					Future<CASResponse> opResult = MemcachedOperationFactory.this.mcClient
-							.asyncCAS(key, cas, data);
-					Boolean result = (opResult.get() == CASResponse.OK);
-					return result;
-				}
-
-			});
-			break;
-		case GET:
-			key = (String) parameters[0];
-			operation = new GenericOperation<byte[]>(new Callable<byte[]>() {
-
-				@Override
-				public byte[] call() throws Exception {
-					Future<Object> opResult = MemcachedOperationFactory.this.mcClient
-							.asyncGet(key);
-					byte[] result = (byte[]) opResult.get();
-					return result;
-				}
-
-			});
-			break;
-		case GET_BULK:
-			final String[] keys = (String[]) parameters;
-			operation = new GenericOperation<Map<String, byte[]>>(
-					new Callable<Map<String, byte[]>>() {
+			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:56 PM
 
 						@Override
-						public Map<String, byte[]> call() throws Exception {
-							Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient
-									.asyncGetBulk(keys);
-							Map<String, byte[]> result = new HashMap<String, byte[]>();
-							for (Map.Entry<String, Object> entry : opResult
-									.get().entrySet()) {
-								result.put(entry.getKey(),
-										(byte[]) entry.getValue());
-							}
-							return result;
+						public Object call()
+								throws UnsupportedOperationException {
+							throw new UnsupportedOperationException(
+									"Unsupported operation: " + type.toString());
 						}
 
 					});
+		}
+
+		final KeyValueOperations mType = (KeyValueOperations) type;
+
+		switch (mType) {
+		case SET:
+			operation = buildSetOperation(parameters);
+			break;
+		case ADD:
+			operation = buildAddOperation(parameters);
+			break;
+		case REPLACE:
+			operation = buildReplaceOperation(parameters);
+			break;
+		case APPEND:
+			operation = buildAppendOperation(parameters);
+			break;
+		case PREPEND:
+			operation = buildPrependOperation(parameters);
+			break;
+		case CAS:
+			operation = buildCasOperation(parameters);
+			break;
+		case GET:
+			operation = buildGetOperation(parameters);
+			break;
+		case GET_BULK:
+			operation = buildGetBulkOperation(parameters);
 			break;
 		case DELETE:
-			key = (String) parameters[0];
-			operation = new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
-							.delete(key);
-					Boolean result = opResult.get();
-					return result;
-				}
-
-			});
+			operation = buildDeleteOperation(parameters);
 			break;
 		default:
-			operation = new GenericOperation<Object>(new Callable<Object>() {
+			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:56 PM
 
-				@Override
-				public Object call() throws Exception {
-					throw new UnsupportedOperationException(
-							"Unsupported operation: " + mType.toString());
-				}
+						@Override
+						public Object call()
+								throws UnsupportedOperationException {
+							throw new UnsupportedOperationException(
+									"Unsupported operation: "
+											+ mType.toString());
+						}
 
-			});
+					});
 
 		}
 
 		return operation;
+	}
+
+	private IOperation<?> buildDeleteOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+						.delete(key);
+				return opResult.get();
+			}
+
+		});
+	}
+
+	private IOperation<?> buildGetBulkOperation(final Object... parameters) {
+		return new GenericOperation<Map<String, byte[]>>(
+				new Callable<Map<String, byte[]>>() {
+
+					@Override
+					public Map<String, byte[]> call()
+							throws ExecutionException, InterruptedException {
+						String[] keys = (String[]) parameters;
+						Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient
+								.asyncGetBulk(keys);
+						Map<String, byte[]> result = new HashMap<String, byte[]>();
+						for (Map.Entry<String, Object> entry : opResult.get()
+								.entrySet()) {
+							result.put(entry.getKey(),
+									(byte[]) entry.getValue());
+						}
+						return result;
+					}
+
+				});
+	}
+
+	private IOperation<?> buildGetOperation(final Object... parameters) {
+		return new GenericOperation<byte[]>(new Callable<byte[]>() {
+
+			@Override
+			public byte[] call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				Future<Object> opResult = MemcachedOperationFactory.this.mcClient
+						.asyncGet(key);
+				return (byte[]) opResult.get();
+			}
+
+		});
+	}
+
+	private IOperation<?> buildCasOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				byte[] data = (byte[]) parameters[1];
+				long cas = MemcachedOperationFactory.this.mcClient.gets(key)
+						.getCas();
+				Future<CASResponse> opResult = MemcachedOperationFactory.this.mcClient
+						.asyncCAS(key, cas, data);
+				return (opResult.get() == CASResponse.OK);
+			}
+
+		});
+	}
+
+	private IOperation<?> buildPrependOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				byte[] data = (byte[]) parameters[1];
+				long cas = MemcachedOperationFactory.this.mcClient.gets(key)
+						.getCas();
+				Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+						.prepend(cas, key, data);
+				return opResult.get();
+			}
+
+		});
+	}
+
+	private IOperation<?> buildAppendOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				byte[] data = (byte[]) parameters[1];
+				long cas = MemcachedOperationFactory.this.mcClient.gets(key)
+						.getCas();
+				Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+						.append(cas, key, data);
+				return opResult.get();
+			}
+
+		});
+	}
+
+	private IOperation<?> buildReplaceOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				int exp = (Integer) parameters[1];
+				byte[] data = (byte[]) parameters[2];
+				Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+						.replace(key, exp, data);
+				return opResult.get();
+			}
+
+		});
+	}
+
+	private IOperation<?> buildAddOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				int exp = (Integer) parameters[1];
+				byte[] data = (byte[]) parameters[2];
+
+				Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+						.add(key, exp, data);
+				return opResult.get();
+			}
+
+		});
+	}
+
+	private IOperation<?> buildSetOperation(final Object... parameters) {
+		return new GenericOperation<Boolean>(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws ExecutionException,
+					InterruptedException {
+				String key = (String) parameters[0];
+				int exp;
+				byte[] data;
+				if (parameters.length == 3) {
+					exp = (Integer) parameters[1];
+					data = (byte[]) parameters[2];
+				} else {
+					exp = 0;
+					data = (byte[]) parameters[1];
+				}
+				Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+						.set(key, exp, data);
+				return opResult.get();
+			}
+
+		});
 	}
 
 	@Override

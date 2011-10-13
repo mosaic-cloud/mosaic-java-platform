@@ -11,10 +11,11 @@ import ch.qos.logback.classic.Level;
  * @author Georgiana Macariu
  * 
  */
-public class MosaicLogger {
+public final class MosaicLogger {
+
 	private static MosaicLogger mLogger;
 
-	private final Logger logger;
+	private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
 
 	private MosaicLogger() {
 		this.logger = LoggerFactory.getLogger(MosaicLogger.class);
@@ -26,7 +27,9 @@ public class MosaicLogger {
 	 * 
 	 * @return the logger
 	 */
-	public final synchronized static MosaicLogger getLogger() {
+	public synchronized static MosaicLogger getLogger() { // NOPMD by georgiana
+															// on 9/27/11 7:15
+															// PM
 		if (MosaicLogger.mLogger == null) {
 			MosaicLogger.mLogger = new MosaicLogger();
 		}
@@ -39,7 +42,7 @@ public class MosaicLogger {
 	 * @param message
 	 *            the message
 	 */
-	public void trace(String message) {
+	public void trace(final String message) {
 		if (this.logger.isTraceEnabled()) {
 			this.logger.trace(message);
 		}
@@ -51,7 +54,7 @@ public class MosaicLogger {
 	 * @param message
 	 *            the message
 	 */
-	public void debug(String message) {
+	public void debug(final String message) {
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug(message);
 		}
@@ -63,7 +66,7 @@ public class MosaicLogger {
 	 * @param message
 	 *            the message
 	 */
-	public void info(String message) {
+	public void info(final String message) {
 		if (this.logger.isInfoEnabled()) {
 			this.logger.info(message);
 		}
@@ -75,7 +78,7 @@ public class MosaicLogger {
 	 * @param message
 	 *            the message
 	 */
-	public void warn(String message) {
+	public void warn(final String message) {
 		if (this.logger.isWarnEnabled()) {
 			this.logger.warn(message);
 		}
@@ -87,7 +90,7 @@ public class MosaicLogger {
 	 * @param message
 	 *            the message
 	 */
-	public void error(String message) {
+	public void error(final String message) {
 		if (this.logger.isErrorEnabled()) {
 			this.logger.error(message);
 		}
@@ -96,14 +99,12 @@ public class MosaicLogger {
 	public void trace(String message, Throwable exception) {
 		if (this.logger.isTraceEnabled()) {
 			this.logger.trace(message);
-			exception.printStackTrace();
 		}
 	}
 
 	public void warn(String message, Throwable exception) {
 		if (this.logger.isWarnEnabled()) {
 			this.logger.warn(message);
-			exception.printStackTrace();
 		}
 
 	}

@@ -14,10 +14,10 @@ import mosaic.driver.ConfigProperties;
  * @author Georgiana Macariu
  * 
  */
-public class RedisDriver extends BaseKeyValueDriver {
-	private String host;
-	private int port;
-	private String username;
+public final class RedisDriver extends AbstractKeyValueDriver {
+
+	private final String host;
+	private final int port;
 	private String password;
 
 	/**
@@ -45,17 +45,13 @@ public class RedisDriver extends BaseKeyValueDriver {
 	 *            the hostname of the Redis server
 	 * @param port
 	 *            the port for the Redis server
-	 * @param user
-	 *            the username for connecting to the server
 	 * @param passwd
 	 *            the password for connecting to the server
 	 */
-	private RedisDriver(int noThreads, String host, int port, String user,
-			String password) {
+	private RedisDriver(int noThreads, String host, int port, String password) {
 		super(noThreads);
 		this.host = host;
 		this.port = port;
-		this.username = user;
 		this.password = password;
 	}
 
@@ -75,8 +71,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static synchronized RedisDriver create(IConfiguration config)
-			throws IOException {
+	public static RedisDriver create(IConfiguration config) throws IOException {
 		int port, noThreads;
 
 		String host = ConfigUtils.resolveParameter(config,
@@ -91,15 +86,12 @@ public class RedisDriver extends BaseKeyValueDriver {
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		// int db = ConfigUtils.resolveParameter(config,
-		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
-		// Integer.class, (-1));
+
 		String passwd = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.4"), //$NON-NLS-1$
 				String.class, ""); //$NON-NLS-1$
 
-		RedisDriver wrapper = new RedisDriver(noThreads, host, port, "", passwd);
-		return wrapper;
+		return new RedisDriver(noThreads, host, port, passwd);
 	}
 
 	/**
@@ -107,7 +99,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 	 * the driver object.
 	 */
 	@Override
-	public synchronized void destroy() {
+	public void destroy() {
 		super.destroy();
 		MosaicLogger.getLogger().trace("RedisDriver destroyed."); //$NON-NLS-1$
 	}
@@ -116,7 +108,7 @@ public class RedisDriver extends BaseKeyValueDriver {
 	protected IOperationFactory createOperationFactory(Object... params) {
 		String bucket = params[0].toString();
 		IOperationFactory opFactory = RedisOperationFactory.getFactory(
-				this.host, this.port, this.username, this.password, bucket);
+				this.host, this.port, this.password, bucket);
 		return opFactory;
 	}
 

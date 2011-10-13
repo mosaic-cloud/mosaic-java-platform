@@ -19,19 +19,20 @@ import mosaic.core.exceptions.NullCompletionCallback;
  *            The type of the actual result of the asynchronous operation.
  */
 public class GenericOperation<T> implements IOperation<T> {
+
 	private IOperationCompletionHandler<T> complHandler;
 	private final FutureTask<T> operation;
-	private CountDownLatch cHandlerSet = new CountDownLatch(1);
+	private final CountDownLatch cHandlerSet = new CountDownLatch(1);
 
 	/**
 	 * Creates a new operation.
 	 * 
-	 * @param op
+	 * @param operation
 	 *            the code to run
 	 */
-	public GenericOperation(Callable<T> op) {
+	public GenericOperation(Callable<T> operation) {
 		super();
-		this.operation = new GenericTask(op);
+		this.operation = new GenericTask(operation);
 	}
 
 	/**
@@ -41,14 +42,11 @@ public class GenericOperation<T> implements IOperation<T> {
 	 */
 	@Override
 	public boolean cancel() {
-		boolean cancelled = true;
-		if (this.operation != null) {
-			if ((cancelled = this.operation.cancel(true))) {
-				assert getHandler() != null : "Operation callback is NULL.";
-				getHandler().onFailure(
-						new NullCompletionCallback(
-								"Operation callback is NULL."));
-			}
+		boolean cancelled = true; // NOPMD by georgiana on 10/12/11 5:02 PM
+		if (this.operation != null && (cancelled = this.operation.cancel(true))) { // NOPMD by georgiana on 10/12/11 5:01 PM
+			assert getHandler() != null : "Operation callback is NULL.";
+			getHandler().onFailure(
+					new NullCompletionCallback("Operation callback is NULL."));
 		}
 		return cancelled;
 	}
@@ -61,7 +59,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 */
 	@Override
 	public boolean isCancelled() {
-		boolean cancelled = true;
+		boolean cancelled = true; // NOPMD by georgiana on 10/12/11 5:02 PM
 		if (this.operation != null) {
 			cancelled = this.operation.isCancelled();
 		}
@@ -77,7 +75,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 */
 	@Override
 	public boolean isDone() {
-		boolean done = false;
+		boolean done = false; // NOPMD by georgiana on 10/12/11 5:02 PM
 		if (this.operation != null) {
 			done = this.operation.isDone();
 		}
@@ -96,7 +94,7 @@ public class GenericOperation<T> implements IOperation<T> {
 	 */
 	@Override
 	public T get() throws InterruptedException, ExecutionException {
-		T result = null;
+		T result = null; // NOPMD by georgiana on 10/12/11 5:02 PM
 		if (this.operation != null) {
 			try {
 				result = this.operation.get();
@@ -127,9 +125,9 @@ public class GenericOperation<T> implements IOperation<T> {
 	 *             if the wait timed out
 	 */
 	@Override
-	public T get(long timeout, TimeUnit unit) throws InterruptedException,
-			ExecutionException, TimeoutException {
-		T result = null;
+	public T get(final long timeout, final TimeUnit unit)
+			throws InterruptedException, ExecutionException, TimeoutException {
+		T result = null; // NOPMD by georgiana on 10/12/11 5:02 PM
 		if (this.operation != null) {
 			try {
 				result = this.operation.get(timeout, unit);
@@ -189,7 +187,7 @@ public class GenericOperation<T> implements IOperation<T> {
 			super.run();
 			try {
 				GenericOperation.this.cHandlerSet.await();
-				GenericOperation.this.complHandler.onSuccess(this.get());
+				GenericOperation.this.complHandler.onSuccess(GenericTask.super.get());
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceHandled(e);
 			} catch (ExecutionException e) {
@@ -205,28 +203,18 @@ public class GenericOperation<T> implements IOperation<T> {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see java.util.concurrent.FutureTask#set(java.lang.Object)
-		 */
-		@Override
-		protected void set(T t) {
-			super.set(t);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
 		 * @see
 		 * java.util.concurrent.FutureTask#setException(java.lang.Throwable)
 		 */
 		@Override
-		protected void setException(Throwable t) {
-			super.setException(t);
+		protected void setException(Throwable exception) {
+			super.setException(exception);
 			try {
 				GenericOperation.this.cHandlerSet.await();
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceHandled(e);
 			}
-			GenericOperation.this.complHandler.onFailure(t);
+			GenericOperation.this.complHandler.onFailure(exception);
 		}
 
 	}

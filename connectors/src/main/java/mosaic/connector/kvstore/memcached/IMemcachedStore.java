@@ -12,9 +12,10 @@ import mosaic.core.ops.IResult;
  * Interface for working with key-value memcached compatible stores.
  * 
  * @author Georgiana Macariu
- * 
+ * @param <T>
+ *            type of stored data
  */
-public interface IMemcachedStore extends IKeyValueStore {
+public interface IMemcachedStore<T extends Object> extends IKeyValueStore<T> {
 
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -42,7 +43,7 @@ public interface IMemcachedStore extends IKeyValueStore {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> set(String key, int exp, Object data,
+	IResult<Boolean> set(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
 
@@ -73,7 +74,7 @@ public interface IMemcachedStore extends IKeyValueStore {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> add(String key, int exp, Object data,
+	IResult<Boolean> add(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
 
@@ -104,7 +105,7 @@ public interface IMemcachedStore extends IKeyValueStore {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> replace(String key, int exp, Object data,
+	IResult<Boolean> replace(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
 
@@ -124,7 +125,7 @@ public interface IMemcachedStore extends IKeyValueStore {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> append(String key, Object data,
+	IResult<Boolean> append(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
 
@@ -144,7 +145,7 @@ public interface IMemcachedStore extends IKeyValueStore {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> prepend(String key, Object data,
+	IResult<Boolean> prepend(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
 
@@ -165,7 +166,7 @@ public interface IMemcachedStore extends IKeyValueStore {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> cas(String key, Object data,
+	IResult<Boolean> cas(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler);
 
@@ -183,8 +184,8 @@ public interface IMemcachedStore extends IKeyValueStore {
 	 *            completion handlers are executed
 	 * @return a result handle for the operation
 	 */
-	IResult<Map<String, Object>> getBulk(List<String> keys,
-			List<IOperationCompletionHandler<Map<String, Object>>> handlers,
-			CompletionInvocationHandler<Map<String, Object>> iHandler);
+	IResult<Map<String, T>> getBulk(List<String> keys,
+			List<IOperationCompletionHandler<Map<String, T>>> handlers,
+			CompletionInvocationHandler<Map<String, T>> iHandler);
 
 }

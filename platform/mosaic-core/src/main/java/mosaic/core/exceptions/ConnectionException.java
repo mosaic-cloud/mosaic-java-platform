@@ -28,7 +28,7 @@ public class ConnectionException extends Exception {
 	 *            the detail message. The detail message is saved for later
 	 *            retrieval by the {@link Throwable#getMessage()} method
 	 */
-	public ConnectionException(String message) {
+	public ConnectionException(final String message) {
 		super(message);
 	}
 
@@ -44,7 +44,7 @@ public class ConnectionException extends Exception {
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public ConnectionException(Throwable cause) {
+	public ConnectionException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -62,7 +62,7 @@ public class ConnectionException extends Exception {
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public ConnectionException(String message, Throwable cause) {
+	public ConnectionException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

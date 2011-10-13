@@ -26,13 +26,15 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 
+import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
 public class RedisConnectorTest {
-	private static KeyValueStoreConnector connector;
+	private static KeyValueStoreConnector<String> connector;
 	private static String keyPrefix;
 	private static KeyValueStub driverStub;
 
@@ -103,8 +105,8 @@ public class RedisConnectorTest {
 
 	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = RedisConnectorTest.keyPrefix + "_key_fantastic";
-		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
-		IResult<Object> r1 = RedisConnectorTest.connector.get(k1, handlers,
+		List<IOperationCompletionHandler<String>> handlers = getHandlers("get");
+		IResult<String> r1 = RedisConnectorTest.connector.get(k1, handlers,
 				null);
 
 		try {
@@ -133,8 +135,8 @@ public class RedisConnectorTest {
 			Assert.fail();
 		}
 
-		List<IOperationCompletionHandler<Object>> handlers1 = getHandlers("get after delete");
-		IResult<Object> r2 = RedisConnectorTest.connector.get(k1, handlers1,
+		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after delete");
+		IResult<String> r2 = RedisConnectorTest.connector.get(k1, handlers1,
 				null);
 
 		try {
@@ -182,7 +184,7 @@ public class RedisConnectorTest {
 	public static void _main(String... args) throws Throwable {
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
-		KeyValueStoreConnector connector = KeyValueStoreConnector.create(
+		KeyValueStoreConnector<String> connector = KeyValueStoreConnector.create(
 				config, new PojoDataEncoder<String>(String.class));
 		String keyPrefix = UUID.randomUUID().toString();
 
@@ -199,28 +201,24 @@ public class RedisConnectorTest {
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("add 1");
 		IResult<Boolean> r1 = connector.set(k1, "fantastic", handlers1, null);
 		boolean result = r1.getResult();
-		System.out.println("Set 1 result=" + result);
+		Preconditions.checkArgument(result);
 
-		List<IOperationCompletionHandler<Object>> handlers = getHandlers("get");
-		IResult<Object> r3 = connector.get(k1, handlers, null);
-		System.out.println(r3.getResult().toString());
+		List<IOperationCompletionHandler<String>> handlers = getHandlers("get");
+		IResult<String> r3 = connector.get(k1, handlers, null);
+		Preconditions.checkArgument("fantastic".equals(r3.getResult()));
 
 		List<IOperationCompletionHandler<List<String>>> handlersl = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlersl.add(new TestLoggingHandler<List<String>>("list"));
 		IResult<List<String>> r4 = connector.list(handlersl, null);
 		List<String> list = r4.getResult();
-		if (list != null) {
-			for (String key : list) {
-				System.out.println(key);
-			}
-		}
+		Preconditions.checkArgument(list!=null);
 
 		List<IOperationCompletionHandler<Boolean>> handlersd = getHandlers("delete");
 		IResult<Boolean> r5 = connector.delete(k1, handlersd, null);
-		System.out.println(r5.getResult().toString());
+		Preconditions.checkArgument(r5.getResult());
 
-		IResult<Object> r6 = connector.get(k1, handlers, null);
-		System.out.println(r6.getResult());
+		IResult<String> r6 = connector.get(k1, handlers, null);
+		Preconditions.checkArgument(r6.getResult()==null);
 
 		connector.destroy();
 		driverStub.destroy();

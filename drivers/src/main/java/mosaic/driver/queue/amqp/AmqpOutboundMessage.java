@@ -7,7 +7,9 @@ package mosaic.driver.queue.amqp;
  * @author Georgiana Macariu
  * 
  */
+@SuppressWarnings("PMD")
 public class AmqpOutboundMessage implements IAmqpMessage {
+
 	private final String callback;
 	private final String contentEncoding;
 	private final String contentType;

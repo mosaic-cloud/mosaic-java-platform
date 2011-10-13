@@ -6,9 +6,10 @@ memcached.host_1=localhost
 memcached.port_1=11210
 kvstore.host=localhost
 kvstore.port=8087
+#kvstore.port=8098
 kvstore.user=
 kvstore.passwd=
 kvstore.bucket=test
 kvstore.driver_threads=10
-kvstore.driver_name=RIAKPB
+kvstore.driver_name=RIAKREST
 

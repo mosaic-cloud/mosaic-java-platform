@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 
@@ -18,11 +17,9 @@ import mosaic.core.ops.IResult;
  * 
  */
 public abstract class AbstractResourceDriver implements IResourceDriver {
-	private List<IResult<?>> pendingResults;
-	private ExecutorService executor;
+	private final List<IResult<?>> pendingResults;
+	private final ExecutorService executor;
 	private boolean destroyed = false;
-
-	public static IConfiguration driverConfiguration;
 
 	/**
 	 * Constructs a driver.
@@ -36,17 +33,18 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	@Override
-	public synchronized void destroy() {
-		IResult<?> pResult;
-
-		this.destroyed = true;
-		this.executor.shutdown();
-		// cancel all pending operations
-		Iterator<IResult<?>> it = this.pendingResults.iterator();
-		while (it.hasNext()) {
-			pResult = it.next();
-			pResult.cancel();
-			it.remove();
+	public void destroy() {
+		synchronized (this) {
+			IResult<?> pResult;
+			this.destroyed = true;
+			this.executor.shutdown();
+			// cancel all pending operations
+			Iterator<IResult<?>> iter = this.pendingResults.iterator();
+			while (iter.hasNext()) {
+				pResult = iter.next();
+				pResult.cancel();
+				iter.remove();
+			}
 		}
 	}
 
@@ -57,12 +55,13 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 * 
 	 * @param <T>
 	 *            the operation's return type
-	 * @param op
+	 * @param operation
 	 *            the operation
 	 */
-	protected synchronized <T extends Object> void submitOperation(
-			FutureTask<T> op) {
-		this.executor.submit(op);
+	protected <T extends Object> void submitOperation(FutureTask<T> operation) {
+		synchronized (this) {
+			this.executor.submit(operation);
+		}
 	}
 
 	/**
@@ -71,23 +70,31 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 * operations see {@link AbstractResourceDriver#submitOperation(FutureTask)}
 	 * .
 	 * 
-	 * @param op
+	 * @param operation
 	 *            the operation
 	 */
-	protected synchronized void executeOperation(Runnable op) {
-		this.executor.execute(op);
+	protected void executeOperation(Runnable operation) {
+		synchronized (this) {
+			this.executor.execute(operation);
+		}
 	}
 
-	public synchronized int countPendingOperations() {
-		return this.pendingResults.size();
+	public int countPendingOperations() {
+		synchronized (this) {
+			return this.pendingResults.size();
+		}
 	}
 
-	public synchronized void removePendingOperation(IResult<?> pendingOp) {
-		this.pendingResults.remove(pendingOp);
+	public void removePendingOperation(IResult<?> pendingOp) {
+		synchronized (this) {
+			this.pendingResults.remove(pendingOp);
+		}
 	}
 
-	public synchronized void addPendingOperation(IResult<?> pendingOp) {
-		this.pendingResults.add(pendingOp);
+	public void addPendingOperation(IResult<?> pendingOp) {
+		synchronized (this) {
+			this.pendingResults.add(pendingOp);
+		}
 	}
 
 	/**
@@ -99,23 +106,27 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 * @param handler
 	 *            the handler used for sending the error
 	 */
-	public synchronized void handleUnsupportedOperationError(
-			final String opName, final IOperationCompletionHandler<?> handler) {
-		Runnable task = new Runnable() {
+	public void handleUnsupportedOperationError(final String opName,
+			final IOperationCompletionHandler<?> handler) {
+		synchronized (this) {
+			Runnable task = new Runnable() {
 
-			@Override
-			public void run() {
-				Exception error = new UnsupportedOperationException(
-						"Operation " + opName
-								+ " is not supported by this driver.");
-				handler.onFailure(error);
-			}
-		};
-		executeOperation(task);
+				@Override
+				public void run() {
+					Exception error = new UnsupportedOperationException(
+							"Operation " + opName
+									+ " is not supported by this driver.");
+					handler.onFailure(error);
+				}
+			};
+			executeOperation(task);
+		}
 	}
 
-	protected synchronized boolean isDestroyed() {
-		return this.destroyed;
+	protected boolean isDestroyed() {
+		synchronized (this) {
+			return this.destroyed;
+		}
 	}
 
 }

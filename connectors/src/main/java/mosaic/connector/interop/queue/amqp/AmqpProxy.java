@@ -73,7 +73,7 @@ public class AmqpProxy extends ConnectorProxy {
 			ZeroMqChannel channel) throws Throwable {
 		String connectorId = connectorIdentifier;
 
-		AmqpConnectorReactor reactor = new AmqpConnectorReactor(config);
+		AmqpConnectorReactor reactor = new AmqpConnectorReactor();
 		AmqpProxy proxy = new AmqpProxy(config, connectorId, reactor, channel);
 
 		proxy.connect(driverIdentifier, AmqpSession.CONNECTOR, new Message(

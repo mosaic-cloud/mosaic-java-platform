@@ -13,13 +13,13 @@ import java.util.regex.Pattern;
  */
 public final class ConfigurationIdentifier {
 
-	public static final ConfigurationIdentifier root = new ConfigurationIdentifier(
+	public static final ConfigurationIdentifier ROOT = new ConfigurationIdentifier(
 			true, null);
-	private static final Pattern identifierPattern = Pattern.compile(
+	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile(
 			"^/?([a-z]([a-z0-9_.]*[a-z0-9])?/)*([a-z]([a-z0-9_.]*[a-z0-9])?)$",
 			Pattern.DOTALL);
 
-	private static final IdentityHashMap<String, ConfigurationIdentifier> identifiers = new IdentityHashMap<String, ConfigurationIdentifier>();
+	private static final IdentityHashMap<String, ConfigurationIdentifier> IDENTIFIERS = new IdentityHashMap<String, ConfigurationIdentifier>();
 	/**
 	 * Indicates if this identifier is absolute
 	 */
@@ -29,7 +29,8 @@ public final class ConfigurationIdentifier {
 	 */
 	private final String identifier;
 
-	private ConfigurationIdentifier(final boolean absolute, String identifier) {
+	private ConfigurationIdentifier(final boolean absolute,
+			final String identifier) {
 		super();
 		this.absolute = absolute;
 		this.identifier = identifier;
@@ -41,20 +42,19 @@ public final class ConfigurationIdentifier {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object identifier) {
-		if (identifier == null)
-			return false;
-		if (!(identifier instanceof ConfigurationIdentifier))
-			return false;
-		ConfigurationIdentifier otherId = (ConfigurationIdentifier) identifier;
-		if (this.absolute != otherId.absolute)
-			return false;
-		if ((this.identifier != null)
-				&& !this.identifier.equals(otherId.identifier))
-			return false;
-		if ((this.identifier == null) && (otherId.identifier != null))
-			return false;
-		return true;
+	public boolean equals(final Object identifier) {
+		boolean isEqual;
+		if (identifier == null) {
+			isEqual = false;
+		} else if (identifier instanceof ConfigurationIdentifier) {
+			final ConfigurationIdentifier otherId = (ConfigurationIdentifier) identifier;
+			isEqual = (this.absolute == otherId.absolute)
+					&& (((this.identifier != null) && this.identifier
+							.equals(otherId.identifier)) || ((this.identifier == null) && (otherId.identifier == null)));
+		} else {
+			isEqual = false;
+		}
+		return isEqual;
 	}
 
 	/**
@@ -65,11 +65,13 @@ public final class ConfigurationIdentifier {
 	 *            the identifier to solve
 	 * @return the built identifier
 	 */
-	public ConfigurationIdentifier resolve(ConfigurationIdentifier identifier) {
-		if (identifier.absolute)
-			throw (new IllegalArgumentException());
-		return (ConfigurationIdentifier.resolveRelative(this,
-				identifier.identifier));
+	public ConfigurationIdentifier resolve(
+			final ConfigurationIdentifier identifier) {
+		if (identifier.absolute) {
+			throw new IllegalArgumentException();
+		}
+		return ConfigurationIdentifier.resolveRelative(this,
+				identifier.identifier);
 	}
 
 	/**
@@ -80,13 +82,13 @@ public final class ConfigurationIdentifier {
 	 *            the string specification of the identifier to be built
 	 * @return the built identifier
 	 */
-	public ConfigurationIdentifier resolve(String specification) {
-		return (ConfigurationIdentifier.resolve(this, specification));
+	public ConfigurationIdentifier resolve(final String specification) {
+		return ConfigurationIdentifier.resolve(this, specification);
 	}
 
 	@Override
-	public final String toString() {
-		return (this.identifier);
+	public String toString() {
+		return this.identifier;
 
 	}
 
@@ -118,8 +120,9 @@ public final class ConfigurationIdentifier {
 	 *            the string specification of the parameter identifier
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
-	public static ConfigurationIdentifier resolveAbsolute(String specification) {
-		return ConfigurationIdentifier.resolve(ConfigurationIdentifier.root,
+	public static ConfigurationIdentifier resolveAbsolute(
+			final String specification) {
+		return ConfigurationIdentifier.resolve(ConfigurationIdentifier.ROOT,
 				specification);
 	}
 
@@ -134,7 +137,7 @@ public final class ConfigurationIdentifier {
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
 	public static ConfigurationIdentifier resolveRelative(
-			ConfigurationIdentifier reference, String specification) {
+			final ConfigurationIdentifier reference, final String specification) {
 		return ConfigurationIdentifier.resolve(reference, specification);
 	}
 
@@ -146,7 +149,8 @@ public final class ConfigurationIdentifier {
 	 *            the string specification of the parameter identifier
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
-	public static ConfigurationIdentifier resolveRelative(String specification) {
+	public static ConfigurationIdentifier resolveRelative(
+			final String specification) {
 		return ConfigurationIdentifier.resolve(null, specification);
 	}
 
@@ -161,42 +165,50 @@ public final class ConfigurationIdentifier {
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
 	private static ConfigurationIdentifier resolve(
-			ConfigurationIdentifier reference, String specification) {
-		boolean isAbsolute = false;
+			final ConfigurationIdentifier reference, final String specification) {
+		boolean isAbsolute = false; // NOPMD by georgiana on 9/26/11 8:34 PM
 		String identifier_;
-		final String identifier;
+		String identifier;
 		// int slashIndex;
 		// String parentIdentifier;
 		ConfigurationIdentifier parameterIdentifier;
 		// ConfigurationIdentifier parentConfigurationIdentifier;
 
 		if (reference == null) {
-			if (specification.startsWith("/")) {
-				isAbsolute = true;
+			if (specification.charAt(0) == '/') {
+				isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
 			}
 
 			identifier_ = specification;
 		} else if (reference.absolute) {
-			isAbsolute = true;
-			if (reference.identifier != null) {
-				identifier_ = reference.identifier + "/" + specification;
+			isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
+			if (reference.identifier == null) {
+				identifier_ = "/" + specification; // NOPMD by georgiana on
+													// 9/26/11 8:36 PM
 			} else {
-				identifier_ = "/" + specification;
+				identifier_ = reference.identifier + "/" + specification; // NOPMD
+																			// by
+																			// georgiana
+																			// on
+																			// 9/26/11
+																			// 8:36
+																			// PM
 			}
 			identifier_ = identifier_.replaceAll("//", "/");
 		} else {
 			identifier_ = reference.identifier + "/" + specification;
 		}
-		if (!ConfigurationIdentifier.identifierPattern.matcher(identifier_)
-				.matches())
-			throw (new IllegalArgumentException(String.format(
-					"Invalid configuration identifier: `%s`", identifier_)));
+		if (!ConfigurationIdentifier.IDENTIFIER_PATTERN.matcher(identifier_)
+				.matches()) {
+			throw new IllegalArgumentException(String.format(
+					"Invalid configuration identifier: `%s`", identifier_));
+		}
 
 		identifier = identifier_.intern();
 
-		synchronized (ConfigurationIdentifier.identifiers) {
-			if (ConfigurationIdentifier.identifiers.containsKey(identifier)) {
-				parameterIdentifier = ConfigurationIdentifier.identifiers
+		synchronized (ConfigurationIdentifier.IDENTIFIERS) {
+			if (ConfigurationIdentifier.IDENTIFIERS.containsKey(identifier)) {
+				parameterIdentifier = ConfigurationIdentifier.IDENTIFIERS
 						.get(identifier);
 			} else {
 				// slashIndex = identifier.lastIndexOf("/");
@@ -214,12 +226,22 @@ public final class ConfigurationIdentifier {
 				// .resolve(null, parentIdentifier);
 				parameterIdentifier = new ConfigurationIdentifier(isAbsolute,
 						identifier);
-				ConfigurationIdentifier.identifiers.put(
+				ConfigurationIdentifier.IDENTIFIERS.put(
 						parameterIdentifier.identifier, parameterIdentifier);
 			}
 		}
 
 		return parameterIdentifier;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31; // NOPMD by georgiana on 9/27/11 1:47 PM
+		int result = 1; // NOPMD by georgiana on 9/26/11 8:37 PM
+		result = prime * result + (absolute ? 1231 : 1237);
+		result = prime * result
+				+ ((identifier == null) ? 0 : identifier.hashCode());
+		return result;
 	}
 
 }

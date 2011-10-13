@@ -13,9 +13,11 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerScheduler;
 
 public class SerialJunitRunner extends BlockJUnit4ClassRunner {
+
 	public SerialJunitRunner(final Class<?> klass) throws InitializationError {
 		super(klass);
 		setScheduler(new RunnerScheduler() {
+
 			ExecutorService executorService = Executors.newFixedThreadPool(1,
 					new NamedThreadFactory(klass.getSimpleName()));
 			CompletionService<Void> completionService = new ExecutorCompletionService<Void>(
@@ -23,7 +25,7 @@ public class SerialJunitRunner extends BlockJUnit4ClassRunner {
 			Queue<Future<Void>> tasks = new LinkedList<Future<Void>>();
 
 			@Override
-			public void schedule(Runnable childStatement) {
+			public void schedule(final Runnable childStatement) {
 				this.tasks.offer(this.completionService.submit(childStatement,
 						null));
 			}

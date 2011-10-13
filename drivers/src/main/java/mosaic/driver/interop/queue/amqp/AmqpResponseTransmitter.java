@@ -1,6 +1,5 @@
 package mosaic.driver.interop.queue.amqp;
 
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.driver.interop.ResponseTransmitter;
 import mosaic.driver.queue.amqp.AmqpInboundMessage;
@@ -34,16 +33,6 @@ import eu.mosaic_cloud.interoperability.core.Session;
 public class AmqpResponseTransmitter extends ResponseTransmitter {
 
 	/**
-	 * Creates a new transmitter.
-	 * 
-	 * @param config
-	 *            the configurations required to initialize the transmitter
-	 */
-	public AmqpResponseTransmitter(IConfiguration config) {
-		super(config);
-	}
-
-	/**
 	 * Builds the result and sends it to the operation originator.
 	 * 
 	 * @param session
@@ -51,7 +40,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 	 * 
 	 * @param token
 	 *            the token identifying the operation
-	 * @param op
+	 * @param operation
 	 *            the identifier of the operation
 	 * @param result
 	 *            the result
@@ -59,8 +48,8 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 	 *            <code>true</code> if the result is actual an error
 	 */
 	public void sendResponse(Session session, CompletionToken token,
-			AmqpOperations op, Object result, boolean isError) {
-		Message message = null;
+			AmqpOperations operation, Object result, boolean isError) {
+		Message message=null; // NOPMD by georgiana on 10/12/11 3:34 PM
 
 		if (isError) {
 			// create error message
@@ -69,7 +58,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 			errorPayload.setErrorMessage(result.toString());
 			message = new Message(AmqpMessage.ERROR, errorPayload.build());
 		} else {
-			switch (op) {
+			switch (operation) {
 			case DECLARE_EXCHANGE:
 			case DECLARE_QUEUE:
 			case BIND_QUEUE:
@@ -77,8 +66,8 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 			case GET:
 			case CANCEL:
 			case ACK:
-				boolean ok = (Boolean) result;
-				if (ok) {
+				boolean success = (Boolean) result;
+				if (success) {
 					Ok.Builder okPayload = IdlCommon.Ok.newBuilder();
 					okPayload.setToken(token);
 					message = new Message(AmqpMessage.OK, okPayload.build());
@@ -96,13 +85,15 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 				message = new Message(AmqpMessage.CONSUME_REPLY,
 						consumePayload.build());
 				break;
+			default:
+				break;
 			}
 		}
 
 		// send response
 		publishResponse(session, message);
 		MosaicLogger.getLogger().trace(
-				"AmqpResponseTransmitter: sent response for " + op
+				"AmqpResponseTransmitter: sent response for " + operation
 						+ " request " + token.getMessageId() + " client id "
 						+ token.getClientId());
 	}

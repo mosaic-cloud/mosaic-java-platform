@@ -22,12 +22,12 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  */
 public class ConnectorProxy implements SessionCallbacks {
 
-	private IConfiguration configuration;
-	private String connectorId;
-	private ZeroMqChannel commChannel;
+	private final IConfiguration configuration;
+	private final String connectorId;
+	private final ZeroMqChannel commChannel;
 
-	private ResponseHandlerMap handlerMap;
-	private AbstractConnectorReactor responseReactor;
+	private final ResponseHandlerMap handlerMap;
+	private final AbstractConnectorReactor responseReactor;
 
 	/**
 	 * Creates a proxy for a resource.
@@ -65,9 +65,11 @@ public class ConnectorProxy implements SessionCallbacks {
 	 * 
 	 * @throws Throwable
 	 */
-	public synchronized void destroy() throws Throwable {
-		this.responseReactor.destroy();
-		this.commChannel.terminate(500);
+	public void destroy() throws Throwable {
+		synchronized (this) {
+			this.responseReactor.destroy();
+			this.commChannel.terminate(500);
+		}
 		MosaicLogger.getLogger().trace("ConnectorProxy destroyed.");
 	}
 
@@ -80,9 +82,11 @@ public class ConnectorProxy implements SessionCallbacks {
 	 *            the request
 	 * @throws IOException
 	 */
-	protected synchronized void sendRequest(Session session, Message request)
+	protected void sendRequest(Session session, Message request)
 			throws IOException {
-		session.send(request);
+		synchronized (this) {
+			session.send(request);
+		}
 	}
 
 	/**
@@ -149,5 +153,9 @@ public class ConnectorProxy implements SessionCallbacks {
 			ExceptionTracer.traceDeferred(e);
 		}
 		return null;
+	}
+
+	public IConfiguration getConfiguration() {
+		return configuration;
 	}
 }

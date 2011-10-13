@@ -9,7 +9,6 @@ import mosaic.core.configuration.IConfiguration;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
-import mosaic.driver.AbstractResourceDriver;
 
 import com.google.common.base.Preconditions;
 
@@ -71,43 +70,43 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 		super();
 		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
-		ResourceComponentCallbacks.callbacks = this;
-//		try {
-			IConfiguration configuration = PropertyTypeConfiguration.create(
-					ResourceComponentCallbacks.class.getClassLoader(),
-					"resource-conn.properties"); //$NON-NLS-1$
-			AbstractResourceDriver.driverConfiguration = configuration;
-			this.amqpGroup = ComponentIdentifier
-					.resolve(ConfigUtils
-							.resolveParameter(
-									AbstractResourceDriver.driverConfiguration,
-									ConfigProperties
-											.getString("ResourceComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-			this.kvGroup = ComponentIdentifier.resolve(ConfigUtils
-					.resolveParameter(
-							AbstractResourceDriver.driverConfiguration,
-							ConfigProperties
-									.getString("ResourceComponentCallbacks.1"), //$NON-NLS-1$
-							String.class, "")); //$NON-NLS-1$
-			this.mcGroup = ComponentIdentifier
-					.resolve(ConfigUtils
-							.resolveParameter(
-									AbstractResourceDriver.driverConfiguration,
-									ConfigProperties
-											.getString("ResourceComponentCallbacks.2"), String.class, //$NON-NLS-1$
-									"")); //$NON-NLS-1$
-			this.selfGroup = ComponentIdentifier
-					.resolve(ConfigUtils
-							.resolveParameter(
-									AbstractResourceDriver.driverConfiguration,
-									ConfigProperties
-											.getString("ResourceComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-			synchronized (this) {
-				this.status = Status.Created;
-			}
-//		} catch (Throwable e) {
-//			e.printStackTrace(System.err);
-//		}
+		ResourceComponentCallbacks.setComponentCallbacks(this);
+		// try {
+		IConfiguration configuration = PropertyTypeConfiguration.create(
+				ResourceComponentCallbacks.class.getClassLoader(),
+				"resource-conn.properties"); //$NON-NLS-1$
+		// set; // FIXME ?
+		this.amqpGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ResourceComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+		this.kvGroup = ComponentIdentifier.resolve(ConfigUtils
+				.resolveParameter(configuration, ConfigProperties
+						.getString("ResourceComponentCallbacks.1"), //$NON-NLS-1$
+						String.class, "")); //$NON-NLS-1$
+		this.mcGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ResourceComponentCallbacks.2"), String.class, //$NON-NLS-1$
+						"")); //$NON-NLS-1$
+		this.selfGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ResourceComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+		synchronized (this) {
+			this.status = Status.Created;
+		}
+		// } catch (Throwable e) {
+		// e.printStackTrace(System.err);
+		// }
+	}
+
+	private static void setComponentCallbacks(
+			ResourceComponentCallbacks callbacks) {
+		ResourceComponentCallbacks.callbacks = callbacks;
 	}
 
 	@Override
@@ -131,8 +130,8 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					} catch (Throwable e) {
 						ExceptionTracer.traceDeferred(e);
 					}
-					reply = ComponentCallReply.create(true, new Boolean(
-							succeeded), ByteBuffer.allocate(0),
+					reply = ComponentCallReply.create(true,
+							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
 							request.reference);
 					component.reply(reply);
 				} else if (request.operation.equals(ConfigProperties
@@ -145,8 +144,8 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					} catch (Throwable e) {
 						ExceptionTracer.traceDeferred(e);
 					}
-					reply = ComponentCallReply.create(true, new Boolean(
-							succeeded), ByteBuffer.allocate(0),
+					reply = ComponentCallReply.create(true,
+							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
 							request.reference);
 					component.reply(reply);
 				} else

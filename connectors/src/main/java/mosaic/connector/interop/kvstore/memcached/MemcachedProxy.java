@@ -30,9 +30,11 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  * communicate with a memcached driver.
  * 
  * @author Georgiana Macariu
+ * @param <T>
+ *            type of stored data
  * 
  */
-public class MemcachedProxy extends KeyValueProxy {
+public class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 
 	/**
 	 * Creates a proxy for key-value distributed storage systems.
@@ -53,7 +55,7 @@ public class MemcachedProxy extends KeyValueProxy {
 	 */
 	private MemcachedProxy(IConfiguration config, String connectorId,
 			MemcachedConnectorReactor reactor, ZeroMqChannel channel,
-			DataEncoder encoder) throws Throwable {
+			DataEncoder<T> encoder) throws Throwable {
 		super(config, connectorId, reactor, channel, encoder);
 	}
 
@@ -76,14 +78,15 @@ public class MemcachedProxy extends KeyValueProxy {
 	 * @return the proxy
 	 * @throws Throwable
 	 */
-	public static MemcachedProxy create(IConfiguration config,
-			String connectorIdentifier, String driverIdentifier, String bucket,
-			ZeroMqChannel channel, DataEncoder encoder) throws Throwable {
+	public static <T extends Object> MemcachedProxy<T> create(
+			IConfiguration config, String connectorIdentifier,
+			String driverIdentifier, String bucket, ZeroMqChannel channel,
+			DataEncoder<T> encoder) throws Throwable {
 		String connectorId = connectorIdentifier;
 		MemcachedConnectorReactor reactor = new MemcachedConnectorReactor(
-				config, encoder);
-		MemcachedProxy proxy = new MemcachedProxy(config, connectorId, reactor,
-				channel, encoder);
+				encoder);
+		MemcachedProxy<T> proxy = new MemcachedProxy<T>(config, connectorId,
+				reactor, channel, encoder);
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
@@ -100,41 +103,41 @@ public class MemcachedProxy extends KeyValueProxy {
 		return proxy;
 	}
 
-	public synchronized void set(String key, int exp, Object data,
+	public synchronized void set(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendSetMessage(key, data, handlers, exp);
 	}
 
-	public void add(String key, int exp, Object data,
+	public void add(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(MemcachedMessage.ADD_REQUEST, key, exp, data, handlers);
 	}
 
-	public synchronized void replace(String key, int exp, Object data,
+	public synchronized void replace(String key, int exp, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(MemcachedMessage.REPLACE_REQUEST, key, exp, data,
 				handlers);
 	}
 
-	public void append(String key, Object data,
+	public void append(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(MemcachedMessage.APPEND_REQUEST, key, 0, data,
 				handlers);
 	}
 
-	public void prepend(String key, Object data,
+	public void prepend(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(MemcachedMessage.PREPEND_REQUEST, key, 0, data,
 				handlers);
 	}
 
-	public void cas(String key, Object data,
+	public void cas(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendStoreMessage(MemcachedMessage.CAS_REQUEST, key, 0, data, handlers);
 	}
 
 	public void getBulk(List<String> keys,
-			List<IOperationCompletionHandler<Map<String, Object>>> handlers) {
+			List<IOperationCompletionHandler<Map<String, T>>> handlers) {
 		sendGetMessage(keys, handlers);
 	}
 
@@ -149,8 +152,7 @@ public class MemcachedProxy extends KeyValueProxy {
 	}
 
 	private void sendStoreMessage(MemcachedMessage mcMessage, String key,
-			int exp, Object data,
-			List<IOperationCompletionHandler<Boolean>> handlers) {
+			int exp, T data, List<IOperationCompletionHandler<Boolean>> handlers) {
 		try {
 			ByteString dataBytes = ByteString.copyFrom(this.dataEncoder
 					.encode(data));

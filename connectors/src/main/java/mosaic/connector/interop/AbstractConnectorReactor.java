@@ -3,7 +3,6 @@ package mosaic.connector.interop;
 import java.io.IOException;
 import java.util.List;
 
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.interop.idl.IdlCommon.CompletionToken;
@@ -32,21 +31,15 @@ public abstract class AbstractConnectorReactor {
 	 * {@link AbstractConnectorReactor#setDispatcher(ResponseHandlerMap)} is
 	 * called.
 	 * 
-	 * @param config
-	 *            the configurations required to initialize the proxy
 	 */
-	protected AbstractConnectorReactor(IConfiguration config) {
+	protected AbstractConnectorReactor() {
 		super();
-		this.session = null;
 	}
 
 	/**
 	 * Destroys this reactor.
-	 * 
-	 * @throws Throwable
 	 */
-	public synchronized void destroy() throws Throwable {
-	}
+	public abstract void destroy();
 
 	/**
 	 * Returns the dispatcher which holds the mappings between the requests and

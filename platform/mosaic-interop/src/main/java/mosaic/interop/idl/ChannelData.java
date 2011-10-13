@@ -7,8 +7,8 @@ package mosaic.interop.idl;
  * 
  */
 public class ChannelData {
-	String channelIdentifier;
-	String channelEndpoint;
+	private final String channelIdentifier;
+	private final String channelEndpoint;
 
 	/**
 	 * Creates a new channel data object.
@@ -27,53 +27,55 @@ public class ChannelData {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((channelEndpoint == null) ? 0 : channelEndpoint.hashCode());
-		result = prime
-				* result
-				+ ((channelIdentifier == null) ? 0 : channelIdentifier
+		final int prime = 31; // NOPMD by georgiana on 9/27/11 7:58 PM
+		int result = 1; // NOPMD by georgiana on 9/27/11 7:58 PM
+		result = (prime * result)
+				+ ((this.channelEndpoint == null) ? 0 : this.channelEndpoint
 						.hashCode());
+		result = (prime * result)
+				+ ((this.channelIdentifier == null) ? 0
+						: this.channelIdentifier.hashCode());
 		return result;
 	}
 
 	public String getChannelIdentifier() {
-		return channelIdentifier;
+		return this.channelIdentifier;
 	}
 
 	public String getChannelEndpoint() {
-		return channelEndpoint;
+		return this.channelEndpoint;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ChannelData other = (ChannelData) obj;
-		if (channelEndpoint == null) {
-			if (other.channelEndpoint != null)
-				return false;
-		} else if (!channelEndpoint.equals(other.channelEndpoint))
-			return false;
-		if (channelIdentifier == null) {
-			if (other.channelIdentifier != null)
-				return false;
-		} else if (!channelIdentifier.equals(other.channelIdentifier))
-			return false;
-		return true;
+		boolean isEqual;
+		isEqual = (this == obj);
+		if (!isEqual) {
+			if (obj instanceof ChannelData) {
+				ChannelData other = (ChannelData) obj;
+				isEqual = (obj == null)
+						|| (getClass() != obj.getClass())
+						|| ((this.channelEndpoint == null) && (other.channelEndpoint != null))
+						|| ((this.channelEndpoint != null) && !this.channelEndpoint
+								.equals(other.channelEndpoint))
+						|| ((this.channelIdentifier == null) && (other.channelIdentifier != null))
+						|| ((this.channelIdentifier != null) && !this.channelIdentifier
+								.equals(other.channelIdentifier));
+				isEqual ^= true;
+			}
+		}
+
+		return isEqual;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return channelIdentifier + "(" + channelEndpoint + ")";
+		return this.channelIdentifier + "(" + this.channelEndpoint + ")";
 	}
 
 }

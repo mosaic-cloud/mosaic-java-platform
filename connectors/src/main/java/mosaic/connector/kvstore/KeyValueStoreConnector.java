@@ -24,16 +24,17 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  * Connector for key-value distributed storage systems .
  * 
  * @author Georgiana Macariu
- * 
+ * @param <T>
+ *            type of stored data
  */
-public class KeyValueStoreConnector implements IKeyValueStore {
+public class KeyValueStoreConnector<T extends Object> implements IKeyValueStore<T> {
 
-	private KeyValueProxy proxy;
+	private KeyValueProxy<T> proxy;
 	private ExecutorService executor;
 	protected DataEncoder<?> dataEncoder;
 
-	protected KeyValueStoreConnector(KeyValueProxy proxy, int noThreads,
-			DataEncoder<?> encoder) {
+	protected KeyValueStoreConnector(KeyValueProxy<T> proxy, int noThreads,
+			DataEncoder<T> encoder) {
 		this.proxy = proxy;
 		this.executor = Executors.newFixedThreadPool(noThreads);
 		this.dataEncoder = encoder;
@@ -52,8 +53,8 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static KeyValueStoreConnector create(IConfiguration config,
-			DataEncoder<?> encoder) throws Throwable {
+	public static <T extends Object>  KeyValueStoreConnector<T> create(IConfiguration config,
+			DataEncoder<T> encoder) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -71,12 +72,12 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 				AbortingExceptionTracer.defaultInstance);
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.connect(driverChannel);
-		KeyValueProxy proxy = KeyValueProxy.create(config, connectorIdentifier,
+		KeyValueProxy<T> proxy = KeyValueProxy.create(config, connectorIdentifier,
 				driverIdentifier, bucket, channel, encoder);
 		MosaicLogger.getLogger().debug(
 				"KeyValueConnector connecting to " + driverChannel + " bucket "
 						+ bucket);
-		return new KeyValueStoreConnector(proxy, noThreads, encoder);
+		return new KeyValueStoreConnector<T>(proxy, noThreads, encoder);
 	}
 
 	/*
@@ -92,11 +93,11 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	}
 
 	@Override
-	public IResult<Object> get(final String key,
-			List<IOperationCompletionHandler<Object>> handlers,
-			CompletionInvocationHandler<Object> iHandler) {
-		IResult<Object> result = null;
-		final EventDrivenOperation<Object> op = new EventDrivenOperation<Object>(
+	public IResult<T> get(final String key,
+			List<IOperationCompletionHandler<T>> handlers,
+			CompletionInvocationHandler<T> iHandler) {
+		IResult<T> result = null;
+		final EventDrivenOperation<T> op = new EventDrivenOperation<T>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
 
@@ -107,7 +108,7 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 
 			}
 		});
-		result = new EventDrivenResult<Object>(op);
+		result = new EventDrivenResult<T>(op);
 		submitOperation(op.getOperation());
 
 		return result;
@@ -136,7 +137,7 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	}
 
 	@Override
-	public IResult<Boolean> set(final String key, final Object data,
+	public IResult<Boolean> set(final String key, final T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
@@ -187,7 +188,7 @@ public class KeyValueStoreConnector implements IKeyValueStore {
 	 *            the class for the type of the proxy
 	 * @return the proxy
 	 */
-	protected <T extends KeyValueProxy> T getProxy(Class<T> proxyClass) {
+	protected <P extends KeyValueProxy<T>> P getProxy(Class<P> proxyClass) {
 		return proxyClass.cast(this.proxy);
 	}
 

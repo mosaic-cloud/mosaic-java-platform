@@ -6,7 +6,11 @@ package mosaic.core.configuration;
  * @author Georgiana Macariu
  * 
  */
-public class ConfigUtils {
+public final class ConfigUtils {
+
+	private ConfigUtils() {
+	}
+
 	/**
 	 * Resolves a configuration parameter given its relative specification.
 	 * 
@@ -24,12 +28,21 @@ public class ConfigUtils {
 	 * @return the value of the parameter
 	 */
 	public static <T extends Object> T resolveParameter(
-			IConfiguration configuration, String identifier,
-			Class<T> valueClass, T defaultValue) {
-		if (configuration != null)
-			return (configuration.getParameter(
+			IConfiguration configuration, String identifier, // NOPMD by
+																// georgiana on
+																// 9/27/11 1:27
+																// PM
+			Class<T> valueClass, T defaultValue) { // NOPMD by georgiana on
+													// 9/27/11 1:27 PM
+		T retValue;
+		if (configuration == null) {
+			retValue = defaultValue;
+
+		} else {
+			retValue = configuration.getParameter(
 					ConfigurationIdentifier.resolveRelative(identifier),
-					valueClass).getValue(defaultValue));
-		return defaultValue;
+					valueClass).getValue(defaultValue);
+		}
+		return retValue;
 	}
 }

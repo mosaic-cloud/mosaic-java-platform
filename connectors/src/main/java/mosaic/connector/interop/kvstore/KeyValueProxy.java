@@ -35,11 +35,13 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  * driver.
  * 
  * @author Georgiana Macariu
+ * @param <T>
+ *            type of stored data
  * 
  */
-public class KeyValueProxy extends ConnectorProxy {
+public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 
-	protected DataEncoder dataEncoder;
+	protected DataEncoder<T> dataEncoder;
 
 	/**
 	 * Creates a proxy for key-value distributed storage systems.
@@ -59,7 +61,7 @@ public class KeyValueProxy extends ConnectorProxy {
 	 */
 	protected KeyValueProxy(IConfiguration config, String connectorId,
 			AbstractConnectorReactor reactor, ZeroMqChannel channel,
-			DataEncoder encoder) throws Throwable {
+			DataEncoder<T> encoder) throws Throwable {
 		super(config, connectorId, reactor, channel);
 		this.dataEncoder = encoder;
 	}
@@ -83,14 +85,15 @@ public class KeyValueProxy extends ConnectorProxy {
 	 * @return the proxy
 	 * @throws Throwable
 	 */
-	public static KeyValueProxy create(IConfiguration config,
-			String connectorIdentifier, String driverIdentifier, String bucket,
-			ZeroMqChannel channel, DataEncoder encoder) throws Throwable {
+	public static <T extends Object> KeyValueProxy<T> create(
+			IConfiguration config, String connectorIdentifier,
+			String driverIdentifier, String bucket, ZeroMqChannel channel,
+			DataEncoder<T> encoder) throws Throwable {
 		String connectorId = connectorIdentifier;
-		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(config,
+		AbstractConnectorReactor reactor = new KeyValueConnectorReactor(
 				encoder);
-		KeyValueProxy proxy = new KeyValueProxy(config, connectorId, reactor,
-				channel, encoder);
+		KeyValueProxy<T> proxy = new KeyValueProxy<T>(config, connectorId,
+				reactor, channel, encoder);
 
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
@@ -124,13 +127,12 @@ public class KeyValueProxy extends ConnectorProxy {
 		super.destroy();
 	}
 
-	public void set(String key, Object data,
+	public void set(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		sendSetMessage(key, data, handlers);
 	}
 
-	public void get(String key,
-			List<IOperationCompletionHandler<Object>> handlers) {
+	public void get(String key, List<IOperationCompletionHandler<T>> handlers) {
 		List<String> keys = new ArrayList<String>();
 		keys.add(key);
 		sendGetMessage(keys, handlers);
@@ -208,7 +210,7 @@ public class KeyValueProxy extends ConnectorProxy {
 		}
 	}
 
-	protected void sendSetMessage(String key, Object data,
+	protected void sendSetMessage(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers, Integer... exp) {
 		String id = UUID.randomUUID().toString();
 		MosaicLogger.getLogger().trace(
@@ -249,8 +251,8 @@ public class KeyValueProxy extends ConnectorProxy {
 		}
 	}
 
-	protected <T extends Object> void sendGetMessage(List<String> keys,
-			List<IOperationCompletionHandler<T>> handlers) {
+	protected <D extends Object> void sendGetMessage(List<String> keys,
+			List<IOperationCompletionHandler<D>> handlers) {
 		String id = UUID.randomUUID().toString();
 		MosaicLogger.getLogger().trace(
 				"KeyValueProxy - Sending GET request [" + id + "]...");
@@ -276,7 +278,7 @@ public class KeyValueProxy extends ConnectorProxy {
 					getResponseReactor(KeyValueConnectorReactor.class)
 							.getSession(), message);
 		} catch (IOException e) {
-			for (IOperationCompletionHandler<T> handler : handlers) {
+			for (IOperationCompletionHandler<D> handler : handlers) {
 				handler.onFailure(e);
 			}
 			ExceptionTracer.traceDeferred(new ConnectionException(

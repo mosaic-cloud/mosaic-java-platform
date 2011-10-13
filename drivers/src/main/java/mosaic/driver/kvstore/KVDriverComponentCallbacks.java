@@ -1,5 +1,6 @@
 package mosaic.driver.kvstore;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,6 @@ import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.driver.AbstractDriverComponentCallbacks;
-import mosaic.driver.AbstractResourceDriver;
 import mosaic.driver.ConfigProperties;
 import mosaic.driver.interop.kvstore.KeyValueStub;
 import mosaic.interop.kvstore.KeyValueSession;
@@ -23,6 +23,7 @@ import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
+import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.tools.Monitor;
@@ -37,6 +38,7 @@ import eu.mosaic_cloud.tools.Monitor;
  */
 public final class KVDriverComponentCallbacks extends
 		AbstractDriverComponentCallbacks {
+
 	private String driverName;
 
 	/**
@@ -49,28 +51,24 @@ public final class KVDriverComponentCallbacks extends
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(KVDriverComponentCallbacks.class
 							.getResourceAsStream("kv.properties"));
-			AbstractResourceDriver.driverConfiguration = configuration;
+			setDriverConfiguration(configuration);
 			this.resourceGroup = ComponentIdentifier.resolve(ConfigUtils
-					.resolveParameter(
-							AbstractResourceDriver.driverConfiguration,
+					.resolveParameter(getDriverConfiguration(),
 							ConfigProperties
 									.getString("KVDriverComponentCallbacks.0"), //$NON-NLS-1$
 							String.class, "")); //$NON-NLS-1$
 			this.selfGroup = ComponentIdentifier.resolve(ConfigUtils
-					.resolveParameter(
-							AbstractResourceDriver.driverConfiguration,
+					.resolveParameter(getDriverConfiguration(),
 							ConfigProperties
 									.getString("KVDriverComponentCallbacks.1"), //$NON-NLS-1$
 							String.class, "")); //$NON-NLS-1$
 			this.driverName = ConfigUtils.resolveParameter(
-					AbstractResourceDriver.driverConfiguration,
+					getDriverConfiguration(),
 					ConfigProperties.getString("KVStoreDriver.6"), //$NON-NLS-1$
 					String.class, ""); //$NON-NLS-1$
 
-			synchronized (this.monitor) {
-				this.status = Status.Created;
-			}
-		} catch (Throwable e) {
+			this.status = Status.Created;
+		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 		}
 	}
@@ -87,13 +85,11 @@ public final class KVDriverComponentCallbacks extends
 				if (request.operation.equals(ConfigProperties
 						.getString("KVDriverComponentCallbacks.5"))) { //$NON-NLS-1$
 					String channelEndpoint = ConfigUtils.resolveParameter(
-							AbstractResourceDriver.driverConfiguration,
-							ConfigProperties
+							getDriverConfiguration(), ConfigProperties
 									.getString("KVDriverComponentCallbacks.3"), //$NON-NLS-1$
 							String.class, "");
 					String channelId = ConfigUtils.resolveParameter(
-							AbstractResourceDriver.driverConfiguration,
-							ConfigProperties
+							getDriverConfiguration(), ConfigProperties
 									.getString("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
 							String.class, "");
 					Map<String, String> outcome = new HashMap<String, String>();
@@ -102,10 +98,12 @@ public final class KVDriverComponentCallbacks extends
 					ComponentCallReply reply = ComponentCallReply.create(true,
 							outcome, ByteBuffer.allocate(0), request.reference);
 					component.reply(reply);
-				} else
+				} else {
 					throw new UnsupportedOperationException();
-			} else
+				}
+			} else {
 				throw new UnsupportedOperationException();
+			}
 			return null;
 		}
 	}
@@ -115,10 +113,10 @@ public final class KVDriverComponentCallbacks extends
 			ComponentCallReply reply) {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
-			if (this.pendingReference == reply.reference)
+			if (this.pendingReference == reply.reference) {
 				if (this.status == Status.WaitingResourceResolved) {
-					this.pendingReference = null;
-					String ip;
+					//					this.pendingReference = null;
+					String ipAddress;
 					Integer port;
 					try {
 						Preconditions.checkArgument(reply.ok);
@@ -128,11 +126,11 @@ public final class KVDriverComponentCallbacks extends
 						MosaicLogger.getLogger().trace(
 								"Resource search returned " + outputs);
 
-						ip = (String) outputs.get("ip"); //$NON-NLS-1$
-						Preconditions.checkNotNull(ip);
+						ipAddress = (String) outputs.get("ip"); //$NON-NLS-1$
+						Preconditions.checkArgument(ipAddress != null);
 						port = (Integer) outputs.get("port"); //$NON-NLS-1$
-						Preconditions.checkNotNull(port);
-					} catch (final Throwable exception) {
+						Preconditions.checkArgument(port != null);
+					} catch (IllegalArgumentException exception) {
 						this.terminate();
 						ExceptionTracer
 								.traceIgnored(
@@ -142,28 +140,30 @@ public final class KVDriverComponentCallbacks extends
 						throw new IllegalStateException();
 					}
 					MosaicLogger.getLogger().trace(
-							"Resolved Riak on " + ip + ":" //$NON-NLS-1$ //$NON-NLS-2$
+							"Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
 									+ port);
-					this.configureDriver(ip, port.toString());
+					this.configureDriver(ipAddress, port.toString());
 					if (this.selfGroup != null) {
 						this.pendingReference = ComponentCallReference.create();
 						this.status = Status.Unregistered;
 						this.component.register(this.selfGroup,
 								this.pendingReference);
 					}
-				} else
-					throw (new IllegalStateException());
-			else
-				throw (new IllegalStateException());
+				} else {
+					throw new IllegalStateException();
+				}
+			} else {
+				throw new IllegalStateException();
+			}
 		}
 		return null;
 	}
 
 	private void configureDriver(String brokerIp, String port) {
-		AbstractResourceDriver.driverConfiguration.addParameter(
+		getDriverConfiguration().addParameter(
 				ConfigurationIdentifier.resolveRelative(ConfigProperties
 						.getString("KVStoreDriver.0")), brokerIp); //$NON-NLS-1$
-		AbstractResourceDriver.driverConfiguration.addParameter(
+		getDriverConfiguration().addParameter(
 				ConfigurationIdentifier.resolveRelative(ConfigProperties
 						.getString("KVStoreDriver.1")), port); //$NON-NLS-1$
 
@@ -200,16 +200,16 @@ public final class KVDriverComponentCallbacks extends
 
 	@Override
 	public CallbackReference registerReturn(Component component,
-			ComponentCallReference reference, boolean ok) {
+			ComponentCallReference reference, boolean success) {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			if (this.pendingReference == reference) {
-				this.pendingReference = null;
-				if (!ok) {
+				//				this.pendingReference = null;
+				if (!success) {
 					ExceptionTracer.traceHandled(new Exception(
 							"failed registering to group; terminating!")); //$NON-NLS-1$
 					this.component.terminate();
-					throw (new IllegalStateException());
+					throw new IllegalStateException();
 				}
 				MosaicLogger
 						.getLogger()
@@ -223,13 +223,36 @@ public final class KVDriverComponentCallbacks extends
 						ConfigProperties
 								.getString("KVDriverComponentCallbacks.3"),
 						KeyValueSession.DRIVER);
-				this.stub = KeyValueStub.create(
-						AbstractResourceDriver.driverConfiguration,
+				this.stub = KeyValueStub.create(getDriverConfiguration(),
 						driverChannel);
 
-			} else
-				throw (new IllegalStateException());
+			} else {
+				throw new IllegalStateException();
+			}
 		}
 		return null;
 	}
+
+	@Override
+	public void deassigned(ComponentCallbacks trigger,
+			ComponentCallbacks newCallbacks) {
+		// nothing to do here
+	}
+
+	@Override
+	public void reassigned(ComponentCallbacks trigger,
+			ComponentCallbacks oldCallbacks) {
+		// nothing to do here
+	}
+
+	@Override
+	public void registered(ComponentCallbacks trigger) {
+		// nothing to do here
+	}
+
+	@Override
+	public void unregistered(ComponentCallbacks trigger) {
+		// nothing to do here
+	}
+
 }

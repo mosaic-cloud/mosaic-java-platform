@@ -11,7 +11,7 @@ import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.ops.IResult;
 import mosaic.core.utils.SerDesUtils;
-import mosaic.driver.kvstore.BaseKeyValueDriver;
+import mosaic.driver.kvstore.AbstractKeyValueDriver;
 import mosaic.driver.kvstore.RiakRestDriver;
 
 import org.junit.AfterClass;
@@ -19,12 +19,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 
 @RunWith(SerialJunitRunner.class)
 public class RiakRestDriverTest {
-	private static BaseKeyValueDriver wrapper;
+	private static AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;
 
 	@BeforeClass
@@ -49,12 +48,10 @@ public class RiakRestDriverTest {
 	public void setUp() {
 	}
 
-	@Test
 	public void testConnection() {
 		Assert.assertNotNull(RiakRestDriverTest.wrapper);
 	}
 
-	@Test
 	public void testSet() throws IOException {
 		String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
 		byte[] b1 = SerDesUtils.pojoToBytes("fantastic");
@@ -84,7 +81,6 @@ public class RiakRestDriverTest {
 		}
 	}
 
-	@Test
 	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = RiakRestDriverTest.keyPrefix + "_key_famous";
 		IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>(
@@ -104,7 +100,6 @@ public class RiakRestDriverTest {
 		}
 	}
 
-	@Test
 	public void testList() {
 		String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
 		String k2 = RiakRestDriverTest.keyPrefix + "_key_famous";
@@ -131,7 +126,6 @@ public class RiakRestDriverTest {
 		}
 	}
 
-	@Test
 	public void testDelete() {
 		String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
@@ -165,7 +159,13 @@ public class RiakRestDriverTest {
 		}
 	}
 
-	public static void main(String[] args) {
-		JUnitCore.main("mosaic.driver.kvstore.tests.RiakRestDriverTest");
+	@Test
+	public void testDriver() throws IOException, ClassNotFoundException {
+		testConnection();
+		testSet();
+		testGet();
+		testList();
+		testDelete();
 	}
+
 }

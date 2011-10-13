@@ -26,6 +26,7 @@ import mosaic.core.exceptions.ResultSetException;
  */
 public class EventDrivenOperation<T> implements IOperation<T>,
 		IOperationCompletionHandler<T> {
+
 	private CountDownLatch doneSignal;
 	private AtomicReference<T> result;
 	private AtomicReference<Throwable> exception;
@@ -39,7 +40,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	 *            handlers to be called when the operation completes
 	 */
 	public EventDrivenOperation(
-			List<IOperationCompletionHandler<T>> complHandlers) {
+			final List<IOperationCompletionHandler<T>> complHandlers) {
 		super();
 		this.doneSignal = new CountDownLatch(1);
 		this.result = new AtomicReference<T>();
@@ -60,8 +61,8 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	 *            completion handlers are executed
 	 */
 	public EventDrivenOperation(
-			List<IOperationCompletionHandler<T>> complHandlers,
-			CompletionInvocationHandler<T> invocationHandler) {
+			final List<IOperationCompletionHandler<T>> complHandlers,
+			final CompletionInvocationHandler<T> invocationHandler) {
 		this(complHandlers);
 
 		if (invocationHandler != null) {
@@ -74,8 +75,8 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 				@SuppressWarnings("unchecked")
 				IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
 						.newProxyInstance(
-								handler.getClass().getClassLoader(),
-								new Class[] { IOperationCompletionHandler.class },
+								Thread.currentThread().getContextClassLoader(),//handler.getClass().getClassLoader(),
+								new Class[] { IOperationCompletionHandler.class },  // NOPMD by georgiana on 10/12/11 5:01 PM
 								iHandler);
 				this.completionHandlers.add(proxy);
 			}
@@ -122,7 +123,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 
 	@Override
 	public void onSuccess(T response) {
-		if (!this.result.compareAndSet(null, (response))) {
+		if (!this.result.compareAndSet(null, response)) {
 			ExceptionTracer.traceDeferred(new ResultSetException(
 					"Operation result cannot be set."));
 		}

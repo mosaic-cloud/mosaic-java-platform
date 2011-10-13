@@ -30,7 +30,7 @@ public enum KeyValueMessage implements MessageSpecification {
 			MessageType.Exchange, KeyValuePayloads.ListRequest.class), LIST_REPLY(
 			MessageType.Exchange, KeyValuePayloads.ListReply.class);
 
-	public final PayloadCoder coder;
+	public PayloadCoder coder = null;
 	public final String identifier;
 	public final MessageType type;
 
@@ -49,24 +49,22 @@ public enum KeyValueMessage implements MessageSpecification {
 			// this.coder = new DefaultJavaSerializationPayloadCoder(clasz,
 			// false);
 			this.coder = new DefaultPBPayloadCoder(clasz, false);
-		} else {
-			this.coder = null;
 		}
 	}
 
 	@Override
 	public String getIdentifier() {
-		return (this.identifier);
+		return this.identifier;
 	}
 
 	@Override
 	public PayloadCoder getPayloadCoder() {
-		return (this.coder);
+		return this.coder;
 	}
 
 	@Override
 	public MessageType getType() {
-		return (this.type);
+		return this.type;
 	}
 
 }

@@ -15,13 +15,16 @@ import org.codehaus.jackson.map.SerializationConfig;
  * @author Georgiana Macariu
  * 
  */
-public class SerDesUtils {
+public final class SerDesUtils {
 
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
 	static {
 		SerDesUtils.objectMapper.configure(
 				SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+	}
+
+	private SerDesUtils() {
 	}
 
 	/**
@@ -31,13 +34,12 @@ public class SerDesUtils {
 	 *            the object to convert.
 	 * @return the associated byte array.
 	 */
-	public static byte[] pojoToBytes(Object object) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
+	public static byte[] pojoToBytes(final Object object) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(object);
 		oos.close();
-		byte[] bytes = baos.toByteArray();
-		return bytes;
+		return baos.toByteArray();
 	}
 
 	/**
@@ -53,12 +55,12 @@ public class SerDesUtils {
 	public static Object toObject(byte[] bytes) throws IOException,
 			ClassNotFoundException {
 		Object object = null;
-		if (bytes.length == 0)
-			return null;
-		ObjectInputStream stream = new ObjectInputStream(
-				new ByteArrayInputStream(bytes));
-		object = stream.readObject();
-		stream.close();
+		if (bytes.length > 0) {
+			ObjectInputStream stream = new ObjectInputStream(
+					new ByteArrayInputStream(bytes));
+			object = stream.readObject();
+			stream.close();
+		}
 		return object;
 	}
 

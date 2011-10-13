@@ -1,6 +1,5 @@
 package mosaic.driver.interop;
 
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
@@ -14,22 +13,12 @@ import eu.mosaic_cloud.interoperability.core.Session;
 public class ResponseTransmitter {
 
 	/**
-	 * Creates a new transmitter.
-	 * 
-	 * @param config
-	 *            the configurations required to initialize the transmitter
-	 */
-	public ResponseTransmitter(IConfiguration config) {
-		super();
-
-	}
-
-	/**
 	 * Destroys the transmitter.
 	 */
-
-	public synchronized void destroy() {
-		MosaicLogger.getLogger().trace("ResponseTransmitter destroyed.");
+	public void destroy() {
+		synchronized (this) {
+			MosaicLogger.getLogger().trace("ResponseTransmitter destroyed.");
+		}
 	}
 
 	/**
@@ -40,8 +29,10 @@ public class ResponseTransmitter {
 	 * @param message
 	 *            the message
 	 */
-	protected synchronized void publishResponse(Session session, Message message) {
-		session.send(message);
+	protected void publishResponse(Session session, Message message) {
+		synchronized (this) {
+			session.send(message);
+		}
 	}
 
 }

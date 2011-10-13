@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.IOperationType;
 import mosaic.driver.interop.ResponseTransmitter;
@@ -35,23 +34,13 @@ import eu.mosaic_cloud.interoperability.core.Session;
 public class KeyValueResponseTransmitter extends ResponseTransmitter {
 
 	/**
-	 * Creates a new transmitter.
-	 * 
-	 * @param config
-	 *            the configurations required to initialize the transmitter
-	 */
-	public KeyValueResponseTransmitter(IConfiguration config) {
-		super(config);
-	}
-
-	/**
 	 * Builds the result and sends it to the operation originator.
 	 * 
 	 * @param session
 	 *            the session to which the response message belongs
 	 * @param token
 	 *            the token identifying the operation
-	 * @param op
+	 * @param operation
 	 *            the identifier of the operation
 	 * @param result
 	 *            the result
@@ -59,20 +48,17 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 	 *            <code>true</code> if the result is actual an error
 	 */
 	public void sendResponse(Session session, CompletionToken token,
-			IOperationType op, Object result, boolean isError) {
-
-		// if (!(op instanceof KeyValueOperations))
-		// return;
-
-		packAndSend(session, token, (KeyValueOperations) op, result, isError);
+			IOperationType operation, Object result, boolean isError) {
+		packAndSend(session, token, (KeyValueOperations) operation, result,
+				isError);
 	}
 
 	protected void packAndSend(Session session, CompletionToken token,
-			KeyValueOperations op, Object result, boolean isError) {
-		Message message = null;
+			KeyValueOperations operation, Object result, boolean isError) {
+		Message message;
 
 		MosaicLogger.getLogger().trace(
-				"KeyValueResponseTransmitter: send response for " + op
+				"KeyValueResponseTransmitter: send response for " + operation
 						+ " request " + token.getMessageId() + " client id "
 						+ token.getClientId());
 
@@ -83,7 +69,7 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 			errorPayload.setErrorMessage(result.toString());
 			message = new Message(KeyValueMessage.ERROR, errorPayload.build());
 		} else {
-			message = buildKeyValueResponse(op, token, result);
+			message = buildKeyValueResponse(operation, token, result);
 		}
 
 		// send response
@@ -93,7 +79,7 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 	/**
 	 * Builds responses for the basic key-value store operaions.
 	 * 
-	 * @param op
+	 * @param operation
 	 *            the operation
 	 * @param token
 	 *            the token of the request
@@ -101,60 +87,57 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 	 *            the result of the operation
 	 * @return the message
 	 */
-	protected Message buildKeyValueResponse(KeyValueOperations op,
+	protected Message buildKeyValueResponse(KeyValueOperations operation, // NOPMD by georgiana on 10/12/11 2:18 PM
 			CompletionToken token, Object result) {
-		Message message = null;
-//		try {
-			switch (op) {
-			case SET:
-			case DELETE:
-				boolean ok = (Boolean) result;
-				if (ok) {
-					Ok.Builder okPayload = IdlCommon.Ok.newBuilder();
-					okPayload.setToken(token);
-					message = new Message(KeyValueMessage.OK, okPayload.build());
-				} else {
-					NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder();
-					nokPayload.setToken(token);
-					message = new Message(KeyValueMessage.NOK,
-							nokPayload.build());
-				}
-				break;
-			case LIST:
-				ListReply.Builder listPayload = KeyValuePayloads.ListReply
-						.newBuilder();
-				listPayload.setToken(token);
-				@SuppressWarnings("unchecked")
-				List<String> resList = (List<String>) result;
-				listPayload.addAllKeys(resList);
-				message = new Message(KeyValueMessage.LIST_REPLY,
-						listPayload.build());
-				break;
-			case GET:
-				GetReply.Builder getPayload = KeyValuePayloads.GetReply
-						.newBuilder();
-				getPayload.setToken(token);
-
-				@SuppressWarnings("unchecked")
-				Map<String, byte[]> resMap = (Map<String, byte[]>) result;
-				List<KVEntry> getResults = new ArrayList<KVEntry>();
-				for (Map.Entry<String, byte[]> entry : resMap.entrySet()) {
-					KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry
-							.newBuilder();
-					kvEntry.setKey(entry.getKey());
-					kvEntry.setValue(ByteString.copyFrom(entry.getValue()));
-					getResults.add(kvEntry.build());
-				}
-				getPayload.addAllResults(getResults);
-				message = new Message(KeyValueMessage.GET_REPLY,
-						getPayload.build());
-				break;
-			default:
-				break;
+		Message message = null; // NOPMD by georgiana on 10/12/11 2:15 PM
+		switch (operation) {
+		case SET:
+		case DELETE:
+			boolean success = (Boolean) result;
+			if (success) {
+				Ok.Builder okPayload = IdlCommon.Ok.newBuilder();
+				okPayload.setToken(token);
+				message = new Message(KeyValueMessage.OK, okPayload.build()); // NOPMD by georgiana on 10/12/11 2:16 PM
+			} else {
+				NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder();
+				nokPayload.setToken(token);
+				message = new Message(KeyValueMessage.NOK, nokPayload.build()); // NOPMD by georgiana on 10/12/11 2:16 PM
 			}
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
+			break;
+		case LIST:
+			ListReply.Builder listPayload = KeyValuePayloads.ListReply
+					.newBuilder();
+			listPayload.setToken(token);
+			@SuppressWarnings("unchecked")
+			List<String> resList = (List<String>) result;
+			listPayload.addAllKeys(resList);
+			message = new Message(KeyValueMessage.LIST_REPLY, // NOPMD by georgiana on 10/12/11 2:16 PM
+					listPayload.build());
+			break;
+		case GET:
+			GetReply.Builder getPayload = KeyValuePayloads.GetReply
+					.newBuilder();
+			getPayload.setToken(token);
+
+			@SuppressWarnings("unchecked")
+			Map<String, byte[]> resMap = (Map<String, byte[]>) result;
+			List<KVEntry> getResults = new ArrayList<KVEntry>();
+			for (Map.Entry<String, byte[]> entry : resMap.entrySet()) {
+				KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry.newBuilder();
+				kvEntry.setKey(entry.getKey());
+				if (entry.getValue() == null) {
+					kvEntry.setValue(ByteString.EMPTY);
+				} else {
+					kvEntry.setValue(ByteString.copyFrom(entry.getValue()));
+				}
+				getResults.add(kvEntry.build());
+			}
+			getPayload.addAllResults(getResults);
+			message = new Message(KeyValueMessage.GET_REPLY, getPayload.build());
+			break;
+		default:
+			break;
+		}
 		return message;
 	}
 

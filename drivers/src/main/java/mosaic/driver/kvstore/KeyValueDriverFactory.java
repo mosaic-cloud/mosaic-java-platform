@@ -13,20 +13,23 @@ import mosaic.driver.kvstore.memcached.MemcachedDriver;
  * @author Georgiana Macariu
  * 
  */
-public class KeyValueDriverFactory {
+public final class KeyValueDriverFactory {
 	public enum DriverType {
 		REDIS(RedisDriver.class), MEMCACHED(MemcachedDriver.class), RIAKREST(
 				RiakRestDriver.class), RIAKPB(RiakPBDriver.class);
 
-		private final Class<? extends BaseKeyValueDriver> driverClass;
+		private final Class<? extends AbstractKeyValueDriver> driverClass;
 
-		DriverType(Class<? extends BaseKeyValueDriver> canonicalClassName) {
+		DriverType(Class<? extends AbstractKeyValueDriver> canonicalClassName) {
 			this.driverClass = canonicalClassName;
 		}
 
-		public Class<? extends BaseKeyValueDriver> getDriverClass() {
+		public Class<? extends AbstractKeyValueDriver> getDriverClass() {
 			return this.driverClass;
 		}
+	}
+
+	private KeyValueDriverFactory() {
 	}
 
 	/**
@@ -40,10 +43,10 @@ public class KeyValueDriverFactory {
 	 * @throws ConnectorNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
-	public static BaseKeyValueDriver createDriver(String driverName,
+	public static AbstractKeyValueDriver createDriver(String driverName,
 			IConfiguration config) throws DriverNotFoundException {
 		DriverType type = null;
-		BaseKeyValueDriver driver = null;
+		AbstractKeyValueDriver driver = null;
 
 		for (DriverType t : DriverType.values()) {
 			if (t.name().equalsIgnoreCase(driverName)) {
@@ -56,11 +59,13 @@ public class KeyValueDriverFactory {
 				Class<?> driverClass = type.getDriverClass();
 				Method createMethod = driverClass.getMethod("create",
 						IConfiguration.class);
-				driver = (BaseKeyValueDriver) createMethod.invoke(null, config);
+				driver = (AbstractKeyValueDriver) createMethod.invoke(null,
+						config);
 			} catch (Exception e) {
 				ExceptionTracer.traceDeferred(e);
-				DriverNotFoundException ex = new DriverNotFoundException(e);
-				throw ex;
+				DriverNotFoundException exception = new DriverNotFoundException(
+						e);
+				throw exception;
 			}
 		}
 		return driver;

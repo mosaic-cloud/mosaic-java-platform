@@ -43,12 +43,14 @@ public class DefaultPBPayloadCoder implements PayloadCoder {
 	public Object decode(ByteBuffer buffer) throws Throwable {
 		Method createMethod = this.clasz.getMethod("parseFrom", byte[].class);
 		Object object = createMethod.invoke(null, buffer.array());
-		if (!this.nullAllowed && (object == null))
-			throw (new IOException("unexpected null object"));
-		if (!this.clasz.isInstance(object))
-			throw (new IOException(String.format(
-					"unexpected object class: `%s`", object.getClass())));
-		return (this.clasz.cast(object));
+		if (!this.nullAllowed && (object == null)) {
+			throw new IOException("unexpected null object");
+		}
+		if (!this.clasz.isInstance(object)) {
+			throw new IOException(String.format(
+					"unexpected object class: `%s`", object.getClass()));
+		}
+		return this.clasz.cast(object);
 	}
 
 	@Override
@@ -58,8 +60,7 @@ public class DefaultPBPayloadCoder implements PayloadCoder {
 		}
 		Preconditions.checkArgument(this.clasz.isInstance(object));
 		byte[] objectBytes = this.clasz.cast(object).toByteArray();
-		ByteBuffer buffer = ByteBuffer.wrap(objectBytes);
-		return buffer;
+		return ByteBuffer.wrap(objectBytes);
 	}
 
 }

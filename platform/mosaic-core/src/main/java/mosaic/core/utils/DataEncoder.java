@@ -10,7 +10,8 @@ package mosaic.core.utils;
  * @author Georgiana Macariu
  * 
  */
-public interface DataEncoder<T> {
+public  interface DataEncoder<T extends Object> {
+
 	/**
 	 * Encodes (serializes) an object as a stream of bytes.
 	 * 
@@ -18,7 +19,7 @@ public interface DataEncoder<T> {
 	 *            the data to serialize
 	 * @return the bytes
 	 */
-	byte[] encode(T data) throws Exception;
+	byte[] encode(T data) throws Exception; // NOPMD by georgiana on 10/12/11 5:02 PM
 
 	/**
 	 * Decodes (deserializes) the data.
@@ -27,6 +28,6 @@ public interface DataEncoder<T> {
 	 *            data bytes
 	 * @return the decoded object
 	 */
-	T decode(byte[] dataBytes) throws Exception;
+	T decode(byte[] dataBytes) throws Exception; // NOPMD by georgiana on 10/12/11 5:02 PM
 
 }

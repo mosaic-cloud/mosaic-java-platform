@@ -1,5 +1,6 @@
 package mosaic.driver.queue.amqp;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,6 @@ import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
 import mosaic.driver.AbstractDriverComponentCallbacks;
-import mosaic.driver.AbstractResourceDriver;
 import mosaic.driver.ConfigProperties;
 import mosaic.driver.interop.queue.amqp.AmqpStub;
 import mosaic.interop.amqp.AmqpSession;
@@ -23,6 +23,7 @@ import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
+import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.tools.Monitor;
@@ -48,26 +49,24 @@ public final class AmqpDriverComponentCallbacks extends
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(AmqpDriverComponentCallbacks.class
 							.getResourceAsStream("amqp.properties"));
-			AbstractResourceDriver.driverConfiguration = configuration;
+			setDriverConfiguration(configuration);
 			this.resourceGroup = ComponentIdentifier
-					.resolve(ConfigUtils
-							.resolveParameter(
-									AbstractResourceDriver.driverConfiguration,
-									ConfigProperties
-											.getString("AmqpDriverComponentCallbacks.0"), //$NON-NLS-1$
-									String.class, "")); //$NON-NLS-1$
+					.resolve(ConfigUtils.resolveParameter(
+							getDriverConfiguration(),
+							ConfigProperties
+									.getString("AmqpDriverComponentCallbacks.0"), //$NON-NLS-1$
+							String.class, "")); //$NON-NLS-1$
 			this.selfGroup = ComponentIdentifier
-					.resolve(ConfigUtils
-							.resolveParameter(
-									AbstractResourceDriver.driverConfiguration,
-									ConfigProperties
-											.getString("AmqpDriverComponentCallbacks.1"), //$NON-NLS-1$
-									String.class, "")); //$NON-NLS-1$
+					.resolve(ConfigUtils.resolveParameter(
+							getDriverConfiguration(),
+							ConfigProperties
+									.getString("AmqpDriverComponentCallbacks.1"), //$NON-NLS-1$
+							String.class, "")); //$NON-NLS-1$
 
 			synchronized (this) {
 				this.status = Status.Created;
 			}
-		} catch (Throwable e) {
+		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
 		}
 	}
@@ -84,13 +83,13 @@ public final class AmqpDriverComponentCallbacks extends
 						.getString("AmqpDriverComponentCallbacks.5"))) { //$NON-NLS-1$
 					String channelEndpoint = ConfigUtils
 							.resolveParameter(
-									AbstractResourceDriver.driverConfiguration,
+									getDriverConfiguration(),
 									ConfigProperties
 											.getString("AmqpDriverComponentCallbacks.3"), //$NON-NLS-1$
 									String.class, "");
 					String channelId = ConfigUtils
 							.resolveParameter(
-									AbstractResourceDriver.driverConfiguration,
+									getDriverConfiguration(),
 									ConfigProperties
 											.getString("AmqpDriverComponentCallbacks.4"), //$NON-NLS-1$
 									String.class, "");
@@ -100,10 +99,12 @@ public final class AmqpDriverComponentCallbacks extends
 					ComponentCallReply reply = ComponentCallReply.create(true,
 							outcome, ByteBuffer.allocate(0), request.reference);
 					component.reply(reply);
-				} else
+				} else {
 					throw new UnsupportedOperationException();
-			} else
+				}
+			} else {
 				throw new UnsupportedOperationException();
+			}
 			return null;
 		}
 	}
@@ -113,84 +114,75 @@ public final class AmqpDriverComponentCallbacks extends
 			ComponentCallReply reply) {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
-			if (this.pendingReference == reply.reference)
-				if (this.status == Status.WaitingResourceResolved) {
-					this.pendingReference = null;
-					String rabbitmqTransport;
-					String brokerIp;
-					Integer brokerPort;
-					String user;
-					String password;
-					String virtualHost;
-					try {
-						Preconditions.checkArgument(reply.ok);
-						Preconditions
-								.checkArgument(reply.outputsOrError instanceof Map);
-						final Map<?, ?> outputs = (Map<?, ?>) reply.outputsOrError;
-						rabbitmqTransport = (String) outputs.get("transport"); //$NON-NLS-1$
-						Preconditions.checkArgument("tcp" //$NON-NLS-1$
-								.equals(rabbitmqTransport));
-						brokerIp = (String) outputs.get("ip"); //$NON-NLS-1$
-						Preconditions.checkNotNull(brokerIp);
-						brokerPort = (Integer) outputs.get("port"); //$NON-NLS-1$
-						Preconditions.checkNotNull(brokerPort);
-						user = (String) outputs.get("username"); //$NON-NLS-1$
-						if (user == null) {
-							user = ""; //$NON-NLS-1$
-						}
-						password = (String) outputs.get("password"); //$NON-NLS-1$
-						if (password == null) {
-							password = ""; //$NON-NLS-1$
-						}
-						virtualHost = (String) outputs.get("virtualHost"); //$NON-NLS-1$
-						if (virtualHost == null) {
-							virtualHost = ""; //$NON-NLS-1$
-						}
-					} catch (final Throwable exception) {
+			if (this.pendingReference == reply.reference
+					&& this.status == Status.WaitingResourceResolved) {
+				//					this.pendingReference = null;
+				String rabbitmqTransport;
+				String brokerIp;
+				Integer brokerPort;
+				String user;
+				String password;
+				String virtualHost;
+
+				if (reply.ok && (reply.outputsOrError instanceof Map)) {
+					final Map<?, ?> outputs = (Map<?, ?>) reply.outputsOrError;
+					rabbitmqTransport = (String) outputs.get("transport"); //$NON-NLS-1$
+					brokerIp = (String) outputs.get("ip"); //$NON-NLS-1$
+					brokerPort = (Integer) outputs.get("port"); //$NON-NLS-1$
+					if (!"tcp".equals(rabbitmqTransport) || (brokerIp == null)
+							|| (brokerPort == null)) {
 						this.terminate();
-						ExceptionTracer
-								.traceIgnored(
-										exception,
-										"failed resolving RabbitMQ broker endpoint: `%s`; terminating!", //$NON-NLS-1$
-										reply.outputsOrError);
+						MosaicLogger
+								.getLogger()
+								.error("failed resolving RabbitMQ broker endpoint: `" + reply.outputsOrError + "`; terminating!" //$NON-NLS-1$
+								);
 						throw new IllegalStateException();
 					}
+
+					user = (String) outputs.get("username"); //$NON-NLS-1$
+					password = (String) outputs.get("password"); //$NON-NLS-1$
+					virtualHost = (String) outputs.get("virtualHost"); //$NON-NLS-1$
+
 					MosaicLogger.getLogger().trace(
 							"Resolved RabbitMQ on " + brokerIp + ":" //$NON-NLS-1$ //$NON-NLS-2$
 									+ brokerPort);
 					this.configureDriver(brokerIp, brokerPort.toString(), user,
 							password, virtualHost);
-					if (this.selfGroup != null) {
-						this.pendingReference = ComponentCallReference.create();
-						this.status = Status.Unregistered;
-						this.component.register(this.selfGroup,
-								this.pendingReference);
-					}
-				} else
-					throw (new IllegalStateException());
-			else
-				throw (new IllegalStateException());
+				}
+				if (this.selfGroup != null) {
+					this.pendingReference = ComponentCallReference.create();
+					this.status = Status.Unregistered;
+					this.component.register(this.selfGroup,
+							this.pendingReference);
+				}
+			} else {
+				throw new IllegalStateException();
+			}
 		}
 		return null;
 	}
 
 	private void configureDriver(String brokerIp, String port, String user,
 			String pass, String vHost) {
-		AbstractResourceDriver.driverConfiguration.addParameter(
-				ConfigurationIdentifier.resolveRelative(ConfigProperties
-						.getString("AmqpDriver.1")), brokerIp); //$NON-NLS-1$
-		AbstractResourceDriver.driverConfiguration.addParameter(
-				ConfigurationIdentifier.resolveRelative(ConfigProperties
-						.getString("AmqpDriver.2")), port); //$NON-NLS-1$
-		AbstractResourceDriver.driverConfiguration.addParameter(
-				ConfigurationIdentifier.resolveRelative(ConfigProperties
-						.getString("AmqpDriver.3")), user); //$NON-NLS-1$
-		AbstractResourceDriver.driverConfiguration.addParameter(
-				ConfigurationIdentifier.resolveRelative(ConfigProperties
-						.getString("AmqpDriver.4")), pass); //$NON-NLS-1$
-		AbstractResourceDriver.driverConfiguration.addParameter(
-				ConfigurationIdentifier.resolveRelative(ConfigProperties
-						.getString("AmqpDriver.5")), vHost); //$NON-NLS-1$
+		try {
+			getDriverConfiguration().addParameter(
+					ConfigurationIdentifier.resolveRelative(ConfigProperties
+							.getString("AmqpDriver.1")), brokerIp); //$NON-NLS-1$
+			getDriverConfiguration().addParameter(
+					ConfigurationIdentifier.resolveRelative(ConfigProperties
+							.getString("AmqpDriver.2")), port); //$NON-NLS-1$
+			getDriverConfiguration().addParameter(
+					ConfigurationIdentifier.resolveRelative(ConfigProperties
+							.getString("AmqpDriver.3")), user); //$NON-NLS-1$
+			getDriverConfiguration().addParameter(
+					ConfigurationIdentifier.resolveRelative(ConfigProperties
+							.getString("AmqpDriver.4")), pass); //$NON-NLS-1$
+			getDriverConfiguration().addParameter(
+					ConfigurationIdentifier.resolveRelative(ConfigProperties
+							.getString("AmqpDriver.5")), vHost); //$NON-NLS-1$
+		} catch (NullPointerException e) { // NOPMD by georgiana on 10/12/11 4:37 PM
+			MosaicLogger.getLogger().trace(e.getMessage());
+		}
 	}
 
 	@Override
@@ -214,16 +206,16 @@ public final class AmqpDriverComponentCallbacks extends
 
 	@Override
 	public CallbackReference registerReturn(Component component,
-			ComponentCallReference reference, boolean ok) {
+			ComponentCallReference reference, boolean registerOk) {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			if (this.pendingReference == reference) {
-				this.pendingReference = null;
-				if (!ok) {
+				//				this.pendingReference = null;
+				if (!registerOk) {
 					ExceptionTracer.traceHandled(new Exception(
 							"failed registering to group; terminating!")); //$NON-NLS-1$
 					this.component.terminate();
-					throw (new IllegalStateException());
+					throw new IllegalStateException();
 				}
 				MosaicLogger
 						.getLogger()
@@ -238,13 +230,35 @@ public final class AmqpDriverComponentCallbacks extends
 				ZeroMqChannel driverChannel = createDriverChannel(channelId,
 						channelEndpoint, AmqpSession.DRIVER);
 
-				this.stub = AmqpStub.create(
-						AbstractResourceDriver.driverConfiguration,
+				this.stub = AmqpStub.create(getDriverConfiguration(),
 						driverChannel);
-			} else
-				throw (new IllegalStateException());
+			} else {
+				throw new IllegalStateException();
+			}
 		}
 		return null;
+	}
+
+	@Override
+	public void deassigned(ComponentCallbacks trigger,
+			ComponentCallbacks newCallbacks) {
+		// nothing to do here
+	}
+
+	@Override
+	public void reassigned(ComponentCallbacks trigger,
+			ComponentCallbacks oldCallbacks) {
+		// nothing to do here
+	}
+
+	@Override
+	public void registered(ComponentCallbacks trigger) {
+		// nothing to do here
+	}
+
+	@Override
+	public void unregistered(ComponentCallbacks trigger) {
+		// nothing to do here
 	}
 
 }

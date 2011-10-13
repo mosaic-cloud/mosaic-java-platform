@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import mosaic.connector.interop.AbstractConnectorReactor;
-import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.ops.IOperationCompletionHandler;
 import mosaic.core.utils.DataEncoder;
@@ -31,21 +30,27 @@ import eu.mosaic_cloud.interoperability.core.Message;
  * 
  */
 public class KeyValueConnectorReactor extends AbstractConnectorReactor {
+
 	protected DataEncoder<?> dataEncoder;
 
 	/**
 	 * Creates the reactor for the key-value store connector proxy.
 	 * 
-	 * @param config
-	 *            the configurations required to initialize the proxy
 	 * @param encoder
 	 *            encoder used for serializing and deserializing data stored in
 	 *            the key-value store
 	 */
-	protected KeyValueConnectorReactor(IConfiguration config,
-			DataEncoder<?> encoder) {
-		super(config);
+	protected KeyValueConnectorReactor(DataEncoder<?> encoder) {
+		super();
 		this.dataEncoder = encoder;
+	}
+
+	/**
+	 * Destroys this reactor.
+	 */
+	public void destroy() {
+		// nothing to do here
+		// if it does something don'y forget synchronized
 	}
 
 	@Override
@@ -109,7 +114,7 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 			handlers = getHandlers(token);
 			if (handlers != null) {
 				List<KVEntry> resultEntries = getPayload.getResultsList();
-				if (resultEntries.size() > 0) {
+				if (!resultEntries.isEmpty()) {
 					try {
 						data = this.dataEncoder.decode(resultEntries.get(0)
 								.getValue().toByteArray());
@@ -129,6 +134,7 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor {
 		case SET_REQUEST:
 		case DELETE_REQUEST:
 		case LIST_REQUEST:
+		default:
 			break;
 		}
 	}

@@ -59,8 +59,8 @@ public class KVDriverConnectionData extends DriverConnectionData {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
+		final int prime = 31; // NOPMD by georgiana on 10/12/11 2:19 PM
+		int result = super.hashCode(); // NOPMD by georgiana on 10/12/11 2:19 PM
 		result = (prime * result)
 				+ ((this.bucket == null) ? 0 : this.bucket.hashCode());
 		return result;
@@ -68,19 +68,17 @@ public class KVDriverConnectionData extends DriverConnectionData {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		KVDriverConnectionData other = (KVDriverConnectionData) obj;
-		if (this.bucket == null) {
-			if (other.bucket != null)
-				return false;
-		} else if (!this.bucket.equals(other.bucket))
-			return false;
-		return true;
+		boolean isEqual = (this == obj);
+		if (!isEqual) {
+			isEqual = (!super.equals(obj)) || (getClass() != obj.getClass());
+			if (!isEqual) {
+				KVDriverConnectionData other = (KVDriverConnectionData) obj;
+				isEqual = ((this.bucket == null) && (other.bucket != null))
+						|| (this.bucket != null && (!this.bucket
+								.equals(other.bucket)));
+			}
+			isEqual ^= true;
+		}
+		return isEqual;
 	}
-
 }

@@ -12,9 +12,10 @@ import java.lang.reflect.InvocationHandler;
  * @param <T>
  *            the type of the response of an asynchronous event-driven operation
  */
-public abstract class CompletionInvocationHandler<T> implements
+public abstract class CompletionInvocationHandler<T> implements // NOPMD by georgiana on 10/12/11 5:00 PM
 		InvocationHandler {
-	protected IOperationCompletionHandler<T> handler;
+
+	protected final IOperationCompletionHandler<T> handler;
 
 	protected CompletionInvocationHandler(IOperationCompletionHandler<T> handler) {
 		super();

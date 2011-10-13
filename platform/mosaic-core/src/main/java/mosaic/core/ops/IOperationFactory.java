@@ -9,6 +9,7 @@ package mosaic.core.ops;
  * 
  */
 public interface IOperationFactory {
+
 	/**
 	 * Builds the asynchronous operation.
 	 * 

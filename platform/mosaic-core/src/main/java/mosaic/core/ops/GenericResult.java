@@ -23,9 +23,9 @@ import java.util.concurrent.ExecutionException;
  */
 public class GenericResult<T> implements IResult<T> {
 
-	private GenericOperation<T> operation;
+	private final GenericOperation<T> operation;
 
-	public GenericResult(GenericOperation<T> operation) {
+	public GenericResult(final GenericOperation<T> operation) {
 		this.operation = operation;
 	}
 
@@ -56,18 +56,18 @@ public class GenericResult<T> implements IResult<T> {
 	 */
 	@Override
 	public final boolean cancel() {
-		boolean done = false;
+		boolean done;
 
 		// first test if it was not already cancelled
 		done = this.operation.isCancelled();
 
-		if (done == false) {
+		if (!done) {
 			// try to cancel the operation
 			done = this.operation.cancel();
 
 			// cancellation may have failed if the operation was
 			// already finished
-			if (done == false) {
+			if (!done) {
 				done = this.operation.isDone();
 			}
 		}

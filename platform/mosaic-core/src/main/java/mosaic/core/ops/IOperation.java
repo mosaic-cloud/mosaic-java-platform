@@ -13,6 +13,7 @@ import java.util.concurrent.TimeoutException;
  *            The type of the actual result of the operation.
  */
 public interface IOperation<T> {
+
 	/**
 	 * Cancels the asynchronous operation.
 	 * 

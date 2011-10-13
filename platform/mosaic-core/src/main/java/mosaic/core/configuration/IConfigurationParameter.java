@@ -9,6 +9,7 @@ package mosaic.core.configuration;
  *            the type of the value of the parameter
  */
 public interface IConfigurationParameter<T extends Object> {
+
 	/**
 	 * Returns the configuration identifier of the parameter.
 	 * 

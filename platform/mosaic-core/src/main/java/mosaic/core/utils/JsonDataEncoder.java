@@ -4,25 +4,24 @@ import java.io.IOException;
 
 import mosaic.core.exceptions.ExceptionTracer;
 
-public class JsonDataEncoder<T> implements DataEncoder<T> {
+public class JsonDataEncoder<T extends Object> implements DataEncoder<T> {
 
-	private Class<T> dataClass;;
+	private final Class<T> dataClass;;
 
-	public JsonDataEncoder(Class<T> dataClass) {
+	public JsonDataEncoder(final Class<T> dataClass) {
 		this.dataClass = dataClass;
 	}
 
 	@Override
-	public byte[] encode(T data) throws Exception {
-		byte[] bytes = SerDesUtils.toJsonBytes(data);
-		return bytes;
+	public byte[] encode(final T data) throws Exception { // NOPMD by georgiana on 10/12/11 5:02 PM
+		return SerDesUtils.toJsonBytes(data);
 	}
 
 	@Override
 	public T decode(byte[] dataBytes) {
-		T ob = null;
+		T object = null;
 		try {
-			ob = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes,
+			object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes,
 					this.dataClass));
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
@@ -30,7 +29,7 @@ public class JsonDataEncoder<T> implements DataEncoder<T> {
 			ExceptionTracer.traceDeferred(e);
 		}
 
-		return ob;
+		return object;
 	}
 
 }

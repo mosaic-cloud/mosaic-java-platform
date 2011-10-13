@@ -5,6 +5,7 @@ import mosaic.core.ops.IOperationCompletionHandler;
 
 public class TestLoggingHandler<T extends Object> implements
 		IOperationCompletionHandler<T> {
+
 	private String testName = "";
 
 	public TestLoggingHandler(String testName) {

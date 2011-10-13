@@ -18,9 +18,9 @@ import mosaic.driver.ConfigProperties;
  * 
  */
 
-public class RiakPBDriver extends BaseKeyValueDriver {
-	private String riakHost;
-	private int riakPort;
+public final class RiakPBDriver extends AbstractKeyValueDriver {
+	private final String riakHost;
+	private final int riakPort;
 
 	/**
 	 * Creates a new Riak driver.
@@ -56,7 +56,7 @@ public class RiakPBDriver extends BaseKeyValueDriver {
 	 * @throws IOException
 	 * @throws ConnectionException
 	 */
-	public static synchronized RiakPBDriver create(IConfiguration config)
+	public static RiakPBDriver create(IConfiguration config)
 			throws IOException, ConnectionException {
 		int port, noThreads;
 
@@ -76,10 +76,9 @@ public class RiakPBDriver extends BaseKeyValueDriver {
 		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
 		// String.class, "");
 
-		RiakPBDriver wrapper = new RiakPBDriver(noThreads, host, port);
 		MosaicLogger.getLogger().trace(
 				"Created Riak PB driver for host " + host + ":" + port);
-		return wrapper;
+		return new RiakPBDriver(noThreads, host, port);
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class RiakPBDriver extends BaseKeyValueDriver {
 	 * the driver object.
 	 */
 	@Override
-	public synchronized void destroy() {
+	public void destroy() {
 		super.destroy();
 		MosaicLogger.getLogger().trace("RiakDriver destroyed."); //$NON-NLS-1$
 	}
