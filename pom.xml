@@ -63,6 +63,11 @@
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>mosaic.examples.feeds.IndexerCloudletPreMain</mainClass>
+								</manifest>
+							</archive>
 						</configuration>
 						<goals>
 							<goal>single</goal>
