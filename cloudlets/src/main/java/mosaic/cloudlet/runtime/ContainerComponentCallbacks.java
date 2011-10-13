@@ -60,6 +60,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	public static enum ResourceType {
 		// NOTE: MEMCACHED is not yet supported, but will be in the near future
 		AMQP("queue"), KEY_VALUE("kvstore"), MEMCACHED("kvstore");
+
 		public String getConfigPrefix() {
 			return this.configPrefix;
 		}
@@ -92,36 +93,36 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ContainerComponentCallbacks.callbacks = this;
-//		try {
-			IConfiguration configuration = PropertyTypeConfiguration.create(
-					ContainerComponentCallbacks.class.getClassLoader(),
-					"resource-container.properties"); //$NON-NLS-1$
-			this.amqpGroup = ComponentIdentifier
-					.resolve(ConfigUtils.resolveParameter(
-							configuration,
-							ConfigProperties
-									.getString("ContainerComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-			this.kvGroup = ComponentIdentifier.resolve(ConfigUtils
-					.resolveParameter(configuration, ConfigProperties
-							.getString("ContainerComponentCallbacks.1"), //$NON-NLS-1$
-							String.class, "")); //$NON-NLS-1$
-			this.mcGroup = ComponentIdentifier
-					.resolve(ConfigUtils.resolveParameter(
-							configuration,
-							ConfigProperties
-									.getString("ContainerComponentCallbacks.2"), String.class, //$NON-NLS-1$
-							"")); //$NON-NLS-1$
-			this.selfGroup = ComponentIdentifier
-					.resolve(ConfigUtils.resolveParameter(
-							configuration,
-							ConfigProperties
-									.getString("ContainerComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-			synchronized (this) {
-				this.status = Status.Created;
-			}
-//		} catch (Throwable e) {
-//			e.printStackTrace(System.err);
-//		}
+		//		try {
+		IConfiguration configuration = PropertyTypeConfiguration.create(
+				ContainerComponentCallbacks.class.getClassLoader(),
+				"resource-container.properties"); //$NON-NLS-1$
+		this.amqpGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ContainerComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+		this.kvGroup = ComponentIdentifier.resolve(ConfigUtils
+				.resolveParameter(configuration, ConfigProperties
+						.getString("ContainerComponentCallbacks.1"), //$NON-NLS-1$
+						String.class, "")); //$NON-NLS-1$
+		this.mcGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ContainerComponentCallbacks.2"), String.class, //$NON-NLS-1$
+						"")); //$NON-NLS-1$
+		this.selfGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ContainerComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+		synchronized (this) {
+			this.status = Status.Created;
+		}
+		//		} catch (Throwable e) {
+		//			e.printStackTrace(System.err);
+		//		}
 	}
 
 	@Override
@@ -213,7 +214,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						throw (new IllegalArgumentException(String.format(
 								"invalid class-path URL `%s`", classpathPart)));
 					classLoaderUrls.add(classpathUrl);
-					System.out.println("classpathurl: " + classpathUrl);
 				}
 			classLoader = new URLClassLoader(
 					classLoaderUrls.toArray(new URL[0]),
@@ -312,10 +312,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						.getLogger()
 						.info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
 
-				if ((CloudletContainerParameters.classpath != null)
-						&& (CloudletContainerParameters.configFile != null)) {
+				if (CloudletContainerParameters.configFile != null) {
 					ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
-
 					CloudletManager container = startCloudlet(loader,
 							CloudletContainerParameters.configFile);
 					if (container != null) {

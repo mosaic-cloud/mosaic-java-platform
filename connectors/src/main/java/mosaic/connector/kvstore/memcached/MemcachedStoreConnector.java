@@ -28,8 +28,8 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConnector<T> implements
-		IMemcachedStore<T> {
+public final class MemcachedStoreConnector<T extends Object> extends
+		KeyValueStoreConnector<T> implements IMemcachedStore<T> { // NOPMD by georgiana on 10/13/11 2:32 PM
 
 	private MemcachedStoreConnector(MemcachedProxy<T> proxy, int noThreads,
 			DataEncoder<T> encoder) {
@@ -49,8 +49,8 @@ public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConn
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static <T extends Object> MemcachedStoreConnector<T> create(IConfiguration config,
-			DataEncoder<T> encoder) throws Throwable {
+	public static <T extends Object> MemcachedStoreConnector<T> create(
+			IConfiguration config, DataEncoder<T> encoder) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -87,73 +87,70 @@ public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConn
 	}
 
 	@Override
-	public IResult<Boolean> set(final String key, final int exp,
-			final T data,
+	public IResult<Boolean> set(final String key, final int exp, final T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
-				((MemcachedProxy<T>)getProxy(MemcachedProxy.class)).set(key, exp, data,
-						op.getCompletionHandlers());
+				((MemcachedProxy<T>) getProxy(MemcachedProxy.class)).set(key,
+						exp, data, operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
 
 	@Override
-	public IResult<Boolean> add(final String key, final int exp,
-			final T data,
+	public IResult<Boolean> add(final String key, final int exp, final T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				getProxy(MemcachedProxy.class).add(key, exp, data,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
 
 	@Override
 	public IResult<Boolean> replace(final String key, final int exp,
-			final T data,
-			List<IOperationCompletionHandler<Boolean>> handlers,
+			final T data, List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				getProxy(MemcachedProxy.class).replace(key, exp, data,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -162,21 +159,21 @@ public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConn
 	public IResult<Boolean> append(final String key, final T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				getProxy(MemcachedProxy.class).append(key, data,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -185,21 +182,21 @@ public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConn
 	public IResult<Boolean> prepend(final String key, final T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				getProxy(MemcachedProxy.class).prepend(key, data,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -208,21 +205,21 @@ public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConn
 	public IResult<Boolean> cas(final String key, final T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				getProxy(MemcachedProxy.class).cas(key, data,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -231,21 +228,21 @@ public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConn
 	public IResult<Map<String, T>> getBulk(final List<String> keys,
 			List<IOperationCompletionHandler<Map<String, T>>> handlers,
 			CompletionInvocationHandler<Map<String, T>> iHandler) {
-		IResult<Map<String, T>> result = null;
-		final EventDrivenOperation<Map<String, T>> op = new EventDrivenOperation<Map<String, T>>(
+		IResult<Map<String, T>> result;
+		final EventDrivenOperation<Map<String, T>> operation = new EventDrivenOperation<Map<String, T>>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				getProxy(MemcachedProxy.class).getBulk(keys,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Map<String, T>>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Map<String, T>>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -254,20 +251,21 @@ public class MemcachedStoreConnector<T extends Object> extends KeyValueStoreConn
 	public IResult<List<String>> list(
 			List<IOperationCompletionHandler<List<String>>> handlers,
 			CompletionInvocationHandler<List<String>> iHandler) {
-		IResult<List<String>> result = null;
-		final EventDrivenOperation<List<String>> op = new EventDrivenOperation<List<String>>(
+		IResult<List<String>> result;
+		final EventDrivenOperation<List<String>> operation = new EventDrivenOperation<List<String>>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
-				getProxy(MemcachedProxy.class).list(op.getCompletionHandlers());
+				getProxy(MemcachedProxy.class).list(
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<List<String>>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<List<String>>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}

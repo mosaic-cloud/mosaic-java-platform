@@ -98,20 +98,20 @@ public class KeyValueStoreConnector<T extends Object> implements
 	public IResult<T> get(final String key,
 			List<IOperationCompletionHandler<T>> handlers,
 			CompletionInvocationHandler<T> iHandler) {
-		IResult<T> result = null;
-		final EventDrivenOperation<T> op = new EventDrivenOperation<T>(
+		IResult<T> result;
+		final EventDrivenOperation<T> operation = new EventDrivenOperation<T>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@Override
 			public void run() {
 				KeyValueStoreConnector.this.proxy.get(key,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<T>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<T>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -120,20 +120,20 @@ public class KeyValueStoreConnector<T extends Object> implements
 	public IResult<Boolean> delete(final String key,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@Override
 			public void run() {
 				KeyValueStoreConnector.this.proxy.delete(key,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -142,19 +142,19 @@ public class KeyValueStoreConnector<T extends Object> implements
 	public IResult<Boolean> set(final String key, final T data,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
-		IResult<Boolean> result = null;
-		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+		IResult<Boolean> result;
+		final EventDrivenOperation<Boolean> operation = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@Override
 			public void run() {
 				KeyValueStoreConnector.this.proxy.set(key, data,
-						op.getCompletionHandlers());
+						operation.getCompletionHandlers());
 			}
 		});
-		result = new EventDrivenResult<Boolean>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<Boolean>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -164,19 +164,19 @@ public class KeyValueStoreConnector<T extends Object> implements
 			List<IOperationCompletionHandler<List<String>>> handlers,
 			CompletionInvocationHandler<List<String>> iHandler) {
 		IResult<List<String>> result;
-		final EventDrivenOperation<List<String>> op = new EventDrivenOperation<List<String>>(
+		final EventDrivenOperation<List<String>> operation = new EventDrivenOperation<List<String>>(
 				handlers, iHandler);
-		op.setOperation(new Runnable() {
+		operation.setOperation(new Runnable() {
 
 			@Override
 			public void run() {
-				KeyValueStoreConnector.this.proxy.list(op
+				KeyValueStoreConnector.this.proxy.list(operation
 						.getCompletionHandlers());
 
 			}
 		});
-		result = new EventDrivenResult<List<String>>(op);
-		submitOperation(op.getOperation());
+		result = new EventDrivenResult<List<String>>(operation);
+		submitOperation(operation.getOperation());
 
 		return result;
 	}
@@ -197,12 +197,12 @@ public class KeyValueStoreConnector<T extends Object> implements
 	/**
 	 * Submits an operation for execution
 	 * 
-	 * @param op
+	 * @param operation
 	 *            the operation
 	 */
-	protected void submitOperation(Runnable op) {
+	protected void submitOperation(Runnable operation) {
 		synchronized (this) {
-			this.executor.submit(op);
+			this.executor.submit(operation);
 		}
 	}
 

@@ -37,7 +37,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
  */
 public class AmqpConnectorReactor extends AbstractConnectorReactor {
 
-	private AmqpCallbacksMap callbacksMap;
+	private final  AmqpCallbacksMap callbacksMap;
 
 	/**
 	 * Creates the reactor for the AMQP connector proxy.
@@ -67,9 +67,10 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor {
 	 * @param callback
 	 *            the callback
 	 */
-	protected synchronized void addCallback(String requestId,
-			IAmqpConsumerCallback callback) {
-		this.callbacksMap.addHandlers(requestId, callback);
+	protected void addCallback(String requestId, IAmqpConsumerCallback callback) {
+		synchronized (this) {
+			this.callbacksMap.addHandlers(requestId, callback);
+		}
 	}
 
 	@Override
