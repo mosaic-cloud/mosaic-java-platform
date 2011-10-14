@@ -43,7 +43,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 
 	private Connection connection;
 	private ConcurrentHashMap<String, Channel> channels;
-	private Channel defaultChannel;
 	private final FlowCallback flowCallback;
 	private final ReturnCallback returnCallback;
 	private final ShutdownListener shutdownListener;

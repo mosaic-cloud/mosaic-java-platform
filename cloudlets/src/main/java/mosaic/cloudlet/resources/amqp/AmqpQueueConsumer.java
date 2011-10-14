@@ -134,7 +134,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				this.queue,
 				this.consumer,
 				false,
-				false,
+				true,
 				null,
 				cHandlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler),
