@@ -25,14 +25,8 @@ public class QueueConsumerCallback extends
 			AmqpQueueConsumeCallbackArguments<IndexerCloudletState, JSONObject> arguments) {
 		AmqpQueueConsumeMessage<JSONObject> message = arguments.getMessage();
 
-		try {
-			Thread.sleep(1000);
-			IndexWorkflow.indexNewFeed(state, message);
-		} catch (Throwable e) {
-			MosaicLogger.getLogger().error(e.getMessage());
-		}
-		message.acknowledge();
-		MosaicLogger.getLogger().trace("Message consumed " + message);
+		IndexWorkflow.indexNewFeed(state, message);
+//		message.acknowledge();
 	}
 
 }

@@ -10,6 +10,7 @@ urgent.queue.consumer.amqp.durable=true
 urgent.queue.consumer.amqp.auto_delete=false
 urgent.queue.consumer.amqp.passive=false
 urgent.queue.consumer.amqp.exclusive=false
+urgent.queue.consumer.amqp.auto_ack=true
 
 batch.queue.consumer.amqp.exchange=feeds.index-data
 batch.queue.consumer.amqp.exchange_type=topic
@@ -19,6 +20,7 @@ batch.queue.consumer.amqp.durable=true
 batch.queue.consumer.amqp.auto_delete=false
 batch.queue.consumer.amqp.passive=false
 batch.queue.consumer.amqp.exclusive=false
+batch.queue.consumer.amqp.auto_ack=true
 
 metadata.kvstore.connector_name=KVSTORE
 metadata.kvstore.bucket=feed-metadata
