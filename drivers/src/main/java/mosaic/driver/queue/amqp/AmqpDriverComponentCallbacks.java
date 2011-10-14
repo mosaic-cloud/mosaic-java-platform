@@ -89,12 +89,13 @@ public final class AmqpDriverComponentCallbacks extends
 									ConfigProperties
 											.getString("AmqpDriverComponentCallbacks.3"), //$NON-NLS-1$
 									String.class, "");
+					// FIXME
 					try {
-						channelEndpoint = channelEndpoint.replace("0.0.0.0",
-								InetAddress.getLocalHost().getHostAddress());// FIXME
-					} catch (UnknownHostException e) {
-
-					}
+						if (System.getenv("mosaic_node_ip") != null)
+							channelEndpoint=channelEndpoint.replace("0.0.0.0", System.getenv("mosaic_node_ip"));
+						else
+							channelEndpoint=channelEndpoint.replace("0.0.0.0", InetAddress.getLocalHost().getHostAddress());
+					} catch (UnknownHostException e) {}
 					String channelId = ConfigUtils
 							.resolveParameter(
 									getDriverConfiguration(),
