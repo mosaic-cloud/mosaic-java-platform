@@ -151,7 +151,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			DriverOperationFinishedHandler exchHandler = new DriverOperationFinishedHandler(
 					token, session);
 
-			resultBool = driver.declareExchange(exchange,
+			resultBool = driver.declareExchange(token.getClientId(), exchange,
 					AmqpExchangeType.valueOf(type.toString().toUpperCase()),
 					durable, autoDelete, passive, exchHandler);
 			exchHandler.setDetails(AmqpOperations.DECLARE_EXCHANGE, resultBool);
@@ -172,8 +172,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			DriverOperationFinishedHandler queueHandler = new DriverOperationFinishedHandler(
 					token, session);
 
-			resultBool = driver.declareQueue(queue, exclusive, durable,
-					autoDelete, passive, queueHandler);
+			resultBool = driver.declareQueue(token.getClientId(), queue,
+					exclusive, durable, autoDelete, passive, queueHandler);
 			queueHandler.setDetails(AmqpOperations.DECLARE_QUEUE, resultBool);
 			break;
 		case BIND_QUEUE_REQUEST:
@@ -190,8 +190,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			DriverOperationFinishedHandler bindHandler = new DriverOperationFinishedHandler(
 					token, session);
 
-			resultBool = driver.bindQueue(exchange, queue, routingKey,
-					bindHandler);
+			resultBool = driver.bindQueue(token.getClientId(), exchange, queue,
+					routingKey, bindHandler);
 			bindHandler.setDetails(AmqpOperations.BIND_QUEUE, resultBool);
 			break;
 		case PUBLISH_REQUEST:
@@ -214,7 +214,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
 					token, session);
 
-			resultBool = driver.basicPublish(mssg, pubHandler);
+			resultBool = driver.basicPublish(token.getClientId(), mssg,
+					pubHandler);
 			pubHandler.setDetails(AmqpOperations.PUBLISH, resultBool);
 			break;
 		case CONSUME_REQUEST:
@@ -252,7 +253,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			DriverOperationFinishedHandler getHandler = new DriverOperationFinishedHandler(
 					token, session);
 
-			resultBool = driver.basicGet(queue, autoAck, getHandler);
+			resultBool = driver.basicGet(token.getClientId(), queue, autoAck,
+					getHandler);
 			getHandler.setDetails(AmqpOperations.GET, resultBool);
 			break;
 		case CANCEL_REQUEST:
@@ -280,7 +282,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			// execute operation
 			DriverOperationFinishedHandler ackHandler = new DriverOperationFinishedHandler(
 					token, session);
-			resultBool = driver.basicAck(delivery, multiple, ackHandler);
+			resultBool = driver.basicAck(token.getClientId(), delivery,
+					multiple, ackHandler);
 			ackHandler.setDetails(AmqpOperations.ACK, resultBool);
 			break;
 		default:

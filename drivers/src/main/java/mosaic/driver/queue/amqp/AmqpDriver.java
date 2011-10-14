@@ -1,8 +1,7 @@
 package mosaic.driver.queue.amqp;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,7 +42,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	private final AmqpOperationFactory opFactory;
 
 	private Connection connection;
-	private List<Channel> channels;
+	private ConcurrentHashMap<String, Channel> channels;
 	private Channel defaultChannel;
 	private final FlowCallback flowCallback;
 	private final ReturnCallback returnCallback;
@@ -130,7 +129,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 			try {
 				this.connection = factory.newConnection();
 				this.connection.addShutdownListener(this.shutdownListener);
-				this.channels = new LinkedList<Channel>();
+				this.channels = new ConcurrentHashMap<String, Channel>();
 				this.connected = true;
 				MosaicLogger.getLogger().debug(
 						"AMQP driver connected to " + amqpServerHost + ":"
@@ -150,8 +149,9 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 			// close any existing connection
 			if (this.connected) {
 				try {
-					for (Channel channel : AmqpDriver.this.channels) {
-						channel.close();
+					for (Map.Entry<String, Channel> channel : AmqpDriver.this.channels
+							.entrySet()) {
+						channel.getValue().close();
 					}
 					this.connection.close();
 					this.connected = false;
@@ -168,6 +168,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	/**
 	 * Declares an exchange and creates a channel for it.
 	 * 
+	 * @param clientId
+	 *            client identifier
 	 * @param name
 	 *            the name of the exchange
 	 * @param type
@@ -185,13 +187,13 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the exchange declaration succeeded
 	 */
-	public IResult<Boolean> declareExchange(String name, AmqpExchangeType type,
-			boolean durable, boolean autoDelete, boolean passive,
-			IOperationCompletionHandler<Boolean> complHandler) {
+	public IResult<Boolean> declareExchange(String clientId, String name,
+			AmqpExchangeType type, boolean durable, boolean autoDelete,
+			boolean passive, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.DECLARE_EXCHANGE, name, type,
-						durable, autoDelete, passive);
+						durable, autoDelete, passive, clientId);
 
 		return startOperation(operation, complHandler);
 	}
@@ -199,6 +201,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	/**
 	 * Declare a queue.
 	 * 
+	 * @param clientId
+	 *            client identifier
 	 * @param queue
 	 *            the name of the queue
 	 * @param exclusive
@@ -217,13 +221,13 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the queue declaration succeeded
 	 */
-	public IResult<Boolean> declareQueue(String queue, boolean exclusive,
-			boolean durable, boolean autoDelete, boolean passive,
-			IOperationCompletionHandler<Boolean> complHandler) {
+	public IResult<Boolean> declareQueue(String clientId, String queue,
+			boolean exclusive, boolean durable, boolean autoDelete,
+			boolean passive, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.DECLARE_QUEUE, queue, exclusive,
-						durable, autoDelete, passive);
+						durable, autoDelete, passive, clientId);
 
 		return startOperation(operation, complHandler);
 	}
@@ -231,6 +235,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	/**
 	 * Bind a queue to an exchange, with no extra arguments.
 	 * 
+	 * @param clientId
+	 *            client identifier
 	 * @param exchange
 	 *            the name of the queue
 	 * @param queue
@@ -241,12 +247,13 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the queue bind succeeded
 	 */
-	public IResult<Boolean> bindQueue(String exchange, String queue,
-			String routingKey, IOperationCompletionHandler<Boolean> complHandler) {
+	public IResult<Boolean> bindQueue(String clientId, String exchange,
+			String queue, String routingKey,
+			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
 				.getOperation(AmqpOperations.BIND_QUEUE, exchange, queue,
-						routingKey);
+						routingKey, clientId);
 
 		return startOperation(operation, complHandler);
 	}
@@ -254,17 +261,20 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	/**
 	 * Publishes a message.
 	 * 
+	 * @param clientId
+	 *            client identifier
 	 * @param message
 	 *            the message, message properties and destination data
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if message was published successfully
 	 */
-	public IResult<Boolean> basicPublish(AmqpOutboundMessage message,
+	public IResult<Boolean> basicPublish(String clientId,
+			AmqpOutboundMessage message,
 			IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
-				.getOperation(AmqpOperations.PUBLISH, message);
+				.getOperation(AmqpOperations.PUBLISH, message, clientId);
 
 		return startOperation(operation, complHandler);
 	}
@@ -305,6 +315,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	/**
 	 * Acknowledge one or several received messages.
 	 * 
+	 * @param clientId
+	 *            client identifier
 	 * @param delivery
 	 *            the tag received with the messages
 	 * @param multiple
@@ -315,11 +327,11 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if messages were acknowledged successfully
 	 */
-	public IResult<Boolean> basicAck(long delivery, boolean multiple,
-			IOperationCompletionHandler<Boolean> complHandler) {
+	public IResult<Boolean> basicAck(String clientId, long delivery,
+			boolean multiple, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
-				.getOperation(AmqpOperations.ACK, delivery, multiple);
+				.getOperation(AmqpOperations.ACK, delivery, multiple, clientId);
 
 		return startOperation(operation, complHandler);
 	}
@@ -327,6 +339,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	/**
 	 * Retrieve a message from a queue.
 	 * 
+	 * @param clientId
+	 *            client identifier
 	 * @param queue
 	 *            the name of the queue
 	 * @param autoAck
@@ -337,11 +351,11 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if message was retrieved successfully
 	 */
-	public IResult<Boolean> basicGet(String queue, boolean autoAck,
-			IOperationCompletionHandler<Boolean> complHandler) {
+	public IResult<Boolean> basicGet(String clientId, String queue,
+			boolean autoAck, IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory
-				.getOperation(AmqpOperations.GET, queue, autoAck);
+				.getOperation(AmqpOperations.GET, queue, autoAck, clientId);
 
 		return startOperation(operation, complHandler);
 	}
@@ -365,14 +379,16 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		return startOperation(operation, complHandler);
 	}
 
-	protected Channel getDefaultChannel() {
-		if (this.defaultChannel == null) {
-			this.defaultChannel = this.openChannel();
+	protected Channel getDefaultChannel(String clientId) {
+		Channel channel = this.channels.get(clientId);
+		if (channel == null) {
+			channel = this.openChannel(clientId);
+			this.channels.put(clientId, channel);
 		}
-		return this.defaultChannel;
+		return channel;
 	}
 
-	private Channel openChannel() {
+	private Channel openChannel(String clientId) {
 		Channel channel = null; // NOPMD by georgiana on 10/12/11 4:21 PM
 		synchronized (this) {
 			try {
@@ -381,7 +397,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 					channel.setDefaultConsumer(null);
 					channel.setReturnListener(this.returnCallback);
 					channel.setFlowListener(this.flowCallback);
-					this.channels.add(channel);
+					channel.basicQos(1);
+					this.channels.put(clientId, channel);
 				}
 			} catch (IOException e) {
 				ExceptionTracer.traceDeferred(e);

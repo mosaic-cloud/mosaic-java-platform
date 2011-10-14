@@ -84,7 +84,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 		IAmqpConsumerCallback callback;
 		List<IOperationCompletionHandler<?>> handlers;
 
-		String mssgPrefix = "AmqpConnectorReactor - Received response ";
+		String mssgPrefix = "AmqpConnectorReactor - Received response "; // NOPMD by georgiana on 10/13/11 2:52 PM
 		switch (amqpMessage) {
 		case OK:
 			IdlCommon.Ok okPayload = (Ok) message.payload;

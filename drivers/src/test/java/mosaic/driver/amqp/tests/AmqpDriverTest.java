@@ -1,5 +1,6 @@
 package mosaic.driver.amqp.tests;
 
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import mosaic.core.Serial;
@@ -25,6 +26,7 @@ public class AmqpDriverTest {
 
 	private static IConfiguration configuration;
 	private static AmqpDriver wrapper;
+	private String clientId = UUID.randomUUID().toString();
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -51,8 +53,9 @@ public class AmqpDriverTest {
 
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare exchange");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.declareExchange(exchange,
-				AmqpExchangeType.DIRECT, false, false, false, handler);
+		IResult<Boolean> r = AmqpDriverTest.wrapper
+				.declareExchange(clientId, exchange, AmqpExchangeType.DIRECT,
+						false, false, false, handler);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -63,8 +66,8 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare queue");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.declareQueue(queue, true,
-				false, true, false, handler);
+		IResult<Boolean> r = AmqpDriverTest.wrapper.declareQueue(clientId,
+				queue, true, false, true, false, handler);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -80,8 +83,8 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"bind queue");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.bindQueue(exchange, queue,
-				routingKey, handler);
+		IResult<Boolean> r = AmqpDriverTest.wrapper.bindQueue(clientId,
+				exchange, queue, routingKey, handler);
 		Assert.assertTrue(r.getResult());
 	}
 

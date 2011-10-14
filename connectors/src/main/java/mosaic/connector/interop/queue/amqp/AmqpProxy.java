@@ -33,7 +33,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  * @author Georgiana Macariu
  * 
  */
-public class AmqpProxy extends ConnectorProxy {
+public final class AmqpProxy extends ConnectorProxy {
 
 	/**
 	 * Creates a proxy for AMQP queuing systems.
@@ -81,9 +81,9 @@ public class AmqpProxy extends ConnectorProxy {
 		return proxy;
 	}
 
-	public synchronized void declareExchange(String name,
-			AmqpExchangeType type, boolean durable, boolean autoDelete,
-			boolean passive, List<IOperationCompletionHandler<Boolean>> handlers) {
+	public void declareExchange(String name, AmqpExchangeType type,
+			boolean durable, boolean autoDelete, boolean passive,
+			List<IOperationCompletionHandler<Boolean>> handlers) {
 		ExchangeType eType = AmqpPayloads.DeclareExchangeRequest.ExchangeType
 				.valueOf(type.toString().toUpperCase());
 		CompletionToken token = generateToken();
@@ -103,8 +103,8 @@ public class AmqpProxy extends ConnectorProxy {
 		sendMessage(message, token, handlers);
 	}
 
-	public synchronized void declareQueue(String queue, boolean exclusive,
-			boolean durable, boolean autoDelete, boolean passive,
+	public void declareQueue(String queue, boolean exclusive, boolean durable,
+			boolean autoDelete, boolean passive,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		CompletionToken token = generateToken();
 
@@ -123,8 +123,7 @@ public class AmqpProxy extends ConnectorProxy {
 		sendMessage(message, token, handlers);
 	}
 
-	public synchronized void bindQueue(String exchange, String queue,
-			String routingKey,
+	public void bindQueue(String exchange, String queue, String routingKey,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		CompletionToken token = generateToken();
 
@@ -141,7 +140,7 @@ public class AmqpProxy extends ConnectorProxy {
 		sendMessage(message, token, handlers);
 	}
 
-	public synchronized void publish(AmqpOutboundMessage message,
+	public void publish(AmqpOutboundMessage message,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		CompletionToken token = generateToken();
 
@@ -162,8 +161,8 @@ public class AmqpProxy extends ConnectorProxy {
 		sendMessage(mssg, token, handlers);
 	}
 
-	public synchronized void consume(String queue, String consumer,
-			boolean exclusive, boolean autoAck, Object extra,
+	public void consume(String queue, String consumer, boolean exclusive,
+			boolean autoAck, Object extra,
 			List<IOperationCompletionHandler<String>> handlers,
 			IAmqpConsumerCallback consumerCallback) {
 
@@ -181,13 +180,8 @@ public class AmqpProxy extends ConnectorProxy {
 
 			AmqpConnectorReactor reactor = super
 					.getResponseReactor(AmqpConnectorReactor.class);
-			if (consumer.equals("")) {
-				requestBuilder.setConsumer(token.getMessageId());
-				reactor.addCallback(token.getMessageId(), consumerCallback);
-			} else {
-				requestBuilder.setConsumer(consumer);
-				reactor.addCallback(consumer, consumerCallback);
-			}
+			requestBuilder.setConsumer(getConnectorId());
+			reactor.addCallback(getConnectorId(), consumerCallback);
 
 			Message mssg = new Message(AmqpMessage.CONSUME_REQUEST,
 					requestBuilder.build());
@@ -203,14 +197,18 @@ public class AmqpProxy extends ConnectorProxy {
 		}
 	}
 
-	public synchronized void cancel(String consumer,
+	public void cancel(String consumer,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		CompletionToken token = generateToken();
 
 		AmqpPayloads.CancelRequest.Builder requestBuilder = AmqpPayloads.CancelRequest
 				.newBuilder();
 		requestBuilder.setToken(token);
-		requestBuilder.setConsumer(consumer);
+		if ("".equals(consumer)) {
+			requestBuilder.setConsumer(consumer);
+		} else {
+			requestBuilder.setConsumer(getConnectorId());
+		}
 
 		Message message = new Message(AmqpMessage.CANCEL_REQUEST,
 				requestBuilder.build());
@@ -218,7 +216,7 @@ public class AmqpProxy extends ConnectorProxy {
 		sendMessage(message, token, handlers);
 	}
 
-	public synchronized void get(String queue, boolean autoAck,
+	public void get(String queue, boolean autoAck,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		CompletionToken token = generateToken();
 
@@ -234,7 +232,7 @@ public class AmqpProxy extends ConnectorProxy {
 		sendMessage(message, token, handlers);
 	}
 
-	public synchronized void ack(long delivery, boolean multiple,
+	public void ack(long delivery, boolean multiple,
 			List<IOperationCompletionHandler<Boolean>> handlers) {
 		CompletionToken token = generateToken();
 
@@ -251,11 +249,13 @@ public class AmqpProxy extends ConnectorProxy {
 	private <V extends Object> void sendMessage(Message message,
 			CompletionToken token, List<IOperationCompletionHandler<V>> handlers) {
 		try {
-			// store token and completion handlers
-			super.registerHandlers(token.getMessageId(), handlers);
-			super.sendRequest(getResponseReactor(AmqpConnectorReactor.class)
-					.getSession(), message);
-
+			synchronized (this) {
+				// store token and completion handlers
+				super.registerHandlers(token.getMessageId(), handlers);
+				super.sendRequest(
+						getResponseReactor(AmqpConnectorReactor.class)
+								.getSession(), message);
+			}
 			MosaicLogger.getLogger().trace(
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");
@@ -270,9 +270,9 @@ public class AmqpProxy extends ConnectorProxy {
 	}
 
 	private CompletionToken generateToken() {
-		String id = UUID.randomUUID().toString();
+		String identifier = UUID.randomUUID().toString();
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
-		tokenBuilder.setMessageId(id);
+		tokenBuilder.setMessageId(identifier);
 		tokenBuilder.setClientId(getConnectorId());
 		return tokenBuilder.build();
 	}

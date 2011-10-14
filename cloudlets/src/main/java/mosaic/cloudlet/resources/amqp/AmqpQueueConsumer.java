@@ -103,20 +103,19 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 			@Override
 			public void onSuccess(String result) {
-				// synchronized (AmqpQueueConsumer.this) {
-				// if (AmqpQueueConsumer.super.registered)
-				// return;
-				// MosaicLogger
-				// .getLogger()
-				// .trace("AmqpQueueConsumer: received consume response message.");
-				// AmqpQueueConsumer.this.consumer = result;
-				// CallbackArguments<S> arguments = new
-				// OperationResultCallbackArguments<S, String>(
-				// AmqpQueueConsumer.super.cloudlet, result);
-				// AmqpQueueConsumer.this.callback.registerSucceeded(
-				// AmqpQueueConsumer.this.cloudletState, arguments);
-				// AmqpQueueConsumer.super.registered = true;
-				// }
+				synchronized (AmqpQueueConsumer.this) {
+					//					if (AmqpQueueConsumer.super.registered)
+					//						return;
+					MosaicLogger
+							.getLogger()
+							.trace("AmqpQueueConsumer: received consume response message.");
+					AmqpQueueConsumer.this.consumer = result;
+					//					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
+					//							AmqpQueueConsumer.super.cloudlet, result);
+					//					AmqpQueueConsumer.this.callback.registerSucceeded(
+					//							AmqpQueueConsumer.this.cloudletState, arguments);
+					AmqpQueueConsumer.super.registered = true;
+				}
 			}
 
 			@Override
@@ -160,7 +159,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 					// .unregisterSucceeded(
 					// AmqpQueueConsumer.this.cloudletState,
 					// arguments);
-					// AmqpQueueConsumer.super.registered = false;
+					AmqpQueueConsumer.super.registered = false;
 					// }
 				}
 
