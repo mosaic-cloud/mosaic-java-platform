@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.ICloudletController;
 import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.connector.queue.amqp.IAmqpConsumerCallback;
+import mosaic.core.configuration.ConfigUtils;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
@@ -31,6 +33,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 		AmqpQueueAccessor<S, D> implements IAmqpQueueConsumer<S, D> {
 
 	private String consumer;
+	private boolean autoAck;
 	private IAmqpQueueConsumerCallback<S, D> callback;
 
 	/**
@@ -59,6 +62,9 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 			ICloudletController<S> cloudlet, Class<D> dataClass,
 			DataEncoder<D> encoder) {
 		super(config, cloudlet, dataClass, true, encoder);
+		this.autoAck = ConfigUtils.resolveParameter(config,
+				ConfigProperties.getString("AmqpQueueConsumer.0"),
+				Boolean.class, false);
 	}
 
 	@Override
@@ -66,7 +72,6 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 		if (callback instanceof IAmqpQueueConsumerCallback) {
 			super.initialize(callback, state);
 			this.callback = (IAmqpQueueConsumerCallback<S, D>) callback;
-			this.consumer = UUID.randomUUID().toString();
 		} else {
 			IllegalArgumentException e = new IllegalArgumentException(
 					"The callback argument must be of type " //$NON-NLS-1$
@@ -133,8 +138,8 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 		getConnector().consume(
 				this.queue,
 				this.consumer,
-				false,
-				true,
+				super.exclusive,
+				this.autoAck,
 				null,
 				cHandlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler),
@@ -149,18 +154,18 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 				@Override
 				public void onSuccess(Boolean result) {
-					// synchronized (AmqpQueueConsumer.this) {
-					// if (!AmqpQueueConsumer.super.registered)
-					// return;
-					// CallbackArguments<S> arguments = new
-					// OperationResultCallbackArguments<S, Boolean>(
-					// AmqpQueueConsumer.super.cloudlet, result);
-					// AmqpQueueConsumer.this.callback
-					// .unregisterSucceeded(
-					// AmqpQueueConsumer.this.cloudletState,
-					// arguments);
-					AmqpQueueConsumer.super.registered = false;
-					// }
+					synchronized (AmqpQueueConsumer.this) {
+						// if (!AmqpQueueConsumer.super.registered)
+						// return;
+						// CallbackArguments<S> arguments = new
+						// OperationResultCallbackArguments<S, Boolean>(
+						// AmqpQueueConsumer.super.cloudlet, result);
+						// AmqpQueueConsumer.this.callback
+						// .unregisterSucceeded(
+						// AmqpQueueConsumer.this.cloudletState,
+						// arguments);
+						AmqpQueueConsumer.super.registered = false;
+					}
 				}
 
 				@Override

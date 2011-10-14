@@ -1,6 +1,8 @@
 package mosaic.driver.queue.amqp;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,6 +89,12 @@ public final class AmqpDriverComponentCallbacks extends
 									ConfigProperties
 											.getString("AmqpDriverComponentCallbacks.3"), //$NON-NLS-1$
 									String.class, "");
+					try {
+						channelEndpoint = channelEndpoint.replace("0.0.0.0",
+								InetAddress.getLocalHost().getHostAddress());// FIXME
+					} catch (UnknownHostException e) {
+
+					}
 					String channelId = ConfigUtils
 							.resolveParameter(
 									getDriverConfiguration(),

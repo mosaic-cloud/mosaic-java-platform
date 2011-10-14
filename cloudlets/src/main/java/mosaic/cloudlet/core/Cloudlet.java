@@ -31,6 +31,7 @@ import mosaic.core.ops.IResult;
  *            the state of the cloudlet
  */
 public class Cloudlet<S extends Object> implements ICloudlet {
+
 	private boolean active;
 	private CloudletExecutor executor;
 	private CloudletController controller;
@@ -133,7 +134,6 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 
 	@Override
 	public boolean destroy() {
-		boolean destroyed = false;
 		synchronized (this) {
 			this.active = false;
 			IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object>() {
@@ -143,6 +143,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 					Cloudlet.this.controllerCallback.destroySucceeded(
 							Cloudlet.this.state, new CallbackArguments<S>(
 									Cloudlet.this.controller));
+					Cloudlet.this.executor.shutdown();
 				}
 
 				@Override
@@ -150,7 +151,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 					Cloudlet.this.controllerCallback.destroyFailed(
 							Cloudlet.this.state, new CallbackArguments<S>(
 									Cloudlet.this.controller));
-
+					Cloudlet.this.executor.shutdown();
 				}
 
 			};
@@ -179,12 +180,18 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 			IResult<Object> result = new EventDrivenResult<Object>(
 					destroyOperation);
 			this.executor.handleRequest(destroyOperation.getOperation());
-			// result.getResult();
-			this.executor.shutdown();
-			// TODO
-			destroyed = true;
+			 try {
+				result.getResult();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+			//			this.executor.shutdown();
+			//			// TODO
+			//			destroyed = true;
 		}
-		return destroyed;
+		return true;
 	}
 
 	@Override
@@ -227,6 +234,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 	 * 
 	 */
 	final class CloudletController implements ICloudletController<S> {
+
 		@Override
 		public final boolean destroy() {
 			return (Cloudlet.this.destroy());
@@ -285,6 +293,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 	 *            type to invoke
 	 */
 	final class CloudletInvocationHandler<T> implements InvocationHandler {
+
 		private T callback;
 
 		/**
