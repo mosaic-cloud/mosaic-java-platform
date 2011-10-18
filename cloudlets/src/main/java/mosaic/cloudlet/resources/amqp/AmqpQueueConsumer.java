@@ -11,6 +11,7 @@ import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.connector.queue.amqp.IAmqpConsumerCallback;
 import mosaic.core.configuration.ConfigUtils;
+import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
@@ -62,8 +63,9 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 			ICloudletController<S> cloudlet, Class<D> dataClass,
 			DataEncoder<D> encoder) {
 		super(config, cloudlet, dataClass, true, encoder);
-		this.autoAck = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AmqpQueueConsumer.0"),
+		String specification = ConfigProperties
+				.getString("AmqpQueueAccessor.4") + "." + ConfigProperties.getString("AmqpQueueConsumer.0"); //$NON-NLS-1$
+		this.autoAck = ConfigUtils.resolveParameter(config, specification,
 				Boolean.class, false);
 	}
 
@@ -111,9 +113,9 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				synchronized (AmqpQueueConsumer.this) {
 					//					if (AmqpQueueConsumer.super.registered)
 					//						return;
-					MosaicLogger
-							.getLogger()
-							.trace("AmqpQueueConsumer: received consume response message.");
+					MosaicLogger.getLogger().trace(
+							"AmqpQueueConsumer: received consume response message, consumer="
+									+ result);
 					AmqpQueueConsumer.this.consumer = result;
 					//					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
 					//							AmqpQueueConsumer.super.cloudlet, result);

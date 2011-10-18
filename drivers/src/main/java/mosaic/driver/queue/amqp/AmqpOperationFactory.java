@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.GenericOperation;
 import mosaic.core.ops.IOperation;
 import mosaic.core.ops.IOperationFactory;
@@ -111,7 +112,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 
 				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					final Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getDefaultChannel(consumer);
+							.getChannel(consumer);
 					if (channel != null) {
 						try {
 							channel.basicCancel(consumer);
@@ -139,7 +140,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 
 				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					final Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getDefaultChannel(consumer);
+							.getChannel(consumer);
 					if (channel != null) {
 						try {
 							channel.basicAck(delivery, multiple);
@@ -169,7 +170,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						synchronized (AmqpOperationFactory.this.amqpDriver) {
 
 							final Channel channel = AmqpOperationFactory.this.amqpDriver
-									.getDefaultChannel(clientId);
+									.getChannel(clientId);
 							if (channel != null) {
 								GetResponse outcome = null;
 								try {
@@ -209,17 +210,17 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 
 			@Override
 			public String call() throws IOException {
-				String consumerTag = null;
 				String queue = (String) parameters[0];
 				String consumer = (String) parameters[1];
 				boolean exclusive = (Boolean) parameters[2];
 				boolean autoAck = (Boolean) parameters[3];
 				Object extra = parameters[4];
 				IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
+				String consumerTag;
 
 				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getDefaultChannel(consumer);
+							.getChannel(consumer);
 					if (channel != null) {
 						AmqpOperationFactory.this.amqpDriver.consumers.put(
 								consumer, consumeCallback);
@@ -233,9 +234,15 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 										null,
 										AmqpOperationFactory.this.amqpDriver.new ConsumerCallback(
 												extra));
+						if (!consumer.equals(consumerTag))
+							MosaicLogger.getLogger().error(
+									"Received different consumer tag: consumerTag = "
+											+ consumerTag + " consumer "
+											+ consumer);
 					}
 				}
-				return consumerTag;
+
+				return consumer;
 			}
 
 		});
@@ -252,7 +259,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 
 				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getDefaultChannel(clientId);
+							.getChannel(clientId);
 
 					if (channel != null) {
 						AMQP.BasicProperties properties = new AMQP.BasicProperties(
@@ -290,7 +297,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 
 					try {
 						Channel channel = AmqpOperationFactory.this.amqpDriver
-								.getDefaultChannel(clientId);
+								.getChannel(clientId);
 						if (channel != null) {
 							AMQP.Queue.BindOk outcome = channel.queueBind(
 									queue, exchange, routingKey, null);
@@ -321,7 +328,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 
 				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getDefaultChannel(clientId);
+							.getChannel(clientId);
 					if (channel != null) {
 						AMQP.Queue.DeclareOk outcome = null;
 						if (passive) {
@@ -355,7 +362,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 
 				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getDefaultChannel(clientId);
+							.getChannel(clientId);
 					if (channel != null) {
 						AMQP.Exchange.DeclareOk outcome = null;
 						if (passive) {

@@ -19,11 +19,6 @@
 			<artifactId>mosaic-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>spy</groupId>
-			<artifactId>spymemcached</artifactId>
-			<version>2.7</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
