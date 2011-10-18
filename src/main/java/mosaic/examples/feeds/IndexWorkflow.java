@@ -308,10 +308,10 @@ public class IndexWorkflow {
 		}
 	}
 
-	public static void sendAcknowledge(Object extra) {
-		getIndexer((UUID) extra).recvMessage.acknowledge();
-		MosaicLogger.getLogger().trace("finished indexing...");
-	}
+//	public static void sendAcknowledge(Object extra) {
+//		getIndexer((UUID) extra).recvMessage.acknowledge();
+//		MosaicLogger.getLogger().trace("finished indexing...");
+//	}
 
 	private void handleError(Exception e) {
 		ExceptionTracer.traceDeferred(e);
