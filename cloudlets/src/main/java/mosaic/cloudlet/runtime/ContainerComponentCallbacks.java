@@ -329,6 +329,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	@Override
 	public CallbackReference terminated(Component component) {
+		MosaicLogger.getLogger().info(
+				"Container component callback terminating.");
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
