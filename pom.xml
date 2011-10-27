@@ -9,6 +9,7 @@
 	<version>0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>http://www.mosaic-cloud.eu/</url>
+	<inceptionYear>2010</inceptionYear>
 
 	<modules>
 		<module>platform/mosaic-core</module>
@@ -66,6 +67,29 @@
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>2.3.2</version>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<executions>
+					<execution>
+						<id>download-licenses</id>
+						<goals>
+							<goal>download-licenses</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 
@@ -91,8 +115,8 @@
 	</repositories>
 
 	<organization>
-		<name>mOSAIC Project</name>
-		<url>http://www.mosaic-cloud.eu/</url>
+		<name>eAustria Research Institute Timisoara</name>
+		<url>http://www.ieat.ro</url>
 	</organization>
 
 	<developers>
@@ -182,4 +206,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<name>mOSAIC Project </name>
 </project>
