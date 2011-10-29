@@ -44,6 +44,11 @@ public final class ZeroMqChannelSocket
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.bind (endpoint);
+		try {
+			Thread.sleep (100);
+		} catch (final InterruptedException exception) {
+			this.exceptions.traceIgnoredException (exception);
+		}
 	}
 	
 	public final void connect (final String endpoint)
@@ -59,6 +64,11 @@ public final class ZeroMqChannelSocket
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.connect (endpoint);
+		try {
+			Thread.sleep (100);
+		} catch (final InterruptedException exception) {
+			this.exceptions.traceIgnoredException (exception);
+		}
 	}
 	
 	public final Packet dequeue ()
