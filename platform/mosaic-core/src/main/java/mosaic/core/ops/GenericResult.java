@@ -1,6 +1,8 @@
 package mosaic.core.ops;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Defines a generic result handle of asynchronous operation. The asynchronous
@@ -37,6 +39,11 @@ public class GenericResult<T> implements IResult<T> {
 	@Override
 	public T getResult() throws InterruptedException, ExecutionException {
 		return this.operation.get();
+	}
+
+	@Override
+	public T getResult(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+		return this.operation.get (timeout, unit);
 	}
 
 	/*

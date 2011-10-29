@@ -1,6 +1,8 @@
 package mosaic.core.ops;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Defines a result handle of an event-driven asynchronous operation. The
@@ -45,4 +47,8 @@ public class EventDrivenResult<T> implements IResult<T> {
 		return this.operation.get();
 	}
 
+	@Override
+	public T getResult(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+		return this.operation.get (timeout, unit);
+	}
 }

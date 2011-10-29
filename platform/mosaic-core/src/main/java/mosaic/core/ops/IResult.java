@@ -1,6 +1,8 @@
 package mosaic.core.ops;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Interface for handling the result of any asynchronous operation. An object of
@@ -43,4 +45,5 @@ public interface IResult<T> {
 	 *             if the operation threw an exception
 	 */
 	T getResult() throws InterruptedException, ExecutionException;
+	T getResult(long timeout, TimeUnit unit)  throws InterruptedException, ExecutionException, TimeoutException;
 }
