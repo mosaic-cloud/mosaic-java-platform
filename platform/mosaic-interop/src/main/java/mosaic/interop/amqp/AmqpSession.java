@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.mosaic_cloud.interoperability.tools.Identifiers;
+
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
@@ -49,4 +51,9 @@ public enum AmqpSession implements SessionSpecification {
 		return this.selfRole;
 	}
 
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
 }

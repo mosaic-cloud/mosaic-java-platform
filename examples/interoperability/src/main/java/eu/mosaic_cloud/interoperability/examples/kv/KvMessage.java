@@ -45,6 +45,12 @@ public enum KvMessage
 	}
 	
 	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
+	
+	@Override
 	public MessageType getType ()
 	{
 		return (this.type);

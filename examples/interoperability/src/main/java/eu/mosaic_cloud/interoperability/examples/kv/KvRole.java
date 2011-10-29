@@ -23,5 +23,11 @@ public enum KvRole
 		return (this.identifier);
 	}
 	
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
+	
 	public final String identifier;
 }

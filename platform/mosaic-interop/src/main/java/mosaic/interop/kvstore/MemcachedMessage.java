@@ -59,4 +59,9 @@ public enum MemcachedMessage implements MessageSpecification {
 		return this.type;
 	}
 
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
 }

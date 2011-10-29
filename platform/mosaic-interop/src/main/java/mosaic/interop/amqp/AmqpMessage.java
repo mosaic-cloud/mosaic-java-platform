@@ -72,4 +72,9 @@ public enum AmqpMessage implements MessageSpecification {
 		return this.type;
 	}
 
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
 }

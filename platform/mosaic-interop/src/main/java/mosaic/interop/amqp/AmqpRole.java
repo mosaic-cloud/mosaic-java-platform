@@ -23,4 +23,9 @@ public enum AmqpRole implements RoleSpecification {
 		return this.identifier;
 	}
 
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
+import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
 public enum KvSession
@@ -36,6 +37,12 @@ public enum KvSession
 	public RoleSpecification getPeerRole ()
 	{
 		return (this.peerRole);
+	}
+	
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
 	}
 	
 	@Override
