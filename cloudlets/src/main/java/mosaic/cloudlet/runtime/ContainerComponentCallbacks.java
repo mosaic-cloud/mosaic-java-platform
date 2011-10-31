@@ -281,16 +281,19 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	@Override
 	public CallbackReference failed(Component component, Throwable exception) {
+		MosaicLogger.getLogger().trace(
+				"Component container failed " + exception.getMessage());
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
+			Preconditions.checkState(this.status != Status.Terminated);
+			Preconditions.checkState(this.status != Status.Unregistered);
 			// also stop and destroy connector & cloudlets
 			for (CloudletManager container : this.cloudletRunners) {
 				container.stop();
 			}
 			this.component = null;
 			this.status = Status.Terminated;
+			exception.printStackTrace();
 			ExceptionTracer.traceDeferred(exception);
 		}
 		return null;
@@ -302,12 +305,12 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			Preconditions.checkState(this.component == null);
 			Preconditions.checkState(this.status == Status.Created);
 			this.component = component;
+			this.status = Status.Unregistered;
 			ComponentCallReference callReference = ComponentCallReference
 					.create();
 			this.component.register(this.selfGroup, callReference);
 			OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
 			this.pendingReferences.put(callReference, result.trigger);
-			this.status = Status.Unregistered;
 			MosaicLogger.getLogger().trace(
 					"Container component callback initialized."); //$NON-NLS-1$
 		}
@@ -328,6 +331,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					this.component.terminate();
 					throw (new IllegalStateException());
 				}
+				this.status = Status.Ready;
 				MosaicLogger
 						.getLogger()
 						.info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
@@ -340,7 +344,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						this.cloudletRunners.add(container);
 					}
 				}
-				this.status = Status.Ready;
 			} else
 				throw (new IllegalStateException());
 		}
@@ -349,10 +352,12 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	@Override
 	public CallbackReference terminated(Component component) {
+		MosaicLogger.getLogger().info(
+				"Container component callback terminating.");
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
+			Preconditions.checkState(this.status != Status.Terminated);
+			Preconditions.checkState(this.status != Status.Unregistered);
 			// also stop and destroy connector & cloudlets
 			for (CloudletManager container : this.cloudletRunners) {
 				container.stop();

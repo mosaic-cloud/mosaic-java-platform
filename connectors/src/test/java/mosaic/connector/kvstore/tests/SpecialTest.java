@@ -1,0 +1,111 @@
+/*
+ * #%L
+ * mosaic-connector
+ * %%
+ * Copyright (C) 2010 - 2011 eAustria Research Institute Timisoara
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+package mosaic.connector.kvstore.tests;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import mosaic.connector.kvstore.KeyValueStoreConnector;
+import mosaic.core.TestLoggingHandler;
+import mosaic.core.configuration.IConfiguration;
+import mosaic.core.configuration.PropertyTypeConfiguration;
+import mosaic.core.ops.IOperationCompletionHandler;
+import mosaic.core.utils.PojoDataEncoder;
+
+public class SpecialTest {
+
+	private static boolean done = false;
+
+	public static void main(String[] args) {
+		KeyValueStoreConnector<String> connector = null;
+		try {
+			IConfiguration config = PropertyTypeConfiguration.create(
+					KeyValueConnectorTest.class.getClassLoader(),
+					"special-test.prop");
+
+			connector = KeyValueStoreConnector.create(config,
+					new PojoDataEncoder<String>(String.class));
+
+			Runtime.getRuntime().addShutdownHook(new Worker());
+			while (!done) {
+				doWork(connector);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		} finally {
+			shutDown(connector);
+		}
+
+	}
+
+	private static void shutDown(KeyValueStoreConnector<?> connector) {
+		if (connector != null) {
+			try {
+				connector.destroy();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@SuppressWarnings("static-access")
+	private static void doWork(KeyValueStoreConnector<String> connector) {
+		String key;
+		String value;
+
+		List<IOperationCompletionHandler<Boolean>> handlersSet = getHandlers("special set");
+		List<IOperationCompletionHandler<String>> handlersGet = getHandlers("special get");
+		List<IOperationCompletionHandler<Boolean>> handlersDel = getHandlers("special delete");
+
+		while (true) {
+			try {
+				key = "key_" + UUID.randomUUID().toString();
+				value = "value_" + UUID.randomUUID().toString();
+				connector.set(key, value, handlersSet, null);
+				Thread.currentThread().sleep(1000);
+				connector.get(key, handlersGet, null);
+				Thread.currentThread().sleep(1000);
+				connector.delete(key, handlersDel, null);
+				Thread.currentThread().sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private static <T> List<IOperationCompletionHandler<T>> getHandlers(
+			String testName) {
+		IOperationCompletionHandler<T> handler = new TestLoggingHandler<T>(
+				testName);
+		List<IOperationCompletionHandler<T>> list = new ArrayList<IOperationCompletionHandler<T>>();
+		list.add(handler);
+		return list;
+	}
+
+	private static class Worker extends Thread {
+
+		public void run() {
+			SpecialTest.done = true;
+		}
+	}
+
+}
