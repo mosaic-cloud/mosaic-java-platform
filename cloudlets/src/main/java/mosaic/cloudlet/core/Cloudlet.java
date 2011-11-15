@@ -1,3 +1,22 @@
+/*
+ * #%L
+ * mosaic-cloudlet
+ * %%
+ * Copyright (C) 2010 - 2011 mOSAIC Project
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package mosaic.cloudlet.core;
 
 import java.lang.reflect.InvocationHandler;
@@ -13,6 +32,7 @@ import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.cloudlet.runtime.CloudletExecutor;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
+import mosaic.core.log.MosaicLogger;
 import mosaic.core.ops.CompletionInvocationHandler;
 import mosaic.core.ops.EventDrivenOperation;
 import mosaic.core.ops.EventDrivenResult;
@@ -180,8 +200,10 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 			IResult<Object> result = new EventDrivenResult<Object>(
 					destroyOperation);
 			this.executor.handleRequest(destroyOperation.getOperation());
-			 try {
+			try {
+				System.out.println("Cloudlet.destroy() - Waiting for destroy.");
 				result.getResult();
+				System.out.println("Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {

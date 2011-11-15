@@ -1,3 +1,22 @@
+/*
+ * #%L
+ * mosaic-driver
+ * %%
+ * Copyright (C) 2010 - 2011 mOSAIC Project
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package mosaic.driver.queue.amqp;
 
 import java.io.IOException;
@@ -24,7 +43,6 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.Envelope;
-import com.rabbitmq.client.FlowListener;
 import com.rabbitmq.client.ReturnListener;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
@@ -43,7 +61,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 
 	private Connection connection;
 	private ConcurrentHashMap<String, Channel> channels;
-	private final FlowCallback flowCallback;
 	private final ReturnCallback returnCallback;
 	private final ShutdownListener shutdownListener;
 	protected final ConcurrentHashMap<String, IAmqpConsumer> consumers;
@@ -65,7 +82,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		this.opFactory = new AmqpOperationFactory(this);
 
 		this.returnCallback = new ReturnCallback();
-		this.flowCallback = new FlowCallback();
 		this.shutdownListener = new ConnectionShutdownListener();
 		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
 		this.executor = Executors.newFixedThreadPool(1);
@@ -378,7 +394,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		return startOperation(operation, complHandler);
 	}
 
-	protected Channel getDefaultChannel(String clientId) {
+	protected Channel getChannel(String clientId) {
 		Channel channel = this.channels.get(clientId);
 		if (channel == null) {
 			channel = this.openChannel(clientId);
@@ -394,8 +410,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 				if (this.connected) {
 					channel = this.connection.createChannel();
 					channel.setDefaultConsumer(null);
-					channel.setReturnListener(this.returnCallback);
-					channel.setFlowListener(this.flowCallback);
+					channel.addReturnListener(this.returnCallback);
 					channel.basicQos(1);
 					this.channels.put(clientId, channel);
 				}
@@ -417,20 +432,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 
 		super.submitOperation(operation.getOperation());
 		return iResult;
-	}
-
-	/**
-	 * Handler for channel flow events.
-	 * 
-	 * @author Georgiana Macariu
-	 * 
-	 */
-	private final class FlowCallback implements FlowListener {
-
-		@Override
-		public void handleFlow(boolean active) {
-			// nothing to do here
-		}
 	}
 
 	/**
@@ -462,6 +463,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
 					.remove(consumer);
+			
 			if (cancelCallback != null) {
 				Runnable task = new Runnable() {
 
@@ -482,6 +484,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
+			AmqpDriver.this.channels.remove(consumer);
 			if (consumeCallback == null) {
 				MosaicLogger
 						.getLogger()
@@ -537,7 +540,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 					"AmqpDriver - Received SHUTDOWN callback for consumer " //$NON-NLS-1$
 							+ consumer + "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
-					.get(consumer);
+					.remove(consumer);
+			AmqpDriver.this.channels.remove(consumer);
 			if (consumeCallback != null) {
 				Runnable task = new Runnable() {
 

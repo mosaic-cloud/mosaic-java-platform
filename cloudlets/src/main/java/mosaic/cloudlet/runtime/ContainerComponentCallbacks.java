@@ -1,3 +1,22 @@
+/*
+ * #%L
+ * mosaic-cloudlet
+ * %%
+ * Copyright (C) 2010 - 2011 mOSAIC Project
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package mosaic.cloudlet.runtime;
 
 import java.net.URL;
@@ -244,6 +263,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	public void terminate() {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component != null);
+			System.out.println("ContainerComponentCallbacks.terminate()");
 			this.component.terminate();
 		}
 	}
@@ -261,16 +281,19 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	@Override
 	public CallbackReference failed(Component component, Throwable exception) {
+		MosaicLogger.getLogger().trace(
+				"Component container failed " + exception.getMessage());
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
+			Preconditions.checkState(this.status != Status.Terminated);
+			Preconditions.checkState(this.status != Status.Unregistered);
 			// also stop and destroy connector & cloudlets
 			for (CloudletManager container : this.cloudletRunners) {
 				container.stop();
 			}
 			this.component = null;
 			this.status = Status.Terminated;
+			exception.printStackTrace();
 			ExceptionTracer.traceDeferred(exception);
 		}
 		return null;
@@ -282,12 +305,12 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			Preconditions.checkState(this.component == null);
 			Preconditions.checkState(this.status == Status.Created);
 			this.component = component;
+			this.status = Status.Unregistered;
 			ComponentCallReference callReference = ComponentCallReference
 					.create();
 			this.component.register(this.selfGroup, callReference);
 			OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
 			this.pendingReferences.put(callReference, result.trigger);
-			this.status = Status.Unregistered;
 			MosaicLogger.getLogger().trace(
 					"Container component callback initialized."); //$NON-NLS-1$
 		}
@@ -308,6 +331,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					this.component.terminate();
 					throw (new IllegalStateException());
 				}
+				this.status = Status.Ready;
 				MosaicLogger
 						.getLogger()
 						.info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
@@ -320,7 +344,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						this.cloudletRunners.add(container);
 					}
 				}
-				this.status = Status.Ready;
 			} else
 				throw (new IllegalStateException());
 		}
@@ -333,8 +356,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				"Container component callback terminating.");
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
+			Preconditions.checkState(this.status != Status.Terminated);
+			Preconditions.checkState(this.status != Status.Unregistered);
 			// also stop and destroy connector & cloudlets
 			for (CloudletManager container : this.cloudletRunners) {
 				container.stop();

@@ -1,3 +1,22 @@
+/*
+ * #%L
+ * mosaic-cloudlet
+ * %%
+ * Copyright (C) 2010 - 2011 mOSAIC Project
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package mosaic.cloudlet.resources.amqp;
 
 import java.util.ArrayList;
@@ -11,6 +30,7 @@ import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.connector.queue.amqp.IAmqpConsumerCallback;
 import mosaic.core.configuration.ConfigUtils;
+import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;
@@ -62,8 +82,9 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 			ICloudletController<S> cloudlet, Class<D> dataClass,
 			DataEncoder<D> encoder) {
 		super(config, cloudlet, dataClass, true, encoder);
-		this.autoAck = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("AmqpQueueConsumer.0"),
+		String specification = ConfigProperties
+				.getString("AmqpQueueAccessor.4") + "." + ConfigProperties.getString("AmqpQueueConsumer.0"); //$NON-NLS-1$
+		this.autoAck = ConfigUtils.resolveParameter(config, specification,
 				Boolean.class, false);
 	}
 
@@ -111,9 +132,9 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				synchronized (AmqpQueueConsumer.this) {
 					//					if (AmqpQueueConsumer.super.registered)
 					//						return;
-					MosaicLogger
-							.getLogger()
-							.trace("AmqpQueueConsumer: received consume response message.");
+					MosaicLogger.getLogger().trace(
+							"AmqpQueueConsumer: received consume response message, consumer="
+									+ result);
 					AmqpQueueConsumer.this.consumer = result;
 					//					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
 					//							AmqpQueueConsumer.super.cloudlet, result);
