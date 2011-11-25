@@ -56,8 +56,8 @@ public class PongCloudlet {
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("kvstore"));
 			state.kvStore = new KeyValueAccessor<PongCloudletState>(
-					kvConfiguration, cloudlet, new JsonDataEncoder<PingPongData>(
-							PingPongData.class));
+					kvConfiguration, cloudlet,
+					new JsonDataEncoder<PingPongData>(PingPongData.class));
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
@@ -129,7 +129,7 @@ public class PongCloudlet {
 
 			// send reply to Ping Cloudlet
 			PongMessage pong = new PongMessage(arguments.getKey(),
-					 (PingPongData) arguments.getValue());
+					(PingPongData) arguments.getValue());
 			state.publisher.publish(pong, null, "");
 
 			ICloudletController<PongCloudletState> cloudlet = arguments
@@ -260,6 +260,7 @@ public class PongCloudlet {
 	}
 
 	public static final class PongCloudletState {
+
 		AmqpQueueConsumer<PongCloudletState, PingMessage> consumer;
 		AmqpQueuePublisher<PongCloudletState, PongMessage> publisher;
 		IKeyValueAccessor<PongCloudletState> kvStore;

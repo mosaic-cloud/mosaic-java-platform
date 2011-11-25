@@ -463,7 +463,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
 					.remove(consumer);
-			
+			AmqpDriver.this.channels.remove(consumer);
 			if (cancelCallback != null) {
 				Runnable task = new Runnable() {
 
@@ -484,7 +484,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
-			AmqpDriver.this.channels.remove(consumer);
+			
 			if (consumeCallback == null) {
 				MosaicLogger
 						.getLogger()
