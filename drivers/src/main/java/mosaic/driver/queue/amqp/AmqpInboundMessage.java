@@ -28,6 +28,7 @@ package mosaic.driver.queue.amqp;
  */
 @SuppressWarnings("PMD")
 public class AmqpInboundMessage implements IAmqpMessage {
+
 	private final String callback;
 	private final String consumer;
 	private final String contentEncoding;
@@ -65,11 +66,11 @@ public class AmqpInboundMessage implements IAmqpMessage {
 		this.delivery = delivery;
 		this.exchange = exchange;
 		this.routingKey = routingKey;
-		this.identifier = "";
-		this.correlation = "";
-		this.callback = "";
+		this.identifier = null;
+		this.correlation = null;
+		this.callback = null;
 		this.contentType = contentType;
-		this.contentEncoding = "";
+		this.contentEncoding = null;
 		this.data = data;
 		this.durable = durable;
 	}

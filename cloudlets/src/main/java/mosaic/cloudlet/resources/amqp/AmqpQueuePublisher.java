@@ -181,8 +181,46 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 	}
 
+	@Override
+	public void publish(D data, final Object token, String contentType,
+			String correlation) {
+		// FIXME this should be in a request-reply accessor
+		synchronized (this) {
+			try {
+				byte[] sData = this.dataEncoder.encode(data);
+				final AmqpOutboundMessage message = new AmqpOutboundMessage(
+						this.exchange, this.routingKey, sData, true, true,
+						false, null, null, contentType, correlation, null);
+
+				IOperationCompletionHandler<Boolean> cHandler = new PublishCompletionHandler(
+						message, token);
+				List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+				handlers.add(cHandler);
+
+				super.getConnector().publish(message, handlers,
+						this.cloudlet.getResponseInvocationHandler(cHandler));
+				MosaicLogger.getLogger().trace(
+						"AmqpQueuePublisher - published message " + data);
+			} catch (Exception e) {
+				@SuppressWarnings("unchecked")
+				IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
+						.buildCallbackInvoker(this.callback,
+								IAmqpQueuePublisherCallback.class);
+				AmqpQueuePublishMessage<D> pMessage = new AmqpQueuePublishMessage<D>(
+						AmqpQueuePublisher.this, null, token);
+				AmqpQueuePublishCallbackArguments<S, D> arguments = new AmqpQueuePublishCallbackArguments<S, D>(
+						AmqpQueuePublisher.this.cloudlet, pMessage);
+				proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
+						arguments);
+				ExceptionTracer.traceDeferred(e);
+			}
+		}
+
+	}
+
 	final class PublishCompletionHandler implements
 			IOperationCompletionHandler<Boolean> {
+
 		private AmqpQueuePublishCallbackArguments<S, D> arguments;
 
 		public PublishCompletionHandler(AmqpOutboundMessage message,

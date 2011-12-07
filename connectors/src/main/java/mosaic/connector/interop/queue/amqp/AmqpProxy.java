@@ -172,7 +172,12 @@ public final class AmqpProxy extends ConnectorProxy {
 		requestBuilder.setImmediate(message.isImmediate());
 		requestBuilder.setMandatory(message.isMandatory());
 		requestBuilder.setRoutingKey(message.getRoutingKey());
-		requestBuilder.setContentType(message.getContentType());
+		if (message.getContentType() != null)
+			requestBuilder.setContentType(message.getContentType());
+		if (message.getCorrelation() != null)
+			requestBuilder.setCorrelationId(message.getCorrelation());
+		if (message.getCallback() != null)
+			requestBuilder.setReplyTo(message.getCallback());
 
 		Message mssg = new Message(AmqpMessage.PUBLISH_REQUEST,
 				requestBuilder.build());

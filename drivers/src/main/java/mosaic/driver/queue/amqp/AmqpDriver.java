@@ -484,7 +484,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
-			
+
 			if (consumeCallback == null) {
 				MosaicLogger
 						.getLogger()
@@ -520,7 +520,9 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 								data,
 								((properties.getDeliveryMode() != null) && (properties
 										.getDeliveryMode() == 2)) ? true
-										: false, properties.getContentType());
+										: false, properties.getReplyTo(), null,
+								properties.getContentType(), properties
+										.getCorrelationId(), null);
 						consumeCallback.handleDelivery(message);
 					}
 				};

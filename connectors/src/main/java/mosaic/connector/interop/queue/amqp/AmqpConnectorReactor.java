@@ -110,8 +110,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			token = okPayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					mssgPrefix
-							+ amqpMessage.toString() + " for request id "
+					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
 			handlers = getHandlers(token);
@@ -127,8 +126,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			token = nokPayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					mssgPrefix
-							+ amqpMessage.toString() + " for request id "
+					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
 			handlers = getHandlers(token);
@@ -144,8 +142,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			token = errorPayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					mssgPrefix
-							+ amqpMessage.toString() + " for request id "
+					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
 			handlers = getHandlers(token);
@@ -162,8 +159,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			token = consumePayload.getToken();
 
 			MosaicLogger.getLogger().trace(
-					mssgPrefix
-							+ amqpMessage.toString() + " for request id "
+					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
 			handlers = getHandlers(token);
@@ -215,9 +211,16 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			String routingKey = delivery.getRoutingKey();
 			int deliveryMode = delivery.getDeliveryMode();
 			byte[] data = delivery.getData().toByteArray();
+			String correlationId = null;
+			String replyTo = null;
+			if (delivery.hasCorrelationId())
+				correlationId = delivery.getCorrelationId();
+			if (delivery.hasReplyTo())
+				replyTo = delivery.getReplyTo();
 			AmqpInboundMessage mssg = new AmqpInboundMessage(consumerId,
 					deliveryTag, exchange, routingKey, data, deliveryMode == 2,
-					delivery.getContentType());
+					replyTo, null, delivery.getContentType(), correlationId,
+					null);
 			callback = this.callbacksMap.getRequestHandlers(consumerId);
 			callback.handleDelivery(mssg);
 			break;
