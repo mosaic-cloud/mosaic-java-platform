@@ -201,9 +201,9 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 					destroyOperation);
 			this.executor.handleRequest(destroyOperation.getOperation());
 			try {
-				System.out.println("Cloudlet.destroy() - Waiting for destroy.");
+				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Waiting for destroy.");
 				result.getResult();
-				System.out.println("Cloudlet.destroy() - Cloudlet destroyed.");
+				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {

@@ -205,6 +205,7 @@ public class PingCloudlet {
 	}
 
 	public static final class PingCloudletState {
+
 		AmqpQueueConsumer<PingCloudletState, PongMessage> consumer;
 		AmqpQueuePublisher<PingCloudletState, PingMessage> publisher;
 	}

@@ -21,7 +21,6 @@ package mosaic.cloudlet.resources.amqp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import mosaic.cloudlet.ConfigProperties;
 import mosaic.cloudlet.core.CallbackArguments;
@@ -30,7 +29,6 @@ import mosaic.cloudlet.core.OperationResultCallbackArguments;
 import mosaic.cloudlet.resources.IResourceAccessorCallback;
 import mosaic.connector.queue.amqp.IAmqpConsumerCallback;
 import mosaic.core.configuration.ConfigUtils;
-import mosaic.core.configuration.ConfigurationIdentifier;
 import mosaic.core.configuration.IConfiguration;
 import mosaic.core.exceptions.ExceptionTracer;
 import mosaic.core.log.MosaicLogger;

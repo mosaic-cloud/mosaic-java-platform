@@ -38,7 +38,7 @@ public final class MosaicLogger {
 
 	private MosaicLogger() {
 		this.logger = LoggerFactory.getLogger(MosaicLogger.class);
-		((ch.qos.logback.classic.Logger) this.logger).setLevel(Level.TRACE);
+		((ch.qos.logback.classic.Logger) this.logger).setLevel(Level.INFO);
 	}
 
 	/**
