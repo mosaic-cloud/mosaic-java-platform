@@ -183,14 +183,17 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 	@Override
 	public void publish(D data, final Object token, String contentType,
-			String correlation) {
-		// FIXME this should be in a request-reply accessor
+			String selector) {
 		synchronized (this) {
 			try {
+				// FIXME this is a hack
+				String routingKey = (selector != null) ? this.queue + "."
+						+ selector : this.routingKey;
+				String exchange = (selector != null) ? "" : this.exchange;
 				byte[] sData = this.dataEncoder.encode(data);
 				final AmqpOutboundMessage message = new AmqpOutboundMessage(
-						this.exchange, this.routingKey, sData, true, true,
-						false, null, null, contentType, correlation, null);
+						exchange, routingKey, sData, true, true, false, null,
+						null, contentType, null, null);
 
 				IOperationCompletionHandler<Boolean> cHandler = new PublishCompletionHandler(
 						message, token);
