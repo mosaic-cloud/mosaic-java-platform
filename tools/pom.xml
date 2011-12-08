@@ -18,5 +18,6 @@
 		<module>tools-json</module>
 		<module>tools-miscellaneous</module>
 		<module>tools-transcript</module>
+		<module>jetty-httpg-connector</module>
 	</modules>
 </project>
