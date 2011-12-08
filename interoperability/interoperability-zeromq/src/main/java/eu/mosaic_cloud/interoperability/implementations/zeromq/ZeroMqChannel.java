@@ -437,8 +437,10 @@ public final class ZeroMqChannel
 					session.idle.release ();
 					throw (exception);
 				}
-			else
+			else {
 				this.transcript.traceError ("null encountered while scheduling dispatcher; ignoring!");
+				session.idle.release ();
+			}
 		}
 	}
 	
@@ -454,8 +456,10 @@ public final class ZeroMqChannel
 					this.idle.release ();
 					throw (exception);
 				}
-			else
+			else {
 				this.transcript.traceError ("null encountered while scheduling handler; ignoring!");
+				this.idle.release ();
+			}
 		}
 	}
 	
