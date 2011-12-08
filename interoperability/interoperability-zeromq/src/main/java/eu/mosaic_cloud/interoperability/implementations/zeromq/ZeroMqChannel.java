@@ -444,14 +444,19 @@ public final class ZeroMqChannel
 	
 	private final void scheduleHandler ()
 	{
-		if ((this.handlers.size () > 0) && this.idle.tryAcquire ())
-			try {
-				this.executor.execute (this.handlers.poll ());
-			} catch (final Error exception) {
-				this.exceptions.traceDeferredException (exception, "error encountered while scheduling handler; rethrowing!");
-				this.idle.release ();
-				throw (exception);
-			}
+		if ((this.handlers.size () > 0) && this.idle.tryAcquire ()) {
+			final Handler handler = this.handlers.poll ();
+			if (handler != null)
+				try {
+					this.executor.execute (handler);
+				} catch (final Error exception) {
+					this.exceptions.traceDeferredException (exception, "error encountered while scheduling handler; rethrowing!");
+					this.idle.release ();
+					throw (exception);
+				}
+			else
+				this.transcript.traceError ("null encountered while scheduling handler; ignoring!");
+		}
 	}
 	
 	private final TranscriptExceptionTracer exceptions;
