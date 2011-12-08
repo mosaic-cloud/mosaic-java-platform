@@ -427,14 +427,19 @@ public final class ZeroMqChannel
 	
 	private final void scheduleDispatcher (final Session session)
 	{
-		if (!session.dispatchers.isEmpty () && session.idle.tryAcquire ())
-			try {
-				session.executor.get ().execute (session.dispatchers.poll ());
-			} catch (final Error exception) {
-				this.exceptions.traceDeferredException (exception, "error encountered while scheduling dispatcher; rethrowing!");
-				session.idle.release ();
-				throw (exception);
-			}
+		if (!session.dispatchers.isEmpty () && session.idle.tryAcquire ()) {
+			final Dispatcher dispatcher = session.dispatchers.poll ();
+			if (dispatcher != null)
+				try {
+					session.executor.get ().execute (dispatcher);
+				} catch (final Error exception) {
+					this.exceptions.traceDeferredException (exception, "error encountered while scheduling dispatcher; rethrowing!");
+					session.idle.release ();
+					throw (exception);
+				}
+			else
+				this.transcript.traceError ("null encountered while scheduling dispatcher; ignoring!");
+		}
 	}
 	
 	private final void scheduleHandler ()
