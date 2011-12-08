@@ -446,7 +446,7 @@ public final class ZeroMqChannel
 	
 	private final void scheduleHandler ()
 	{
-		if ((this.handlers.size () > 0) && this.idle.tryAcquire ()) {
+		if (!this.handlers.isEmpty () && this.idle.tryAcquire ()) {
 			final Handler handler = this.handlers.poll ();
 			if (handler != null)
 				try {
