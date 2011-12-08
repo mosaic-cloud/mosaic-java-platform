@@ -2,7 +2,7 @@
 
 set -x -e -E -u -o pipefail || exit 1
 
-ip=194.102.62.140
+ip=192.168.137.10
 port=31808
 
 curl -s "http://${ip}:${port}/"'log/stream' &

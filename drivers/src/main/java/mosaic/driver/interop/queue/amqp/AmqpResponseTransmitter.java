@@ -68,7 +68,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 	 */
 	public void sendResponse(Session session, CompletionToken token,
 			AmqpOperations operation, Object result, boolean isError) {
-		Message message=null; // NOPMD by georgiana on 10/12/11 3:34 PM
+		Message message = null; // NOPMD by georgiana on 10/12/11 3:34 PM
 
 		if (isError) {
 			// create error message
@@ -196,7 +196,12 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		deliveryPayload.setRoutingKey(message.getRoutingKey());
 		deliveryPayload.setDeliveryMode(message.isDurable() ? 2 : 1);
 		deliveryPayload.setData(ByteString.copyFrom(message.getData()));
-		deliveryPayload.setContentType(message.getContentType());
+		if (message.getContentType() != null)
+			deliveryPayload.setContentType(message.getContentType());
+		if (message.getCallback() != null)
+			deliveryPayload.setReplyTo(message.getCallback());
+		if (message.getCorrelation() != null)
+			deliveryPayload.setCorrelationId(message.getCorrelation());
 		Message mssg = new Message(AmqpMessage.DELIVERY,
 				deliveryPayload.build());
 

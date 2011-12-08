@@ -222,9 +222,20 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			boolean immediate = publish.getImmediate();
 			boolean mandatory = publish.getMandatory();
 			routingKey = publish.getRoutingKey();
+			String correlationId = null;
+			String replyTo = null;
+			;
+			if (publish.hasCorrelationId()) {
+				correlationId = publish.getCorrelationId();
+			}
+			if (publish.hasReplyTo()) {
+				replyTo = publish.getReplyTo();
+			}
+
 			AmqpOutboundMessage mssg = new AmqpOutboundMessage(exchange,
 					routingKey, dataBytes, mandatory, immediate, durable,
-					publish.getContentType());
+					replyTo, null, publish.getContentType(), correlationId,
+					null);
 
 			MosaicLogger.getLogger().trace(
 					"AmqpStub - Received request for PUBLISH"); //$NON-NLS-1$
