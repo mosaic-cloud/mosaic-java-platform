@@ -86,7 +86,6 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 			BucketData bucketData = this.bucketFactories.get(bucket);
 			if (bucketData == null) {
 				bucketData = new BucketData(bucket);
-				System.out.println("AbstractKeyValueDriver.registerClient()");
 				this.bucketFactories.put(bucket, bucketData);
 				bucketData.noClients.incrementAndGet();
 				MosaicLogger.getLogger().trace(
@@ -181,11 +180,9 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 	protected <T extends IOperationFactory> T getOperationFactory(
 			String clientId, Class<T> factClass) {
 		T factory = null; // NOPMD by georgiana on 10/12/11 12:55 PM
-		synchronized (this) {
-			BucketData bucket = this.clientBucketMap.get(clientId);
-			if (bucket != null) {
-				factory = factClass.cast(bucket.opFactory);
-			}
+		BucketData bucket = this.clientBucketMap.get(clientId);
+		if (bucket != null) {
+			factory = factClass.cast(bucket.opFactory);
 		}
 		return factory;
 	}
@@ -197,11 +194,9 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 	 */
 	private IOperationFactory getOperationFactory(String clientId) {
 		IOperationFactory factory = null; // NOPMD by georgiana on 10/12/11 12:55 PM
-		synchronized (this) {
-			BucketData bucket = this.clientBucketMap.get(clientId);
-			if (bucket != null) {
-				factory = bucket.opFactory;
-			}
+		BucketData bucket = this.clientBucketMap.get(clientId);
+		if (bucket != null) {
+			factory = bucket.opFactory;
 		}
 		return factory;
 	}

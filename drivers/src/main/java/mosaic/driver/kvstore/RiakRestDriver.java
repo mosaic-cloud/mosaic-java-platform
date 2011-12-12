@@ -94,7 +94,7 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
 		// String.class, "");
 
 		MosaicLogger.getLogger().trace(
-				"Created Riak REST driver for host " + host + ":" + port);
+				"Created Riak REST driver for host " + host + ":" + port+" [threads="+noThreads+"]");
 		return new RiakRestDriver(noThreads, host, port);
 	}
 
