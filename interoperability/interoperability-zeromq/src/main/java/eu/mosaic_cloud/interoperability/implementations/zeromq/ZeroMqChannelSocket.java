@@ -143,7 +143,7 @@ public final class ZeroMqChannelSocket
 				inboundPollIndex = poller.register (this.socket, ZMQ.Poller.POLLIN);
 			else
 				inboundPollIndex = -1;
-			if (this.outboundPackets.size () > 0)
+			if (!this.outboundPackets.isEmpty ())
 				outboundPollIndex = poller.register (this.socket, ZMQ.Poller.POLLOUT);
 			else
 				outboundPollIndex = -1;
