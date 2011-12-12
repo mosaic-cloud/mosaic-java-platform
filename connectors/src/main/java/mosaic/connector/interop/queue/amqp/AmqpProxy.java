@@ -273,13 +273,11 @@ public final class AmqpProxy extends ConnectorProxy {
 	private <V extends Object> void sendMessage(Message message,
 			CompletionToken token, List<IOperationCompletionHandler<V>> handlers) {
 		try {
-			synchronized (this) {
 				// store token and completion handlers
 				super.registerHandlers(token.getMessageId(), handlers);
 				super.sendRequest(
 						getResponseReactor(AmqpConnectorReactor.class)
 								.getSession(), message);
-			}
 			MosaicLogger.getLogger().trace(
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");

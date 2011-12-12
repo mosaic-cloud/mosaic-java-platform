@@ -115,10 +115,8 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	 */
 	@Override
 	public void register() {
-		synchronized (this) {
-			// declare queue and in case of success register as consumer
-			startRegister(this.callback);
-		}
+		// declare queue and in case of success register as consumer
+		startRegister(this.callback);
 	}
 
 	@Override
@@ -168,38 +166,36 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 	@Override
 	public void unregister() {
-		synchronized (this) {
-			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-				@Override
-				public void onSuccess(Boolean result) {
-					synchronized (AmqpQueueConsumer.this) {
-						// if (!AmqpQueueConsumer.super.registered)
-						// return;
-						// CallbackArguments<S> arguments = new
-						// OperationResultCallbackArguments<S, Boolean>(
-						// AmqpQueueConsumer.super.cloudlet, result);
-						// AmqpQueueConsumer.this.callback
-						// .unregisterSucceeded(
-						// AmqpQueueConsumer.this.cloudletState,
-						// arguments);
-						AmqpQueueConsumer.super.registered = false;
-					}
+			@Override
+			public void onSuccess(Boolean result) {
+				synchronized (AmqpQueueConsumer.this) {
+					// if (!AmqpQueueConsumer.super.registered)
+					// return;
+					// CallbackArguments<S> arguments = new
+					// OperationResultCallbackArguments<S, Boolean>(
+					// AmqpQueueConsumer.super.cloudlet, result);
+					// AmqpQueueConsumer.this.callback
+					// .unregisterSucceeded(
+					// AmqpQueueConsumer.this.cloudletState,
+					// arguments);
+					AmqpQueueConsumer.super.registered = false;
 				}
+			}
 
-				@Override
-				public <E extends Throwable> void onFailure(E error) {
-					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
-							AmqpQueueConsumer.super.cloudlet, error);
-					AmqpQueueConsumer.this.callback.unregisterFailed(
-							AmqpQueueConsumer.super.cloudletState, arguments);
-				}
-			};
-			List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-			cHandlers.add(cHandler);
-			super.getConnector().cancel(this.consumer, cHandlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-		}
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						AmqpQueueConsumer.super.cloudlet, error);
+				AmqpQueueConsumer.this.callback.unregisterFailed(
+						AmqpQueueConsumer.super.cloudletState, arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		cHandlers.add(cHandler);
+		super.getConnector().cancel(this.consumer, cHandlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
 	/**
@@ -210,39 +206,37 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	 */
 	@Override
 	public void acknowledge(AmqpQueueConsumeMessage<D> message) {
-		synchronized (this) {
-			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-				@Override
-				public void onSuccess(Boolean result) {
-					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
-							AmqpQueueConsumer.super.cloudlet, result);
-					AmqpQueueConsumer.this.callback.acknowledgeSucceeded(
-							AmqpQueueConsumer.super.cloudletState, arguments);
-				}
+			@Override
+			public void onSuccess(Boolean result) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						AmqpQueueConsumer.super.cloudlet, result);
+				AmqpQueueConsumer.this.callback.acknowledgeSucceeded(
+						AmqpQueueConsumer.super.cloudletState, arguments);
+			}
 
-				@Override
-				public <E extends Throwable> void onFailure(E error) {
-					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
-							AmqpQueueConsumer.super.cloudlet, error);
-					AmqpQueueConsumer.this.callback.acknowledgeFailed(
-							AmqpQueueConsumer.super.cloudletState, arguments);
-				}
-			};
-			List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-			handlers.add(cHandler);
-			// if (!this.autoAck) {
-			AmqpInboundMessage inMssg = message.getMessage();
-			super.getConnector().ack(inMssg.getDelivery(), false, handlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-			// } else {
-			// CallbackArguments<S> arguments = new
-			// OperationResultCallbackArguments<S, Boolean>(
-			// AmqpQueueConsumer.super.cloudlet, true);
-			// callback.acknowledgeSucceeded(
-			// AmqpQueueConsumer.super.cloudletState, arguments);
-			// }
-		}
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+						AmqpQueueConsumer.super.cloudlet, error);
+				AmqpQueueConsumer.this.callback.acknowledgeFailed(
+						AmqpQueueConsumer.super.cloudletState, arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		handlers.add(cHandler);
+		// if (!this.autoAck) {
+		AmqpInboundMessage inMssg = message.getMessage();
+		super.getConnector().ack(inMssg.getDelivery(), false, handlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
+		// } else {
+		// CallbackArguments<S> arguments = new
+		// OperationResultCallbackArguments<S, Boolean>(
+		// AmqpQueueConsumer.super.cloudlet, true);
+		// callback.acknowledgeSucceeded(
+		// AmqpQueueConsumer.super.cloudletState, arguments);
+		// }
 	}
 
 	/**

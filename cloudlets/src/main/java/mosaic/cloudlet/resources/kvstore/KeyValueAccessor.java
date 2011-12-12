@@ -191,118 +191,110 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 	@Override
 	public IResult<Boolean> set(final String key, final Object value,
 			final Object extra) {
-		synchronized (this) {
-			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-				@Override
-				public void onSuccess(Boolean result) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, value, extra);
-					KeyValueAccessor.this.callback.setSucceeded(
-							KeyValueAccessor.this.cloudletState, arguments);
+			@Override
+			public void onSuccess(Boolean result) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, key, value, extra);
+				KeyValueAccessor.this.callback.setSucceeded(
+						KeyValueAccessor.this.cloudletState, arguments);
 
-				}
+			}
 
-				@Override
-				public <E extends Throwable> void onFailure(E error) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, error, extra);
-					KeyValueAccessor.this.callback.setFailed(
-							KeyValueAccessor.this.cloudletState, arguments);
-				}
-			};
-			List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-			handlers.add(cHandler);
-			return this.connector.set(key, value, handlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-		}
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, key, error, extra);
+				KeyValueAccessor.this.callback.setFailed(
+						KeyValueAccessor.this.cloudletState, arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		handlers.add(cHandler);
+		return this.connector.set(key, value, handlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
 	@Override
 	public IResult<Object> get(final String key, final Object extra) {
-		synchronized (this) {
-			IOperationCompletionHandler<Object> cHandler = new IOperationCompletionHandler<Object>() {
+		IOperationCompletionHandler<Object> cHandler = new IOperationCompletionHandler<Object>() {
 
-				@Override
-				public void onSuccess(Object result) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, result, extra);
-					KeyValueAccessor.this.callback.getSucceeded(
-							KeyValueAccessor.this.cloudletState, arguments);
+			@Override
+			public void onSuccess(Object result) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, key, result, extra);
+				KeyValueAccessor.this.callback.getSucceeded(
+						KeyValueAccessor.this.cloudletState, arguments);
 
-				}
+			}
 
-				@Override
-				public <E extends Throwable> void onFailure(E error) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, error, extra);
-					KeyValueAccessor.this.callback.getFailed(
-							KeyValueAccessor.this.cloudletState, arguments);
-				}
-			};
-			List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>>();
-			handlers.add(cHandler);
-			return this.connector.get(key, handlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-		}
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, key, error, extra);
+				KeyValueAccessor.this.callback.getFailed(
+						KeyValueAccessor.this.cloudletState, arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>>();
+		handlers.add(cHandler);
+		return this.connector.get(key, handlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
 	@Override
 	public IResult<Boolean> delete(final String key, final Object extra) {
-		synchronized (this) {
-			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-				@Override
-				public void onSuccess(Boolean result) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, null, extra);
-					KeyValueAccessor.this.callback.deleteSucceeded(
-							KeyValueAccessor.this.cloudletState, arguments);
+			@Override
+			public void onSuccess(Boolean result) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, key, null, extra);
+				KeyValueAccessor.this.callback.deleteSucceeded(
+						KeyValueAccessor.this.cloudletState, arguments);
 
-				}
+			}
 
-				@Override
-				public <E extends Throwable> void onFailure(E error) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, key, error, extra);
-					KeyValueAccessor.this.callback.deleteFailed(
-							KeyValueAccessor.this.cloudletState, arguments);
-				}
-			};
-			List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-			handlers.add(cHandler);
-			return this.connector.delete(key, handlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-		}
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, key, error, extra);
+				KeyValueAccessor.this.callback.deleteFailed(
+						KeyValueAccessor.this.cloudletState, arguments);
+			}
+		};
+		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+		handlers.add(cHandler);
+		return this.connector.delete(key, handlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
 	@Override
 	public IResult<List<String>> list(final Object extra) {
-		synchronized (this) {
-			IOperationCompletionHandler<List<String>> cHandler = new IOperationCompletionHandler<List<String>>() {
+		IOperationCompletionHandler<List<String>> cHandler = new IOperationCompletionHandler<List<String>>() {
 
-				@Override
-				public void onSuccess(List<String> result) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, result, null, extra);
-					KeyValueAccessor.this.callback.deleteSucceeded(
-							KeyValueAccessor.this.cloudletState, arguments);
+			@Override
+			public void onSuccess(List<String> result) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, result, null, extra);
+				KeyValueAccessor.this.callback.deleteSucceeded(
+						KeyValueAccessor.this.cloudletState, arguments);
 
-				}
+			}
 
-				@Override
-				public <E extends Throwable> void onFailure(E error) {
-					KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
-							KeyValueAccessor.this.cloudlet, "", error, extra); //$NON-NLS-1$
-					KeyValueAccessor.this.callback.deleteFailed(
-							KeyValueAccessor.this.cloudletState, arguments);
-				}
-			};
-			List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
-			handlers.add(cHandler);
-			return this.connector.list(handlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-		}
+			@Override
+			public <E extends Throwable> void onFailure(E error) {
+				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+						KeyValueAccessor.this.cloudlet, "", error, extra); //$NON-NLS-1$
+				KeyValueAccessor.this.callback.deleteFailed(
+						KeyValueAccessor.this.cloudletState, arguments);
+			}
+		};
+		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
+		handlers.add(cHandler);
+		return this.connector.list(handlers,
+				this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
 }

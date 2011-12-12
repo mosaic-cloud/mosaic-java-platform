@@ -36,6 +36,7 @@ import mosaic.core.ops.IResult;
  * 
  */
 public abstract class AbstractResourceDriver implements IResourceDriver {
+
 	private final List<IResult<?>> pendingResults;
 	private final ExecutorService executor;
 	private boolean destroyed = false;
@@ -78,9 +79,7 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 *            the operation
 	 */
 	protected <T extends Object> void submitOperation(FutureTask<T> operation) {
-		synchronized (this) {
-			this.executor.submit(operation);
-		}
+		this.executor.submit(operation);
 	}
 
 	/**
@@ -93,9 +92,7 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 *            the operation
 	 */
 	protected void executeOperation(Runnable operation) {
-		synchronized (this) {
-			this.executor.execute(operation);
-		}
+		this.executor.execute(operation);
 	}
 
 	public int countPendingOperations() {
@@ -127,19 +124,17 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 */
 	public void handleUnsupportedOperationError(final String opName,
 			final IOperationCompletionHandler<?> handler) {
-		synchronized (this) {
-			Runnable task = new Runnable() {
+		Runnable task = new Runnable() {
 
-				@Override
-				public void run() {
-					Exception error = new UnsupportedOperationException(
-							"Operation " + opName
-									+ " is not supported by this driver.");
-					handler.onFailure(error);
-				}
-			};
-			executeOperation(task);
-		}
+			@Override
+			public void run() {
+				Exception error = new UnsupportedOperationException(
+						"Operation " + opName
+								+ " is not supported by this driver.");
+				handler.onFailure(error);
+			}
+		};
+		executeOperation(task);
 	}
 
 	protected boolean isDestroyed() {

@@ -35,9 +35,7 @@ public class ResponseTransmitter {
 	 * Destroys the transmitter.
 	 */
 	public void destroy() {
-		synchronized (this) {
 			MosaicLogger.getLogger().trace("ResponseTransmitter destroyed.");
-		}
 	}
 
 	/**
@@ -49,9 +47,7 @@ public class ResponseTransmitter {
 	 *            the message
 	 */
 	protected void publishResponse(Session session, Message message) {
-		synchronized (this) {
 			session.send(message);
-		}
 	}
 
 }
