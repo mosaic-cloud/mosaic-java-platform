@@ -52,19 +52,19 @@ public class ResponseHandlerMap {
 	 */
 	public <T extends Object> void addHandlers(String requestId,
 			List<IOperationCompletionHandler<T>> handlers) {
-		//		synchronized (this) {
-		List<IOperationCompletionHandler<?>> eHandlers = this.handlerMap
-				.get(requestId);
-		if (eHandlers == null) {
-			eHandlers = new ArrayList<IOperationCompletionHandler<?>>();
-			for (IOperationCompletionHandler<T> handler : handlers) {
-				eHandlers.add(handler);
+		synchronized (this) {
+			List<IOperationCompletionHandler<?>> eHandlers = this.handlerMap
+					.get(requestId);
+			if (eHandlers == null) {
+				eHandlers = new ArrayList<IOperationCompletionHandler<?>>();
+				for (IOperationCompletionHandler<T> handler : handlers) {
+					eHandlers.add(handler);
+				}
+				this.handlerMap.put(requestId, eHandlers);
+			} else {
+				eHandlers.addAll(handlers);
 			}
-			this.handlerMap.put(requestId, eHandlers);
-		} else {
-			eHandlers.addAll(handlers);
 		}
-		//		}
 	}
 
 	/**
@@ -76,11 +76,11 @@ public class ResponseHandlerMap {
 	 */
 	public List<IOperationCompletionHandler<?>> removeRequestHandlers(
 			String requestId) {
-		//		synchronized (this) {
-		List<IOperationCompletionHandler<?>> handlers = this.handlerMap
-				.remove(requestId);
-		return handlers;
-		//		}
+		synchronized (this) {
+			List<IOperationCompletionHandler<?>> handlers = this.handlerMap
+					.remove(requestId);
+			return handlers;
+		}
 	}
 
 	/**
@@ -92,17 +92,17 @@ public class ResponseHandlerMap {
 	 */
 	public List<IOperationCompletionHandler<?>> getRequestHandlers(
 			String requestId) {
-		//		synchronized (this) {
-		return this.handlerMap.get(requestId);
-		//		}
+		synchronized (this) {
+			return this.handlerMap.get(requestId);
+		}
 	}
 
 	/**
 	 * Removes from the handler map all pending requests.
 	 */
 	public void cancelAllRequests() {
-		//		synchronized (this) {
-		this.handlerMap.clear();
-		//		}
+		synchronized (this) {
+			this.handlerMap.clear();
+		}
 	}
 }

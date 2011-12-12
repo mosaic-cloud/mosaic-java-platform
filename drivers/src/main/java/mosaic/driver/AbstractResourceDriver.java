@@ -96,9 +96,9 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	public int countPendingOperations() {
-		//		synchronized (this) {
-		return this.pendingResults.size();
-		//		}
+		synchronized (this) {
+			return this.pendingResults.size();
+		}
 	}
 
 	public void removePendingOperation(IResult<?> pendingOp) {
@@ -108,7 +108,9 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	public void addPendingOperation(IResult<?> pendingOp) {
-		this.pendingResults.add(pendingOp);
+		synchronized (this) {
+			this.pendingResults.add(pendingOp);
+		}
 	}
 
 	/**

@@ -243,7 +243,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				if (channel != null) {
 					AmqpOperationFactory.this.amqpDriver.consumers.put(
 							consumer, consumeCallback);
-					channel.basicQos(1024);
+					channel.basicQos(8192);
 					consumerTag = channel
 							.basicConsume(
 									queue,
