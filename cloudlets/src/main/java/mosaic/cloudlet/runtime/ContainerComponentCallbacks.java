@@ -270,7 +270,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	public void terminate() {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component != null);
-			System.out.println("ContainerComponentCallbacks.terminate()");
+//			System.out.println("ContainerComponentCallbacks.terminate()");
 			this.component.terminate();
 		}
 	}
