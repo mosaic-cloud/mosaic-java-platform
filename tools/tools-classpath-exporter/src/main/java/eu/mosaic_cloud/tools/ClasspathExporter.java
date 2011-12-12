@@ -28,11 +28,10 @@ import java.net.InetSocketAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
+import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.transcript.core.Transcript;

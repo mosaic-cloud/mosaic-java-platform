@@ -23,11 +23,9 @@ package eu.mosaic_cloud.interoperability.examples.kv;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
-
-import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
-
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
