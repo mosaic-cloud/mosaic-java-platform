@@ -220,9 +220,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 	 *            the operation
 	 */
 	protected void submitOperation(Runnable operation) {
-		synchronized (this) {
 			this.executor.submit(operation);
-		}
 	}
 
 }

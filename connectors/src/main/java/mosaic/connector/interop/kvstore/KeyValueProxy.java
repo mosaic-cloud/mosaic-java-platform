@@ -139,13 +139,10 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 		AbortRequest.Builder requestBuilder = AbortRequest.newBuilder();
 		requestBuilder.setToken(tokenBuilder.build());
 
-		synchronized (this) {
-			super.sendRequest(
-					getResponseReactor(KeyValueConnectorReactor.class)
-							.getSession(), new Message(KeyValueMessage.ABORTED,
-							requestBuilder.build()));
-			super.destroy();
-		}
+		super.sendRequest(getResponseReactor(KeyValueConnectorReactor.class)
+				.getSession(), new Message(KeyValueMessage.ABORTED,
+				requestBuilder.build()));
+		super.destroy();
 	}
 
 	public void set(String key, T data,

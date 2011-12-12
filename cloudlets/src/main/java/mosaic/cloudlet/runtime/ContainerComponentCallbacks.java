@@ -147,7 +147,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	@Override
 	public CallbackReference called(Component component,
 			ComponentCallRequest request) {
-		CloudletManager container = null;
+		List<CloudletManager> containers = null;
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
@@ -165,10 +165,10 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 								"Loading cloudlet in JAR " + operands.get(0)
 										+ " with configuration "
 										+ operands.get(i));
-						container = startCloudlet(loader, operands.get(i)
+						containers = startCloudlet(loader, operands.get(i)
 								.toString());
-						if (container != null) {
-							this.cloudletRunners.add(container);
+						if (containers != null) {
+							this.cloudletRunners.addAll(containers);
 						}
 					}
 					ComponentCallReply reply = ComponentCallReply.create(true,
@@ -198,19 +198,26 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		}
 	}
 
-	private CloudletManager startCloudlet(ClassLoader loader,
+	private List<CloudletManager> startCloudlet(ClassLoader loader,
 			String configurationFile) {
 		final IConfiguration configuration = PropertyTypeConfiguration.create(
 				loader, configurationFile);
-		final CloudletManager container = new CloudletManager(loader,
-				configuration);
+		int noInstances = ConfigUtils.resolveParameter(configuration,
+				ConfigProperties.getString("CloudletDummyContainer.3"),
+				Integer.class, 1);
+		List<CloudletManager> containers = new ArrayList<CloudletManager>();
+		for (int i = 0; i < noInstances; i++) {
+			final CloudletManager container = new CloudletManager(loader,
+					configuration);
 
-		try {
-			container.start();
-		} catch (CloudletException e) {
-			ExceptionTracer.traceDeferred(e);
+			try {
+				container.start();
+				containers.add(container);
+			} catch (CloudletException e) {
+				ExceptionTracer.traceDeferred(e);
+			}
 		}
-		return container;
+		return containers;
 	}
 
 	private ClassLoader getCloudletClassLoader(String classpathArgument) {
@@ -338,10 +345,10 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 				if (CloudletContainerParameters.configFile != null) {
 					ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
-					CloudletManager container = startCloudlet(loader,
+					List<CloudletManager> containers = startCloudlet(loader,
 							CloudletContainerParameters.configFile);
-					if (container != null) {
-						this.cloudletRunners.add(container);
+					if (containers != null) {
+						this.cloudletRunners.addAll(containers);
 					}
 				}
 			} else
