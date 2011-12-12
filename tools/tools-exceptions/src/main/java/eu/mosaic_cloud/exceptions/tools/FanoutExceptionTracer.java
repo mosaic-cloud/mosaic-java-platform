@@ -42,7 +42,9 @@ public final class FanoutExceptionTracer
 		for (final ExceptionTracer delegate : this.delegates)
 			try {
 				delegate.trace (resolution, exception);
-			} catch (final Throwable exception1) {}
+			} catch (final Throwable exception1) {
+				// intentional
+			}
 	}
 	
 	@Override
@@ -51,7 +53,9 @@ public final class FanoutExceptionTracer
 		for (final ExceptionTracer delegate : this.delegates)
 			try {
 				delegate.trace (resolution, exception, message);
-			} catch (final Throwable exception1) {}
+			} catch (final Throwable exception1) {
+				// intentional
+			}
 	}
 	
 	@Override
@@ -60,7 +64,9 @@ public final class FanoutExceptionTracer
 		for (final ExceptionTracer delegate : this.delegates)
 			try {
 				delegate.trace (resolution, exception, format, tokens);
-			} catch (final Throwable exception1) {}
+			} catch (final Throwable exception1) {
+				// intentional
+			}
 	}
 	
 	private final ExceptionTracer[] delegates;

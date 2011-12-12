@@ -100,13 +100,14 @@ public class ResourceFinder {
 					this.callback.resourceNotFound();
 				}
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 				this.callback.resourceNotFound();
 			} catch (ExecutionException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 				this.callback.resourceNotFound();
 			} catch (Throwable e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
+				this.callback.resourceNotFound();
 			}
 		}
 

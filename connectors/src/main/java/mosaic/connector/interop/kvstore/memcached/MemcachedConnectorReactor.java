@@ -92,7 +92,7 @@ public class MemcachedConnectorReactor extends KeyValueConnectorReactor {
 						}
 						handled = true;
 					} catch (Exception e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 				}
 			}

@@ -178,10 +178,10 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 						arguments);
 				this.status = ResourceStatus.INITIALIZED;
 			} catch (Throwable e) {
+				ExceptionTracer.traceDeferred(e);
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.initializeFailed(state, arguments);
-				ExceptionTracer.traceDeferred(e);
 			}
 		}
 	}
@@ -212,10 +212,10 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 				MosaicLogger.getLogger().trace(
 						"AmqpQueueAccessor destroyed successfully.");
 			} catch (Throwable e) {
+				ExceptionTracer.traceDeferred(e);
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.destroyFailed(this.cloudletState, arguments);
-				ExceptionTracer.traceDeferred(e);
 			}
 			this.status = ResourceStatus.DESTROYED;
 		}

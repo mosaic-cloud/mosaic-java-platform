@@ -167,7 +167,7 @@ public class ConnectorProxy implements SessionCallbacks {
 		try {
 			this.responseReactor.processResponse(message);
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return null;
 	}

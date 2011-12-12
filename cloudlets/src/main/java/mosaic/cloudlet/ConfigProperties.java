@@ -22,6 +22,8 @@ package mosaic.cloudlet;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 public class ConfigProperties {
 	private static final String BUNDLE_NAME = "mosaic.cloudlet.config"; //$NON-NLS-1$
 
@@ -35,6 +37,7 @@ public class ConfigProperties {
 		try {
 			return ConfigProperties.RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
+			ExceptionTracer.traceIgnored(e);
 			return '!' + key + '!';
 		}
 	}

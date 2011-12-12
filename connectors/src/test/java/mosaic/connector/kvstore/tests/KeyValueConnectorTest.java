@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.core.Serial;
 import mosaic.core.SerialJunitRunner;
@@ -115,10 +117,10 @@ public class KeyValueConnectorTest {
 			Assert.assertTrue(r1.getResult());
 			Assert.assertTrue(r2.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -132,10 +134,10 @@ public class KeyValueConnectorTest {
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().toString());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -148,10 +150,10 @@ public class KeyValueConnectorTest {
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 
@@ -162,10 +164,10 @@ public class KeyValueConnectorTest {
 		try {
 			Assert.assertNull(r2.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -182,10 +184,10 @@ public class KeyValueConnectorTest {
 				Assert.assertNotNull(r1.getResult());
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}

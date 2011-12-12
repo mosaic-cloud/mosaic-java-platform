@@ -112,10 +112,10 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				this.callbackProxy.initializeSucceeded(this.cloudletState,
 						arguments);
 			} catch (Throwable e) {
+				ExceptionTracer.traceDeferred(e);
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						this.cloudlet, e);
 				this.callbackProxy.initializeFailed(state, arguments);
-				ExceptionTracer.traceDeferred(e);
 			}
 		}
 	}
@@ -132,10 +132,10 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				this.callbackProxy.destroySucceeded(this.cloudletState,
 						arguments);
 			} catch (Throwable e) {
+				ExceptionTracer.traceDeferred(e);
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						this.cloudlet, e);
 				this.callbackProxy.destroyFailed(this.cloudletState, arguments);
-				ExceptionTracer.traceDeferred(e);
 			}
 		}
 	}

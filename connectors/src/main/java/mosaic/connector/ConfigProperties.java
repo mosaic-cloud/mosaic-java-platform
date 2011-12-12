@@ -22,6 +22,8 @@ package mosaic.connector;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 public final class ConfigProperties {
 	private static final String BUNDLE_NAME = "mosaic.connector.config"; //$NON-NLS-1$
 
@@ -35,6 +37,7 @@ public final class ConfigProperties {
 		try {
 			return ConfigProperties.RESOURCE_BUNDLE.getString(key); // NOPMD by georgiana on 10/13/11 10:05 AM
 		} catch (MissingResourceException e) {
+			ExceptionTracer.traceIgnored(e);
 			return '!' + key + '!';
 		}
 	}

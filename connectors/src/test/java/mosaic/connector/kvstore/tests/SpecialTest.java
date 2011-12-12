@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.IConfiguration;
@@ -49,7 +51,7 @@ public class SpecialTest {
 				doWork(connector);
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 		} finally {
 			shutDown(connector);
 		}
@@ -61,7 +63,7 @@ public class SpecialTest {
 			try {
 				connector.destroy();
 			} catch (Throwable e) {
-				e.printStackTrace();
+				ExceptionTracer.traceIgnored(e);
 			}
 		}
 	}
@@ -86,7 +88,7 @@ public class SpecialTest {
 				connector.delete(key, handlersDel, null);
 				Thread.currentThread().sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceIgnored(e);
 			}
 
 		}

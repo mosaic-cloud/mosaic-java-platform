@@ -96,18 +96,4 @@ public final class ExceptionTracer {
 		ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored,
 				exception, format, tokens);
 	}
-
-	public static void traceRethrown(Throwable exception) throws Throwable {
-		ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored,
-				exception, null);
-		throw exception;
-	}
-
-	public static void traceRethrown(Throwable exception, final String format,
-			final Object... tokens) throws Throwable {
-		ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored,
-				exception, format, tokens);
-		throw exception;
-	}
-
 }

@@ -88,7 +88,7 @@ public final class AmqpDriverComponentCallbacks extends
 				this.status = Status.Created;
 			}
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 	}
 
@@ -114,7 +114,9 @@ public final class AmqpDriverComponentCallbacks extends
 							channelEndpoint=channelEndpoint.replace("0.0.0.0", System.getenv("mosaic_node_ip"));
 						else
 							channelEndpoint=channelEndpoint.replace("0.0.0.0", InetAddress.getLocalHost().getHostAddress());
-					} catch (UnknownHostException e) {}
+					} catch (UnknownHostException e) {
+						ExceptionTracer.traceIgnored(e);
+					}
 					String channelId = ConfigUtils
 							.resolveParameter(
 									getDriverConfiguration(),
@@ -209,7 +211,7 @@ public final class AmqpDriverComponentCallbacks extends
 					ConfigurationIdentifier.resolveRelative(ConfigProperties
 							.getString("AmqpDriver.5")), vHost); //$NON-NLS-1$
 		} catch (NullPointerException e) { // NOPMD by georgiana on 10/12/11 4:37 PM
-			MosaicLogger.getLogger().trace(e.getMessage());
+			ExceptionTracer.traceIgnored(e);
 		}
 	}
 
@@ -240,10 +242,10 @@ public final class AmqpDriverComponentCallbacks extends
 			if (this.pendingReference == reference) {
 				//				this.pendingReference = null;
 				if (!registerOk) {
-					ExceptionTracer.traceHandled(new Exception(
-							"failed registering to group; terminating!")); //$NON-NLS-1$
+					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
-					throw new IllegalStateException();
+					throw (new IllegalStateException(e));
 				}
 				MosaicLogger
 						.getLogger()

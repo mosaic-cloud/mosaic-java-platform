@@ -137,7 +137,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						channel.basicCancel(consumer);
 						succeeded = true;
 					} catch (IOException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 				}
 				//				}
@@ -165,7 +165,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						channel.basicAck(delivery, multiple);
 						succeeded = true;
 					} catch (IOException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 				}
 				//				}
@@ -214,7 +214,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 											properties.getMessageId());
 								}
 							} catch (IOException e) {
-								ExceptionTracer.traceDeferred(e);
+								ExceptionTracer.traceIgnored(e);
 							}
 						}
 						//						}
@@ -323,7 +323,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						succeeded = (outcome != null);
 					}
 				} catch (IOException e) {
-					ExceptionTracer.traceDeferred(e);
+					ExceptionTracer.traceIgnored(e);
 				}
 				//				}
 				return succeeded;

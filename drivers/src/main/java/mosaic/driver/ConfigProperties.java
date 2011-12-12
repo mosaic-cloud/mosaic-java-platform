@@ -22,6 +22,8 @@ package mosaic.driver;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 public final class ConfigProperties {
 	private static final String BUNDLE_NAME = "mosaic.driver.config"; //$NON-NLS-1$
 
@@ -36,6 +38,7 @@ public final class ConfigProperties {
 		try {
 			retString = ConfigProperties.RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
+			ExceptionTracer.traceIgnored(e);
 			retString = '!' + key + '!';
 		}
 		return retString;

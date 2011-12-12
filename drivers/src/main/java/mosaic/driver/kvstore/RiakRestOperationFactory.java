@@ -121,6 +121,7 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
 						});
 			}
 		} catch (final Exception e) {
+			ExceptionTracer.traceDeferred(e);
 			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:45 PM
 
 						@Override
@@ -129,7 +130,6 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
 						}
 
 					});
-			ExceptionTracer.traceDeferred(e);
 		}
 		return operation;
 	}

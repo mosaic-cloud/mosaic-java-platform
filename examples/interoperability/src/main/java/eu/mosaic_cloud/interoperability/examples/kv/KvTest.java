@@ -48,7 +48,7 @@ public final class KvTest
 		final ZeroMqChannel clientChannel = new ZeroMqChannel (clientIdentifier, exceptions);
 		clientChannel.register (KvSession.Client);
 		clientChannel.connect (KvTest.serverEndpoint);
-		final KvServer server = new KvServer ();
+		final KvServer server = new KvServer (exceptions);
 		server.initialize (serverChannel);
 		final KvClient client_1 = new KvClient ();
 		Assert.assertTrue (client_1.initialize (clientChannel, serverIdentifier).get ().booleanValue ());

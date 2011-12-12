@@ -186,12 +186,11 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 					getResponseReactor(KeyValueConnectorReactor.class)
 							.getSession(), message);
 		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+			ConnectionException e1 = new ConnectionException("Cannot send delete request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
-				handler.onFailure(e);
+				handler.onFailure(e1);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
-					"Cannot send delete request to driver: " + e.getMessage(),
-					e));
 		}
 	}
 
@@ -219,13 +218,11 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 					getResponseReactor(KeyValueConnectorReactor.class)
 							.getSession(), message);
 		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+			ConnectionException e1 = new ConnectionException("Cannot send list request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<List<String>> handler : handlers) {
-				handler.onFailure(e);
+				handler.onFailure(e1);
 			}
-			ExceptionTracer
-					.traceDeferred(new ConnectionException(
-							"Cannot send list request to driver: "
-									+ e.getMessage(), e));
 		}
 	}
 
@@ -262,11 +259,11 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 					getResponseReactor(KeyValueConnectorReactor.class)
 							.getSession(), message);
 		} catch (Exception e) {
+			ExceptionTracer.traceDeferred(e);
+			ConnectionException e1 = new ConnectionException("Cannot send set request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
-				handler.onFailure(e);
+				handler.onFailure(e1);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
-					"Cannot send set request to driver: " + e.getMessage(), e));
 		}
 	}
 
@@ -297,11 +294,11 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 					getResponseReactor(KeyValueConnectorReactor.class)
 							.getSession(), message);
 		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+			ConnectionException e1 = new ConnectionException("Cannot send get request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<D> handler : handlers) {
-				handler.onFailure(e);
+				handler.onFailure(e1);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
-					"Cannot send get request to driver: " + e.getMessage(), e));
 		}
 	}
 }

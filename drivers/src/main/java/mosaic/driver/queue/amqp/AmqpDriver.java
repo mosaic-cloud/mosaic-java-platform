@@ -150,7 +150,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 						"AMQP driver connected to " + amqpServerHost + ":"
 								+ amqpServerPort);
 			} catch (IOException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 				this.connection = null; // NOPMD by georgiana on 10/12/11 3:38 PM
 			}
 		}
@@ -171,9 +171,9 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 					this.connection.close();
 					this.connected = false;
 				} catch (IOException e) {
+					ExceptionTracer.traceIgnored(e);
 					MosaicLogger.getLogger().error(
 							"AMQP cannot close connection with server."); //$NON-NLS-1$
-					ExceptionTracer.traceDeferred(e);
 				}
 			}
 		}
@@ -415,7 +415,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 					this.channels.put(clientId, channel);
 				}
 			} catch (IOException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 		}
 
@@ -648,10 +648,10 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 						AmqpDriver.this.connectResource();
 						tries++; // NOPMD by georgiana on 10/12/11 4:23 PM
 					} catch (InterruptedException e) {
+						ExceptionTracer.traceIgnored(e);
 						if (AmqpDriver.super.isDestroyed()) {
 							break;
 						}
-						ExceptionTracer.traceDeferred(e);
 					}
 				}
 				if (!AmqpDriver.this.connected

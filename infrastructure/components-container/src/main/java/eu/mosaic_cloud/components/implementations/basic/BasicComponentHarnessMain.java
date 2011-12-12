@@ -32,8 +32,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.LinkedList;
 
-import eu.mosaic_cloud.transcript.implementations.slf4j.Slf4jTranscriptBackend;
-
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.net.SocketAppender;
 import com.google.common.base.Preconditions;
@@ -84,7 +82,7 @@ public final class BasicComponentHarnessMain
 			try {
 				Thread.sleep (BasicComponentHarnessMain.sleepTimeout);
 			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Handled, exception);
+				exceptions.trace (ExceptionResolution.Ignored, exception);
 				break;
 			}
 		}
@@ -104,6 +102,11 @@ public final class BasicComponentHarnessMain
 	}
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String loggerArgument)
+	{
+		BasicComponentHarnessMain.main (componentArgument, classpathArgument, loggerArgument, AbortingExceptionTracer.defaultInstance);
+	}
+	
+	public static final void main (final String componentArgument, final String classpathArgument, final String loggerArgument, final ExceptionTracer exceptions)
 	{
 		final Logger logger = (Logger) LoggerFactory.getLogger (BasicComponentHarnessMain.class);
 		Preconditions.checkNotNull (componentArgument);
@@ -131,10 +134,12 @@ public final class BasicComponentHarnessMain
 						try {
 							classpathUrl = new URL (classpathPart);
 						} catch (final Exception exception) {
+							exceptions.trace (ExceptionResolution.Deferred, exception);
 							throw (new IllegalArgumentException (String.format ("invalid class-path URL `%s`", classpathPart), exception));
 						}
-					else
+					else {
 						throw (new IllegalArgumentException (String.format ("invalid class-path URL `%s`", classpathPart)));
+					}
 					classLoaderUrls.add (classpathUrl);
 				}
 			classLoader = new URLClassLoader (classLoaderUrls.toArray (new URL[0]), BasicComponentHarnessMain.class.getClassLoader ());
@@ -144,6 +149,7 @@ public final class BasicComponentHarnessMain
 		try {
 			componentClass = classLoader.loadClass (componentArgument);
 		} catch (final Exception exception) {
+			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while resolving)", componentArgument), exception));
 		}
 		Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (componentClass), "invalid component class `%s` (not an instance of `ComponentCallbacks`)", componentClass.getName ());
@@ -151,9 +157,10 @@ public final class BasicComponentHarnessMain
 		try {
 			callbacks = (ComponentCallbacks) componentClass.newInstance ();
 		} catch (final Exception exception) {
+			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while instantiating)", componentClass.getName ()), exception));
 		}
-		BasicComponentHarnessMain.main (callbacks, AbortingExceptionTracer.defaultInstance);
+		BasicComponentHarnessMain.main (callbacks, exceptions);
 	}
 	
 	public static final void main (final String[] arguments)

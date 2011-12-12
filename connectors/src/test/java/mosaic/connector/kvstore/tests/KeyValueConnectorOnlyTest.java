@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import com.google.common.base.Preconditions;
 import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.core.Serial;
@@ -54,7 +56,7 @@ public class KeyValueConnectorOnlyTest
 		try {
 			Assert.assertTrue (r1.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 		} catch (final Exception e) {
-			e.printStackTrace ();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail ();
 		}
 		final List<IOperationCompletionHandler<String>> handlers1 = KeyValueConnectorOnlyTest.getHandlers ("get after delete");
@@ -62,7 +64,7 @@ public class KeyValueConnectorOnlyTest
 		try {
 			Assert.assertNull (r2.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 		} catch (final Exception e) {
-			e.printStackTrace ();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail ();
 		}
 	}
@@ -77,7 +79,7 @@ public class KeyValueConnectorOnlyTest
 		try {
 			Assert.assertEquals ("fantastic", r1.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS).toString ());
 		} catch (final Exception e) {
-			e.printStackTrace ();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail ();
 		}
 	}
@@ -97,7 +99,7 @@ public class KeyValueConnectorOnlyTest
 			Assert.assertTrue (r1.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 			Assert.assertTrue (r2.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 		} catch (final Exception e) {
-			e.printStackTrace ();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail ();
 		}
 	}
@@ -105,15 +107,10 @@ public class KeyValueConnectorOnlyTest
 	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		try {
-			Preconditions.checkArgument ((arguments != null) && (arguments.length == 0));
-			KeyValueConnectorOnlyTest.setUpBeforeClass ();
-			new KeyValueConnectorOnlyTest ().testConnector ();
-			KeyValueConnectorOnlyTest.tearDownAfterClass ();
-		} catch (final Throwable exception) {
-			exception.printStackTrace ();
-			System.exit (1);
-		}
+		Preconditions.checkArgument ((arguments != null) && (arguments.length == 0));
+		KeyValueConnectorOnlyTest.setUpBeforeClass ();
+		new KeyValueConnectorOnlyTest ().testConnector ();
+		KeyValueConnectorOnlyTest.tearDownAfterClass ();
 	}
 	
 	@BeforeClass

@@ -400,7 +400,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			try {
 				this.signal.await();
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 			this.driver.removePendingOperation(this.result);
 			this.transmitter.sendResponse(this.session, this.complToken,
@@ -413,7 +413,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			try {
 				this.signal.await();
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 			this.driver.removePendingOperation(this.result);
 			// result is error

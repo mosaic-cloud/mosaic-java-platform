@@ -27,6 +27,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerScheduler;
@@ -56,7 +58,7 @@ public class SerialJunitRunner extends BlockJUnit4ClassRunner {
 						this.tasks.remove(this.completionService.take());
 					}
 				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+					ExceptionTracer.traceIgnored(e);
 				} finally {
 					while (!this.tasks.isEmpty()) {
 						this.tasks.poll().cancel(true);

@@ -53,7 +53,21 @@ public final class AbortingExceptionTracer
 		if (abort) {
 			try {
 				exception.printStackTrace (System.err);
-			} catch (final Throwable exception1) {}
+			} catch (final Throwable exception1) {
+				// intentional
+			}
+			new Thread () {
+				@Override
+				public final void run ()
+				{
+					try {
+						Thread.sleep (2000);
+					} catch (final InterruptedException exception1) {
+						// intentional
+					}
+					Runtime.getRuntime ().halt (1);
+				}
+			}.start ();
 			System.exit (1);
 		}
 	}

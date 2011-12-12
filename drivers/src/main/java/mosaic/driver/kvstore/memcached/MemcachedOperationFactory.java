@@ -88,7 +88,7 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
 			return new MemcachedOperationFactory(hosts, user, password, bucket, // NOPMD by georgiana on 10/12/11 4:56 PM
 					useBucket);
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return null;
 	}

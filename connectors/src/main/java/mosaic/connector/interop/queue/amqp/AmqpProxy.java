@@ -212,12 +212,11 @@ public final class AmqpProxy extends ConnectorProxy {
 
 			sendMessage(mssg, token, handlers);
 		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+			ConnectionException e1 = new ConnectionException("Cannot send consume request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<String> handler : handlers) {
-				handler.onFailure(e);
+				handler.onFailure(e1);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
-					"Cannot send consume request to driver: " + e.getMessage(),
-					e));
 		}
 	}
 
@@ -282,12 +281,11 @@ public final class AmqpProxy extends ConnectorProxy {
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");
 		} catch (IOException e) {
+			ExceptionTracer.traceDeferred(e);
+			ConnectionException e1 = new ConnectionException("Cannot send " + message.specification.toString() + " request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<V> handler : handlers) {
-				handler.onFailure(e);
+				handler.onFailure(e1);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
-					"Cannot send " + message.specification.toString()
-							+ " request to driver: " + e.getMessage(), e));
 		}
 	}
 

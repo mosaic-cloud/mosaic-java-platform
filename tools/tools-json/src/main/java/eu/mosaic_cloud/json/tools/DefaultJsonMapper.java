@@ -64,7 +64,7 @@ public final class DefaultJsonMapper
 			final _Object_ object = mapper.treeToValue (node, clasz);
 			return (object);
 		} catch (final IOException exception) {
-			throw (new RuntimeException (exception));
+			throw (new IllegalStateException (exception));
 		}
 	}
 	
@@ -81,7 +81,7 @@ public final class DefaultJsonMapper
 			final Object data = this.transformFromNode (node);
 			return (data);
 		} catch (final IOException exception) {
-			throw (new RuntimeException (exception));
+			throw (new IllegalStateException (exception));
 		}
 	}
 	

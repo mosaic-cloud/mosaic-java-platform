@@ -343,11 +343,6 @@ public final class BasicComponent
 				this.channel.close (ChannelFlow.Outbound);
 				this.channel.terminate ();
 				this.notifyStopped ();
-//				try {
-//					Thread.sleep (5 * 1000);
-//				} catch (final InterruptedException exception) {
-//				}
-//				System.exit (1);
 			}
 		}
 		

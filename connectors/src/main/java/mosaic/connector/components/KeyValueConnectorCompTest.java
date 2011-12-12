@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import junit.framework.Assert;
+
+import mosaic.core.exceptions.ExceptionTracer;
+
 import mosaic.connector.components.ResourceComponentCallbacks.ResourceType;
 import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.core.configuration.ConfigUtils;
@@ -85,11 +89,11 @@ public class KeyValueConnectorCompTest {
 			Preconditions.checkState(r1.getResult(), "Set 1 returned false.");
 			Preconditions.checkState(r2.getResult(), "Set 2 returned false.");
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		}
 	}
 
@@ -103,11 +107,11 @@ public class KeyValueConnectorCompTest {
 					"fantastic".equals(r1.getResult().toString()),
 					"Get returned something wrong");
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		}
 	}
 
@@ -118,11 +122,11 @@ public class KeyValueConnectorCompTest {
 		try {
 			Preconditions.checkState(r1.getResult(), "Object not deleted.");
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after delete");
@@ -132,11 +136,11 @@ public class KeyValueConnectorCompTest {
 			Preconditions.checkState(r2.getResult() == null,
 					"Object still exists after delete");
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		}
 	}
 
@@ -153,11 +157,11 @@ public class KeyValueConnectorCompTest {
 
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
-			Preconditions.checkArgument(false);
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		}
 	}
 

@@ -144,9 +144,9 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				initialized = true;
 				this.active = true;
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 		}
 		return initialized;
@@ -205,9 +205,9 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				result.getResult();
 				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceIgnored(e);
 			}
 			//			this.executor.shutdown();
 			//			// TODO
@@ -340,11 +340,11 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 						method.invoke(CloudletInvocationHandler.this.callback,
 								arguments);
 					} catch (IllegalArgumentException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					} catch (IllegalAccessException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					} catch (InvocationTargetException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 
 				}
@@ -395,11 +395,11 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 								CloudletResponseInvocationHandler.this.handler,
 								arguments);
 					} catch (IllegalArgumentException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					} catch (IllegalAccessException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					} catch (InvocationTargetException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 
 				}

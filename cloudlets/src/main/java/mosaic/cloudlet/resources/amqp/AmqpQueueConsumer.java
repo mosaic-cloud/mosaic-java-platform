@@ -289,7 +289,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				AmqpQueueConsumer.this.callback.consume(
 						AmqpQueueConsumer.this.cloudletState, arguments);
 			} catch (Exception e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 		}
 

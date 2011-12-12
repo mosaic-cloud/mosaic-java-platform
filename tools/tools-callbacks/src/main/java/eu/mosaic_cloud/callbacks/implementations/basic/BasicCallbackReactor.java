@@ -444,7 +444,7 @@ public final class BasicCallbackReactor
 							this.executor.execute (proxy);
 						} catch (final Throwable exception) {
 							Preconditions.checkState (proxy.scheduled.compareAndSet (action, null));
-							this.exceptions.traceDeferredException (exception);
+							this.exceptions.traceIgnoredException (exception);
 						}
 					}
 					break;

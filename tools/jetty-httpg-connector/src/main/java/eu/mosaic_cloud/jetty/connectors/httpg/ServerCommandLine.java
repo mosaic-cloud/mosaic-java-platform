@@ -96,7 +96,7 @@ public class ServerCommandLine {
 			line = parser.parse(options, args);
 		} catch (ParseException exp) {
 			System.err.println("Parsing failed.  Reason: " + exp.getMessage());
-			System.exit(1);
+			printHelpAndExit(options);
 		}
 
 		if (line.hasOption("help")) {

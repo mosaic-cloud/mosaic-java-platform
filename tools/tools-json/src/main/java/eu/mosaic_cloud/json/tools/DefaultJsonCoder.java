@@ -46,6 +46,17 @@ public final class DefaultJsonCoder
 		this.style = new JSONStyle (-1 & ~JSONStyle.FLAG_PROTECT_KEYS & ~JSONStyle.FLAG_PROTECT_VALUES);
 	}
 	
+	@Override
+	public final Object decode (final ByteBuffer data_)
+	{
+		Preconditions.checkNotNull (data_);
+		final ByteBuffer data = data_.asReadOnlyBuffer ();
+		final byte[] dataBytes = new byte[data.remaining ()];
+		data.get (dataBytes);
+		final String dataString = new String (dataBytes, this.metaDataCharset);
+		return (this.decodeFromString (dataString));
+	}
+	
 	public final Object decodeFromString (final String data)
 	{
 		try {
@@ -56,19 +67,8 @@ public final class DefaultJsonCoder
 		} catch (final ParseException exception) {
 			throw (new IllegalArgumentException (exception.getMessage (), exception.getCause ()));
 		} catch (final IOException exception) {
-			throw (new RuntimeException (exception));
+			throw (new IllegalStateException (exception));
 		}
-	}
-	
-	@Override
-	public final Object decode (final ByteBuffer data_)
-	{
-		Preconditions.checkNotNull (data_);
-		final ByteBuffer data = data_.asReadOnlyBuffer ();
-		final byte[] dataBytes = new byte[data.remaining ()];
-		data.get (dataBytes);
-		final String dataString = new String (dataBytes, this.metaDataCharset);
-		return (this.decodeFromString (dataString));
 	}
 	
 	@Override

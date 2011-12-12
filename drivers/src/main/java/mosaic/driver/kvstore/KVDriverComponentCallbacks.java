@@ -90,7 +90,7 @@ public final class KVDriverComponentCallbacks extends
 
 			this.status = Status.Created;
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 	}
 
@@ -115,7 +115,9 @@ public final class KVDriverComponentCallbacks extends
 							channelEndpoint=channelEndpoint.replace("0.0.0.0", System.getenv("mosaic_node_ip"));
 						else
 							channelEndpoint=channelEndpoint.replace("0.0.0.0", InetAddress.getLocalHost().getHostAddress());
-					} catch (UnknownHostException e) {}
+					} catch (UnknownHostException e) {
+						ExceptionTracer.traceIgnored(e);
+					}
 					String channelId = ConfigUtils.resolveParameter(
 							getDriverConfiguration(), ConfigProperties
 									.getString("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
@@ -164,11 +166,11 @@ public final class KVDriverComponentCallbacks extends
 					} catch (IllegalArgumentException exception) {
 						this.terminate();
 						ExceptionTracer
-								.traceIgnored(
+								.traceDeferred(
 										exception,
 										"failed resolving Riak broker endpoint: `%s`; terminating!", //$NON-NLS-1$
 										reply.outputsOrError);
-						throw new IllegalStateException();
+						throw new IllegalStateException(exception);
 					}
 					MosaicLogger.getLogger().trace(
 							"Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
@@ -237,10 +239,10 @@ public final class KVDriverComponentCallbacks extends
 			if (this.pendingReference == reference) {
 				//				this.pendingReference = null;
 				if (!success) {
-					ExceptionTracer.traceHandled(new Exception(
-							"failed registering to group; terminating!")); //$NON-NLS-1$
+					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
-					throw new IllegalStateException();
+					throw (new IllegalStateException(e));
 				}
 				MosaicLogger
 						.getLogger()

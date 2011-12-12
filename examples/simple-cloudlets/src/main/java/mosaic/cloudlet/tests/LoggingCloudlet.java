@@ -145,6 +145,7 @@ public class LoggingCloudlet {
 				try {
 					cloudlet.destroyResource(state.kvStore, this);
 				} catch (Exception e) {
+					ExceptionTracer.traceIgnored(e);
 					MosaicLogger.getLogger().error(
 							"LoggingCloudlet.KeyValueCallback.setSucceeded() - caught exception "
 									+ e.getClass().getCanonicalName());
@@ -230,9 +231,9 @@ public class LoggingCloudlet {
 				AuthenticationToken aToken = new AuthenticationToken(token);
 				state.publisher.publish(aToken, null, "");
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceHandled(e);
+				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
-				ExceptionTracer.traceHandled(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 
 			message.acknowledge();

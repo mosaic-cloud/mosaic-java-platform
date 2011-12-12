@@ -89,7 +89,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 			try {
 				this.commChannel.terminate(500);
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 			MosaicLogger.getLogger().trace("DriverStub destroyed.");
 		}
@@ -125,9 +125,9 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 		try {
 			startOperation(message, session);
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		} catch (ClassNotFoundException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return null;
 	}
