@@ -150,7 +150,7 @@
 	</developers>
 
 	<scm>
-		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/ciprian/mosaic-java-components</connection>
+		<connection>scm:hg:https://bitbucket.org/mosaic/mosaic-java-platform</connection>
 		<developerConnection>scm:hg:file://${basedir}</developerConnection>
 	</scm>
 
