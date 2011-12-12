@@ -11,6 +11,7 @@
 		<relativePath>../..</relativePath>
 	</parent>
 	<artifactId>components-examples</artifactId>
+	<name>components-examples</name>
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>

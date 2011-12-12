@@ -10,6 +10,7 @@
 		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>tools-parent</artifactId>
+	<name>tools-parent</name>
 	<packaging>pom</packaging>
 	<modules>
 		<module>tools-callbacks</module>

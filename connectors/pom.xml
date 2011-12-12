@@ -7,6 +7,7 @@
 		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>mosaic-connector</artifactId>
+	<name>mosaic-connector</name>
 	<dependencies>
                 <dependency>
                         <groupId>junit</groupId>
