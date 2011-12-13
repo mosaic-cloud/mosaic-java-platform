@@ -122,10 +122,10 @@ public final class KVDriverComponentCallbacks extends
 							String.class, "");
 					Map<String, String> outcome = new HashMap<String, String>();
 					// FIXME
-//					outcome.put("channelEndpoint", channelEndpoint);
-//					outcome.put("channelIdentifier", channelId);
-					outcome.put("channelEndpoint", "tcp://194.102.62.90:31031");
-					outcome.put("channelIdentifier", "driver.kv.1");
+					outcome.put("channelEndpoint", channelEndpoint);
+					outcome.put("channelIdentifier", channelId);
+//					outcome.put("channelEndpoint", "tcp://194.102.62.90:31031");
+//					outcome.put("channelIdentifier", "driver.kv.1");
 					ComponentCallReply reply = ComponentCallReply.create(true,
 							outcome, ByteBuffer.allocate(0), request.reference);
 					component.reply(reply);

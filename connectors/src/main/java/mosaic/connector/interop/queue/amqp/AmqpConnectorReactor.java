@@ -86,7 +86,9 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 	 *            the callback
 	 */
 	protected void addCallback(String requestId, IAmqpConsumerCallback callback) {
-		this.callbacksMap.addHandlers(requestId, callback);
+		synchronized (this) {
+			this.callbacksMap.addHandlers(requestId, callback);
+		}
 	}
 
 	@Override

@@ -103,7 +103,9 @@ public class ConnectorProxy implements SessionCallbacks {
 	 */
 	protected void sendRequest(Session session, Message request)
 			throws IOException {
+		synchronized (this) {
 			session.send(request);
+		}
 	}
 
 	/**

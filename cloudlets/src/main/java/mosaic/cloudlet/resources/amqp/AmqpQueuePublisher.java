@@ -112,7 +112,9 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	@Override
 	public void register() {
 		// declare queue and in case of success register as consumer
-		startRegister(this.callback);
+		synchronized (this) {
+			startRegister(this.callback);
+		}
 	}
 
 	@Override
