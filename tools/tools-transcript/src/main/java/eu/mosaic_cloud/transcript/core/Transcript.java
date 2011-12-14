@@ -43,7 +43,9 @@ public final class Transcript
 	{
 		try {
 			this.backend.trace (resolution, exception);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	@Override
@@ -51,7 +53,9 @@ public final class Transcript
 	{
 		try {
 			this.backend.trace (resolution, exception, message);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	@Override
@@ -59,7 +63,9 @@ public final class Transcript
 	{
 		try {
 			this.backend.trace (resolution, exception, format, tokens);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	@Override
@@ -67,7 +73,9 @@ public final class Transcript
 	{
 		try {
 			this.backend.trace (type, message);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	@Override
@@ -75,7 +83,9 @@ public final class Transcript
 	{
 		try {
 			this.backend.trace (type, format, tokens);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	public final void traceDebugging (final String message)

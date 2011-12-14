@@ -27,6 +27,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import mosaic.core.log.MosaicLogger;
 
 /**
@@ -500,6 +502,7 @@ public class CloudletExecutor {
 				}
 			} catch (InterruptedException ie) {
 				// On interruption, re-check runState
+				ExceptionTracer.traceIgnored(ie);
 			} finally {
 				this.mainLock.unlock();
 			}
@@ -550,6 +553,7 @@ public class CloudletExecutor {
 
 			} catch (InterruptedException ie) {
 				// On interruption, re-check runState
+				ExceptionTracer.traceIgnored(ie);
 			} finally {
 				this.mainLock.unlock();
 			}

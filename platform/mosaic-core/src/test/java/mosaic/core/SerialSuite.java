@@ -29,6 +29,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.runner.Runner;
 import org.junit.runners.Suite;
@@ -88,7 +90,7 @@ public final class SerialSuite extends Suite {
 						this.tasks.remove(this.completionService.take());
 					}
 				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+					ExceptionTracer.traceIgnored(e);
 				} finally {
 					while (!this.tasks.isEmpty()) {
 						this.tasks.poll().cancel(true);

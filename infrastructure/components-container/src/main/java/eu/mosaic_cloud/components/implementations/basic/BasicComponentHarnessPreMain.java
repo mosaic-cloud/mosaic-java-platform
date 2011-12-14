@@ -44,10 +44,13 @@ public final class BasicComponentHarnessPreMain
 		System.setOut (System.err);
 	}
 	
-	public static final void main(final String[] arguments)
-			throws ClassNotFoundException, SecurityException,
-			NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
-			
+	public static final void main (final String[] arguments)
+			throws ClassNotFoundException,
+				SecurityException,
+				NoSuchMethodException,
+				IllegalArgumentException,
+				IllegalAccessException,
+				InvocationTargetException
 	{
 		final Class<?> mainClass = BasicComponentHarnessPreMain.class.getClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("PreMain", "Main"));
 		final Method mainMethod = mainClass.getMethod ("main", String[].class);

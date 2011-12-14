@@ -39,6 +39,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
+import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.json.tools.DefaultJsonCoder;
 import eu.mosaic_cloud.tools.ClasspathExporter;
@@ -53,7 +55,19 @@ public final class MosBasicComponentLauncher
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final String arguments[], final ClassLoader loader)
+	public static final void main (final String[] arguments)
+			throws Throwable
+	{
+		MosBasicComponentLauncher.main (arguments, null);
+	}
+	
+	public static final void main (final String[] arguments, final ClassLoader loader)
+			throws Throwable
+	{
+		MosBasicComponentLauncher.main (arguments, loader, AbortingExceptionTracer.defaultInstance);
+	}
+	
+	public static final void main (final String[] arguments, final ClassLoader loader, final ExceptionTracer exceptions)
 			throws Throwable
 	{
 		final Logger logger = (Logger) LoggerFactory.getLogger (MosBasicComponentLauncher.class);
@@ -62,7 +76,7 @@ public final class MosBasicComponentLauncher
 		final InetSocketAddress httpAddress = new InetSocketAddress (arguments[1], Integer.parseInt (arguments[2]));
 		final InetSocketAddress logbackAddress = new InetSocketAddress (arguments[1], Integer.parseInt (arguments[3]));
 		final URL controller = new URL (arguments[4]);
-		final ClasspathExporter exporter = ClasspathExporter.create (httpAddress, Objects.firstNonNull (loader, ClassLoader.getSystemClassLoader ()), AbortingExceptionTracer.defaultInstance);
+		final ClasspathExporter exporter = ClasspathExporter.create (httpAddress, Objects.firstNonNull (loader, ClassLoader.getSystemClassLoader ()), exceptions);
 		final SimpleSocketServer appender = new SimpleSocketServer ((LoggerContext) LoggerFactory.getILoggerFactory (), logbackAddress.getPort ());
 		final String[] identifier = new String[] {null};
 		final boolean[] shouldStop = new boolean[] {false};
@@ -78,7 +92,9 @@ public final class MosBasicComponentLauncher
 					{
 						try {
 							Thread.sleep (2000);
-						} catch (final InterruptedException exception) {}
+						} catch (final InterruptedException exception) {
+							// intentional
+						}
 						Runtime.getRuntime ().halt (1);
 					}
 				}.start ();
@@ -88,19 +104,22 @@ public final class MosBasicComponentLauncher
 						final URL stopUrl = new URL (controller, String.format ("/processes/stop?key=%s", identifier[0]));
 						stopUrl.openStream ().close ();
 					} catch (final Throwable exception) {
-						logger.error ("failed stopping component", exception);
+						exceptions.trace (ExceptionResolution.Ignored, exception);
+						logger.error ("failed stopping component; ignoring!", exception);
 					}
 				logger.debug ("stopping exporter...");
 				try {
 					exporter.stopServer ();
 				} catch (final Throwable exception) {
-					logger.error ("failed stopping exporter", exception);
+					exceptions.trace (ExceptionResolution.Ignored, exception);
+					logger.error ("failed stopping exporter; ignoring!", exception);
 				}
 				logger.debug ("sopping appender...");
 				try {
 					appender.close ();
 				} catch (final Throwable exception) {
-					logger.error ("failed stopping appender", exception);
+					exceptions.trace (ExceptionResolution.Ignored, exception);
+					logger.error ("failed stopping appender; ignoring!", exception);
 				}
 			}
 		});
@@ -108,17 +127,17 @@ public final class MosBasicComponentLauncher
 		try {
 			exporter.startServer ();
 		} catch (final Throwable exception) {
-			logger.error ("failed starting exporter", exception);
-			Runtime.getRuntime ().halt (1);
-			return;
+			exceptions.trace (ExceptionResolution.Deferred, exception);
+			logger.error ("failed starting exporter; ignoring!", exception);
+			throw (new Error (exception));
 		}
 		logger.debug ("starting appender...");
 		try {
 			appender.start ();
 		} catch (final Throwable exception) {
-			logger.error ("failed starting appender", exception);
-			Runtime.getRuntime ().halt (1);
-			return;
+			exceptions.trace (ExceptionResolution.Deferred, exception);
+			logger.error ("failed starting appender; ignoring!", exception);
+			throw (new Error (exception));
 		}
 		logger.debug ("creating component...");
 		try {
@@ -136,28 +155,21 @@ public final class MosBasicComponentLauncher
 					identifier[0] = (String) ((List<?>) createResponseMap.get ("keys")).get (0);
 					Preconditions.checkNotNull (identifier);
 				} catch (final Throwable exception) {
-					logger.error (String.format ("failed creating component: %s", createResponse), exception);
-					Runtime.getRuntime ().halt (1);
-					return;
+					exceptions.trace (ExceptionResolution.Deferred, exception);
+					logger.error (String.format ("failed creating component: %s; ignoring!", createResponse), exception);
+					throw (new Error (exception));
 				}
 			} catch (final Throwable exception) {
-				logger.error ("failed creating component", exception);
-				Runtime.getRuntime ().halt (1);
-				return;
+				exceptions.trace (ExceptionResolution.Deferred, exception);
+				logger.error ("failed creating component; ignoring!", exception);
+				throw (new Error (exception));
 			}
 		} catch (final Throwable exception) {
-			logger.error ("failed creating component", exception);
-			Runtime.getRuntime ().halt (1);
-			return;
+			exceptions.trace (ExceptionResolution.Deferred, exception);
+			logger.error ("failed creating component; ignoring!", exception);
+			throw (new Error (exception));
 		}
 		logger.info ("started: {}", identifier);
 		new BufferedReader (new InputStreamReader (System.in)).readLine ();
-		System.exit (0);
-	}
-	
-	public static final void main (final String[] arguments)
-			throws Throwable
-	{
-		MosBasicComponentLauncher.main (arguments, null);
 	}
 }

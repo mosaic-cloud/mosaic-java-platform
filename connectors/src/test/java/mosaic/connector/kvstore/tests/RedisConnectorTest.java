@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import mosaic.connector.kvstore.KeyValueStoreConnector;
 import mosaic.core.Serial;
 import mosaic.core.SerialJunitRunner;
@@ -114,10 +116,10 @@ public class RedisConnectorTest {
 			Assert.assertTrue(r1.getResult());
 			Assert.assertTrue(r2.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -131,10 +133,10 @@ public class RedisConnectorTest {
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().toString());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -147,10 +149,10 @@ public class RedisConnectorTest {
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 
@@ -161,10 +163,10 @@ public class RedisConnectorTest {
 		try {
 			Assert.assertNull(r2.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -179,10 +181,10 @@ public class RedisConnectorTest {
 			String k2 = RedisConnectorTest.keyPrefix + "_key_famous";
 			Assert.assertTrue(r1.getResult().contains(k2));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}

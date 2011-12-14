@@ -119,7 +119,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 			this.status = Status.Created;
 		}
 		// } catch (Throwable e) {
-		// e.printStackTrace(System.err);
+		// ExceptionTracer.traceIgnored(e);
 		// }
 	}
 
@@ -250,10 +250,11 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					.remove(reference);
 			if (pendingReply != null) {
 				if (!ok) {
-					ExceptionTracer.traceHandled(new Exception(
-							"failed registering to group; terminating!")); //$NON-NLS-1$
+					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
-					throw (new IllegalStateException());
+					throw (new IllegalStateException(e));
+
 				}
 				MosaicLogger
 						.getLogger()

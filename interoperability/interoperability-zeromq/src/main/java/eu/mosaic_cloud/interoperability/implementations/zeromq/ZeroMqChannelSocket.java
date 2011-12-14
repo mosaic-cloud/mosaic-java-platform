@@ -100,6 +100,7 @@ public final class ZeroMqChannelSocket
 		try {
 			return (this.inboundPackets.poll (timeout, TimeUnit.MILLISECONDS));
 		} catch (final InterruptedException exception) {
+			this.exceptions.traceIgnoredException (exception);
 			return (null);
 		}
 	}
@@ -114,6 +115,7 @@ public final class ZeroMqChannelSocket
 		try {
 			return (this.outboundPackets.offer (packet, timeout, TimeUnit.MILLISECONDS));
 		} catch (final InterruptedException exception) {
+			this.exceptions.traceIgnoredException (exception);
 			return (false);
 		}
 	}

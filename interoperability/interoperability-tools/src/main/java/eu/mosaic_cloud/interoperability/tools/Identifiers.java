@@ -43,6 +43,6 @@ public final class Identifiers
 	public static final String generateName (final Enum<?> object)
 	{
 		Preconditions.checkNotNull (object);
-		return (object.getClass ().getName () + ":" + object.name ());		
+		return (object.getClass ().getName () + ":" + object.name ());
 	}
 }

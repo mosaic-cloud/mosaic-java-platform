@@ -140,7 +140,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			this.status = Status.Created;
 		}
 		//		} catch (Throwable e) {
-		//			e.printStackTrace(System.err);
+		//			ExceptionTracer.traceIgnored(e);
 		//		}
 	}
 
@@ -236,6 +236,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						try {
 							classpathUrl = new URL(classpathPart);
 						} catch (final Exception exception) {
+							ExceptionTracer.traceDeferred(exception);
 							throw (new IllegalArgumentException(String.format(
 									"invalid class-path URL `%s`",
 									classpathPart), exception));
@@ -306,8 +307,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			}
 			this.component = null;
 			this.status = Status.Terminated;
-			exception.printStackTrace();
-			ExceptionTracer.traceIgnored(exception);
+			ExceptionTracer.traceHandled(exception);
 		}
 		return null;
 	}
@@ -339,10 +339,10 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					.remove(reference);
 			if (pendingReply != null) {
 				if (!ok) {
-					ExceptionTracer.traceHandled(new Exception(
-							"failed registering to group; terminating!")); //$NON-NLS-1$
+					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
-					throw (new IllegalStateException());
+					throw (new IllegalStateException(e));
 				}
 				this.status = Status.Ready;
 				MosaicLogger

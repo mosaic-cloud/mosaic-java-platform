@@ -131,9 +131,9 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 					incDriverReference(stub);
 				}
 			} catch (DriverNotFoundException e) {
-				ExceptionTracer.traceIgnored(new ConnectionException(
-						"The required key-value driver cannot be provided: " //$NON-NLS-1$
-								+ e.getMessage(), e));
+				ExceptionTracer.traceDeferred(e);
+				ConnectionException e1 = new ConnectionException("The required key-value driver cannot be provided: " + e.getMessage(), e);
+				ExceptionTracer.traceIgnored(e1);
 			}
 		}
 		return stub;

@@ -107,6 +107,7 @@ public class ResourceFinder {
 				this.callback.resourceNotFound();
 			} catch (Throwable e) {
 				ExceptionTracer.traceIgnored(e);
+				this.callback.resourceNotFound();
 			}
 		}
 

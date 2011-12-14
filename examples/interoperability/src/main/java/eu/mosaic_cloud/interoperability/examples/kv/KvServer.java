@@ -24,6 +24,8 @@ package eu.mosaic_cloud.interoperability.examples.kv;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
@@ -36,8 +38,9 @@ public final class KvServer
 		implements
 			SessionCallbacks
 {
-	public KvServer ()
+	public KvServer (final ExceptionTracer exceptions)
 	{
+		this.exceptions = exceptions;
 		this.logger = LoggerFactory.getLogger (this.getClass ());
 		this.bucket = new ConcurrentHashMap<String, String> ();
 	}
@@ -80,12 +83,16 @@ public final class KvServer
 				session.continueDispatch ();
 				try {
 					Thread.sleep (500);
-				} catch (final InterruptedException exception) {}
+				} catch (final InterruptedException exception) {
+					this.exceptions.trace (ExceptionResolution.Ignored, exception);
+				}
 				this.logger.info ("get replied [{}]: {}", request.sequence, value);
 				session.send (new Message (KvMessage.GetReply, new KvPayloads.GetReply (request.sequence, value)));
 				try {
 					Thread.sleep (2000);
-				} catch (final InterruptedException exception) {}
+				} catch (final InterruptedException exception) {
+					this.exceptions.trace (ExceptionResolution.Ignored, exception);
+				}
 				this.logger.info ("get finished [{}]", request.sequence);
 			}
 				break;
@@ -96,12 +103,16 @@ public final class KvServer
 				session.continueDispatch ();
 				try {
 					Thread.sleep (500);
-				} catch (final InterruptedException exception) {}
+				} catch (final InterruptedException exception) {
+					this.exceptions.trace (ExceptionResolution.Ignored, exception);
+				}
 				this.logger.info ("put replied [{}]", request.sequence);
 				session.send (new Message (KvMessage.Ok, new KvPayloads.Ok (request.sequence)));
 				try {
 					Thread.sleep (2000);
-				} catch (final InterruptedException exception) {}
+				} catch (final InterruptedException exception) {
+					this.exceptions.trace (ExceptionResolution.Ignored, exception);
+				}
 				this.logger.info ("put finished: [{}]", request.sequence);
 			}
 				break;
@@ -115,5 +126,6 @@ public final class KvServer
 	}
 	
 	private final ConcurrentHashMap<String, String> bucket;
+	private final ExceptionTracer exceptions;
 	private final Logger logger;
 }

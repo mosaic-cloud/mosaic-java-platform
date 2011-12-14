@@ -177,6 +177,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	// try {
 	// result = callable.call();
 	// } catch (Throwable ex) {
+	// ExceptionTracer.traceDeferred(ex);
 	// setException(ex);
 	// return;
 	// }

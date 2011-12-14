@@ -41,12 +41,16 @@ public abstract class InterceptingExceptionTracer
 	{
 		try {
 			this.trace_ (resolution, exception);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 		try {
 			final ExceptionTracer delegate = (this.delegate != null) ? this.delegate : ExceptionTracer.defaultInstance.get ();
 			if (delegate != null)
 				delegate.trace (resolution, exception);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	@Override
@@ -54,12 +58,16 @@ public abstract class InterceptingExceptionTracer
 	{
 		try {
 			this.trace_ (resolution, exception, message);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 		try {
 			final ExceptionTracer delegate = (this.delegate != null) ? this.delegate : ExceptionTracer.defaultInstance.get ();
 			if (delegate != null)
 				delegate.trace (resolution, exception, message);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	@Override
@@ -67,12 +75,16 @@ public abstract class InterceptingExceptionTracer
 	{
 		try {
 			this.trace_ (resolution, exception, format, tokens);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 		try {
 			final ExceptionTracer delegate = (this.delegate != null) ? this.delegate : ExceptionTracer.defaultInstance.get ();
 			if (delegate != null)
 				delegate.trace (resolution, exception, format, tokens);
-		} catch (final Throwable exception1) {}
+		} catch (final Throwable exception1) {
+			// intentional
+		}
 	}
 	
 	protected abstract void trace_ (final ExceptionResolution resolution, final Throwable exception);

@@ -146,9 +146,10 @@ public class CloudletManager {
 			cloudlet.initialize(resourceConfig);
 			this.cloudletPool.add(cloudlet);
 		} catch (ClassNotFoundException e) {
+			ExceptionTracer.traceDeferred(e);
 			MosaicLogger.getLogger().error(
 					"Could not resolve class: " + e.getMessage()); //$NON-NLS-1$
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(e);
 		}
 	}
 
@@ -177,10 +178,10 @@ public class CloudletManager {
 		try {
 			instance = clasz.newInstance();
 		} catch (final Throwable exception) {
+			ExceptionTracer.traceDeferred(exception);
 			MosaicLogger.getLogger().error(
 					"Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
-			ExceptionTracer.traceIgnored(exception);
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(exception);
 		}
 		return instance;
 	}

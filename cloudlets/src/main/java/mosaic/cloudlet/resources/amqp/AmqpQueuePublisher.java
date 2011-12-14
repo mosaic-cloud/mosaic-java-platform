@@ -162,6 +162,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 			MosaicLogger.getLogger().trace(
 					"AmqpQueuePublisher - published message " + data);
 		} catch (Exception e) {
+			ExceptionTracer.traceDeferred(e);
 			@SuppressWarnings("unchecked")
 			IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
@@ -172,7 +173,6 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 					AmqpQueuePublisher.this.cloudlet, pMessage);
 			proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
 					arguments);
-			ExceptionTracer.traceIgnored(e);
 		}
 
 	}
@@ -200,6 +200,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 			MosaicLogger.getLogger().trace(
 					"AmqpQueuePublisher - published message " + data);
 		} catch (Exception e) {
+			ExceptionTracer.traceDeferred(e);
 			@SuppressWarnings("unchecked")
 			IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
@@ -210,7 +211,6 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 					AmqpQueuePublisher.this.cloudlet, pMessage);
 			proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
 					arguments);
-			ExceptionTracer.traceIgnored(e);
 		}
 
 	}

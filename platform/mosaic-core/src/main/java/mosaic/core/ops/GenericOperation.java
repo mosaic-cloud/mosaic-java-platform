@@ -119,8 +119,13 @@ public class GenericOperation<T> implements IOperation<T> {
 				result = this.operation.get();
 			} catch (ExecutionException e) {
 				// TODO customize exception
-				if (e.getCause() instanceof UnsupportedOperationException) {
-					getHandler().onFailure(e.getCause());
+				Throwable e1 = e.getCause();
+				if (e1 instanceof UnsupportedOperationException) {
+					ExceptionTracer.traceHandled(e);
+					ExceptionTracer.traceDeferred(e1);
+					getHandler().onFailure(e1);
+				} else {
+					ExceptionTracer.traceIgnored(e);
 				}
 			}
 		}
@@ -152,8 +157,13 @@ public class GenericOperation<T> implements IOperation<T> {
 				result = this.operation.get(timeout, unit);
 			} catch (ExecutionException e) {
 				// TODO customize exception
-				if (e.getCause() instanceof UnsupportedOperationException) {
-					getHandler().onFailure(e.getCause());
+				Throwable e1 = e.getCause();
+				if (e1 instanceof UnsupportedOperationException) {
+					ExceptionTracer.traceHandled(e);
+					ExceptionTracer.traceDeferred(e1);
+					getHandler().onFailure(e1);
+				} else {
+					ExceptionTracer.traceIgnored(e);
 				}
 			}
 		}
@@ -208,13 +218,16 @@ public class GenericOperation<T> implements IOperation<T> {
 				GenericOperation.this.cHandlerSet.await();
 				GenericOperation.this.complHandler.onSuccess(GenericTask.super.get());
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceHandled(e);
+				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
 				// TODO customize exception
-				if (e.getCause() instanceof UnsupportedOperationException) {
-					getHandler().onFailure(e.getCause());
-				} else {
+				Throwable e1 = e.getCause();
+				if (e1 instanceof UnsupportedOperationException) {
 					ExceptionTracer.traceHandled(e);
+					ExceptionTracer.traceDeferred(e1);
+					getHandler().onFailure(e1);
+				} else {
+					ExceptionTracer.traceIgnored(e);
 				}
 			}
 		}
@@ -231,7 +244,7 @@ public class GenericOperation<T> implements IOperation<T> {
 			try {
 				GenericOperation.this.cHandlerSet.await();
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceHandled(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 			GenericOperation.this.complHandler.onFailure(exception);
 		}

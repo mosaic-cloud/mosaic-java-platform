@@ -205,9 +205,9 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				result.getResult();
 				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
-				e.printStackTrace();
+				ExceptionTracer.traceIgnored(e);
 			}
 			//			this.executor.shutdown();
 			//			// TODO

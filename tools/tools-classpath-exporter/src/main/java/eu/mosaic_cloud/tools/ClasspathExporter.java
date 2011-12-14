@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
+import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.transcript.core.Transcript;
@@ -111,18 +112,24 @@ public final class ClasspathExporter
 	
 	public static final void main (final String[] arguments, final ClassLoader loader)
 	{
+		ClasspathExporter.main (arguments, loader, AbortingExceptionTracer.defaultInstance);
+	}
+	
+	public static final void main (final String[] arguments, final ClassLoader loader, final ExceptionTracer exceptions)
+	{
 		Preconditions.checkArgument ((arguments != null) && ((arguments.length == 0) || (arguments.length == 2)), "invalid arguments: expected <ip> <port>");
 		final InetSocketAddress address;
 		if (arguments.length == 0)
 			address = new InetSocketAddress (27665);
 		else
 			address = new InetSocketAddress (arguments[0], Integer.parseInt (arguments[1]));
-		final ClasspathExporter exporter = ClasspathExporter.create (address, Objects.firstNonNull (loader, ClassLoader.getSystemClassLoader ()), AbortingExceptionTracer.defaultInstance);
+		final ClasspathExporter exporter = ClasspathExporter.create (address, Objects.firstNonNull (loader, ClassLoader.getSystemClassLoader ()), exceptions);
 		exporter.startServer ();
 		while (true) {
 			try {
 				Thread.sleep (1000);
 			} catch (final InterruptedException exception) {
+				exceptions.trace (ExceptionResolution.Ignored, exception);
 				break;
 			}
 		}

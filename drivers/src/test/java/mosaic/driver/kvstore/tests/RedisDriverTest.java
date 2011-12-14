@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import mosaic.core.Serial;
 import mosaic.core.SerialJunitRunner;
 import mosaic.core.TestLoggingHandler;
@@ -95,10 +97,10 @@ public class RedisDriverTest {
 			Assert.assertTrue(r1.getResult());
 			Assert.assertTrue(r2.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -114,10 +116,10 @@ public class RedisDriverTest {
 			Assert.assertEquals("fantastic",
 					SerDesUtils.toObject(r1.getResult()).toString());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -139,10 +141,10 @@ public class RedisDriverTest {
 			Assert.assertTrue(lresult.contains(k1));
 			Assert.assertTrue(lresult.contains(k2));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -163,10 +165,10 @@ public class RedisDriverTest {
 			Assert.assertTrue(r1.getResult());
 			Assert.assertTrue(r2.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 
@@ -178,10 +180,10 @@ public class RedisDriverTest {
 		try {
 			Assert.assertNull(r3.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}

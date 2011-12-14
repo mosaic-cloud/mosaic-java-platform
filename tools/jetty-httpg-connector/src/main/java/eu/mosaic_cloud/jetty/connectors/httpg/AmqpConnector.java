@@ -98,7 +98,7 @@ public class AmqpConnector extends AbstractConnector {
 			Log.warn("Could not decode message: " + e.getMessage());
 		} catch (IOException e) {
 			Log.warn("Could not read message: " + e.getMessage());
-			e.printStackTrace();
+			e.printStackTrace(System.err);
 		}
 		ConnectorEndPoint _endPoint = new ConnectorEndPoint(msg);
 		_endPoint.dispatch();
@@ -168,7 +168,7 @@ public class AmqpConnector extends AbstractConnector {
 				try {
 					Thread.sleep(400);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					e.printStackTrace(System.err);
 				}
 				try {
 					setupConnection();
@@ -226,7 +226,7 @@ public class AmqpConnector extends AbstractConnector {
 				sendResponse();
 			} catch (JSONException e) {
 				// TODO Handle this...
-				e.printStackTrace();
+				e.printStackTrace(System.err);
 			}
 			}
 			super.close();

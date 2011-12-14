@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import mosaic.core.exceptions.ExceptionTracer;
+
 import mosaic.core.TestLoggingHandler;
 import mosaic.core.configuration.PropertyTypeConfiguration;
 import mosaic.core.ops.IOperationCompletionHandler;
@@ -84,10 +86,10 @@ public class RiakPBDriverTest {
 			Assert.assertTrue(r1.getResult());
 			Assert.assertTrue(r2.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -103,10 +105,10 @@ public class RiakPBDriverTest {
 			Assert.assertEquals("famous", SerDesUtils.toObject(r1.getResult())
 					.toString());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -129,10 +131,10 @@ public class RiakPBDriverTest {
 			Assert.assertTrue(lresult.contains(k1));
 			Assert.assertTrue(lresult.contains(k2));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
@@ -147,17 +149,18 @@ public class RiakPBDriverTest {
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 
 		try {
 			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+		} catch (InterruptedException e) {
+			ExceptionTracer.traceIgnored(e);
+			Assert.fail();
 		}
 		IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
 				"check deleted");
@@ -167,10 +170,10 @@ public class RiakPBDriverTest {
 		try {
 			Assert.assertNull(r3.getResult());
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			ExceptionTracer.traceIgnored(e);
 			Assert.fail();
 		}
 	}
