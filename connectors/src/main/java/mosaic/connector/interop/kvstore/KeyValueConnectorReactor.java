@@ -141,7 +141,7 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor { // NOPM
 									.onSuccess(data);
 						}
 					} catch (Exception e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 				}
 			}

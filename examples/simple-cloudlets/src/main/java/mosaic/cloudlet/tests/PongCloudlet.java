@@ -137,7 +137,7 @@ public class PongCloudlet {
 			try {
 				cloudlet.destroyResource(state.kvStore, this);
 			} catch (Exception e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 		}
 

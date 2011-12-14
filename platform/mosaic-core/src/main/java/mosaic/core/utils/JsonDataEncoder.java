@@ -43,9 +43,9 @@ public class JsonDataEncoder<T extends Object> implements DataEncoder<T> {
 			object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes,
 					this.dataClass));
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		} catch (ClassNotFoundException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 
 		return object;

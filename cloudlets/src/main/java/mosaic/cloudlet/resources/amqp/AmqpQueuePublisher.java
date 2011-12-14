@@ -172,7 +172,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 					AmqpQueuePublisher.this.cloudlet, pMessage);
 			proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
 					arguments);
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 
 	}
@@ -210,7 +210,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 					AmqpQueuePublisher.this.cloudlet, pMessage);
 			proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
 					arguments);
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 
 	}

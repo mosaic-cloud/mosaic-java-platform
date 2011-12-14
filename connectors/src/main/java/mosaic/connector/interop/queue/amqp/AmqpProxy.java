@@ -215,7 +215,7 @@ public final class AmqpProxy extends ConnectorProxy {
 			for (IOperationCompletionHandler<String> handler : handlers) {
 				handler.onFailure(e);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
+			ExceptionTracer.traceIgnored(new ConnectionException(
 					"Cannot send consume request to driver: " + e.getMessage(),
 					e));
 		}
@@ -273,13 +273,13 @@ public final class AmqpProxy extends ConnectorProxy {
 	private <V extends Object> void sendMessage(Message message,
 			CompletionToken token, List<IOperationCompletionHandler<V>> handlers) {
 		try {
-			synchronized (this) {
+//			synchronized (this) {
 				// store token and completion handlers
 				super.registerHandlers(token.getMessageId(), handlers);
 				super.sendRequest(
 						getResponseReactor(AmqpConnectorReactor.class)
 								.getSession(), message);
-			}
+//			}
 			MosaicLogger.getLogger().trace(
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");
@@ -287,7 +287,7 @@ public final class AmqpProxy extends ConnectorProxy {
 			for (IOperationCompletionHandler<V> handler : handlers) {
 				handler.onFailure(e);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
+			ExceptionTracer.traceIgnored(new ConnectionException(
 					"Cannot send " + message.specification.toString()
 							+ " request to driver: " + e.getMessage(), e));
 		}

@@ -181,7 +181,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.initializeFailed(state, arguments);
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 		}
 	}
@@ -215,7 +215,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.destroyFailed(this.cloudletState, arguments);
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 			this.status = ResourceStatus.DESTROYED;
 		}

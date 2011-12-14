@@ -189,7 +189,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
+			ExceptionTracer.traceIgnored(new ConnectionException(
 					"Cannot send delete request to driver: " + e.getMessage(),
 					e));
 		}
@@ -223,7 +223,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 				handler.onFailure(e);
 			}
 			ExceptionTracer
-					.traceDeferred(new ConnectionException(
+					.traceIgnored(new ConnectionException(
 							"Cannot send list request to driver: "
 									+ e.getMessage(), e));
 		}
@@ -265,7 +265,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
+			ExceptionTracer.traceIgnored(new ConnectionException(
 					"Cannot send set request to driver: " + e.getMessage(), e));
 		}
 	}
@@ -300,7 +300,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 			for (IOperationCompletionHandler<D> handler : handlers) {
 				handler.onFailure(e);
 			}
-			ExceptionTracer.traceDeferred(new ConnectionException(
+			ExceptionTracer.traceIgnored(new ConnectionException(
 					"Cannot send get request to driver: " + e.getMessage(), e));
 		}
 	}

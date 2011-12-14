@@ -103,9 +103,9 @@ public class ConnectorProxy implements SessionCallbacks {
 	 */
 	protected void sendRequest(Session session, Message request)
 			throws IOException {
-		synchronized (this) {
+//		synchronized (this) {
 			session.send(request);
-		}
+//		}
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class ConnectorProxy implements SessionCallbacks {
 		try {
 			this.responseReactor.processResponse(message);
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return null;
 	}

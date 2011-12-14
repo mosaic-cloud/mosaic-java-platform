@@ -131,7 +131,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 					incDriverReference(stub);
 				}
 			} catch (DriverNotFoundException e) {
-				ExceptionTracer.traceDeferred(new ConnectionException(
+				ExceptionTracer.traceIgnored(new ConnectionException(
 						"The required key-value driver cannot be provided: " //$NON-NLS-1$
 								+ e.getMessage(), e));
 			}
@@ -389,7 +389,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			try {
 				this.signal.await();
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 			this.driver.removePendingOperation(this.result);
 
@@ -410,7 +410,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			try {
 				this.signal.await();
 			} catch (InterruptedException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 			}
 
 			this.driver.removePendingOperation(this.result);

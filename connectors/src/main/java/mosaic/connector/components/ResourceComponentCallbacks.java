@@ -147,7 +147,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 						succeeded = true;
 
 					} catch (Throwable e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 					reply = ComponentCallReply.create(true,
 							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
@@ -161,7 +161,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 						KeyValueConnectorCompTest.test();
 						succeeded = true;
 					} catch (Throwable e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
 					reply = ComponentCallReply.create(true,
 							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),

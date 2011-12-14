@@ -129,7 +129,7 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
 						}
 
 					});
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return operation;
 	}

@@ -38,7 +38,7 @@ public final class MosaicLogger {
 
 	private MosaicLogger() {
 		this.logger = LoggerFactory.getLogger(MosaicLogger.class);
-		((ch.qos.logback.classic.Logger) this.logger).setLevel(Level.TRACE);
+		((ch.qos.logback.classic.Logger) this.logger).setLevel(Level.ERROR);
 	}
 
 	/**
@@ -47,8 +47,8 @@ public final class MosaicLogger {
 	 * @return the logger
 	 */
 	public static MosaicLogger getLogger() { // NOPMD by georgiana
-												// on 9/27/11 7:15
-												// PM
+		// on 9/27/11 7:15
+		// PM
 		if (MosaicLogger.mLogger == null) {
 			MosaicLogger.mLogger = new MosaicLogger();
 		}

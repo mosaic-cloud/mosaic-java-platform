@@ -88,7 +88,7 @@ public final class AmqpDriverComponentCallbacks extends
 				this.status = Status.Created;
 			}
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 	}
 

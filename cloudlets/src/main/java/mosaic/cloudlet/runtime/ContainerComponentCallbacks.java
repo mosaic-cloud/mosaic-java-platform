@@ -213,8 +213,12 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			try {
 				container.start();
 				containers.add(container);
+				MosaicLogger.getLogger().trace(
+						"Starting cloudlet with config file "
+								+ configurationFile);
 			} catch (CloudletException e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
+				e.printStackTrace();
 			}
 		}
 		return containers;
@@ -239,6 +243,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					} else
 						throw (new IllegalArgumentException(String.format(
 								"invalid class-path URL `%s`", classpathPart)));
+					MosaicLogger.getLogger().trace(
+							"Loading cloudlet from " + classpathUrl + "...");
 					classLoaderUrls.add(classpathUrl);
 				}
 			classLoader = new URLClassLoader(
@@ -270,7 +276,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	public void terminate() {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component != null);
-//			System.out.println("ContainerComponentCallbacks.terminate()");
+			//			System.out.println("ContainerComponentCallbacks.terminate()");
 			this.component.terminate();
 		}
 	}
@@ -301,7 +307,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			this.component = null;
 			this.status = Status.Terminated;
 			exception.printStackTrace();
-			ExceptionTracer.traceDeferred(exception);
+			ExceptionTracer.traceIgnored(exception);
 		}
 		return null;
 	}
@@ -350,6 +356,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					if (containers != null) {
 						this.cloudletRunners.addAll(containers);
 					}
+				} else {
+					MosaicLogger.getLogger().error("Missing config file");
 				}
 			} else
 				throw (new IllegalStateException());
@@ -448,9 +456,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						"Found driver on channel " + channel);
 			}
 		} catch (InterruptedException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		} catch (ExecutionException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 
 		return channel;

@@ -77,7 +77,7 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
 					"Created Riak PB factory for " + riakHost + ":" + port
 							+ " bucket " + bucket);
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return factory;
 	}
@@ -137,7 +137,7 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
 						}
 
 					});
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return operation;
 	}

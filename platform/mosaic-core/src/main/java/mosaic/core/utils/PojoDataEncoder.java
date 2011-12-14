@@ -42,9 +42,9 @@ public class PojoDataEncoder<T extends Object> implements DataEncoder<T> {
 		try {
 			object = this.dataClass.cast(SerDesUtils.toObject(dataBytes));
 		} catch (IOException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		} catch (ClassNotFoundException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 
 		return object;

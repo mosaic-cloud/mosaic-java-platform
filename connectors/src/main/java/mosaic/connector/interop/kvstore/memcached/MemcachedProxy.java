@@ -167,7 +167,7 @@ public final class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 		for (IOperationCompletionHandler<List<String>> handler : handlers) {
 			handler.onFailure(exception);
 		}
-		// ExceptionTracer.traceDeferred(e);
+		// ExceptionTracer.traceIgnored(e);
 	}
 
 	private void sendStoreMessage(MemcachedMessage mcMessage, String key,
@@ -255,7 +255,7 @@ public final class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 				handler.onFailure(e);
 			}
 			ExceptionTracer
-					.traceDeferred(new ConnectionException(
+					.traceIgnored(new ConnectionException(
 							"Cannot send store request to driver: "
 									+ e.getMessage(), e));
 		}

@@ -122,7 +122,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 					incDriverReference(stub);
 				}
 			} catch (IOException e) {
-				ExceptionTracer.traceDeferred(new ConnectionException(
+				ExceptionTracer.traceIgnored(new ConnectionException(
 						"The Memcached proxy cannot connect to the driver: "
 								+ e.getMessage(), e));
 			}

@@ -129,7 +129,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				boolean succeeded = false;
 				String consumer = (String) parameters[0];
 
-				synchronized (AmqpOperationFactory.this.amqpDriver) {
+//				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					final Channel channel = AmqpOperationFactory.this.amqpDriver
 							.getChannel(consumer);
 					if (channel != null) {
@@ -137,10 +137,10 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 							channel.basicCancel(consumer);
 							succeeded = true;
 						} catch (IOException e) {
-							ExceptionTracer.traceDeferred(e);
+							ExceptionTracer.traceIgnored(e);
 						}
 					}
-				}
+//				}
 				return succeeded;
 			}
 
@@ -157,7 +157,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				boolean multiple = (Boolean) parameters[1];
 				String consumer = (String) parameters[2];
 
-				synchronized (AmqpOperationFactory.this.amqpDriver) {
+//				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					final Channel channel = AmqpOperationFactory.this.amqpDriver
 							.getChannel(consumer);
 					if (channel != null) {
@@ -165,10 +165,10 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 							channel.basicAck(delivery, multiple);
 							succeeded = true;
 						} catch (IOException e) {
-							ExceptionTracer.traceDeferred(e);
+							ExceptionTracer.traceIgnored(e);
 						}
 					}
-				}
+//				}
 				return succeeded;
 			}
 
@@ -186,7 +186,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						boolean autoAck = (Boolean) parameters[1];
 						String clientId = (String) parameters[2];
 
-						synchronized (AmqpOperationFactory.this.amqpDriver) {
+//						synchronized (AmqpOperationFactory.this.amqpDriver) {
 
 							final Channel channel = AmqpOperationFactory.this.amqpDriver
 									.getChannel(clientId);
@@ -214,10 +214,10 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 												properties.getMessageId());
 									}
 								} catch (IOException e) {
-									ExceptionTracer.traceDeferred(e);
+									ExceptionTracer.traceIgnored(e);
 								}
 							}
-						}
+//						}
 						return message;
 					}
 
@@ -237,7 +237,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
 				String consumerTag;
 
-				synchronized (AmqpOperationFactory.this.amqpDriver) {
+//				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
 							.getChannel(consumer);
 					if (channel != null) {
@@ -260,7 +260,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 											+ consumerTag + " consumer "
 											+ consumer);
 					}
-				}
+//				}
 
 				return consumer;
 			}
@@ -277,7 +277,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				AmqpOutboundMessage message = (AmqpOutboundMessage) parameters[0];
 				String clientId = (String) parameters[1];
 
-				synchronized (AmqpOperationFactory.this.amqpDriver) {
+//				synchronized (AmqpOperationFactory.this.amqpDriver) {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
 							.getChannel(clientId);
 
@@ -295,7 +295,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 								message.getData());
 						succeeded = true;
 					}
-				}
+//				}
 				return succeeded;
 			}
 
@@ -313,7 +313,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				String routingKey = (String) parameters[2];
 				String clientId = (String) parameters[3];
 
-				synchronized (AmqpOperationFactory.this.amqpDriver) {
+//				synchronized (AmqpOperationFactory.this.amqpDriver) {
 
 					try {
 						Channel channel = AmqpOperationFactory.this.amqpDriver
@@ -324,9 +324,9 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 							succeeded = (outcome != null);
 						}
 					} catch (IOException e) {
-						ExceptionTracer.traceDeferred(e);
+						ExceptionTracer.traceIgnored(e);
 					}
-				}
+//				}
 				return succeeded;
 			}
 

@@ -127,7 +127,7 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 							+ ports.get(index) + "/pools");
 					nodesURI.add(address);
 				} catch (URISyntaxException e) {
-					ExceptionTracer.traceDeferred(e);
+					ExceptionTracer.traceIgnored(e);
 				}
 			} else {
 				InetSocketAddress address = new InetSocketAddress( // NOPMD by georgiana on 10/12/11 12:50 PM

@@ -84,7 +84,7 @@ public class KeyValueConnectorFactory {
 				connector = (IKeyValueStore) createMethod.invoke(null, config,
 						encoder);
 			} catch (Exception e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 				ConnectorNotFoundException ex = new ConnectorNotFoundException(
 						e);
 				throw ex;

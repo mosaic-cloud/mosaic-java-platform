@@ -79,7 +79,7 @@ public class TestRunner {
 		try {
 			container.start();
 		} catch (CloudletException e) {
-			ExceptionTracer.traceDeferred(e);
+			ExceptionTracer.traceIgnored(e);
 		}
 		return container;
 	}

@@ -67,7 +67,6 @@ public final class ExceptionTracer {
 	public static void traceDeferred(Throwable exception) {
 		ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Deferred,
 				exception, null);
-		exception.printStackTrace();
 	}
 
 	public static void traceDeferred(Throwable exception, final String format,
