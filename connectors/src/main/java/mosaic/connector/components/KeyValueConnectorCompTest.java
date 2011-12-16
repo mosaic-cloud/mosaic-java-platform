@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
+
 
 import mosaic.core.exceptions.ExceptionTracer;
 
