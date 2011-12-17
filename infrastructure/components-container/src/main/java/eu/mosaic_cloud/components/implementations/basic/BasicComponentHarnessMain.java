@@ -22,13 +22,20 @@ package eu.mosaic_cloud.components.implementations.basic;
 
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.Pipe;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SocketChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.LinkedList;
 
@@ -55,7 +62,7 @@ public final class BasicComponentHarnessMain
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacks callbacks, final InputStream input, final OutputStream output, final ExceptionTracer exceptions)
 	{
 		final Pipe inputPipe;
 		final Pipe outputPipe;
@@ -66,11 +73,32 @@ public final class BasicComponentHarnessMain
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (new Error (exception));
 		}
-		final Piper inputPiper = new Piper (Channels.newChannel (BasicComponentHarnessPreMain.stdin), inputPipe.sink (), exceptions);
-		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (BasicComponentHarnessPreMain.stdout), exceptions);
+		final Piper inputPiper = new Piper (Channels.newChannel (input), inputPipe.sink (), exceptions);
+		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (output), exceptions);
+		try {
+			BasicComponentHarnessMain.main (callbacks, inputPipe.source (), outputPipe.sink (), exceptions);
+		} catch (final Error exception) {
+			exceptions.trace (ExceptionResolution.Deferred, exception);
+			throw (exception);
+		} finally {
+			try {
+				inputPiper.join ();
+			} catch (final InterruptedException exception) {
+				exceptions.trace (ExceptionResolution.Ignored, exception);
+			}
+			try {
+				outputPiper.join ();
+			} catch (final InterruptedException exception) {
+				exceptions.trace (ExceptionResolution.Ignored, exception);
+			}
+		}
+	}
+	
+	public static final void main (final ComponentCallbacks callbacks, final ReadableByteChannel input, final WritableByteChannel output, final ExceptionTracer exceptions)
+	{
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.create ();
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
-		final BasicChannel channel = BasicChannel.create (inputPipe.source (), outputPipe.sink (), coder, reactor, exceptions);
+		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
 		reactor.initialize ();
 		channel.initialize ();
@@ -89,41 +117,47 @@ public final class BasicComponentHarnessMain
 		component.terminate ();
 		channel.terminate ();
 		reactor.terminate ();
+	}
+	
+	public static final void main (final ComponentCallbacks callbacks, final SocketAddress address, final ExceptionTracer exceptions)
+	{
+		final Socket connection;
+		final InputStream input;
+		final OutputStream output;
 		try {
-			inputPiper.join ();
-		} catch (final InterruptedException exception) {
-			exceptions.trace (ExceptionResolution.Ignored, exception);
+			final ServerSocket acceptor = new ServerSocket ();
+			acceptor.bind (address, 1);
+			connection = acceptor.accept ();
+			acceptor.close ();
+			input = connection.getInputStream ();
+			output = connection.getOutputStream ();
+		} catch (final IOException exception) {
+			exceptions.trace (ExceptionResolution.Deferred, exception);
+			throw (new Error (exception));
 		}
 		try {
-			outputPiper.join ();
-		} catch (final InterruptedException exception) {
-			exceptions.trace (ExceptionResolution.Ignored, exception);
+			BasicComponentHarnessMain.main (callbacks, input, output, exceptions);
+		} catch (final Error exception) {
+			exceptions.trace (ExceptionResolution.Deferred, exception);
+			throw (exception);
+		} finally {
+			try {
+				connection.close ();
+			} catch (final IOException exception) {
+				exceptions.trace (ExceptionResolution.Deferred, exception);
+				throw (new Error (exception));
+			}
 		}
 	}
 	
-	public static final void main (final String componentArgument, final String classpathArgument, final String loggerArgument)
+	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
 	{
-		BasicComponentHarnessMain.main (componentArgument, classpathArgument, loggerArgument, AbortingExceptionTracer.defaultInstance);
+		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, AbortingExceptionTracer.defaultInstance);
 	}
 	
-	public static final void main (final String componentArgument, final String classpathArgument, final String loggerArgument, final ExceptionTracer exceptions)
+	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ExceptionTracer exceptions)
 	{
-		final Logger logger = (Logger) LoggerFactory.getLogger (BasicComponentHarnessMain.class);
 		Preconditions.checkNotNull (componentArgument);
-		if (loggerArgument != null) {
-			logger.debug ("starting remote appender...");
-			final String[] loggerParts = loggerArgument.split (":");
-			Preconditions.checkArgument (loggerParts.length == 2);
-			final SocketAppender appender = new SocketAppender ();
-			appender.setName ("remote");
-			appender.setContext (logger.getLoggerContext ());
-			appender.setRemoteHost (loggerParts[0]);
-			appender.setPort (Integer.parseInt (loggerParts[1]));
-			appender.start ();
-			appender.setReconnectionDelay (1000);
-			logger.addAppender (appender);
-		}
-		logger.debug ("booting...");
 		final ClassLoader classLoader;
 		if (classpathArgument != null) {
 			final LinkedList<URL> classLoaderUrls = new LinkedList<URL> ();
@@ -160,31 +194,60 @@ public final class BasicComponentHarnessMain
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while instantiating)", componentClass.getName ()), exception));
 		}
-		BasicComponentHarnessMain.main (callbacks, exceptions);
+		if (loggerArgument != null) {
+			final Logger logger = (Logger) LoggerFactory.getLogger (BasicComponentHarnessMain.class);
+			final String[] loggerParts = loggerArgument.split (":");
+			Preconditions.checkArgument (loggerParts.length == 2);
+			final SocketAppender appender = new SocketAppender ();
+			appender.setName ("remote");
+			appender.setContext (logger.getLoggerContext ());
+			appender.setRemoteHost (loggerParts[0]);
+			appender.setPort (Integer.parseInt (loggerParts[1]));
+			appender.start ();
+			appender.setReconnectionDelay (1000);
+			logger.addAppender (appender);
+		}
+		if ((channelArgument == null) || (channelArgument.equals ("stdio")))
+			BasicComponentHarnessMain.main (callbacks, BasicComponentHarnessPreMain.stdin, BasicComponentHarnessPreMain.stdout, exceptions);
+		else {
+			final String[] channelParts = channelArgument.split (":");
+			Preconditions.checkArgument (channelParts.length == 2);
+			final InetSocketAddress channelAddress = new InetSocketAddress (channelParts[0], Integer.parseInt (channelParts[1]));
+			BasicComponentHarnessMain.main (callbacks, channelAddress, exceptions);
+		}
 	}
 	
 	public static final void main (final String[] arguments)
 	{
 		Preconditions.checkNotNull (arguments);
-		Preconditions.checkArgument ((arguments.length >= 1) && (arguments.length <= 3), "invalid arguments; aborting! (expected `<component-callbacks-class-name> <class-path-urls> <logger-address>`");
+		Preconditions.checkArgument ((arguments.length >= 1) && (arguments.length <= 4), "invalid arguments; aborting! (expected `<component-callbacks-class-name> <class-path-urls> <channel-endpoint> <logger-endpoint>`");
 		final String componentArgument;
 		final String classpathArgument;
+		final String channelArgument;
 		final String loggerArgument;
 		if (arguments.length == 1) {
 			componentArgument = arguments[0];
 			classpathArgument = null;
+			channelArgument = null;
 			loggerArgument = null;
 		} else if (arguments.length == 2) {
 			componentArgument = arguments[0];
 			classpathArgument = arguments[1];
+			channelArgument = null;
 			loggerArgument = null;
 		} else if (arguments.length == 3) {
 			componentArgument = arguments[0];
 			classpathArgument = arguments[1];
-			loggerArgument = arguments[2];
+			channelArgument = arguments[2];
+			loggerArgument = null;
+		} else if (arguments.length == 4) {
+			componentArgument = arguments[0];
+			classpathArgument = arguments[1];
+			channelArgument = arguments[2];
+			loggerArgument = arguments[3];
 		} else
 			throw (new AssertionError ());
-		BasicComponentHarnessMain.main (componentArgument, classpathArgument, loggerArgument);
+		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument);
 	}
 	
 	private static final long sleepTimeout = 100;

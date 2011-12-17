@@ -18,6 +18,11 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>
+			<artifactId>components-container</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud</groupId>
 			<artifactId>components-tools</artifactId>
 			<version>${project.version}</version>
 		</dependency>

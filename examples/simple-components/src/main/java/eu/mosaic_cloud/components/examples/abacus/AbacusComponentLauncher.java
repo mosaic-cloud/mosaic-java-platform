@@ -36,7 +36,10 @@ public final class AbacusComponentLauncher
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		Preconditions.checkArgument ((arguments != null) && (arguments.length == 2), "invalid arguments: expected <ip> <mos-url>");
-		MosBasicComponentLauncher.main (new String[] {AbacusComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments[0], "29017", "29018", arguments[1]}, AbacusComponentLauncher.class.getClassLoader ());
+		Preconditions.checkArgument (arguments != null);
+		final String[] finalArguments = new String[arguments.length + 1];
+		finalArguments[0] = AbacusComponentLauncher.class.getName ().replace ("Launcher", "Callbacks");
+		System.arraycopy (arguments, 0, finalArguments, 1, arguments.length);
+		MosBasicComponentLauncher.main (finalArguments, AbacusComponentLauncher.class.getClassLoader ());
 	}
 }
