@@ -56,7 +56,7 @@ public final class MosBasicComponentLauncher
 	}
 	
 	public static final void main (final String[] arguments)
-		throws Throwable
+			throws Throwable
 	{
 		MosBasicComponentLauncher.main (arguments, null);
 	}
