@@ -652,6 +652,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 						if (AmqpDriver.super.isDestroyed()) {
 							break;
 						}
+						ExceptionTracer.traceDeferred(e);
 					}
 				}
 				if (!AmqpDriver.this.connected

@@ -46,7 +46,7 @@ public class AmqpCallbacksMap {
 	 * @param callback
 	 *            the callback
 	 */
-	public synchronized	void addHandlers(String consumerId, IAmqpConsumerCallback callback) {
+	public void addHandlers(String consumerId, IAmqpConsumerCallback callback) {
 		this.handlerMap.put(consumerId, callback);
 	}
 
@@ -57,7 +57,7 @@ public class AmqpCallbacksMap {
 	 *            the consumer identifier
 	 * @return the callback
 	 */
-	public synchronized IAmqpConsumerCallback removeConsumerCallback(String consumerId) {
+	public IAmqpConsumerCallback removeConsumerCallback(String consumerId) {
 		return this.handlerMap.remove(consumerId);
 	}
 
@@ -68,7 +68,7 @@ public class AmqpCallbacksMap {
 	 *            the consumer identifier
 	 * @return the callback
 	 */
-	public synchronized IAmqpConsumerCallback getRequestHandlers(String consumerId) {
+	public IAmqpConsumerCallback getRequestHandlers(String consumerId) {
 		return this.handlerMap.get(consumerId);
 	}
 }

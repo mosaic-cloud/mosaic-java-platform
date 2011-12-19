@@ -81,7 +81,7 @@ public final class KeyValueDriverFactory {
 				driver = (AbstractKeyValueDriver) createMethod.invoke(null,
 						config);
 			} catch (Exception e) {
-				ExceptionTracer.traceDeferred(e);
+				ExceptionTracer.traceIgnored(e);
 				DriverNotFoundException exception = new DriverNotFoundException(
 						e);
 				throw exception;

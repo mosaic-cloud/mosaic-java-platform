@@ -139,7 +139,6 @@ public class CloudletManager {
 			stateClasz = this.classLoader.loadClass(cloudletStateClass);
 			resourceConfig = PropertyTypeConfiguration.create(this.classLoader,
 					resourceFile);
-
 			ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
 			Object cloudletState = invokeConstructor(stateClasz);
 			Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler,

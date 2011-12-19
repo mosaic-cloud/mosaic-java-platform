@@ -32,7 +32,7 @@ import ch.qos.logback.classic.Level;
  */
 public final class MosaicLogger {
 
-	private static MosaicLogger mLogger = new MosaicLogger();
+	private static MosaicLogger mLogger;
 
 	private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
 
@@ -46,11 +46,11 @@ public final class MosaicLogger {
 	 * @return the logger
 	 */
 	public static MosaicLogger getLogger() { // NOPMD by georgiana
-												// on 9/27/11 7:15
-												// PM
-												//		if (MosaicLogger.mLogger == null) {
-		//			MosaicLogger.mLogger = new MosaicLogger();
-		//		}
+		// on 9/27/11 7:15
+		// PM
+		if (MosaicLogger.mLogger == null) {
+			MosaicLogger.mLogger = new MosaicLogger();
+		}
 		return MosaicLogger.mLogger;
 	}
 

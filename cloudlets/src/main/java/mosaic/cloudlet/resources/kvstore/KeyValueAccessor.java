@@ -136,6 +136,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
 						this.cloudlet, e);
 				this.callbackProxy.destroyFailed(this.cloudletState, arguments);
+				ExceptionTracer.traceDeferred(e);
 			}
 		}
 	}

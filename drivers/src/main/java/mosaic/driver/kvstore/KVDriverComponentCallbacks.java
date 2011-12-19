@@ -112,9 +112,12 @@ public final class KVDriverComponentCallbacks extends
 					// FIXME
 					try {
 						if (System.getenv("mosaic_node_ip") != null)
-							channelEndpoint=channelEndpoint.replace("0.0.0.0", System.getenv("mosaic_node_ip"));
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", System.getenv("mosaic_node_ip"));
 						else
-							channelEndpoint=channelEndpoint.replace("0.0.0.0", InetAddress.getLocalHost().getHostAddress());
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", InetAddress.getLocalHost()
+											.getHostAddress());
 					} catch (UnknownHostException e) {
 						ExceptionTracer.traceIgnored(e);
 					}
@@ -123,11 +126,8 @@ public final class KVDriverComponentCallbacks extends
 									.getString("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
 							String.class, "");
 					Map<String, String> outcome = new HashMap<String, String>();
-					// FIXME
-//					outcome.put("channelEndpoint", channelEndpoint);
-//					outcome.put("channelIdentifier", channelId);
-					outcome.put("channelEndpoint", "tcp://194.102.62.90:31031");
-					outcome.put("channelIdentifier", "driver.kv.1");
+					outcome.put("channelEndpoint", channelEndpoint);
+					outcome.put("channelIdentifier", channelId);
 					ComponentCallReply reply = ComponentCallReply.create(true,
 							outcome, ByteBuffer.allocate(0), request.reference);
 					component.reply(reply);
@@ -239,7 +239,8 @@ public final class KVDriverComponentCallbacks extends
 			if (this.pendingReference == reference) {
 				//				this.pendingReference = null;
 				if (!success) {
-					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					Exception e = new Exception(
+							"failed registering to group; terminating!"); //$NON-NLS-1$
 					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
 					throw (new IllegalStateException(e));
