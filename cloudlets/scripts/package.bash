@@ -5,7 +5,6 @@ if ! test "${#}" -eq 0 ; then
 	exit 1
 fi
 
-_outputs="$( readlink -f -- ./.outputs )"
 if ! test -e "${_outputs}" ; then
 	mkdir "${_outputs}"
 fi
