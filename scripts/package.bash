@@ -5,8 +5,6 @@ if ! test "${#}" -eq 0 ; then
 	exit 1
 fi
 
-echo "[ii] packaging ${_package_name}..." >&2
-
 _outputs="$( readlink -f -- ./.outputs )"
 if ! test -e "${_outputs}" ; then
 	mkdir "${_outputs}"
@@ -94,7 +92,7 @@ done
 cat >"${_outputs}/package/pkg.json" <<EOS
 {
 	"package" : "${_package_name}",
-	"version" : "${_package_version}.$( date '+%Y%m%d.%H%M%S' )",
+	"version" : "${_package_version}",
 	"maintainer" : "mosaic-developers@lists.info.uvt.ro",
 	"description" : "mOSAIC Components",
 	"directories" : [ "bin", "lib" ],
