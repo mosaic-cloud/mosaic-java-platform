@@ -125,6 +125,8 @@ public final class BasicComponentHarnessMain
 		final OutputStream output;
 		try {
 			final ServerSocket acceptor = new ServerSocket ();
+			acceptor.setReuseAddress (true);
+			acceptor.setSoTimeout (6 * 1000);
 			acceptor.bind (address, 1);
 			connection = acceptor.accept ();
 			acceptor.close ();

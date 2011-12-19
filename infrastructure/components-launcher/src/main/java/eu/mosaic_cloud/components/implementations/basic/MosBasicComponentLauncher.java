@@ -39,6 +39,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
+import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
@@ -53,6 +54,30 @@ public final class MosBasicComponentLauncher
 	{
 		super ();
 		throw (new UnsupportedOperationException ());
+	}
+	
+	public static final void main (final Class<? extends ComponentCallbacks> callbacksClass, final String[] arguments)
+			throws Throwable
+	{
+		Preconditions.checkNotNull (callbacksClass);
+		MosBasicComponentLauncher.main (callbacksClass.getName (), arguments, callbacksClass.getClassLoader ());
+	}
+	
+	public static final void main (final String callbacksClass, final String[] arguments)
+			throws Throwable
+	{
+		MosBasicComponentLauncher.main (callbacksClass, arguments, null);
+	}
+	
+	public static final void main (final String callbacksClass, final String[] arguments, final ClassLoader loader)
+			throws Throwable
+	{
+		Preconditions.checkNotNull (callbacksClass);
+		Preconditions.checkArgument (arguments != null);
+		final String[] finalArguments = new String[arguments.length + 1];
+		finalArguments[0] = callbacksClass;
+		System.arraycopy (arguments, 0, finalArguments, 1, arguments.length);
+		MosBasicComponentLauncher.main (finalArguments, loader);
 	}
 	
 	public static final void main (final String[] arguments)

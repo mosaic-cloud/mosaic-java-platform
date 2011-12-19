@@ -19,6 +19,8 @@
  */
 package mosaic.cloudlet.tests;
 
+import mosaic.cloudlet.CloudletContainerLauncher;
+
 import mosaic.cloudlet.core.CallbackArguments;
 import mosaic.cloudlet.core.DefaultCloudletCallback;
 import mosaic.cloudlet.core.ICloudletController;
@@ -63,6 +65,9 @@ public class HelloWorldCloudlet {
 	}
 
 	public static final class HelloCloudletState {
+	}
 
+	public static void main(String[] arguments) throws Throwable {
+		CloudletContainerLauncher.main ("hello-cloudlet.prop", arguments);
 	}
 }

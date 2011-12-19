@@ -23,6 +23,11 @@
 			<artifactId>mosaic-connector</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud</groupId>
+			<artifactId>components-launcher</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

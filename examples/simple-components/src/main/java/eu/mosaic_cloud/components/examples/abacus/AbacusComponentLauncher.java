@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.components.examples.abacus;
 
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
 
@@ -36,10 +35,6 @@ public final class AbacusComponentLauncher
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		Preconditions.checkArgument (arguments != null);
-		final String[] finalArguments = new String[arguments.length + 1];
-		finalArguments[0] = AbacusComponentLauncher.class.getName ().replace ("Launcher", "Callbacks");
-		System.arraycopy (arguments, 0, finalArguments, 1, arguments.length);
-		MosBasicComponentLauncher.main (finalArguments, AbacusComponentLauncher.class.getClassLoader ());
+		MosBasicComponentLauncher.main (AbacusComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments);
 	}
 }
