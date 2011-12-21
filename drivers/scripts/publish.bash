@@ -12,4 +12,4 @@ if test -e "${_package_afs}" ; then
 fi
 
 exec ssh -T cook@agent1.builder.mosaic.ieat.ro. <"${_outputs}/package.tar.gz"
-exit 0
+exit 1
