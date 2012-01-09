@@ -8,6 +8,7 @@
 		<relativePath>../..</relativePath>
 	</parent>
 	<artifactId>mosaic-examples</artifactId>
+	<name>mosaic-examples</name>
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>

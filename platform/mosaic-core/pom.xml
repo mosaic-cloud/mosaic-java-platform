@@ -7,6 +7,7 @@
 		<version>0.4-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
+	<name>mosaic-core</name>
 	<artifactId>mosaic-core</artifactId>
 	<dependencies>
 		<dependency>

@@ -7,6 +7,7 @@
 		<version>0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>mosaic-cloudlet</artifactId>
+	<name>mosaic-cloudlet</name>
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud</groupId>

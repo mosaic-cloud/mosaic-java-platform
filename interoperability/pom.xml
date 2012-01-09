@@ -10,6 +10,7 @@
                 <version>0.4-SNAPSHOT</version>
         </parent>
 	<artifactId>interoperability-parent</artifactId>
+	<name>interoperability-parent</name>
 	<packaging>pom</packaging>
 	<modules>
 		<module>interoperability-core</module>

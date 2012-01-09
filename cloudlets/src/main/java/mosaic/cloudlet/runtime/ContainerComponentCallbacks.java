@@ -172,7 +172,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						}
 					}
 					ComponentCallReply reply = ComponentCallReply.create(true,
-							new Boolean(true), ByteBuffer.allocate(0),
+							Boolean.valueOf(true), ByteBuffer.allocate(0),
 							request.reference);
 					component.reply(reply);
 					return null;
