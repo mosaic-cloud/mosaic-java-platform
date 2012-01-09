@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>eu.mosaic_cloud.platform</groupId>
+		<artifactId>platform-parent</artifactId>
+		<version>0.4.1.mosaic_dev-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>platform-core</artifactId>
+	<name>mosaic-platform-core</name>
+	
+	<dependencies>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>tools-json</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>tools-transcript</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>0.9.29</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+	</dependencies>
+	
+</project>

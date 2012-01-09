@@ -16,24 +16,25 @@
 	
 	<modules>
 		<module>cloudlets</module>
+		<module>components-container</module>
+		<module>components-core</module>
+		<module>components-launcher</module>
+		<module>components-tools</module>
 		<module>connectors</module>
 		<module>drivers</module>
-		<module>interoperability/interoperability-core</module>
-		<module>interoperability/interoperability-tools</module>
-		<module>interoperability/interoperability-zeromq</module>
-		<module>interoperability/zeromq</module>
-		<module>infrastructure/components-container</module>
-		<module>infrastructure/components-core</module>
-		<module>infrastructure/components-launcher</module>
-		<module>infrastructure/components-tools</module>
-		<module>platform/mosaic-core</module>
-		<module>platform/mosaic-interop</module>
-		<module>tools/tools-callbacks</module>
-		<module>tools/tools-classpath-exporter</module>
-		<module>tools/tools-exceptions</module>
-		<module>tools/tools-json</module>
-		<module>tools/tools-miscellaneous</module>
-		<module>tools/tools-transcript</module>
+		<module>interoperability-core</module>
+		<module>interoperability-tools</module>
+		<module>interoperability-zeromq</module>
+		<module>jetty-httpg-connector</module>
+		<module>platform-core</module>
+		<module>platform-interop</module>
+		<module>tools-callbacks</module>
+		<module>tools-classpath-exporter</module>
+		<module>tools-exceptions</module>
+		<module>tools-json</module>
+		<module>tools-miscellaneous</module>
+		<module>tools-transcript</module>
+		<module>zeromq</module>
 		<module>examples/interoperability</module>
 		<module>examples/simple-cloudlets</module>
 		<module>examples/simple-components</module>
