@@ -6,8 +6,10 @@
 
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>java-parent</artifactId>
-	<version>0.4-SNAPSHOT</version>
+	<version>0.4.1.mosaic_dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
+	<name>mOSAIC Java Platform</name>
 	<url>http://www.mosaic-cloud.eu/</url>
 	<inceptionYear>2010</inceptionYear>
 
@@ -67,7 +69,6 @@
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>2.3.3</version>
 			</plugin>
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -81,7 +82,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
 
@@ -91,10 +91,16 @@
 	</properties>
 
 	<repositories>
-		<!-- <repository> <id>mosaic</id> <name>mOSAIC Maven Repository</name> 
-			<layout>default</layout> <url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url> 
-			<snapshots> <updatePolicy>always</updatePolicy> <enabled>true</enabled> </snapshots> 
-			</repository> -->
+		<repository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>developers.mosaic-cloud.eu</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>couchbase</id>
 			<name>Couchbase Repository</name>
@@ -117,9 +123,10 @@
 			<name>Georgiana Macariu</name>
 			<email>georgiana@ieat.ro</email>
 			<organization>Research Institute eAustria</organization>
-			<organizationUrl>http://www.ieat.ro</organizationUrl>
+			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
+				<role>architect</role>
 			</roles>
 			<timezone>+3</timezone>
 		</developer>
@@ -128,7 +135,7 @@
 			<name>Ciprian Craciun</name>
 			<email>ccraciun@ieat.ro</email>
 			<organization>Research Institute eAustria</organization>
-			<organizationUrl>http://www.ieat.ro</organizationUrl>
+			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
 				<role>architect</role>
@@ -140,13 +147,13 @@
 			<name>Marian Neagul</name>
 			<email>marian@ieat.ro</email>
 			<organization>Research Institute eAustria</organization>
-			<organizationUrl>http://www.ieat.ro</organizationUrl>
+			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
+				<role>architect</role>
 			</roles>
 			<timezone>+3</timezone>
 		</developer>
-
 	</developers>
 
 	<scm>
@@ -193,10 +200,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.8</version>
-				<configuration>
-				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
-	<name>mOSAIC Project </name>
+
 </project>

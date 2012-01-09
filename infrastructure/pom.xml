@@ -7,7 +7,7 @@
         <parent>
                 <artifactId>java-parent</artifactId>
                 <groupId>eu.mosaic_cloud</groupId>
-                <version>0.4-SNAPSHOT</version>
+                <version>0.4.1.mosaic_dev-SNAPSHOT</version>
         </parent>
 	<artifactId>components-parent</artifactId>
 	<name>components-parent</name>
