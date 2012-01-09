@@ -1,17 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>eu.mosaic_cloud</groupId>
+	
+	<parent>
+		<groupId>eu.mosaic_cloud.platform</groupId>
+		<artifactId>platform-parent</artifactId>
+		<version>0.4.1.mosaic_dev-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+	
+	<groupId>eu.mosaic_cloud.components</groupId>
 	<artifactId>jetty-httpg-connector</artifactId>
-	<version>0.4.1.mosaic_dev-SNAPSHOT</version>
-	<name>jetty-httpg-connector</name>
-	<url>http://www.mosaic-cloud.eu/</url>
-	<packaging>jar</packaging>
-	<inceptionYear>2010</inceptionYear>
-
-
-
+	<name>mosaic-jetty-httpg-connector</name>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -58,25 +62,10 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -99,99 +88,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.0-beta-3</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>1.0-beta-3</version>
-				<executions>
-					<execution>
-						<id>download-licenses</id>
-						<goals>
-							<goal>download-licenses</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
-
-
 	</build>
-
-	<organization>
-		<name>mOSAIC Project</name>
-		<url>http://www.mosaic-cloud.eu</url>
-	</organization>
-
-	<distributionManagement>
-		<site>
-			<id>mojo.website</id>
-			<name>mOSAIC Jetty HTTPG Connector</name>
-			<url>file:///srv/sites/mosaic-jetty-httpg-connector</url>
-		</site>
-		<repository>
-			<id>developers.mosaic-cloud.eu</id>
-			<name>developers.mosaic-cloud.eu-releases</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
-		</repository>
-		<snapshotRepository>
-			<id>developers.mosaic-cloud.eu</id>
-			<name>developers.mosaic-cloud.eu-snapshots</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<scm>
-		<connection>scm:hg:http://mosaic.ieat.ro/hg/users/marian/jetty-connector</connection>
-		<developerConnection>scm:hg:file://${basedir}</developerConnection>
-	</scm>
-
-	<issueManagement>
-		<system>jira</system>
-		<url>http://developers.mosaic-cloud.eu/jira/</url>
-	</issueManagement>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-					<docletArtifact>
-						<groupId>org.umlgraph</groupId>
-						<artifactId>doclet</artifactId>
-						<version>5.1</version>
-					</docletArtifact>
-					<additionalparam>-views</additionalparam>
-					<useStandardDocletOptions>true</useStandardDocletOptions>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<license.licenseName>apache_v2</license.licenseName>
-	</properties>
-
-	<ciManagement>
-		<system>bamboo</system>
-		<url>http://developers.mosaic-cloud.eu/bamboo</url>
-	</ciManagement>
-	<description>Mosaic Jetty2httpg connector</description>
+	
 </project>

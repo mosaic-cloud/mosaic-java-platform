@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.Assert;
-
 
 import mosaic.core.exceptions.ExceptionTracer;
 
@@ -91,10 +89,10 @@ public class KeyValueConnectorCompTest {
 			Preconditions.checkState(r2.getResult(), "Set 2 returned false.");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		}
 	}
 
@@ -109,10 +107,10 @@ public class KeyValueConnectorCompTest {
 					"Get returned something wrong");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		}
 	}
 
@@ -124,10 +122,10 @@ public class KeyValueConnectorCompTest {
 			Preconditions.checkState(r1.getResult(), "Object not deleted.");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after delete");
@@ -138,10 +136,10 @@ public class KeyValueConnectorCompTest {
 					"Object still exists after delete");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		}
 	}
 
@@ -159,10 +157,10 @@ public class KeyValueConnectorCompTest {
 			}
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
+			throw (new Error (e));
 		}
 	}
 

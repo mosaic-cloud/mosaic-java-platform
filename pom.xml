@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+<project
+			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>eu.mosaic_cloud</groupId>
-	<artifactId>java-parent</artifactId>
+	
+	<groupId>eu.mosaic_cloud.platform</groupId>
+	<artifactId>platform-parent</artifactId>
 	<version>0.4.1.mosaic_dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
-	<name>mOSAIC Java Platform</name>
-	<url>http://www.mosaic-cloud.eu/</url>
+	
+	<name>mosaic-platform-parent</name>
+	<url>http://developers.mosaic-cloud.eu/</url>
 	<inceptionYear>2010</inceptionYear>
-
+	
 	<modules>
+		<module>cloudlets</module>
+		<module>connectors</module>
+		<module>drivers</module>
+		<module>interoperability/interoperability-core</module>
+		<module>interoperability/interoperability-tools</module>
+		<module>interoperability/interoperability-zeromq</module>
+		<module>interoperability/zeromq</module>
+		<module>infrastructure/components-container</module>
+		<module>infrastructure/components-core</module>
+		<module>infrastructure/components-launcher</module>
+		<module>infrastructure/components-tools</module>
 		<module>platform/mosaic-core</module>
 		<module>platform/mosaic-interop</module>
-		<module>drivers</module>
-		<module>connectors</module>
-		<module>cloudlets</module>
-		<module>interoperability</module>
-		<module>infrastructure</module>
-		<module>tools</module>
+		<module>tools/tools-callbacks</module>
+		<module>tools/tools-classpath-exporter</module>
+		<module>tools/tools-exceptions</module>
+		<module>tools/tools-json</module>
+		<module>tools/tools-miscellaneous</module>
+		<module>tools/tools-transcript</module>
+		<module>examples/interoperability</module>
 		<module>examples/simple-cloudlets</module>
 		<module>examples/simple-components</module>
-		<module>examples/interoperability</module>
 	</modules>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -40,7 +52,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -84,45 +96,39 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<license.licenseName>apache_v2</license.licenseName>
-	</properties>
-
+	
 	<repositories>
 		<repository>
 			<id>developers.mosaic-cloud.eu</id>
-			<name>developers.mosaic-cloud.eu</name>
+			<name>mOSAIC Repository</name>
 			<layout>default</layout>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 			<snapshots>
-				<updatePolicy>always</updatePolicy>
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 		<repository>
-			<id>couchbase</id>
-			<name>Couchbase Repository</name>
+			<id>files.couchbase.com</id>
+			<name>CouchBase Repository</name>
 			<layout>default</layout>
-			<url>http://files.couchbase.com/maven2/</url>
+			<url>http://files.couchbase.com/maven2</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
-
+	
 	<organization>
-		<name>eAustria Research Institute Timisoara</name>
-		<url>http://www.ieat.ro</url>
+		<name>eAustria Research Institute, Timisoara, Romania</name>
+		<url>http://www.ieat.ro/</url>
 	</organization>
-
+	
 	<developers>
 		<developer>
 			<id>georgiana</id>
 			<name>Georgiana Macariu</name>
 			<email>georgiana@ieat.ro</email>
-			<organization>Research Institute eAustria</organization>
+			<organization>eAustria Research Institute, Timisoara, Romania</organization>
 			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -134,7 +140,7 @@
 			<id>ccraciun</id>
 			<name>Ciprian Craciun</name>
 			<email>ccraciun@ieat.ro</email>
-			<organization>Research Institute eAustria</organization>
+			<organization>eAustria Research Institute, Timisoara, Romania</organization>
 			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -146,7 +152,7 @@
 			<id>marian</id>
 			<name>Marian Neagul</name>
 			<email>marian@ieat.ro</email>
-			<organization>Research Institute eAustria</organization>
+			<organization>eAustria Research Institute, Timisoara, Romania</organization>
 			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -155,40 +161,40 @@
 			<timezone>+3</timezone>
 		</developer>
 	</developers>
-
+	
 	<scm>
 		<connection>scm:hg:https://bitbucket.org/mosaic/mosaic-java-platform</connection>
 		<developerConnection>scm:hg:file://${basedir}</developerConnection>
 	</scm>
-
+	
 	<distributionManagement>
 		<site>
 			<id>builder.mosaic.ieat.ro</id>
 			<url>scp://builder.mosaic.ieat.ro/srv/sites/mosaic-java-platform</url>
 		</site>
 		<repository>
-			<id>developers.mosaic-cloud.eu</id>
-			<name>developers.mosaic-cloud.eu-releases</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<id>developers.mosaic-cloud.eu-releases</id>
+			<name>mOSAIC Releases Repository</name>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 		</repository>
 		<snapshotRepository>
-			<id>developers.mosaic-cloud.eu</id>
-			<name>developers.mosaic-cloud.eu-snapshots</name>
+			<id>developers.mosaic-cloud.eu-snapshots</id>
+			<name>mOSAIC Snapshots Repository</name>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 			<uniqueVersion>false</uniqueVersion>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
 		</snapshotRepository>
 	</distributionManagement>
-
+	
 	<issueManagement>
 		<system>jira</system>
 		<url>http://developers.mosaic-cloud.eu/jira</url>
 	</issueManagement>
-
+	
 	<ciManagement>
 		<system>bamboo</system>
 		<url>http://developers.mosaic-cloud.eu/bamboo</url>
 	</ciManagement>
-
+	
 	<reporting>
 		<plugins>
 			<plugin>
@@ -203,5 +209,10 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<license.licenseName>apache_v2</license.licenseName>
+	</properties>
+	
 </project>
