@@ -102,11 +102,22 @@
 					<projectNameTemplate>${project.name}</projectNameTemplate>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 		</plugins>
 	</build>
 
 	<repositories>
-<!-- 		<repository>
+		<repository>
 			<id>developers.mosaic-cloud.eu</id>
 			<name>mOSAIC Repository</name>
 			<layout>default</layout>
@@ -114,7 +125,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository> -->
+		</repository>
 		<repository>
 			<id>files.couchbase.com</id>
 			<name>CouchBase Repository</name>
