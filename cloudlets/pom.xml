@@ -9,6 +9,7 @@
 		<groupId>eu.mosaic_cloud.platform</groupId>
 		<artifactId>platform-parent</artifactId>
 		<version>0.4.1.mosaic_dev-SNAPSHOT</version>
+		<relativePath>../platform-parent</relativePath>
 	</parent>
 	
 	<artifactId>cloudlets</artifactId>

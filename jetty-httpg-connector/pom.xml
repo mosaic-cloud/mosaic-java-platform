@@ -9,9 +9,9 @@
 		<groupId>eu.mosaic_cloud.platform</groupId>
 		<artifactId>platform-parent</artifactId>
 		<version>0.4.1.mosaic_dev-SNAPSHOT</version>
+		<relativePath>../platform-parent</relativePath>
 	</parent>
 	
-	<groupId>eu.mosaic_cloud.components</groupId>
 	<artifactId>jetty-httpg-connector</artifactId>
 	<name>mosaic-jetty-httpg-connector</name>
 	
