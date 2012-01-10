@@ -43,10 +43,15 @@
 				<version>1.0</version>
 				<executions>
 					<execution>
-						<id>download-licenses</id>
+						<phase>validate</phase>
 						<goals>
-							<goal>download-licenses</goal>
+							<goal>update-project-license</goal>
+							<goal>update-file-header</goal>
 						</goals>
+						<configuration>
+							<canUpdateCopyright>true</canUpdateCopyright>
+							<canUpdateDescription>true</canUpdateDescription>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -83,7 +88,7 @@
 	</repositories>
 	
 	<organization>
-		<name>eAustria Research Institute, Timisoara, Romania</name>
+		<name>eAustria Research Institute (Timisoara, Romania)</name>
 		<url>http://www.ieat.ro/</url>
 	</organization>
 	
@@ -92,7 +97,7 @@
 			<id>georgiana</id>
 			<name>Georgiana Macariu</name>
 			<email>georgiana@ieat.ro</email>
-			<organization>eAustria Research Institute, Timisoara, Romania</organization>
+			<organization>eAustria Research Institute (Timisoara, Romania)</organization>
 			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -104,7 +109,7 @@
 			<id>ccraciun</id>
 			<name>Ciprian Craciun</name>
 			<email>ccraciun@ieat.ro</email>
-			<organization>eAustria Research Institute, Timisoara, Romania</organization>
+			<organization>eAustria Research Institute (Timisoara, Romania)</organization>
 			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -116,7 +121,7 @@
 			<id>marian</id>
 			<name>Marian Neagul</name>
 			<email>marian@ieat.ro</email>
-			<organization>eAustria Research Institute, Timisoara, Romania</organization>
+			<organization>eAustria Research Institute (Timisoara, Romania)</organization>
 			<organizationUrl>http://www.ieat.ro/</organizationUrl>
 			<roles>
 				<role>developer</role>
