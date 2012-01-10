@@ -52,7 +52,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>mosaic.cloudlet.CloudletContainerPreMain</mainClass>
+									<mainClass>eu.mosaic_cloud.cloudlet.CloudletContainerPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

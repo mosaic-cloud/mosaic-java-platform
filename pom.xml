@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project
-			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>eu.mosaic_cloud.platform</groupId>
 	<artifactId>platform-parent</artifactId>
 	<version>0.4.1.mosaic_dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<name>mosaic-platform-parent</name>
 	<url>http://developers.mosaic-cloud.eu/</url>
 	<inceptionYear>2010</inceptionYear>
-	
+
 	<modules>
 		<module>cloudlets</module>
 		<module>components-container</module>
@@ -39,7 +38,7 @@
 		<module>examples/simple-cloudlets</module>
 		<module>examples/simple-components</module>
 	</modules>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -53,7 +52,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -105,9 +104,9 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<repositories>
-		<repository>
+<!-- 		<repository>
 			<id>developers.mosaic-cloud.eu</id>
 			<name>mOSAIC Repository</name>
 			<layout>default</layout>
@@ -115,7 +114,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository>
+		</repository> -->
 		<repository>
 			<id>files.couchbase.com</id>
 			<name>CouchBase Repository</name>
@@ -126,12 +125,12 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<organization>
 		<name>eAustria Research Institute, Timisoara, Romania</name>
 		<url>http://www.ieat.ro/</url>
 	</organization>
-	
+
 	<developers>
 		<developer>
 			<id>georgiana</id>
@@ -170,12 +169,12 @@
 			<timezone>+3</timezone>
 		</developer>
 	</developers>
-	
+
 	<scm>
 		<connection>scm:hg:https://bitbucket.org/mosaic/mosaic-java-platform</connection>
 		<developerConnection>scm:hg:file://${basedir}</developerConnection>
 	</scm>
-	
+
 	<distributionManagement>
 		<site>
 			<id>builder.mosaic.ieat.ro</id>
@@ -193,17 +192,17 @@
 			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<issueManagement>
 		<system>jira</system>
 		<url>http://developers.mosaic-cloud.eu/jira</url>
 	</issueManagement>
-	
+
 	<ciManagement>
 		<system>bamboo</system>
 		<url>http://developers.mosaic-cloud.eu/bamboo</url>
 	</ciManagement>
-	
+
 	<reporting>
 		<plugins>
 			<plugin>
@@ -218,10 +217,10 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<license.licenseName>apache_v2</license.licenseName>
 	</properties>
-	
+
 </project>

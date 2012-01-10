@@ -1,6 +1,6 @@
 package mosaic_cloud.idl.common;
 
-option java_package = "mosaic.interop.idl";
+option java_package = "eu.mosaic_cloud.interop.idl";
 option java_outer_classname = "IdlCommon";
 option optimize_for = SPEED;
 

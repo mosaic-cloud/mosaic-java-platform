@@ -1,6 +1,6 @@
 package mosaic_cloud.idl.amqp;
 
-option java_package = "mosaic.interop.idl.amqp";
+option java_package = "eu.mosaic_cloud.interop.idl.amqp";
 option java_outer_classname = "AmqpPayloads";
 option optimize_for = SPEED;
 

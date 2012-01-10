@@ -1,5 +1,5 @@
-cloudlet.main_class=mosaic.cloudlet.tests.LoggingCloudlet$LifeCycleHandler
-cloudlet.state_class=mosaic.cloudlet.tests.LoggingCloudlet$LoggingCloudletState
+cloudlet.main_class=eu.mosaic_cloud.cloudlet.tests.LoggingCloudlet$LifeCycleHandler
+cloudlet.state_class=eu.mosaic_cloud.cloudlet.tests.LoggingCloudlet$LoggingCloudletState
 cloudlet.resource_file=logging-cloudlet.prop
 
 queue.consumer.amqp.exchange=exchange-test
