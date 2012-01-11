@@ -17,23 +17,24 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
+
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 
 import eu.mosaic_cloud.cloudlet.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlet.core.ICloudletController;
 import eu.mosaic_cloud.core.log.MosaicLogger;
-import mosaic.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 
-public final class BatchConsumerCallback extends QueueConsumerCallback {
+public final class UrgentConsumerCallback extends QueueConsumerCallback {
 
 	@Override
 	public void unregisterSucceeded(IndexerCloudletState state,
 			CallbackArguments<IndexerCloudletState> arguments) {
 		MosaicLogger.getLogger().info(
-				"Batch Index Message consumer unregistered successfully.");
+				"Urgent Index Message consumer unregistered successfully.");
 		ICloudletController<IndexerCloudletState> cloudlet = arguments
 				.getCloudlet();
-		cloudlet.destroyResource(state.batchConsumer, this);
+		cloudlet.destroyResource(state.urgentConsumer, this);
 	}
 
 	@Override
@@ -41,14 +42,14 @@ public final class BatchConsumerCallback extends QueueConsumerCallback {
 			CallbackArguments<IndexerCloudletState> arguments) {
 		// if resource initialized successfully then just register as a
 		// consumer
-		state.batchConsumer.register();
+		state.urgentConsumer.register();
 	}
 
 	@Override
 	public void destroySucceeded(IndexerCloudletState state,
 			CallbackArguments<IndexerCloudletState> arguments) {
 		MosaicLogger.getLogger().info(
-				"Batch Index Message consumer was destroyed successfully.");
-		state.batchConsumer = null;
+				"Urgent Index Message consumer was destroyed successfully.");
+		state.urgentConsumer = null;
 	}
 }

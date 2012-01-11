@@ -17,16 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 
 import eu.mosaic_cloud.cloudlet.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.DefaultKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.core.log.MosaicLogger;
-import mosaic.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 
 public class TasksKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletState> {

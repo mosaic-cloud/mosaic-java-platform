@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,12 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
+
 import com.sun.syndication.io.FeedException;
 import eu.mosaic_cloud.cloudlet.resources.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.core.log.MosaicLogger;
-import mosaic.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

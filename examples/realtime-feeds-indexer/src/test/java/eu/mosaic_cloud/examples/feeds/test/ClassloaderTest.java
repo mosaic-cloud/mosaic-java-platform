@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds.test;
+package eu.mosaic_cloud.examples.feeds.test;
 
 import java.net.URL;
 import java.net.URLClassLoader;

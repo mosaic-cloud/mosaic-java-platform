@@ -17,14 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
+
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 
 import eu.mosaic_cloud.cloudlet.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlet.resources.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlet.resources.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlet.resources.amqp.DefaultAmqpConsumerCallback;
 import eu.mosaic_cloud.core.log.MosaicLogger;
-import mosaic.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 import org.json.JSONObject;
 
 public class QueueConsumerCallback extends

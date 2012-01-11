@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.cloudlet.CloudletContainerPreMain.CloudletContainerParameters;

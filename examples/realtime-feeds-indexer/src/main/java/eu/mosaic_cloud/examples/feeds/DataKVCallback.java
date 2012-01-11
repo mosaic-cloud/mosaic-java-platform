@@ -17,50 +17,51 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 
 import eu.mosaic_cloud.cloudlet.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.DefaultKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.core.log.MosaicLogger;
-import mosaic.examples.feeds.IndexerCloudlet.IndexerCloudletState;
 
-public class TimelinesKVCallback extends
+public class DataKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletState> {
 
-	private static final String BUCKET_NAME = "feed-timelines";
+	private static final String BUCKET_NAME = "feed-data";
 
 	@Override
 	public void destroySucceeded(IndexerCloudletState state,
 			CallbackArguments<IndexerCloudletState> arguments) {
-		state.timelinesStore = null;
+		state.dataStore = null;
 	}
 
 	@Override
-	public void setSucceeded(IndexerCloudletState state,
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		IndexWorkflow.updateFeedMetadata(arguments.getExtra());
-	}
-
-	@Override
-	public void setFailed(IndexerCloudletState state,
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		handleError(arguments);
-	}
-
-	private void handleError(
+	public void getSucceeded(IndexerCloudletState state,
 			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
 		String key = arguments.getKey();
-		MosaicLogger.getLogger().warn(
-				"failed fetch (" + TimelinesKVCallback.BUCKET_NAME + "," + key
+		MosaicLogger.getLogger().trace(
+				"succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key
+						+ ")");
+		IndexWorkflow.parseLatestFeed(arguments.getValue(),
+				arguments.getExtra());
+	}
+
+	@Override
+	public void getFailed(IndexerCloudletState state,
+			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
+		String key = arguments.getKey();
+		MosaicLogger.getLogger()
+				.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key
 						+ ")");
 		Map<String, String> errorMssg = new HashMap<String, String>(4);
 		errorMssg.put("reason", "unexpected key-value store error");
 		errorMssg.put("message", arguments.getValue().toString());
-		errorMssg.put("bucket", TimelinesKVCallback.BUCKET_NAME);
+		errorMssg.put("bucket", DataKVCallback.BUCKET_NAME);
 		errorMssg.put("key", key);
 		IndexWorkflow.onIndexError(errorMssg, arguments.getExtra());
 	}

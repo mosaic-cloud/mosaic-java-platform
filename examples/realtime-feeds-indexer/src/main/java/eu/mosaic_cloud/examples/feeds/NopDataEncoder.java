@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
 
 import eu.mosaic_cloud.core.utils.DataEncoder;
 

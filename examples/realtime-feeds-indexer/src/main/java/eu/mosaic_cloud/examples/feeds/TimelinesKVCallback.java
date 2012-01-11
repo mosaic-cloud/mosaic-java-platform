@@ -17,48 +17,33 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds;
+package eu.mosaic_cloud.examples.feeds;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
+
 import eu.mosaic_cloud.cloudlet.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.DefaultKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.KeyValueCallbackArguments;
-import eu.mosaic_cloud.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.core.log.MosaicLogger;
-import mosaic.examples.feeds.IndexerCloudlet.IndexerCloudletState;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public final class MetadataKVCallback extends
+public class TimelinesKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletState> {
 
-	private static final String BUCKET_NAME = "feed-metadata";
+	private static final String BUCKET_NAME = "feed-timelines";
 
 	@Override
 	public void destroySucceeded(IndexerCloudletState state,
 			CallbackArguments<IndexerCloudletState> arguments) {
-		state.metadataStore = null;
-	}
-
-	private void createFeedMetaData(IndexerCloudletState state, String key,
-			Object extra) {
-		JSONObject feedMetaData = new JSONObject();
-		try {
-			feedMetaData.put("key", key);
-			feedMetaData.put("sequence", 0);
-			state.metadataStore.set(key, feedMetaData, extra);
-		} catch (JSONException e) {
-			ExceptionTracer.traceDeferred(e);
-		}
-
+		state.timelinesStore = null;
 	}
 
 	@Override
 	public void setSucceeded(IndexerCloudletState state,
 			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		IndexWorkflow.onMetadataStored(arguments);
+		IndexWorkflow.updateFeedMetadata(arguments.getExtra());
 	}
 
 	@Override
@@ -67,38 +52,16 @@ public final class MetadataKVCallback extends
 		handleError(arguments);
 	}
 
-	@Override
-	public void getSucceeded(IndexerCloudletState state,
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		String key = arguments.getKey();
-		MosaicLogger.getLogger().trace(
-				"succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + ","
-						+ key + ")");
-		Object value = arguments.getValue();
-		if (value == null) {
-			createFeedMetaData(state, key, arguments.getExtra());
-		} else {
-			IndexWorkflow.findNewFeeds(arguments.getValue(),
-					arguments.getExtra());
-		}
-	}
-
-	@Override
-	public void getFailed(IndexerCloudletState state,
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
-		handleError(arguments);
-	}
-
 	private void handleError(
 			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
 		String key = arguments.getKey();
 		MosaicLogger.getLogger().warn(
-				"failed fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key
+				"failed fetch (" + TimelinesKVCallback.BUCKET_NAME + "," + key
 						+ ")");
 		Map<String, String> errorMssg = new HashMap<String, String>(4);
 		errorMssg.put("reason", "unexpected key-value store error");
 		errorMssg.put("message", arguments.getValue().toString());
-		errorMssg.put("bucket", MetadataKVCallback.BUCKET_NAME);
+		errorMssg.put("bucket", TimelinesKVCallback.BUCKET_NAME);
 		errorMssg.put("key", key);
 		IndexWorkflow.onIndexError(errorMssg, arguments.getExtra());
 	}

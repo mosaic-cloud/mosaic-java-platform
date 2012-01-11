@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package mosaic.examples.feeds.test;
+package eu.mosaic_cloud.examples.feeds.test;
 
 import static org.junit.Assert.fail;
 
@@ -26,7 +26,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import mosaic.examples.feeds.FeedParser;
+import eu.mosaic_cloud.examples.feeds.FeedParser;
+
 
 import org.junit.After;
 import org.junit.Before;
