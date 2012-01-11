@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
@@ -54,6 +55,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
+@Ignore
 public class RedisConnectorTest {
 	private static KeyValueStoreConnector<String> connector;
 	private static String keyPrefix;

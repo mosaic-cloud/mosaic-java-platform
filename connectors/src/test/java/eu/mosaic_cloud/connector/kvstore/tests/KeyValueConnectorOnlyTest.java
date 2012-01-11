@@ -44,12 +44,14 @@ import eu.mosaic_cloud.core.utils.PojoDataEncoder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
 @RunWith (SerialJunitRunner.class)
 @Serial
+@Ignore
 public class KeyValueConnectorOnlyTest
 {
 	public void testConnection ()

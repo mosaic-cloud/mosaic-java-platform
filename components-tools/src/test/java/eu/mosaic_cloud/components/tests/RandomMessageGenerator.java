@@ -103,7 +103,7 @@ public class RandomMessageGenerator
 			object = new JSONObject ();
 			object.put ("some-boolean", Boolean.valueOf (this.random.nextBoolean ()));
 			object.put ("some-integer", Long.valueOf (this.random.nextLong ()));
-			object.put ("some-float", Double.valueOf (this.random.nextDouble ()));
+			object.put ("some-float", Float.valueOf (this.random.nextFloat ()));
 			object.put ("some-string", Long.toString (this.random.nextLong ()));
 			object.put ("some-object", this.generateObject (chance * 0.9f));
 			object.put ("some-array", this.generateArray (chance * 0.9f));

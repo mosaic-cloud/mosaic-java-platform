@@ -121,6 +121,7 @@
 		<versions.plugins.license>1.0</versions.plugins.license>
 		<versions.plugins.project-info-reports>2.4</versions.plugins.project-info-reports>
 		<versions.plugins.site>3.0</versions.plugins.site>
+		<versions.plugins.surefire>2.11</versions.plugins.surefire>
 		<versions.plugins.wagon>1.0</versions.plugins.wagon>
 		
 		<versions.java.compiler>1.6</versions.java.compiler>

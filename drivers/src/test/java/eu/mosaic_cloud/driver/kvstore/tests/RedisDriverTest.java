@@ -31,6 +31,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
@@ -49,6 +50,7 @@ import eu.mosaic_cloud.driver.kvstore.RedisDriver;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
+@Ignore
 public class RedisDriverTest {
 	private static AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;

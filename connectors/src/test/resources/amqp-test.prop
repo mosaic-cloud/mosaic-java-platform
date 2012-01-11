@@ -1,8 +1,11 @@
-amqp.connector_threads=10
-interop.channel.address=tcp://127.0.0.1:31028
-interop.driver.identifier=driver.amqp.1
 
-amqp.host=localhost
+interop.channel.address = tcp://127.0.0.1:31028
+interop.driver.identifier = driver.amqp.1
+
+amqp.connector_threads = 10
+
+amqp.host = 127.0.0.1
+amqp.port = 21688
 amqp.driver_threads=10
 
 consumer.amqp.queue=queue-x
@@ -15,4 +18,3 @@ publisher.amqp.routing_key=rk-x
 publisher.amqp.manadatory=true
 publisher.amqp.immediate=true
 publisher.amqp.durable=false
-

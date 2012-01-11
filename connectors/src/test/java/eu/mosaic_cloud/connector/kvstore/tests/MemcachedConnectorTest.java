@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -55,6 +56,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
+@Ignore
 public class MemcachedConnectorTest {
 	private static MemcachedStoreConnector<String> connector;
 	private static String keyPrefix;

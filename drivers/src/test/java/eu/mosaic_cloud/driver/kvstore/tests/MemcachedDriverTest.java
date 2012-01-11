@@ -32,6 +32,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,6 +48,7 @@ import eu.mosaic_cloud.driver.kvstore.memcached.MemcachedDriver;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
+@Ignore
 public class MemcachedDriverTest {
 	private static MemcachedDriver wrapper;
 	private static String keyPrefix;

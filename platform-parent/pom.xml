@@ -77,6 +77,14 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${versions.plugins.surefire}</version>
+				<configuration>
+					<argLine>-Djava.library.path=${java.library.path}</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	

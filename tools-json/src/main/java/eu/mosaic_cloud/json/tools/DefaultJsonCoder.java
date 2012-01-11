@@ -59,7 +59,7 @@ public final class DefaultJsonCoder
 	{
 		try {
 			Preconditions.checkNotNull (data);
-			final JSONParser parser = new JSONParser (JSONParser.MODE_RFC4627);
+			final JSONParser parser = new JSONParser (JSONParser.MODE_RFC4627 & ~JSONParser.USE_HI_PRECISION_FLOAT);
 			final Object structure = parser.parse (data);
 			return (structure);
 		} catch (final ParseException exception) {
