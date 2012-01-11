@@ -532,7 +532,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		}
 
 		@Override
-		public void handleRecoverOk() {
+		public void handleRecoverOk(String consumerTag) {
 			// nothing to do here
 		}
 

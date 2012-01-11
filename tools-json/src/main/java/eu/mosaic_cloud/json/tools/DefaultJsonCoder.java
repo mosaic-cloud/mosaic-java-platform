@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.json.tools;
 
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
@@ -30,7 +29,6 @@ import eu.mosaic_cloud.json.core.JsonCoder;
 import net.minidev.json.JSONStyle;
 import net.minidev.json.JSONValue;
 import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.JSONParserBase;
 import net.minidev.json.parser.ParseException;
 
 
@@ -61,13 +59,11 @@ public final class DefaultJsonCoder
 	{
 		try {
 			Preconditions.checkNotNull (data);
-			final JSONParser parser = new JSONParser (JSONParserBase.MODE_RFC4627);
+			final JSONParser parser = new JSONParser (JSONParser.MODE_RFC4627);
 			final Object structure = parser.parse (data);
 			return (structure);
 		} catch (final ParseException exception) {
 			throw (new IllegalArgumentException (exception.getMessage (), exception.getCause ()));
-		} catch (final IOException exception) {
-			throw (new IllegalStateException (exception));
 		}
 	}
 	

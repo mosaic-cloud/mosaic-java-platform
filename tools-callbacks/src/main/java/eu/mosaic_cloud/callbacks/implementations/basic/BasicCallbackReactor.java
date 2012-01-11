@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.AbstractListenableFuture;
+import com.google.common.util.concurrent.AbstractFuture;
 import com.google.common.util.concurrent.AbstractService;
 import eu.mosaic_cloud.callbacks.core.CallbackFuture;
 import eu.mosaic_cloud.callbacks.core.CallbackHandler;
@@ -100,7 +100,7 @@ public final class BasicCallbackReactor
 	}
 	
 	private static abstract class Action
-			extends AbstractListenableFuture<Void>
+			extends AbstractFuture<Void>
 			implements
 				CallbackFuture
 	{
@@ -114,12 +114,12 @@ public final class BasicCallbackReactor
 		@Override
 		public final boolean cancel (final boolean maybeInterrupt)
 		{
-			return (this.cancel ());
+			return (super.cancel (maybeInterrupt));
 		}
 		
 		final void triggerCancel ()
 		{
-			this.cancel ();
+			this.cancel (true);
 		}
 		
 		final void triggerFail (final Throwable exception)

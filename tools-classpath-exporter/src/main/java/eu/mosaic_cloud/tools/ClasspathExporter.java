@@ -36,8 +36,9 @@ import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.transcript.core.Transcript;
 import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 
 
 public final class ClasspathExporter
@@ -55,7 +56,7 @@ public final class ClasspathExporter
 	}
 	
 	@Override
-	public void handle (final String path, final HttpServletRequest request, final HttpServletResponse response, final int dispatch)
+	public void handle (final String path, final Request baseRequest, final HttpServletRequest request, final HttpServletResponse response)
 	{
 		try {
 			this.transcript.traceDebugging ("serving resource `%s`...", path);
