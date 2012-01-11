@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.1</version>
+			<version>${versions.dependencies.junit}</version>
 		</dependency>
 	</dependencies>
 	
@@ -53,7 +53,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2</version>
+				<version>${versions.plugins.assembly}</version>
 				<executions>
 					<execution>
 						<id>components-examples-abacus</id>
