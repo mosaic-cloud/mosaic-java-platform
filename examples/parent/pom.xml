@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>eu.mosaic_cloud</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.4.1_mosaic_dev-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+	
+	<groupId>eu.mosaic_cloud.examples</groupId>
+	<artifactId>examples-parent</artifactId>
+	<packaging>pom</packaging>
+	<name>mosaic-examples-parent</name>
+	
+	<modules>
+		<module>../realtime-feeds-indexer</module>
+		<module>../simple-cloudlets</module>
+		<module>../simple-components</module>
+		<module>../interoperability</module>
+	</modules>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${versions.dependencies.guava}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${versions.dependencies.junit}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${versions.plugins.compiler}</version>
+				<configuration>
+					<source>${versions.java.compiler}</source>
+					<target>${versions.java.compiler}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${versions.plugins.jar}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${versions.plugins.surefire}</version>
+				<configuration>
+					<argLine>-Djava.library.path=${java.library.path}</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

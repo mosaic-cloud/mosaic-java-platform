@@ -6,14 +6,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>eu.mosaic_cloud.platform</groupId>
-		<artifactId>platform-parent</artifactId>
+		<groupId>eu.mosaic_cloud.examples</groupId>
+		<artifactId>examples-parent</artifactId>
 		<version>0.4.1_mosaic_dev-SNAPSHOT</version>
-		<relativePath>../..</relativePath>
+		<relativePath>../parent</relativePath>
 	</parent>
 	
-	<artifactId>platform-examples</artifactId>
-	<name>mosaic-platform-examples</name>
+	<artifactId>examples-simple-cloudlets</artifactId>
+	<name>mosaic-examples-simple-cloudlets</name>
 	
 	<dependencies>
 		<dependency>

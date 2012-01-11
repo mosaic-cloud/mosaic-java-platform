@@ -2,7 +2,7 @@
 
 <project
 			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
@@ -12,39 +12,30 @@
 		<relativePath>../parent</relativePath>
 	</parent>
 	
-	<artifactId>examples-simple-components</artifactId>
-	<name>mosaic-examples-simple-components</name>
+	<artifactId>examples-realtime-feeds-indexer</artifactId>
+	<name>mosaic-examples-realtime-feeds-indexer</name>
+	<description>An example of a cloudlet for Twitter feeds indexing</description>
 	
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>components-core</artifactId>
+			<artifactId>cloudlets</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>components-container</artifactId>
+			<artifactId>platform-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>components-launcher</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${versions.dependencies.json}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>components-tools</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>tools-classpath-exporter</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${versions.dependencies.junit}</version>
+			<groupId>rome</groupId>
+			<artifactId>rome</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 	
@@ -56,22 +47,20 @@
 				<version>${versions.plugins.assembly}</version>
 				<executions>
 					<execution>
-						<id>components-examples-abacus</id>
 						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
 						<configuration>
-							<finalName>components-examples-abacus-${project.version}</finalName>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.components.examples.abacus.AbacusComponentPreMain</mainClass>
+									<mainClass>mosaic.examples.feeds.IndexerCloudletPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>
+						<goals>
+							<goal>single</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

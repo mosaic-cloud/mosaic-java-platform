@@ -16,6 +16,7 @@
 	
 	<modules>
 		<module>./platform-parent</module>
+		<module>./examples/parent</module>
 	</modules>
 	
 	<build>
