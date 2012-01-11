@@ -33,4 +33,4 @@ _mvn_env=(
 _package_name=mosaic-examples-realtime-feeds-java
 _package_version=0.1.alpha
 _package_afs=/afs/olympus.volution.ro/people/ciprian/web/data/5e069b1ba84ae3ab9c0eb0d8cbcb0a57
-_package_jar_name=mosaic-examples-feeds-indexer-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+_package_jar_name=examples-realtime-feeds-indexer-0.4.1_mosaic_dev-SNAPSHOT-jar-with-dependencies.jar

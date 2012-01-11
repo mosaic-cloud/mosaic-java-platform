@@ -9,6 +9,6 @@ _mvn_args+=(
 	package -DskipTests=true
 )
 
-cd "${_workbench}/.."
+cd "${_workbench}"
 
 exec env "${_mvn_env[@]}" "${_mvn}" "${_mvn_args[@]}"
