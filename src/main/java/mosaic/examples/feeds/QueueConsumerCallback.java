@@ -26,7 +26,7 @@ public class QueueConsumerCallback extends
 		AmqpQueueConsumeMessage<JSONObject> message = arguments.getMessage();
 
 		IndexWorkflow.indexNewFeed(state, message);
-//		message.acknowledge();
+		message.acknowledge();
 	}
 
 }
