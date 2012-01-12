@@ -44,8 +44,8 @@ test -e "${_package}/lib/scripts/${_self_basename}.bash"
 _PATH="${_package}/bin:${PATH:-}"
 _LD_LIBRARY_PATH="${_package}/lib/java:${LD_LIBRARY_PATH:-}"
 
-_java="$( PATH="${_PATH}" type -P -- java || true )"
-if test -z "${_java}" ; then
+_java_bin="$( PATH="${_PATH}" type -P -- java || true )"
+if test -z "${_java_bin}" ; then
 	echo "[ee] missing \`java\` (Java interpreter) executable in path: \`${_PATH}\`; ignoring!" >&2
 	exit 1
 fi

@@ -9,4 +9,4 @@ _mvn_args+=(
 	package -DskipTests=true
 )
 
-exec env "${_mvn_env[@]}" "${_mvn}" "${_mvn_args[@]}"
+exec env "${_mvn_env[@]}" "${_mvn_bin}" "${_mvn_args[@]}"

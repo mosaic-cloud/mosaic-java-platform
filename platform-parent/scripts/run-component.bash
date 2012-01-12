@@ -26,4 +26,4 @@ _java_args+=(
 mkdir -p -- "${_tmp}"
 cd -- "${_tmp}"
 
-exec env "${_java_env[@]}" "${_java}" "${_java_args[@]}"
+exec env "${_java_env[@]}" "${_java_bin}" "${_java_args[@]}"

@@ -1,21 +1,20 @@
 #!/dev/null
 
 _workbench="$( readlink -e -- . )"
-_sources="${_workbench}/sources"
 _scripts="${_workbench}/scripts"
 _tools="${_workbench}/.tools"
 _outputs="${_workbench}/.outputs"
 
 _PATH="${_tools}/bin:${PATH}"
 
-_java="$( PATH="${_PATH}" type -P -- java || true )"
-if test -z "${_java}" ; then
+_java_bin="$( PATH="${_PATH}" type -P -- java || true )"
+if test -z "${_java_bin}" ; then
 	echo "[ee] missing \`java\` (Java interpreter) executable in path: \`${_PATH}\`; ignoring!" >&2
 	exit 1
 fi
 
-_mvn="$( PATH="${_PATH}" type -P -- mvn || true )"
-if test -z "${_mvn}" ; then
+_mvn_bin="$( PATH="${_PATH}" type -P -- mvn || true )"
+if test -z "${_mvn_bin}" ; then
 	echo "[ee] missing \`mvn\` (Java Maven tool) executable in path: \`${_PATH}\`; ignoring!" >&2
 	exit 1
 fi
@@ -37,7 +36,7 @@ _mvn_env=(
 while read _maven_pom_variable ; do
 	declare "${_maven_pom_variable}"
 done <<<"$(
-		env "${_mvn_env[@]}" "${_mvn}" "${_mvn_args[@]}" validate -D_maven_pom_phase=validate \
+		env "${_mvn_env[@]}" "${_mvn_bin}" "${_mvn_args[@]}" validate -D_maven_pom_phase=validate \
 		| grep -o -E -e '^_maven_pom_[a-z]+=.+$'
 )"
 
