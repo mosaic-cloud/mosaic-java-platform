@@ -6,25 +6,27 @@ if ! test "${#}" -eq 0 ; then
 fi
 
 if ! test -e "${_outputs}" ; then
-	mkdir "${_outputs}"
+	mkdir -- "${_outputs}"
 fi
 
 if test -e "${_outputs}/package" ; then
+	chmod -R +w -- "${_outputs}/package"
 	rm -R "${_outputs}/package"
 fi
 if test -e "${_outputs}/package.tar.gz" ; then
-	rm "${_outputs}/package.tar.gz"
+	chmod +w -- "${_outputs}/package.tar.gz"
+	rm -- "${_outputs}/package.tar.gz"
 fi
 
-mkdir "${_outputs}/package"
-mkdir "${_outputs}/package/bin"
-mkdir "${_outputs}/package/lib"
+mkdir -- "${_outputs}/package"
+mkdir -- "${_outputs}/package/bin"
+mkdir -- "${_outputs}/package/lib"
 
-mkdir "${_outputs}/package/lib/java"
-find "${_workbench}/target/" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" {} \;
-find "${_workbench}/lib/" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" {} \;
+mkdir -- "${_outputs}/package/lib/java"
+find "${_workbench}/target/" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
+find "${_workbench}/lib/" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 
-mkdir "${_outputs}/package/lib/scripts"
+mkdir -- "${_outputs}/package/lib/scripts"
 
 cat >"${_outputs}/package/lib/scripts/do.sh" <<'EOS'
 #!/bin/bash
@@ -39,13 +41,13 @@ _package="$( readlink -e -- . )"
 cmp -s -- "${_package}/lib/scripts/do.sh" "${_self_realpath}"
 test -e "${_package}/lib/scripts/${_self_basename}.bash"
 
-_PATH="${_package}/bin:${_package}/lib/applications-elf:${PATH:-}"
+_PATH="${_package}/bin:${PATH:-}"
 _LD_LIBRARY_PATH="${_package}/lib/java:${LD_LIBRARY_PATH:-}"
 
 _java="$( PATH="${_PATH}" type -P -- java || true )"
 if test -z "${_java}" ; then
-	echo "[ww] missing \`java\` (Java interpreter) executable in path: \`${_PATH}\`; ignoring!" >&2
-	_java=java
+	echo "[ee] missing \`java\` (Java interpreter) executable in path: \`${_PATH}\`; ignoring!" >&2
+	exit 1
 fi
 
 _java_jars="${_package}/lib/java"
@@ -73,10 +75,15 @@ sed -r -e 's|@package_jar_name@|'"${_package_jar_name}"'|g' -i -- "${_outputs}/p
 
 chmod +x -- "${_outputs}/package/lib/scripts/do.sh"
 
-for _script_path in ./scripts/run-component.bash ; do
-	_script_name="$( basename -- "${_script_path}" .bash )"
-	cp -T "${_script_path}" "${_outputs}/package/lib/scripts/${_script_name}.bash"
-	ln -s -T ./do.sh "${_outputs}/package/lib/scripts/${_script_name}"
+for _script_name in "${_package_scripts[@]}" ; do
+	test -e "${_scripts}/${_script_name}" || continue
+	if test -e "${_scripts}/${_script_name}.bash" ; then
+		_script="${_scripts}/${_script_name}.bash"
+	else
+		_script="$( dirname -- "$( readlink -e -- "${_scripts}/${_script_name}" )" )/${_script_name}.bash"
+	fi
+	cp -T -- "${_script}" "${_outputs}/package/lib/scripts/${_script_name}.bash"
+	ln -s -T -- ./do.sh "${_outputs}/package/lib/scripts/${_script_name}"
 	cat >"${_outputs}/package/bin/${_package_name}--${_script_name}" <<EOS
 #!/bin/bash
 if test "\${#}" -eq 0 ; then
@@ -100,6 +107,8 @@ cat >"${_outputs}/package/pkg.json" <<EOS
 	]
 }
 EOS
+
+chmod -R a+rX-w -- "${_outputs}/package"
 
 tar -czf "${_outputs}/package.tar.gz" -C "${_outputs}/package" .
 
