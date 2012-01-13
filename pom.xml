@@ -52,6 +52,7 @@
 				<version>${versions.plugins.license}</version>
 				<executions>
 					<execution>
+						<phase>verify</phase>
 						<goals>
 							<goal>update-project-license</goal>
 							<goal>update-file-header</goal>
@@ -59,6 +60,27 @@
 						<configuration>
 							<canUpdateCopyright>true</canUpdateCopyright>
 							<canUpdateDescription>true</canUpdateDescription>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${versions.plugins.antrun}</version>
+				<executions>
+					<execution>
+						<phase>${_maven_pom_phase}</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="_maven_pom_group=${project.groupId}${line.separator}" file="/dev/stdout" />
+								<echo message="_maven_pom_artifact=${project.artifactId}${line.separator}" file="/dev/stdout" />
+								<echo message="_maven_pom_version=${project.version}${line.separator}" file="/dev/stdout" />
+								<echo message="_maven_pom_package=${_maven_pom_package}${line.separator}" file="/dev/stdout" />
+							</target>
 						</configuration>
 					</execution>
 				</executions>
@@ -112,6 +134,7 @@
 		<versions.dependencies.slf4j>1.6.4</versions.dependencies.slf4j>
 		<versions.dependencies.spy>2.7.3</versions.dependencies.spy>
 		
+		<versions.plugins.antrun>1.7</versions.plugins.antrun>
 		<versions.plugins.assembly>2.2.2</versions.plugins.assembly>
 		<versions.plugins.compiler>2.3.2</versions.plugins.compiler>
 		<versions.plugins.dependency>2.4</versions.plugins.dependency>
@@ -129,6 +152,9 @@
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<license.licenseName>apache_v2</license.licenseName>
+		
+		<_maven_pom_phase />
+		<_maven_pom_package />
 		
 	</properties>
 	
