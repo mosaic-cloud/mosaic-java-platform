@@ -82,7 +82,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${versions.plugins.surefire}</version>
 				<configuration>
-					<argLine>-Djava.library.path=${java.library.path}</argLine>
+					<argLine>-Djava.library.path=${java.library.path}:${project.basedir}/lib</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

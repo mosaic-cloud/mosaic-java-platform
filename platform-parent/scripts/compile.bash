@@ -1,12 +1,11 @@
 #!/dev/null
 
-if ! test "${#}" -eq 0 ; then
-	echo "[ee] invalid arguments; aborting!" >&2
-	exit 1
+if test "${#}" -gt 1 ; then
+	_mvn_args+=( "${@}" )
+else
+	_mvn_args+=( clean compile )
 fi
 
-_mvn_args+=(
-	package -DskipTests=true
-)
+exec env "${_mvn_env[@]}" "${_mvn_bin}" -f "${_mvn_pom}" "${_mvn_args[@]}"
 
-exec env "${_mvn_env[@]}" "${_mvn_bin}" "${_mvn_args[@]}"
+exit 1

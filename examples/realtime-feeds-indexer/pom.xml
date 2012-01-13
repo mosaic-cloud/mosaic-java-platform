@@ -68,7 +68,7 @@
 	</build>
 	
 	<properties>
-		<_maven_pom_package>mosaic-examples-realtime-feeds-java</_maven_pom_package>
+		<_maven_pom_package>mosaic-examples-realtime-feeds-indexer-java</_maven_pom_package>
 	</properties>
 	
 </project>
