@@ -26,6 +26,8 @@ _java_env=(
 		PATH="${_PATH}"
 )
 
+_mvn_pom="${_workbench}/pom.xml"
+_mvn_pkg_pom="${_outputs}/package.mvn/pom.xml"
 _mvn_args=(
 		-q
 )
@@ -36,7 +38,7 @@ _mvn_env=(
 while read _maven_pom_variable ; do
 	declare "${_maven_pom_variable}"
 done <<<"$(
-		env "${_mvn_env[@]}" "${_mvn_bin}" "${_mvn_args[@]}" validate -D_maven_pom_phase=validate \
+		env "${_mvn_env[@]}" "${_mvn_bin}" -f "${_mvn_pom}" "${_mvn_args[@]}" validate -D_maven_pom_phase=validate \
 		| grep -o -E -e '^_maven_pom_[a-z]+=.+$'
 )"
 
@@ -45,6 +47,7 @@ test -n "${_maven_pom_version}"
 test -n "${_maven_pom_package}"
 
 _package_name="${_maven_pom_package}"
-_package_version="${_maven_pom_version}"
+_package_version=0.2.0_mosaic_dev
 _package_jar_name="${_maven_pom_artifact}-${_maven_pom_version}-jar-with-dependencies.jar"
 _package_scripts=( run-component )
+_package_cook=cook@agent1.builder.mosaic.ieat.ro.
