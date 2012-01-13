@@ -1,8 +1,8 @@
 /*
  * #%L
- * interoperability-examples
+ * mosaic-examples-interoperability
  * %%
- * Copyright (C) 2010 - 2011 mOSAIC Project
+ * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
