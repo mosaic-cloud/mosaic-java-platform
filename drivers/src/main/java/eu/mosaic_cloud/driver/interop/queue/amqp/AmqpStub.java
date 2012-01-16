@@ -224,7 +224,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			routingKey = publish.getRoutingKey();
 			String correlationId = null;
 			String replyTo = null;
-			;
+			
 			if (publish.hasCorrelationId()) {
 				correlationId = publish.getCorrelationId();
 			}
