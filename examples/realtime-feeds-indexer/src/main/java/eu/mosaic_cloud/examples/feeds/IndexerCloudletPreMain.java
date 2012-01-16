@@ -35,7 +35,7 @@ public class IndexerCloudletPreMain {
 		CloudletContainerParameters.classpath = null;
 		CloudletContainerParameters.configFile = "indexer-cloudlet.prop";
 		BasicComponentHarnessPreMain
-				.main(new String[] { "mosaic.cloudlet.runtime.ContainerComponentCallbacks" });
+				.main(new String[] { "eu.mosaic_cloud.cloudlet.runtime.ContainerComponentCallbacks" });
 	}
 
 }

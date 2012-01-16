@@ -7,7 +7,7 @@
 	
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.4.1_mosaic_dev-SNAPSHOT</version>
+	<version>0.4.2_mosaic_dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>mosaic-parent</name>
@@ -16,7 +16,11 @@
 	
 	<modules>
 		<module>./platform-parent</module>
+		<module>./components-parent</module>
+		<module>./interoperability-parent</module>
+		<module>./tools-parent</module>
 		<module>./examples/parent</module>
+		<module>./jetty-httpg-connector</module>
 	</modules>
 	
 	<build>
@@ -151,12 +155,21 @@
 		<versions.java.compiler>1.6</versions.java.compiler>
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
 		<license.licenseName>apache_v2</license.licenseName>
 		
 		<_maven_pom_phase />
 		<_maven_pom_package />
 		
 	</properties>
+	
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	
 	<repositories>
 		<repository>

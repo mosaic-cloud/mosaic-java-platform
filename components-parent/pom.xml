@@ -12,17 +12,16 @@
 		<relativePath>..</relativePath>
 	</parent>
 	
-	<groupId>eu.mosaic_cloud.platform</groupId>
-	<artifactId>platform-parent</artifactId>
+	<groupId>eu.mosaic_cloud.components</groupId>
+	<artifactId>components-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-platform-parent</name>
+	<name>mosaic-components-parent</name>
 	
 	<modules>
-		<module>../cloudlets</module>
-		<module>../connectors</module>
-		<module>../drivers</module>
-		<module>../platform-core</module>
-		<module>../platform-interop</module>
+		<module>../components-core</module>
+		<module>../components-container</module>
+		<module>../components-launcher</module>
+		<module>../components-tools</module>
 	</modules>
 	
 	<dependencies>
@@ -71,43 +70,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											license-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.0,)
-										</versionRange>
-										<goals>
-											<goal>
-												update-project-license
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 	
 	<properties>

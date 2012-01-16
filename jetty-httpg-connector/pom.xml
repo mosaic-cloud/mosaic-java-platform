@@ -6,10 +6,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>eu.mosaic_cloud.platform</groupId>
-		<artifactId>platform-parent</artifactId>
-		<version>0.4.1_mosaic_dev-SNAPSHOT</version>
-		<relativePath>../platform-parent</relativePath>
+		<groupId>eu.mosaic_cloud.components</groupId>
+		<artifactId>components-parent</artifactId>
+		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
+		<relativePath>../components-parent</relativePath>
 	</parent>
 	
 	<artifactId>jetty-httpg-connector</artifactId>
@@ -94,5 +94,17 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<properties>
+		<license.licenseName>apache_v2</license.licenseName>
+	</properties>
+	
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	
 </project>

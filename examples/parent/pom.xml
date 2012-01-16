@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.4.1_mosaic_dev-SNAPSHOT</version>
+		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
 	
@@ -108,5 +108,17 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<properties>
+		<license.licenseName>apache_v2</license.licenseName>
+	</properties>
+	
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	
 </project>

@@ -12,16 +12,16 @@
 		<relativePath>../tools-parent</relativePath>
 	</parent>
 	
-	<artifactId>tools-miscellaneous</artifactId>
-	<name>mosaic-tools-miscellaneous</name>
+	<groupId>eu.mosaic_cloud.interoperability</groupId>
+	<artifactId>interoperability-parent</artifactId>
+	<packaging>pom</packaging>
+	<name>mosaic-interoperability-parent</name>
 	
-	<dependencies>
-		<dependency>
-			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-exceptions</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>../interoperability-core</module>
+		<module>../interoperability-tools</module>
+		<module>../interoperability-zeromq</module>
+	</modules>
 	
 	<properties>
 		<license.licenseName>apache_v2</license.licenseName>
