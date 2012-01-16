@@ -127,7 +127,7 @@ public class CloudletManager {
 			if (cloudletStateClass.equals(""))
 				throw new CloudletException("The configuration file " //$NON-NLS-1$
 						+ this.configuration.toString()
-						+ " does not specify a state class for cloudlet " //$NON-NLS-1$
+						+ " does not specify a context class for cloudlet " //$NON-NLS-1$
 						+ cloudletClass + "."); //$NON-NLS-1$
 
 			String resourceFile = ConfigUtils

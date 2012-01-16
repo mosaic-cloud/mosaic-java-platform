@@ -35,14 +35,14 @@ import eu.mosaic_cloud.core.utils.PojoDataEncoder;
 public class ConsumerCloudlet {
 
 	public static final class LifeCycleHandler extends
-			DefaultCloudletCallback<ConsumerCloudletState> {
+			DefaultCloudletCallback<ConsumerCloudletContext> {
 
 		@Override
-		public void initialize(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void initialize(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"ConsumerCloudlet is being initialized.");
-			ICloudletController<ConsumerCloudletState> cloudlet = arguments
+			ICloudletController<ConsumerCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			IConfiguration configuration = cloudlet.getConfiguration();
 			IConfiguration queueConfiguration = configuration
@@ -50,33 +50,33 @@ public class ConsumerCloudlet {
 							.resolveAbsolute("queue"));
 			DataEncoder<String> encoder = new PojoDataEncoder<String>(
 					String.class);
-			state.consumer = new AmqpQueueConsumer<ConsumerCloudlet.ConsumerCloudletState, String>(
+			context.consumer = new AmqpQueueConsumer<ConsumerCloudlet.ConsumerCloudletContext, String>(
 					queueConfiguration, cloudlet, String.class, encoder);
 
 		}
 
 		@Override
-		public void initializeSucceeded(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void initializeSucceeded(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"ConsumerCloudlet initialized successfully.");
-			ICloudletController<ConsumerCloudletState> cloudlet = arguments
+			ICloudletController<ConsumerCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.initializeResource(state.consumer,
-					new AmqpConsumerCallback(), state);
+			cloudlet.initializeResource(context.consumer,
+					new AmqpConsumerCallback(), context);
 
 		}
 
 		@Override
-		public void destroy(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void destroy(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"ConsumerCloudlet is being destroyed.");
 		}
 
 		@Override
-		public void destroySucceeded(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void destroySucceeded(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Consumer cloudlet was destroyed successfully.");
 		}
@@ -84,54 +84,54 @@ public class ConsumerCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpConsumerCallback<ConsumerCloudletState, String> {
+			DefaultAmqpConsumerCallback<ConsumerCloudletContext, String> {
 
 		@Override
-		public void registerSucceeded(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void registerSucceeded(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"ConsumerCloudlet consumer registered successfully.");
 		}
 
 		@Override
-		public void unregisterSucceeded(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void unregisterSucceeded(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"ConsumerCloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
-			ICloudletController<ConsumerCloudletState> cloudlet = arguments
+			ICloudletController<ConsumerCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(state.consumer, this);
+			cloudlet.destroyResource(context.consumer, this);
 		}
 
 		@Override
-		public void initializeSucceeded(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void initializeSucceeded(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
-			state.consumer.register();
+			context.consumer.register();
 		}
 
 		@Override
-		public void destroySucceeded(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
+		public void destroySucceeded(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"ConsumerCloudlet consumer was destroyed successfully.");
-			state.consumer = null;
+			context.consumer = null;
 			arguments.getCloudlet().destroy();
 		}
 
 		@Override
-		public void acknowledgeSucceeded(ConsumerCloudletState state,
-				CallbackArguments<ConsumerCloudletState> arguments) {
-			state.consumer.unregister();
+		public void acknowledgeSucceeded(ConsumerCloudletContext context,
+				CallbackArguments<ConsumerCloudletContext> arguments) {
+			context.consumer.unregister();
 
 		}
 
 		@Override
 		public void consume(
-				ConsumerCloudletState state,
-				AmqpQueueConsumeCallbackArguments<ConsumerCloudletState, String> arguments) {
+				ConsumerCloudletContext context,
+				AmqpQueueConsumeCallbackArguments<ConsumerCloudletContext, String> arguments) {
 
 			AmqpQueueConsumeMessage<String> message = arguments.getMessage();
 			String data = message.getData();
@@ -143,7 +143,7 @@ public class ConsumerCloudlet {
 
 	}
 
-	public static final class ConsumerCloudletState {
-		AmqpQueueConsumer<ConsumerCloudletState, String> consumer;
+	public static final class ConsumerCloudletContext {
+		AmqpQueueConsumer<ConsumerCloudletContext, String> consumer;
 	}
 }

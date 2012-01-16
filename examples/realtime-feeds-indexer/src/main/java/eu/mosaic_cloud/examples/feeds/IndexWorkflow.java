@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletContext;
 
 import com.sun.syndication.io.FeedException;
 import eu.mosaic_cloud.cloudlet.resources.amqp.AmqpQueueConsumeMessage;
@@ -45,7 +45,7 @@ public class IndexWorkflow {
 	private AmqpQueueConsumeMessage<JSONObject> recvMessage = null;
 	private UUID key;
 	private JSONObject indexMessage;
-	private IndexerCloudletState state;
+	private IndexerCloudletContext context;
 	private Timeline currentTimeline;
 	private FeedParser parser;
 	private JSONObject currentFeedMetaData;
@@ -55,22 +55,22 @@ public class IndexWorkflow {
 	private boolean indexDone = false;
 	private JSONObject newTimeline;
 
-	private IndexWorkflow(IndexerCloudletState state,
+	private IndexWorkflow(IndexerCloudletContext context,
 			AmqpQueueConsumeMessage<JSONObject> recvMessage) {
 		super();
 		this.parser = new FeedParser();
 		this.currentFeedMetaData = new JSONObject();
 		this.newFeedTask = new JSONObject();
 		this.newFeedItems = new JSONArray();
-		this.state = state;
+		this.context = context;
 		this.recvMessage = recvMessage;
 		this.indexMessage = recvMessage.getData();
 	}
 
 	private static final IndexWorkflow createIndexer(
-			IndexerCloudletState state,
+			IndexerCloudletContext context,
 			AmqpQueueConsumeMessage<JSONObject> recvMessage) {
-		IndexWorkflow aIndexer = new IndexWorkflow(state, recvMessage);
+		IndexWorkflow aIndexer = new IndexWorkflow(context, recvMessage);
 		aIndexer.key = UUID.randomUUID();
 		IndexWorkflow.indexers.put(aIndexer.key, aIndexer);
 		return aIndexer;
@@ -80,11 +80,11 @@ public class IndexWorkflow {
 		return IndexWorkflow.indexers.get(key);
 	}
 
-	public static void indexNewFeed(IndexerCloudletState state,
+	public static void indexNewFeed(IndexerCloudletContext context,
 			AmqpQueueConsumeMessage<JSONObject> recvMessage) {
 
 		IndexWorkflow aIndexer = IndexWorkflow
-				.createIndexer(state, recvMessage);
+				.createIndexer(context, recvMessage);
 		MosaicLogger.getLogger().trace(
 				"New indexer created for message " + aIndexer.indexMessage);
 		aIndexer.fetchLatestFeed();
@@ -100,7 +100,7 @@ public class IndexWorkflow {
 			MosaicLogger.getLogger().info(
 					"indexing " + this.indexMessage.getString("url")
 							+ " (from data) step 2 (fetching latest data)...");
-			this.state.dataStore.get(this.indexMessage.getString("data"),
+			this.context.dataStore.get(this.indexMessage.getString("data"),
 					this.key);
 		} catch (JSONException e) {
 			handleError(e);
@@ -148,7 +148,7 @@ public class IndexWorkflow {
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
 						+ " step 3 (fetching latest meta-data)...");
 		// FIXME
-		this.state.metadataStore.get(feedKey, this.key);
+		this.context.metadataStore.get(feedKey, this.key);
 	}
 
 	public static void findNewFeeds(Object fetchedData, Object extra) {
@@ -225,7 +225,7 @@ public class IndexWorkflow {
 					JSONObject json = item.convertToJson();
 					json.put("feed", currentFeed);
 					this.newFeedItems.put(json);
-					this.state.itemsStore.set(itemKey, json, this.key);
+					this.context.itemsStore.set(itemKey, json, this.key);
 				}
 				this.newTimeline.put("items", items);
 				this.currentFeedMetaData.put("timelines",
@@ -250,7 +250,7 @@ public class IndexWorkflow {
 				}
 
 				// store timeline
-				this.state.timelinesStore.set(newTimelineKey, this.newTimeline,
+				this.context.timelinesStore.set(newTimelineKey, this.newTimeline,
 						this.key);
 			} else {
 				this.currentFeedMetaData = this.previousFeedMetaData;
@@ -272,7 +272,7 @@ public class IndexWorkflow {
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
 						+ " step 5 (updating meta-data)...");
 		try {
-			this.state.metadataStore.set(
+			this.context.metadataStore.set(
 					this.currentFeedMetaData.getString("key"),
 					this.currentFeedMetaData, this.key);
 		} catch (JSONException e) {
@@ -282,16 +282,16 @@ public class IndexWorkflow {
 	}
 
 	public static void onMetadataStored(
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
+			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		getIndexer((UUID) arguments.getExtra()).handleMetadataStored(arguments);
 	}
 
 	private void handleMetadataStored(
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
+			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		if (this.indexDone) {
 			storeIndexOutcome();
 		} else {
-			this.state.metadataStore.get(arguments.getKey(), this.key);
+			this.context.metadataStore.get(arguments.getKey(), this.key);
 		}
 	}
 
@@ -320,7 +320,7 @@ public class IndexWorkflow {
 			this.newFeedTask.put("items", items);
 			Object error = null;
 			this.newFeedTask.put("error", error);
-			this.state.taskStore.set(feedTaskKey, this.newFeedTask, this.key);
+			this.context.taskStore.set(feedTaskKey, this.newFeedTask, this.key);
 		} catch (JSONException e) {
 			ExceptionTracer.traceDeferred(e);
 		}

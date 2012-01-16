@@ -37,51 +37,51 @@ import eu.mosaic_cloud.core.utils.JsonDataEncoder;
 public class PingCloudlet {
 
 	public static final class LifeCycleHandler extends
-			DefaultCloudletCallback<PingCloudletState> {
+			DefaultCloudletCallback<PingCloudletContext> {
 
 		@Override
-		public void initialize(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void initialize(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger()
 					.info("Ping Cloudlet is being initialized.");
-			ICloudletController<PingCloudletState> cloudlet = arguments
+			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			IConfiguration configuration = cloudlet.getConfiguration();
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			state.consumer = new AmqpQueueConsumer<PingCloudlet.PingCloudletState, PongMessage>(
+			context.consumer = new AmqpQueueConsumer<PingCloudlet.PingCloudletContext, PongMessage>(
 					queueConfiguration, cloudlet, PongMessage.class,
 					new JsonDataEncoder<PongMessage>(PongMessage.class));
-			state.publisher = new AmqpQueuePublisher<PingCloudlet.PingCloudletState, PingMessage>(
+			context.publisher = new AmqpQueuePublisher<PingCloudlet.PingCloudletContext, PingMessage>(
 					queueConfiguration, cloudlet, PingMessage.class,
 					new JsonDataEncoder<PingMessage>(PingMessage.class));
 
 		}
 
 		@Override
-		public void initializeSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void initializeSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet initialized successfully.");
-			ICloudletController<PingCloudletState> cloudlet = arguments
+			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.initializeResource(state.consumer,
-					new AmqpConsumerCallback(), state);
-			cloudlet.initializeResource(state.publisher,
-					new AmqpPublisherCallback(), state);
+			cloudlet.initializeResource(context.consumer,
+					new AmqpConsumerCallback(), context);
+			cloudlet.initializeResource(context.publisher,
+					new AmqpPublisherCallback(), context);
 		}
 
 		@Override
-		public void destroy(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void destroy(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info("Ping Cloudlet is being destroyed.");
 
 		}
 
 		@Override
-		public void destroySucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void destroySucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet was destroyed successfully.");
 		}
@@ -89,56 +89,56 @@ public class PingCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpConsumerCallback<PingCloudletState, PongMessage> {
+			DefaultAmqpConsumerCallback<PingCloudletContext, PongMessage> {
 
 		@Override
-		public void registerSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void registerSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet consumer registered successfully.");
 		}
 
 		@Override
-		public void unregisterSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void unregisterSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
-			ICloudletController<PingCloudletState> cloudlet = arguments
+			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(state.consumer, this);
+			cloudlet.destroyResource(context.consumer, this);
 		}
 
 		@Override
-		public void initializeSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void initializeSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
-			state.consumer.register();
+			context.consumer.register();
 		}
 
 		@Override
-		public void destroySucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void destroySucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet consumer was destroyed successfully.");
-			state.consumer = null;
-			if (state.publisher == null) {
+			context.consumer = null;
+			if (context.publisher == null) {
 				arguments.getCloudlet().destroy();
 			}
 		}
 
 		@Override
-		public void acknowledgeSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
-			state.consumer.unregister();
+		public void acknowledgeSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
+			context.consumer.unregister();
 
 		}
 
 		@Override
 		public void consume(
-				PingCloudletState state,
-				AmqpQueueConsumeCallbackArguments<PingCloudletState, PongMessage> arguments) {
+				PingCloudletContext context,
+				AmqpQueueConsumeCallbackArguments<PingCloudletContext, PongMessage> arguments) {
 			AmqpQueueConsumeMessage<PongMessage> message = arguments
 					.getMessage();
 			PongMessage data = message.getData();
@@ -154,59 +154,59 @@ public class PingCloudlet {
 	}
 
 	public static final class AmqpPublisherCallback extends
-			DefaultAmqpPublisherCallback<PingCloudletState, PingMessage> {
+			DefaultAmqpPublisherCallback<PingCloudletContext, PingMessage> {
 
 		@Override
-		public void registerSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void registerSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet publisher registered successfully.");
 			PingMessage data = new PingMessage("pingpong");
-			state.publisher.publish(data, null, "");
+			context.publisher.publish(data, null, "");
 		}
 
 		@Override
-		public void unregisterSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void unregisterSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
-			ICloudletController<PingCloudletState> cloudlet = arguments
+			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(state.publisher, this);
+			cloudlet.destroyResource(context.publisher, this);
 		}
 
 		@Override
-		public void initializeSucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void initializeSucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
-			state.publisher.register();
+			context.publisher.register();
 		}
 
 		@Override
-		public void destroySucceeded(PingCloudletState state,
-				CallbackArguments<PingCloudletState> arguments) {
+		public void destroySucceeded(PingCloudletContext context,
+				CallbackArguments<PingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Ping Cloudlet publisher was destroyed successfully.");
-			state.publisher = null;
-			if (state.consumer == null) {
+			context.publisher = null;
+			if (context.consumer == null) {
 				arguments.getCloudlet().destroy();
 			}
 		}
 
 		@Override
 		public void publishSucceeded(
-				PingCloudletState state,
-				AmqpQueuePublishCallbackArguments<PingCloudletState, PingMessage> arguments) {
-			state.publisher.unregister();
+				PingCloudletContext context,
+				AmqpQueuePublishCallbackArguments<PingCloudletContext, PingMessage> arguments) {
+			context.publisher.unregister();
 		}
 
 	}
 
-	public static final class PingCloudletState {
+	public static final class PingCloudletContext {
 
-		AmqpQueueConsumer<PingCloudletState, PongMessage> consumer;
-		AmqpQueuePublisher<PingCloudletState, PingMessage> publisher;
+		AmqpQueueConsumer<PingCloudletContext, PongMessage> consumer;
+		AmqpQueuePublisher<PingCloudletContext, PingMessage> publisher;
 	}
 }

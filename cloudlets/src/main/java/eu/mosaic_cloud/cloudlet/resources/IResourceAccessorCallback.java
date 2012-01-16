@@ -27,47 +27,47 @@ import eu.mosaic_cloud.cloudlet.core.ICallback;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  */
-public interface IResourceAccessorCallback<S> extends ICallback {
+public interface IResourceAccessorCallback<C> extends ICallback {
 	/**
 	 * Called when resource accessor initialization succeeded.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void initializeSucceeded(S state, CallbackArguments<S> arguments);
+	void initializeSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when resource accessor initialization failed.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void initializeFailed(S state, CallbackArguments<S> arguments);
+	void initializeFailed(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when resource accessor destruction succeeded.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void destroySucceeded(S state, CallbackArguments<S> arguments);
+	void destroySucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when resource accessor destruction failed.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void destroyFailed(S state, CallbackArguments<S> arguments);
+	void destroyFailed(C context, CallbackArguments<C> arguments);
 }

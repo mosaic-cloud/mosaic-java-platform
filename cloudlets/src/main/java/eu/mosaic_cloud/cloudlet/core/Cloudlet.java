@@ -48,17 +48,17 @@ import eu.mosaic_cloud.core.ops.IResult;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the state of the cloudlet
+ * @param <C>
+ *            the context of the cloudlet
  */
-public class Cloudlet<S extends Object> implements ICloudlet {
+public class Cloudlet<C extends Object> implements ICloudlet {
 
 	private boolean active;
 	private CloudletExecutor executor;
 	private CloudletController controller;
 	private IConfiguration configuration;
-	private ICloudletCallback<S> controllerCallback;
-	private S state;
+	private ICloudletCallback<C> controllerCallback;
+	private C context;
 
 	/**
 	 * Creates a new cloudlet instance.
@@ -70,10 +70,10 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 	 *            the class loader used for loading cloudlet classes
 	 * @throws CloudletException
 	 */
-	public Cloudlet(S state, ICloudletCallback<S> callback, ClassLoader loader)
+	public Cloudlet(C context, ICloudletCallback<C> callback, ClassLoader loader)
 			throws CloudletException {
 		synchronized (this) {
-			this.state = state;
+			this.context = context;
 			this.active = false;
 			this.executor = new CloudletExecutor(loader);
 			this.controller = new CloudletController();
@@ -102,14 +102,14 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				@Override
 				public void onSuccess(Object result) {
 					Cloudlet.this.controllerCallback.initializeSucceeded(
-							Cloudlet.this.state, new CallbackArguments<S>(
+							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
 				}
 
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					Cloudlet.this.controllerCallback.initializeFailed(
-							Cloudlet.this.state, new CallbackArguments<S>(
+							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
 
 				}
@@ -128,7 +128,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				public void run() {
 					// call the user defined init
 					Cloudlet.this.controllerCallback.initialize(
-							Cloudlet.this.state, new CallbackArguments<S>(
+							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
 					List<IOperationCompletionHandler<Object>> handlers = initOperation
 							.getCompletionHandlers();
@@ -162,7 +162,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				@Override
 				public void onSuccess(Object result) {
 					Cloudlet.this.controllerCallback.destroySucceeded(
-							Cloudlet.this.state, new CallbackArguments<S>(
+							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
 					Cloudlet.this.executor.shutdown();
 				}
@@ -170,7 +170,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					Cloudlet.this.controllerCallback.destroyFailed(
-							Cloudlet.this.state, new CallbackArguments<S>(
+							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
 					Cloudlet.this.executor.shutdown();
 				}
@@ -189,7 +189,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 				public void run() {
 					// call the user defined init
 					Cloudlet.this.controllerCallback.destroy(
-							Cloudlet.this.state, new CallbackArguments<S>(
+							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
 					List<IOperationCompletionHandler<Object>> handlers = destroyOperation
 							.getCompletionHandlers();
@@ -222,14 +222,14 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 		return this.active;
 	}
 
-	private synchronized void destroyResource(IResourceAccessor<S> accessor,
-			IResourceAccessorCallback<S> callbackHandler) {
+	private synchronized void destroyResource(IResourceAccessor<C> accessor,
+			IResourceAccessorCallback<C> callbackHandler) {
 		accessor.destroy(callbackHandler);
 	}
 
-	private synchronized void initializeResource(IResourceAccessor<S> accessor,
-			IResourceAccessorCallback<S> callbackHandler, S cloudletState) {
-		accessor.initialize(callbackHandler, this.state);
+	private synchronized void initializeResource(IResourceAccessor<C> accessor,
+			IResourceAccessorCallback<C> callbackHandler, C cloudletState) {
+		accessor.initialize(callbackHandler, this.context);
 	}
 
 	private <T> CompletionInvocationHandler<T> getResponseHandler(
@@ -256,7 +256,7 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 	 * @author Georgiana Macariu
 	 * 
 	 */
-	final class CloudletController implements ICloudletController<S> {
+	final class CloudletController implements ICloudletController<C> {
 
 		@Override
 		public final boolean destroy() {
@@ -279,16 +279,16 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 		}
 
 		@Override
-		public void initializeResource(IResourceAccessor<S> accessor,
-				IResourceAccessorCallback<S> callbackHandler, S cloudletState) {
+		public void initializeResource(IResourceAccessor<C> accessor,
+				IResourceAccessorCallback<C> callbackHandler, C cloudletState) {
 			Cloudlet.this.initializeResource(accessor, callbackHandler,
 					cloudletState);
 
 		}
 
 		@Override
-		public void destroyResource(IResourceAccessor<S> accessor,
-				IResourceAccessorCallback<S> callbackHandler) {
+		public void destroyResource(IResourceAccessor<C> accessor,
+				IResourceAccessorCallback<C> callbackHandler) {
 			Cloudlet.this.destroyResource(accessor, callbackHandler);
 
 		}

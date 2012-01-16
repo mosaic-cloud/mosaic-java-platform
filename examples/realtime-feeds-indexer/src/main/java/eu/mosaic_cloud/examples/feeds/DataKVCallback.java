@@ -22,7 +22,7 @@ package eu.mosaic_cloud.examples.feeds;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletContext;
 
 import eu.mosaic_cloud.cloudlet.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.DefaultKeyValueAccessorCallback;
@@ -30,19 +30,19 @@ import eu.mosaic_cloud.cloudlet.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.core.log.MosaicLogger;
 
 public class DataKVCallback extends
-		DefaultKeyValueAccessorCallback<IndexerCloudletState> {
+		DefaultKeyValueAccessorCallback<IndexerCloudletContext> {
 
 	private static final String BUCKET_NAME = "feed-data";
 
 	@Override
-	public void destroySucceeded(IndexerCloudletState state,
-			CallbackArguments<IndexerCloudletState> arguments) {
-		state.dataStore = null;
+	public void destroySucceeded(IndexerCloudletContext context,
+			CallbackArguments<IndexerCloudletContext> arguments) {
+		context.dataStore = null;
 	}
 
 	@Override
-	public void getSucceeded(IndexerCloudletState state,
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
+	public void getSucceeded(IndexerCloudletContext context,
+			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		MosaicLogger.getLogger().trace(
 				"succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key
@@ -52,8 +52,8 @@ public class DataKVCallback extends
 	}
 
 	@Override
-	public void getFailed(IndexerCloudletState state,
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
+	public void getFailed(IndexerCloudletContext context,
+			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		MosaicLogger.getLogger()
 				.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key
