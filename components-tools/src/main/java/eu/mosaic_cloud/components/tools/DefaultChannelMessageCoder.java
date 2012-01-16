@@ -29,8 +29,8 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
-import eu.mosaic_cloud.json.core.JsonCoder;
-import eu.mosaic_cloud.json.tools.DefaultJsonCoder;
+import eu.mosaic_cloud.tools.json.core.JsonCoder;
+import eu.mosaic_cloud.tools.json.tools.DefaultJsonCoder;
 import net.minidev.json.JSONObject;
 
 

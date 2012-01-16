@@ -28,8 +28,8 @@ import java.util.UUID;
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
-import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 
 
 public final class JettyComponentPreMain

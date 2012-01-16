@@ -1,5 +1,5 @@
-cloudlet.main_class=eu.mosaic_cloud.examples.feeds.IndexerCloudlet$LifeCycleHandler
-cloudlet.context_class=eu.mosaic_cloud.examples.feeds.IndexerCloudlet$IndexerCloudletContext
+cloudlet.main_class=eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet$LifeCycleHandler
+cloudlet.context_class=eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet$IndexerCloudletContext
 cloudlet.resource_file=indexer-cloudlet.prop
 
 urgent.queue.consumer.amqp.exchange=feeds.index-data

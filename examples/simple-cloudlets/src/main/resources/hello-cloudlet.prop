@@ -1,4 +1,4 @@
-cloudlet.main_class=eu.mosaic_cloud.cloudlet.tests.HelloWorldCloudlet$LifeCycleHandler
-cloudlet.context_class=eu.mosaic_cloud.cloudlet.tests.HelloWorldCloudlet$HelloCloudletContext
+cloudlet.main_class=eu.mosaic_cloud.cloudlets.tests.HelloWorldCloudlet$LifeCycleHandler
+cloudlet.context_class=eu.mosaic_cloud.cloudlets.tests.HelloWorldCloudlet$HelloCloudletContext
 cloudlet.resource_file=hello-cloudlet.prop
 

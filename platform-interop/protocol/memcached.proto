@@ -1,6 +1,6 @@
 package mosaic_cloud.idl.kvstore;
 
-option java_package = "eu.mosaic_cloud.interop.idl.kvstore";
+option java_package = "eu.mosaic_cloud.platform.interop.idl.kvstore";
 option java_outer_classname = "MemcachedPayloads";
 option optimize_for = SPEED;
 

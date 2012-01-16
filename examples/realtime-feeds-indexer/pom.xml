@@ -54,7 +54,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.examples.feeds.IndexerCloudletPreMain</mainClass>
+									<mainClass>eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudletPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

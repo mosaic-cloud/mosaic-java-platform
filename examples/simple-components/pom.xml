@@ -68,7 +68,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.components.examples.abacus.AbacusComponentPreMain</mainClass>
+									<mainClass>eu.mosaic_cloud.examples.components.simple.AbacusComponentPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.interoperability.core;
 
 
-import eu.mosaic_cloud.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface SessionCallbacks

@@ -26,9 +26,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.transcript.core.Transcript;
-import eu.mosaic_cloud.transcript.tools.TranscriptExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.zeromq.ZMQ;
 
 

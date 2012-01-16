@@ -97,7 +97,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.driver.DriverPreMain</mainClass>
+							<mainClass>eu.mosaic_cloud.drivers.DriverPreMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

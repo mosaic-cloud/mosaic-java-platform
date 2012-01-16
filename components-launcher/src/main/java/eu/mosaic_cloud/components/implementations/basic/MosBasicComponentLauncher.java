@@ -40,11 +40,11 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
-import eu.mosaic_cloud.exceptions.core.ExceptionResolution;
-import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.json.tools.DefaultJsonCoder;
-import eu.mosaic_cloud.tools.ClasspathExporter;
+import eu.mosaic_cloud.tools.classpath_exporter.ClasspathExporter;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.json.tools.DefaultJsonCoder;
 import org.slf4j.LoggerFactory;
 
 

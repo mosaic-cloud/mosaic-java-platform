@@ -1,5 +1,5 @@
-cloudlet.main_class=eu.mosaic_cloud.cloudlet.tests.SimpleLoggingCloudlet$LifeCycleHandler
-cloudlet.context_class=eu.mosaic_cloud.cloudlet.tests.SimpleLoggingCloudlet$LoggingCloudletContext
+cloudlet.main_class=eu.mosaic_cloud.cloudlets.tests.SimpleLoggingCloudlet$LifeCycleHandler
+cloudlet.context_class=eu.mosaic_cloud.cloudlets.tests.SimpleLoggingCloudlet$LoggingCloudletContext
 cloudlet.resource_file=simple-logging-cloudlet.prop
 
 queue.consumer.amqp.exchange=exchange-test
