@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-jetty-httpg-connector
+ * mosaic-components-httpg-jetty-connector
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%

@@ -6,41 +6,35 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>eu.mosaic_cloud.platform</groupId>
-		<artifactId>platform-parent</artifactId>
-		<version>0.4.1_mosaic_dev-SNAPSHOT</version>
-		<relativePath>./.repositories/mosaic-java-platform/platform-parent</relativePath>
+		<groupId>eu.mosaic_cloud.components</groupId>
+		<artifactId>components-parent</artifactId>
+		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
+		<relativePath>../components-parent</relativePath>
 	</parent>
 	
-	<groupId>eu.mosaic_cloud.components</groupId>
-	<artifactId>jetty</artifactId>
-	<name>mosaic-components-jetty</name>
+	<artifactId>components-httpg-jetty-container</artifactId>
+	<name>mosaic-components-httpg-jetty-container</name>
 	
 	<dependencies>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>jetty-httpg-connector</artifactId>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-httpg-jetty-connector</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
+			<groupId>eu.mosaic_cloud.components</groupId>
 			<artifactId>components-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>components-tools</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
+			<groupId>eu.mosaic_cloud.components</groupId>
 			<artifactId>components-container</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${versions.dependencies.guava}</version>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-tools</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	
