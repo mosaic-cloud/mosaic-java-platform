@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.examples</groupId>
 		<artifactId>examples-parent</artifactId>
-		<version>0.4.1_mosaic_dev-SNAPSHOT</version>
+		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
 		<relativePath>../parent</relativePath>
 	</parent>
 	
@@ -70,5 +70,13 @@
 	<properties>
 		<_maven_pom_package>mosaic-examples-realtime-feeds-indexer-java</_maven_pom_package>
 	</properties>
+	
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	
 </project>

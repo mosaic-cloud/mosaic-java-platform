@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.platform</groupId>
 		<artifactId>platform-parent</artifactId>
-		<version>0.4.1_mosaic_dev-SNAPSHOT</version>
+		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
 		<relativePath>../platform-parent</relativePath>
 	</parent>
 	
@@ -17,17 +17,17 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
+			<groupId>eu.mosaic_cloud.interoperability</groupId>
 			<artifactId>interoperability-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
+			<groupId>eu.mosaic_cloud.interoperability</groupId>
 			<artifactId>interoperability-tools</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
+			<groupId>eu.mosaic_cloud.interoperability</groupId>
 			<artifactId>interoperability-zeromq</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -37,5 +37,13 @@
 			<version>${versions.dependencies.protobuf}</version>
 		</dependency>
 	</dependencies>
+	
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	
 </project>

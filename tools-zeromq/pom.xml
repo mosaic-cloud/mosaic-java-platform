@@ -12,21 +12,17 @@
 		<relativePath>../tools-parent</relativePath>
 	</parent>
 	
-	<artifactId>tools-miscellaneous</artifactId>
-	<name>mosaic-tools-miscellaneous</name>
+	<artifactId>tools-zeromq</artifactId>
+	<name>mosaic-tools-zeromq</name>
 	
-	<dependencies>
-		<dependency>
-			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-exceptions</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+	<properties>
+		<license.licenseName>gpl_v3</license.licenseName>
+	</properties>
 	
 	<licenses>
 		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<name>GPL 3</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>

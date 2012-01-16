@@ -9,19 +9,19 @@
 		<groupId>eu.mosaic_cloud</groupId>
 		<artifactId>parent</artifactId>
 		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
-		<relativePath>../..</relativePath>
+		<relativePath>..</relativePath>
 	</parent>
 	
-	<groupId>eu.mosaic_cloud.examples</groupId>
-	<artifactId>examples-parent</artifactId>
+	<groupId>eu.mosaic_cloud.components</groupId>
+	<artifactId>components-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-examples-parent</name>
+	<name>mosaic-components-parent</name>
 	
 	<modules>
-		<module>../realtime-feeds-indexer</module>
-		<module>../simple-cloudlets</module>
-		<module>../simple-components</module>
-		<module>../interoperability</module>
+		<module>../components-core</module>
+		<module>../components-container</module>
+		<module>../components-launcher</module>
+		<module>../components-tools</module>
 	</modules>
 	
 	<dependencies>
@@ -66,7 +66,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${versions.plugins.surefire}</version>
 				<configuration>
-					<argLine>-Djava.library.path=${java.library.path}</argLine>
+					<argLine>-Djava.library.path=${java.library.path}:${project.basedir}/lib</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
