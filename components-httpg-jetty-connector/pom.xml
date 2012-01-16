@@ -79,7 +79,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.jetty.connectors.httpg.ServerCommandLine</mainClass>
+							<mainClass>eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

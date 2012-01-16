@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.components.jetty;
+package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
 import java.io.File;
@@ -66,7 +66,7 @@ public final class JettyComponentPreMain
 			}
 			Preconditions.checkArgument (JettyComponentContext.appWar.isFile (), "invalid appWar file; (does not exist)");
 			Preconditions.checkArgument (JettyComponentContext.appWar.canRead (), "invalid appWar file; (can not read)");
-			final Class<?> mainClass = JettyComponentPreMain.class.getClassLoader ().loadClass ("eu.mosaic_cloud.jetty.connectors.httpg.ServerCommandLine");
+			final Class<?> mainClass = JettyComponentPreMain.class.getClassLoader ().loadClass ("eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine");
 			final Method mainMethod = mainClass.getMethod ("main", String[].class);
 			mainMethod.invoke (null, new Object[] {new String[] {"--server", "127.0.0.1", "--port", "21688", "--auto-declare", "true", "--webapp", JettyComponentContext.appWar.getAbsolutePath (), "--tmp", temporary}});
 		} else

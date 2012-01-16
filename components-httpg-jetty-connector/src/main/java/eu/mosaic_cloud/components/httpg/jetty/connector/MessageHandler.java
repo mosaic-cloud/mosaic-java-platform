@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.jetty.connectors.httpg;
+package eu.mosaic_cloud.components.httpg.jetty.connector;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

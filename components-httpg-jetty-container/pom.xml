@@ -50,7 +50,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.components.jetty.JettyComponentPreMain</mainClass>
+							<mainClass>eu.mosaic_cloud.components.httpg.jetty.container.JettyComponentPreMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

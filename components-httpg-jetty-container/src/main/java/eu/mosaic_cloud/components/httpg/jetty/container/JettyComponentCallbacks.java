@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.components.jetty;
+package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
 import java.util.IdentityHashMap;
@@ -36,9 +36,9 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine;
 import eu.mosaic_cloud.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.jetty.connectors.httpg.ServerCommandLine;
 import eu.mosaic_cloud.tools.Monitor;
 import eu.mosaic_cloud.tools.OutcomeFuture;
 import eu.mosaic_cloud.tools.OutcomeFuture.OutcomeTrigger;

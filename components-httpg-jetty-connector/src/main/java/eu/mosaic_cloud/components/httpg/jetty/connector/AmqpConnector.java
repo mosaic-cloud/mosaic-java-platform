@@ -17,14 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.jetty.connectors.httpg;
+package eu.mosaic_cloud.components.httpg.jetty.connector;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import eu.mosaic_cloud.components.httpg.jetty.connector.MessageHandler.MessageFormatException;
 
-import eu.mosaic_cloud.jetty.connectors.httpg.MessageHandler.MessageFormatException;
+
 
 import org.eclipse.jetty.io.ByteArrayEndPoint;
 import org.eclipse.jetty.io.ConnectedEndPoint;

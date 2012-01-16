@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.components.jetty;
+package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
 import java.io.File;
