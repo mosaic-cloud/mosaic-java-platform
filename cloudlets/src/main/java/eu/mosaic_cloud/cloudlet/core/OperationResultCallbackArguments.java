@@ -26,13 +26,13 @@ package eu.mosaic_cloud.cloudlet.core;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet
+ * @param <C>
+ *            the type of the context of the cloudlet
  * @param <T>
  *            the type of the result of the operation
  */
-public class OperationResultCallbackArguments<S, T> extends
-		CallbackArguments<S> {
+public class OperationResultCallbackArguments<C, T> extends
+		CallbackArguments<C> {
 	private T result;
 	private Throwable error;
 
@@ -44,7 +44,7 @@ public class OperationResultCallbackArguments<S, T> extends
 	 * @param result
 	 *            the result of the operation
 	 */
-	public OperationResultCallbackArguments(ICloudletController<S> cloudlet,
+	public OperationResultCallbackArguments(ICloudletController<C> cloudlet,
 			T result) {
 		super(cloudlet);
 		this.result = result;
@@ -59,7 +59,7 @@ public class OperationResultCallbackArguments<S, T> extends
 	 * @param error
 	 *            the exception thrown by the operation
 	 */
-	public OperationResultCallbackArguments(ICloudletController<S> cloudlet,
+	public OperationResultCallbackArguments(ICloudletController<C> cloudlet,
 			Throwable error) {
 		super(cloudlet);
 		this.result = null;

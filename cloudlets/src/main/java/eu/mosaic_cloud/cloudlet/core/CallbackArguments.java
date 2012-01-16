@@ -20,16 +20,16 @@
 package eu.mosaic_cloud.cloudlet.core;
 
 /**
- * Base class for clouldet callback arguments. This will hold a reference to the
+ * Base class for cloudlet callback arguments. This will hold a reference to the
  * cloudlet controller and operation specific information.
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet
+ * @param <C>
+ *            the type of the context of the cloudlet
  */
-public class CallbackArguments<S> {
-	private ICloudletController<S> cloudlet;
+public class CallbackArguments<C> {
+	private ICloudletController<C> cloudlet;
 
 	/**
 	 * Creates a new argument
@@ -37,7 +37,7 @@ public class CallbackArguments<S> {
 	 * @param cloudlet
 	 *            the cloudlet controller
 	 */
-	public CallbackArguments(ICloudletController<S> cloudlet) {
+	public CallbackArguments(ICloudletController<C> cloudlet) {
 		super();
 		this.cloudlet = cloudlet;
 	}
@@ -47,7 +47,7 @@ public class CallbackArguments<S> {
 	 * 
 	 * @return the cloudlet controller
 	 */
-	public ICloudletController<S> getCloudlet() {
+	public ICloudletController<C> getCloudlet() {
 		return this.cloudlet;
 	}
 }

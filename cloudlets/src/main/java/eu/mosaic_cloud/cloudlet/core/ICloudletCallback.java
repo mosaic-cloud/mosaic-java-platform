@@ -25,75 +25,75 @@ package eu.mosaic_cloud.cloudlet.core;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            The type of the object encoding the state of the cloudlet.
+ * @param <C>
+ *            The type of the object encoding the context of the cloudlet.
  */
-public interface ICloudletCallback<S> extends ICallback {
+public interface ICloudletCallback<C> extends ICallback {
 
 	/**
 	 * Initializes the user cloudlet.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            here, this argument just gives access to the cloudlet
 	 *            controller
 	 */
-	public void initialize(S state, CallbackArguments<S> arguments);
+	public void initialize(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Operation called after the cloudlet is successfully initialized.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            here, this argument just gives access to the cloudlet
 	 *            controller
 	 */
-	public void initializeSucceeded(S state, CallbackArguments<S> arguments);
+	public void initializeSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Operation called after the cloudlet is unsuccessfully initialized.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            here, this argument just gives access to the cloudlet
 	 *            controller
 	 */
-	public void initializeFailed(S state, CallbackArguments<S> arguments);
+	public void initializeFailed(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Destrozs the user cloudlet.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            here, this argument just gives access to the cloudlet
 	 *            controller
 	 */
-	public void destroy(S state, CallbackArguments<S> arguments);
+	public void destroy(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Operation called after the cloudlet is successfully destroyed.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            here, this argument just gives access to the cloudlet
 	 *            controller
 	 */
-	public void destroySucceeded(S state, CallbackArguments<S> arguments);
+	public void destroySucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Operation called after the cloudlet is unsuccessfully destroyed.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            here, this argument just gives access to the cloudlet
 	 *            controller
 	 */
-	public void destroyFailed(S state, CallbackArguments<S> arguments);
+	public void destroyFailed(C context, CallbackArguments<C> arguments);
 
 }

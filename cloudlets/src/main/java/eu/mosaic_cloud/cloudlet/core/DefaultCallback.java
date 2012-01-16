@@ -26,10 +26,10 @@ import eu.mosaic_cloud.core.log.MosaicLogger;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this callback
+ * @param <C>
+ *            the type of the context of the cloudlet using this callback
  */
-public class DefaultCallback<S> implements ICallback {
+public class DefaultCallback<C> implements ICallback {
 	/**
 	 * Handles any unhandled callback.
 	 * 
@@ -43,7 +43,7 @@ public class DefaultCallback<S> implements ICallback {
 	 * @param couldDestroy
 	 *            <code>true</code> if cloudlet can be destroyed here
 	 */
-	protected void handleUnhandledCallback(CallbackArguments<S> arguments,
+	protected void handleUnhandledCallback(CallbackArguments<C> arguments,
 			String callbackType, boolean positive, boolean couldDestroy) {
 		this.traceUnhandledCallback(arguments, callbackType, positive);
 		if (!positive && couldDestroy) {
@@ -62,7 +62,7 @@ public class DefaultCallback<S> implements ICallback {
 	 *            <code>true</code> if callback corresponds to successful
 	 *            termination of the operation
 	 */
-	protected void traceUnhandledCallback(CallbackArguments<S> arguments,
+	protected void traceUnhandledCallback(CallbackArguments<C> arguments,
 			String callbackType, boolean positive) {
 		MosaicLogger.getLogger().info(
 				"unhandled cloudlet callback: `" + this.getClass().getName()

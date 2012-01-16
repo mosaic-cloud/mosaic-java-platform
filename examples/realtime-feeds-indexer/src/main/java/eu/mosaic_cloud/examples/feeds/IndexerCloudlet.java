@@ -36,14 +36,14 @@ import org.json.JSONObject;
 public class IndexerCloudlet {
 
 	public static final class LifeCycleHandler extends
-			DefaultCloudletCallback<IndexerCloudletState> {
+			DefaultCloudletCallback<IndexerCloudletContext> {
 
 		@Override
-		public void initialize(IndexerCloudletState state,
-				CallbackArguments<IndexerCloudletState> arguments) {
+		public void initialize(IndexerCloudletContext context,
+				CallbackArguments<IndexerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"FeedIndexerCloudlet is being initialized.");
-			ICloudletController<IndexerCloudletState> cloudlet = arguments
+			ICloudletController<IndexerCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			IConfiguration configuration = cloudlet.getConfiguration();
 			IConfiguration metadataConfiguration = configuration
@@ -51,133 +51,133 @@ public class IndexerCloudlet {
 							.resolveAbsolute("metadata"));
 			DataEncoder<byte[]> nopEncoder = new NopDataEncoder();
 			DataEncoder<JSONObject> jsonEncoder = new JSONDataEncoder();
-			state.metadataStore = new KeyValueAccessor<IndexerCloudletState>(
+			context.metadataStore = new KeyValueAccessor<IndexerCloudletContext>(
 					metadataConfiguration, cloudlet, jsonEncoder);
 			IConfiguration dataConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("data"));
-			state.dataStore = new KeyValueAccessor<IndexerCloudletState>(
+			context.dataStore = new KeyValueAccessor<IndexerCloudletContext>(
 					dataConfiguration, cloudlet, nopEncoder);
 			IConfiguration timelinesConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("timelines"));
-			state.timelinesStore = new KeyValueAccessor<IndexerCloudletState>(
+			context.timelinesStore = new KeyValueAccessor<IndexerCloudletContext>(
 					timelinesConfiguration, cloudlet, jsonEncoder);
 			IConfiguration itemsConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("items"));
-			state.itemsStore = new KeyValueAccessor<IndexerCloudletState>(
+			context.itemsStore = new KeyValueAccessor<IndexerCloudletContext>(
 					itemsConfiguration, cloudlet, jsonEncoder);
 			IConfiguration tasksConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("tasks"));
-			state.taskStore = new KeyValueAccessor<IndexerCloudletState>(
+			context.taskStore = new KeyValueAccessor<IndexerCloudletContext>(
 					tasksConfiguration, cloudlet, jsonEncoder);
 
 			IConfiguration urgentQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("urgent.queue"));
-			state.urgentConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletState, JSONObject>(
+			context.urgentConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
 					urgentQueueConfiguration, cloudlet, JSONObject.class,
 					jsonEncoder);
 			IConfiguration batchQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("batch.queue"));
-			state.batchConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletState, JSONObject>(
+			context.batchConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
 					batchQueueConfiguration, cloudlet, JSONObject.class,
 					jsonEncoder);
 
 		}
 
 		@Override
-		public void initializeSucceeded(IndexerCloudletState state,
-				CallbackArguments<IndexerCloudletState> arguments) {
+		public void initializeSucceeded(IndexerCloudletContext context,
+				CallbackArguments<IndexerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Feeds IndexerCloudlet initialized successfully.");
-			ICloudletController<IndexerCloudletState> cloudlet = arguments
+			ICloudletController<IndexerCloudletContext> cloudlet = arguments
 					.getCloudlet();
 
-			state.metadataStoreCallback = new MetadataKVCallback();
-			cloudlet.initializeResource(state.metadataStore,
-					state.metadataStoreCallback, state);
+			context.metadataStoreCallback = new MetadataKVCallback();
+			cloudlet.initializeResource(context.metadataStore,
+					context.metadataStoreCallback, context);
 
-			state.dataStoreCallback = new DataKVCallback();
-			cloudlet.initializeResource(state.dataStore,
-					state.dataStoreCallback, state);
+			context.dataStoreCallback = new DataKVCallback();
+			cloudlet.initializeResource(context.dataStore,
+					context.dataStoreCallback, context);
 
-			state.timelinesStoreCallback = new TimelinesKVCallback();
-			cloudlet.initializeResource(state.timelinesStore,
-					state.timelinesStoreCallback, state);
+			context.timelinesStoreCallback = new TimelinesKVCallback();
+			cloudlet.initializeResource(context.timelinesStore,
+					context.timelinesStoreCallback, context);
 
-			state.itemsStoreCallback = new ItemsKVCallback();
-			cloudlet.initializeResource(state.itemsStore,
-					state.itemsStoreCallback, state);
+			context.itemsStoreCallback = new ItemsKVCallback();
+			cloudlet.initializeResource(context.itemsStore,
+					context.itemsStoreCallback, context);
 
-			state.tasksStoreCallback = new TasksKVCallback();
-			cloudlet.initializeResource(state.taskStore,
-					state.tasksStoreCallback, state);
+			context.tasksStoreCallback = new TasksKVCallback();
+			cloudlet.initializeResource(context.taskStore,
+					context.tasksStoreCallback, context);
 
-			state.urgentConsumerCallback = new UrgentConsumerCallback();
-			cloudlet.initializeResource(state.urgentConsumer,
-					state.urgentConsumerCallback, state);
+			context.urgentConsumerCallback = new UrgentConsumerCallback();
+			cloudlet.initializeResource(context.urgentConsumer,
+					context.urgentConsumerCallback, context);
 
-			state.batchConsumerCallback = new BatchConsumerCallback();
-			cloudlet.initializeResource(state.batchConsumer,
-					state.batchConsumerCallback, state);
+			context.batchConsumerCallback = new BatchConsumerCallback();
+			cloudlet.initializeResource(context.batchConsumer,
+					context.batchConsumerCallback, context);
 		}
 
 		@Override
-		public void destroy(IndexerCloudletState state,
-				CallbackArguments<IndexerCloudletState> arguments) {
+		public void destroy(IndexerCloudletContext context,
+				CallbackArguments<IndexerCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Feeds IndexerCloudlet is being destroyed.");
-			ICloudletController<IndexerCloudletState> cloudlet = arguments
+			ICloudletController<IndexerCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			if (state.metadataStore != null) {
-				cloudlet.destroyResource(state.metadataStore,
-						state.metadataStoreCallback);
+			if (context.metadataStore != null) {
+				cloudlet.destroyResource(context.metadataStore,
+						context.metadataStoreCallback);
 			}
-			if (state.dataStore != null) {
-				cloudlet.destroyResource(state.dataStore,
-						state.dataStoreCallback);
+			if (context.dataStore != null) {
+				cloudlet.destroyResource(context.dataStore,
+						context.dataStoreCallback);
 			}
-			if (state.timelinesStore != null) {
-				cloudlet.destroyResource(state.timelinesStore,
-						state.timelinesStoreCallback);
+			if (context.timelinesStore != null) {
+				cloudlet.destroyResource(context.timelinesStore,
+						context.timelinesStoreCallback);
 			}
-			if (state.itemsStore != null) {
-				cloudlet.destroyResource(state.itemsStore,
-						state.itemsStoreCallback);
+			if (context.itemsStore != null) {
+				cloudlet.destroyResource(context.itemsStore,
+						context.itemsStoreCallback);
 			}
-			if (state.taskStore != null) {
-				cloudlet.destroyResource(state.taskStore,
-						state.tasksStoreCallback);
+			if (context.taskStore != null) {
+				cloudlet.destroyResource(context.taskStore,
+						context.tasksStoreCallback);
 			}
-			if (state.urgentConsumer != null) {
-				state.urgentConsumer.unregister();
+			if (context.urgentConsumer != null) {
+				context.urgentConsumer.unregister();
 			}
-			if (state.batchConsumer != null) {
-				state.batchConsumer.unregister();
+			if (context.batchConsumer != null) {
+				context.batchConsumer.unregister();
 			}
 		}
 	}
 
-	public static final class IndexerCloudletState {
+	public static final class IndexerCloudletContext {
 
-		AmqpQueueConsumer<IndexerCloudletState, JSONObject> urgentConsumer;
-		AmqpQueueConsumer<IndexerCloudletState, JSONObject> batchConsumer;
-		IKeyValueAccessor<IndexerCloudletState> metadataStore;
-		IKeyValueAccessor<IndexerCloudletState> dataStore;
-		IKeyValueAccessor<IndexerCloudletState> timelinesStore;
-		IKeyValueAccessor<IndexerCloudletState> itemsStore;
-		IKeyValueAccessor<IndexerCloudletState> taskStore;
-		IAmqpQueueConsumerCallback<IndexerCloudletState, JSONObject> urgentConsumerCallback;
-		IAmqpQueueConsumerCallback<IndexerCloudletState, JSONObject> batchConsumerCallback;
-		IKeyValueAccessorCallback<IndexerCloudletState> metadataStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletState> dataStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletState> timelinesStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletState> itemsStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletState> tasksStoreCallback;
+		AmqpQueueConsumer<IndexerCloudletContext, JSONObject> urgentConsumer;
+		AmqpQueueConsumer<IndexerCloudletContext, JSONObject> batchConsumer;
+		IKeyValueAccessor<IndexerCloudletContext> metadataStore;
+		IKeyValueAccessor<IndexerCloudletContext> dataStore;
+		IKeyValueAccessor<IndexerCloudletContext> timelinesStore;
+		IKeyValueAccessor<IndexerCloudletContext> itemsStore;
+		IKeyValueAccessor<IndexerCloudletContext> taskStore;
+		IAmqpQueueConsumerCallback<IndexerCloudletContext, JSONObject> urgentConsumerCallback;
+		IAmqpQueueConsumerCallback<IndexerCloudletContext, JSONObject> batchConsumerCallback;
+		IKeyValueAccessorCallback<IndexerCloudletContext> metadataStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletContext> dataStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletContext> timelinesStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletContext> itemsStoreCallback;
+		IKeyValueAccessorCallback<IndexerCloudletContext> tasksStoreCallback;
 	}
 
 }

@@ -32,10 +32,10 @@ import eu.mosaic_cloud.core.ops.IOperationCompletionHandler;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet
+ * @param <C>
+ *            the type of the context of the cloudlet
  */
-public interface ICloudletController<S> extends ICloudlet {
+public interface ICloudletController<C> extends ICloudlet {
 	IConfiguration getConfiguration();
 
 	<T> CompletionInvocationHandler<T> getResponseInvocationHandler(
@@ -52,10 +52,10 @@ public interface ICloudletController<S> extends ICloudlet {
 	 *            the cloudlet callback handler which must handle callbacks to
 	 *            operations invoked on the accessor
 	 * @param cloudletState
-	 *            the cloudlet state
+	 *            the cloudlet context
 	 */
-	void initializeResource(IResourceAccessor<S> accessor,
-			IResourceAccessorCallback<S> callbackHandler, S cloudletState);
+	void initializeResource(IResourceAccessor<C> accessor,
+			IResourceAccessorCallback<C> callbackHandler, C cloudletState);
 
 	/**
 	 * Destroys the resource accessor for a given resource.
@@ -66,7 +66,7 @@ public interface ICloudletController<S> extends ICloudlet {
 	 *            the cloudlet callback handler which must handle callbacks to
 	 *            operations invoked on the accessor
 	 */
-	void destroyResource(IResourceAccessor<S> accessor,
-			IResourceAccessorCallback<S> callbackHandler);
+	void destroyResource(IResourceAccessor<C> accessor,
+			IResourceAccessorCallback<C> callbackHandler);
 
 }

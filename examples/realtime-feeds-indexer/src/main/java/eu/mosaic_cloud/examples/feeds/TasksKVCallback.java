@@ -22,7 +22,7 @@ package eu.mosaic_cloud.examples.feeds;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletState;
+import eu.mosaic_cloud.examples.feeds.IndexerCloudlet.IndexerCloudletContext;
 
 import eu.mosaic_cloud.cloudlet.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlet.resources.kvstore.DefaultKeyValueAccessorCallback;
@@ -30,24 +30,24 @@ import eu.mosaic_cloud.cloudlet.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.core.log.MosaicLogger;
 
 public class TasksKVCallback extends
-		DefaultKeyValueAccessorCallback<IndexerCloudletState> {
+		DefaultKeyValueAccessorCallback<IndexerCloudletContext> {
 
 	private static final String BUCKET_NAME = "feed-tasks";
 
 	@Override
-	public void destroySucceeded(IndexerCloudletState state,
-			CallbackArguments<IndexerCloudletState> arguments) {
-		state.taskStore = null;
+	public void destroySucceeded(IndexerCloudletContext context,
+			CallbackArguments<IndexerCloudletContext> arguments) {
+		context.taskStore = null;
 	}
 
 	@Override
-	public void setFailed(IndexerCloudletState state,
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
+	public void setFailed(IndexerCloudletContext context,
+			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		handleError(arguments);
 	}
 
 	private void handleError(
-			KeyValueCallbackArguments<IndexerCloudletState> arguments) {
+			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		MosaicLogger.getLogger().warn(
 				"failed fetch (" + TasksKVCallback.BUCKET_NAME + "," + key

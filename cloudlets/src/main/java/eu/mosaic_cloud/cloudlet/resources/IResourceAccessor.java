@@ -24,19 +24,19 @@ package eu.mosaic_cloud.cloudlet.resources;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  */
-public interface IResourceAccessor<S> {
+public interface IResourceAccessor<C> {
 	/**
 	 * Initialize the accessor.
 	 * 
 	 * @param callback
 	 *            handler for callbacks received from the resource
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 */
-	void initialize(IResourceAccessorCallback<S> callback, S state);
+	void initialize(IResourceAccessorCallback<C> callback, C context);
 
 	/**
 	 * Destroys the accessor.
@@ -44,7 +44,7 @@ public interface IResourceAccessor<S> {
 	 * @param callback
 	 *            handler for callbacks received from the resource
 	 */
-	void destroy(IResourceAccessorCallback<S> callback);
+	void destroy(IResourceAccessorCallback<C> callback);
 
 	/**
 	 * Returns the current status of the accessor.

@@ -28,43 +28,43 @@ import eu.mosaic_cloud.core.log.MosaicLogger;
 
 public class HelloWorldCloudlet {
 	public static final class LifeCycleHandler extends
-			DefaultCloudletCallback<HelloCloudletState> {
+			DefaultCloudletCallback<HelloCloudletContext> {
 
 		@Override
-		public void initialize(HelloCloudletState state,
-				CallbackArguments<HelloCloudletState> arguments) {
+		public void initialize(HelloCloudletContext context,
+				CallbackArguments<HelloCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"HelloWorld cloudlet is initializing...");
 		}
 
 		@Override
-		public void initializeSucceeded(HelloCloudletState state,
-				CallbackArguments<HelloCloudletState> arguments) {
+		public void initializeSucceeded(HelloCloudletContext context,
+				CallbackArguments<HelloCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"HelloWorld cloudlet was initialized successfully.");
 			System.out.println("Hello world!");
-			ICloudletController<HelloCloudletState> cloudlet = arguments
+			ICloudletController<HelloCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.destroy();
 		}
 
 		@Override
-		public void destroy(HelloCloudletState state,
-				CallbackArguments<HelloCloudletState> arguments) {
+		public void destroy(HelloCloudletContext context,
+				CallbackArguments<HelloCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"HelloWorld cloudlet is being destroyed.");
 		}
 
 		@Override
-		public void destroySucceeded(HelloCloudletState state,
-				CallbackArguments<HelloCloudletState> arguments) {
+		public void destroySucceeded(HelloCloudletContext context,
+				CallbackArguments<HelloCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"HelloWorld cloudlet was destroyed successfully.");
 		}
 
 	}
 
-	public static final class HelloCloudletState {
+	public static final class HelloCloudletContext {
 	}
 
 	public static void main(String[] arguments) throws Throwable {

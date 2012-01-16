@@ -27,32 +27,32 @@ import eu.mosaic_cloud.cloudlet.core.DefaultCallback;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this callback
+ * @param <C>
+ *            the type of the context of the cloudlet using this callback
  */
-public class DefaultResourceAccessorCallback<S> extends DefaultCallback<S>
-		implements IResourceAccessorCallback<S> {
+public class DefaultResourceAccessorCallback<C> extends DefaultCallback<C>
+		implements IResourceAccessorCallback<C> {
 
 	@Override
-	public void initializeSucceeded(S state, CallbackArguments<S> arguments) {
+	public void initializeSucceeded(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments,
 				"Resource Initialize Succeeded", true, true);
 	}
 
 	@Override
-	public void initializeFailed(S state, CallbackArguments<S> arguments) {
+	public void initializeFailed(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Resource Initialize Failed",
 				false, true);
 	}
 
 	@Override
-	public void destroySucceeded(S state, CallbackArguments<S> arguments) {
+	public void destroySucceeded(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded",
 				true, false);
 	}
 
 	@Override
-	public void destroyFailed(S state, CallbackArguments<S> arguments) {
+	public void destroyFailed(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Resource Destroy Failed",
 				false, false);
 	}
