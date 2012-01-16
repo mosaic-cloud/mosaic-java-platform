@@ -12,8 +12,8 @@
 		<relativePath>../components-parent</relativePath>
 	</parent>
 	
-	<artifactId>jetty-httpg-connector</artifactId>
-	<name>mosaic-jetty-httpg-connector</name>
+	<artifactId>components-httpg-jetty-connector</artifactId>
+	<name>mosaic-components-httpg-jetty-connector</name>
 	
 	<dependencies>
 		<dependency>

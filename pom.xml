@@ -20,7 +20,8 @@
 		<module>./interoperability-parent</module>
 		<module>./tools-parent</module>
 		<module>./examples/parent</module>
-		<module>./jetty-httpg-connector</module>
+		<module>./components-httpg-jetty-container</module>
+		<module>./components-httpg-jetty-connector</module>
 	</modules>
 	
 	<build>
