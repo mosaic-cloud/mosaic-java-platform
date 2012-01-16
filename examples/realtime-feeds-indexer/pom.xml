@@ -68,6 +68,7 @@
 	</build>
 	
 	<properties>
+		<license.licenseName>apache_v2</license.licenseName>
 		<_maven_pom_package>mosaic-examples-realtime-feeds-indexer-java</_maven_pom_package>
 	</properties>
 	

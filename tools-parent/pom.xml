@@ -75,6 +75,10 @@
 		</plugins>
 	</build>
 	
+	<properties>
+		<license.licenseName>apache_v2</license.licenseName>
+	</properties>
+	
 	<licenses>
 		<license>
 			<name>Apache 2</name>

@@ -67,6 +67,7 @@
 	</build>
 	
 	<properties>
+		<license.licenseName>apache_v2</license.licenseName>
 		<_maven_pom_package>mosaic-components-java-cloudlet-container</_maven_pom_package>
 	</properties>
 	
