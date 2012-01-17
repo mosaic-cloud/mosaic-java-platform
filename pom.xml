@@ -75,7 +75,7 @@
 				<version>${versions.plugins.antrun}</version>
 				<executions>
 					<execution>
-						<phase>${_maven_pom_phase}</phase>
+						<phase>none</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>

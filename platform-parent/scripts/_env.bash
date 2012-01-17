@@ -26,21 +26,27 @@ _java_env=(
 		PATH="${_PATH}"
 )
 
-_mvn_pom="${_workbench}/pom.xml"
+_mvn_this_pom="${_workbench}/pom.xml"
+_mvn_uber_pom="${_self_do_realpath_dirname}/../../pom.xml"
 _mvn_pkg_pom="${_outputs}/package.mvn/pom.xml"
 _mvn_args=(
-		-q
+		--errors --quiet
+		--offline
 )
 _mvn_env=(
 		PATH="${_PATH}"
 )
 
 while read _maven_pom_variable ; do
+	test -n "${_maven_pom_variable}" || continue
 	declare "${_maven_pom_variable}"
 done <<<"$(
-		env "${_mvn_env[@]}" "${_mvn_bin}" -f "${_mvn_pom}" "${_mvn_args[@]}" validate -D_maven_pom_phase=validate \
-		| grep -o -E -e '^_maven_pom_[a-z]+=.+$'
+		env "${_mvn_env[@]}" "${_mvn_bin}" -f "${_mvn_this_pom}" "${_mvn_args[@]}" help:effective-pom -Doutput=/dev/stderr 3>&1 1>&2 2>&3 \
+		| grep -o -E -e '<echo message="_maven_pom_[a-z]+=.+&#xA;" file="/dev/stdout" />' \
+		| sed -r -e 's!^<echo message="(_maven_pom_[a-z]+=.+)&#xA;" file="/dev/stdout" />$!\1!'
 )"
+
+_mvn_pom="${_mvn_uber_pom}"
 
 test -n "${_maven_pom_artifact}"
 test -n "${_maven_pom_version}"
