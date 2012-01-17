@@ -11,7 +11,7 @@ fi
 
 if test -e "${_outputs}/package" ; then
 	chmod -R +w -- "${_outputs}/package"
-	rm -R "${_outputs}/package"
+	rm -R -- "${_outputs}/package"
 fi
 if test -e "${_outputs}/package.tar.gz" ; then
 	chmod +w -- "${_outputs}/package.tar.gz"
@@ -58,11 +58,12 @@ fi
 
 _java_jars="${_package}/lib/java"
 _java_args=(
-	"-Djava.library.path=${_LD_LIBRARY_PATH}"
+		-server
+		"-Djava.library.path=${_LD_LIBRARY_PATH}"
 )
 _java_env=(
-	PATH="${_PATH}"
-	LD_LIBRARY_PATH="${_LD_LIBRARY_PATH}"
+		PATH="${_PATH}"
+		LD_LIBRARY_PATH="${_LD_LIBRARY_PATH}"
 )
 
 _package_jar_name='@package_jar_name@'
