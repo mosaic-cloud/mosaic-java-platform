@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
-			<version>1.0</version>
+			<version>${versions.dependencies.rome}</version>
 		</dependency>
 	</dependencies>
 	
@@ -68,6 +68,7 @@
 	</build>
 	
 	<properties>
+		<versions.dependencies.rome>1.0</versions.dependencies.rome>
 		<license.licenseName>apache_v2</license.licenseName>
 		<_maven_pom_package>mosaic-examples-realtime-feeds-indexer-java</_maven_pom_package>
 	</properties>

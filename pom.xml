@@ -152,6 +152,7 @@
 		<versions.plugins.site>3.0</versions.plugins.site>
 		<versions.plugins.surefire>2.11</versions.plugins.surefire>
 		<versions.plugins.wagon>1.0</versions.plugins.wagon>
+		<versions.plugins.war>2.1.1</versions.plugins.war>
 		
 		<versions.java.compiler>1.6</versions.java.compiler>
 		
