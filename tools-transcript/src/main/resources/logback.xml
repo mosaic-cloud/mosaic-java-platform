@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  #%L
-  mosaic-tools-transcript
-  %%
-  Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
-  %%
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-       http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  #L%
-  -->
+<!-- #%L mosaic-tools-transcript %% Copyright (C) 2010 - 2012 Institute e-Austria 
+	Timisoara (Romania) %% Licensed under the Apache License, Version 2.0 (the 
+	"License"); you may not use this file except in compliance with the License. 
+	You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. 
+	#L% -->
 
 <configuration debug="false">
+	
 	<statusListener class="eu.mosaic_cloud.tools.transcript.implementations.slf4j.Slf4jStatusListener" />
 	<define name="jvm_pid" class="eu.mosaic_cloud.tools.transcript.implementations.slf4j.Slf4jJvmPidPropertyDefiner" />
+	
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48logger{48}][%-32thread] %msg%n</pattern>
+			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48logger{48}][%-32thread]
+				%msg%n</pattern>
 		</encoder>
 	</appender>
+	
+	<logger name="eu.mosaic_cloud.core.log.MosaicLogger" level="debug" />
+	<logger name="eu.mosaic_cloud.core.exceptions.ExceptionTracer" level="trace" />
+	
 	<root level="error">
 		<appender-ref ref="console" />
 	</root>
+	
 </configuration>

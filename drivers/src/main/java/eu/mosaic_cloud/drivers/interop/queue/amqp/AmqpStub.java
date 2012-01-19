@@ -22,28 +22,8 @@ package eu.mosaic_cloud.drivers.interop.queue.amqp; // NOPMD by georgiana on 10/
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-
-import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
-import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType;
-
+import com.google.common.base.Preconditions;
+import com.rabbitmq.client.ConnectionFactory;
 import eu.mosaic_cloud.drivers.IResourceDriver;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
@@ -54,14 +34,29 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.IAmqpConsumer;
-
-
-import com.google.common.base.Preconditions;
-import com.rabbitmq.client.ConnectionFactory;
-
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
+import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
 
 /**
  * Stub for the driver for queuing systems implementing the AMQP protocol. This
@@ -438,7 +433,12 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
+<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
 		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleConsumeOk(java.lang.String)
+=======
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleConsumeOk(java.lang
+		 * .String)
+>>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleConsumeOk(String consumerTag) {
@@ -451,7 +451,12 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
+<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
 		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleCancelOk(java.lang.String)
+=======
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleCancelOk(java.lang
+		 * .String)
+>>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleCancelOk(String consumerTag) {
@@ -465,8 +470,13 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
+<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
 		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleDelivery(mosaic.connector
 		 * .queue.AmqpInboundMessage)
+=======
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleDelivery(mosaic.
+		 * connector .queue.AmqpInboundMessage)
+>>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleDelivery(AmqpInboundMessage message) {
@@ -480,8 +490,13 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
+<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
 		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleShutdown(java.lang.String,
 		 * java.lang.String)
+=======
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleShutdown(java.lang
+		 * .String, java.lang.String)
+>>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleShutdown(String consumerTag, String errorMessage) {

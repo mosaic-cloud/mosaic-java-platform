@@ -26,33 +26,26 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-
-import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
-import eu.mosaic_cloud.drivers.ConfigProperties;
-import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
-
-
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
+import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 
 /**
  * This callback class enables the AMQP driver to be exposed as a component.
@@ -116,9 +109,12 @@ public final class AmqpDriverComponentCallbacks extends
 					// FIXME
 					try {
 						if (System.getenv("mosaic_node_ip") != null)
-							channelEndpoint=channelEndpoint.replace("0.0.0.0", System.getenv("mosaic_node_ip"));
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", System.getenv("mosaic_node_ip"));
 						else
-							channelEndpoint=channelEndpoint.replace("0.0.0.0", InetAddress.getLocalHost().getHostAddress());
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", InetAddress.getLocalHost()
+											.getHostAddress());
 					} catch (UnknownHostException e) {
 						ExceptionTracer.traceIgnored(e);
 					}
@@ -177,10 +173,15 @@ public final class AmqpDriverComponentCallbacks extends
 					user = (String) outputs.get("username"); //$NON-NLS-1$
 					password = (String) outputs.get("password"); //$NON-NLS-1$
 					virtualHost = (String) outputs.get("virtualHost"); //$NON-NLS-1$
+					user = user != null ? user : "";
+					password = password != null ? password : "";
+					virtualHost = virtualHost != null ? virtualHost : "";
 
-					MosaicLogger.getLogger().trace(
+					MosaicLogger.getLogger().debug(
 							"Resolved RabbitMQ on " + brokerIp + ":" //$NON-NLS-1$ //$NON-NLS-2$
-									+ brokerPort);
+									+ brokerPort + " user = " + user
+									+ " password = " + password + " vhost = "
+									+ virtualHost);
 					this.configureDriver(brokerIp, brokerPort.toString(), user,
 							password, virtualHost);
 				}
@@ -247,7 +248,8 @@ public final class AmqpDriverComponentCallbacks extends
 			if (this.pendingReference == reference) {
 				//				this.pendingReference = null;
 				if (!registerOk) {
-					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					Exception e = new Exception(
+							"failed registering to group; terminating!"); //$NON-NLS-1$
 					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
 					throw (new IllegalStateException(e));

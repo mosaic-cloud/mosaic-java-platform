@@ -23,31 +23,25 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.protobuf.ByteString;
+import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-
 import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
-
-import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
-
-
-import com.google.protobuf.ByteString;
-
-import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
  * Proxy for the driver for queuing systems implementing the AMQP protocol. This
@@ -217,7 +211,9 @@ public final class AmqpProxy extends ConnectorProxy {
 			sendMessage(mssg, token, handlers);
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
-			ConnectionException e1 = new ConnectionException("Cannot send consume request to driver: " + e.getMessage(), e);
+			ConnectionException e1 = new ConnectionException(
+					"Cannot send consume request to driver: " + e.getMessage(),
+					e);
 			for (IOperationCompletionHandler<String> handler : handlers) {
 				handler.onFailure(e1);
 			}
@@ -276,19 +272,20 @@ public final class AmqpProxy extends ConnectorProxy {
 	private <V extends Object> void sendMessage(Message message,
 			CompletionToken token, List<IOperationCompletionHandler<V>> handlers) {
 		try {
-//			synchronized (this) {
-				// store token and completion handlers
-				super.registerHandlers(token.getMessageId(), handlers);
-				super.sendRequest(
-						getResponseReactor(AmqpConnectorReactor.class)
-								.getSession(), message);
-//			}
+			//			synchronized (this) {
+			// store token and completion handlers
+			super.registerHandlers(token.getMessageId(), handlers);
+			super.sendRequest(getResponseReactor(AmqpConnectorReactor.class)
+					.getSession(), message);
+			//			}
 			MosaicLogger.getLogger().trace(
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
-			ConnectionException e1 = new ConnectionException("Cannot send " + message.specification.toString() + " request to driver: " + e.getMessage(), e);
+			ConnectionException e1 = new ConnectionException("Cannot send "
+					+ message.specification.toString() + " request to driver: "
+					+ e.getMessage(), e);
 			for (IOperationCompletionHandler<V> handler : handlers) {
 				handler.onFailure(e1);
 			}
