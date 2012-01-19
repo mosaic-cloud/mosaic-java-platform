@@ -213,8 +213,8 @@ public class Cloudlet<S extends Object> implements ICloudlet {
 		CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T>(
 				callback);
 		@SuppressWarnings("unchecked")
-		T proxy = (T) Proxy.newProxyInstance(callback.getClass()
-				.getClassLoader(), new Class[] { callbackType }, iHandler);
+		T proxy = (T) Proxy.newProxyInstance(executor.getLoader(),
+				new Class[] { callbackType }, iHandler);
 		return proxy;
 	}
 

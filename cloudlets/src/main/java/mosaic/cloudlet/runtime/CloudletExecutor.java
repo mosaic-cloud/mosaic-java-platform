@@ -135,6 +135,8 @@ public class CloudletExecutor {
 
 	private CountDownLatch terminationLatch = new CountDownLatch(1);
 
+	private ClassLoader loader;
+
 	/**
 	 * Creates a new CloudletExecutor.
 	 * 
@@ -143,6 +145,7 @@ public class CloudletExecutor {
 	 */
 	public CloudletExecutor(ClassLoader loader) {
 		super();
+		this.loader = loader;
 		this.runState = CloudletExecutor.INITIALIZING;
 		this.requestQueue = new LinkedBlockingQueue<Runnable>();
 		this.responseQueue = new LinkedBlockingQueue<Runnable>();
@@ -709,5 +712,9 @@ public class CloudletExecutor {
 				this.runLock.unlock();
 			}
 		}
+	}
+
+	public ClassLoader getLoader() {
+		return loader;
 	}
 }
