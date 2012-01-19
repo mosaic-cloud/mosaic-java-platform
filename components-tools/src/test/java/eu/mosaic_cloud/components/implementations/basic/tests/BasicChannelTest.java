@@ -32,6 +32,8 @@ import eu.mosaic_cloud.components.tools.tests.RandomMessageGenerator;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,9 +47,10 @@ public final class BasicChannelTest
 	{
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
-		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, exceptions);
+		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, threading, exceptions);
 		final QueueingChannelCallbacks callbacks = QueueingChannelCallbacks.create (channel);
 		reactor.initialize ();
 		channel.initialize ();
@@ -62,10 +65,10 @@ public final class BasicChannelTest
 		}
 		pipe.sink ().close ();
 		while (channel.isActive ())
-			Thread.sleep (BasicChannelTest.sleepTimeout);
-		Thread.sleep (BasicChannelTest.sleepTimeout);
+			Threading.sleep (BasicChannelTest.sleepTimeout);
+		Threading.sleep (BasicChannelTest.sleepTimeout);
 		reactor.terminate ();
-		Thread.sleep (BasicChannelTest.sleepTimeout);
+		Threading.sleep (BasicChannelTest.sleepTimeout);
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

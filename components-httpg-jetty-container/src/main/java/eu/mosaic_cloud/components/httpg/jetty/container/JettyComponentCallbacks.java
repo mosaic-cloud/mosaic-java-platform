@@ -42,6 +42,9 @@ import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.eclipse.jetty.server.Server;
@@ -63,6 +66,7 @@ public final class JettyComponentCallbacks
 		super ();
 		this.monitor = Monitor.create (this);
 		synchronized (this) {
+			this.threading = Threading.getCurrentContext ();
 			this.transcript = Transcript.create (this);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			JettyComponentContext.callbacks = this;
@@ -290,7 +294,7 @@ public final class JettyComponentCallbacks
 			final Server jettyServer;
 			jettyServer = ServerCommandLine.createServer (jettyProperties);
 			this.jettyServer = jettyServer;
-			final Thread jettyThread = new Thread () {
+			final Thread jettyLoop = this.threading.newThread (new ThreadConfiguration (jettyServer, "jetty"), new Runnable () {
 				@Override
 				public final void run ()
 				{
@@ -301,8 +305,8 @@ public final class JettyComponentCallbacks
 						JettyComponentCallbacks.this.exceptions.traceIgnoredException (exception, "error encountered while starting Jetty; terminating!");
 					}
 				}
-			};
-			jettyThread.start ();
+			});
+			jettyLoop.start ();
 		}
 	}
 	
@@ -320,6 +324,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	final TranscriptExceptionTracer exceptions;
+	final ThreadingContext threading;
 	final Transcript transcript;
 	private Component component;
 	private Server jettyServer;

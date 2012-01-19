@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
+import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -36,10 +39,7 @@ import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.drivers.ConfigProperties;
-import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
 
@@ -69,9 +69,9 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 	 * @param passwd
 	 *            the password for connecting to the server
 	 */
-	private MemcachedDriver(int noThreads, List<?> hosts, String user,
+	private MemcachedDriver(ThreadingContext threading, int noThreads, List<?> hosts, String user,
 			String password) {
-		super(noThreads);
+		super(threading, noThreads);
 		this.hosts = hosts;
 		this.username = user;
 		this.password = password;
@@ -95,7 +95,7 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static MemcachedDriver create(IConfiguration config)
+	public static MemcachedDriver create(IConfiguration config, ThreadingContext threading)
 			throws IOException {
 		List<URI> nodesURI = new ArrayList<URI>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
 		List<InetSocketAddress> nodesISA = new ArrayList<InetSocketAddress>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
@@ -156,9 +156,9 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 						ConfigProperties.getString("KVStoreDriver.4"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (MemcachedDriver.USE_BUCKET) {
-			driver = new MemcachedDriver(noThreads, nodesURI, user, passwd);
+			driver = new MemcachedDriver(threading, noThreads, nodesURI, user, passwd);
 		} else {
-			driver = new MemcachedDriver(noThreads, nodesISA, user, passwd);
+			driver = new MemcachedDriver(threading, noThreads, nodesISA, user, passwd);
 		}
 		return driver;
 	}

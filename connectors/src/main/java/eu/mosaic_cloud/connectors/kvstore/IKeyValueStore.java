@@ -21,11 +21,10 @@ package eu.mosaic_cloud.connectors.kvstore;
 
 import java.util.List;
 
+import eu.mosaic_cloud.connectors.IResourceConnector;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.connectors.IResourceConnector;
 
 
 

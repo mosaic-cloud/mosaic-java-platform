@@ -24,19 +24,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
+import eu.mosaic_cloud.drivers.kvstore.RiakRestDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-
-import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
-import eu.mosaic_cloud.drivers.kvstore.RiakRestDriver;
-
-
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -56,7 +53,7 @@ public class RiakRestDriverTest {
 		RiakRestDriverTest.wrapper = RiakRestDriver
 				.create(PropertyTypeConfiguration.create(
 						RiakRestDriverTest.class.getClassLoader(),
-						"riakrest-test.prop"));
+						"riakrest-test.prop"), Threading.sequezeThreadingContextOutOfDryRock());
 		RiakRestDriverTest.keyPrefix = UUID.randomUUID().toString();
 		RiakRestDriverTest.wrapper.registerClient(RiakRestDriverTest.keyPrefix,
 				"test");

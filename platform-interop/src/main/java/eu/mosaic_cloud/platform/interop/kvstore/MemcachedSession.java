@@ -23,11 +23,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import eu.mosaic_cloud.interoperability.tools.Identifiers;
-
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
+import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 /**
  * Defines the Memcached session: the messages that can be exchanged and the

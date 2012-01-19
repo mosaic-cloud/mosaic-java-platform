@@ -22,6 +22,15 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ContainerException;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
+import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
+import eu.mosaic_cloud.connectors.kvstore.IKeyValueStore;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -29,17 +38,7 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.Miscellaneous;
-
-import eu.mosaic_cloud.connectors.kvstore.IKeyValueStore;
-
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ContainerException;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
-import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
-import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
 
@@ -83,7 +82,7 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state) {
+	public void initialize(IResourceAccessorCallback<S> callback, S state, ThreadingContext threading) {
 		synchronized (this) {
 			this.status = ResourceStatus.INITIALIZING;
 			this.cloudletState = state;

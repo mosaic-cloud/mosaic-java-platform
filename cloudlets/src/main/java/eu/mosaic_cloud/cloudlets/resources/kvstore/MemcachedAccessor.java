@@ -23,14 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.connectors.kvstore.memcached.IMemcachedStore;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
-import eu.mosaic_cloud.connectors.kvstore.memcached.IMemcachedStore;
-
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 
 
 

@@ -22,16 +22,12 @@ package eu.mosaic_cloud.connectors.interop;
 import java.io.IOException;
 import java.util.List;
 
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-
-import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
-
-
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 
 /**
  * Base class for connector reactors.

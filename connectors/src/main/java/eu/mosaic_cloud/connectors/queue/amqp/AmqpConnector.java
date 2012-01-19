@@ -22,8 +22,12 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import eu.mosaic_cloud.connectors.ConfigProperties;
+import eu.mosaic_cloud.connectors.interop.queue.amqp.AmqpProxy;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -32,18 +36,10 @@ import eu.mosaic_cloud.platform.core.ops.EventDrivenOperation;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
-
-import eu.mosaic_cloud.connectors.ConfigProperties;
-import eu.mosaic_cloud.connectors.interop.queue.amqp.AmqpProxy;
-
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Connector for queuing systems implementing the AMQP protocol.
@@ -54,6 +50,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 public class AmqpConnector implements IAmqpQueueConnector {
 
 	private AmqpProxy proxy;
+	private ThreadingContext threading;
 	private ExecutorService executor;
 
 	/**
@@ -64,9 +61,10 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	 * @param noThreads
 	 *            the number of threads to be used for processing requests
 	 */
-	private AmqpConnector(AmqpProxy proxy, int noThreads) {
+	private AmqpConnector(AmqpProxy proxy, ThreadingContext threading, int noThreads) {
 		this.proxy = proxy;
-		this.executor = Executors.newFixedThreadPool(noThreads);
+		this.threading = threading;
+		this.executor = this.threading.newFixedThreadPool(new ThreadConfiguration (this, "operations"), noThreads);
 	}
 
 	/**
@@ -80,7 +78,7 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static synchronized AmqpConnector create(IConfiguration config)
+	public static synchronized AmqpConnector create(IConfiguration config, ThreadingContext threading)
 			throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
@@ -95,12 +93,12 @@ public class AmqpConnector implements IAmqpQueueConnector {
 				"Connector working with driver on " + driverIdentifier + "("
 						+ driverChannel + ")");
 		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		channel.register(AmqpSession.CONNECTOR);
 		channel.connect(driverChannel);
 		AmqpProxy proxy = AmqpProxy.create(config, connectorIdentifier,
 				driverIdentifier, channel);
-		return new AmqpConnector(proxy, noThreads);
+		return new AmqpConnector(proxy, threading, noThreads);
 	}
 
 	@Override

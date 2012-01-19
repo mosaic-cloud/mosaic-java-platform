@@ -26,6 +26,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.drivers.DriverNotFoundException;
+import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
+import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
+import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
+import eu.mosaic_cloud.drivers.kvstore.KeyValueDriverFactory;
+import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Session;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
@@ -33,7 +44,6 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -45,20 +55,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-
-import eu.mosaic_cloud.drivers.ConfigProperties;
-import eu.mosaic_cloud.drivers.DriverNotFoundException;
-import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
-import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
-import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueDriverFactory;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
-
-import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.Session;
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
  * Stub for the driver for key-value distributed storage systems. This is used

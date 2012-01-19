@@ -36,6 +36,8 @@ import eu.mosaic_cloud.components.tools.tests.RandomMessageGenerator;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,10 +51,11 @@ public final class BasicComponentTest
 	{
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
-		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
+		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
-		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, exceptions);
+		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, threading, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
 		final QueueingComponentCallbacks callbacks = QueueingComponentCallbacks.create (component);
 		reactor.initialize ();
@@ -77,10 +80,10 @@ public final class BasicComponentTest
 		}
 		pipe.sink ().close ();
 		while (component.isActive ())
-			Thread.sleep (BasicComponentTest.sleepTimeout);
-		Thread.sleep (BasicComponentTest.sleepTimeout);
+			Threading.sleep (BasicComponentTest.sleepTimeout);
+		Threading.sleep (BasicComponentTest.sleepTimeout);
 		reactor.terminate ();
-		Thread.sleep (BasicComponentTest.sleepTimeout);
+		Threading.sleep (BasicComponentTest.sleepTimeout);
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

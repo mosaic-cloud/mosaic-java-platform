@@ -31,7 +31,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.WritableByteChannel;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -46,8 +45,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.IgnoredException;
-import eu.mosaic_cloud.tools.miscellaneous.DefaultThreadPoolFactory;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -57,10 +57,10 @@ public final class BasicChannel
 		implements
 			eu.mosaic_cloud.components.core.Channel
 {
-	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ExceptionTracer exceptions)
+	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Channel (this, input, output, coder, callbackReactor, callbacks, exceptions);
+		this.delegate = new Channel (this, input, output, coder, callbackReactor, callbacks, threading, exceptions);
 	}
 	
 	@Override
@@ -99,14 +99,14 @@ public final class BasicChannel
 	
 	final Channel delegate;
 	
-	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks, final ExceptionTracer exceptions)
+	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		return (new BasicChannel (input, output, coder, reactor, callbacks, exceptions));
+		return (new BasicChannel (input, output, coder, reactor, callbacks, threading, exceptions));
 	}
 	
-	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ExceptionTracer exceptions)
+	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		return (new BasicChannel (input, output, coder, reactor, null, exceptions));
+		return (new BasicChannel (input, output, coder, reactor, null, threading, exceptions));
 	}
 	
 	private static final long defaultPollTimeout = 1000;
@@ -114,7 +114,7 @@ public final class BasicChannel
 	private static final class Channel
 			extends AbstractService
 	{
-		Channel (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ExceptionTracer exceptions)
+		Channel (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ThreadingContext threading, final ExceptionTracer exceptions)
 		{
 			super ();
 			Preconditions.checkNotNull (facade);
@@ -124,9 +124,11 @@ public final class BasicChannel
 			Preconditions.checkArgument (output instanceof SelectableChannel);
 			Preconditions.checkNotNull (coder);
 			Preconditions.checkNotNull (callbackReactor);
+			Preconditions.checkNotNull (threading);
 			this.facade = facade;
 			this.monitor = Monitor.create (this.facade);
 			synchronized (this.monitor) {
+				this.threading = threading;
 				this.transcript = Transcript.create (this.facade);
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 				this.input = input;
@@ -142,7 +144,7 @@ public final class BasicChannel
 				this.coder = coder;
 				this.callbackReactor = callbackReactor;
 				this.callbackTrigger = this.callbackReactor.register (ChannelCallbacks.class, callbacks);
-				this.executor = Executors.newCachedThreadPool (DefaultThreadPoolFactory.create (this.facade, true, Thread.NORM_PRIORITY, this.exceptions));
+				this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this.facade, "services", true, this.exceptions.catcher));
 				this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.inboundMessages = new LinkedBlockingQueue<ChannelMessage> ();
@@ -252,6 +254,7 @@ public final class BasicChannel
 		final LinkedBlockingQueue<ByteBuffer> outboundPackets;
 		final WritableByteChannel output;
 		final Selector selector;
+		final ThreadingContext threading;
 		final Transcript transcript;
 	}
 	

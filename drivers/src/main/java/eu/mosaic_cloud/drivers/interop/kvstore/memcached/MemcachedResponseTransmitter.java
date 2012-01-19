@@ -23,26 +23,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.protobuf.ByteString;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
+import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error.Builder;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok;
-import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error.Builder;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
-
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
-
-
-import com.google.protobuf.ByteString;
-
-import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.Session;
 
 /**
  * Serializes responses for memcached operation requests and sends them to the

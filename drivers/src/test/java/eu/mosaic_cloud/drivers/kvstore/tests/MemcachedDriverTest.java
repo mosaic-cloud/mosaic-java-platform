@@ -26,19 +26,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-
-import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
-
-
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -61,7 +58,7 @@ public class MemcachedDriverTest {
 		MemcachedDriverTest.wrapper = MemcachedDriver
 				.create(PropertyTypeConfiguration.create(
 						MemcachedDriverTest.class.getClassLoader(),
-						"memcached-test.prop"));
+						"memcached-test.prop"), Threading.sequezeThreadingContextOutOfDryRock());
 		MemcachedDriverTest.keyPrefix = UUID.randomUUID().toString();
 		MemcachedDriverTest.wrapper.registerClient(
 				MemcachedDriverTest.keyPrefix, "test");

@@ -22,16 +22,13 @@ package eu.mosaic_cloud.connectors.components;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.components.core.ComponentCallReply;
+import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
-
-import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
-
-import eu.mosaic_cloud.components.core.ComponentCallReply;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
  * Finder for resource drivers.
@@ -72,8 +69,7 @@ public class ResourceFinder {
 		OutcomeFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks
 				.findDriver(type);
 		Worker worker = new Worker(replyFuture, callback);
-		Thread tWorker = new Thread(worker);
-		tWorker.start();
+		Threading.createAndStartNormalThread (Threading.sequezeThreadingContextOutOfDryRock(), this, "callback", worker);
 	}
 
 	class Worker implements Runnable {

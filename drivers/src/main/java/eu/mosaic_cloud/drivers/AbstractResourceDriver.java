@@ -23,11 +23,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 
 
@@ -40,6 +41,7 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 public abstract class AbstractResourceDriver implements IResourceDriver {
 
 	private final List<IResult<?>> pendingResults;
+	protected final ThreadingContext threading;
 	private final ExecutorService executor;
 	private boolean destroyed = false;
 
@@ -49,9 +51,10 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 * @param noThreads
 	 *            number of threads to be used for serving requests
 	 */
-	protected AbstractResourceDriver(int noThreads) {
+	protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
 		this.pendingResults = new ArrayList<IResult<?>>();
-		this.executor = Executors.newFixedThreadPool(noThreads);
+		this.threading = threading;
+		this.executor = this.threading.newFixedThreadPool (new ThreadConfiguration (this, "operations"), noThreads);
 	}
 
 	@Override

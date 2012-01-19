@@ -24,11 +24,12 @@ import java.util.Queue;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
@@ -41,8 +42,8 @@ public class SerialJunitRunner extends BlockJUnit4ClassRunner {
 		super(klass);
 		setScheduler(new RunnerScheduler() {
 
-			ExecutorService executorService = Executors.newFixedThreadPool(1,
-					new NamedThreadFactory(klass.getSimpleName()));
+			ThreadingContext threading = Threading.sequezeThreadingContextOutOfDryRock();
+			ExecutorService executorService = threading.newFixedThreadPool(new ThreadConfiguration(this, "tests"), 1);
 			CompletionService<Void> completionService = new ExecutorCompletionService<Void>(
 					this.executorService);
 			Queue<Future<Void>> tasks = new LinkedList<Future<Void>>();

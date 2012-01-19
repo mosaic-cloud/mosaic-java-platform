@@ -23,8 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
-
-
+import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ContainerException;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
+import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -32,20 +41,7 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector;
-
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ContainerException;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
-import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
-import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
 
@@ -154,7 +150,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	}
 
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state) {
+	public void initialize(IResourceAccessorCallback<S> callback, S state, ThreadingContext threading) {
 		synchronized (this) {
 			@SuppressWarnings("unchecked")
 			IResourceAccessorCallback<S> proxy = this.cloudlet
@@ -168,7 +164,7 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 					throw new ContainerException(
 							"Cannot find a resource of type "
 									+ ResourceType.AMQP.toString());
-				this.connector = AmqpConnector.create(this.configuration);
+				this.connector = AmqpConnector.create(this.configuration, threading);
 
 				// IOperationCompletionHandler<Boolean> cHandler = new
 				// ConnectionOpenHandler(

@@ -27,22 +27,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-
-import com.google.common.base.Preconditions;
-
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -81,7 +77,7 @@ public class KeyValueConnectorOnlyTest
 		try {
 			Assert.assertTrue (r1.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 		} catch (final Exception e) {
-			ExceptionTracer.traceIgnored(e);
+			ExceptionTracer.traceIgnored (e);
 			Assert.fail ();
 		}
 		final List<IOperationCompletionHandler<String>> handlers1 = KeyValueConnectorOnlyTest.getHandlers ("get after delete");
@@ -89,7 +85,7 @@ public class KeyValueConnectorOnlyTest
 		try {
 			Assert.assertNull (r2.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 		} catch (final Exception e) {
-			ExceptionTracer.traceIgnored(e);
+			ExceptionTracer.traceIgnored (e);
 			Assert.fail ();
 		}
 	}
@@ -104,7 +100,7 @@ public class KeyValueConnectorOnlyTest
 		try {
 			Assert.assertEquals ("fantastic", r1.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS).toString ());
 		} catch (final Exception e) {
-			ExceptionTracer.traceIgnored(e);
+			ExceptionTracer.traceIgnored (e);
 			Assert.fail ();
 		}
 	}
@@ -124,7 +120,7 @@ public class KeyValueConnectorOnlyTest
 			Assert.assertTrue (r1.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 			Assert.assertTrue (r2.getResult (KeyValueConnectorOnlyTest.timeout, TimeUnit.MILLISECONDS));
 		} catch (final Exception e) {
-			ExceptionTracer.traceIgnored(e);
+			ExceptionTracer.traceIgnored (e);
 			Assert.fail ();
 		}
 	}
@@ -143,7 +139,7 @@ public class KeyValueConnectorOnlyTest
 			throws Throwable
 	{
 		final IConfiguration config = PropertyTypeConfiguration.create (KeyValueConnectorOnlyTest.class.getClassLoader (), "kv-test.prop");
-		KeyValueConnectorOnlyTest.connector = KeyValueStoreConnector.create (config, new PojoDataEncoder<String> (String.class));
+		KeyValueConnectorOnlyTest.connector = KeyValueStoreConnector.create (config, new PojoDataEncoder<String> (String.class), Threading.sequezeThreadingContextOutOfDryRock ());
 		KeyValueConnectorOnlyTest.keyPrefix = UUID.randomUUID ().toString ();
 	}
 	

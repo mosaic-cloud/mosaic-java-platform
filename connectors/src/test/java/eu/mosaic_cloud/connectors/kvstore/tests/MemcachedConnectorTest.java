@@ -26,28 +26,26 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.connectors.kvstore.memcached.MemcachedStoreConnector;
+import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
-
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
-
-import eu.mosaic_cloud.connectors.kvstore.memcached.MemcachedStoreConnector;
-
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -55,10 +53,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
@@ -70,6 +64,7 @@ public class MemcachedConnectorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
+		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				MemcachedConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
@@ -77,16 +72,16 @@ public class MemcachedConnectorTest {
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.register(MemcachedSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
 
 		MemcachedConnectorTest.driverStub = MemcachedStub.create(config,
-				driverChannel);
+				driverChannel, Threading.sequezeThreadingContextOutOfDryRock());
 		MemcachedConnectorTest.connector = MemcachedStoreConnector.create(
-				config, new PojoDataEncoder<String>(String.class));
+				config, new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
 		MemcachedConnectorTest.keyPrefix = UUID.randomUUID().toString();
 	}
 
@@ -248,7 +243,7 @@ public class MemcachedConnectorTest {
 		}
 
 		try {
-			Thread.sleep(1000);
+			Threading.sleep(1000);
 			List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after append");
 			IResult<String> r2 = MemcachedConnectorTest.connector.get(k1,
 					handlers1, null);
@@ -392,20 +387,21 @@ public class MemcachedConnectorTest {
 	}
 
 	public static void main(String... args) throws Throwable {
+		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				MemcachedConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
 		MemcachedStoreConnector<String> connector = MemcachedStoreConnector
-				.create(config, new PojoDataEncoder<String>(String.class));
+				.create(config, new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
 		String keyPrefix = UUID.randomUUID().toString();
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
 
-		MemcachedStub driverStub = MemcachedStub.create(config, driverChannel);
+		MemcachedStub driverStub = MemcachedStub.create(config, driverChannel, Threading.sequezeThreadingContextOutOfDryRock());
 
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("add 1");

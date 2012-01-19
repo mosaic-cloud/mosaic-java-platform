@@ -21,11 +21,10 @@ package eu.mosaic_cloud.drivers.kvstore;
 
 import java.lang.reflect.Method;
 
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
 import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
 
 

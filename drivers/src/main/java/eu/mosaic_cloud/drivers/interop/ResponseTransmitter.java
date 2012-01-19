@@ -19,10 +19,9 @@
  */
 package eu.mosaic_cloud.drivers.interop;
 
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 /**
  * Base class for driver response transmitter.

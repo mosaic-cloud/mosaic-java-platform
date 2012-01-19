@@ -29,33 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.cloudlets.ConfigProperties;
-
-import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
-
-
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-
-import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
-
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
-import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
-
-import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-
-import eu.mosaic_cloud.cloudlets.core.CloudletException;
-
-
 import com.google.common.base.Preconditions;
-
+import eu.mosaic_cloud.cloudlets.ConfigProperties;
+import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
+import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -63,6 +40,20 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.interop.idl.ChannelData;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
+import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
  * This callback class enables the container to communicate with other platform
@@ -104,6 +95,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	private Status status;
 	private Component component;
+	private ThreadingContext threading;
 	private Monitor monitor;
 	private IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingReferences;
 	private ComponentIdentifier amqpGroup;
@@ -118,6 +110,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	 */
 	public ContainerComponentCallbacks() {
 		super();
+		this.threading = Threading.getCurrentContext();
 		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ContainerComponentCallbacks.callbacks = this;
@@ -216,8 +209,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				Integer.class, 1);
 		List<CloudletManager> containers = new ArrayList<CloudletManager>();
 		for (int i = 0; i < noInstances; i++) {
-			final CloudletManager container = new CloudletManager(loader,
-					configuration);
+			final CloudletManager container = new CloudletManager(
+					this.threading, loader, configuration);
 
 			try {
 				container.start();
@@ -227,7 +220,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 								+ configurationFile);
 			} catch (CloudletException e) {
 				ExceptionTracer.traceIgnored(e);
-				e.printStackTrace();
 			}
 		}
 		return containers;

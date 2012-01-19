@@ -31,9 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.eclipse.jetty.server.Request;
@@ -127,12 +127,8 @@ public final class ClasspathExporter
 		final ClasspathExporter exporter = ClasspathExporter.create (address, Objects.firstNonNull (loader, ClassLoader.getSystemClassLoader ()), exceptions);
 		exporter.startServer ();
 		while (true) {
-			try {
-				Thread.sleep (1000);
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
+			if (!Threading.sleep (1000))
 				break;
-			}
 		}
 		exporter.stopServer ();
 	}

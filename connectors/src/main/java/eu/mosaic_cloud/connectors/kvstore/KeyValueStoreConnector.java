@@ -22,8 +22,10 @@ package eu.mosaic_cloud.connectors.kvstore;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import eu.mosaic_cloud.connectors.ConfigProperties;
+import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -33,15 +35,10 @@ import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.connectors.ConfigProperties;
-import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
-
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Connector for key-value distributed storage systems .
@@ -54,13 +51,15 @@ public class KeyValueStoreConnector<T extends Object> implements
 		IKeyValueStore<T> {
 
 	private final KeyValueProxy<T> proxy;
+	private final ThreadingContext threading;
 	private final ExecutorService executor;
 	protected DataEncoder<?> dataEncoder;
 
-	protected KeyValueStoreConnector(KeyValueProxy<T> proxy, int noThreads,
+	protected KeyValueStoreConnector(KeyValueProxy<T> proxy, ThreadingContext threading, int noThreads,
 			DataEncoder<T> encoder) {
 		this.proxy = proxy;
-		this.executor = Executors.newFixedThreadPool(noThreads);
+		this.threading = threading;
+		this.executor = this.threading.newFixedThreadPool(new ThreadConfiguration (this, "operations"), noThreads);
 		this.dataEncoder = encoder;
 	}
 
@@ -78,7 +77,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 	 * @throws Throwable
 	 */
 	public static <T extends Object> KeyValueStoreConnector<T> create(
-			IConfiguration config, DataEncoder<T> encoder) throws Throwable {
+			IConfiguration config, DataEncoder<T> encoder, ThreadingContext threading) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -93,7 +92,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 		String driverIdentifier = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("AllConnector.1"), String.class, "");
 		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.connect(driverChannel);
 		KeyValueProxy<T> proxy = KeyValueProxy
@@ -102,7 +101,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 		MosaicLogger.getLogger().debug(
 				"KeyValueConnector connecting to " + driverChannel + " bucket "
 						+ bucket);
-		return new KeyValueStoreConnector<T>(proxy, noThreads, encoder);
+		return new KeyValueStoreConnector<T>(proxy, threading, noThreads, encoder);
 	}
 
 	/*

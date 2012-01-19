@@ -28,8 +28,8 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,18 +81,10 @@ public final class KvServer
 				this.logger.info ("get requested [{}]: {}", request.sequence, request.key);
 				final String value = this.bucket.get (request.key);
 				session.continueDispatch ();
-				try {
-					Thread.sleep (500);
-				} catch (final InterruptedException exception) {
-					this.exceptions.trace (ExceptionResolution.Ignored, exception);
-				}
+				Threading.sleep (500);
 				this.logger.info ("get replied [{}]: {}", request.sequence, value);
 				session.send (new Message (KvMessage.GetReply, new KvPayloads.GetReply (request.sequence, value)));
-				try {
-					Thread.sleep (2000);
-				} catch (final InterruptedException exception) {
-					this.exceptions.trace (ExceptionResolution.Ignored, exception);
-				}
+				Threading.sleep (2000);
 				this.logger.info ("get finished [{}]", request.sequence);
 			}
 				break;
@@ -101,18 +93,10 @@ public final class KvServer
 				this.logger.info ("put requested [{}]: {} -> {}", new Object[] {request.sequence, request.key, request.value});
 				this.bucket.put (request.key, request.value);
 				session.continueDispatch ();
-				try {
-					Thread.sleep (500);
-				} catch (final InterruptedException exception) {
-					this.exceptions.trace (ExceptionResolution.Ignored, exception);
-				}
+				Threading.sleep (500);
 				this.logger.info ("put replied [{}]", request.sequence);
 				session.send (new Message (KvMessage.Ok, new KvPayloads.Ok (request.sequence)));
-				try {
-					Thread.sleep (2000);
-				} catch (final InterruptedException exception) {
-					this.exceptions.trace (ExceptionResolution.Ignored, exception);
-				}
+				Threading.sleep (2000);
 				this.logger.info ("put finished: [{}]", request.sequence);
 			}
 				break;

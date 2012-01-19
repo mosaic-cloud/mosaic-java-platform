@@ -22,28 +22,8 @@ package eu.mosaic_cloud.drivers.interop.queue.amqp; // NOPMD by georgiana on 10/
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-
-import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
-import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
-import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType;
-
+import com.google.common.base.Preconditions;
+import com.rabbitmq.client.ConnectionFactory;
 import eu.mosaic_cloud.drivers.IResourceDriver;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
@@ -54,14 +34,30 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.IAmqpConsumer;
-
-
-import com.google.common.base.Preconditions;
-import com.rabbitmq.client.ConnectionFactory;
-
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
+import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
+import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Stub for the driver for queuing systems implementing the AMQP protocol. This
@@ -101,11 +97,11 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 	 *            the channel for communicating with connectors
 	 * @return the AMQP driver stub
 	 */
-	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel) {
+	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel, ThreadingContext threading) {
 		synchronized (AbstractDriverStub.LOCK) {
 			if (AmqpStub.stub == null) {
 				AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
-				AmqpDriver driver = AmqpDriver.create(config);
+				AmqpDriver driver = AmqpDriver.create(config, threading);
 				AmqpStub.stub = new AmqpStub(config, transmitter, driver,
 						channel);
 				incDriverReference(AmqpStub.stub);

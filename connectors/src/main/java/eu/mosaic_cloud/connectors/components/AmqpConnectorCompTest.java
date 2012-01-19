@@ -23,22 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-
-import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
-
-
-import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public class AmqpConnectorCompTest {
@@ -148,7 +144,7 @@ public class AmqpConnectorCompTest {
 			AmqpConnectorCompTest.this.configuration.addParameter(
 					"interop.channel.address", channel.getChannelEndpoint());
 			AmqpConnectorCompTest.this.connector = AmqpConnector
-					.create(AmqpConnectorCompTest.this.configuration);
+					.create(AmqpConnectorCompTest.this.configuration, Threading.sequezeThreadingContextOutOfDryRock());
 			AmqpConnectorCompTest.this.testConn();
 			AmqpConnectorCompTest.this.destroy();
 		}

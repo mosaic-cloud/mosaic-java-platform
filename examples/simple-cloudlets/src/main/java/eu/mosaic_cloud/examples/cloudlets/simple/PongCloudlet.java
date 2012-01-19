@@ -19,12 +19,6 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -39,6 +33,11 @@ import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallba
 import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessor;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 
 
 public class PongCloudlet {

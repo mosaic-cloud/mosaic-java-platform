@@ -24,13 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.protobuf.ByteString;
+import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
+import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest;
@@ -40,16 +45,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-
-import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
-import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-
-import com.google.protobuf.ByteString;
-
-import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used

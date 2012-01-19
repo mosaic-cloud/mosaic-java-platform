@@ -28,7 +28,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import org.json.JSONObject;
 import org.json.JSONTokener;
 

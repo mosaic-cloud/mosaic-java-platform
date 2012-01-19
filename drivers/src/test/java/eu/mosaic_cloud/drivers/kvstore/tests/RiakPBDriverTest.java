@@ -24,17 +24,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import eu.mosaic_cloud.drivers.kvstore.RiakPBDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-
-import eu.mosaic_cloud.drivers.kvstore.RiakPBDriver;
-
-
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -53,7 +50,7 @@ public class RiakPBDriverTest {
 		RiakPBDriverTest.wrapper = RiakPBDriver
 				.create(PropertyTypeConfiguration.create(
 						RiakPBDriverTest.class.getClassLoader(),
-						"riakpb-test.prop"));
+						"riakpb-test.prop"), Threading.sequezeThreadingContextOutOfDryRock());
 		RiakPBDriverTest.keyPrefix = UUID.randomUUID().toString();
 		RiakPBDriverTest.wrapper.registerClient(RiakPBDriverTest.keyPrefix,
 				"test");
@@ -160,12 +157,7 @@ public class RiakPBDriverTest {
 			Assert.fail();
 		}
 
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
+		Threading.sleep(1000);
 		IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
 				"check deleted");
 		IResult<byte[]> r3 = RiakPBDriverTest.wrapper.invokeGetOperation(

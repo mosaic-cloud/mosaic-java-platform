@@ -25,27 +25,25 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
-
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -54,10 +52,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
-
-import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
@@ -69,13 +63,14 @@ public class RedisConnectorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
+		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
@@ -83,7 +78,7 @@ public class RedisConnectorTest {
 		RedisConnectorTest.driverStub = KeyValueStub.create(config,
 				driverChannel);
 		RedisConnectorTest.connector = KeyValueStoreConnector.create(config,
-				new PojoDataEncoder<String>(String.class));
+				new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
 		RedisConnectorTest.keyPrefix = UUID.randomUUID().toString();
 	}
 
@@ -211,16 +206,17 @@ public class RedisConnectorTest {
 	}
 
 	public static void _main(String... args) throws Throwable {
+		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 		KeyValueStoreConnector<String> connector = KeyValueStoreConnector.create(
-				config, new PojoDataEncoder<String>(String.class));
+				config, new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
 		String keyPrefix = UUID.randomUUID().toString();
 
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));

@@ -24,18 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
-
-
+import eu.mosaic_cloud.cloudlets.core.Cloudlet;
+import eu.mosaic_cloud.cloudlets.core.CloudletException;
+import eu.mosaic_cloud.cloudlets.core.ICloudlet;
+import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.cloudlets.core.Cloudlet;
-import eu.mosaic_cloud.cloudlets.core.CloudletException;
-import eu.mosaic_cloud.cloudlets.core.ICloudlet;
-import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
 
@@ -54,6 +52,7 @@ public class CloudletManager {
 	 */
 	private List<ICloudlet> cloudletPool;
 
+	private ThreadingContext threading;
 	private ClassLoader classLoader;
 
 	private IConfiguration configuration;
@@ -67,8 +66,9 @@ public class CloudletManager {
 	 * @param configuration
 	 *            configuration object of the cloudlet
 	 */
-	public CloudletManager(ClassLoader classLoader, IConfiguration configuration) {
+	public CloudletManager(ThreadingContext threading, ClassLoader classLoader, IConfiguration configuration) {
 		super();
+		this.threading = threading;
 		this.classLoader = classLoader;
 		this.configuration = configuration;
 		this.cloudletPool = new ArrayList<ICloudlet>();
@@ -147,7 +147,7 @@ public class CloudletManager {
 			ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
 			Object cloudletState = invokeConstructor(stateClasz);
 			Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler,
-					this.classLoader);
+					this.threading, this.classLoader);
 			cloudlet.initialize(resourceConfig);
 			this.cloudletPool.add(cloudlet);
 		} catch (ClassNotFoundException e) {

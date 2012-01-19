@@ -28,6 +28,8 @@ import java.util.concurrent.TimeUnit;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,12 +42,13 @@ public final class KvTest
 			throws Exception
 	{
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final ThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
-		final ZeroMqChannel serverChannel = new ZeroMqChannel (serverIdentifier, exceptions);
+		final ZeroMqChannel serverChannel = new ZeroMqChannel (serverIdentifier, threading, exceptions);
 		serverChannel.register (KvSession.Server);
 		serverChannel.accept (KvTest.serverEndpoint);
-		final ZeroMqChannel clientChannel = new ZeroMqChannel (clientIdentifier, exceptions);
+		final ZeroMqChannel clientChannel = new ZeroMqChannel (clientIdentifier, threading, exceptions);
 		clientChannel.register (KvSession.Client);
 		clientChannel.connect (KvTest.serverEndpoint);
 		final KvServer server = new KvServer (exceptions);

@@ -29,6 +29,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 
@@ -165,7 +168,7 @@ public class CloudletExecutor {
 	 * @param loader
 	 *            the class loader used for loading cloudlet classes
 	 */
-	public CloudletExecutor(ClassLoader loader) {
+	public CloudletExecutor(ThreadingContext threading, ClassLoader loader) {
 		super();
 		this.runState = CloudletExecutor.INITIALIZING;
 		this.requestQueue = new LinkedBlockingQueue<Runnable>();
@@ -173,16 +176,12 @@ public class CloudletExecutor {
 
 		// FIXME get threads from workers from a thread pool
 		this.worker = new Worker();
-		this.worker.thread = new Thread(this.worker);
-		this.worker.thread.setContextClassLoader(loader);
-		this.worker.thread.setDaemon(false);
-		this.worker.thread.start();
+		this.worker.thread = threading.newThread (new ThreadConfiguration (this, "worker", true).setClassLoader (loader), this.worker);
+		this.worker.thread.start ();
 
 		this.backupWorker = new BackupWorker();
-		this.backupWorker.thread = new Thread(this.backupWorker);
-		this.backupWorker.thread.setContextClassLoader(loader);
-		this.backupWorker.thread.setDaemon(false);
-		this.backupWorker.thread.start();
+		this.backupWorker.thread = threading.newThread (new ThreadConfiguration (this, "backup-worker", true).setClassLoader (loader), this.backupWorker);
+		this.backupWorker.thread.start ();
 		this.runningWorkers = 2;
 		this.runState = CloudletExecutor.RUNNING;
 		MosaicLogger.getLogger().trace("CloudletExecutor started.");
@@ -626,7 +625,7 @@ public class CloudletExecutor {
 		protected void interruptIfIdle() {
 			if (this.runLock.tryLock()) {
 				try {
-					if (this.thread != Thread.currentThread()) {
+					if (!Threading.isCurrentThread(this.thread)) {
 						this.thread.interrupt();
 					}
 				} finally {
@@ -655,7 +654,7 @@ public class CloudletExecutor {
 				 * a shutdownNow -- if so, the interrupt is re-enabled.
 				 */
 				if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
-						&& Thread.interrupted()
+						&& Threading.isCurrentThreadInterrupted()
 						&& (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
 					this.thread.interrupt();
 				}
@@ -728,7 +727,7 @@ public class CloudletExecutor {
 				 * a shutdownNow -- if so, the interrupt is re-enabled.
 				 */
 				if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
-						&& Thread.interrupted()
+						&& Threading.isCurrentThreadInterrupted ()
 						&& (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
 					this.thread.interrupt();
 				}

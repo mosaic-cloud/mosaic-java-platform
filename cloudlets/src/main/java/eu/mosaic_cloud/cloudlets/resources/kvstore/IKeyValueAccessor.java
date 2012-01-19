@@ -21,9 +21,8 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
 
 import java.util.List;
 
-import eu.mosaic_cloud.platform.core.ops.IResult;
-
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
+import eu.mosaic_cloud.platform.core.ops.IResult;
 
 
 

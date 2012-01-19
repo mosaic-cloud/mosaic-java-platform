@@ -27,6 +27,8 @@ import java.util.UUID;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSocket;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,15 +41,16 @@ public final class ZeroMqChannelTest
 			throws Exception
 	{
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
 		final ByteBuffer header = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
 		final ByteBuffer payload = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
-		final ZeroMqChannelSocket server = new ZeroMqChannelSocket (serverIdentifier, null, exceptions);
+		final ZeroMqChannelSocket server = new ZeroMqChannelSocket (serverIdentifier, null, threading, exceptions);
 		server.accept (ZeroMqChannelTest.serverEndpoint);
-		final ZeroMqChannelSocket client = new ZeroMqChannelSocket (clientIdentifier, null, exceptions);
+		final ZeroMqChannelSocket client = new ZeroMqChannelSocket (clientIdentifier, null, threading, exceptions);
 		client.connect (ZeroMqChannelTest.serverEndpoint);
-		Thread.sleep (ZeroMqChannelTest.pollTimeout);
+		Threading.sleep (ZeroMqChannelTest.pollTimeout);
 		final ZeroMqChannelSocket.Packet packet1 = new ZeroMqChannelSocket.Packet (serverIdentifier, header, payload);
 		client.enqueue (packet1, ZeroMqChannelTest.pollTimeout);
 		final ZeroMqChannelSocket.Packet packet2 = server.dequeue (ZeroMqChannelTest.pollTimeout);

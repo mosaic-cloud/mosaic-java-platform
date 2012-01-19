@@ -28,8 +28,6 @@ import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
-
-
 import redis.clients.jedis.Jedis;
 import redis.clients.util.SafeEncoder;
 

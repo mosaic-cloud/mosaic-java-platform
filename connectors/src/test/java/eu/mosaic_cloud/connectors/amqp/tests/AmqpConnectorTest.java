@@ -23,33 +23,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import eu.mosaic_cloud.connectors.kvstore.tests.MemcachedConnectorTest;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
+import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
@@ -60,22 +57,23 @@ public class AmqpConnectorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
+		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
 		AmqpConnectorTest.configuration = PropertyTypeConfiguration.create(
 				AmqpConnectorTest.class.getClassLoader(), "amqp-test.prop");
 
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(AmqpConnectorTest.configuration,
 						"interop.driver.identifier", String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(AmqpSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(
 				AmqpConnectorTest.configuration, "interop.channel.address",
 				String.class, ""));
 
 		AmqpConnectorTest.driverStub = AmqpStub.create(
-				AmqpConnectorTest.configuration, driverChannel);
+				AmqpConnectorTest.configuration, driverChannel, threading);
 		AmqpConnectorTest.connector = AmqpConnector
-				.create(AmqpConnectorTest.configuration);
+				.create(AmqpConnectorTest.configuration, Threading.sequezeThreadingContextOutOfDryRock());
 	}
 
 	@AfterClass

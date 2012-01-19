@@ -41,6 +41,11 @@
 			<artifactId>tools-transcript</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-threading</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	
 	<properties>

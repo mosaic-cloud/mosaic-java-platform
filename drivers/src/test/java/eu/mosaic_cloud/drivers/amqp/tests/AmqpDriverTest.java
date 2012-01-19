@@ -22,19 +22,17 @@ package eu.mosaic_cloud.drivers.amqp.tests;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -56,7 +54,7 @@ public class AmqpDriverTest {
 		AmqpDriverTest.configuration = PropertyTypeConfiguration.create(
 				AmqpDriverTest.class.getClassLoader(), "amqp-test.prop");
 		AmqpDriverTest.wrapper = AmqpDriver
-				.create(AmqpDriverTest.configuration);
+				.create(AmqpDriverTest.configuration, Threading.sequezeThreadingContextOutOfDryRock());
 	}
 
 	@AfterClass

@@ -34,6 +34,7 @@ public abstract class BaseExceptionTracer
 	protected BaseExceptionTracer ()
 	{
 		super ();
+		this.catcher = UncaughtExceptionHandler.create (this);
 	}
 	
 	public final void traceCaughtException (final CaughtException exception)
@@ -85,4 +86,6 @@ public abstract class BaseExceptionTracer
 	{
 		this.trace (ExceptionResolution.Ignored, exception, format, tokens);
 	}
+	
+	public final UncaughtExceptionHandler catcher;
 }

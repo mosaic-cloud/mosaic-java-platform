@@ -23,15 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 
@@ -41,6 +43,7 @@ public class SpecialTest {
 	private static boolean done = false;
 
 	public static void main(String[] args) {
+		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
 		KeyValueStoreConnector<String> connector = null;
 		try {
 			IConfiguration config = PropertyTypeConfiguration.create(
@@ -48,9 +51,8 @@ public class SpecialTest {
 					"special-test.prop");
 
 			connector = KeyValueStoreConnector.create(config,
-					new PojoDataEncoder<String>(String.class));
-
-			Runtime.getRuntime().addShutdownHook(new Worker());
+					new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
+			Threading.registerExitCallback(threading, SpecialTest.class, "exit-hook", new Worker());
 			while (!done) {
 				doWork(connector);
 			}
@@ -82,19 +84,14 @@ public class SpecialTest {
 		List<IOperationCompletionHandler<Boolean>> handlersDel = getHandlers("special delete");
 
 		while (true) {
-			try {
-				key = "key_" + UUID.randomUUID().toString();
-				value = "value_" + UUID.randomUUID().toString();
-				connector.set(key, value, handlersSet, null);
-				Thread.currentThread().sleep(1000);
-				connector.get(key, handlersGet, null);
-				Thread.currentThread().sleep(1000);
-				connector.delete(key, handlersDel, null);
-				Thread.currentThread().sleep(1000);
-			} catch (InterruptedException e) {
-				ExceptionTracer.traceIgnored(e);
-			}
-
+			key = "key_" + UUID.randomUUID().toString();
+			value = "value_" + UUID.randomUUID().toString();
+			connector.set(key, value, handlersSet, null);
+			Threading.sleep(1000);
+			connector.get(key, handlersGet, null);
+			Threading.sleep(1000);
+			connector.delete(key, handlersDel, null);
+			Threading.sleep(1000);
 		}
 	}
 
@@ -107,7 +104,7 @@ public class SpecialTest {
 		return list;
 	}
 
-	private static class Worker extends Thread {
+	private static class Worker implements Runnable {
 
 		public void run() {
 			SpecialTest.done = true;

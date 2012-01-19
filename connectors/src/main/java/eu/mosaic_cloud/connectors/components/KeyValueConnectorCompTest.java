@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -33,16 +36,8 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-
-import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-
-
-
-import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public class KeyValueConnectorCompTest {
@@ -197,7 +192,7 @@ public class KeyValueConnectorCompTest {
 					"interop.channel.address", channel.getChannelEndpoint());
 			KeyValueConnectorCompTest.this.connector = KeyValueStoreConnector
 					.create(KeyValueConnectorCompTest.this.configuration,
-							new PojoDataEncoder<String>(String.class));
+							new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
 			KeyValueConnectorCompTest.this.testConnector();
 			KeyValueConnectorCompTest.this.connector.destroy();
 		}

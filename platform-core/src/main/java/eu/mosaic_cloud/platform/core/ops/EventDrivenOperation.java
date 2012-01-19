@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.exceptions.ResultSetException;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 
@@ -96,7 +97,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 				@SuppressWarnings("unchecked")
 				IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
 						.newProxyInstance(
-								Thread.currentThread().getContextClassLoader(),//handler.getClass().getClassLoader(),
+								Threading.getCurrentThread().getContextClassLoader(),//handler.getClass().getClassLoader(),
 								new Class[] { IOperationCompletionHandler.class },  // NOPMD by georgiana on 10/12/11 5:01 PM
 								iHandler);
 				this.completionHandlers.add(proxy);

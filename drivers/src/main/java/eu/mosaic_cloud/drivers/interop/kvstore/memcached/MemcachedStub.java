@@ -23,17 +23,27 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
+import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
+import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
+import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
+import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Session;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
-import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
+import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest;
@@ -43,21 +53,7 @@ import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedMessage;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
-
-import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
-import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
-import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
-import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
-
-
-import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.Session;
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Stub for the driver for key-value distributed storage systems implementing
@@ -101,7 +97,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 	 * @return the Memcached driver stub
 	 */
 	public static MemcachedStub create(IConfiguration config,
-			ZeroMqChannel channel) {
+			ZeroMqChannel channel, ThreadingContext threading) {
 		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
 		MemcachedStub stub;
 		synchronized (AbstractDriverStub.LOCK) {
@@ -112,7 +108,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 							"MemcachedStub: create new stub.");
 
 					MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
-					MemcachedDriver driver = MemcachedDriver.create(config);
+					MemcachedDriver driver = MemcachedDriver.create(config, threading);
 					stub = new MemcachedStub(config, transmitter, driver,
 							channel);
 					MemcachedStub.stubs.put(cData, stub);
