@@ -30,8 +30,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import eu.mosaic_cloud.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.core.log.MosaicLogger;
 
-
-
 /**
  * A Cloudlet executor that executes operations requested in a certain cloudlet
  * instance.
@@ -158,6 +156,8 @@ public class CloudletExecutor {
 
 	private CountDownLatch terminationLatch = new CountDownLatch(1);
 
+	private ClassLoader loader;
+
 	/**
 	 * Creates a new CloudletExecutor.
 	 * 
@@ -184,6 +184,7 @@ public class CloudletExecutor {
 		this.backupWorker.thread.start();
 		this.runningWorkers = 2;
 		this.runState = CloudletExecutor.RUNNING;
+		this.loader = loader;
 		MosaicLogger.getLogger().trace("CloudletExecutor started.");
 	}
 
@@ -737,5 +738,9 @@ public class CloudletExecutor {
 				this.runLock.unlock();
 			}
 		}
+	}
+
+	public ClassLoader getLoader() {
+		return loader;
 	}
 }

@@ -39,7 +39,6 @@ import eu.mosaic_cloud.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.core.ops.IResult;
 
-
 /**
  * This class handles the internals of cloudlet execution. An object of this
  * class will be created by the container for each user cloudlet. The link
@@ -202,9 +201,11 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 					destroyOperation);
 			this.executor.handleRequest(destroyOperation.getOperation());
 			try {
-				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Waiting for destroy.");
+				MosaicLogger.getLogger().trace(
+						"Cloudlet.destroy() - Waiting for destroy.");
 				result.getResult();
-				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Cloudlet destroyed.");
+				MosaicLogger.getLogger().trace(
+						"Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
@@ -243,8 +244,10 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T>(
 				callback);
 		@SuppressWarnings("unchecked")
-		T proxy = (T) Proxy.newProxyInstance(callback.getClass()
-				.getClassLoader(), new Class[] { callbackType }, iHandler);
+		T proxy = (T) Proxy.newProxyInstance(executor.getLoader(),
+				new Class[] { callbackType }, iHandler);
+		//		T proxy = (T) Proxy.newProxyInstance(callback.getClass()
+		//				.getClassLoader(), new Class[] { callbackType }, iHandler);
 		return proxy;
 	}
 

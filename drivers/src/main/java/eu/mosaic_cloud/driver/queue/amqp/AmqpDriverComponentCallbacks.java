@@ -26,7 +26,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.google.common.base.Preconditions;
 
 import eu.mosaic_cloud.callbacks.core.CallbackReference;
@@ -111,9 +110,12 @@ public final class AmqpDriverComponentCallbacks extends
 					// FIXME
 					try {
 						if (System.getenv("mosaic_node_ip") != null)
-							channelEndpoint=channelEndpoint.replace("0.0.0.0", System.getenv("mosaic_node_ip"));
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", System.getenv("mosaic_node_ip"));
 						else
-							channelEndpoint=channelEndpoint.replace("0.0.0.0", InetAddress.getLocalHost().getHostAddress());
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", InetAddress.getLocalHost()
+											.getHostAddress());
 					} catch (UnknownHostException e) {
 						ExceptionTracer.traceIgnored(e);
 					}
@@ -172,10 +174,15 @@ public final class AmqpDriverComponentCallbacks extends
 					user = (String) outputs.get("username"); //$NON-NLS-1$
 					password = (String) outputs.get("password"); //$NON-NLS-1$
 					virtualHost = (String) outputs.get("virtualHost"); //$NON-NLS-1$
+					user = user != null ? user : "";
+					password = password != null ? password : "";
+					virtualHost = virtualHost != null ? virtualHost : "";
 
-					MosaicLogger.getLogger().trace(
+					MosaicLogger.getLogger().debug(
 							"Resolved RabbitMQ on " + brokerIp + ":" //$NON-NLS-1$ //$NON-NLS-2$
-									+ brokerPort);
+									+ brokerPort + " user = " + user
+									+ " password = " + password + " vhost = "
+									+ virtualHost);
 					this.configureDriver(brokerIp, brokerPort.toString(), user,
 							password, virtualHost);
 				}
@@ -242,7 +249,8 @@ public final class AmqpDriverComponentCallbacks extends
 			if (this.pendingReference == reference) {
 				//				this.pendingReference = null;
 				if (!registerOk) {
-					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					Exception e = new Exception(
+							"failed registering to group; terminating!"); //$NON-NLS-1$
 					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
 					throw (new IllegalStateException(e));

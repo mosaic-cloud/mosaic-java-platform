@@ -22,7 +22,6 @@ package eu.mosaic_cloud.driver.interop.queue.amqp; // NOPMD by georgiana on 10/1
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-
 import com.google.common.base.Preconditions;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -435,7 +434,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleConsumeOk(java.lang.String)
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleConsumeOk(java.lang
+		 * .String)
 		 */
 		@Override
 		public void handleConsumeOk(String consumerTag) {
@@ -448,7 +448,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleCancelOk(java.lang.String)
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleCancelOk(java.lang
+		 * .String)
 		 */
 		@Override
 		public void handleCancelOk(String consumerTag) {
@@ -462,8 +463,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleDelivery(mosaic.connector
-		 * .queue.AmqpInboundMessage)
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleDelivery(mosaic.
+		 * connector .queue.AmqpInboundMessage)
 		 */
 		@Override
 		public void handleDelivery(AmqpInboundMessage message) {
@@ -477,8 +478,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleShutdown(java.lang.String,
-		 * java.lang.String)
+		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleShutdown(java.lang
+		 * .String, java.lang.String)
 		 */
 		@Override
 		public void handleShutdown(String consumerTag, String errorMessage) {

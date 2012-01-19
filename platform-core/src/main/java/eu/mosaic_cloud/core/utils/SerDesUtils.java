@@ -22,8 +22,10 @@ package eu.mosaic_cloud.core.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -43,8 +45,8 @@ public final class SerDesUtils {
 				SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 	}
 
-	private SerDesUtils() {
-	}
+	//	private SerDesUtils() {
+	//	}
 
 	/**
 	 * Converts an object to an array of bytes .
@@ -54,6 +56,14 @@ public final class SerDesUtils {
 	 * @return the associated byte array.
 	 */
 	public static byte[] pojoToBytes(final Object object) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(object);
+		oos.close();
+		return baos.toByteArray();
+	}
+
+	public byte[] opojoToBytes(final Object object) throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(object);
@@ -75,7 +85,19 @@ public final class SerDesUtils {
 			ClassNotFoundException {
 		Object object = null;
 		if (bytes.length > 0) {
-			ObjectInputStream stream = new ObjectInputStream(
+			ObjectInputStream stream = new SpecialObjectInputStream(
+					new ByteArrayInputStream(bytes));
+			object = stream.readObject();
+			stream.close();
+		}
+		return object;
+	}
+
+	public Object otoObject(byte[] bytes) throws IOException,
+			ClassNotFoundException {
+		Object object = null;
+		if (bytes.length > 0) {
+			ObjectInputStream stream = new SpecialObjectInputStream(
 					new ByteArrayInputStream(bytes));
 			object = stream.readObject();
 			stream.close();
@@ -118,5 +140,24 @@ public final class SerDesUtils {
 		byte[] bytes = SerDesUtils.objectMapper.writeValueAsString(object)
 				.getBytes();
 		return bytes;
+	}
+
+	static class SpecialObjectInputStream extends ObjectInputStream {
+
+		public SpecialObjectInputStream(InputStream in) throws IOException {
+			super(in);
+		}
+
+		@Override
+		public Class resolveClass(ObjectStreamClass desc) throws IOException,
+				ClassNotFoundException {
+			ClassLoader currentLoader = null;
+			try {
+				currentLoader = Thread.currentThread().getContextClassLoader();
+				return currentLoader.loadClass(desc.getName());
+			} catch (Exception e) {
+			}
+			return null;
+		}
 	}
 }
