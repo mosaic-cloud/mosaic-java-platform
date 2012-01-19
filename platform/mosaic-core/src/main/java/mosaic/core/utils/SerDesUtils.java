@@ -3,8 +3,10 @@ package mosaic.core.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -55,7 +57,7 @@ public class SerDesUtils {
 		Object object = null;
 		if (bytes.length == 0)
 			return null;
-		ObjectInputStream stream = new ObjectInputStream(
+		ObjectInputStream stream = new SpecialObjectInputStream(
 				new ByteArrayInputStream(bytes));
 		object = stream.readObject();
 		stream.close();
@@ -97,5 +99,25 @@ public class SerDesUtils {
 		byte[] bytes = SerDesUtils.objectMapper.writeValueAsString(object)
 				.getBytes();
 		return bytes;
+	}
+
+	static class SpecialObjectInputStream extends ObjectInputStream {
+
+		public SpecialObjectInputStream(InputStream in) throws IOException {
+			super(in);
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public Class resolveClass(ObjectStreamClass desc) throws IOException,
+				ClassNotFoundException {
+			ClassLoader currentLoader = null;
+			try {
+				currentLoader = Thread.currentThread().getContextClassLoader();
+				return currentLoader.loadClass(desc.getName());
+			} catch (Exception e) {
+			}
+			return null;
+		}
 	}
 }
