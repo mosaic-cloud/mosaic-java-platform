@@ -15,6 +15,6 @@ if test -e "${_package_afs}" ; then
 	cp -T "${_outputs}/package.tar.gz" "${_package_afs}/${_package_name}-${_package_version}.tar.gz"
 fi
 
-ssh -T mosaic.grid.info.uvt.ro <"${_outputs}/package.tar.gz"
+ssh -T cook@agent1.builder.mosaic.ieat.ro. <"${_outputs}/package.tar.gz"
 
 exit 0

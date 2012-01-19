@@ -24,8 +24,8 @@ mkdir "${_outputs}/package/bin"
 mkdir "${_outputs}/package/lib"
 
 mkdir "${_outputs}/package/lib/java"
-find "$( readlink -e -- ./umbrella )"/*/ \( -type d -path "${_outputs}/package" -prune \) -o \( -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" {} \; \)
-find "$( readlink -e -- ./umbrella/lib )" \( -type d -path "${_outputs}/package" -prune \) -o \( -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" {} \; \)
+find "$( readlink -e -- ./.parent )" \( -type d -path "${_outputs}/package" -prune \) -o \( -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" {} \; \)
+find "$( readlink -e -- ./.parent/.lib )" \( -type d -path "${_outputs}/package" -prune \) -o \( -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" {} \; \)
 
 mkdir "${_outputs}/package/lib/scripts"
 
@@ -94,7 +94,7 @@ done
 cat >"${_outputs}/package/pkg.json" <<EOS
 {
 	"package" : "${_package_name}",
-	"version" : "${_package_version}.$( date '+%Y%m%d.%H%M%S' )",
+	"version" : "${_package_version}",
 	"maintainer" : "mosaic-developers@lists.info.uvt.ro",
 	"description" : "mOSAIC Components",
 	"directories" : [ "bin", "lib" ],
