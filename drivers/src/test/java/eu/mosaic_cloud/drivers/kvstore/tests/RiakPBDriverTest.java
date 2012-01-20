@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import eu.mosaic_cloud.drivers.kvstore.RiakPBDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -33,24 +38,20 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-
 //@RunWith(SerialJunitRunner.class)
 //@Serial
 public class RiakPBDriverTest {
+
 	private static RiakPBDriver wrapper;
 	private static String keyPrefix;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		RiakPBDriverTest.wrapper = RiakPBDriver
-				.create(PropertyTypeConfiguration.create(
+		RiakPBDriverTest.wrapper = RiakPBDriver.create(
+				PropertyTypeConfiguration.create(
 						RiakPBDriverTest.class.getClassLoader(),
-						"riakpb-test.prop"), Threading.sequezeThreadingContextOutOfDryRock());
+						"riakpb-test.prop"), Threading
+						.sequezeThreadingContextOutOfDryRock());
 		RiakPBDriverTest.keyPrefix = UUID.randomUUID().toString();
 		RiakPBDriverTest.wrapper.registerClient(RiakPBDriverTest.keyPrefix,
 				"test");

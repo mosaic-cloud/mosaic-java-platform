@@ -25,7 +25,6 @@ import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
-
 public final class ExceptionTracer {
 
 	private final TranscriptExceptionTracer transcriptTracer;

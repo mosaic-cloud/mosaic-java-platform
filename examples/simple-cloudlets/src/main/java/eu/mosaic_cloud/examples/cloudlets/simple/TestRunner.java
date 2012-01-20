@@ -26,7 +26,6 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-
 public class TestRunner {
 
 	public static CloudletManager runHelloWorld() {

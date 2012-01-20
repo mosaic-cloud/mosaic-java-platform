@@ -55,11 +55,12 @@ public class KeyValueStoreConnector<T extends Object> implements
 	private final ExecutorService executor;
 	protected DataEncoder<?> dataEncoder;
 
-	protected KeyValueStoreConnector(KeyValueProxy<T> proxy, ThreadingContext threading, int noThreads,
-			DataEncoder<T> encoder) {
+	protected KeyValueStoreConnector(KeyValueProxy<T> proxy,
+			ThreadingContext threading, int noThreads, DataEncoder<T> encoder) {
 		this.proxy = proxy;
 		this.threading = threading;
-		this.executor = this.threading.newFixedThreadPool(new ThreadConfiguration (this, "operations"), noThreads);
+		this.executor = this.threading.newFixedThreadPool(
+				new ThreadConfiguration(this, "operations"), noThreads);
 		this.dataEncoder = encoder;
 	}
 
@@ -77,7 +78,8 @@ public class KeyValueStoreConnector<T extends Object> implements
 	 * @throws Throwable
 	 */
 	public static <T extends Object> KeyValueStoreConnector<T> create(
-			IConfiguration config, DataEncoder<T> encoder, ThreadingContext threading) throws Throwable {
+			IConfiguration config, DataEncoder<T> encoder,
+			ThreadingContext threading) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -101,7 +103,8 @@ public class KeyValueStoreConnector<T extends Object> implements
 		MosaicLogger.getLogger().debug(
 				"KeyValueConnector connecting to " + driverChannel + " bucket "
 						+ bucket);
-		return new KeyValueStoreConnector<T>(proxy, threading, noThreads, encoder);
+		return new KeyValueStoreConnector<T>(proxy, threading, noThreads,
+				encoder);
 	}
 
 	/*
@@ -223,7 +226,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 	 *            the operation
 	 */
 	protected void submitOperation(Runnable operation) {
-			this.executor.submit(operation);
+		this.executor.submit(operation);
 	}
 
 }

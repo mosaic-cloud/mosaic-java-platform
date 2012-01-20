@@ -22,6 +22,7 @@ package eu.mosaic_cloud.drivers;
 import java.lang.reflect.InvocationTargetException;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
 public final class DriverPreMain {
@@ -39,7 +40,10 @@ public final class DriverPreMain {
 	 * @throws SecurityException
 	 * @throws Exception
 	 */
-	public static void main(String[] arguments) throws SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException  {
+	public static void main(String[] arguments) throws SecurityException,
+			IllegalArgumentException, ClassNotFoundException,
+			NoSuchMethodException, IllegalAccessException,
+			InvocationTargetException {
 		Preconditions.checkArgument(arguments != null);
 		Preconditions
 				.checkArgument(arguments.length == 1,

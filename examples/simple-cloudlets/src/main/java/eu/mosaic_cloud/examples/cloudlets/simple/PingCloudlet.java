@@ -34,7 +34,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 
-
 public class PingCloudlet {
 
 	public static final class LifeCycleHandler extends

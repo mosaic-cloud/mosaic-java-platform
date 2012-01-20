@@ -70,8 +70,7 @@ public enum KeyValueSession implements SessionSpecification {
 	}
 
 	@Override
-	public String getQualifiedName ()
-	{
-		return (Identifiers.generateName (this));
+	public String getQualifiedName() {
+		return (Identifiers.generateName(this));
 	}
 }

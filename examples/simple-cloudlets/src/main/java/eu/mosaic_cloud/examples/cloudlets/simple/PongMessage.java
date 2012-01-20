@@ -34,7 +34,7 @@ public class PongMessage {
 	}
 
 	public String getKey() {
-		return key;
+		return this.key;
 	}
 
 	public void setKey(String key) {
@@ -42,7 +42,7 @@ public class PongMessage {
 	}
 
 	public PingPongData getValue() {
-		return value;
+		return this.value;
 	}
 
 	public void setValue(PingPongData value) {

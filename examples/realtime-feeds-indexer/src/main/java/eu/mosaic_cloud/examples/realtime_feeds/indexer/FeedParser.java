@@ -53,8 +53,9 @@ public class FeedParser {
 		Feed atomFeed = null;
 		if (feed.getFeedType().toLowerCase().startsWith("atom")) {
 			atomFeed = (Feed) feed.originalWireFeed();
-		} else
+		} else {
 			throw new FeedException("Only ATOM feeds can be parsed.");
+		}
 		Timeline timeline = new Timeline(atomFeed.getId(), feed.getLink(),
 				atomFeed.getUpdated().getTime());
 

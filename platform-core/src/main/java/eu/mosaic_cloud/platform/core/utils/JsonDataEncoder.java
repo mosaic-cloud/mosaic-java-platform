@@ -23,8 +23,6 @@ import java.io.IOException;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
-
-
 public class JsonDataEncoder<T extends Object> implements DataEncoder<T> {
 
 	private final Class<T> dataClass;;

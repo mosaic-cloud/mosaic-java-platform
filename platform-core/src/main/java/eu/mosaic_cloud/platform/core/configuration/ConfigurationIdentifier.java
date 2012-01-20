@@ -257,9 +257,9 @@ public final class ConfigurationIdentifier {
 	public int hashCode() {
 		final int prime = 31; // NOPMD by georgiana on 9/27/11 1:47 PM
 		int result = 1; // NOPMD by georgiana on 9/26/11 8:37 PM
-		result = prime * result + (absolute ? 1231 : 1237);
-		result = prime * result
-				+ ((identifier == null) ? 0 : identifier.hashCode());
+		result = (prime * result) + (this.absolute ? 1231 : 1237);
+		result = (prime * result)
+				+ ((this.identifier == null) ? 0 : this.identifier.hashCode());
 		return result;
 	}
 

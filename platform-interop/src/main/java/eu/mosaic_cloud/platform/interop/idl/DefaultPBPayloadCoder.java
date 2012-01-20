@@ -26,6 +26,7 @@ import java.nio.ByteBuffer;
 
 import com.google.common.base.Preconditions;
 import com.google.protobuf.GeneratedMessage;
+
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 
 /**

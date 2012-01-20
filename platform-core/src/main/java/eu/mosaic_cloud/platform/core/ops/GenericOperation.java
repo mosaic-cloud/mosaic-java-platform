@@ -29,8 +29,6 @@ import java.util.concurrent.TimeoutException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.exceptions.NullCompletionCallback;
 
-
-
 /**
  * Basic implementation of an asynchronous operation. It uses Java
  * {@link FutureTask} to implement the asynchronism.
@@ -64,7 +62,8 @@ public class GenericOperation<T> implements IOperation<T> {
 	@Override
 	public boolean cancel() {
 		boolean cancelled = true; // NOPMD by georgiana on 10/12/11 5:02 PM
-		if (this.operation != null && (cancelled = this.operation.cancel(true))) { // NOPMD by georgiana on 10/12/11 5:01 PM
+		if ((this.operation != null)
+				&& (cancelled = this.operation.cancel(true))) { // NOPMD by georgiana on 10/12/11 5:01 PM
 			assert getHandler() != null : "Operation callback is NULL.";
 			getHandler().onFailure(
 					new NullCompletionCallback("Operation callback is NULL."));
@@ -218,7 +217,8 @@ public class GenericOperation<T> implements IOperation<T> {
 			super.run();
 			try {
 				GenericOperation.this.cHandlerSet.await();
-				GenericOperation.this.complHandler.onSuccess(GenericTask.super.get());
+				GenericOperation.this.complHandler.onSuccess(GenericTask.super
+						.get());
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {

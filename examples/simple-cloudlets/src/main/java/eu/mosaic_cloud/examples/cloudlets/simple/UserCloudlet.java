@@ -35,7 +35,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
-
 public class UserCloudlet {
 
 	public static final class LifeCycleHandler extends
@@ -90,7 +89,8 @@ public class UserCloudlet {
 
 	}
 
-	public static final class AmqpConsumerCallback extends
+	public static final class AmqpConsumerCallback
+			extends
 			DefaultAmqpConsumerCallback<UserCloudletContext, AuthenticationToken> {
 
 		@Override
@@ -217,6 +217,7 @@ public class UserCloudlet {
 	}
 
 	public static final class UserCloudletContext {
+
 		AmqpQueueConsumer<UserCloudletContext, AuthenticationToken> consumer;
 		AmqpQueuePublisher<UserCloudletContext, LoggingData> publisher;
 		boolean publisherRunning = false;

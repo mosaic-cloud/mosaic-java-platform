@@ -74,8 +74,7 @@ public enum MemcachedSession implements SessionSpecification {
 	}
 
 	@Override
-	public String getQualifiedName ()
-	{
-		return (Identifiers.generateName (this));
+	public String getQualifiedName() {
+		return (Identifiers.generateName(this));
 	}
 }

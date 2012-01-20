@@ -51,8 +51,8 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public final class MemcachedStoreConnector<T extends Object> extends
 		KeyValueStoreConnector<T> implements IMemcachedStore<T> { // NOPMD by georgiana on 10/13/11 2:32 PM
 
-	private MemcachedStoreConnector(MemcachedProxy<T> proxy, ThreadingContext threading, int noThreads,
-			DataEncoder<T> encoder) {
+	private MemcachedStoreConnector(MemcachedProxy<T> proxy,
+			ThreadingContext threading, int noThreads, DataEncoder<T> encoder) {
 		super(proxy, threading, noThreads, encoder);
 	}
 
@@ -70,7 +70,8 @@ public final class MemcachedStoreConnector<T extends Object> extends
 	 * @throws Throwable
 	 */
 	public static <T extends Object> MemcachedStoreConnector<T> create(
-			IConfiguration config, DataEncoder<T> encoder, ThreadingContext threading) throws Throwable {
+			IConfiguration config, DataEncoder<T> encoder,
+			ThreadingContext threading) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -92,7 +93,8 @@ public final class MemcachedStoreConnector<T extends Object> extends
 		MemcachedProxy<T> proxy = MemcachedProxy
 				.create(config, connectorIdentifier, driverIdentifier, bucket,
 						channel, encoder);
-		return new MemcachedStoreConnector<T>(proxy, threading, noThreads, encoder);
+		return new MemcachedStoreConnector<T>(proxy, threading, noThreads,
+				encoder);
 	}
 
 	/*

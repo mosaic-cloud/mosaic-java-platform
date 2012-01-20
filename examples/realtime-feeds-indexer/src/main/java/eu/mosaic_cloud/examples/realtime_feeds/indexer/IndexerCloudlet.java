@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
+import org.json.JSONObject;
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -31,7 +33,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import org.json.JSONObject;
 
 public class IndexerCloudlet {
 

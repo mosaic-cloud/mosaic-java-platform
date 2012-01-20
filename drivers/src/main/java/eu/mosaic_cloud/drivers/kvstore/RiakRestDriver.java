@@ -28,8 +28,6 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * Driver class for the Riak key-value database management systems.
  * 
@@ -39,6 +37,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * 
  */
 public final class RiakRestDriver extends AbstractKeyValueDriver {
+
 	private final String riakHost;
 	private final int riakPort;
 
@@ -52,7 +51,8 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
 	 * @param riakPort
 	 *            the port for the Riak server
 	 */
-	private RiakRestDriver(ThreadingContext threading, int noThreads, String riakHost, int riakPort) {
+	private RiakRestDriver(ThreadingContext threading, int noThreads,
+			String riakHost, int riakPort) {
 		super(threading, noThreads);
 		this.riakHost = riakHost;
 		this.riakPort = riakPort;
@@ -75,8 +75,8 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static RiakRestDriver create(IConfiguration config, ThreadingContext threading)
-			throws IOException {
+	public static RiakRestDriver create(IConfiguration config,
+			ThreadingContext threading) throws IOException {
 		int port, noThreads;
 
 		String host = ConfigUtils.resolveParameter(config,
@@ -97,7 +97,8 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
 		// String.class, "");
 
 		MosaicLogger.getLogger().trace(
-				"Created Riak REST driver for host " + host + ":" + port+" [threads="+noThreads+"]");
+				"Created Riak REST driver for host " + host + ":" + port
+						+ " [threads=" + noThreads + "]");
 		return new RiakRestDriver(threading, noThreads, host, port);
 	}
 

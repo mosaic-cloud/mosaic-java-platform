@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpCallbacksMap;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
@@ -68,6 +69,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 	/**
 	 * Destroys this reactor.
 	 */
+	@Override
 	public void destroy() {
 		// nothing to do here
 		// if it does something don'y forget synchronized
@@ -211,10 +213,12 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			byte[] data = delivery.getData().toByteArray();
 			String correlationId = null;
 			String replyTo = null;
-			if (delivery.hasCorrelationId())
+			if (delivery.hasCorrelationId()) {
 				correlationId = delivery.getCorrelationId();
-			if (delivery.hasReplyTo())
+			}
+			if (delivery.hasReplyTo()) {
 				replyTo = delivery.getReplyTo();
+			}
 			AmqpInboundMessage mssg = new AmqpInboundMessage(consumerId,
 					deliveryTag, exchange, routingKey, data, deliveryMode == 2,
 					replyTo, null, delivery.getContentType(), correlationId,

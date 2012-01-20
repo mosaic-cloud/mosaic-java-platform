@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
@@ -36,8 +37,8 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-
 public class AmqpConnectorCompTest {
+
 	private IConfiguration configuration;
 	private AmqpConnector connector;
 
@@ -129,12 +130,13 @@ public class AmqpConnectorCompTest {
 	}
 
 	class Callback implements IFinderCallback {
+
 		/*
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceFound(eu.mosaic_cloud.platform.interop
-		 * .idl.ChannelData)
+		 * eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceFound(eu.
+		 * mosaic_cloud.platform.interop .idl.ChannelData)
 		 */
 		@Override
 		public void resourceFound(ChannelData channel) throws Throwable {
@@ -143,8 +145,9 @@ public class AmqpConnectorCompTest {
 							channel.getChannelIdentifier());
 			AmqpConnectorCompTest.this.configuration.addParameter(
 					"interop.channel.address", channel.getChannelEndpoint());
-			AmqpConnectorCompTest.this.connector = AmqpConnector
-					.create(AmqpConnectorCompTest.this.configuration, Threading.sequezeThreadingContextOutOfDryRock());
+			AmqpConnectorCompTest.this.connector = AmqpConnector.create(
+					AmqpConnectorCompTest.this.configuration,
+					Threading.sequezeThreadingContextOutOfDryRock());
 			AmqpConnectorCompTest.this.testConn();
 			AmqpConnectorCompTest.this.destroy();
 		}
@@ -152,7 +155,8 @@ public class AmqpConnectorCompTest {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceNotFound()
+		 * @see
+		 * eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceNotFound()
 		 */
 		@Override
 		public void resourceNotFound() {

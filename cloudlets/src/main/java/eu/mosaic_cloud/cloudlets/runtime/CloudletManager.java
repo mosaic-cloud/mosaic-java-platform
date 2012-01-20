@@ -35,8 +35,6 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * Implements a container holding a list of cloudlet instances. All instances
  * have the same cloudlet type.
@@ -66,7 +64,8 @@ public class CloudletManager {
 	 * @param configuration
 	 *            configuration object of the cloudlet
 	 */
-	public CloudletManager(ThreadingContext threading, ClassLoader classLoader, IConfiguration configuration) {
+	public CloudletManager(ThreadingContext threading, ClassLoader classLoader,
+			IConfiguration configuration) {
 		super();
 		this.threading = threading;
 		this.classLoader = classLoader;
@@ -117,22 +116,24 @@ public class CloudletManager {
 							this.configuration,
 							ConfigProperties
 									.getString("CloudletDummyContainer.0"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-			if (cloudletClass.equals(""))
+			if (cloudletClass.equals("")) {
 				throw new CloudletException("The configuration file " //$NON-NLS-1$
 						+ this.configuration.toString()
 						+ " does not specify a handler class for cloudlet " //$NON-NLS-1$
 						+ cloudletClass + "."); //$NON-NLS-1$
+			}
 
 			String cloudletStateClass = ConfigUtils
 					.resolveParameter(
 							this.configuration,
 							ConfigProperties
 									.getString("CloudletDummyContainer.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-			if (cloudletStateClass.equals(""))
+			if (cloudletStateClass.equals("")) {
 				throw new CloudletException("The configuration file " //$NON-NLS-1$
 						+ this.configuration.toString()
 						+ " does not specify a context class for cloudlet " //$NON-NLS-1$
 						+ cloudletClass + "."); //$NON-NLS-1$
+			}
 
 			String resourceFile = ConfigUtils
 					.resolveParameter(
@@ -195,14 +196,16 @@ public class CloudletManager {
 	private <T> boolean implementsType(Class<T> clasz, Class<?> searchedType) {
 		Type genericTypes[] = clasz.getInterfaces();
 		for (int i = 0; i < genericTypes.length; i++) {
-			if (genericTypes[i] == searchedType)
+			if (genericTypes[i] == searchedType) {
 				return true;
+			}
 		}
 		boolean found = false;
 		for (int i = 0; i < genericTypes.length; i++) {
 			found = implementsType((Class<T>) genericTypes[i], searchedType);
-			if (found)
+			if (found) {
 				return true;
+			}
 		}
 		Class<? super T> superClass = clasz.getSuperclass();
 		found = implementsType(superClass, searchedType);

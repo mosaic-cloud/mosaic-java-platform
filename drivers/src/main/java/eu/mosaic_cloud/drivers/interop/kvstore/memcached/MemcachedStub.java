@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
@@ -108,7 +109,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 							"MemcachedStub: create new stub.");
 
 					MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
-					MemcachedDriver driver = MemcachedDriver.create(config, threading);
+					MemcachedDriver driver = MemcachedDriver.create(config,
+							threading);
 					stub = new MemcachedStub(config, transmitter, driver,
 							channel);
 					MemcachedStub.stubs.put(cData, stub);
@@ -122,7 +124,9 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 				}
 			} catch (IOException e) {
 				ExceptionTracer.traceDeferred(e);
-				ConnectionException e1 = new ConnectionException("The Memcached proxy cannot connect to the driver: " + e.getMessage(), e);
+				ConnectionException e1 = new ConnectionException(
+						"The Memcached proxy cannot connect to the driver: "
+								+ e.getMessage(), e);
 				ExceptionTracer.traceIgnored(e1);
 			}
 		}

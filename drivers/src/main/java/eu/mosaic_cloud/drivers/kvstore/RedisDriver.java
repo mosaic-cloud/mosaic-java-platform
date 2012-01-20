@@ -28,8 +28,6 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * Driver class for the Redis key-value database management systems.
  * 
@@ -52,7 +50,8 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	 * @param port
 	 *            the port for the Redis server
 	 */
-	private RedisDriver(ThreadingContext threading, int noThreads, String host, int port) {
+	private RedisDriver(ThreadingContext threading, int noThreads, String host,
+			int port) {
 		super(threading, noThreads);
 		this.host = host;
 		this.port = port;
@@ -70,7 +69,8 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	 * @param passwd
 	 *            the password for connecting to the server
 	 */
-	private RedisDriver(ThreadingContext threading, int noThreads, String host, int port, String password) {
+	private RedisDriver(ThreadingContext threading, int noThreads, String host,
+			int port, String password) {
 		super(threading, noThreads);
 		this.host = host;
 		this.port = port;
@@ -93,7 +93,8 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static RedisDriver create(IConfiguration config, ThreadingContext threading) throws IOException {
+	public static RedisDriver create(IConfiguration config,
+			ThreadingContext threading) throws IOException {
 		int port, noThreads;
 
 		String host = ConfigUtils.resolveParameter(config,

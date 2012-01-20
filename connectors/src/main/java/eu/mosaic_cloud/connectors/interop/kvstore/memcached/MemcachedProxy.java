@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Message;
@@ -249,7 +250,8 @@ public final class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 							.getSession(), message);
 		} catch (Exception e) {
 			ExceptionTracer.traceDeferred(e);
-			ConnectionException e1 = new ConnectionException("Cannot send store request to driver: " + e.getMessage(), e);
+			ConnectionException e1 = new ConnectionException(
+					"Cannot send store request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e1);
 			}

@@ -19,8 +19,8 @@
  */
 package eu.mosaic_cloud.platform.interop.amqp;
 
-
 import com.google.protobuf.GeneratedMessage;
+
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
@@ -91,8 +91,7 @@ public enum AmqpMessage implements MessageSpecification {
 	}
 
 	@Override
-	public String getQualifiedName ()
-	{
-		return (Identifiers.generateName (this));
+	public String getQualifiedName() {
+		return (Identifiers.generateName(this));
 	}
 }

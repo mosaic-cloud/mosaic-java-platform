@@ -40,8 +40,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * This class handles the internals of cloudlet execution. An object of this
  * class will be created by the container for each user cloudlet. The link
@@ -73,7 +71,8 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 	 *            the class loader used for loading cloudlet classes
 	 * @throws CloudletException
 	 */
-	public Cloudlet(C context, ICloudletCallback<C> callback, ThreadingContext threading, ClassLoader loader)
+	public Cloudlet(C context, ICloudletCallback<C> callback,
+			ThreadingContext threading, ClassLoader loader)
 			throws CloudletException {
 		synchronized (this) {
 			this.context = context;
@@ -206,9 +205,11 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 					destroyOperation);
 			this.executor.handleRequest(destroyOperation.getOperation());
 			try {
-				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Waiting for destroy.");
+				MosaicLogger.getLogger().trace(
+						"Cloudlet.destroy() - Waiting for destroy.");
 				result.getResult();
-				MosaicLogger.getLogger().trace("Cloudlet.destroy() - Cloudlet destroyed.");
+				MosaicLogger.getLogger().trace(
+						"Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
@@ -247,8 +248,8 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T>(
 				callback);
 		@SuppressWarnings("unchecked")
-		T proxy = (T) Proxy.newProxyInstance(callback.getClass()
-				.getClassLoader(), new Class[] { callbackType }, iHandler);
+		T proxy = (T) Proxy.newProxyInstance(this.executor.getLoader(),
+				new Class[] { callbackType }, iHandler);
 		return proxy;
 	}
 

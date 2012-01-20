@@ -30,6 +30,7 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
  *            the type of the consumed data
  */
 public interface IAmqpQueueConsumer<S, D> extends IAmqpQueueAccessor<S> {
+
 	/**
 	 * Acknowledges a message.
 	 * 

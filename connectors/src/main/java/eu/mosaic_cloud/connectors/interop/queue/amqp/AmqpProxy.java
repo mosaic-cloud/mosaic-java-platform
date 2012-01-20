@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
@@ -170,12 +171,15 @@ public final class AmqpProxy extends ConnectorProxy {
 		requestBuilder.setImmediate(message.isImmediate());
 		requestBuilder.setMandatory(message.isMandatory());
 		requestBuilder.setRoutingKey(message.getRoutingKey());
-		if (message.getContentType() != null)
+		if (message.getContentType() != null) {
 			requestBuilder.setContentType(message.getContentType());
-		if (message.getCorrelation() != null)
+		}
+		if (message.getCorrelation() != null) {
 			requestBuilder.setCorrelationId(message.getCorrelation());
-		if (message.getCallback() != null)
+		}
+		if (message.getCallback() != null) {
 			requestBuilder.setReplyTo(message.getCallback());
+		}
 
 		Message mssg = new Message(AmqpMessage.PUBLISH_REQUEST,
 				requestBuilder.build());
@@ -211,7 +215,9 @@ public final class AmqpProxy extends ConnectorProxy {
 			sendMessage(mssg, token, handlers);
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
-			ConnectionException e1 = new ConnectionException("Cannot send consume request to driver: " + e.getMessage(), e);
+			ConnectionException e1 = new ConnectionException(
+					"Cannot send consume request to driver: " + e.getMessage(),
+					e);
 			for (IOperationCompletionHandler<String> handler : handlers) {
 				handler.onFailure(e1);
 			}
@@ -270,19 +276,20 @@ public final class AmqpProxy extends ConnectorProxy {
 	private <V extends Object> void sendMessage(Message message,
 			CompletionToken token, List<IOperationCompletionHandler<V>> handlers) {
 		try {
-//			synchronized (this) {
-				// store token and completion handlers
-				super.registerHandlers(token.getMessageId(), handlers);
-				super.sendRequest(
-						getResponseReactor(AmqpConnectorReactor.class)
-								.getSession(), message);
-//			}
+			//			synchronized (this) {
+			// store token and completion handlers
+			super.registerHandlers(token.getMessageId(), handlers);
+			super.sendRequest(getResponseReactor(AmqpConnectorReactor.class)
+					.getSession(), message);
+			//			}
 			MosaicLogger.getLogger().trace(
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");
 		} catch (IOException e) {
 			ExceptionTracer.traceDeferred(e);
-			ConnectionException e1 = new ConnectionException("Cannot send " + message.specification.toString() + " request to driver: " + e.getMessage(), e);
+			ConnectionException e1 = new ConnectionException("Cannot send "
+					+ message.specification.toString() + " request to driver: "
+					+ e.getMessage(), e);
 			for (IOperationCompletionHandler<V> handler : handlers) {
 				handler.onFailure(e1);
 			}

@@ -40,8 +40,6 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.Miscellaneous;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * Base cloudlet-level accessor for key value storages. Cloudlets will use an
  * object of this type to get access to a key-value storage.
@@ -82,7 +80,8 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state, ThreadingContext threading) {
+	public void initialize(IResourceAccessorCallback<S> callback, S state,
+			ThreadingContext threading) {
 		synchronized (this) {
 			this.status = ResourceStatus.INITIALIZING;
 			this.cloudletState = state;
@@ -93,7 +92,8 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 					this.callback, IKeyValueAccessorCallback.class);
 			try {
 				String connectorName = ConfigUtils.resolveParameter(
-						this.configuration, eu.mosaic_cloud.cloudlets.ConfigProperties
+						this.configuration,
+						eu.mosaic_cloud.cloudlets.ConfigProperties
 								.getString("KeyValueAccessor.0"), String.class, //$NON-NLS-1$
 						""); //$NON-NLS-1$
 				ResourceType type = ResourceType.KEY_VALUE;
@@ -104,9 +104,10 @@ public class KeyValueAccessor<S> implements IKeyValueAccessor<S> {
 				}
 
 				if (!ResourceFinder.getResourceFinder().findResource(type,
-						this.configuration))
+						this.configuration)) {
 					throw new ContainerException(
 							"Cannot find a resource of type " + type.toString());
+				}
 				this.connector = KeyValueConnectorFactory.createConnector(
 						connectorName, this.configuration, this.dataEncoder);// MemcachedStoreConnector.create(configuration);
 				this.status = ResourceStatus.READY;

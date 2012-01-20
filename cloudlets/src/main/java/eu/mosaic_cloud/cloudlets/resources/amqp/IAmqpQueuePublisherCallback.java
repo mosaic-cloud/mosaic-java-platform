@@ -32,6 +32,7 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
  */
 public interface IAmqpQueuePublisherCallback<S, D> extends
 		IAmqpQueueAccessorCallback<S> {
+
 	/**
 	 * Called when the publisher receives confirmation that the message
 	 * publishing finished successfully.

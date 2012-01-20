@@ -26,6 +26,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -37,28 +45,21 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-
 @RunWith(SerialJunitRunner.class)
 @Serial
 @Ignore
 public class MemcachedDriverTest {
+
 	private static MemcachedDriver wrapper;
 	private static String keyPrefix;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		MemcachedDriverTest.wrapper = MemcachedDriver
-				.create(PropertyTypeConfiguration.create(
+		MemcachedDriverTest.wrapper = MemcachedDriver.create(
+				PropertyTypeConfiguration.create(
 						MemcachedDriverTest.class.getClassLoader(),
-						"memcached-test.prop"), Threading.sequezeThreadingContextOutOfDryRock());
+						"memcached-test.prop"), Threading
+						.sequezeThreadingContextOutOfDryRock());
 		MemcachedDriverTest.keyPrefix = UUID.randomUUID().toString();
 		MemcachedDriverTest.wrapper.registerClient(
 				MemcachedDriverTest.keyPrefix, "test");

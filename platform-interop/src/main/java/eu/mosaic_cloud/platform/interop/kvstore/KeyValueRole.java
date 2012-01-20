@@ -43,8 +43,7 @@ public enum KeyValueRole implements RoleSpecification {
 	}
 
 	@Override
-	public String getQualifiedName ()
-	{
-		return (Identifiers.generateName (this));
+	public String getQualifiedName() {
+		return (Identifiers.generateName(this));
 	}
 }

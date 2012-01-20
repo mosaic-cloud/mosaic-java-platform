@@ -24,6 +24,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RiakRestDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -35,25 +42,19 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-
 @RunWith(SerialJunitRunner.class)
 public class RiakRestDriverTest {
+
 	private static AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		RiakRestDriverTest.wrapper = RiakRestDriver
-				.create(PropertyTypeConfiguration.create(
+		RiakRestDriverTest.wrapper = RiakRestDriver.create(
+				PropertyTypeConfiguration.create(
 						RiakRestDriverTest.class.getClassLoader(),
-						"riakrest-test.prop"), Threading.sequezeThreadingContextOutOfDryRock());
+						"riakrest-test.prop"), Threading
+						.sequezeThreadingContextOutOfDryRock());
 		RiakRestDriverTest.keyPrefix = UUID.randomUUID().toString();
 		RiakRestDriverTest.wrapper.registerClient(RiakRestDriverTest.keyPrefix,
 				"test");

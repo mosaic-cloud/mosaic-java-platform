@@ -30,8 +30,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
-
-
 /**
  * Ccloudlet-level accessor for memcached-based key value storages. Cloudlets
  * will use an object of this type to get access to a memcached storage.

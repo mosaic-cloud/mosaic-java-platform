@@ -19,8 +19,8 @@
  */
 package eu.mosaic_cloud.drivers;
 
-
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
@@ -50,8 +50,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public abstract class AbstractDriverComponentCallbacks implements
 		ComponentCallbacks, CallbackHandler<ComponentCallbacks> {
 
-	protected AbstractDriverComponentCallbacks (ThreadingContext threading)
-	{
+	protected AbstractDriverComponentCallbacks(ThreadingContext threading) {
 		this.threading = threading;
 	}
 
@@ -120,14 +119,18 @@ public abstract class AbstractDriverComponentCallbacks implements
 		return null;
 	}
 
+	@Override
 	public abstract void deassigned(ComponentCallbacks trigger,
 			ComponentCallbacks newCallbacks);
 
+	@Override
 	public abstract void reassigned(ComponentCallbacks trigger,
 			ComponentCallbacks oldCallbacks);
 
+	@Override
 	public abstract void registered(ComponentCallbacks trigger);
 
+	@Override
 	public abstract void unregistered(ComponentCallbacks trigger);
 
 	protected ZeroMqChannel createDriverChannel(String channelIdentifierProp,
@@ -146,7 +149,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	}
 
 	protected IConfiguration getDriverConfiguration() {
-		return driverConfiguration;
+		return this.driverConfiguration;
 	}
 
 	protected void setDriverConfiguration(IConfiguration driverConfiguration) {

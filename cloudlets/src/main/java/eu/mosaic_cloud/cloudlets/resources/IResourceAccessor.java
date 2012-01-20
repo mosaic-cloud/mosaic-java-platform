@@ -30,6 +30,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  *            the type of the cloudlet context
  */
 public interface IResourceAccessor<C> {
+
 	/**
 	 * Initialize the accessor.
 	 * 
@@ -38,7 +39,8 @@ public interface IResourceAccessor<C> {
 	 * @param context
 	 *            cloudlet context
 	 */
-	void initialize(IResourceAccessorCallback<C> callback, C context, final ThreadingContext threading);
+	void initialize(IResourceAccessorCallback<C> callback, C context,
+			final ThreadingContext threading);
 
 	/**
 	 * Destroys the accessor.

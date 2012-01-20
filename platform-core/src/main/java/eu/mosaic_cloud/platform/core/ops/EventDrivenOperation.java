@@ -32,8 +32,6 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.exceptions.ResultSetException;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-
-
 /**
  * Implementation of an asynchronous operation using only an event driven
  * approach. It is also possible for the caller of the operation to block until
@@ -97,8 +95,9 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 				@SuppressWarnings("unchecked")
 				IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
 						.newProxyInstance(
-								Threading.getCurrentThread().getContextClassLoader(),//handler.getClass().getClassLoader(),
-								new Class[] { IOperationCompletionHandler.class },  // NOPMD by georgiana on 10/12/11 5:01 PM
+								Threading.getCurrentThread()
+										.getContextClassLoader(),//handler.getClass().getClassLoader(),
+								new Class[] { IOperationCompletionHandler.class }, // NOPMD by georgiana on 10/12/11 5:01 PM
 								iHandler);
 				this.completionHandlers.add(proxy);
 			}

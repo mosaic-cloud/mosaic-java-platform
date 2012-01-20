@@ -25,8 +25,6 @@ import java.util.List;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 
-
-
 /**
  * The arguments of the cloudlet callback methods for the operations on
  * key-value storages.
@@ -37,6 +35,7 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  *            the state of the cloudlet
  */
 public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
+
 	private final List<String> keys;
 	private final Object value;
 	private final Object extra;

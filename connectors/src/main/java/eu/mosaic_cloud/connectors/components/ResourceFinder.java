@@ -37,6 +37,7 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
  * 
  */
 public class ResourceFinder {
+
 	private static ResourceFinder finder;
 
 	private ResourceFinder() {
@@ -69,10 +70,13 @@ public class ResourceFinder {
 		OutcomeFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks
 				.findDriver(type);
 		Worker worker = new Worker(replyFuture, callback);
-		Threading.createAndStartNormalThread (Threading.sequezeThreadingContextOutOfDryRock(), this, "callback", worker);
+		Threading.createAndStartNormalThread(
+				Threading.sequezeThreadingContextOutOfDryRock(), this,
+				"callback", worker);
 	}
 
 	class Worker implements Runnable {
+
 		private OutcomeFuture<ComponentCallReply> future;
 		private IFinderCallback callback;
 

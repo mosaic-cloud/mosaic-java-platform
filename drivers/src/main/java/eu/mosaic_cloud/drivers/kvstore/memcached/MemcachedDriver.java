@@ -41,8 +41,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * Driver class for the memcached-compatible key-value database management
  * systems.
@@ -69,8 +67,8 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 	 * @param passwd
 	 *            the password for connecting to the server
 	 */
-	private MemcachedDriver(ThreadingContext threading, int noThreads, List<?> hosts, String user,
-			String password) {
+	private MemcachedDriver(ThreadingContext threading, int noThreads,
+			List<?> hosts, String user, String password) {
 		super(threading, noThreads);
 		this.hosts = hosts;
 		this.username = user;
@@ -95,8 +93,8 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static MemcachedDriver create(IConfiguration config, ThreadingContext threading)
-			throws IOException {
+	public static MemcachedDriver create(IConfiguration config,
+			ThreadingContext threading) throws IOException {
 		List<URI> nodesURI = new ArrayList<URI>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
 		List<InetSocketAddress> nodesISA = new ArrayList<InetSocketAddress>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
 		int noNodes = 0; // NOPMD by georgiana on 10/12/11 10:07 AM
@@ -156,9 +154,11 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 						ConfigProperties.getString("KVStoreDriver.4"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (MemcachedDriver.USE_BUCKET) {
-			driver = new MemcachedDriver(threading, noThreads, nodesURI, user, passwd);
+			driver = new MemcachedDriver(threading, noThreads, nodesURI, user,
+					passwd);
 		} else {
-			driver = new MemcachedDriver(threading, noThreads, nodesISA, user, passwd);
+			driver = new MemcachedDriver(threading, noThreads, nodesISA, user,
+					passwd);
 		}
 		return driver;
 	}

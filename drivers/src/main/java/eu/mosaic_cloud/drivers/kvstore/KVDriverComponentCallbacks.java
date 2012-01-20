@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -110,13 +111,14 @@ public final class KVDriverComponentCallbacks extends
 							String.class, "");
 					// FIXME
 					try {
-						if (System.getenv("mosaic_node_ip") != null)
+						if (System.getenv("mosaic_node_ip") != null) {
 							channelEndpoint = channelEndpoint.replace(
 									"0.0.0.0", System.getenv("mosaic_node_ip"));
-						else
+						} else {
 							channelEndpoint = channelEndpoint.replace(
 									"0.0.0.0", InetAddress.getLocalHost()
 											.getHostAddress());
+						}
 					} catch (UnknownHostException e) {
 						ExceptionTracer.traceIgnored(e);
 					}

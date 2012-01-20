@@ -25,7 +25,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
+
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
@@ -45,25 +54,20 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.RunWith;
-
 @RunWith(SerialJunitRunner.class)
 @Serial
 @Ignore
 public class RedisConnectorTest {
+
 	private static KeyValueStoreConnector<String> connector;
 	private static String keyPrefix;
 	private static KeyValueStub driverStub;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
-		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
+		ThreadingContext threading = BasicThreadingContext.create(
+				MemcachedConnectorTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 
@@ -78,7 +82,8 @@ public class RedisConnectorTest {
 		RedisConnectorTest.driverStub = KeyValueStub.create(config,
 				driverChannel);
 		RedisConnectorTest.connector = KeyValueStoreConnector.create(config,
-				new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
+				new PojoDataEncoder<String>(String.class),
+				Threading.sequezeThreadingContextOutOfDryRock());
 		RedisConnectorTest.keyPrefix = UUID.randomUUID().toString();
 	}
 
@@ -202,15 +207,19 @@ public class RedisConnectorTest {
 	}
 
 	public static void main(String... args) {
-		JUnitCore.main("eu.mosaic_cloud.connectors.kvstore.tests.RedisConnectorTest");
+		JUnitCore
+				.main("eu.mosaic_cloud.connectors.kvstore.tests.RedisConnectorTest");
 	}
 
 	public static void _main(String... args) throws Throwable {
-		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
+		ThreadingContext threading = BasicThreadingContext.create(
+				MemcachedConnectorTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
-		KeyValueStoreConnector<String> connector = KeyValueStoreConnector.create(
-				config, new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
+		KeyValueStoreConnector<String> connector = KeyValueStoreConnector
+				.create(config, new PojoDataEncoder<String>(String.class),
+						Threading.sequezeThreadingContextOutOfDryRock());
 		String keyPrefix = UUID.randomUUID().toString();
 
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
@@ -236,14 +245,14 @@ public class RedisConnectorTest {
 		handlersl.add(new TestLoggingHandler<List<String>>("list"));
 		IResult<List<String>> r4 = connector.list(handlersl, null);
 		List<String> list = r4.getResult();
-		Preconditions.checkArgument(list!=null);
+		Preconditions.checkArgument(list != null);
 
 		List<IOperationCompletionHandler<Boolean>> handlersd = getHandlers("delete");
 		IResult<Boolean> r5 = connector.delete(k1, handlersd, null);
 		Preconditions.checkArgument(r5.getResult());
 
 		IResult<String> r6 = connector.get(k1, handlers, null);
-		Preconditions.checkArgument(r6.getResult()==null);
+		Preconditions.checkArgument(r6.getResult() == null);
 
 		connector.destroy();
 		driverStub.destroy();

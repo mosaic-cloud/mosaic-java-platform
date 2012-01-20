@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -165,10 +166,12 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
 							request.reference);
 					component.reply(reply);
-				} else
+				} else {
 					throw new UnsupportedOperationException();
-			} else
+				}
+			} else {
 				throw new UnsupportedOperationException();
+			}
 		}
 		return null;
 	}
@@ -183,8 +186,9 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 				OutcomeTrigger<ComponentCallReply> trigger = this.pendingReferences
 						.remove(reply.reference);
 				trigger.succeeded(reply);
-			} else
+			} else {
 				throw (new IllegalStateException());
+			}
 
 		}
 		return null;
@@ -248,7 +252,8 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					.remove(reference);
 			if (pendingReply != null) {
 				if (!ok) {
-					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					Exception e = new Exception(
+							"failed registering to group; terminating!"); //$NON-NLS-1$
 					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
 					throw (new IllegalStateException(e));
@@ -258,8 +263,9 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 						.getLogger()
 						.info("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
 				this.status = Status.Ready;
-			} else
+			} else {
 				throw (new IllegalStateException());
+			}
 		}
 		return null;
 	}

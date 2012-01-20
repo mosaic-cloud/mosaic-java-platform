@@ -24,12 +24,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import redis.clients.jedis.Jedis;
+import redis.clients.util.SafeEncoder;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
-import redis.clients.jedis.Jedis;
-import redis.clients.util.SafeEncoder;
 
 /**
  * Factory class which builds the asynchronous calls for the operations defined
@@ -81,8 +81,8 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * eu.mosaic_cloud.platform.core.IOperationFactory#getOperation(eu.mosaic_cloud.platform.core.IOperationType,
-	 * java.lang.Object[])
+	 * eu.mosaic_cloud.platform.core.IOperationFactory#getOperation(eu.mosaic_cloud
+	 * .platform.core.IOperationType, java.lang.Object[])
 	 */
 	@Override
 	public IOperation<?> getOperation(final IOperationType type,

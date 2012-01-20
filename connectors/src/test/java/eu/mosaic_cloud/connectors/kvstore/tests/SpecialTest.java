@@ -35,15 +35,14 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-
-
-
 public class SpecialTest {
 
 	private static boolean done = false;
 
 	public static void main(String[] args) {
-		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
+		ThreadingContext threading = BasicThreadingContext.create(
+				MemcachedConnectorTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		KeyValueStoreConnector<String> connector = null;
 		try {
 			IConfiguration config = PropertyTypeConfiguration.create(
@@ -51,9 +50,11 @@ public class SpecialTest {
 					"special-test.prop");
 
 			connector = KeyValueStoreConnector.create(config,
-					new PojoDataEncoder<String>(String.class), Threading.sequezeThreadingContextOutOfDryRock());
-			Threading.registerExitCallback(threading, SpecialTest.class, "exit-hook", new Worker());
-			while (!done) {
+					new PojoDataEncoder<String>(String.class),
+					Threading.sequezeThreadingContextOutOfDryRock());
+			Threading.registerExitCallback(threading, SpecialTest.class,
+					"exit-hook", new Worker());
+			while (!SpecialTest.done) {
 				doWork(connector);
 			}
 		} catch (Throwable e) {
@@ -106,6 +107,7 @@ public class SpecialTest {
 
 	private static class Worker implements Runnable {
 
+		@Override
 		public void run() {
 			SpecialTest.done = true;
 		}

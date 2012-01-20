@@ -25,6 +25,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.RunWith;
+
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RedisDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -38,20 +47,11 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.RunWith;
-
-
 @RunWith(SerialJunitRunner.class)
 @Serial
 @Ignore
 public class RedisDriverTest {
+
 	private static AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;
 
@@ -59,7 +59,8 @@ public class RedisDriverTest {
 	public static void setUpBeforeClass() throws Exception {
 		RedisDriverTest.wrapper = RedisDriver.create(PropertyTypeConfiguration
 				.create(RedisDriverTest.class.getClassLoader(),
-						"redis-test.prop"), Threading.sequezeThreadingContextOutOfDryRock());
+						"redis-test.prop"), Threading
+				.sequezeThreadingContextOutOfDryRock());
 		RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
 		RedisDriverTest.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
 		MosaicLogger.getLogger().trace("KEY: " + RedisDriverTest.keyPrefix);

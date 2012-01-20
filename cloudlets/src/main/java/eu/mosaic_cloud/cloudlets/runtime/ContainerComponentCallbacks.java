@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
@@ -193,8 +194,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				// component.reply(reply);
 				// return null;
 				// }
-				else
+				else {
 					throw new UnsupportedOperationException();
+				}
 			}
 			throw new UnsupportedOperationException();
 		}
@@ -229,7 +231,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		final ClassLoader classLoader;
 		if (classpathArgument != null) {
 			final LinkedList<URL> classLoaderUrls = new LinkedList<URL>();
-			for (final String classpathPart : classpathArgument.split(";"))
+			for (final String classpathPart : classpathArgument.split(";")) {
 				if (classpathPart.length() > 0) {
 					final URL classpathUrl;
 					if (classpathPart.startsWith("http:")
@@ -242,13 +244,15 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 									"invalid class-path URL `%s`",
 									classpathPart), exception));
 						}
-					} else
+					} else {
 						throw (new IllegalArgumentException(String.format(
 								"invalid class-path URL `%s`", classpathPart)));
+					}
 					MosaicLogger.getLogger().trace(
 							"Loading cloudlet from " + classpathUrl + "...");
 					classLoaderUrls.add(classpathUrl);
 				}
+			}
 			classLoader = new URLClassLoader(
 					classLoaderUrls.toArray(new URL[0]),
 					ContainerComponentCallbacks.class.getClassLoader());
@@ -268,8 +272,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				OutcomeTrigger<ComponentCallReply> trigger = this.pendingReferences
 						.remove(reply.reference);
 				trigger.succeeded(reply);
-			} else
+			} else {
 				throw (new IllegalStateException());
+			}
 
 		}
 		return null;
@@ -340,7 +345,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					.remove(reference);
 			if (pendingReply != null) {
 				if (!ok) {
-					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					Exception e = new Exception(
+							"failed registering to group; terminating!"); //$NON-NLS-1$
 					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
 					throw (new IllegalStateException(e));
@@ -360,8 +366,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				} else {
 					MosaicLogger.getLogger().error("Missing config file");
 				}
-			} else
+			} else {
 				throw (new IllegalStateException());
+			}
 		}
 		return null;
 	}

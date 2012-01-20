@@ -28,8 +28,6 @@ import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 
-
-
 /**
  * Interface for working with AMQP compatible queueing systems.
  * 

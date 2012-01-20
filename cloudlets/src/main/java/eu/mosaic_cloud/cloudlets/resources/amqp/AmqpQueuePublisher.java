@@ -34,8 +34,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * This class provides access for cloudlets to an AMQP-based queueing system as
  * a message publisher.
@@ -86,11 +84,13 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueAccessor#initialize(eu.mosaic_cloud.cloudlets
-	 * .resources.IResourceAccessorCallback, java.lang.Object)
+	 * eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueAccessor#initialize
+	 * (eu.mosaic_cloud.cloudlets .resources.IResourceAccessorCallback,
+	 * java.lang.Object)
 	 */
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state, ThreadingContext threading) {
+	public void initialize(IResourceAccessorCallback<S> callback, S state,
+			ThreadingContext threading) {
 		synchronized (this) {
 			if (callback instanceof IAmqpQueuePublisherCallback) {
 				super.initialize(callback, state, threading);
@@ -122,8 +122,9 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 	@Override
 	protected void finishRegister(IAmqpQueueAccessorCallback<S> callback) {
-		if (AmqpQueuePublisher.super.registered)
+		if (AmqpQueuePublisher.super.registered) {
 			return;
+		}
 		CallbackArguments<S> arguments = new CallbackArguments<S>(
 				AmqpQueuePublisher.super.cloudlet);
 		this.callback.registerSucceeded(AmqpQueuePublisher.this.cloudletState,
@@ -137,8 +138,9 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	@Override
 	public void unregister() {
 		synchronized (this) {
-			if (!AmqpQueuePublisher.super.registered)
+			if (!AmqpQueuePublisher.super.registered) {
 				return;
+			}
 			AmqpQueuePublisher.super.registered = false;
 		}
 		CallbackArguments<S> arguments = new CallbackArguments<S>(

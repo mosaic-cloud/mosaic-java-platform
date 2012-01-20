@@ -43,8 +43,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * Base accessor class for AMQP queuing systems.
  * 
@@ -150,7 +148,8 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 	}
 
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state, ThreadingContext threading) {
+	public void initialize(IResourceAccessorCallback<S> callback, S state,
+			ThreadingContext threading) {
 		synchronized (this) {
 			@SuppressWarnings("unchecked")
 			IResourceAccessorCallback<S> proxy = this.cloudlet
@@ -160,11 +159,13 @@ public abstract class AmqpQueueAccessor<S, D extends Object> implements
 				this.status = ResourceStatus.INITIALIZING;
 				this.cloudletState = state;
 				if (!ResourceFinder.getResourceFinder().findResource(
-						ResourceType.AMQP, this.configuration))
+						ResourceType.AMQP, this.configuration)) {
 					throw new ContainerException(
 							"Cannot find a resource of type "
 									+ ResourceType.AMQP.toString());
-				this.connector = AmqpConnector.create(this.configuration, threading);
+				}
+				this.connector = AmqpConnector.create(this.configuration,
+						threading);
 
 				// IOperationCompletionHandler<Boolean> cHandler = new
 				// ConnectionOpenHandler(

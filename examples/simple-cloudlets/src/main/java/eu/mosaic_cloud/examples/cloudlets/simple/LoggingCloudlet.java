@@ -43,34 +43,32 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
-
-
 public class LoggingCloudlet {
 
 	public static final class LifeCycleHandler extends
-			DefaultCloudletCallback<LoggingCloudletState> {
+			DefaultCloudletCallback<LoggingCloudletContext> {
 
 		@Override
-		public void initialize(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void initialize(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet is being initialized.");
-			ICloudletController<LoggingCloudletState> cloudlet = arguments
+			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			IConfiguration configuration = cloudlet.getConfiguration();
 			IConfiguration kvConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("kvstore"));
-			context.kvStore = new KeyValueAccessor<LoggingCloudletState>(
+			context.kvStore = new KeyValueAccessor<LoggingCloudletContext>(
 					kvConfiguration, cloudlet, new PojoDataEncoder<String>(
 							String.class));
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			context.consumer = new AmqpQueueConsumer<LoggingCloudlet.LoggingCloudletState, LoggingData>(
+			context.consumer = new AmqpQueueConsumer<LoggingCloudlet.LoggingCloudletContext, LoggingData>(
 					queueConfiguration, cloudlet, LoggingData.class,
 					new PojoDataEncoder<LoggingData>(LoggingData.class));
-			context.publisher = new AmqpQueuePublisher<LoggingCloudlet.LoggingCloudletState, AuthenticationToken>(
+			context.publisher = new AmqpQueuePublisher<LoggingCloudlet.LoggingCloudletContext, AuthenticationToken>(
 					queueConfiguration, cloudlet, AuthenticationToken.class,
 					new PojoDataEncoder<AuthenticationToken>(
 							AuthenticationToken.class));
@@ -78,14 +76,14 @@ public class LoggingCloudlet {
 		}
 
 		@Override
-		public void initializeSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void initializeSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet initialized successfully.");
-			ICloudletController<LoggingCloudletState> cloudlet = arguments
+			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.initializeResource(context.kvStore, new KeyValueCallback(),
-					context);
+			cloudlet.initializeResource(context.kvStore,
+					new KeyValueCallback(), context);
 			cloudlet.initializeResource(context.consumer,
 					new AmqpConsumerCallback(), context);
 			cloudlet.initializeResource(context.publisher,
@@ -94,15 +92,15 @@ public class LoggingCloudlet {
 		}
 
 		@Override
-		public void destroy(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void destroy(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger()
 					.info("LoggingCloudlet is being destroyed.");
 		}
 
 		@Override
-		public void destroySucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void destroySucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet was destroyed successfully.");
 		}
@@ -110,12 +108,13 @@ public class LoggingCloudlet {
 	}
 
 	public static final class KeyValueCallback extends
-			DefaultKeyValueAccessorCallback<LoggingCloudletState> {
+			DefaultKeyValueAccessorCallback<LoggingCloudletContext> {
+
 		private static int sets = 0;
 
 		@Override
-		public void initializeSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void initializeSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger
 					.getLogger()
 					.info("LoggingCloudlet - KeyValue accessor initialized successfully");
@@ -127,22 +126,23 @@ public class LoggingCloudlet {
 		}
 
 		@Override
-		public void destroySucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void destroySucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			context.kvStore = null;
-			if (context.publisher == null && context.consumer == null) {
+			if ((context.publisher == null) && (context.consumer == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
 
 		@Override
-		public void setSucceeded(LoggingCloudletState context,
-				KeyValueCallbackArguments<LoggingCloudletState> arguments) {
-			sets++;
+		public void setSucceeded(LoggingCloudletContext context,
+				KeyValueCallbackArguments<LoggingCloudletContext> arguments) {
+			KeyValueCallback.sets++;
 			MosaicLogger.getLogger().info(
-					"LoggingCloudlet - KeyValue succeeded set no. " + sets);
-			if (sets == 2) {
-				ICloudletController<LoggingCloudletState> cloudlet = arguments
+					"LoggingCloudlet - KeyValue succeeded set no. "
+							+ KeyValueCallback.sets);
+			if (KeyValueCallback.sets == 2) {
+				ICloudletController<LoggingCloudletContext> cloudlet = arguments
 						.getCloudlet();
 				try {
 					cloudlet.destroyResource(context.kvStore, this);
@@ -158,58 +158,58 @@ public class LoggingCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpConsumerCallback<LoggingCloudletState, LoggingData> {
+			DefaultAmqpConsumerCallback<LoggingCloudletContext, LoggingData> {
 
 		@Override
-		public void registerSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void registerSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet consumer registered successfully.");
 			context.consumerRunning = true;
 		}
 
 		@Override
-		public void unregisterSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void unregisterSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
-			ICloudletController<LoggingCloudletState> cloudlet = arguments
+			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.destroyResource(context.consumer, this);
 			context.consumerRunning = false;
 		}
 
 		@Override
-		public void initializeSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void initializeSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
 			context.consumer.register();
 		}
 
 		@Override
-		public void destroySucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void destroySucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet consumer was destroyed successfully.");
 			context.consumer = null;
-			if (context.publisher == null && context.kvStore == null) {
+			if ((context.publisher == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
 
 		@Override
-		public void acknowledgeSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void acknowledgeSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			context.consumer.unregister();
 
 		}
 
 		@Override
 		public void consume(
-				LoggingCloudletState context,
-				AmqpQueueConsumeCallbackArguments<LoggingCloudletState, LoggingData> arguments) {
+				LoggingCloudletContext context,
+				AmqpQueueConsumeCallbackArguments<LoggingCloudletContext, LoggingData> arguments) {
 			AmqpQueueConsumeMessage<LoggingData> message = arguments
 					.getMessage();
 			LoggingData data = message.getData();
@@ -245,60 +245,61 @@ public class LoggingCloudlet {
 
 	public static final class AmqpPublisherCallback
 			extends
-			DefaultAmqpPublisherCallback<LoggingCloudletState, AuthenticationToken> {
+			DefaultAmqpPublisherCallback<LoggingCloudletContext, AuthenticationToken> {
 
 		@Override
-		public void registerSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void registerSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet publisher registered successfully.");
 			context.publisherRunning = true;
 		}
 
 		@Override
-		public void unregisterSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void unregisterSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
-			ICloudletController<LoggingCloudletState> cloudlet = arguments
+			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.destroyResource(context.publisher, this);
 			context.publisherRunning = false;
 		}
 
 		@Override
-		public void initializeSucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void initializeSucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
 			context.publisher.register();
 		}
 
 		@Override
-		public void destroySucceeded(LoggingCloudletState context,
-				CallbackArguments<LoggingCloudletState> arguments) {
+		public void destroySucceeded(LoggingCloudletContext context,
+				CallbackArguments<LoggingCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet publisher was destroyed successfully.");
 			context.publisher = null;
-			if (context.consumer == null && context.kvStore == null) {
+			if ((context.consumer == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
 
 		@Override
 		public void publishSucceeded(
-				LoggingCloudletState context,
-				AmqpQueuePublishCallbackArguments<LoggingCloudletState, AuthenticationToken> arguments) {
+				LoggingCloudletContext context,
+				AmqpQueuePublishCallbackArguments<LoggingCloudletContext, AuthenticationToken> arguments) {
 			context.publisher.unregister();
 		}
 
 	}
 
-	public static final class LoggingCloudletState {
-		AmqpQueueConsumer<LoggingCloudletState, LoggingData> consumer;
-		AmqpQueuePublisher<LoggingCloudletState, AuthenticationToken> publisher;
-		IKeyValueAccessor<LoggingCloudletState> kvStore;
+	public static final class LoggingCloudletContext {
+
+		AmqpQueueConsumer<LoggingCloudletContext, LoggingData> consumer;
+		AmqpQueuePublisher<LoggingCloudletContext, AuthenticationToken> publisher;
+		IKeyValueAccessor<LoggingCloudletContext> kvStore;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

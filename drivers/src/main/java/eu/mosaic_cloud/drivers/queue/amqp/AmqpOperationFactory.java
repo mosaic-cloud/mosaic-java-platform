@@ -26,13 +26,13 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.GetResponse;
+
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
-
 
 /**
  * Factory class which builds the asynchronous calls for the operations defined
@@ -57,8 +57,8 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * eu.mosaic_cloud.platform.core.IOperationFactory#getOperation(eu.mosaic_cloud.platform.core.IOperationType ,
-	 * java.lang.Object[])
+	 * eu.mosaic_cloud.platform.core.IOperationFactory#getOperation(eu.mosaic_cloud
+	 * .platform.core.IOperationType , java.lang.Object[])
 	 */
 	@Override
 	public IOperation<?> getOperation(final IOperationType type, // NOPMD by georgiana on 10/12/11 4:13 PM
@@ -129,18 +129,18 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				boolean succeeded = false;
 				String consumer = (String) parameters[0];
 
-//				synchronized (AmqpOperationFactory.this.amqpDriver) {
-					final Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getChannel(consumer);
-					if (channel != null) {
-						try {
-							channel.basicCancel(consumer);
-							succeeded = true;
-						} catch (IOException e) {
-							ExceptionTracer.traceIgnored(e);
-						}
+				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				final Channel channel = AmqpOperationFactory.this.amqpDriver
+						.getChannel(consumer);
+				if (channel != null) {
+					try {
+						channel.basicCancel(consumer);
+						succeeded = true;
+					} catch (IOException e) {
+						ExceptionTracer.traceIgnored(e);
 					}
-//				}
+				}
+				//				}
 				return succeeded;
 			}
 
@@ -157,18 +157,18 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				boolean multiple = (Boolean) parameters[1];
 				String consumer = (String) parameters[2];
 
-//				synchronized (AmqpOperationFactory.this.amqpDriver) {
-					final Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getChannel(consumer);
-					if (channel != null) {
-						try {
-							channel.basicAck(delivery, multiple);
-							succeeded = true;
-						} catch (IOException e) {
-							ExceptionTracer.traceIgnored(e);
-						}
+				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				final Channel channel = AmqpOperationFactory.this.amqpDriver
+						.getChannel(consumer);
+				if (channel != null) {
+					try {
+						channel.basicAck(delivery, multiple);
+						succeeded = true;
+					} catch (IOException e) {
+						ExceptionTracer.traceIgnored(e);
 					}
-//				}
+				}
+				//				}
 				return succeeded;
 			}
 
@@ -186,38 +186,38 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						boolean autoAck = (Boolean) parameters[1];
 						String clientId = (String) parameters[2];
 
-//						synchronized (AmqpOperationFactory.this.amqpDriver) {
+						//						synchronized (AmqpOperationFactory.this.amqpDriver) {
 
-							final Channel channel = AmqpOperationFactory.this.amqpDriver
-									.getChannel(clientId);
-							if (channel != null) {
-								GetResponse outcome = null;
-								try {
-									outcome = channel.basicGet(queue, autoAck);
-									if (outcome != null) {
-										final Envelope envelope = outcome
-												.getEnvelope();
-										final AMQP.BasicProperties properties = outcome
-												.getProps();
-										message = new AmqpInboundMessage(
-												null,
-												envelope.getDeliveryTag(),
-												envelope.getExchange(),
-												envelope.getRoutingKey(),
-												outcome.getBody(),
-												properties.getDeliveryMode() == 2 ? true
-														: false,
-												properties.getReplyTo(),
-												properties.getContentEncoding(),
-												properties.getContentType(),
-												properties.getCorrelationId(),
-												properties.getMessageId());
-									}
-								} catch (IOException e) {
-									ExceptionTracer.traceIgnored(e);
+						final Channel channel = AmqpOperationFactory.this.amqpDriver
+								.getChannel(clientId);
+						if (channel != null) {
+							GetResponse outcome = null;
+							try {
+								outcome = channel.basicGet(queue, autoAck);
+								if (outcome != null) {
+									final Envelope envelope = outcome
+											.getEnvelope();
+									final AMQP.BasicProperties properties = outcome
+											.getProps();
+									message = new AmqpInboundMessage(
+											null,
+											envelope.getDeliveryTag(),
+											envelope.getExchange(),
+											envelope.getRoutingKey(),
+											outcome.getBody(),
+											properties.getDeliveryMode() == 2 ? true
+													: false, properties
+													.getReplyTo(), properties
+													.getContentEncoding(),
+											properties.getContentType(),
+											properties.getCorrelationId(),
+											properties.getMessageId());
 								}
+							} catch (IOException e) {
+								ExceptionTracer.traceIgnored(e);
 							}
-//						}
+						}
+						//						}
 						return message;
 					}
 
@@ -237,30 +237,31 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
 				String consumerTag;
 
-//				synchronized (AmqpOperationFactory.this.amqpDriver) {
-					Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getChannel(consumer);
-					if (channel != null) {
-						AmqpOperationFactory.this.amqpDriver.consumers.put(
-								consumer, consumeCallback);
-						channel.basicQos(8192);
-						consumerTag = channel
-								.basicConsume(
-										queue,
-										autoAck,
-										consumer,
-										true,
-										exclusive,
-										null,
-										AmqpOperationFactory.this.amqpDriver.new ConsumerCallback(
-												extra));
-						if (!consumer.equals(consumerTag))
-							MosaicLogger.getLogger().error(
-									"Received different consumer tag: consumerTag = "
-											+ consumerTag + " consumer "
-											+ consumer);
+				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				Channel channel = AmqpOperationFactory.this.amqpDriver
+						.getChannel(consumer);
+				if (channel != null) {
+					AmqpOperationFactory.this.amqpDriver.consumers.put(
+							consumer, consumeCallback);
+					channel.basicQos(8192);
+					consumerTag = channel
+							.basicConsume(
+									queue,
+									autoAck,
+									consumer,
+									true,
+									exclusive,
+									null,
+									AmqpOperationFactory.this.amqpDriver.new ConsumerCallback(
+											extra));
+					if (!consumer.equals(consumerTag)) {
+						MosaicLogger
+								.getLogger()
+								.error("Received different consumer tag: consumerTag = "
+										+ consumerTag + " consumer " + consumer);
 					}
-//				}
+				}
+				//				}
 
 				return consumer;
 			}
@@ -277,25 +278,24 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				AmqpOutboundMessage message = (AmqpOutboundMessage) parameters[0];
 				String clientId = (String) parameters[1];
 
-//				synchronized (AmqpOperationFactory.this.amqpDriver) {
-					Channel channel = AmqpOperationFactory.this.amqpDriver
-							.getChannel(clientId);
+				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				Channel channel = AmqpOperationFactory.this.amqpDriver
+						.getChannel(clientId);
 
-					if (channel != null) {
-						AMQP.BasicProperties properties = new AMQP.BasicProperties(
-								message.getContentType(), message
-										.getContentEncoding(), null, message
-										.isDurable() ? 2 : 1, 0, message
-										.getCorrelation(), message
-										.getCallback(), null, message
-										.getIdentifier(), null, null, null,
-								null, null);
-						channel.basicPublish(message.getExchange(),
-								message.getRoutingKey(), properties,
-								message.getData());
-						succeeded = true;
-					}
-//				}
+				if (channel != null) {
+					AMQP.BasicProperties properties = new AMQP.BasicProperties(
+							message.getContentType(), message
+									.getContentEncoding(), null, message
+									.isDurable() ? 2 : 1, 0, message
+									.getCorrelation(), message.getCallback(),
+							null, message.getIdentifier(), null, null, null,
+							null, null);
+					channel.basicPublish(message.getExchange(),
+							message.getRoutingKey(), properties,
+							message.getData());
+					succeeded = true;
+				}
+				//				}
 				return succeeded;
 			}
 
@@ -313,20 +313,20 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				String routingKey = (String) parameters[2];
 				String clientId = (String) parameters[3];
 
-//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
 
-					try {
-						Channel channel = AmqpOperationFactory.this.amqpDriver
-								.getChannel(clientId);
-						if (channel != null) {
-							AMQP.Queue.BindOk outcome = channel.queueBind(
-									queue, exchange, routingKey, null);
-							succeeded = (outcome != null);
-						}
-					} catch (IOException e) {
-						ExceptionTracer.traceIgnored(e);
+				try {
+					Channel channel = AmqpOperationFactory.this.amqpDriver
+							.getChannel(clientId);
+					if (channel != null) {
+						AMQP.Queue.BindOk outcome = channel.queueBind(queue,
+								exchange, routingKey, null);
+						succeeded = (outcome != null);
 					}
-//				}
+				} catch (IOException e) {
+					ExceptionTracer.traceIgnored(e);
+				}
+				//				}
 				return succeeded;
 			}
 

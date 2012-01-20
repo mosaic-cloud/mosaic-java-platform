@@ -24,8 +24,6 @@ import java.util.Map;
 
 import eu.mosaic_cloud.platform.core.ops.IResult;
 
-
-
 /**
  * Basic interface for cloudlets to access memcached-based key-value storages.
  * 
@@ -35,6 +33,7 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
  *            the type of the state of the cloudlet
  */
 public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
+
 	/**
 	 * Stores the given data and associates it with the specified key.
 	 * 

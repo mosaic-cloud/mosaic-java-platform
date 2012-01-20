@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -65,6 +66,7 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor { // NOPM
 	/**
 	 * Destroys this reactor.
 	 */
+	@Override
 	public void destroy() {
 		// nothing to do here
 		// if it does something don'y forget synchronized
@@ -107,7 +109,8 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor { // NOPM
 			token = errorPayload.getToken();
 			handlers = getHandlers(token);
 			if (handlers != null) {
-				Exception exception = new Exception(errorPayload.getErrorMessage()); // NOPMD by georgiana on 10/13/11 12:40 PM
+				Exception exception = new Exception(
+						errorPayload.getErrorMessage()); // NOPMD by georgiana on 10/13/11 12:40 PM
 				for (IOperationCompletionHandler<?> handler : handlers) {
 					handler.onFailure(exception);
 				}

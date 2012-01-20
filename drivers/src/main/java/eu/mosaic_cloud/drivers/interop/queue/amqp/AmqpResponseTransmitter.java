@@ -19,8 +19,8 @@
  */
 package eu.mosaic_cloud.drivers.interop.queue.amqp;
 
-
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
@@ -195,12 +195,15 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		deliveryPayload.setRoutingKey(message.getRoutingKey());
 		deliveryPayload.setDeliveryMode(message.isDurable() ? 2 : 1);
 		deliveryPayload.setData(ByteString.copyFrom(message.getData()));
-		if (message.getContentType() != null)
+		if (message.getContentType() != null) {
 			deliveryPayload.setContentType(message.getContentType());
-		if (message.getCallback() != null)
+		}
+		if (message.getCallback() != null) {
 			deliveryPayload.setReplyTo(message.getCallback());
-		if (message.getCorrelation() != null)
+		}
+		if (message.getCorrelation() != null) {
 			deliveryPayload.setCorrelationId(message.getCorrelation());
+		}
 		Message mssg = new Message(AmqpMessage.DELIVERY,
 				deliveryPayload.build());
 

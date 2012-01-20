@@ -26,7 +26,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 
-
 /**
  * Finder for resource drivers.
  * 
@@ -34,6 +33,7 @@ import eu.mosaic_cloud.platform.interop.idl.ChannelData;
  * 
  */
 public class ResourceFinder {
+
 	private static ResourceFinder finder;
 
 	private ResourceFinder() {

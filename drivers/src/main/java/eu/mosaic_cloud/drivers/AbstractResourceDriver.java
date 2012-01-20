@@ -30,8 +30,6 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
-
-
 /**
  * Base class for the resource drivers.
  * 
@@ -54,7 +52,8 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
 		this.pendingResults = new ArrayList<IResult<?>>();
 		this.threading = threading;
-		this.executor = this.threading.newFixedThreadPool (new ThreadConfiguration (this, "operations"), noThreads);
+		this.executor = this.threading.newFixedThreadPool(
+				new ThreadConfiguration(this, "operations"), noThreads);
 	}
 
 	@Override
@@ -101,21 +100,21 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	public int countPendingOperations() {
-//		synchronized (this) {
-			return this.pendingResults.size();
-//		}
+		//		synchronized (this) {
+		return this.pendingResults.size();
+		//		}
 	}
 
 	public void removePendingOperation(IResult<?> pendingOp) {
-//		synchronized (this) {
-			this.pendingResults.remove(pendingOp);
-//		}
+		//		synchronized (this) {
+		this.pendingResults.remove(pendingOp);
+		//		}
 	}
 
 	public void addPendingOperation(IResult<?> pendingOp) {
-//		synchronized (this) {
-			this.pendingResults.add(pendingOp);
-//		}
+		//		synchronized (this) {
+		this.pendingResults.add(pendingOp);
+		//		}
 	}
 
 	/**

@@ -28,6 +28,7 @@ package eu.mosaic_cloud.drivers.queue.amqp;
  * 
  */
 public interface IAmqpConsumer {
+
 	/**
 	 * Handles the Consume OK message.
 	 * 

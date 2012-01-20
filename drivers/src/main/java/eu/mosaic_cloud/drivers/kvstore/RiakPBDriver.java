@@ -29,8 +29,6 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
-
-
 /**
  * Driver class for the Riak key-value database management systems.
  * 
@@ -41,6 +39,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 
 public final class RiakPBDriver extends AbstractKeyValueDriver {
+
 	private final String riakHost;
 	private final int riakPort;
 
@@ -54,7 +53,8 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
 	 * @param riakPort
 	 *            the port for the Riak server
 	 */
-	private RiakPBDriver(ThreadingContext threading, int noThreads, String riakHost, int riakPort) {
+	private RiakPBDriver(ThreadingContext threading, int noThreads,
+			String riakHost, int riakPort) {
 		super(threading, noThreads);
 		this.riakHost = riakHost;
 		this.riakPort = riakPort;
@@ -78,8 +78,8 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
 	 * @throws IOException
 	 * @throws ConnectionException
 	 */
-	public static RiakPBDriver create(IConfiguration config, ThreadingContext threading)
-			throws IOException, ConnectionException {
+	public static RiakPBDriver create(IConfiguration config,
+			ThreadingContext threading) throws IOException, ConnectionException {
 		int port, noThreads;
 
 		String host = ConfigUtils.resolveParameter(config,

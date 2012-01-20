@@ -30,7 +30,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
-
 public class PublisherCloudlet {
 
 	public static final class LifeCycleHandler extends
@@ -130,6 +129,7 @@ public class PublisherCloudlet {
 	}
 
 	public static final class PublisherCloudletContext {
+
 		AmqpQueuePublisher<PublisherCloudletContext, String> publisher;
 	}
 }

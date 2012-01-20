@@ -29,8 +29,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
-
-
 /**
  * A factory for key-value connectors.
  * 
@@ -38,6 +36,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
  * 
  */
 public class KeyValueConnectorFactory {
+
 	public enum ConnectorType {
 		KVSTORE(KeyValueStoreConnector.class), MEMCACHED(
 				MemcachedStoreConnector.class);

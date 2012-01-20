@@ -30,6 +30,7 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
  *            the type of the published data
  */
 public interface IAmqpQueuePublisher<S, D> extends IAmqpQueueAccessor<S> {
+
 	/**
 	 * Publishes a message to a queue.
 	 * 
@@ -42,7 +43,7 @@ public interface IAmqpQueuePublisher<S, D> extends IAmqpQueueAccessor<S> {
 	 *            "text/plain")
 	 */
 	void publish(D data, Object token, String contentType);
-	
+
 	/**
 	 * Publishes a message to a queue.
 	 * 

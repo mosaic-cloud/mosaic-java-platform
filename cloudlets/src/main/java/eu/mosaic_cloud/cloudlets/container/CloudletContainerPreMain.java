@@ -20,6 +20,7 @@
 package eu.mosaic_cloud.cloudlets.container;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
 public class CloudletContainerPreMain {
@@ -38,14 +39,16 @@ public class CloudletContainerPreMain {
 	public static void main(String[] arguments) throws Exception {
 		Preconditions.checkArgument(arguments != null);
 		Preconditions
-				.checkArgument(arguments.length == 2 || arguments.length == 3,
+				.checkArgument((arguments.length == 2)
+						|| (arguments.length == 3),
 						"invalid arguments: <cloudlet jar> <cloudlet descriptor> [<no_of_instances>]");
 
 		CloudletContainerPreMain.CloudletContainerParameters.classpath = arguments[0];
 		CloudletContainerPreMain.CloudletContainerParameters.configFile = arguments[1];
-		if (arguments.length == 3)
+		if (arguments.length == 3) {
 			CloudletContainerPreMain.CloudletContainerParameters.noInstances = Integer
 					.parseInt(arguments[2]);
+		}
 		BasicComponentHarnessPreMain
 				.main(new String[] { "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks" });
 

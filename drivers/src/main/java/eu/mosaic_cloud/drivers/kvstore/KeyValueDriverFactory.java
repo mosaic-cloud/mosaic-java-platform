@@ -26,8 +26,6 @@ import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
-
-
 /**
  * A factory for key-value drivers.
  * 
@@ -35,6 +33,7 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
  * 
  */
 public final class KeyValueDriverFactory {
+
 	public enum DriverType {
 		REDIS(RedisDriver.class), MEMCACHED(MemcachedDriver.class), RIAKREST(
 				RiakRestDriver.class), RIAKPB(RiakPBDriver.class);

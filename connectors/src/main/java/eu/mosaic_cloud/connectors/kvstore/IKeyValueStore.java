@@ -26,8 +26,6 @@ import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 
-
-
 /**
  * Interface for working with key-value stores.
  * 
@@ -36,6 +34,7 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
  *            type of stored data
  */
 public interface IKeyValueStore<T extends Object> extends IResourceConnector {
+
 	/**
 	 * Stores the given data and associates it with the specified key.
 	 * 

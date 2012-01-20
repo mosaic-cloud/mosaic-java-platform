@@ -28,7 +28,7 @@ public class PingPongData {
 	}
 
 	public String getPing() {
-		return ping;
+		return this.ping;
 	}
 
 	public void setPing(String ping) {
@@ -36,7 +36,7 @@ public class PingPongData {
 	}
 
 	public String getPong() {
-		return pong;
+		return this.pong;
 	}
 
 	public void setPong(String pong) {
@@ -45,7 +45,7 @@ public class PingPongData {
 
 	@Override
 	public String toString() {
-		return "(" + ping + ", " + pong + ")";
+		return "(" + this.ping + ", " + this.pong + ")";
 	}
 
 }

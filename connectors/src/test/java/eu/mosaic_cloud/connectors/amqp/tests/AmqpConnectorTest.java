@@ -23,6 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import eu.mosaic_cloud.connectors.kvstore.tests.MemcachedConnectorTest;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
@@ -42,22 +48,19 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 @RunWith(SerialJunitRunner.class)
 @Serial
 public class AmqpConnectorTest {
+
 	private static IConfiguration configuration;
 	private static AmqpConnector connector;
 	private static AmqpStub driverStub;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
-		ThreadingContext threading = BasicThreadingContext.create (MemcachedConnectorTest.class, AbortingExceptionTracer.defaultInstance.catcher);
+		ThreadingContext threading = BasicThreadingContext.create(
+				MemcachedConnectorTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		AmqpConnectorTest.configuration = PropertyTypeConfiguration.create(
 				AmqpConnectorTest.class.getClassLoader(), "amqp-test.prop");
 
@@ -72,8 +75,9 @@ public class AmqpConnectorTest {
 
 		AmqpConnectorTest.driverStub = AmqpStub.create(
 				AmqpConnectorTest.configuration, driverChannel, threading);
-		AmqpConnectorTest.connector = AmqpConnector
-				.create(AmqpConnectorTest.configuration, Threading.sequezeThreadingContextOutOfDryRock());
+		AmqpConnectorTest.connector = AmqpConnector.create(
+				AmqpConnectorTest.configuration,
+				Threading.sequezeThreadingContextOutOfDryRock());
 	}
 
 	@AfterClass

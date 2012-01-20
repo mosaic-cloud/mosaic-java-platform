@@ -33,6 +33,7 @@ package eu.mosaic_cloud.cloudlets.core;
  */
 public class OperationResultCallbackArguments<C, T> extends
 		CallbackArguments<C> {
+
 	private T result;
 	private Throwable error;
 

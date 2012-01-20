@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
@@ -131,7 +132,9 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 				}
 			} catch (DriverNotFoundException e) {
 				ExceptionTracer.traceDeferred(e);
-				ConnectionException e1 = new ConnectionException("The required key-value driver cannot be provided: " + e.getMessage(), e);
+				ConnectionException e1 = new ConnectionException(
+						"The required key-value driver cannot be provided: "
+								+ e.getMessage(), e);
 				ExceptionTracer.traceIgnored(e1);
 			}
 		}

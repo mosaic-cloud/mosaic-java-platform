@@ -30,6 +30,7 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
  *            the type of the context of the cloudlet using this callback
  */
 public class DefaultCallback<C> implements ICallback {
+
 	/**
 	 * Handles any unhandled callback.
 	 * 

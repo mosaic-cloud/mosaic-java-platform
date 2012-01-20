@@ -28,8 +28,6 @@ import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
-
-
 public class ItemsKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletContext> {
 

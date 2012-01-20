@@ -25,7 +25,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 
-
 /**
  * Interface for cloudlet control operations. Each cloudlet has access to an
  * object implementing this interface and uses it to ask for resources or
@@ -37,6 +36,7 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
  *            the type of the context of the cloudlet
  */
 public interface ICloudletController<C> extends ICloudlet {
+
 	IConfiguration getConfiguration();
 
 	<T> CompletionInvocationHandler<T> getResponseInvocationHandler(

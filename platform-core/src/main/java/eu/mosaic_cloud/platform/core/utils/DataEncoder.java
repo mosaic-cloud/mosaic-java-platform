@@ -29,7 +29,7 @@ package eu.mosaic_cloud.platform.core.utils;
  * @author Georgiana Macariu
  * 
  */
-public  interface DataEncoder<T extends Object> {
+public interface DataEncoder<T extends Object> {
 
 	/**
 	 * Encodes (serializes) an object as a stream of bytes.

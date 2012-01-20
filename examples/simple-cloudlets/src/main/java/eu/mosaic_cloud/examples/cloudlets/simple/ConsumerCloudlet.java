@@ -32,7 +32,6 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
-
 public class ConsumerCloudlet {
 
 	public static final class LifeCycleHandler extends
@@ -145,6 +144,7 @@ public class ConsumerCloudlet {
 	}
 
 	public static final class ConsumerCloudletContext {
+
 		AmqpQueueConsumer<ConsumerCloudletContext, String> consumer;
 	}
 }
