@@ -99,7 +99,7 @@ public final class BasicThreadingContext
 		Preconditions.checkNotNull (configuration);
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
-		Preconditions.checkArgument (configuration.name == null || ThreadingContext.namePattern.matcher (configuration.name).matches ());
+		Preconditions.checkArgument ((configuration.name == null) || ThreadingContext.namePattern.matcher (configuration.name).matches ());
 		final String ownerName;
 		if (owner instanceof Class)
 			ownerName = ((Class<?>) owner).getCanonicalName ();
@@ -119,26 +119,24 @@ public final class BasicThreadingContext
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkArgument ((index == -1) || (index >= 1));
-		Preconditions.checkArgument (configuration.name == null || ThreadingContext.namePattern.matcher (configuration.name).matches ());
+		Preconditions.checkArgument ((configuration.name == null) || ThreadingContext.namePattern.matcher (configuration.name).matches ());
 		final String ownerName;
 		if (group != null)
 			ownerName = group.getName ();
+		else if (owner instanceof Class)
+			ownerName = ((Class<?>) owner).getCanonicalName ();
 		else
-			if (owner instanceof Class)
-				ownerName = ((Class<?>) owner).getCanonicalName ();
-			else
-				ownerName = String.format ("%s/%08x", owner.getClass ().getCanonicalName (), Integer.valueOf (System.identityHashCode (owner)));
+			ownerName = String.format ("%s/%08x", owner.getClass ().getCanonicalName (), Integer.valueOf (System.identityHashCode (owner)));
 		final String finalName;
 		if (index != -1)
 			if (configuration.name != null)
 				finalName = String.format ("%s//%s/%02d", ownerName, configuration.name, Integer.valueOf (index));
 			else
-				finalName = String.format ("%s//%02d", ownerName,  Integer.valueOf (index));
+				finalName = String.format ("%s//%02d", ownerName, Integer.valueOf (index));
+		else if (configuration.name != null)
+			finalName = String.format ("%s//%s", group.getName (), configuration.name);
 		else
-			if (configuration.name != null)
-				finalName = String.format ("%s//%s", group.getName (), configuration.name);
-			else
-				finalName = ownerName;
+			finalName = ownerName;
 		return (finalName);
 	}
 	
