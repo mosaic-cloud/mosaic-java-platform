@@ -45,8 +45,8 @@ public final class SerDesUtils {
 				SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 	}
 
-	//	private SerDesUtils() {
-	//	}
+	private SerDesUtils() {
+	}
 
 	/**
 	 * Converts an object to an array of bytes .
@@ -56,14 +56,6 @@ public final class SerDesUtils {
 	 * @return the associated byte array.
 	 */
 	public static byte[] pojoToBytes(final Object object) throws IOException {
-		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		final ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(object);
-		oos.close();
-		return baos.toByteArray();
-	}
-
-	public byte[] opojoToBytes(final Object object) throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(object);
@@ -82,18 +74,6 @@ public final class SerDesUtils {
 	 * @throws IOException
 	 */
 	public static Object toObject(byte[] bytes) throws IOException,
-			ClassNotFoundException {
-		Object object = null;
-		if (bytes.length > 0) {
-			ObjectInputStream stream = new SpecialObjectInputStream(
-					new ByteArrayInputStream(bytes));
-			object = stream.readObject();
-			stream.close();
-		}
-		return object;
-	}
-
-	public Object otoObject(byte[] bytes) throws IOException,
 			ClassNotFoundException {
 		Object object = null;
 		if (bytes.length > 0) {
