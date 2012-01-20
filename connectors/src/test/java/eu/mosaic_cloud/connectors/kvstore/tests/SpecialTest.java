@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -40,6 +42,7 @@ public class SpecialTest {
 	private static boolean done = false;
 
 	public static void main(String[] args) {
+		BasicThreadingSecurityManager.initialize ();
 		ThreadingContext threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);

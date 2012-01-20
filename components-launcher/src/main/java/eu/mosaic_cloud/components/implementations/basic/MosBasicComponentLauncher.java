@@ -48,6 +48,7 @@ import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonCoder;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import org.slf4j.LoggerFactory;
 
@@ -94,8 +95,10 @@ public final class MosBasicComponentLauncher
 			throws Throwable
 	{
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
-		final ThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		BasicThreadingSecurityManager.initialize ();
+		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
 		MosBasicComponentLauncher.main (arguments, loader, threading, exceptions);
+		threading.join ();
 	}
 	
 	public static final void main (final String[] arguments, final ClassLoader loader, final ThreadingContext threading, final ExceptionTracer exceptions)

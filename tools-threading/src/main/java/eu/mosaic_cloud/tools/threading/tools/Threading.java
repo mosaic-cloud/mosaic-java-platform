@@ -77,9 +77,7 @@ public final class Threading
 	
 	public static final ThreadingContext getCurrentContext ()
 	{
-		final ThreadingContext context = Threading.context.get ();
-		Preconditions.checkState (context != null);
-		return (context);
+		return (Threading.context.get ());
 	}
 	
 	public static final Thread getCurrentThread ()
@@ -108,6 +106,15 @@ public final class Threading
 		Threading.loop ();
 	}
 	
+	public static final void interrupt (final Iterable<? extends Thread> threads)
+	{
+		Preconditions.checkNotNull (threads);
+		for (final Thread thread : threads) {
+			Preconditions.checkNotNull (thread);
+			thread.interrupt ();
+		}
+	}
+	
 	public static final void interruptCurrentThread ()
 	{
 		Thread.currentThread ().interrupt ();
@@ -130,6 +137,54 @@ public final class Threading
 		return (Thread.currentThread ().isInterrupted ());
 	}
 	
+	public static final boolean join (final Iterable<? extends Thread> threads)
+	{
+		return (Threading.join (threads, 0));
+	}
+	
+	public static final boolean join (final Iterable<? extends Thread> threads, final long timeout)
+	{
+		// Mirrors the code from `java.lang.Thread.join`.
+		Preconditions.checkNotNull (threads);
+		Preconditions.checkArgument (timeout >= 0);
+		try {
+			final long begin = System.currentTimeMillis ();
+			for (final Thread thread : threads) {
+				Preconditions.checkNotNull (thread);
+				final long remainingTimeout;
+				if (timeout > 0) {
+					remainingTimeout = timeout - (System.currentTimeMillis () - begin);
+					if (remainingTimeout <= 0)
+						return (false);
+				} else
+					remainingTimeout = 0;
+				thread.join (remainingTimeout);
+			}
+			return (true);
+		} catch (final InterruptedException exception) {
+			Threading.interruptCurrentThread ();
+			return (false);
+		}
+	}
+	
+	public static final boolean join (final Thread thread)
+	{
+		return (Threading.join (thread, 0));
+	}
+	
+	public static final boolean join (final Thread thread, final long timeout)
+	{
+		Preconditions.checkNotNull (thread);
+		Preconditions.checkArgument (timeout >= 0);
+		try {
+			thread.join (timeout);
+			return (true);
+		} catch (final InterruptedException exception) {
+			Threading.interruptCurrentThread ();
+			return (false);
+		}
+	}
+	
 	public static final void registerExitCallback (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
 		Preconditions.checkNotNull (threading);
@@ -147,8 +202,9 @@ public final class Threading
 	public static final void setCurrentContext (final ThreadingContext context)
 	{
 		Preconditions.checkNotNull (context);
-		synchronized (context) {
-			Preconditions.checkState (Threading.context.get () == null);
+		synchronized (Threading.context) {
+			if (Threading.context.get () != null)
+				throw (new IllegalThreadStateException ());
 			Threading.context.set (context);
 		}
 	}
@@ -162,6 +218,22 @@ public final class Threading
 			Thread.currentThread ().interrupt ();
 			return (false);
 		}
+	}
+	
+	public static final int start (final Iterable<? extends Thread> threads)
+	{
+		Preconditions.checkNotNull (threads);
+		int count = 0;
+		for (final Thread thread : threads) {
+			Preconditions.checkNotNull (thread);
+			try {
+				thread.start ();
+				count++;
+			} catch (final IllegalThreadStateException exception) {
+				// intentional
+			}
+		}
+		return (count);
 	}
 	
 	private static final void loop ()

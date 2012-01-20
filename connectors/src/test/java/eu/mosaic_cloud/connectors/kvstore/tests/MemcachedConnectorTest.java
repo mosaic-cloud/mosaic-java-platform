@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -66,6 +68,7 @@ public class MemcachedConnectorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
+		BasicThreadingSecurityManager.initialize ();
 		ThreadingContext threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
@@ -392,6 +395,7 @@ public class MemcachedConnectorTest {
 	}
 
 	public static void main(String... args) throws Throwable {
+		BasicThreadingSecurityManager.initialize ();
 		ThreadingContext threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);

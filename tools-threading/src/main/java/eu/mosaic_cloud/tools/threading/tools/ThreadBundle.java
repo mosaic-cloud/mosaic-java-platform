@@ -2,85 +2,204 @@
 package eu.mosaic_cloud.tools.threading.tools;
 
 
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.threading.core.ThreadController;
 
-public final class ThreadBundle
+
+public final class ThreadBundle<_Thread_ extends Thread>
 		extends Object
+		implements
+			ThreadController,
+			Iterable<_Thread_>
 {
-	public ThreadBundle ()
+	private ThreadBundle ()
 	{
 		super ();
-		this.threads = new ConcurrentSkipListSet<ThreadBundle.Thread> ();
+		this.collector = new ReferenceQueue<_Thread_> ();
+		this.threads = new ConcurrentSkipListSet<ThreadReference<_Thread_>> (new ThreadComparator ());
 	}
 	
-	public final void join ()
+	@Override
+	public final void interrupt ()
 	{
-		while (true)
-			try {
-				for (final Thread thread : this.threads)
-					thread.join (1);
+		this.collect ();
+		Threading.interrupt (this);
+	}
+	
+	@Override
+	public final Iterator<_Thread_> iterator ()
+	{
+		this.collect ();
+		return (new ThreadIterator<_Thread_> (this.threads.iterator ()));
+	}
+	
+	@Override
+	public final boolean join ()
+	{
+		this.collect ();
+		return (Threading.join (this));
+	}
+	
+	@Override
+	public final boolean join (final long timeout)
+	{
+		this.collect ();
+		return (Threading.join (this, timeout));
+	}
+	
+	public final void register (final _Thread_ thread)
+	{
+		Preconditions.checkNotNull (thread);
+		this.threads.add (new ThreadReference<_Thread_> (thread, this.collector));
+	}
+	
+	public final int start ()
+	{
+		this.collect ();
+		return (Threading.start (this));
+	}
+	
+	private final void collect ()
+	{
+		while (true) {
+			final Reference<? extends _Thread_> reference = this.collector.poll ();
+			if (reference == null)
 				break;
-			} catch (final InterruptedException exception) {
-				for (final Thread thread : this.threads)
-					thread.interrupt ();
-			}
+			final _Thread_ thread = reference.get ();
+			if (thread == null)
+				continue;
+			this.threads.remove (new ThreadReference<_Thread_> (thread));
+		}
 	}
 	
-	public final void shouldStop ()
+	final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
+	private final ReferenceQueue<_Thread_> collector;
+	
+	public static final <_Thread_ extends Thread> ThreadBundle<_Thread_> create ()
 	{
-		for (final Thread thread : this.threads)
-			thread.shouldStop ();
+		return (new ThreadBundle<_Thread_> ());
 	}
 	
-	public final void start ()
-	{
-		for (final Thread thread : this.threads)
-			thread.start ();
-	}
-	
-	/*private*/final ConcurrentSkipListSet<Thread> threads;
-	
-	public abstract class Thread
-			extends java.lang.Thread
+	private static final class ThreadComparator
+			extends Object
 			implements
-				Comparable<Thread>
+				Comparator<ThreadReference<?>>
 	{
-		protected Thread ()
+		ThreadComparator ()
 		{
 			super ();
-			ThreadBundle.this.threads.add (this);
-			this.shouldStop = false;
 		}
 		
 		@Override
-		public final int compareTo (final Thread thread)
+		public final int compare (final ThreadReference<?> left, final ThreadReference<?> right)
 		{
-			final int thisHash = System.identityHashCode (this);
-			final int threadHash = System.identityHashCode (thread);
-			if (thisHash < threadHash)
-				return (-1);
-			if (thisHash > threadHash)
-				return (1);
-			return (0);
+			return ((left.hashCode () - right.hashCode ()));
 		}
-		
-		public final void shouldStop ()
+	}
+	
+	private static final class ThreadIterator<_Thread_ extends Thread>
+			extends Object
+			implements
+				Iterator<_Thread_>
+	{
+		ThreadIterator (final Iterator<ThreadReference<_Thread_>> threads)
 		{
-			this.shouldStop = true;
+			super ();
+			this.threads = threads;
 		}
 		
 		@Override
-		public final synchronized void start ()
+		public final boolean hasNext ()
 		{
-			super.start ();
+			if (this.current == null)
+				this.advance ();
+			return (this.current != null);
 		}
 		
-		protected final boolean shouldRun ()
+		@Override
+		public final _Thread_ next ()
 		{
-			return (!this.shouldStop);
+			if (this.current == null)
+				this.advance ();
+			if (this.current == null)
+				throw (new NoSuchElementException ());
+			return (this.current);
 		}
 		
-		private boolean shouldStop;
+		@Override
+		public final void remove ()
+		{
+			throw (new UnsupportedOperationException ());
+		}
+		
+		private final void advance ()
+		{
+			this.current = null;
+			while (true) {
+				if (!this.threads.hasNext ())
+					break;
+				this.current = this.threads.next ().get ();
+				if (this.current != null)
+					break;
+			}
+		}
+		
+		private _Thread_ current;
+		private final Iterator<ThreadReference<_Thread_>> threads;
+	}
+	
+	private static final class ThreadReference<_Thread_ extends Thread>
+			extends Object
+	{
+		ThreadReference (final _Thread_ thread)
+		{
+			super ();
+			this.threadIdentifier = thread.getId ();
+			this.objectIdentifier = System.identityHashCode (thread);
+			this.reference = null;
+		}
+		
+		ThreadReference (final _Thread_ thread, final ReferenceQueue<? super _Thread_> collector)
+		{
+			super ();
+			Preconditions.checkNotNull (thread);
+			this.reference = new WeakReference<_Thread_> (thread, collector);
+			this.threadIdentifier = thread.getId ();
+			this.objectIdentifier = System.identityHashCode (thread);
+		}
+		
+		@Override
+		public final boolean equals (final Object object)
+		{
+			if (this == object)
+				return (true);
+			if (!(object instanceof ThreadReference))
+				return (false);
+			final ThreadReference<?> other = (ThreadReference<?>) object;
+			return ((this.objectIdentifier == other.objectIdentifier) && (this.threadIdentifier == other.threadIdentifier));
+		}
+		
+		public final _Thread_ get ()
+		{
+			return (this.reference.get ());
+		}
+		
+		@Override
+		public final int hashCode ()
+		{
+			return (this.objectIdentifier);
+		}
+		
+		private final int objectIdentifier;
+		private final WeakReference<_Thread_> reference;
+		private final long threadIdentifier;
 	}
 }
