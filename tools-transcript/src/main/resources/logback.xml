@@ -20,15 +20,19 @@
   -->
 
 <configuration debug="false">
+	
 	<statusListener class="eu.mosaic_cloud.tools.transcript.implementations.slf4j.Slf4jStatusListener" />
 	<define name="jvm_pid" class="eu.mosaic_cloud.tools.transcript.implementations.slf4j.Slf4jJvmPidPropertyDefiner" />
+	
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48logger{48}][%-32thread] %msg%n</pattern>
 		</encoder>
 	</appender>
-	<root level="error">
+	
+	<root level="info">
 		<appender-ref ref="console" />
 	</root>
+	
 </configuration>

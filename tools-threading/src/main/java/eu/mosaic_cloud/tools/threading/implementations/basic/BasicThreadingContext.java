@@ -99,35 +99,46 @@ public final class BasicThreadingContext
 		Preconditions.checkNotNull (configuration);
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
+		Preconditions.checkArgument (configuration.name == null || ThreadingContext.namePattern.matcher (configuration.name).matches ());
 		final String ownerName;
 		if (owner instanceof Class)
 			ownerName = ((Class<?>) owner).getCanonicalName ();
 		else
-			ownerName = String.format ("%s#%08x", owner.getClass ().getCanonicalName (), Integer.valueOf (System.identityHashCode (owner)));
+			ownerName = String.format ("%s/%08x", owner.getClass ().getCanonicalName (), Integer.valueOf (System.identityHashCode (owner)));
 		final String finalName;
 		if (configuration.name == null)
 			finalName = ownerName;
-		else {
-			Preconditions.checkArgument (ThreadingContext.namePattern.matcher (configuration.name).matches ());
-			finalName = String.format ("%s#%s", ownerName, "#", configuration.name);
-		}
+		else
+			finalName = String.format ("%s/%s", ownerName, configuration.name);
 		return (finalName);
 	}
 	
 	static final String buildThreadName (final ThreadGroup group, final ThreadConfiguration configuration, final int index)
 	{
-		Preconditions.checkNotNull (group);
 		Preconditions.checkNotNull (configuration);
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
-		Preconditions.checkNotNull (configuration.name);
 		Preconditions.checkArgument ((index == -1) || (index >= 1));
-		Preconditions.checkArgument (ThreadingContext.namePattern.matcher (configuration.name).matches ());
+		Preconditions.checkArgument (configuration.name == null || ThreadingContext.namePattern.matcher (configuration.name).matches ());
+		final String ownerName;
+		if (group != null)
+			ownerName = group.getName ();
+		else
+			if (owner instanceof Class)
+				ownerName = ((Class<?>) owner).getCanonicalName ();
+			else
+				ownerName = String.format ("%s/%08x", owner.getClass ().getCanonicalName (), Integer.valueOf (System.identityHashCode (owner)));
 		final String finalName;
 		if (index != -1)
-			finalName = String.format ("%s##%s#%02d", group.getName (), configuration.name, Integer.valueOf (index));
+			if (configuration.name != null)
+				finalName = String.format ("%s//%s/%02d", ownerName, configuration.name, Integer.valueOf (index));
+			else
+				finalName = String.format ("%s//%02d", ownerName,  Integer.valueOf (index));
 		else
-			finalName = String.format ("%s##%s", group.getName (), configuration.name);
+			if (configuration.name != null)
+				finalName = String.format ("%s//%s", group.getName (), configuration.name);
+			else
+				finalName = ownerName;
 		return (finalName);
 	}
 	
@@ -148,7 +159,10 @@ public final class BasicThreadingContext
 			this.index = index;
 			this.running = new AtomicBoolean (false);
 			this.setDaemon (this.configuration.daemon);
-			this.setPriority (this.configuration.priority);
+			if (configuration.priority != -1)
+				this.setPriority (configuration.priority);
+			else
+				this.setPriority (Math.min (group.getMaxPriority (), Thread.NORM_PRIORITY));
 			if (this.configuration.classLoader != null)
 				this.setContextClassLoader (this.configuration.classLoader);
 			this.setName (BasicThreadingContext.buildThreadName (this.group, this.configuration, this.index));
@@ -189,7 +203,7 @@ public final class BasicThreadingContext
 		@Override
 		public final Thread newThread (final Runnable runnable)
 		{
-			return (new BasicThread (this.group, this.configuration, runnable, this.index != null ? this.index.incrementAndGet () : -1));
+			return (new BasicThread (this.group, this.configuration.setName (null), runnable, this.index != null ? this.index.incrementAndGet () : -1));
 		}
 		
 		private final ThreadConfiguration configuration;
@@ -216,7 +230,7 @@ public final class BasicThreadingContext
 			if (configuration.priority != -1)
 				this.setMaxPriority (configuration.priority);
 			else
-				this.setMaxPriority (Thread.MAX_PRIORITY);
+				this.setMaxPriority (parent.getMaxPriority ());
 		}
 		
 		@Override
