@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletExecutor;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -35,11 +38,7 @@ import eu.mosaic_cloud.platform.core.ops.EventDrivenOperation;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletExecutor;
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * This class handles the internals of cloudlet execution. An object of this
@@ -60,6 +59,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 	private IConfiguration configuration;
 	private ICloudletCallback<C> controllerCallback;
 	private C context;
+	private ThreadingContext threading;
 
 	/**
 	 * Creates a new cloudlet instance.
@@ -71,12 +71,14 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 	 *            the class loader used for loading cloudlet classes
 	 * @throws CloudletException
 	 */
-	public Cloudlet(C context, ICloudletCallback<C> callback, ClassLoader loader)
+	public Cloudlet(C context, ICloudletCallback<C> callback,
+			ThreadingContext threading, ClassLoader loader)
 			throws CloudletException {
 		synchronized (this) {
 			this.context = context;
+			this.threading = threading;
 			this.active = false;
-			this.executor = new CloudletExecutor(loader);
+			this.executor = new CloudletExecutor(this.threading, loader);
 			this.controller = new CloudletController();
 
 			this.controllerCallback = callback;
@@ -232,7 +234,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 
 	private synchronized void initializeResource(IResourceAccessor<C> accessor,
 			IResourceAccessorCallback<C> callbackHandler, C cloudletState) {
-		accessor.initialize(callbackHandler, this.context);
+		accessor.initialize(callbackHandler, this.context, this.threading);
 	}
 
 	private <T> CompletionInvocationHandler<T> getResponseHandler(
@@ -246,7 +248,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T>(
 				callback);
 		@SuppressWarnings("unchecked")
-		T proxy = (T) Proxy.newProxyInstance(executor.getLoader(),
+		T proxy = (T) Proxy.newProxyInstance(this.executor.getLoader(),
 				new Class[] { callbackType }, iHandler);
 		return proxy;
 	}

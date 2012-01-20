@@ -26,24 +26,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-
-import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
-import eu.mosaic_cloud.drivers.ConfigProperties;
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
-
-
 import com.google.common.base.Preconditions;
 
 import eu.mosaic_cloud.components.core.Component;
@@ -52,7 +34,20 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
+import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
  * This callback class enables the Key Value store driver to be exposed as a
@@ -71,7 +66,7 @@ public final class KVDriverComponentCallbacks extends
 	 * Creates a driver callback.
 	 */
 	public KVDriverComponentCallbacks() {
-		super();
+		super(Threading.getCurrentContext());
 		this.monitor = Monitor.create(this);
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
@@ -116,13 +111,14 @@ public final class KVDriverComponentCallbacks extends
 							String.class, "");
 					// FIXME
 					try {
-						if (System.getenv("mosaic_node_ip") != null)
+						if (System.getenv("mosaic_node_ip") != null) {
 							channelEndpoint = channelEndpoint.replace(
 									"0.0.0.0", System.getenv("mosaic_node_ip"));
-						else
+						} else {
 							channelEndpoint = channelEndpoint.replace(
 									"0.0.0.0", InetAddress.getLocalHost()
 											.getHostAddress());
+						}
 					} catch (UnknownHostException e) {
 						ExceptionTracer.traceIgnored(e);
 					}

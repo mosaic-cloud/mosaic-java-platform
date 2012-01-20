@@ -31,6 +31,7 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
  *            the type of the data in the consumed message
  */
 public class AmqpQueueConsumeMessage<D extends Object> {
+
 	private final AmqpQueueConsumer<? extends Object, D> consumer;
 	private final AmqpInboundMessage message;
 	private final D data;

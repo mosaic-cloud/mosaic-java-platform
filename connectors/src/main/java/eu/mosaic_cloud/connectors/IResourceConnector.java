@@ -26,6 +26,7 @@ package eu.mosaic_cloud.connectors;
  * 
  */
 public interface IResourceConnector {
+
 	/**
 	 * Destroy the connection with the resource.
 	 * 

@@ -32,10 +32,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.rabbitmq.client.QueueingConsumer;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.rabbitmq.client.QueueingConsumer;
 
 public class MessageHandler {
 

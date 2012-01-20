@@ -20,10 +20,9 @@
 
 package eu.mosaic_cloud.drivers;
 
-
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
+import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
 /**
  * Launches a driver.
@@ -31,20 +30,20 @@ import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLaunche
  * @author Georgiana Macariu
  * 
  */
-public final class DriverLauncher
-{
-	private DriverLauncher ()
-	{
-		super ();
-		throw new UnsupportedOperationException ();
+public final class DriverLauncher {
+
+	private DriverLauncher() {
+		super();
+		throw new UnsupportedOperationException();
 	}
-	
-	public static void main (final String[] arguments)
-			throws Throwable
-	{
-		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 1), "invalid arguments: expected `<amqp | kv | memcached> ...`");
-		arguments[0] = DriverCallbackType.valueOf (arguments[0].toUpperCase ()).getCallbackClass ();
-		Preconditions.checkNotNull (arguments[0]);
-		MosBasicComponentLauncher.main (arguments);
+
+	public static void main(final String[] arguments) throws Throwable {
+		Preconditions.checkArgument((arguments != null)
+				&& (arguments.length >= 1),
+				"invalid arguments: expected `<amqp | kv | memcached> ...`");
+		arguments[0] = DriverCallbackType.valueOf(arguments[0].toUpperCase())
+				.getCallbackClass();
+		Preconditions.checkNotNull(arguments[0]);
+		MosBasicComponentLauncher.main(arguments);
 	}
 }

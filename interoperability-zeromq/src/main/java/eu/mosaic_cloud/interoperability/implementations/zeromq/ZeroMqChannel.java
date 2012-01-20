@@ -33,9 +33,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -51,6 +49,8 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSocket.Packet;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -60,18 +60,20 @@ public final class ZeroMqChannel
 		implements
 			Channel
 {
-	public ZeroMqChannel (final String self, final ExceptionTracer exceptions)
+	public ZeroMqChannel (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (self);
+		Preconditions.checkNotNull (threading);
 		this.transcript = Transcript.create (this);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
+		this.threading = threading;
 		this.selfIdentifier = self;
 		this.state = new State ();
 		this.handlers = new ConcurrentLinkedQueue<ZeroMqChannel.Handler> ();
 		this.idle = new Semaphore (1);
-		this.executor = Executors.newCachedThreadPool (new ExecutorThreadFactory ());
-		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger (), exceptions);
+		this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this, "zeromq-callbacks"));
+		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger (), this.threading, exceptions);
 	}
 	
 	@Override
@@ -466,6 +468,7 @@ public final class ZeroMqChannel
 	private final String selfIdentifier;
 	private final ZeroMqChannelSocket socket;
 	private final State state;
+	private final ThreadingContext threading;
 	private final Transcript transcript;
 	
 	private static final class Acceptor
@@ -530,26 +533,6 @@ public final class ZeroMqChannel
 		abstract void dispatch ();
 		
 		final Session session;
-	}
-	
-	private final class ExecutorThreadFactory
-			extends Object
-			implements
-				ThreadFactory
-	{
-		ExecutorThreadFactory ()
-		{
-			super ();
-		}
-		
-		@Override
-		public final Thread newThread (final java.lang.Runnable runnable)
-		{
-			final Thread thread = Executors.defaultThreadFactory ().newThread (runnable);
-			thread.setName (String.format ("%s#%08x#%08x", ZeroMqChannel.this.getClass ().getSimpleName (), Integer.valueOf (System.identityHashCode (ZeroMqChannel.this)), Integer.valueOf (System.identityHashCode (thread))));
-			thread.setDaemon (true);
-			return (thread);
-		}
 	}
 	
 	private abstract class Handler

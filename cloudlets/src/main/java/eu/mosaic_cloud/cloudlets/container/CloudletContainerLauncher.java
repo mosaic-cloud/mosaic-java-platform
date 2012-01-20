@@ -20,10 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.container;
 
-
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
+import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
 /**
  * Launches a cloudlet.
@@ -31,34 +30,32 @@ import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLaunche
  * @author Georgiana Macariu
  * 
  */
-public class CloudletContainerLauncher
-{
-	private CloudletContainerLauncher ()
-	{
-		super ();
-		throw new UnsupportedOperationException ();
+public class CloudletContainerLauncher {
+
+	private CloudletContainerLauncher() {
+		super();
+		throw new UnsupportedOperationException();
 	}
-	
-	public static void main (final String descriptor, final String[] arguments)
-			throws Throwable
-	{
-		Preconditions.checkNotNull (descriptor);
-		Preconditions.checkArgument (arguments != null);
+
+	public static void main(final String descriptor, final String[] arguments)
+			throws Throwable {
+		Preconditions.checkNotNull(descriptor);
+		Preconditions.checkArgument(arguments != null);
 		CloudletContainerPreMain.CloudletContainerParameters.classpath = null;
 		CloudletContainerPreMain.CloudletContainerParameters.configFile = descriptor;
 		final String[] finalArguments = new String[arguments.length + 1];
 		finalArguments[0] = "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks";
-		System.arraycopy (arguments, 0, finalArguments, 1, arguments.length);
-		MosBasicComponentLauncher.main (finalArguments, null);
+		System.arraycopy(arguments, 0, finalArguments, 1, arguments.length);
+		MosBasicComponentLauncher.main(finalArguments, null);
 	}
-	
-	public static void main (final String[] arguments)
-			throws Throwable
-	{
-		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 1), "invalid arguments: expected `<descriptor> ...`");
+
+	public static void main(final String[] arguments) throws Throwable {
+		Preconditions.checkArgument((arguments != null)
+				&& (arguments.length >= 1),
+				"invalid arguments: expected `<descriptor> ...`");
 		CloudletContainerPreMain.CloudletContainerParameters.classpath = null;
 		CloudletContainerPreMain.CloudletContainerParameters.configFile = arguments[0];
 		arguments[0] = "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks";
-		MosBasicComponentLauncher.main (arguments);
+		MosBasicComponentLauncher.main(arguments);
 	}
 }

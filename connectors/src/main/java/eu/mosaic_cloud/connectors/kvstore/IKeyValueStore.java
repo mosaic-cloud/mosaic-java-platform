@@ -21,13 +21,10 @@ package eu.mosaic_cloud.connectors.kvstore;
 
 import java.util.List;
 
+import eu.mosaic_cloud.connectors.IResourceConnector;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.connectors.IResourceConnector;
-
-
 
 /**
  * Interface for working with key-value stores.
@@ -37,6 +34,7 @@ import eu.mosaic_cloud.connectors.IResourceConnector;
  *            type of stored data
  */
 public interface IKeyValueStore<T extends Object> extends IResourceConnector {
+
 	/**
 	 * Stores the given data and associates it with the specified key.
 	 * 

@@ -30,18 +30,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import net.spy.memcached.BinaryConnectionFactory;
+import net.spy.memcached.CASResponse;
+import net.spy.memcached.MemcachedClient;
+import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
-
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
-
-
-import net.spy.memcached.BinaryConnectionFactory;
-import net.spy.memcached.CASResponse;
-import net.spy.memcached.MemcachedClient;
 
 /**
  * Factory class which builds the asynchronous calls for the operations defined
@@ -100,8 +97,8 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * eu.mosaic_cloud.platform.core.IOperationFactory#getOperation(eu.mosaic_cloud.platform.core.IOperationType,
-	 * java.lang.Object[])
+	 * eu.mosaic_cloud.platform.core.IOperationFactory#getOperation(eu.mosaic_cloud
+	 * .platform.core.IOperationType, java.lang.Object[])
 	 */
 	@Override
 	public IOperation<?> getOperation(final IOperationType type, // NOPMD by georgiana on 10/12/11 4:57 PM

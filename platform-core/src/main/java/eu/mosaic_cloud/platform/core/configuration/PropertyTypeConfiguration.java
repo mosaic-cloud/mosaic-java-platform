@@ -25,8 +25,6 @@ import java.util.Properties;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
-
-
 /**
  * This class implements a configuration handler for project configurations
  * based on property files.
@@ -189,16 +187,19 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 		return isEqual;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31; // NOPMD by georgiana on 9/27/11 2:26 PM
 		int result = 1; // NOPMD by georgiana on 9/27/11 2:26 PM
-		result = prime * result
-				+ ((properties == null) ? 0 : properties.hashCode());
-		result = prime * result + ((root == null) ? 0 : root.hashCode());
+		result = (prime * result)
+				+ ((this.properties == null) ? 0 : this.properties.hashCode());
+		result = (prime * result)
+				+ ((this.root == null) ? 0 : this.root.hashCode());
 		return result;
 	}
 

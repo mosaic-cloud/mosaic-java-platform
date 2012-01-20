@@ -61,8 +61,9 @@ public class GenericResult<T> implements IResult<T> {
 	}
 
 	@Override
-	public T getResult(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-		return this.operation.get (timeout, unit);
+	public T getResult(long timeout, TimeUnit unit)
+			throws InterruptedException, ExecutionException, TimeoutException {
+		return this.operation.get(timeout, unit);
 	}
 
 	/*

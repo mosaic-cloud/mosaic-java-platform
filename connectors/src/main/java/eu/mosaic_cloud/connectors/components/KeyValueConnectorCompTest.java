@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.base.Preconditions;
+
+import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -33,19 +37,11 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-
-import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-
-
-
-import com.google.common.base.Preconditions;
-
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 public class KeyValueConnectorCompTest {
+
 	private IConfiguration configuration;
 	private KeyValueStoreConnector<String> connector;
 	private String keyPrefix;
@@ -55,9 +51,9 @@ public class KeyValueConnectorCompTest {
 		this.configuration = PropertyTypeConfiguration.create(
 				KeyValueConnectorCompTest.class.getClassLoader(),
 				"kv-conn-test.prop");
-		storeType = ConfigUtils.resolveParameter(this.configuration,
+		this.storeType = ConfigUtils.resolveParameter(this.configuration,
 				"kvstore.driver_name", String.class, "");
-		keyPrefix = UUID.randomUUID().toString();
+		this.keyPrefix = UUID.randomUUID().toString();
 		ResourceFinder.getResourceFinder().findResource(ResourceType.KEY_VALUE,
 				new Callback());
 
@@ -77,13 +73,13 @@ public class KeyValueConnectorCompTest {
 	}
 
 	public void testSet() throws IOException {
-		String k1 = keyPrefix + "_key_fantastic";
+		String k1 = this.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
 		IResult<Boolean> r1 = this.connector.set(k1, "fantastic", handlers1,
 				null);
 		Preconditions.checkNotNull(r1);
 
-		String k2 = keyPrefix + "_key_famous";
+		String k2 = this.keyPrefix + "_key_famous";
 		List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers("set 2");
 		IResult<Boolean> r2 = this.connector.set(k2, "famous", handlers2, null);
 		Preconditions.checkNotNull(r2);
@@ -93,15 +89,15 @@ public class KeyValueConnectorCompTest {
 			Preconditions.checkState(r2.getResult(), "Set 2 returned false.");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		}
 	}
 
 	public void testGet() throws IOException, ClassNotFoundException {
-		String k1 = keyPrefix + "_key_fantastic";
+		String k1 = this.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<String>> handlers = getHandlers("get");
 		IResult<String> r1 = this.connector.get(k1, handlers, null);
 
@@ -111,25 +107,25 @@ public class KeyValueConnectorCompTest {
 					"Get returned something wrong");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		}
 	}
 
 	public void testDelete() {
-		String k1 = keyPrefix + "_key_fantastic";
+		String k1 = this.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
 		IResult<Boolean> r1 = this.connector.delete(k1, handlers, null);
 		try {
 			Preconditions.checkState(r1.getResult(), "Object not deleted.");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after delete");
@@ -140,10 +136,10 @@ public class KeyValueConnectorCompTest {
 					"Object still exists after delete");
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		}
 	}
 
@@ -152,7 +148,7 @@ public class KeyValueConnectorCompTest {
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
 		IResult<List<String>> r1 = this.connector.list(handlers, null);
 		try {
-			if (storeType.equalsIgnoreCase("memcached")) {
+			if (this.storeType.equalsIgnoreCase("memcached")) {
 				Preconditions.checkState(r1.getResult() == null);
 			} else {
 				Preconditions
@@ -161,10 +157,10 @@ public class KeyValueConnectorCompTest {
 			}
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		} catch (ExecutionException e) {
 			ExceptionTracer.traceIgnored(e);
-			throw (new Error (e));
+			throw (new Error(e));
 		}
 	}
 
@@ -181,12 +177,13 @@ public class KeyValueConnectorCompTest {
 	}
 
 	class Callback implements IFinderCallback {
+
 		/*
 		 * (non-Javadoc)
 		 * 
 		 * @see
-		 * eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceFound(eu.mosaic_cloud.platform.interop
-		 * .idl.ChannelData)
+		 * eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceFound(eu.
+		 * mosaic_cloud.platform.interop .idl.ChannelData)
 		 */
 		@Override
 		public void resourceFound(ChannelData channel) throws Throwable {
@@ -197,7 +194,8 @@ public class KeyValueConnectorCompTest {
 					"interop.channel.address", channel.getChannelEndpoint());
 			KeyValueConnectorCompTest.this.connector = KeyValueStoreConnector
 					.create(KeyValueConnectorCompTest.this.configuration,
-							new PojoDataEncoder<String>(String.class));
+							new PojoDataEncoder<String>(String.class),
+							Threading.sequezeThreadingContextOutOfDryRock());
 			KeyValueConnectorCompTest.this.testConnector();
 			KeyValueConnectorCompTest.this.connector.destroy();
 		}
@@ -205,7 +203,8 @@ public class KeyValueConnectorCompTest {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceNotFound()
+		 * @see
+		 * eu.mosaic_cloud.connectors.temp.IFinderCallback#resourceNotFound()
 		 */
 		@Override
 		public void resourceNotFound() {

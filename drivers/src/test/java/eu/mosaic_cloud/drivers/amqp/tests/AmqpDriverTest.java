@@ -22,26 +22,23 @@ package eu.mosaic_cloud.drivers.amqp.tests;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
@@ -55,8 +52,9 @@ public class AmqpDriverTest {
 	public static void setUpBeforeClass() throws Exception {
 		AmqpDriverTest.configuration = PropertyTypeConfiguration.create(
 				AmqpDriverTest.class.getClassLoader(), "amqp-test.prop");
-		AmqpDriverTest.wrapper = AmqpDriver
-				.create(AmqpDriverTest.configuration);
+		AmqpDriverTest.wrapper = AmqpDriver.create(
+				AmqpDriverTest.configuration,
+				Threading.sequezeThreadingContextOutOfDryRock());
 	}
 
 	@AfterClass
@@ -76,9 +74,9 @@ public class AmqpDriverTest {
 
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare exchange");
-		IResult<Boolean> r = AmqpDriverTest.wrapper
-				.declareExchange(clientId, exchange, AmqpExchangeType.DIRECT,
-						false, false, false, handler);
+		IResult<Boolean> r = AmqpDriverTest.wrapper.declareExchange(
+				this.clientId, exchange, AmqpExchangeType.DIRECT, false, false,
+				false, handler);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -89,7 +87,7 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare queue");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.declareQueue(clientId,
+		IResult<Boolean> r = AmqpDriverTest.wrapper.declareQueue(this.clientId,
 				queue, true, false, true, false, handler);
 		Assert.assertTrue(r.getResult());
 	}
@@ -106,7 +104,7 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"bind queue");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.bindQueue(clientId,
+		IResult<Boolean> r = AmqpDriverTest.wrapper.bindQueue(this.clientId,
 				exchange, queue, routingKey, handler);
 		Assert.assertTrue(r.getResult());
 	}

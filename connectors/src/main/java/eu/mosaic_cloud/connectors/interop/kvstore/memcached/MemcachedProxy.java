@@ -23,28 +23,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.google.protobuf.ByteString;
+
+import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
-import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
+import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedMessage;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
-
-import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-
-import com.google.protobuf.ByteString;
-
-import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 
 /**
  * Proxy for the driver for key-value distributed storage systems implementing
@@ -254,7 +250,8 @@ public final class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 							.getSession(), message);
 		} catch (Exception e) {
 			ExceptionTracer.traceDeferred(e);
-			ConnectionException e1 = new ConnectionException("Cannot send store request to driver: " + e.getMessage(), e);
+			ConnectionException e1 = new ConnectionException(
+					"Cannot send store request to driver: " + e.getMessage(), e);
 			for (IOperationCompletionHandler<Boolean> handler : handlers) {
 				handler.onFailure(e1);
 			}

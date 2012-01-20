@@ -21,14 +21,12 @@ package eu.mosaic_cloud.drivers.kvstore;
 
 import java.io.IOException;
 
+import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
-
-import eu.mosaic_cloud.drivers.ConfigProperties;
-
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Driver class for the Redis key-value database management systems.
@@ -52,8 +50,9 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	 * @param port
 	 *            the port for the Redis server
 	 */
-	private RedisDriver(int noThreads, String host, int port) {
-		super(noThreads);
+	private RedisDriver(ThreadingContext threading, int noThreads, String host,
+			int port) {
+		super(threading, noThreads);
 		this.host = host;
 		this.port = port;
 	}
@@ -70,8 +69,9 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	 * @param passwd
 	 *            the password for connecting to the server
 	 */
-	private RedisDriver(int noThreads, String host, int port, String password) {
-		super(noThreads);
+	private RedisDriver(ThreadingContext threading, int noThreads, String host,
+			int port, String password) {
+		super(threading, noThreads);
 		this.host = host;
 		this.port = port;
 		this.password = password;
@@ -93,7 +93,8 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static RedisDriver create(IConfiguration config) throws IOException {
+	public static RedisDriver create(IConfiguration config,
+			ThreadingContext threading) throws IOException {
 		int port, noThreads;
 
 		String host = ConfigUtils.resolveParameter(config,
@@ -113,7 +114,7 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 				ConfigProperties.getString("KVStoreDriver.4"), //$NON-NLS-1$
 				String.class, ""); //$NON-NLS-1$
 
-		return new RedisDriver(noThreads, host, port, passwd);
+		return new RedisDriver(threading, noThreads, host, port, passwd);
 	}
 
 	/**

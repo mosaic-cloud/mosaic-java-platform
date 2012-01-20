@@ -21,16 +21,12 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 import java.util.List;
 
+import eu.mosaic_cloud.connectors.queue.IQueueConnector;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
-
-import eu.mosaic_cloud.connectors.queue.IQueueConnector;
-
-
 
 /**
  * Interface for working with AMQP compatible queueing systems.

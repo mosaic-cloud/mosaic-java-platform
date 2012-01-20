@@ -23,25 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
-
-
+import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
-
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
-
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * This class provides access for cloudlets to an AMQP-based queueing system as
@@ -94,9 +88,10 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	}
 
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state) {
+	public void initialize(IResourceAccessorCallback<S> callback, S state,
+			ThreadingContext threading) {
 		if (callback instanceof IAmqpQueueConsumerCallback) {
-			super.initialize(callback, state);
+			super.initialize(callback, state, threading);
 			this.callback = (IAmqpQueueConsumerCallback<S, D>) callback;
 		} else {
 			IllegalArgumentException e = new IllegalArgumentException(
@@ -118,7 +113,8 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueueAccessor#register()
+	 * @see
+	 * eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueueAccessor#register()
 	 */
 	@Override
 	public void register() {
@@ -264,8 +260,9 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 		public void handleCancelOk(String consumerTag) {
 			MosaicLogger.getLogger().trace(
 					"AmqpQueueConsumer: received CANCEL ok message.");
-			if (!AmqpQueueConsumer.super.registered)
+			if (!AmqpQueueConsumer.super.registered) {
 				return;
+			}
 			CallbackArguments<S> arguments = new CallbackArguments<S>(
 					AmqpQueueConsumer.this.cloudlet);
 			AmqpQueueConsumer.this.callback.unregisterSucceeded(
@@ -275,8 +272,9 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 		@Override
 		public void handleConsumeOk(String consumerTag) {
-			if (AmqpQueueConsumer.super.registered)
+			if (AmqpQueueConsumer.super.registered) {
 				return;
+			}
 			MosaicLogger.getLogger().trace(
 					"AmqpQueueConsumer: received CONSUME ok message.");
 			AmqpQueueConsumer.this.consumer = consumerTag;

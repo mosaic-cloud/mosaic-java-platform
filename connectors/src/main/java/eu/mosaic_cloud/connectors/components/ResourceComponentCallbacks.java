@@ -22,22 +22,6 @@ package eu.mosaic_cloud.connectors.components;
 import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
-import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
-
-import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-
-import eu.mosaic_cloud.connectors.ConfigProperties;
-
-
 import com.google.common.base.Preconditions;
 
 import eu.mosaic_cloud.components.core.Component;
@@ -47,6 +31,17 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.connectors.ConfigProperties;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
+import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
 
 /**
  * This callback class enables the connectors to find resource drivers and
@@ -171,10 +166,12 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
 							request.reference);
 					component.reply(reply);
-				} else
+				} else {
 					throw new UnsupportedOperationException();
-			} else
+				}
+			} else {
 				throw new UnsupportedOperationException();
+			}
 		}
 		return null;
 	}
@@ -189,8 +186,9 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 				OutcomeTrigger<ComponentCallReply> trigger = this.pendingReferences
 						.remove(reply.reference);
 				trigger.succeeded(reply);
-			} else
+			} else {
 				throw (new IllegalStateException());
+			}
 
 		}
 		return null;
@@ -254,7 +252,8 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					.remove(reference);
 			if (pendingReply != null) {
 				if (!ok) {
-					Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+					Exception e = new Exception(
+							"failed registering to group; terminating!"); //$NON-NLS-1$
 					ExceptionTracer.traceDeferred(e);
 					this.component.terminate();
 					throw (new IllegalStateException(e));
@@ -264,8 +263,9 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 						.getLogger()
 						.info("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
 				this.status = Status.Ready;
-			} else
+			} else {
 				throw (new IllegalStateException());
+			}
 		}
 		return null;
 	}

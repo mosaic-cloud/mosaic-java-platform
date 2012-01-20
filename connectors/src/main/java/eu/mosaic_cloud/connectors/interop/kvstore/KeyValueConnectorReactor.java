@@ -22,10 +22,13 @@ package eu.mosaic_cloud.connectors.interop.kvstore;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
+import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
+import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error;
@@ -36,13 +39,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
-
-import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
-
-
-import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.interoperability.core.Message;
 
 /**
  * Implements a reactor for processing asynchronous requests issued by the
@@ -70,6 +66,7 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor { // NOPM
 	/**
 	 * Destroys this reactor.
 	 */
+	@Override
 	public void destroy() {
 		// nothing to do here
 		// if it does something don'y forget synchronized
@@ -112,7 +109,8 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor { // NOPM
 			token = errorPayload.getToken();
 			handlers = getHandlers(token);
 			if (handlers != null) {
-				Exception exception = new Exception(errorPayload.getErrorMessage()); // NOPMD by georgiana on 10/13/11 12:40 PM
+				Exception exception = new Exception(
+						errorPayload.getErrorMessage()); // NOPMD by georgiana on 10/13/11 12:40 PM
 				for (IOperationCompletionHandler<?> handler : handlers) {
 					handler.onFailure(exception);
 				}

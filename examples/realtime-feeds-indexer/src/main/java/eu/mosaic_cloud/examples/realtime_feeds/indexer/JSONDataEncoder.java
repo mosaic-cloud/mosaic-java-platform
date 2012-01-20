@@ -27,10 +27,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public class JSONDataEncoder implements DataEncoder<JSONObject> {
 
@@ -45,8 +45,9 @@ public class JSONDataEncoder implements DataEncoder<JSONObject> {
 
 	@Override
 	public JSONObject decode(byte[] dataBytes) throws Exception {
-		if (dataBytes.length == 0)
+		if (dataBytes.length == 0) {
 			return null;
+		}
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				new ByteArrayInputStream(dataBytes)));
 		JSONTokener tokener = new JSONTokener(reader);

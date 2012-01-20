@@ -25,28 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
-
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -55,11 +33,29 @@ import org.junit.runner.RunWith;
 
 import com.google.common.base.Preconditions;
 
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.tests.Serial;
+import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
+import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
+import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
+import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 @RunWith(SerialJunitRunner.class)
 @Serial
 public class KeyValueConnectorTest {
+
 	private static KeyValueStoreConnector<String> connector;
 	private static String keyPrefix;
 	private static KeyValueStub driverStub;
@@ -67,6 +63,9 @@ public class KeyValueConnectorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
+		ThreadingContext threading = BasicThreadingContext.create(
+				MemcachedConnectorTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				KeyValueConnectorTest.class.getClassLoader(), "kv-test.prop");
 		KeyValueConnectorTest.storeType = ConfigUtils.resolveParameter(config,
@@ -75,7 +74,7 @@ public class KeyValueConnectorTest {
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
@@ -83,7 +82,8 @@ public class KeyValueConnectorTest {
 		KeyValueConnectorTest.driverStub = KeyValueStub.create(config,
 				driverChannel);
 		KeyValueConnectorTest.connector = KeyValueStoreConnector.create(config,
-				new PojoDataEncoder<String>(String.class));
+				new PojoDataEncoder<String>(String.class),
+				Threading.sequezeThreadingContextOutOfDryRock());
 		KeyValueConnectorTest.keyPrefix = UUID.randomUUID().toString();
 	}
 
@@ -208,16 +208,20 @@ public class KeyValueConnectorTest {
 	}
 
 	public static void main() throws Throwable {
+		ThreadingContext threading = BasicThreadingContext.create(
+				MemcachedConnectorTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				KeyValueConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
-		KeyValueStoreConnector<String> connector = KeyValueStoreConnector.create(
-				config, new PojoDataEncoder<String>(String.class));
+		KeyValueStoreConnector<String> connector = KeyValueStoreConnector
+				.create(config, new PojoDataEncoder<String>(String.class),
+						Threading.sequezeThreadingContextOutOfDryRock());
 		String keyPrefix = UUID.randomUUID().toString();
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
@@ -231,7 +235,8 @@ public class KeyValueConnectorTest {
 
 		List<IOperationCompletionHandler<String>> handlers = getHandlers("get");
 		IResult<String> r3 = connector.get(k1, handlers, null);
-		Preconditions.checkArgument("fantastic".equals(r3.getResult().toString()));
+		Preconditions.checkArgument("fantastic".equals(r3.getResult()
+				.toString()));
 
 		List<IOperationCompletionHandler<List<String>>> handlersl = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlersl.add(new TestLoggingHandler<List<String>>("list"));
@@ -244,7 +249,7 @@ public class KeyValueConnectorTest {
 		Preconditions.checkArgument(r5.getResult());
 
 		IResult<String> r6 = connector.get(k1, handlers, null);
-		Preconditions.checkArgument(r6.getResult()==null);
+		Preconditions.checkArgument(r6.getResult() == null);
 
 		connector.destroy();
 		driverStub.destroy();

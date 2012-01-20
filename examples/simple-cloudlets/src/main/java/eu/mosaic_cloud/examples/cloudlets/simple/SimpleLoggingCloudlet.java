@@ -19,12 +19,6 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -35,7 +29,11 @@ import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArgument
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
 import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpConsumerCallback;
 import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpPublisherCallback;
-
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
 public class SimpleLoggingCloudlet {
 
@@ -216,6 +214,7 @@ public class SimpleLoggingCloudlet {
 	}
 
 	public static final class LoggingCloudletContext {
+
 		AmqpQueueConsumer<LoggingCloudletContext, LoggingData> consumer;
 		AmqpQueuePublisher<LoggingCloudletContext, AuthenticationToken> publisher;
 		boolean publisherRunning = false;

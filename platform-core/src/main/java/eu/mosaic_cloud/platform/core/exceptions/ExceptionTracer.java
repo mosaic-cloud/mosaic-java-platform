@@ -19,15 +19,11 @@
  */
 package eu.mosaic_cloud.platform.core.exceptions;
 
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
-
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
-
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
-
 
 public final class ExceptionTracer {
 

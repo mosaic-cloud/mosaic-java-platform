@@ -29,7 +29,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
  * A Cloudlet executor that executes operations requested in a certain cloudlet
@@ -165,7 +167,7 @@ public class CloudletExecutor {
 	 * @param loader
 	 *            the class loader used for loading cloudlet classes
 	 */
-	public CloudletExecutor(ClassLoader loader) {
+	public CloudletExecutor(ThreadingContext threading, ClassLoader loader) {
 		super();
 		this.runState = CloudletExecutor.INITIALIZING;
 		this.requestQueue = new LinkedBlockingQueue<Runnable>();
@@ -173,15 +175,14 @@ public class CloudletExecutor {
 
 		// FIXME get threads from workers from a thread pool
 		this.worker = new Worker();
-		this.worker.thread = new Thread(this.worker);
-		this.worker.thread.setContextClassLoader(loader);
-		this.worker.thread.setDaemon(false);
+		this.worker.thread = threading.newThread(new ThreadConfiguration(this,
+				"worker", true).setClassLoader(loader), this.worker);
 		this.worker.thread.start();
 
 		this.backupWorker = new BackupWorker();
-		this.backupWorker.thread = new Thread(this.backupWorker);
-		this.backupWorker.thread.setContextClassLoader(loader);
-		this.backupWorker.thread.setDaemon(false);
+		this.backupWorker.thread = threading.newThread(new ThreadConfiguration(
+				this, "backup-worker", true).setClassLoader(loader),
+				this.backupWorker);
 		this.backupWorker.thread.start();
 		this.runningWorkers = 2;
 		this.runState = CloudletExecutor.RUNNING;
@@ -362,8 +363,9 @@ public class CloudletExecutor {
 	 *             if request is null
 	 */
 	public void handleRequest(Runnable request) {
-		if (request == null)
+		if (request == null) {
 			throw new NullPointerException();
+		}
 
 		// if ((runState == RUNNING) && requestQueue.offer(request)) {
 		// if (runState != RUNNING)
@@ -441,15 +443,17 @@ public class CloudletExecutor {
 	 *            the response to process
 	 */
 	public void handleResponse(Runnable response) {
-		if (response == null)
+		if (response == null) {
 			throw new NullPointerException();
+		}
 		this.mainLock.lock();
 		try {
 			if ((this.runState < CloudletExecutor.STOP)
-					&& this.responseQueue.offer(response))
+					&& this.responseQueue.offer(response)) {
 				if (this.worker.isBlocked()) {
 					this.mainWorkerBlocked.signal();
 				}
+			}
 			this.queuesNotEmpty.signal();
 		} finally {
 			this.mainLock.unlock();
@@ -474,17 +478,18 @@ public class CloudletExecutor {
 		for (;;) {
 			try {
 				int state = this.runState;
-				if (state > CloudletExecutor.SHUTDOWN)
+				if (state > CloudletExecutor.SHUTDOWN) {
 					return null;
+				}
 				Runnable r;
 				this.mainLock.lock();
-				if (state == CloudletExecutor.SHUTDOWN) // Help drain queues
+				if (state == CloudletExecutor.SHUTDOWN) {
 					if (!this.responseQueue.isEmpty()) {
 						r = this.responseQueue.poll();
 					} else {
 						r = this.requestQueue.poll();
 					}
-				else {
+				} else {
 					while (this.responseQueue.isEmpty()
 							&& this.requestQueue.isEmpty()) {
 						this.queuesNotEmpty.await();
@@ -495,8 +500,9 @@ public class CloudletExecutor {
 						r = this.requestQueue.poll();
 					}
 				}
-				if (r != null)
+				if (r != null) {
 					return r;
+				}
 				if (workerCanExit()) {
 					if (this.runState >= CloudletExecutor.SHUTDOWN) {
 						interruptBackupWorker();
@@ -529,8 +535,9 @@ public class CloudletExecutor {
 		for (;;) {
 			try {
 				int state = this.runState;
-				if (state > CloudletExecutor.SHUTDOWN)
+				if (state > CloudletExecutor.SHUTDOWN) {
 					return null;
+				}
 				Runnable r;
 				this.mainLock.lock();
 				// wait until the main worker blocks
@@ -627,7 +634,7 @@ public class CloudletExecutor {
 		protected void interruptIfIdle() {
 			if (this.runLock.tryLock()) {
 				try {
-					if (this.thread != Thread.currentThread()) {
+					if (!Threading.isCurrentThread(this.thread)) {
 						this.thread.interrupt();
 					}
 				} finally {
@@ -656,7 +663,7 @@ public class CloudletExecutor {
 				 * a shutdownNow -- if so, the interrupt is re-enabled.
 				 */
 				if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
-						&& Thread.interrupted()
+						&& Threading.isCurrentThreadInterrupted()
 						&& (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
 					this.thread.interrupt();
 				}
@@ -690,8 +697,9 @@ public class CloudletExecutor {
 		 * asynchronous operation in a request.
 		 */
 		public boolean isBlocked() {
-			if (isActive() && (this.thread.getState() == State.WAITING))
+			if (isActive() && (this.thread.getState() == State.WAITING)) {
 				return true;
+			}
 			return false;
 		}
 	}
@@ -729,7 +737,7 @@ public class CloudletExecutor {
 				 * a shutdownNow -- if so, the interrupt is re-enabled.
 				 */
 				if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
-						&& Thread.interrupted()
+						&& Threading.isCurrentThreadInterrupted()
 						&& (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
 					this.thread.interrupt();
 				}
@@ -742,6 +750,6 @@ public class CloudletExecutor {
 	}
 
 	public ClassLoader getLoader() {
-		return loader;
+		return this.loader;
 	}
 }

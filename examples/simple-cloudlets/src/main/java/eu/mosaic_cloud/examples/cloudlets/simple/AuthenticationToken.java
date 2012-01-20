@@ -32,11 +32,11 @@ public final class AuthenticationToken implements Serializable {
 	}
 
 	public String getToken() {
-		return token;
+		return this.token;
 	}
 
 	@Override
 	public String toString() {
-		return token;
+		return this.token;
 	}
 }

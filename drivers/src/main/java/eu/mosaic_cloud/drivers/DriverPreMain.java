@@ -40,7 +40,10 @@ public final class DriverPreMain {
 	 * @throws SecurityException
 	 * @throws Exception
 	 */
-	public static void main(String[] arguments) throws SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException  {
+	public static void main(String[] arguments) throws SecurityException,
+			IllegalArgumentException, ClassNotFoundException,
+			NoSuchMethodException, IllegalAccessException,
+			InvocationTargetException {
 		Preconditions.checkArgument(arguments != null);
 		Preconditions
 				.checkArgument(arguments.length == 1,

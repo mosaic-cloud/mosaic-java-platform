@@ -44,7 +44,11 @@ import eu.mosaic_cloud.tools.classpath_exporter.ClasspathExporter;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonCoder;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import org.slf4j.LoggerFactory;
 
 
@@ -89,34 +93,34 @@ public final class MosBasicComponentLauncher
 	public static final void main (final String[] arguments, final ClassLoader loader)
 			throws Throwable
 	{
-		MosBasicComponentLauncher.main (arguments, loader, AbortingExceptionTracer.defaultInstance);
+		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
+		final ThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		MosBasicComponentLauncher.main (arguments, loader, threading, exceptions);
 	}
 	
-	public static final void main (final String[] arguments, final ClassLoader loader, final ExceptionTracer exceptions)
+	public static final void main (final String[] arguments, final ClassLoader loader, final ThreadingContext threading, final ExceptionTracer exceptions)
 			throws Throwable
 	{
+		Preconditions.checkNotNull (threading);
+		Preconditions.checkNotNull (exceptions);
 		final Logger logger = (Logger) LoggerFactory.getLogger (MosBasicComponentLauncher.class);
 		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 2) && (("local".equals (arguments[1]) && (arguments.length == 5)) || ("remote".equals (arguments[1]) && (arguments.length == 6))), "invalid arguments: expected `<class> local <ip> <port> <mos-url>` or `<class> remote <ip> <port-1> <port-2> <mos-url>`");
 		final boolean[] shouldStop = new boolean[] {false};
 		{
-			Runtime.getRuntime ().addShutdownHook (new Thread () {
+			Threading.registerExitCallback (threading, MosBasicComponentLauncher.class, "exit-hook-1", new Runnable () {
 				@Override
 				public final void run ()
 				{
 					shouldStop[0] = true;
 					logger.debug ("starting safety hook...");
-					new Thread () {
+					Threading.createAndStartDaemonThread (threading, MosBasicComponentLauncher.class, "exiter", new Runnable () {
 						@Override
 						public final void run ()
 						{
-							try {
-								Thread.sleep (2000);
-							} catch (final InterruptedException exception) {
-								// intentional
-							}
-							Runtime.getRuntime ().halt (1);
+							Threading.sleep (2000);
+							Threading.halt ();
 						}
-					}.start ();
+					});
 				}
 			});
 		}
@@ -134,7 +138,7 @@ public final class MosBasicComponentLauncher
 				@Override
 				public final void run ()
 				{
-					BasicComponentHarnessMain.main (clasz, null, String.format ("%s:%d", channelAddress.getAddress ().getHostAddress (), Integer.valueOf (channelAddress.getPort ())), null, exceptions);
+					BasicComponentHarnessMain.main (clasz, null, String.format ("%s:%d", channelAddress.getAddress ().getHostAddress (), Integer.valueOf (channelAddress.getPort ())), null, threading, exceptions);
 				}
 			};
 		} else if ("remote".equals (arguments[1])) {
@@ -145,7 +149,7 @@ public final class MosBasicComponentLauncher
 			createParameters = new String[] {String.format ("type=%s", URLEncoder.encode ("#mosaic-components:java-container", "UTF-8")), String.format ("configuration=%s", DefaultJsonCoder.defaultInstance.encodeToString (configuration)), "count=1"};
 			final ClasspathExporter exporter = ClasspathExporter.create (httpAddress, Objects.firstNonNull (loader, ClassLoader.getSystemClassLoader ()), exceptions);
 			final SimpleSocketServer appender = new SimpleSocketServer ((LoggerContext) LoggerFactory.getILoggerFactory (), logbackAddress.getPort ());
-			Runtime.getRuntime ().addShutdownHook (new Thread () {
+			Threading.registerExitCallback (threading, MosBasicComponentLauncher.class, "exit-hook-2", new Runnable () {
 				@Override
 				public final void run ()
 				{
@@ -194,10 +198,10 @@ public final class MosBasicComponentLauncher
 			};
 		} else
 			throw (new IllegalStateException ());
-		final Thread main = new Thread (run);
+		final Thread main = Threading.createNormalThread (threading, MosBasicComponentLauncher.class, "main", run);
 		final String[] identifier = new String[] {null};
 		{
-			Runtime.getRuntime ().addShutdownHook (new Thread () {
+			Threading.registerExitCallback (threading, MosBasicComponentLauncher.class, "exit-hook-3", new Runnable () {
 				@Override
 				public final void run ()
 				{
@@ -215,7 +219,7 @@ public final class MosBasicComponentLauncher
 		}
 		logger.debug ("starting main...");
 		main.start ();
-		Thread.sleep (1000);
+		Threading.sleep (1000);
 		logger.debug ("creating component...");
 		try {
 			final URL createUrl = new URL (controller, String.format ("/processes/create?%s", Joiner.on ("&").join (Arrays.asList (createParameters))));

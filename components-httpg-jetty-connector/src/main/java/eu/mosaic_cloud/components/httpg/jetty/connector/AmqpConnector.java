@@ -23,10 +23,14 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownListener;
+import com.rabbitmq.client.ShutdownSignalException;
 import eu.mosaic_cloud.components.httpg.jetty.connector.MessageHandler.MessageFormatException;
-
-
-
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import org.eclipse.jetty.io.ByteArrayEndPoint;
 import org.eclipse.jetty.io.ConnectedEndPoint;
 import org.eclipse.jetty.io.EndPoint;
@@ -35,13 +39,6 @@ import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.util.log.Log;
 import org.json.JSONException;
-
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.QueueingConsumer;
-import com.rabbitmq.client.ShutdownListener;
-import com.rabbitmq.client.ShutdownSignalException;
 
 
 public class AmqpConnector extends AbstractConnector {
@@ -85,21 +82,18 @@ public class AmqpConnector extends AbstractConnector {
 		try {
 			delivery = _consumer.nextDelivery();
 		} catch (ShutdownSignalException e) {
-			Log.warn ("Shutdown encountered...");
-			System.exit(1);
-			try {
-				Thread.sleep (1000);
-			} catch (InterruptedException e1) {}
-			throw (e);
+			Log.warn (e);
+			throw e;
 		}
 		try {
 			msg = MessageHandler.decodeMessage(delivery);
 			msg.set_channel(_channel);
 		} catch (MessageFormatException e) {
-			Log.warn("Could not decode message: " + e.getMessage());
+			Log.warn(e);
+			throw new IOException(e);
 		} catch (IOException e) {
-			Log.warn("Could not read message: " + e.getMessage());
-			e.printStackTrace(System.err);
+			Log.warn(e);
+			throw e;
 		}
 		ConnectorEndPoint _endPoint = new ConnectorEndPoint(msg);
 		_endPoint.dispatch();
@@ -155,38 +149,32 @@ public class AmqpConnector extends AbstractConnector {
 
 	@Override
 	public void open() throws IOException {
-		try {
-			setupConnection();
-		} catch (IOException e) {
-			Log.warn(e);
-			System.exit(1);
+		while (true) {
+			try {
+				setupConnection();
+				break;
+			} catch (IOException e) {
+				Log.warn(e);
+				Threading.sleep (1000);
+				continue;
+			}
 		}
 		_connection.addShutdownListener(new ShutdownListener() {
-
 			@Override
 			public void shutdownCompleted(ShutdownSignalException cause) {
 				Log.warn("Connection to RabbitMQ failed!");
-				try {
-					Thread.sleep(400);
-				} catch (InterruptedException e) {
-					e.printStackTrace(System.err);
-				}
-				try {
-					setupConnection();
-				} catch (IOException e) {
-					Log.warn("Faild connecting... Going to sleep and retry");
-					System.exit(1);
+				while (true) {
 					try {
-						Thread.sleep(4000);
-					} catch (InterruptedException e1) {
-
+						setupConnection();
+						break;
+					} catch (IOException e) {
+						Log.warn(e);
+						Threading.sleep (1000);
+						continue;
 					}
-					shutdownCompleted(cause);
 				}
-
 			}
 		});
-
 	}
 
 	protected class ConnectorEndPoint extends ByteArrayEndPoint implements
@@ -223,12 +211,12 @@ public class AmqpConnector extends AbstractConnector {
 		public void close() throws IOException {
 			// Log.info("connector close() called!");
 			if (!_closed) {
-			try {
-				sendResponse();
-			} catch (JSONException e) {
-				// TODO Handle this...
-				e.printStackTrace(System.err);
-			}
+				try {
+					sendResponse();
+				} catch (JSONException e) {
+					// TODO Handle this...
+					Log.warn(e);
+				}
 			}
 			super.close();
 		}

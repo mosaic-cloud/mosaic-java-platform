@@ -21,15 +21,13 @@ package eu.mosaic_cloud.drivers.kvstore;
 
 import java.io.IOException;
 
+import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
-
-import eu.mosaic_cloud.drivers.ConfigProperties;
-
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Driver class for the Riak key-value database management systems.
@@ -41,6 +39,7 @@ import eu.mosaic_cloud.drivers.ConfigProperties;
  */
 
 public final class RiakPBDriver extends AbstractKeyValueDriver {
+
 	private final String riakHost;
 	private final int riakPort;
 
@@ -54,8 +53,9 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
 	 * @param riakPort
 	 *            the port for the Riak server
 	 */
-	private RiakPBDriver(int noThreads, String riakHost, int riakPort) {
-		super(noThreads);
+	private RiakPBDriver(ThreadingContext threading, int noThreads,
+			String riakHost, int riakPort) {
+		super(threading, noThreads);
 		this.riakHost = riakHost;
 		this.riakPort = riakPort;
 	}
@@ -78,8 +78,8 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
 	 * @throws IOException
 	 * @throws ConnectionException
 	 */
-	public static RiakPBDriver create(IConfiguration config)
-			throws IOException, ConnectionException {
+	public static RiakPBDriver create(IConfiguration config,
+			ThreadingContext threading) throws IOException, ConnectionException {
 		int port, noThreads;
 
 		String host = ConfigUtils.resolveParameter(config,
@@ -100,7 +100,7 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
 
 		MosaicLogger.getLogger().trace(
 				"Created Riak PB driver for host " + host + ":" + port);
-		return new RiakPBDriver(noThreads, host, port);
+		return new RiakPBDriver(threading, noThreads, host, port);
 	}
 
 	/**

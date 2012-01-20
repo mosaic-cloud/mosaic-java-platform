@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.zeromq.ZMQ;
@@ -35,10 +37,12 @@ import org.zeromq.ZMQ;
 public final class ZeroMqChannelSocket
 		extends Object
 {
-	public ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger, final ExceptionTracer exceptions)
+	public ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (self);
+		Preconditions.checkNotNull (threading);
+		this.threading = threading;
 		this.transcript = Transcript.create (this);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.self = self;
@@ -47,7 +51,6 @@ public final class ZeroMqChannelSocket
 		this.dequeueTrigger = dequeueTrigger;
 		this.shouldStop = false;
 		this.looper = new Looper ();
-		this.looper.start ();
 	}
 	
 	public final void accept (final String endpoint)
@@ -55,19 +58,11 @@ public final class ZeroMqChannelSocket
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("accepting on `%s`...", endpoint);
 		if (this.socket == null)
-			try {
-				Thread.sleep (100);
-			} catch (final InterruptedException exception) {
-				this.exceptions.traceIgnoredException (exception);
-			}
+			Threading.sleep (100);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.bind (endpoint);
-		try {
-			Thread.sleep (100);
-		} catch (final InterruptedException exception) {
-			this.exceptions.traceIgnoredException (exception);
-		}
+		Threading.sleep (100);
 	}
 	
 	public final void connect (final String endpoint)
@@ -75,19 +70,11 @@ public final class ZeroMqChannelSocket
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("connecting to `%s`...", endpoint);
 		if (this.socket == null)
-			try {
-				Thread.sleep (100);
-			} catch (final InterruptedException exception) {
-				this.exceptions.traceIgnoredException (exception);
-			}
+			Threading.sleep (100);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.connect (endpoint);
-		try {
-			Thread.sleep (100);
-		} catch (final InterruptedException exception) {
-			this.exceptions.traceIgnoredException (exception);
-		}
+		Threading.sleep (100);
 	}
 	
 	public final Packet dequeue ()
@@ -282,11 +269,12 @@ public final class ZeroMqChannelSocket
 	private final Runnable dequeueTrigger;
 	private final TranscriptExceptionTracer exceptions;
 	private final LinkedBlockingQueue<Packet> inboundPackets;
-	private final Thread looper;
+	private final Looper looper;
 	private final LinkedBlockingQueue<Packet> outboundPackets;
 	private final String self;
 	private boolean shouldStop;
 	private ZMQ.Socket socket;
+	private final ThreadingContext threading;
 	private final Transcript transcript;
 	static {
 		context = ZMQ.context (1);
@@ -312,12 +300,14 @@ public final class ZeroMqChannelSocket
 	}
 	
 	private final class Looper
-			extends Thread
+			extends Object
+			implements
+				Runnable
 	{
 		Looper ()
 		{
-			this.setName (String.format ("%s#%08x", ZeroMqChannelSocket.this.getClass ().getSimpleName (), Integer.valueOf (System.identityHashCode (ZeroMqChannelSocket.this))));
-			this.setDaemon (true);
+			super ();
+			this.thread = Threading.createAndStartDaemonThread (ZeroMqChannelSocket.this.threading, ZeroMqChannelSocket.this, "loop", this);
 		}
 		
 		@Override
@@ -327,5 +317,7 @@ public final class ZeroMqChannelSocket
 			ZeroMqChannelSocket.this.loop ();
 			ZeroMqChannelSocket.this.teardown ();
 		}
+		
+		private final Thread thread;
 	}
 }

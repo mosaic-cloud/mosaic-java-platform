@@ -24,7 +24,6 @@ package eu.mosaic_cloud.components.implementations.basic;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -47,6 +46,11 @@ import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReacto
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.slf4j.LoggerFactory;
@@ -61,8 +65,12 @@ public final class BasicComponentHarnessMain
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final ComponentCallbacks callbacks, final InputStream input, final OutputStream output, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacks callbacks, final InputStream input, final OutputStream output, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
+		Preconditions.checkNotNull (callbacks);
+		Preconditions.checkNotNull (input);
+		Preconditions.checkNotNull (threading);
+		Preconditions.checkNotNull (exceptions);
 		final Pipe inputPipe;
 		final Pipe outputPipe;
 		try {
@@ -72,10 +80,10 @@ public final class BasicComponentHarnessMain
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (new Error (exception));
 		}
-		final Piper inputPiper = new Piper (Channels.newChannel (input), inputPipe.sink (), exceptions);
-		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (output), exceptions);
+		final Piper inputPiper = new Piper (Channels.newChannel (input), inputPipe.sink (), threading, exceptions);
+		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (output), threading, exceptions);
 		try {
-			BasicComponentHarnessMain.main (callbacks, inputPipe.source (), outputPipe.sink (), exceptions);
+			BasicComponentHarnessMain.main (callbacks, inputPipe.source (), outputPipe.sink (), threading, exceptions);
 		} catch (final Error exception) {
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (exception);
@@ -93,11 +101,15 @@ public final class BasicComponentHarnessMain
 		}
 	}
 	
-	public static final void main (final ComponentCallbacks callbacks, final ReadableByteChannel input, final WritableByteChannel output, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacks callbacks, final ReadableByteChannel input, final WritableByteChannel output, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
+		Preconditions.checkNotNull (callbacks);
+		Preconditions.checkNotNull (input);
+		Preconditions.checkNotNull (threading);
+		Preconditions.checkNotNull (exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.create ();
-		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
-		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, exceptions);
+		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
+		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, threading, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
 		reactor.initialize ();
 		channel.initialize ();
@@ -106,20 +118,20 @@ public final class BasicComponentHarnessMain
 		while (true) {
 			if (!component.isActive ())
 				break;
-			try {
-				Thread.sleep (BasicComponentHarnessMain.sleepTimeout);
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
+			if (!Threading.sleep (BasicComponentHarnessMain.sleepTimeout))
 				break;
-			}
 		}
 		component.terminate ();
 		channel.terminate ();
 		reactor.terminate ();
 	}
 	
-	public static final void main (final ComponentCallbacks callbacks, final SocketAddress address, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacks callbacks, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
+		Preconditions.checkNotNull (callbacks);
+		Preconditions.checkNotNull (address);
+		Preconditions.checkNotNull (threading);
+		Preconditions.checkNotNull (exceptions);
 		final Socket connection;
 		final InputStream input;
 		final OutputStream output;
@@ -137,7 +149,7 @@ public final class BasicComponentHarnessMain
 			throw (new Error (exception));
 		}
 		try {
-			BasicComponentHarnessMain.main (callbacks, input, output, exceptions);
+			BasicComponentHarnessMain.main (callbacks, input, output, threading, exceptions);
 		} catch (final Error exception) {
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (exception);
@@ -153,12 +165,16 @@ public final class BasicComponentHarnessMain
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
 	{
-		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, AbortingExceptionTracer.defaultInstance);
+		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
+		final ThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
 	}
 	
-	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ExceptionTracer exceptions)
+	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		Preconditions.checkNotNull (componentArgument);
+		Preconditions.checkNotNull (threading);
+		Preconditions.checkNotNull (exceptions);
 		final ClassLoader classLoader;
 		if (classpathArgument != null) {
 			final LinkedList<URL> classLoaderUrls = new LinkedList<URL> ();
@@ -209,12 +225,12 @@ public final class BasicComponentHarnessMain
 			logger.addAppender (appender);
 		}
 		if ((channelArgument == null) || (channelArgument.equals ("stdio")))
-			BasicComponentHarnessMain.main (callbacks, BasicComponentHarnessPreMain.stdin, BasicComponentHarnessPreMain.stdout, exceptions);
+			BasicComponentHarnessMain.main (callbacks, BasicComponentHarnessPreMain.stdin, BasicComponentHarnessPreMain.stdout, threading, exceptions);
 		else {
 			final String[] channelParts = channelArgument.split (":");
 			Preconditions.checkArgument (channelParts.length == 2);
 			final InetSocketAddress channelAddress = new InetSocketAddress (channelParts[0], Integer.parseInt (channelParts[1]));
-			BasicComponentHarnessMain.main (callbacks, channelAddress, exceptions);
+			BasicComponentHarnessMain.main (callbacks, channelAddress, threading, exceptions);
 		}
 	}
 	
@@ -254,21 +270,27 @@ public final class BasicComponentHarnessMain
 	private static final long sleepTimeout = 100;
 	
 	private static final class Piper
-			extends Thread
+			extends Object
 			implements
-				UncaughtExceptionHandler
+				Runnable,
+				Thread.UncaughtExceptionHandler
 	{
-		Piper (final ReadableByteChannel source, final WritableByteChannel sink, final ExceptionTracer exceptions)
+		Piper (final ReadableByteChannel source, final WritableByteChannel sink, final ThreadingContext threading, final ExceptionTracer exceptions)
 		{
 			super ();
+			this.threading = threading;
 			this.transcript = Transcript.create (this);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
-			this.setDaemon (true);
-			this.setName (String.format ("Piper#%08x", Integer.valueOf (System.identityHashCode (this))));
-			this.setUncaughtExceptionHandler (this);
-			this.start ();
+			this.thread = this.threading.newThread (new ThreadConfiguration (this, "piper", this), this);
+			this.thread.start ();
+		}
+		
+		public final void join ()
+				throws InterruptedException
+		{
+			this.thread.join ();
 		}
 		
 		@Override
@@ -308,9 +330,9 @@ public final class BasicComponentHarnessMain
 		}
 		
 		@Override
-		public void uncaughtException (final Thread thread, final Throwable exception)
+		public final void uncaughtException (final Thread thread, final Throwable exception)
 		{
-			Preconditions.checkArgument (this == thread);
+			Preconditions.checkArgument (this.thread == thread);
 			this.exceptions.traceIgnoredException (exception);
 			this.close ();
 		}
@@ -334,6 +356,8 @@ public final class BasicComponentHarnessMain
 		private final TranscriptExceptionTracer exceptions;
 		private final WritableByteChannel sink;
 		private final ReadableByteChannel source;
+		private final Thread thread;
+		private final ThreadingContext threading;
 		private final Transcript transcript;
 	}
 }

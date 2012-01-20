@@ -22,18 +22,16 @@ package eu.mosaic_cloud.connectors.interop;
 import java.io.IOException;
 import java.util.List;
 
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 
 /**
  * Base class for connector proxys.
@@ -105,9 +103,9 @@ public class ConnectorProxy implements SessionCallbacks {
 	 */
 	protected void sendRequest(Session session, Message request)
 			throws IOException {
-//		synchronized (this) {
-			session.send(request);
-//		}
+		//		synchronized (this) {
+		session.send(request);
+		//		}
 	}
 
 	/**
@@ -177,6 +175,6 @@ public class ConnectorProxy implements SessionCallbacks {
 	}
 
 	public IConfiguration getConfiguration() {
-		return configuration;
+		return this.configuration;
 	}
 }

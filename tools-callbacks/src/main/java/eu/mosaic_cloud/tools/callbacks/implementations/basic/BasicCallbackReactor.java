@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -40,8 +39,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackTrigger;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.miscellaneous.DefaultThreadPoolFactory;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -51,10 +51,10 @@ public final class BasicCallbackReactor
 		implements
 			CallbackReactor
 {
-	private BasicCallbackReactor (final ExceptionTracer exceptions)
+	private BasicCallbackReactor (final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Reactor (this, exceptions);
+		this.delegate = new Reactor (this, threading, exceptions);
 	}
 	
 	@Override
@@ -94,9 +94,9 @@ public final class BasicCallbackReactor
 	
 	final Reactor delegate;
 	
-	public static final BasicCallbackReactor create (final ExceptionTracer exceptions)
+	public static final BasicCallbackReactor create (final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		return (new BasicCallbackReactor (exceptions));
+		return (new BasicCallbackReactor (threading, exceptions));
 	}
 	
 	private static abstract class Action
@@ -212,15 +212,17 @@ public final class BasicCallbackReactor
 	static private final class Reactor
 			extends AbstractService
 	{
-		Reactor (final BasicCallbackReactor facade, final ExceptionTracer exceptions)
+		Reactor (final BasicCallbackReactor facade, final ThreadingContext threading, final ExceptionTracer exceptions)
 		{
 			Preconditions.checkNotNull (facade);
+			Preconditions.checkNotNull (threading);
 			this.facade = facade;
 			this.monitor = Monitor.create (this.facade);
 			synchronized (this.monitor) {
+				this.threading = threading;
 				this.transcript = Transcript.create (this.facade);
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
-				this.executor = Executors.newCachedThreadPool (DefaultThreadPoolFactory.create (this.facade, true, Thread.NORM_PRIORITY, this.exceptions));
+				this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this.facade, "callbacks", this.exceptions.catcher));
 				this.proxies = new WeakHashMap<CallbackTrigger, Proxy> ();
 				this.actions = new WeakHashMap<CallbackReference, Action> ();
 			}
@@ -495,6 +497,7 @@ public final class BasicCallbackReactor
 		final BasicCallbackReactor facade;
 		final Monitor monitor;
 		final WeakHashMap<CallbackTrigger, Proxy> proxies;
+		final ThreadingContext threading;
 		final Transcript transcript;
 	}
 	

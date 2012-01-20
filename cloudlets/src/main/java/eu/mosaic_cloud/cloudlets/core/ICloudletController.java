@@ -19,13 +19,11 @@
  */
 package eu.mosaic_cloud.cloudlets.core;
 
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-
 
 /**
  * Interface for cloudlet control operations. Each cloudlet has access to an
@@ -38,6 +36,7 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
  *            the type of the context of the cloudlet
  */
 public interface ICloudletController<C> extends ICloudlet {
+
 	IConfiguration getConfiguration();
 
 	<T> CompletionInvocationHandler<T> getResponseInvocationHandler(

@@ -22,9 +22,15 @@ package eu.mosaic_cloud.connectors.interop.queue.amqp;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
+import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpCallbacksMap;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-
 import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -38,17 +44,6 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
-
-import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpCallbacksMap;
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
-
-
-import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.interoperability.core.Message;
 
 /**
  * Implements a reactor for processing asynchronous requests issued by the AMQP
@@ -74,6 +69,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 	/**
 	 * Destroys this reactor.
 	 */
+	@Override
 	public void destroy() {
 		// nothing to do here
 		// if it does something don'y forget synchronized
@@ -217,10 +213,12 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			byte[] data = delivery.getData().toByteArray();
 			String correlationId = null;
 			String replyTo = null;
-			if (delivery.hasCorrelationId())
+			if (delivery.hasCorrelationId()) {
 				correlationId = delivery.getCorrelationId();
-			if (delivery.hasReplyTo())
+			}
+			if (delivery.hasReplyTo()) {
 				replyTo = delivery.getReplyTo();
+			}
 			AmqpInboundMessage mssg = new AmqpInboundMessage(consumerId,
 					deliveryTag, exchange, routingKey, data, deliveryMode == 2,
 					replyTo, null, delivery.getContentType(), correlationId,

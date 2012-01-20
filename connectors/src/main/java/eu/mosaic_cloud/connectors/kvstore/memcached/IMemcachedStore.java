@@ -22,13 +22,10 @@ package eu.mosaic_cloud.connectors.kvstore.memcached;
 import java.util.List;
 import java.util.Map;
 
+import eu.mosaic_cloud.connectors.kvstore.IKeyValueStore;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.connectors.kvstore.IKeyValueStore;
-
-
 
 /**
  * Interface for working with key-value memcached compatible stores.

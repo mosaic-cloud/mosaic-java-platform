@@ -26,15 +26,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import eu.mosaic_cloud.examples.realtime_feeds.indexer.FeedParser;
-
-
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.sun.syndication.io.FeedException;
+
+import eu.mosaic_cloud.examples.realtime_feeds.indexer.FeedParser;
 
 public class FeedParserTest {
 
@@ -65,13 +65,13 @@ public class FeedParserTest {
 			}
 			bytes = builder.toString().getBytes();// toBytes(builder.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			Assert.fail();
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					Assert.fail();
 				}
 			}
 		}

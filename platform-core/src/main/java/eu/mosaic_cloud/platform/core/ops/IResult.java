@@ -64,5 +64,7 @@ public interface IResult<T> {
 	 *             if the operation threw an exception
 	 */
 	T getResult() throws InterruptedException, ExecutionException;
-	T getResult(long timeout, TimeUnit unit)  throws InterruptedException, ExecutionException, TimeoutException;
+
+	T getResult(long timeout, TimeUnit unit) throws InterruptedException,
+			ExecutionException, TimeoutException;
 }

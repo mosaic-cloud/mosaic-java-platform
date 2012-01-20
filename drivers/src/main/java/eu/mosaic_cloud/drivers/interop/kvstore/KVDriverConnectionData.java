@@ -93,7 +93,7 @@ public class KVDriverConnectionData extends DriverConnectionData {
 			if (!isEqual) {
 				KVDriverConnectionData other = (KVDriverConnectionData) obj;
 				isEqual = ((this.bucket == null) && (other.bucket != null))
-						|| (this.bucket != null && (!this.bucket
+						|| ((this.bucket != null) && (!this.bucket
 								.equals(other.bucket)));
 			}
 			isEqual ^= true;

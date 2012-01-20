@@ -32,6 +32,7 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
  */
 public interface IAmqpQueueAccessorCallback<S> extends
 		IResourceAccessorCallback<S> {
+
 	/**
 	 * Called when consumer or publisher registered successfully.
 	 * 

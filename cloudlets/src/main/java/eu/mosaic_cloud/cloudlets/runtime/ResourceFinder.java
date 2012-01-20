@@ -20,15 +20,11 @@
 package eu.mosaic_cloud.cloudlets.runtime;
 
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
-
+import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-
-import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
-
 
 /**
  * Finder for resource drivers.
@@ -37,6 +33,7 @@ import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceTyp
  * 
  */
 public class ResourceFinder {
+
 	private static ResourceFinder finder;
 
 	private ResourceFinder() {

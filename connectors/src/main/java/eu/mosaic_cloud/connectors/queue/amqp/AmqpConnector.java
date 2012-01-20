@@ -22,8 +22,12 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import eu.mosaic_cloud.connectors.ConfigProperties;
+import eu.mosaic_cloud.connectors.interop.queue.amqp.AmqpProxy;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -32,18 +36,10 @@ import eu.mosaic_cloud.platform.core.ops.EventDrivenOperation;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
-
-import eu.mosaic_cloud.connectors.ConfigProperties;
-import eu.mosaic_cloud.connectors.interop.queue.amqp.AmqpProxy;
-
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Connector for queuing systems implementing the AMQP protocol.
@@ -54,6 +50,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 public class AmqpConnector implements IAmqpQueueConnector {
 
 	private AmqpProxy proxy;
+	private ThreadingContext threading;
 	private ExecutorService executor;
 
 	/**
@@ -64,9 +61,12 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	 * @param noThreads
 	 *            the number of threads to be used for processing requests
 	 */
-	private AmqpConnector(AmqpProxy proxy, int noThreads) {
+	private AmqpConnector(AmqpProxy proxy, ThreadingContext threading,
+			int noThreads) {
 		this.proxy = proxy;
-		this.executor = Executors.newFixedThreadPool(noThreads);
+		this.threading = threading;
+		this.executor = this.threading.newFixedThreadPool(
+				new ThreadConfiguration(this, "operations"), noThreads);
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static synchronized AmqpConnector create(IConfiguration config)
-			throws Throwable {
+	public static synchronized AmqpConnector create(IConfiguration config,
+			ThreadingContext threading) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -95,12 +95,12 @@ public class AmqpConnector implements IAmqpQueueConnector {
 				"Connector working with driver on " + driverIdentifier + "("
 						+ driverChannel + ")");
 		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		channel.register(AmqpSession.CONNECTOR);
 		channel.connect(driverChannel);
 		AmqpProxy proxy = AmqpProxy.create(config, connectorIdentifier,
 				driverIdentifier, channel);
-		return new AmqpConnector(proxy, noThreads);
+		return new AmqpConnector(proxy, threading, noThreads);
 	}
 
 	@Override
@@ -113,9 +113,11 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#declareExchange(java.lang.String,
-	 * eu.mosaic_cloud.drivers.queue.AmqpExchangeType, boolean, boolean, boolean,
-	 * java.util.List, eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
+	 * @see
+	 * eu.mosaic_cloud.connectors.queue.IAmqpQueue#declareExchange(java.lang
+	 * .String, eu.mosaic_cloud.drivers.queue.AmqpExchangeType, boolean,
+	 * boolean, boolean, java.util.List,
+	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
 	 */
 	@Override
 	public IResult<Boolean> declareExchange(final String name,
@@ -124,22 +126,21 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.declareExchange(name, type,
-							durable, autoDelete, passive,
-							op.getCompletionHandlers());
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.declareExchange(name, type, durable,
+						autoDelete, passive, op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}
@@ -147,8 +148,9 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#declareQueue(java.lang.String,
-	 * boolean, boolean, boolean, boolean, java.util.List,
+	 * @see
+	 * eu.mosaic_cloud.connectors.queue.IAmqpQueue#declareQueue(java.lang.String
+	 * , boolean, boolean, boolean, boolean, java.util.List,
 	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
 	 */
 	@Override
@@ -158,22 +160,22 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.declareQueue(queue, exclusive,
-							durable, autoDelete, passive,
-							op.getCompletionHandlers());
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.declareQueue(queue, exclusive,
+						durable, autoDelete, passive,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}
@@ -181,7 +183,8 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#bindQueue(java.lang.String,
+	 * @see
+	 * eu.mosaic_cloud.connectors.queue.IAmqpQueue#bindQueue(java.lang.String,
 	 * java.lang.String, java.lang.String, java.util.List,
 	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
 	 */
@@ -191,21 +194,21 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.bindQueue(exchange, queue,
-							routingKey, op.getCompletionHandlers());
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.bindQueue(exchange, queue, routingKey,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}
@@ -213,8 +216,8 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#publish(eu.mosaic_cloud.connectors.queue.
-	 * AmqpOutboundMessage, java.util.List,
+	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#publish(eu.mosaic_cloud.
+	 * connectors.queue. AmqpOutboundMessage, java.util.List,
 	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
 	 */
 	@Override
@@ -222,21 +225,21 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.publish(message,
-							op.getCompletionHandlers());
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.publish(message,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}
@@ -244,7 +247,8 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#consume(java.lang.String,
+	 * @see
+	 * eu.mosaic_cloud.connectors.queue.IAmqpQueue#consume(java.lang.String,
 	 * java.lang.String, boolean, boolean, java.lang.Object, java.util.List,
 	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler,
 	 * eu.mosaic_cloud.connectors.queue.IAmqpConsumerCallback)
@@ -256,22 +260,22 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			CompletionInvocationHandler<String> iHandler,
 			final IAmqpConsumerCallback consumerCallback) {
 		IResult<String> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<String> op = new EventDrivenOperation<String>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<String> op = new EventDrivenOperation<String>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.consume(queue, consumer,
-							exclusive, autoAck, extra,
-							op.getCompletionHandlers(), consumerCallback);
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.consume(queue, consumer, exclusive,
+						autoAck, extra, op.getCompletionHandlers(),
+						consumerCallback);
 
-				}
-			});
-			result = new EventDrivenResult<String>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<String>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}
@@ -280,28 +284,29 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	 * (non-Javadoc)
 	 * 
 	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#cancel(java.lang.String,
-	 * java.util.List, eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
+	 * java.util.List,
+	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
 	 */
 	@Override
 	public IResult<Boolean> cancel(final String consumer,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.cancel(consumer,
-							op.getCompletionHandlers());
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.cancel(consumer,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}
@@ -309,29 +314,30 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#get(java.lang.String, boolean,
-	 * java.util.List, eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
+	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#get(java.lang.String,
+	 * boolean, java.util.List,
+	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
 	 */
 	@Override
 	public IResult<Boolean> get(final String queue, final boolean autoAck,
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.get(queue, autoAck,
-							op.getCompletionHandlers());
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.get(queue, autoAck,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}
@@ -339,7 +345,8 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#ack(long, boolean, java.util.List,
+	 * @see eu.mosaic_cloud.connectors.queue.IAmqpQueue#ack(long, boolean,
+	 * java.util.List,
 	 * eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler)
 	 */
 	@Override
@@ -347,21 +354,21 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-//		synchronized (this) {
-			final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
-					handlers, iHandler);
-			op.setOperation(new Runnable() {
+		//		synchronized (this) {
+		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
+				handlers, iHandler);
+		op.setOperation(new Runnable() {
 
-				@Override
-				public void run() {
-					AmqpConnector.this.proxy.ack(delivery, multiple,
-							op.getCompletionHandlers());
+			@Override
+			public void run() {
+				AmqpConnector.this.proxy.ack(delivery, multiple,
+						op.getCompletionHandlers());
 
-				}
-			});
-			result = new EventDrivenResult<Boolean>(op);
-			this.executor.submit(op.getOperation());
-//		}
+			}
+		});
+		result = new EventDrivenResult<Boolean>(op);
+		this.executor.submit(op.getOperation());
+		//		}
 
 		return result;
 	}

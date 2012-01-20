@@ -30,6 +30,7 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
  * 
  */
 public interface IAmqpConsumerCallback {
+
 	/**
 	 * Handles the Cancel OK message.
 	 * 

@@ -22,18 +22,15 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
-
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public final class MetadataKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletContext> {

@@ -33,6 +33,7 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
  */
 public interface IKeyValueAccessorCallback<S> extends
 		IResourceAccessorCallback<S> {
+
 	/**
 	 * Called when the set operation completed successfully.
 	 * 

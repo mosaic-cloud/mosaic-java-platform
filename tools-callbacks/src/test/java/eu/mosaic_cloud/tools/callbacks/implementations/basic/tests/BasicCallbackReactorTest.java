@@ -32,6 +32,8 @@ import eu.mosaic_cloud.tools.callbacks.tools.QueueCallbacks;
 import eu.mosaic_cloud.tools.callbacks.tools.QueueingQueueCallbacks;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,7 +46,8 @@ public final class BasicCallbackReactorTest
 			throws Exception
 	{
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		final BasicCallbackReactor reactor = BasicCallbackReactor.create (exceptions);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		reactor.initialize ();
 		final LinkedList<QueueCallbacks<Integer>> triggers = new LinkedList<QueueCallbacks<Integer>> ();
 		for (int index = 0; index < BasicCallbackReactorTest.queueCount; index++) {
@@ -76,7 +79,7 @@ public final class BasicCallbackReactorTest
 		}
 		for (final CallbackFuture future : futures)
 			Assert.assertNull (future.get (BasicCallbackReactorTest.pollTimeout, TimeUnit.MILLISECONDS));
-		Thread.sleep (BasicCallbackReactorTest.sleepTimeout);
+		Threading.sleep (BasicCallbackReactorTest.sleepTimeout);
 		{
 			int counter = 0;
 			for (int index = 0; index < BasicCallbackReactorTest.callCount; index++)
@@ -88,7 +91,7 @@ public final class BasicCallbackReactorTest
 				Assert.assertNull (callback.queue.poll ());
 		}
 		reactor.terminate ();
-		Thread.sleep (BasicCallbackReactorTest.sleepTimeout);
+		Threading.sleep (BasicCallbackReactorTest.sleepTimeout);
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

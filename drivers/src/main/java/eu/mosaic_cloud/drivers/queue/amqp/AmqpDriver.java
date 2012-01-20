@@ -23,20 +23,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.ops.GenericOperation;
-import eu.mosaic_cloud.platform.core.ops.GenericResult;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.drivers.AbstractResourceDriver;
-import eu.mosaic_cloud.drivers.ConfigProperties;
-
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
@@ -49,6 +35,18 @@ import com.rabbitmq.client.ReturnListener;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
+import eu.mosaic_cloud.drivers.AbstractResourceDriver;
+import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.ops.GenericOperation;
+import eu.mosaic_cloud.platform.core.ops.GenericResult;
+import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Driver class for the AMQP-based management systems.
@@ -77,8 +75,9 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 * @param noThreads
 	 *            number of threads to be used for serving requests
 	 */
-	private AmqpDriver(IConfiguration configuration, int noThreads) {
-		super(noThreads);
+	private AmqpDriver(IConfiguration configuration,
+			ThreadingContext threading, int noThreads) {
+		super(threading, noThreads);
 		this.configuration = configuration;
 		this.connected = false;
 
@@ -87,7 +86,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		this.returnCallback = new ReturnCallback();
 		this.shutdownListener = new ConnectionShutdownListener();
 		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
-		this.executor = Executors.newFixedThreadPool(1);
+		this.executor = this.threading.newFixedThreadPool(
+				new ThreadConfiguration(this, "operations"), 1);
 	}
 
 	/**
@@ -97,10 +97,11 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 *            configuration data required for starting the driver
 	 * @return an AMQP driver
 	 */
-	public static AmqpDriver create(IConfiguration configuration) { // NOPMD by georgiana on 10/12/11 4:19 PM
+	public static AmqpDriver create(IConfiguration configuration,
+			ThreadingContext threading) { // NOPMD by georgiana on 10/12/11 4:19 PM
 		int noThreads = ConfigUtils.resolveParameter(configuration,
 				ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
-		AmqpDriver driver = new AmqpDriver(configuration, noThreads);
+		AmqpDriver driver = new AmqpDriver(configuration, threading, noThreads);
 		// open connection - moved to the stub
 		driver.connectResource();
 		synchronized (driver) {

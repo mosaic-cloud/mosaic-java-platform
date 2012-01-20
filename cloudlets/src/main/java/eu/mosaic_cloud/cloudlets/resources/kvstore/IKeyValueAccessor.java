@@ -21,11 +21,8 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
 
 import java.util.List;
 
-import eu.mosaic_cloud.platform.core.ops.IResult;
-
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
-
-
+import eu.mosaic_cloud.platform.core.ops.IResult;
 
 /**
  * Basic interface for cloudlets to access key-value storages.
@@ -36,6 +33,7 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
  *            the type of the state of the cloudlet
  */
 public interface IKeyValueAccessor<S> extends IResourceAccessor<S> {
+
 	/**
 	 * Stores the given data and associates it with the specified key.
 	 * 

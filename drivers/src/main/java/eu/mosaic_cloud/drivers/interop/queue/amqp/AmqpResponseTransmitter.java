@@ -19,9 +19,14 @@
  */
 package eu.mosaic_cloud.drivers.interop.queue.amqp;
 
+import com.google.protobuf.ByteString;
 
+import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
+import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
 import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -35,15 +40,6 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage;
-
-import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
-
-import com.google.protobuf.ByteString;
-
-import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.Session;
 
 /**
  * Serializes responses for AMQP operation requests and sends them to the
@@ -199,12 +195,15 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		deliveryPayload.setRoutingKey(message.getRoutingKey());
 		deliveryPayload.setDeliveryMode(message.isDurable() ? 2 : 1);
 		deliveryPayload.setData(ByteString.copyFrom(message.getData()));
-		if (message.getContentType() != null)
+		if (message.getContentType() != null) {
 			deliveryPayload.setContentType(message.getContentType());
-		if (message.getCallback() != null)
+		}
+		if (message.getCallback() != null) {
 			deliveryPayload.setReplyTo(message.getCallback());
-		if (message.getCorrelation() != null)
+		}
+		if (message.getCorrelation() != null) {
 			deliveryPayload.setCorrelationId(message.getCorrelation());
+		}
 		Message mssg = new Message(AmqpMessage.DELIVERY,
 				deliveryPayload.build());
 

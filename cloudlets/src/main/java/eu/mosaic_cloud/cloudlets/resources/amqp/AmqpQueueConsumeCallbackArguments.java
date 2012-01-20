@@ -34,6 +34,7 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  */
 public class AmqpQueueConsumeCallbackArguments<S, D> extends
 		CallbackArguments<S> {
+
 	private AmqpQueueConsumeMessage<D> message;
 
 	/**

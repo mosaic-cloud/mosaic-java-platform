@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import eu.mosaic_cloud.connectors.ConfigProperties;
+import eu.mosaic_cloud.connectors.interop.kvstore.memcached.MemcachedProxy;
+import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -32,17 +36,10 @@ import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
-
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.connectors.ConfigProperties;
-import eu.mosaic_cloud.connectors.interop.kvstore.memcached.MemcachedProxy;
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Connector for key-value distributed storage systems implementing the
@@ -54,9 +51,9 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 public final class MemcachedStoreConnector<T extends Object> extends
 		KeyValueStoreConnector<T> implements IMemcachedStore<T> { // NOPMD by georgiana on 10/13/11 2:32 PM
 
-	private MemcachedStoreConnector(MemcachedProxy<T> proxy, int noThreads,
-			DataEncoder<T> encoder) {
-		super(proxy, noThreads, encoder);
+	private MemcachedStoreConnector(MemcachedProxy<T> proxy,
+			ThreadingContext threading, int noThreads, DataEncoder<T> encoder) {
+		super(proxy, threading, noThreads, encoder);
 	}
 
 	/**
@@ -73,7 +70,8 @@ public final class MemcachedStoreConnector<T extends Object> extends
 	 * @throws Throwable
 	 */
 	public static <T extends Object> MemcachedStoreConnector<T> create(
-			IConfiguration config, DataEncoder<T> encoder) throws Throwable {
+			IConfiguration config, DataEncoder<T> encoder,
+			ThreadingContext threading) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
 				.resolveParameter(
@@ -88,14 +86,15 @@ public final class MemcachedStoreConnector<T extends Object> extends
 		String driverIdentifier = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("AllConnector.1"), String.class, "");
 		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
-				AbortingExceptionTracer.defaultInstance);
+				threading, AbortingExceptionTracer.defaultInstance);
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.register(MemcachedSession.CONNECTOR);
 		channel.connect(driverChannel);
 		MemcachedProxy<T> proxy = MemcachedProxy
 				.create(config, connectorIdentifier, driverIdentifier, bucket,
 						channel, encoder);
-		return new MemcachedStoreConnector<T>(proxy, noThreads, encoder);
+		return new MemcachedStoreConnector<T>(proxy, threading, noThreads,
+				encoder);
 	}
 
 	/*

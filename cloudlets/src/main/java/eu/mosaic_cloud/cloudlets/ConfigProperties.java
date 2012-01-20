@@ -24,9 +24,8 @@ import java.util.ResourceBundle;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
-
-
 public class ConfigProperties {
+
 	private static final String BUNDLE_NAME = "eu.mosaic_cloud.cloudlets.config"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle

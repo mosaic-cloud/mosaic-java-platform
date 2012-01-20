@@ -31,6 +31,7 @@ import eu.mosaic_cloud.cloudlets.core.ICallback;
  *            the type of the cloudlet context
  */
 public interface IResourceAccessorCallback<C> extends ICallback {
+
 	/**
 	 * Called when resource accessor initialization succeeded.
 	 * 

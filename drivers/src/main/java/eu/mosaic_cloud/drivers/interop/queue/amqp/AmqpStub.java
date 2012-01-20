@@ -24,6 +24,7 @@ import java.util.concurrent.CountDownLatch;
 
 import com.google.common.base.Preconditions;
 import com.rabbitmq.client.ConnectionFactory;
+
 import eu.mosaic_cloud.drivers.IResourceDriver;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
@@ -57,6 +58,7 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeReq
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Stub for the driver for queuing systems implementing the AMQP protocol. This
@@ -96,11 +98,12 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 	 *            the channel for communicating with connectors
 	 * @return the AMQP driver stub
 	 */
-	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel) {
+	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel,
+			ThreadingContext threading) {
 		synchronized (AbstractDriverStub.LOCK) {
 			if (AmqpStub.stub == null) {
 				AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
-				AmqpDriver driver = AmqpDriver.create(config);
+				AmqpDriver driver = AmqpDriver.create(config, threading);
 				AmqpStub.stub = new AmqpStub(config, transmitter, driver,
 						channel);
 				incDriverReference(AmqpStub.stub);
@@ -222,7 +225,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			routingKey = publish.getRoutingKey();
 			String correlationId = null;
 			String replyTo = null;
-			
+
 			if (publish.hasCorrelationId()) {
 				correlationId = publish.getCorrelationId();
 			}
@@ -432,13 +435,15 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
-		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleConsumeOk(java.lang.String)
-=======
+		 * @see <<<<<<<
+		 * HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop
+		 * /queue/amqp/AmqpStub.java
+		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#
+		 * handleConsumeOk(java.lang.String) =======
 		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleConsumeOk(java.lang
-		 * .String)
->>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
+		 * .String) >>>>>>>
+		 * georgiana:drivers/src/main/java/eu/mosaic_cloud/driver
+		 * /interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleConsumeOk(String consumerTag) {
@@ -450,13 +455,15 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
-		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleCancelOk(java.lang.String)
-=======
+		 * @see <<<<<<<
+		 * HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop
+		 * /queue/amqp/AmqpStub.java
+		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#
+		 * handleCancelOk(java.lang.String) =======
 		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleCancelOk(java.lang
-		 * .String)
->>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
+		 * .String) >>>>>>>
+		 * georgiana:drivers/src/main/java/eu/mosaic_cloud/driver
+		 * /interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleCancelOk(String consumerTag) {
@@ -469,14 +476,15 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
-		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleDelivery(mosaic.connector
-		 * .queue.AmqpInboundMessage)
-=======
+		 * @see <<<<<<<
+		 * HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop
+		 * /queue/amqp/AmqpStub.java
+		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#
+		 * handleDelivery(mosaic.connector .queue.AmqpInboundMessage) =======
 		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleDelivery(mosaic.
-		 * connector .queue.AmqpInboundMessage)
->>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
+		 * connector .queue.AmqpInboundMessage) >>>>>>>
+		 * georgiana:drivers/src/main
+		 * /java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleDelivery(AmqpInboundMessage message) {
@@ -489,14 +497,15 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-<<<<<<< HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop/queue/amqp/AmqpStub.java
-		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#handleShutdown(java.lang.String,
-		 * java.lang.String)
-=======
+		 * @see <<<<<<<
+		 * HEAD:drivers/src/main/java/eu/mosaic_cloud/drivers/interop
+		 * /queue/amqp/AmqpStub.java
+		 * eu.mosaic_cloud.drivers.queue.IAmqpConsumer#
+		 * handleShutdown(java.lang.String, java.lang.String) =======
 		 * eu.mosaic_cloud.driver.queue.IAmqpConsumer#handleShutdown(java.lang
-		 * .String, java.lang.String)
->>>>>>> georgiana:drivers/src/main/java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
+		 * .String, java.lang.String) >>>>>>>
+		 * georgiana:drivers/src/main/java/eu/
+		 * mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
 		public void handleShutdown(String consumerTag, String errorMessage) {

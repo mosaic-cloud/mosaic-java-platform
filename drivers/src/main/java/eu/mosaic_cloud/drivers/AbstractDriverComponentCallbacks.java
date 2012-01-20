@@ -19,21 +19,6 @@
  */
 package eu.mosaic_cloud.drivers;
 
-
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-
-import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-
-import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
-
 import com.google.common.base.Preconditions;
 
 import eu.mosaic_cloud.components.core.Component;
@@ -41,8 +26,18 @@ import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * This callback class enables a resource driver to be exposed as a component.
@@ -54,6 +49,10 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
  */
 public abstract class AbstractDriverComponentCallbacks implements
 		ComponentCallbacks, CallbackHandler<ComponentCallbacks> {
+
+	protected AbstractDriverComponentCallbacks(ThreadingContext threading) {
+		this.threading = threading;
+	}
 
 	protected static enum Status {
 		Created, Registered, Terminated, Unregistered, WaitingResourceResolved;
@@ -67,6 +66,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	protected ComponentIdentifier resourceGroup;
 	protected ComponentIdentifier selfGroup;
 	protected IConfiguration driverConfiguration;
+	protected ThreadingContext threading;
 
 	public void terminate() {
 		synchronized (this.monitor) {
@@ -119,14 +119,18 @@ public abstract class AbstractDriverComponentCallbacks implements
 		return null;
 	}
 
+	@Override
 	public abstract void deassigned(ComponentCallbacks trigger,
 			ComponentCallbacks newCallbacks);
 
+	@Override
 	public abstract void reassigned(ComponentCallbacks trigger,
 			ComponentCallbacks oldCallbacks);
 
+	@Override
 	public abstract void registered(ComponentCallbacks trigger);
 
+	@Override
 	public abstract void unregistered(ComponentCallbacks trigger);
 
 	protected ZeroMqChannel createDriverChannel(String channelIdentifierProp,
@@ -136,7 +140,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 		ZeroMqChannel driverChannel = new ZeroMqChannel(
 				ConfigUtils.resolveParameter(this.driverConfiguration,
 						channelIdentifierProp, String.class, ""),
-				AbortingExceptionTracer.defaultInstance);
+				this.threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(role);
 		driverChannel.accept(ConfigUtils
 				.resolveParameter(this.driverConfiguration,
@@ -145,7 +149,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	}
 
 	protected IConfiguration getDriverConfiguration() {
-		return driverConfiguration;
+		return this.driverConfiguration;
 	}
 
 	protected void setDriverConfiguration(IConfiguration driverConfiguration) {

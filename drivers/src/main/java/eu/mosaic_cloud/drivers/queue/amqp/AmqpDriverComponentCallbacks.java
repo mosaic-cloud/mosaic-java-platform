@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -46,6 +47,7 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
  * This callback class enables the AMQP driver to be exposed as a component.
@@ -62,7 +64,7 @@ public final class AmqpDriverComponentCallbacks extends
 	 * Creates a driver callback.
 	 */
 	public AmqpDriverComponentCallbacks() {
-		super();
+		super(Threading.getCurrentContext());
 		this.monitor = Monitor.create(this);
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
@@ -108,13 +110,14 @@ public final class AmqpDriverComponentCallbacks extends
 									String.class, "");
 					// FIXME
 					try {
-						if (System.getenv("mosaic_node_ip") != null)
+						if (System.getenv("mosaic_node_ip") != null) {
 							channelEndpoint = channelEndpoint.replace(
 									"0.0.0.0", System.getenv("mosaic_node_ip"));
-						else
+						} else {
 							channelEndpoint = channelEndpoint.replace(
 									"0.0.0.0", InetAddress.getLocalHost()
 											.getHostAddress());
+						}
 					} catch (UnknownHostException e) {
 						ExceptionTracer.traceIgnored(e);
 					}
@@ -145,8 +148,8 @@ public final class AmqpDriverComponentCallbacks extends
 			ComponentCallReply reply) {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
-			if (this.pendingReference == reply.reference
-					&& this.status == Status.WaitingResourceResolved) {
+			if ((this.pendingReference == reply.reference)
+					&& (this.status == Status.WaitingResourceResolved)) {
 				//					this.pendingReference = null;
 				String rabbitmqTransport;
 				String brokerIp;
@@ -268,7 +271,7 @@ public final class AmqpDriverComponentCallbacks extends
 						channelEndpoint, AmqpSession.DRIVER);
 
 				this.stub = AmqpStub.create(getDriverConfiguration(),
-						driverChannel);
+						driverChannel, this.threading);
 			} else {
 				throw new IllegalStateException();
 			}

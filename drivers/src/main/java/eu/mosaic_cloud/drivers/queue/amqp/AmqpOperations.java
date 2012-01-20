@@ -29,6 +29,7 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  */
 public enum AmqpOperations implements IOperationType {
 	DECLARE_EXCHANGE, DECLARE_QUEUE, BIND_QUEUE, CONSUME, PUBLISH, GET, ACK, CANCEL;
+
 	private static final AmqpOperations[] COPY_OF_VALUES = values();
 
 	/**

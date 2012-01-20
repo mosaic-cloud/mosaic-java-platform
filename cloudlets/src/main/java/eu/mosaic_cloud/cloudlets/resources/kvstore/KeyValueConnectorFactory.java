@@ -21,17 +21,13 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
 
 import java.lang.reflect.Method;
 
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
+import eu.mosaic_cloud.cloudlets.resources.ConnectorNotFoundException;
 import eu.mosaic_cloud.connectors.kvstore.IKeyValueStore;
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.connectors.kvstore.memcached.MemcachedStoreConnector;
-
-import eu.mosaic_cloud.cloudlets.resources.ConnectorNotFoundException;
-
-
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 /**
  * A factory for key-value connectors.
@@ -40,6 +36,7 @@ import eu.mosaic_cloud.cloudlets.resources.ConnectorNotFoundException;
  * 
  */
 public class KeyValueConnectorFactory {
+
 	public enum ConnectorType {
 		KVSTORE(KeyValueStoreConnector.class), MEMCACHED(
 				MemcachedStoreConnector.class);

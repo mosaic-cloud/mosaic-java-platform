@@ -31,6 +31,7 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
  */
 public interface IMemcachedAccessorCallback<S> extends
 		IKeyValueAccessorCallback<S> {
+
 	/**
 	 * Called when the add operation completed successfully.
 	 * 

@@ -19,14 +19,10 @@
  */
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-
-
+import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public final class BatchConsumerCallback extends QueueConsumerCallback {
 

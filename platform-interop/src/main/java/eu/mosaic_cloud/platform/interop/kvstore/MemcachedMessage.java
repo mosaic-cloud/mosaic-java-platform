@@ -19,16 +19,14 @@
  */
 package eu.mosaic_cloud.platform.interop.kvstore;
 
-
-import eu.mosaic_cloud.platform.interop.idl.DefaultPBPayloadCoder;
-import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
-
 import com.google.protobuf.GeneratedMessage;
 
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
+import eu.mosaic_cloud.platform.interop.idl.DefaultPBPayloadCoder;
+import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 
 /**
  * Enum containing all possible MEMCACHED connector-driver messages.
@@ -80,8 +78,7 @@ public enum MemcachedMessage implements MessageSpecification {
 	}
 
 	@Override
-	public String getQualifiedName ()
-	{
-		return (Identifiers.generateName (this));
+	public String getQualifiedName() {
+		return (Identifiers.generateName(this));
 	}
 }

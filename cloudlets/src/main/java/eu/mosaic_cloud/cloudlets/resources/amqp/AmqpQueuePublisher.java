@@ -22,20 +22,17 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
-
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * This class provides access for cloudlets to an AMQP-based queueing system as
@@ -87,14 +84,16 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueAccessor#initialize(eu.mosaic_cloud.cloudlets
-	 * .resources.IResourceAccessorCallback, java.lang.Object)
+	 * eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueAccessor#initialize
+	 * (eu.mosaic_cloud.cloudlets .resources.IResourceAccessorCallback,
+	 * java.lang.Object)
 	 */
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state) {
+	public void initialize(IResourceAccessorCallback<S> callback, S state,
+			ThreadingContext threading) {
 		synchronized (this) {
 			if (callback instanceof IAmqpQueuePublisherCallback) {
-				super.initialize(callback, state);
+				super.initialize(callback, state, threading);
 				this.callback = (IAmqpQueuePublisherCallback<S, D>) callback;
 			} else {
 				IllegalArgumentException e = new IllegalArgumentException(
@@ -123,8 +122,9 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 	@Override
 	protected void finishRegister(IAmqpQueueAccessorCallback<S> callback) {
-		if (AmqpQueuePublisher.super.registered)
+		if (AmqpQueuePublisher.super.registered) {
 			return;
+		}
 		CallbackArguments<S> arguments = new CallbackArguments<S>(
 				AmqpQueuePublisher.super.cloudlet);
 		this.callback.registerSucceeded(AmqpQueuePublisher.this.cloudletState,
@@ -138,8 +138,9 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	@Override
 	public void unregister() {
 		synchronized (this) {
-			if (!AmqpQueuePublisher.super.registered)
+			if (!AmqpQueuePublisher.super.registered) {
 				return;
+			}
 			AmqpQueuePublisher.super.registered = false;
 		}
 		CallbackArguments<S> arguments = new CallbackArguments<S>(

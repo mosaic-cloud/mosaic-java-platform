@@ -19,12 +19,6 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -39,7 +33,11 @@ import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallba
 import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessor;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
-
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 
 public class PongCloudlet {
 
@@ -79,8 +77,8 @@ public class PongCloudlet {
 					"Pong Cloudlet initialized successfully.");
 			ICloudletController<PongCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.initializeResource(context.kvStore, new KeyValueCallback(),
-					context);
+			cloudlet.initializeResource(context.kvStore,
+					new KeyValueCallback(), context);
 			cloudlet.initializeResource(context.consumer,
 					new AmqpConsumerCallback(), context);
 			cloudlet.initializeResource(context.publisher,
@@ -118,7 +116,7 @@ public class PongCloudlet {
 		public void destroySucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
 			context.kvStore = null;
-			if (context.publisher == null && context.consumer == null) {
+			if ((context.publisher == null) && (context.consumer == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
@@ -179,7 +177,7 @@ public class PongCloudlet {
 				CallbackArguments<PongCloudletContext> arguments) {
 			MosaicLogger.getLogger().info(
 					"Pong Cloudlet consumer was destroyed successfully.");
-			if (context.publisher == null && context.kvStore == null) {
+			if ((context.publisher == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
@@ -247,7 +245,7 @@ public class PongCloudlet {
 			MosaicLogger.getLogger().info(
 					"Pong Cloudlet publisher was destroyed successfully.");
 			context.publisher = null;
-			if (context.consumer == null && context.kvStore == null) {
+			if ((context.consumer == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}

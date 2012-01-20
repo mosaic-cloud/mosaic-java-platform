@@ -27,6 +27,7 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 
 
 public final class UncaughtExceptionHandler
+		extends Object
 		implements
 			Thread.UncaughtExceptionHandler
 {

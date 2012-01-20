@@ -21,14 +21,6 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -43,8 +35,13 @@ import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallba
 import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessor;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
-
-
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
 public class LoggingCloudlet {
 
@@ -85,8 +82,8 @@ public class LoggingCloudlet {
 					"LoggingCloudlet initialized successfully.");
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.initializeResource(context.kvStore, new KeyValueCallback(),
-					context);
+			cloudlet.initializeResource(context.kvStore,
+					new KeyValueCallback(), context);
 			cloudlet.initializeResource(context.consumer,
 					new AmqpConsumerCallback(), context);
 			cloudlet.initializeResource(context.publisher,
@@ -112,6 +109,7 @@ public class LoggingCloudlet {
 
 	public static final class KeyValueCallback extends
 			DefaultKeyValueAccessorCallback<LoggingCloudletContext> {
+
 		private static int sets = 0;
 
 		@Override
@@ -131,7 +129,7 @@ public class LoggingCloudlet {
 		public void destroySucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
 			context.kvStore = null;
-			if (context.publisher == null && context.consumer == null) {
+			if ((context.publisher == null) && (context.consumer == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
@@ -139,10 +137,11 @@ public class LoggingCloudlet {
 		@Override
 		public void setSucceeded(LoggingCloudletContext context,
 				KeyValueCallbackArguments<LoggingCloudletContext> arguments) {
-			sets++;
+			KeyValueCallback.sets++;
 			MosaicLogger.getLogger().info(
-					"LoggingCloudlet - KeyValue succeeded set no. " + sets);
-			if (sets == 2) {
+					"LoggingCloudlet - KeyValue succeeded set no. "
+							+ KeyValueCallback.sets);
+			if (KeyValueCallback.sets == 2) {
 				ICloudletController<LoggingCloudletContext> cloudlet = arguments
 						.getCloudlet();
 				try {
@@ -195,7 +194,7 @@ public class LoggingCloudlet {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet consumer was destroyed successfully.");
 			context.consumer = null;
-			if (context.publisher == null && context.kvStore == null) {
+			if ((context.publisher == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
@@ -282,7 +281,7 @@ public class LoggingCloudlet {
 			MosaicLogger.getLogger().info(
 					"LoggingCloudlet publisher was destroyed successfully.");
 			context.publisher = null;
-			if (context.consumer == null && context.kvStore == null) {
+			if ((context.consumer == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();
 			}
 		}
@@ -297,6 +296,7 @@ public class LoggingCloudlet {
 	}
 
 	public static final class LoggingCloudletContext {
+
 		AmqpQueueConsumer<LoggingCloudletContext, LoggingData> consumer;
 		AmqpQueuePublisher<LoggingCloudletContext, AuthenticationToken> publisher;
 		IKeyValueAccessor<LoggingCloudletContext> kvStore;

@@ -33,15 +33,15 @@ public final class LoggingData implements Serializable {
 	}
 
 	public String getUser() {
-		return user;
+		return this.user;
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	@Override
 	public String toString() {
-		return user + "(" + password + ")";
+		return this.user + "(" + this.password + ")";
 	}
 }

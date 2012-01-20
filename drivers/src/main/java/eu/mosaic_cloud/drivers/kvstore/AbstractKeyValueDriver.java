@@ -24,18 +24,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.common.base.Preconditions;
+
+import eu.mosaic_cloud.drivers.AbstractResourceDriver;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-
-import eu.mosaic_cloud.drivers.AbstractResourceDriver;
-
-
-import com.google.common.base.Preconditions;
-
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Base class for key-value store drivers. Implements only the basic set, get,
@@ -55,8 +53,8 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 	 */
 	private final Map<String, BucketData> clientBucketMap;
 
-	protected AbstractKeyValueDriver(int noThreads) {
-		super(noThreads);
+	protected AbstractKeyValueDriver(ThreadingContext threading, int noThreads) {
+		super(threading, noThreads);
 		this.bucketFactories = new HashMap<String, BucketData>();
 		this.clientBucketMap = new HashMap<String, BucketData>();
 	}

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
@@ -170,12 +171,15 @@ public final class AmqpProxy extends ConnectorProxy {
 		requestBuilder.setImmediate(message.isImmediate());
 		requestBuilder.setMandatory(message.isMandatory());
 		requestBuilder.setRoutingKey(message.getRoutingKey());
-		if (message.getContentType() != null)
+		if (message.getContentType() != null) {
 			requestBuilder.setContentType(message.getContentType());
-		if (message.getCorrelation() != null)
+		}
+		if (message.getCorrelation() != null) {
 			requestBuilder.setCorrelationId(message.getCorrelation());
-		if (message.getCallback() != null)
+		}
+		if (message.getCallback() != null) {
 			requestBuilder.setReplyTo(message.getCallback());
+		}
 
 		Message mssg = new Message(AmqpMessage.PUBLISH_REQUEST,
 				requestBuilder.build());

@@ -34,6 +34,7 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
  */
 public interface IAmqpQueueConsumerCallback<S, D> extends
 		IAmqpQueueAccessorCallback<S> {
+
 	/**
 	 * Handles successful message acknowledge events.
 	 * 

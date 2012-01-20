@@ -26,19 +26,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-
-import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
-
-
-import com.sun.syndication.io.FeedException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.sun.syndication.io.FeedException;
+
+import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
+import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public class IndexWorkflow {
 
@@ -86,8 +84,8 @@ public class IndexWorkflow {
 	public static void indexNewFeed(IndexerCloudletContext context,
 			AmqpQueueConsumeMessage<JSONObject> recvMessage) {
 
-		IndexWorkflow aIndexer = IndexWorkflow
-				.createIndexer(context, recvMessage);
+		IndexWorkflow aIndexer = IndexWorkflow.createIndexer(context,
+				recvMessage);
 		MosaicLogger.getLogger().trace(
 				"New indexer created for message " + aIndexer.indexMessage);
 		aIndexer.fetchLatestFeed();
@@ -253,8 +251,8 @@ public class IndexWorkflow {
 				}
 
 				// store timeline
-				this.context.timelinesStore.set(newTimelineKey, this.newTimeline,
-						this.key);
+				this.context.timelinesStore.set(newTimelineKey,
+						this.newTimeline, this.key);
 			} else {
 				this.currentFeedMetaData = this.previousFeedMetaData;
 				storeIndexOutcome();
@@ -329,10 +327,10 @@ public class IndexWorkflow {
 		}
 	}
 
-//	public static void sendAcknowledge(Object extra) {
-//		getIndexer((UUID) extra).recvMessage.acknowledge();
-//		MosaicLogger.getLogger().trace("finished indexing...");
-//	}
+	//	public static void sendAcknowledge(Object extra) {
+	//		getIndexer((UUID) extra).recvMessage.acknowledge();
+	//		MosaicLogger.getLogger().trace("finished indexing...");
+	//	}
 
 	private void handleError(Exception e) {
 		ExceptionTracer.traceDeferred(e);

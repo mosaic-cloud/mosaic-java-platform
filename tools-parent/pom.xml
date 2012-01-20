@@ -23,6 +23,7 @@
 		<module>../tools-exceptions</module>
 		<module>../tools-json</module>
 		<module>../tools-miscellaneous</module>
+		<module>../tools-threading</module>
 		<module>../tools-transcript</module>
 		<module>../tools-zeromq</module>
 	</modules>

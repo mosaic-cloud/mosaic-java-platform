@@ -19,10 +19,7 @@
  */
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import org.json.JSONObject;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
@@ -32,8 +29,10 @@ import eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueueConsumerCallback;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessor;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
-
-import org.json.JSONObject;
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public class IndexerCloudlet {
 

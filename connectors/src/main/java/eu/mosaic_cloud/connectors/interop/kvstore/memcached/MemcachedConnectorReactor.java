@@ -24,22 +24,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+
+import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueConnectorReactor;
+import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
-
-import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueConnectorReactor;
-
-
-import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.interoperability.core.Message;
 
 /**
  * Implements a reactor for processing asynchronous requests issued by the

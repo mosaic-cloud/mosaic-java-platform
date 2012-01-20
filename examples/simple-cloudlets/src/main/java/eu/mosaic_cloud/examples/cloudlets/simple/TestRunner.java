@@ -19,13 +19,12 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
+import eu.mosaic_cloud.cloudlets.core.CloudletException;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletManager;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-
-import eu.mosaic_cloud.cloudlets.core.CloudletException;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletManager;
-
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 public class TestRunner {
 
@@ -76,6 +75,7 @@ public class TestRunner {
 
 	private static CloudletManager startCloudlet(IConfiguration configuration) {
 		final CloudletManager container = new CloudletManager(
+				Threading.getCurrentContext(),
 				TestRunner.class.getClassLoader(), configuration);
 
 		try {
