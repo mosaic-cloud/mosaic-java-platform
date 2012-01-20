@@ -39,7 +39,6 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration
 public abstract class AbstractResourceDriver implements IResourceDriver {
 
 	private final List<IResult<?>> pendingResults;
-	protected final ThreadingContext threading;
 	private final ExecutorService executor;
 	private boolean destroyed = false;
 
@@ -51,9 +50,8 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 */
 	protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
 		this.pendingResults = new ArrayList<IResult<?>>();
-		this.threading = threading;
-		this.executor = this.threading.newFixedThreadPool(
-				new ThreadConfiguration(this, "operations"), noThreads);
+		this.executor = threading.newFixedThreadPool(new ThreadConfiguration(
+				this, "operations"), noThreads);
 	}
 
 	@Override
