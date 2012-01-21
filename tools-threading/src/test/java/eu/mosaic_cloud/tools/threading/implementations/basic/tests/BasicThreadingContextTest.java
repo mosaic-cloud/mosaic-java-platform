@@ -8,8 +8,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.omg.PortableInterceptor.SUCCESSFUL;
-
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;

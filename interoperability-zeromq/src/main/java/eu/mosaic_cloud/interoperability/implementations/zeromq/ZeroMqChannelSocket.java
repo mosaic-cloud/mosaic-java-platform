@@ -107,12 +107,6 @@ public final class ZeroMqChannelSocket
 		}
 	}
 	
-	public final void terminate ()
-	{
-		this.transcript.traceDebugging ("terminating...");
-		this.shouldStop = true;
-	}
-	
 	public final boolean join ()
 	{
 		return (Threading.join (this.loop));
@@ -123,9 +117,10 @@ public final class ZeroMqChannelSocket
 		return (Threading.join (this.loop, timeout));
 	}
 	
-	private final void failed ()
+	public final void terminate ()
 	{
-		this.transcript.traceError ("socket failed; ignoring!");
+		this.transcript.traceDebugging ("terminating...");
+		this.shouldStop = true;
 	}
 	
 	final void loop ()
@@ -157,6 +152,25 @@ public final class ZeroMqChannelSocket
 			}
 			poller.unregister (this.socket);
 		}
+	}
+	
+	final void setup ()
+	{
+		this.transcript.traceDebugging ("setting-up...");
+		this.socket = ZeroMqChannelSocket.context.socket (ZMQ.XREP);
+		this.socket.setIdentity (this.self.getBytes ());
+	}
+	
+	final void teardown ()
+	{
+		this.transcript.traceDebugging ("tearing-down...");
+		this.socket.close ();
+		this.socket = null;
+	}
+	
+	private final void failed ()
+	{
+		this.transcript.traceError ("socket failed; ignoring!");
 	}
 	
 	private final void receive ()
@@ -260,20 +274,6 @@ public final class ZeroMqChannelSocket
 				this.transcript.traceError ("error encountered while sending packet: ignoring!");
 				return;
 			}
-	}
-	
-	final void setup ()
-	{
-		this.transcript.traceDebugging ("setting-up...");
-		this.socket = ZeroMqChannelSocket.context.socket (ZMQ.XREP);
-		this.socket.setIdentity (this.self.getBytes ());
-	}
-	
-	final void teardown ()
-	{
-		this.transcript.traceDebugging ("tearing-down...");
-		this.socket.close ();
-		this.socket = null;
 	}
 	
 	private final Runnable dequeueTrigger;

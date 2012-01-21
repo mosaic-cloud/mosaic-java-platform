@@ -21,15 +21,28 @@ public final class Threading
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final ThreadGroup getRootThreadGroup ()
+	public static final boolean await (final CountDownLatch latch)
 	{
-		final ThreadGroup root;
-		for (ThreadGroup child = Threading.getCurrentThreadGroup (), parent = child.getParent (); true; child = parent, parent = child.getParent ())
-			if (parent == null) {
-				root = child;
-				break;
-			}
-		return (root);
+		Preconditions.checkNotNull (latch);
+		try {
+			latch.await ();
+			return (true);
+		} catch (final InterruptedException exception) {
+			Threading.interruptCurrentThread ();
+			return (false);
+		}
+	}
+	
+	public static final boolean await (final CountDownLatch latch, final long timeout)
+	{
+		Preconditions.checkNotNull (latch);
+		Preconditions.checkArgument (timeout >= 0);
+		try {
+			return (latch.await (timeout, TimeUnit.MILLISECONDS));
+		} catch (final InterruptedException exception) {
+			Threading.interruptCurrentThread ();
+			return (false);
+		}
 	}
 	
 	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
@@ -104,6 +117,17 @@ public final class Threading
 	public static final ThreadGroup getCurrentThreadGroup ()
 	{
 		return (Thread.currentThread ().getThreadGroup ());
+	}
+	
+	public static final ThreadGroup getRootThreadGroup ()
+	{
+		final ThreadGroup root;
+		for (ThreadGroup child = Threading.getCurrentThreadGroup (), parent = child.getParent (); true; child = parent, parent = child.getParent ())
+			if (parent == null) {
+				root = child;
+				break;
+			}
+		return (root);
 	}
 	
 	public static final void halt ()
@@ -261,30 +285,6 @@ public final class Threading
 	public static final boolean wait (final Object monitor)
 	{
 		return (Threading.wait (monitor, 0));
-	}
-	
-	public static final boolean await (final CountDownLatch latch)
-	{
-		Preconditions.checkNotNull (latch);
-		try {
-			latch.await ();
-			return (true);
-		} catch (final InterruptedException exception) {
-			Threading.interruptCurrentThread ();
-			return (false);
-		}
-	}
-	
-	public static final boolean await (final CountDownLatch latch, final long timeout)
-	{
-		Preconditions.checkNotNull (latch);
-		Preconditions.checkArgument (timeout >= 0);
-		try {
-			return (latch.await (timeout, TimeUnit.MILLISECONDS));
-		} catch (final InterruptedException exception) {
-			Threading.interruptCurrentThread ();
-			return (false);
-		}
 	}
 	
 	public static final boolean wait (final Object monitor, final long timeout)
