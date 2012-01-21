@@ -36,7 +36,19 @@ public interface ThreadingContext
 	
 	public abstract ThreadFactory newThreadFactory (final ThreadConfiguration configuration);
 	
+	public abstract void registerThread (final Thread thread);
+	
 	public static final Pattern namePattern = Pattern.compile ("^[a-z0-9]([a-z0-9-]*[a-z0-9])?$");
+	
+	public static interface ManagedThread
+	{
+		public abstract ThreadingContext getContext ();
+	}
+	
+	public static interface ManagedThreadGroup
+	{
+		public abstract ThreadingContext getContext ();
+	}
 	
 	public static final class ThreadConfiguration
 			extends Object

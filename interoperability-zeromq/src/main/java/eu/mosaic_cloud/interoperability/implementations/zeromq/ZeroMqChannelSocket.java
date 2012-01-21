@@ -50,7 +50,7 @@ public final class ZeroMqChannelSocket
 		this.outboundPackets = new LinkedBlockingQueue<Packet> ();
 		this.dequeueTrigger = dequeueTrigger;
 		this.shouldStop = false;
-		this.looper = new Looper ();
+		this.loop = Threading.createAndStartDaemonThread (ZeroMqChannelSocket.this.threading, ZeroMqChannelSocket.this, "loop", new Loop ());
 	}
 	
 	public final void accept (final String endpoint)
@@ -113,12 +113,22 @@ public final class ZeroMqChannelSocket
 		this.shouldStop = true;
 	}
 	
+	public final boolean join ()
+	{
+		return (Threading.join (this.loop));
+	}
+	
+	public final boolean join (final long timeout)
+	{
+		return (Threading.join (this.loop, timeout));
+	}
+	
 	private final void failed ()
 	{
 		this.transcript.traceError ("socket failed; ignoring!");
 	}
 	
-	private final void loop ()
+	final void loop ()
 	{
 		this.transcript.traceDebugging ("loopping...");
 		final ZMQ.Poller poller = ZeroMqChannelSocket.context.poller (3);
@@ -252,14 +262,14 @@ public final class ZeroMqChannelSocket
 			}
 	}
 	
-	private final void setup ()
+	final void setup ()
 	{
 		this.transcript.traceDebugging ("setting-up...");
 		this.socket = ZeroMqChannelSocket.context.socket (ZMQ.XREP);
 		this.socket.setIdentity (this.self.getBytes ());
 	}
 	
-	private final void teardown ()
+	final void teardown ()
 	{
 		this.transcript.traceDebugging ("tearing-down...");
 		this.socket.close ();
@@ -269,17 +279,14 @@ public final class ZeroMqChannelSocket
 	private final Runnable dequeueTrigger;
 	private final TranscriptExceptionTracer exceptions;
 	private final LinkedBlockingQueue<Packet> inboundPackets;
-	private final Looper looper;
+	private final Thread loop;
 	private final LinkedBlockingQueue<Packet> outboundPackets;
 	private final String self;
 	private boolean shouldStop;
 	private ZMQ.Socket socket;
 	private final ThreadingContext threading;
 	private final Transcript transcript;
-	static {
-		context = ZMQ.context (1);
-	}
-	private static final ZMQ.Context context;
+	private static final ZMQ.Context context = ZMQ.context (1);
 	
 	public static final class Packet
 			extends Object
@@ -299,15 +306,14 @@ public final class ZeroMqChannelSocket
 		public final String peer;
 	}
 	
-	private final class Looper
+	private final class Loop
 			extends Object
 			implements
 				Runnable
 	{
-		Looper ()
+		Loop ()
 		{
 			super ();
-			this.thread = Threading.createAndStartDaemonThread (ZeroMqChannelSocket.this.threading, ZeroMqChannelSocket.this, "loop", this);
 		}
 		
 		@Override
@@ -317,7 +323,5 @@ public final class ZeroMqChannelSocket
 			ZeroMqChannelSocket.this.loop ();
 			ZeroMqChannelSocket.this.teardown ();
 		}
-		
-		private final Thread thread;
 	}
 }

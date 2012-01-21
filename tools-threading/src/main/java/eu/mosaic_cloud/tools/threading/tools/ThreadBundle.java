@@ -131,7 +131,9 @@ public final class ThreadBundle<_Thread_ extends Thread>
 				this.advance ();
 			if (this.current == null)
 				throw (new NoSuchElementException ());
-			return (this.current);
+			final _Thread_ current = this.current;
+			this.current = null;
+			return (current);
 		}
 		
 		@Override

@@ -2,8 +2,13 @@
 package eu.mosaic_cloud.tools.threading.tools;
 
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ManagedThread;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ManagedThreadGroup;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 
@@ -14,6 +19,17 @@ public final class Threading
 	{
 		super ();
 		throw (new UnsupportedOperationException ());
+	}
+	
+	public static final ThreadGroup getRootThreadGroup ()
+	{
+		final ThreadGroup root;
+		for (ThreadGroup child = Threading.getCurrentThreadGroup (), parent = child.getParent (); true; child = parent, parent = child.getParent ())
+			if (parent == null) {
+				root = child;
+				break;
+			}
+		return (root);
 	}
 	
 	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
@@ -77,7 +93,7 @@ public final class Threading
 	
 	public static final ThreadingContext getCurrentContext ()
 	{
-		return (Threading.context.get ());
+		return (CurrentContext.instance.get ());
 	}
 	
 	public static final Thread getCurrentThread ()
@@ -185,6 +201,22 @@ public final class Threading
 		}
 	}
 	
+	public static final void notify (final Object monitor)
+	{
+		Preconditions.checkNotNull (monitor);
+		synchronized (monitor) {
+			monitor.notify ();
+		}
+	}
+	
+	public static final void notifyAll (final Object monitor)
+	{
+		Preconditions.checkNotNull (monitor);
+		synchronized (monitor) {
+			monitor.notifyAll ();
+		}
+	}
+	
 	public static final void registerExitCallback (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
 		Preconditions.checkNotNull (threading);
@@ -197,16 +229,6 @@ public final class Threading
 	public static final ThreadingContext sequezeThreadingContextOutOfDryRock ()
 	{
 		throw (new UnsupportedOperationException ());
-	}
-	
-	public static final void setCurrentContext (final ThreadingContext context)
-	{
-		Preconditions.checkNotNull (context);
-		synchronized (Threading.context) {
-			if (Threading.context.get () != null)
-				throw (new IllegalThreadStateException ());
-			Threading.context.set (context);
-		}
 	}
 	
 	public static final boolean sleep (final long timeout)
@@ -236,6 +258,50 @@ public final class Threading
 		return (count);
 	}
 	
+	public static final boolean wait (final Object monitor)
+	{
+		return (Threading.wait (monitor, 0));
+	}
+	
+	public static final boolean await (final CountDownLatch latch)
+	{
+		Preconditions.checkNotNull (latch);
+		try {
+			latch.await ();
+			return (true);
+		} catch (final InterruptedException exception) {
+			Threading.interruptCurrentThread ();
+			return (false);
+		}
+	}
+	
+	public static final boolean await (final CountDownLatch latch, final long timeout)
+	{
+		Preconditions.checkNotNull (latch);
+		Preconditions.checkArgument (timeout >= 0);
+		try {
+			return (latch.await (timeout, TimeUnit.MILLISECONDS));
+		} catch (final InterruptedException exception) {
+			Threading.interruptCurrentThread ();
+			return (false);
+		}
+	}
+	
+	public static final boolean wait (final Object monitor, final long timeout)
+	{
+		Preconditions.checkNotNull (monitor);
+		Preconditions.checkArgument (timeout >= 0);
+		try {
+			synchronized (monitor) {
+				monitor.wait (timeout);
+			}
+			return (true);
+		} catch (final InterruptedException exception) {
+			Threading.interruptCurrentThread ();
+			return (false);
+		}
+	}
+	
 	private static final void loop ()
 	{
 		while (true) {
@@ -252,5 +318,72 @@ public final class Threading
 	
 	public static final int defaultAbortExitCode = 1;
 	public static final int defaultHaltExitCode = 255;
-	private static final ThreadLocal<ThreadingContext> context = new ThreadLocal<ThreadingContext> ();
+	
+	private static final class CurrentContext
+			extends ThreadLocal<ThreadingContext>
+	{
+		private CurrentContext ()
+		{
+			super ();
+			this.initialValueActive = false;
+		}
+		
+		@Override
+		public final ThreadingContext get ()
+		{
+			synchronized (this) {
+				if (this.initialValueActive)
+					return (null);
+				return (super.get ());
+			}
+		}
+		
+		@Override
+		public final void remove ()
+		{
+			throw (new UnsupportedOperationException ());
+		}
+		
+		@Override
+		public final void set (final ThreadingContext value)
+		{
+			throw (new UnsupportedOperationException ());
+		}
+		
+		@Override
+		protected final ThreadingContext initialValue ()
+		{
+			synchronized (this) {
+				try {
+					this.initialValueActive = true;
+					ThreadingContext context = super.initialValue ();
+					final Thread thread = Threading.getCurrentThread ();
+					if (context == null) {
+						if (thread instanceof ManagedThread) {
+							context = ((ManagedThread) thread).getContext ();
+							Preconditions.checkNotNull (context);
+						}
+					}
+					if (context == null) {
+						for (ThreadGroup group = thread.getThreadGroup (); group != null; group = group.getParent ())
+							if (group instanceof ManagedThreadGroup) {
+								context = ((ManagedThreadGroup) group).getContext ();
+								Preconditions.checkNotNull (context);
+								break;
+							}
+					}
+					if (context != null) {
+						if (!context.isManaged (thread))
+							context.registerThread (thread);
+					}
+					return (context);
+				} finally {
+					this.initialValueActive = false;
+				}
+			}
+		}
+		
+		private boolean initialValueActive;
+		public static final CurrentContext instance = new CurrentContext ();
+	}
 }
