@@ -89,16 +89,8 @@ public final class BasicComponentHarnessMain
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (exception);
 		} finally {
-			try {
-				inputPiper.join ();
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
-			try {
-				outputPiper.join ();
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
+			inputPiper.join ();
+			outputPiper.join ();
 		}
 	}
 	
@@ -290,10 +282,9 @@ public final class BasicComponentHarnessMain
 			this.thread.start ();
 		}
 		
-		public final void join ()
-				throws InterruptedException
+		public final boolean join ()
 		{
-			this.thread.join ();
+			return (Threading.join (this.thread));
 		}
 		
 		@Override

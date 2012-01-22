@@ -21,8 +21,10 @@
 package eu.mosaic_cloud.tools.exceptions.tools;
 
 
+import java.nio.BufferOverflowException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
@@ -33,40 +35,63 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 public final class QueueingExceptionTracer
 		extends InterceptingExceptionTracer
 {
-	private QueueingExceptionTracer (final BlockingQueue<CaughtException> queue, final ExceptionTracer delegate)
+	private QueueingExceptionTracer (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate)
 	{
 		super (delegate);
 		Preconditions.checkNotNull (queue);
+		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
 		this.queue = queue;
+		this.waitTimeout = waitTimeout;
 	}
 	
 	@Override
 	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception)
 	{
-		this.queue.add (new CaughtException (resolution, exception));
+		this.enqueue (new CaughtException (resolution, exception));
 	}
 	
 	@Override
 	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
 	{
-		this.queue.add (new CaughtException (resolution, exception, message));
+		this.enqueue (new CaughtException (resolution, exception, message));
 	}
 	
 	@Override
 	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
 	{
-		this.queue.add (new CaughtException (resolution, exception, format, tokens));
+		this.enqueue (new CaughtException (resolution, exception, format, tokens));
+	}
+	
+	private final void enqueue (final CaughtException exception)
+	{
+		try {
+			final boolean enqueued;
+			if (this.waitTimeout > 0)
+				enqueued = this.queue.offer (exception, this.waitTimeout, TimeUnit.MILLISECONDS);
+			else if (this.waitTimeout == 0)
+				enqueued = this.queue.offer (exception);
+			else if (this.waitTimeout == -1) {
+				this.queue.put (exception);
+				enqueued = true;
+			} else
+				throw (new AssertionError ());
+			if (!enqueued)
+				throw (new BufferOverflowException ());
+		} catch (final InterruptedException exception1) {
+			throw (new BufferOverflowException ());
+		}
 	}
 	
 	public final BlockingQueue<CaughtException> queue;
+	private final long waitTimeout;
 	
-	public static final QueueingExceptionTracer create (final BlockingQueue<CaughtException> queue, final ExceptionTracer delegate)
+	public static final QueueingExceptionTracer create (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate)
 	{
-		return (new QueueingExceptionTracer (queue, delegate));
+		return (new QueueingExceptionTracer (queue, waitTimeout, delegate));
 	}
 	
 	public static final QueueingExceptionTracer create (final ExceptionTracer delegate)
 	{
-		return (new QueueingExceptionTracer (new LinkedBlockingQueue<CaughtException> (), delegate));
+		return (new QueueingExceptionTracer (new LinkedBlockingQueue<CaughtException> (), 0, delegate));
 	}
 }

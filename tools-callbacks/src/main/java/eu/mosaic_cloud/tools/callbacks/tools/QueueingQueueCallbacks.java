@@ -21,12 +21,14 @@
 package eu.mosaic_cloud.tools.callbacks.tools;
 
 
+import java.nio.BufferOverflowException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public final class QueueingQueueCallbacks<_Element_ extends Object>
@@ -35,11 +37,13 @@ public final class QueueingQueueCallbacks<_Element_ extends Object>
 			QueueCallbacks<_Element_>,
 			CallbackHandler<QueueCallbacks<_Element_>>
 {
-	private QueueingQueueCallbacks (final BlockingQueue<_Element_> queue)
+	private QueueingQueueCallbacks (final BlockingQueue<_Element_> queue, final long waitTimeout)
 	{
 		super ();
 		Preconditions.checkNotNull (queue);
+		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
 		this.queue = queue;
+		this.waitTimeout = waitTimeout;
 	}
 	
 	@Override
@@ -49,7 +53,8 @@ public final class QueueingQueueCallbacks<_Element_ extends Object>
 	@Override
 	public final CallbackReference enqueue (final _Element_ element)
 	{
-		this.queue.add (element);
+		if (!Threading.offer (this.queue, element, this.waitTimeout))
+			throw (new BufferOverflowException ());
 		return (null);
 	}
 	
@@ -66,14 +71,15 @@ public final class QueueingQueueCallbacks<_Element_ extends Object>
 	{}
 	
 	public final BlockingQueue<_Element_> queue;
+	private final long waitTimeout;
 	
 	public static final <_Element_ extends Object> QueueingQueueCallbacks<_Element_> create ()
 	{
-		return (new QueueingQueueCallbacks<_Element_> (new LinkedBlockingQueue<_Element_> ()));
+		return (new QueueingQueueCallbacks<_Element_> (new LinkedBlockingQueue<_Element_> (), 0));
 	}
 	
-	public static final <_Element_ extends Object> QueueingQueueCallbacks<_Element_> create (final BlockingQueue<_Element_> queue)
+	public static final <_Element_ extends Object> QueueingQueueCallbacks<_Element_> create (final BlockingQueue<_Element_> queue, final long waitTimeout)
 	{
-		return (new QueueingQueueCallbacks<_Element_> (queue));
+		return (new QueueingQueueCallbacks<_Element_> (queue, waitTimeout));
 	}
 }

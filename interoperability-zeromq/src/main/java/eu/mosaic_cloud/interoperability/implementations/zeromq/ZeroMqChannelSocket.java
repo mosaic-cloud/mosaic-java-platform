@@ -21,9 +21,9 @@
 package eu.mosaic_cloud.interoperability.implementations.zeromq;
 
 
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -77,39 +77,14 @@ public final class ZeroMqChannelSocket
 		Threading.sleep (100);
 	}
 	
-	public final Packet dequeue ()
-	{
-		return (this.inboundPackets.poll ());
-	}
-	
 	public final Packet dequeue (final long timeout)
 	{
-		try {
-			return (this.inboundPackets.poll (timeout, TimeUnit.MILLISECONDS));
-		} catch (final InterruptedException exception) {
-			this.exceptions.traceIgnoredException (exception);
-			return (null);
-		}
-	}
-	
-	public final boolean enqueue (final Packet packet)
-	{
-		return (this.outboundPackets.offer (packet));
+		return (Threading.poll (this.inboundPackets, timeout));
 	}
 	
 	public final boolean enqueue (final Packet packet, final long timeout)
 	{
-		try {
-			return (this.outboundPackets.offer (packet, timeout, TimeUnit.MILLISECONDS));
-		} catch (final InterruptedException exception) {
-			this.exceptions.traceIgnoredException (exception);
-			return (false);
-		}
-	}
-	
-	public final boolean join ()
-	{
-		return (Threading.join (this.loop));
+		return (Threading.offer (this.outboundPackets, packet, timeout));
 	}
 	
 	public final boolean join (final long timeout)
@@ -230,7 +205,8 @@ public final class ZeroMqChannelSocket
 		}
 		peer = new String (peer_);
 		final Packet packet = new Packet (peer, ByteBuffer.wrap (header), payload != null ? ByteBuffer.wrap (payload) : null);
-		this.inboundPackets.add (packet);
+		if (!Threading.offer (this.inboundPackets, packet, -1))
+			throw (new BufferOverflowException ());
 		if (this.dequeueTrigger != null)
 			try {
 				this.dequeueTrigger.run ();
