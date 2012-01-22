@@ -39,7 +39,7 @@ public final class BasicThreadingContextTest
 	{
 		final int forkCount = Forker.getCount (this.forkLevel, this.forkFanout, true);
 		final ThreadFactory creator = this.threading.newThreadFactory (new ThreadConfiguration (this, "forkers"));
-		final Waiter waiter = new Waiter (forkCount, null);
+		final Waiter waiter = new Waiter (forkCount, this.waitTimeout, null);
 		final Forker forker = new Forker (creator, this.forkLevel, this.forkFanout, waiter);
 		forker.fork ();
 		forker.awaitRunning (this.waitTimeout);
@@ -56,7 +56,7 @@ public final class BasicThreadingContextTest
 	{
 		final int forkCount = Forker.getCount (this.forkLevel, this.forkFanout, true);
 		final ThreadFactory creator = new ManagedUnmanagedThreadFactory (this.threading, null, new ThreadConfiguration (this, "forkers"), forkCount);
-		final Waiter waiter = new Waiter (forkCount, null);
+		final Waiter waiter = new Waiter (forkCount, this.waitTimeout, null);
 		final Forker forker = new Forker (creator, this.forkLevel, this.forkFanout, waiter);
 		forker.fork ();
 		forker.awaitRunning (this.waitTimeout);
@@ -75,7 +75,7 @@ public final class BasicThreadingContextTest
 		Preconditions.checkArgument (managedLevel >= 2);
 		final int managedCount = Forker.getCount (managedLevel, this.forkFanout, true);
 		final ThreadFactory creator = new ManagedUnmanagedThreadFactory (this.threading, Threading.getRootThreadGroup (), new ThreadConfiguration (this, "forkers"), managedCount);
-		final Waiter waiter = new Waiter (1, null);
+		final Waiter waiter = new Waiter (1, this.waitTimeout, null);
 		final Forker forker = new Forker (creator, this.forkLevel, this.forkFanout, waiter);
 		forker.fork ();
 		waiter.trigger ();
@@ -98,7 +98,7 @@ public final class BasicThreadingContextTest
 	@Test
 	public final void testWaiter ()
 	{
-		final Waiter waiter = new Waiter (1, null);
+		final Waiter waiter = new Waiter (1, this.waitTimeout, null);
 		final ThreadingContextAsserter asserter = new ThreadingContextAsserter (this.threading, waiter);
 		final Thread thread = Threading.createAndStartDaemonThread (this.threading, this, null, asserter);
 		Assert.assertTrue (this.threading.isManaged (thread));
@@ -118,7 +118,7 @@ public final class BasicThreadingContextTest
 	private final int forkFanout = 2;
 	private final int forkLevel = 6;
 	private BasicThreadingContext threading;
-	private final long waitTimeout = 1000 * 1000000;
+	private final long waitTimeout = 1000;
 	
 	public static final class Forker
 			extends Object
@@ -315,13 +315,15 @@ public final class BasicThreadingContextTest
 			implements
 				Runnable
 	{
-		public Waiter (final int count, final Runnable delegate)
+		public Waiter (final int count, final long timeout, final Runnable delegate)
 		{
 			super ();
 			Preconditions.checkArgument (count >= 0);
+			Preconditions.checkArgument (timeout >= 0);
 			this.triggered = new CountDownLatch (count);
 			this.completed = new CountDownLatch (count);
 			this.delegate = delegate;
+			this.timeout = timeout;
 		}
 		
 		public final boolean awaitCompleted (final long timeout)
@@ -337,7 +339,7 @@ public final class BasicThreadingContextTest
 		@Override
 		public final void run ()
 		{
-			Assert.assertTrue (Threading.await (this.triggered));
+			Assert.assertTrue (Threading.await (this.triggered, this.timeout));
 			if (this.delegate != null)
 				this.delegate.run ();
 			this.completed.countDown ();
@@ -357,6 +359,7 @@ public final class BasicThreadingContextTest
 		
 		private final CountDownLatch completed;
 		private final Runnable delegate;
+		private final long timeout;
 		private final CountDownLatch triggered;
 	}
 }
