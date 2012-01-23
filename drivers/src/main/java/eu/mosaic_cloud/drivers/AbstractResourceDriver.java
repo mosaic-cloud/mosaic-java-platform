@@ -25,10 +25,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
 
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
+
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Base class for the resource drivers.

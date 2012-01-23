@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
+
 import eu.mosaic_cloud.connectors.ConfigProperties;
 import eu.mosaic_cloud.connectors.interop.queue.amqp.AmqpProxy;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
@@ -39,7 +41,6 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Connector for queuing systems implementing the AMQP protocol.

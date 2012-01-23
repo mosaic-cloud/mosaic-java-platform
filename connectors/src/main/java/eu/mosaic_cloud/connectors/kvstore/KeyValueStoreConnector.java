@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
+
 import eu.mosaic_cloud.connectors.ConfigProperties;
 import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
@@ -38,7 +40,6 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Connector for key-value distributed storage systems .

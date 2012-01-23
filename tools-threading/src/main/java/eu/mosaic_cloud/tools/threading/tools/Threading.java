@@ -20,10 +20,10 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ManagedThread;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ManagedThreadGroup;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 
 public final class Threading
