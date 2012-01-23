@@ -30,29 +30,23 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 
-@RunWith(SerialJunitRunner.class)
-@Serial
-@Ignore
 public class MemcachedDriverTest {
 
-	private BasicThreadingContext threadingContext;
+	private ThreadingContext threadingContext;
 	private MemcachedDriver wrapper;
 	private static String keyPrefix;
 
@@ -88,7 +82,7 @@ public class MemcachedDriverTest {
 		byte[] bytes1 = SerDesUtils.pojoToBytes("fantastic");
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"set 1");
-		IResult<Boolean> r1 = wrapper.invokeSetOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeSetOperation(
 				MemcachedDriverTest.keyPrefix, k1, 30, bytes1, handler1);
 		Assert.assertNotNull(r1);
 
@@ -96,7 +90,7 @@ public class MemcachedDriverTest {
 		byte[] bytes2 = SerDesUtils.pojoToBytes("famous");
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"set 2");
-		IResult<Boolean> r2 = wrapper.invokeSetOperation(
+		IResult<Boolean> r2 = this.wrapper.invokeSetOperation(
 				MemcachedDriverTest.keyPrefix, k2, 30, bytes2, handler2);
 		Assert.assertNotNull(r2);
 
@@ -116,7 +110,7 @@ public class MemcachedDriverTest {
 		String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>(
 				"get");
-		IResult<byte[]> r1 = wrapper.invokeGetOperation(
+		IResult<byte[]> r1 = this.wrapper.invokeGetOperation(
 				MemcachedDriverTest.keyPrefix, k1, handler);
 
 		try {
@@ -139,7 +133,7 @@ public class MemcachedDriverTest {
 		keys.add(k2);
 		IOperationCompletionHandler<Map<String, byte[]>> handler = new TestLoggingHandler<Map<String, byte[]>>(
 				"getBulk");
-		IResult<Map<String, byte[]>> r1 = wrapper.invokeGetBulkOperation(
+		IResult<Map<String, byte[]>> r1 = this.wrapper.invokeGetBulkOperation(
 				MemcachedDriverTest.keyPrefix, keys, handler);
 
 		try {
@@ -166,9 +160,9 @@ public class MemcachedDriverTest {
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"add2");
 
-		IResult<Boolean> r1 = wrapper.invokeAddOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeAddOperation(
 				MemcachedDriverTest.keyPrefix, k1, 30, b1, handler1);
-		IResult<Boolean> r2 = wrapper.invokeAddOperation(
+		IResult<Boolean> r2 = this.wrapper.invokeAddOperation(
 				MemcachedDriverTest.keyPrefix, k2, 30, b2, handler2);
 
 		try {
@@ -188,7 +182,7 @@ public class MemcachedDriverTest {
 		byte[] b1 = SerDesUtils.pojoToBytes("fantabulous");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"replace");
-		IResult<Boolean> r1 = wrapper.invokeReplaceOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeReplaceOperation(
 				MemcachedDriverTest.keyPrefix, k1, 30, b1, handler);
 		try {
 			Assert.assertTrue(r1.getResult());
@@ -201,7 +195,7 @@ public class MemcachedDriverTest {
 		}
 		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
 				"Get after replace");
-		IResult<byte[]> r2 = wrapper.invokeGetOperation(
+		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
 				MemcachedDriverTest.keyPrefix, k1, handler1);
 
 		try {
@@ -221,7 +215,7 @@ public class MemcachedDriverTest {
 		byte[] b1 = SerDesUtils.pojoToBytes(" and miraculous");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"append");
-		IResult<Boolean> r1 = wrapper.invokeAppendOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeAppendOperation(
 				MemcachedDriverTest.keyPrefix, k1, b1, handler);
 		try {
 			Assert.assertTrue(r1.getResult());
@@ -235,7 +229,7 @@ public class MemcachedDriverTest {
 
 		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
 				"Get after append");
-		IResult<byte[]> r2 = wrapper.invokeGetOperation(
+		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
 				MemcachedDriverTest.keyPrefix, k1, handler1);
 
 		try {
@@ -255,7 +249,7 @@ public class MemcachedDriverTest {
 		byte[] b1 = SerDesUtils.pojoToBytes("it is ");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"prepend");
-		IResult<Boolean> r1 = wrapper.invokePrependOperation(
+		IResult<Boolean> r1 = this.wrapper.invokePrependOperation(
 				MemcachedDriverTest.keyPrefix, k1, b1, handler);
 		try {
 			Assert.assertTrue(r1.getResult());
@@ -269,7 +263,7 @@ public class MemcachedDriverTest {
 
 		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
 				"Get after prepend");
-		IResult<byte[]> r2 = wrapper.invokeGetOperation(
+		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
 				MemcachedDriverTest.keyPrefix, k1, handler1);
 
 		try {
@@ -289,7 +283,7 @@ public class MemcachedDriverTest {
 		byte[] b1 = SerDesUtils.pojoToBytes("replaced by dummy");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"cas");
-		IResult<Boolean> r1 = wrapper.invokeCASOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeCASOperation(
 				MemcachedDriverTest.keyPrefix, k1, b1, handler);
 		try {
 			Assert.assertTrue(r1.getResult());
@@ -303,7 +297,7 @@ public class MemcachedDriverTest {
 
 		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
 				"Get after cas");
-		IResult<byte[]> r2 = wrapper.invokeGetOperation(
+		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
 				MemcachedDriverTest.keyPrefix, k1, handler1);
 
 		try {
@@ -323,7 +317,7 @@ public class MemcachedDriverTest {
 
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"delete");
-		IResult<Boolean> r1 = wrapper.invokeDeleteOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(
 				MemcachedDriverTest.keyPrefix, k1, handler);
 		try {
 			Assert.assertTrue(r1.getResult());
@@ -337,7 +331,7 @@ public class MemcachedDriverTest {
 
 		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
 				"Get after delete");
-		IResult<byte[]> r2 = wrapper.invokeGetOperation(
+		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
 				MemcachedDriverTest.keyPrefix, k1, handler1);
 
 		try {

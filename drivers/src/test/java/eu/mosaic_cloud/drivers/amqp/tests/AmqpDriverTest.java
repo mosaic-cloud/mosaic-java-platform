@@ -39,6 +39,7 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 
 public class AmqpDriverTest {
@@ -46,7 +47,7 @@ public class AmqpDriverTest {
 	private static IConfiguration configuration;
 	private AmqpDriver wrapper;
 	private String clientId = UUID.randomUUID().toString();
-	private BasicThreadingContext threadingContext;
+	private ThreadingContext threadingContext;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -82,8 +83,9 @@ public class AmqpDriverTest {
 
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare exchange");
-		IResult<Boolean> r = wrapper.declareExchange(this.clientId, exchange,
-				AmqpExchangeType.DIRECT, false, false, false, handler);
+		IResult<Boolean> r = this.wrapper
+				.declareExchange(this.clientId, exchange,
+						AmqpExchangeType.DIRECT, false, false, false, handler);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -94,8 +96,8 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare queue");
-		IResult<Boolean> r = wrapper.declareQueue(this.clientId, queue, true,
-				false, true, false, handler);
+		IResult<Boolean> r = this.wrapper.declareQueue(this.clientId, queue,
+				true, false, true, false, handler);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -111,8 +113,8 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"bind queue");
-		IResult<Boolean> r = wrapper.bindQueue(this.clientId, exchange, queue,
-				routingKey, handler);
+		IResult<Boolean> r = this.wrapper.bindQueue(this.clientId, exchange,
+				queue, routingKey, handler);
 		Assert.assertTrue(r.getResult());
 	}
 

@@ -22,10 +22,10 @@
 		</encoder>
 	</appender>
 	
-	<logger name="eu.mosaic_cloud.core.log.MosaicLogger" level="debug" />
-	<logger name="eu.mosaic_cloud.core.exceptions.ExceptionTracer" level="trace" />
+	<logger name="eu.mosaic_cloud.platform.core.log" level="debug" />
+	<logger name="eu.mosaic_cloud.platform.core.exceptions" level="debug" />
 	
-	<root level="error">
+	<root level="info">
 		<appender-ref ref="console" />
 	</root>
 	

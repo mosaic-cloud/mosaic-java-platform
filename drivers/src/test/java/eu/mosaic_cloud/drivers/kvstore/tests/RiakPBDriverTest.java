@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,35 +37,43 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-//@RunWith(SerialJunitRunner.class)
-//@Serial
 public class RiakPBDriverTest {
 
-	private static RiakPBDriver wrapper;
+	private RiakPBDriver wrapper;
+	private ThreadingContext threadingContext;
 	private static String keyPrefix;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		RiakPBDriverTest.wrapper = RiakPBDriver.create(
-				PropertyTypeConfiguration.create(
-						RiakPBDriverTest.class.getClassLoader(),
-						"riakpb-test.prop"), Threading
-						.sequezeThreadingContextOutOfDryRock());
 		RiakPBDriverTest.keyPrefix = UUID.randomUUID().toString();
-		RiakPBDriverTest.wrapper.registerClient(RiakPBDriverTest.keyPrefix,
-				"test");
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		RiakPBDriverTest.wrapper.unregisterClient(RiakPBDriverTest.keyPrefix);
-		RiakPBDriverTest.wrapper.destroy();
+	@Before
+	public void setUp() throws Exception {
+		QueueingExceptionTracer exceptions = QueueingExceptionTracer
+				.create(NullExceptionTracer.defaultInstance);
+		this.threadingContext = BasicThreadingContext.create(this,
+				exceptions.catcher);
+		this.wrapper = RiakPBDriver.create(PropertyTypeConfiguration.create(
+				RiakPBDriverTest.class.getClassLoader(), "riakpb-test.prop"),
+				this.threadingContext);
+		this.wrapper.registerClient(RiakPBDriverTest.keyPrefix, "test");
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		this.wrapper.unregisterClient(RiakPBDriverTest.keyPrefix);
+		this.wrapper.destroy();
 	}
 
 	public void testConnection() {
-		Assert.assertNotNull(RiakPBDriverTest.wrapper);
+		Assert.assertNotNull(this.wrapper);
 	}
 
 	public void testSet() throws IOException {
@@ -72,7 +81,7 @@ public class RiakPBDriverTest {
 		byte[] b1 = SerDesUtils.pojoToBytes("fantastic");
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"set 1");
-		IResult<Boolean> r1 = RiakPBDriverTest.wrapper.invokeSetOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeSetOperation(
 				RiakPBDriverTest.keyPrefix, k1, b1, handler1);
 		Assert.assertNotNull(r1);
 
@@ -80,7 +89,7 @@ public class RiakPBDriverTest {
 		byte[] b2 = SerDesUtils.pojoToBytes("famous");
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"set 2");
-		IResult<Boolean> r2 = RiakPBDriverTest.wrapper.invokeSetOperation(
+		IResult<Boolean> r2 = this.wrapper.invokeSetOperation(
 				RiakPBDriverTest.keyPrefix, k2, b2, handler2);
 		Assert.assertNotNull(r2);
 
@@ -100,7 +109,7 @@ public class RiakPBDriverTest {
 		String k1 = RiakPBDriverTest.keyPrefix + "_key_famous";
 		IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>(
 				"get");
-		IResult<byte[]> r1 = RiakPBDriverTest.wrapper.invokeGetOperation(
+		IResult<byte[]> r1 = this.wrapper.invokeGetOperation(
 				RiakPBDriverTest.keyPrefix, k1, handler);
 
 		try {
@@ -123,8 +132,8 @@ public class RiakPBDriverTest {
 		// keys.add(k2);
 		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
 				"list");
-		IResult<List<String>> r1 = RiakPBDriverTest.wrapper
-				.invokeListOperation(RiakPBDriverTest.keyPrefix, handler);
+		IResult<List<String>> r1 = this.wrapper.invokeListOperation(
+				RiakPBDriverTest.keyPrefix, handler);
 
 		try {
 			List<String> lresult = r1.getResult();
@@ -146,7 +155,7 @@ public class RiakPBDriverTest {
 
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"delete 1");
-		IResult<Boolean> r1 = RiakPBDriverTest.wrapper.invokeDeleteOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(
 				RiakPBDriverTest.keyPrefix, k1, handler1);
 		try {
 			Assert.assertTrue(r1.getResult());
@@ -161,7 +170,7 @@ public class RiakPBDriverTest {
 		Threading.sleep(1000);
 		IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
 				"check deleted");
-		IResult<byte[]> r3 = RiakPBDriverTest.wrapper.invokeGetOperation(
+		IResult<byte[]> r3 = this.wrapper.invokeGetOperation(
 				RiakPBDriverTest.keyPrefix, k1, handler3);
 
 		try {

@@ -25,14 +25,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.RunWith;
 
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RedisDriver;
@@ -41,43 +39,45 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 
-@RunWith(SerialJunitRunner.class)
-@Serial
-@Ignore
 public class RedisDriverTest {
 
-	private static AbstractKeyValueDriver wrapper;
+	private AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;
+	private ThreadingContext threadingContext;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		RedisDriverTest.wrapper = RedisDriver.create(PropertyTypeConfiguration
-				.create(RedisDriverTest.class.getClassLoader(),
-						"redis-test.prop"), Threading
-				.sequezeThreadingContextOutOfDryRock());
 		RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
-		RedisDriverTest.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
 		MosaicLogger.getLogger().trace("KEY: " + RedisDriverTest.keyPrefix);
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		RedisDriverTest.wrapper.unregisterClient(RedisDriverTest.keyPrefix);
-		RedisDriverTest.wrapper.destroy();
+	@Before
+	public void setUp() throws Exception {
+		QueueingExceptionTracer exceptions = QueueingExceptionTracer
+				.create(NullExceptionTracer.defaultInstance);
+		this.threadingContext = BasicThreadingContext.create(this,
+				exceptions.catcher);
+		this.wrapper = RedisDriver.create(PropertyTypeConfiguration.create(
+				RedisDriverTest.class.getClassLoader(), "redis-test.prop"),
+				this.threadingContext);
+		this.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
 	}
 
-	@Before
-	public void setUp() {
+	@After
+	public void tearDown() throws Exception {
+		this.wrapper.unregisterClient(RedisDriverTest.keyPrefix);
+		this.wrapper.destroy();
 	}
 
 	public void testConnection() {
-		Assert.assertNotNull(RedisDriverTest.wrapper);
+		Assert.assertNotNull(this.wrapper);
 	}
 
 	public void testSet() throws IOException {
@@ -85,7 +85,7 @@ public class RedisDriverTest {
 		byte[] b1 = SerDesUtils.pojoToBytes("fantastic");
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"set 1");
-		IResult<Boolean> r1 = RedisDriverTest.wrapper.invokeSetOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeSetOperation(
 				RedisDriverTest.keyPrefix, k1, b1, handler1);
 		Assert.assertNotNull(r1);
 
@@ -93,7 +93,7 @@ public class RedisDriverTest {
 		byte[] b2 = SerDesUtils.pojoToBytes("famous");
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"set 2");
-		IResult<Boolean> r2 = RedisDriverTest.wrapper.invokeSetOperation(
+		IResult<Boolean> r2 = this.wrapper.invokeSetOperation(
 				RedisDriverTest.keyPrefix, k2, b2, handler2);
 		Assert.assertNotNull(r2);
 
@@ -113,7 +113,7 @@ public class RedisDriverTest {
 		String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>(
 				"get");
-		IResult<byte[]> r1 = RedisDriverTest.wrapper.invokeGetOperation(
+		IResult<byte[]> r1 = this.wrapper.invokeGetOperation(
 				RedisDriverTest.keyPrefix, k1, handler);
 
 		try {
@@ -136,7 +136,7 @@ public class RedisDriverTest {
 		keys.add(k2);
 		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
 				"list");
-		IResult<List<String>> r1 = RedisDriverTest.wrapper.invokeListOperation(
+		IResult<List<String>> r1 = this.wrapper.invokeListOperation(
 				RedisDriverTest.keyPrefix, handler);
 
 		try {
@@ -161,9 +161,9 @@ public class RedisDriverTest {
 				"delete 1");
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"delete 2");
-		IResult<Boolean> r1 = RedisDriverTest.wrapper.invokeDeleteOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(
 				RedisDriverTest.keyPrefix, k1, handler1);
-		IResult<Boolean> r2 = RedisDriverTest.wrapper.invokeDeleteOperation(
+		IResult<Boolean> r2 = this.wrapper.invokeDeleteOperation(
 				RedisDriverTest.keyPrefix, k2, handler2);
 		try {
 			Assert.assertTrue(r1.getResult());
@@ -178,7 +178,7 @@ public class RedisDriverTest {
 
 		IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
 				"check deleted");
-		IResult<byte[]> r3 = RedisDriverTest.wrapper.invokeGetOperation(
+		IResult<byte[]> r3 = this.wrapper.invokeGetOperation(
 				RedisDriverTest.keyPrefix, k1, handler3);
 
 		try {
