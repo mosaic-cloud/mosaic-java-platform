@@ -5,7 +5,7 @@ interop.driver.identifier = driver.amqp.1
 amqp.connector_threads = 10
 
 amqp.host = 127.0.0.1
-amqp.port = 21688
+amqp.port = 5672
 amqp.driver_threads=10
 
 consumer.amqp.queue=queue-x

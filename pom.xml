@@ -154,7 +154,7 @@
 		<versions.plugins.wagon>1.0</versions.plugins.wagon>
 		<versions.plugins.war>2.1.1</versions.plugins.war>
 		
-		<versions.java.compiler>1.6</versions.java.compiler>
+		<versions.java.compiler>1.7</versions.java.compiler>
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		

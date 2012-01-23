@@ -41,6 +41,7 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
 public class AmqpDriverTest {
 
@@ -65,6 +66,7 @@ public class AmqpDriverTest {
 	public void setUp() throws IOException {
 		QueueingExceptionTracer exceptions = QueueingExceptionTracer
 				.create(NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
 		this.wrapper = AmqpDriver.create(AmqpDriverTest.configuration,

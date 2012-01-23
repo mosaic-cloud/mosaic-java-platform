@@ -26,12 +26,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.google.common.base.Preconditions;
 
@@ -41,19 +40,59 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
-@RunWith(SerialJunitRunner.class)
-@Serial
-@Ignore
 public class KeyValueConnectorOnlyTest {
 
+	private KeyValueStoreConnector<String> connector;
+	private ThreadingContext threadingContext;
+
+	private static String keyPrefix;
+	private static final long timeout = 1000 * 1000;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Throwable {
+		KeyValueConnectorOnlyTest.keyPrefix = UUID.randomUUID().toString();
+	}
+
+	@Before
+	public void setUp() throws Throwable {
+		QueueingExceptionTracer exceptions = QueueingExceptionTracer
+				.create(NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize();
+		this.threadingContext = BasicThreadingContext.create(this,
+				exceptions.catcher);
+		final IConfiguration config = PropertyTypeConfiguration.create(
+				KeyValueConnectorOnlyTest.class.getClassLoader(),
+				"kv-test.prop");
+		this.connector = KeyValueStoreConnector.create(config,
+				new PojoDataEncoder<String>(String.class),
+				this.threadingContext);
+		KeyValueConnectorOnlyTest.keyPrefix = UUID.randomUUID().toString();
+	}
+
+	@After
+	public void tearDown() throws Throwable {
+		this.connector.destroy();
+	}
+
+	private static <T> List<IOperationCompletionHandler<T>> getHandlers(
+			final String testName) {
+		final IOperationCompletionHandler<T> handler = new TestLoggingHandler<T>(
+				testName);
+		final List<IOperationCompletionHandler<T>> list = new ArrayList<IOperationCompletionHandler<T>>();
+		list.add(handler);
+		return list;
+	}
+
 	public void testConnection() {
-		Assert.assertNotNull(KeyValueConnectorOnlyTest.connector);
+		Assert.assertNotNull(this.connector);
 	}
 
 	@Test
@@ -69,8 +108,7 @@ public class KeyValueConnectorOnlyTest {
 				+ "_key_fantastic";
 		final List<IOperationCompletionHandler<Boolean>> handlers = KeyValueConnectorOnlyTest
 				.getHandlers("delete");
-		final IResult<Boolean> r1 = KeyValueConnectorOnlyTest.connector.delete(
-				k1, handlers, null);
+		final IResult<Boolean> r1 = this.connector.delete(k1, handlers, null);
 		try {
 			Assert.assertTrue(r1.getResult(KeyValueConnectorOnlyTest.timeout,
 					TimeUnit.MILLISECONDS));
@@ -80,8 +118,7 @@ public class KeyValueConnectorOnlyTest {
 		}
 		final List<IOperationCompletionHandler<String>> handlers1 = KeyValueConnectorOnlyTest
 				.getHandlers("get after delete");
-		final IResult<String> r2 = KeyValueConnectorOnlyTest.connector.get(k1,
-				handlers1, null);
+		final IResult<String> r2 = this.connector.get(k1, handlers1, null);
 		try {
 			Assert.assertNull(r2.getResult(KeyValueConnectorOnlyTest.timeout,
 					TimeUnit.MILLISECONDS));
@@ -96,8 +133,7 @@ public class KeyValueConnectorOnlyTest {
 				+ "_key_fantastic";
 		final List<IOperationCompletionHandler<String>> handlers = KeyValueConnectorOnlyTest
 				.getHandlers("get");
-		final IResult<String> r1 = KeyValueConnectorOnlyTest.connector.get(k1,
-				handlers, null);
+		final IResult<String> r1 = this.connector.get(k1, handlers, null);
 		try {
 			Assert.assertEquals(
 					"fantastic",
@@ -114,14 +150,14 @@ public class KeyValueConnectorOnlyTest {
 				+ "_key_fantastic";
 		final List<IOperationCompletionHandler<Boolean>> handlers1 = KeyValueConnectorOnlyTest
 				.getHandlers("set 1");
-		final IResult<Boolean> r1 = KeyValueConnectorOnlyTest.connector.set(k1,
-				"fantastic", handlers1, null);
+		final IResult<Boolean> r1 = this.connector.set(k1, "fantastic",
+				handlers1, null);
 		Assert.assertNotNull(r1);
 		final String k2 = KeyValueConnectorOnlyTest.keyPrefix + "_key_famous";
 		final List<IOperationCompletionHandler<Boolean>> handlers2 = KeyValueConnectorOnlyTest
 				.getHandlers("set 2");
-		final IResult<Boolean> r2 = KeyValueConnectorOnlyTest.connector.set(k2,
-				"famous", handlers2, null);
+		final IResult<Boolean> r2 = this.connector.set(k2, "famous", handlers2,
+				null);
 		Assert.assertNotNull(r2);
 		try {
 			Assert.assertTrue(r1.getResult(KeyValueConnectorOnlyTest.timeout,
@@ -138,37 +174,10 @@ public class KeyValueConnectorOnlyTest {
 		Preconditions.checkArgument((arguments != null)
 				&& (arguments.length == 0));
 		KeyValueConnectorOnlyTest.setUpBeforeClass();
-		new KeyValueConnectorOnlyTest().testConnector();
-		KeyValueConnectorOnlyTest.tearDownAfterClass();
+		KeyValueConnectorOnlyTest test = new KeyValueConnectorOnlyTest();
+		test.setUp();
+		test.testConnector();
+		test.tearDown();
 	}
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Throwable {
-		final IConfiguration config = PropertyTypeConfiguration.create(
-				KeyValueConnectorOnlyTest.class.getClassLoader(),
-				"kv-test.prop");
-		KeyValueConnectorOnlyTest.connector = KeyValueStoreConnector.create(
-				config, new PojoDataEncoder<String>(String.class),
-				Threading.sequezeThreadingContextOutOfDryRock());
-		KeyValueConnectorOnlyTest.keyPrefix = UUID.randomUUID().toString();
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Throwable {
-		KeyValueConnectorOnlyTest.connector.destroy();
-	}
-
-	private static <T> List<IOperationCompletionHandler<T>> getHandlers(
-			final String testName) {
-		final IOperationCompletionHandler<T> handler = new TestLoggingHandler<T>(
-				testName);
-		final List<IOperationCompletionHandler<T>> list = new ArrayList<IOperationCompletionHandler<T>>();
-		list.add(handler);
-		return list;
-	}
-
-	private static KeyValueStoreConnector<String> connector;
-	private static String keyPrefix;
-	private static String storeType;
-	private static final long timeout = 1000 * 1000;
 }

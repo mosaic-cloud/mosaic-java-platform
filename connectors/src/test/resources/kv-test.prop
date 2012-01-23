@@ -5,7 +5,7 @@ interop.driver.identifier=driver.kv.1
 kvstore.connector_threads=10
 
 kvstore.host=127.0.0.1
-kvstore.port=24637
+kvstore.port=8098
 kvstore.user=
 kvstore.passwd=
 kvstore.bucket=test

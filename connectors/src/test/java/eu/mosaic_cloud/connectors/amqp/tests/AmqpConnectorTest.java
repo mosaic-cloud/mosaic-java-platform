@@ -23,13 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import eu.mosaic_cloud.connectors.kvstore.tests.MemcachedConnectorTest;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
@@ -41,27 +40,24 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
-@RunWith(SerialJunitRunner.class)
-@Serial
 public class AmqpConnectorTest {
 
+	private AmqpConnector connector;
 	private static IConfiguration configuration;
-	private static AmqpConnector connector;
+	private static ThreadingContext threading;
 	private static AmqpStub driverStub;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
-		BasicThreadingSecurityManager.initialize ();
-		ThreadingContext threading = BasicThreadingContext.create(
+		BasicThreadingSecurityManager.initialize();
+		AmqpConnectorTest.threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
 		AmqpConnectorTest.configuration = PropertyTypeConfiguration.create(
@@ -70,27 +66,36 @@ public class AmqpConnectorTest {
 		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(AmqpConnectorTest.configuration,
 						"interop.driver.identifier", String.class, ""),
-				threading, AbortingExceptionTracer.defaultInstance);
+				AmqpConnectorTest.threading,
+				AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(AmqpSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(
 				AmqpConnectorTest.configuration, "interop.channel.address",
 				String.class, ""));
 
 		AmqpConnectorTest.driverStub = AmqpStub.create(
-				AmqpConnectorTest.configuration, driverChannel, threading);
-		AmqpConnectorTest.connector = AmqpConnector.create(
-				AmqpConnectorTest.configuration,
-				Threading.sequezeThreadingContextOutOfDryRock());
+				AmqpConnectorTest.configuration, driverChannel,
+				AmqpConnectorTest.threading);
+	}
+
+	@Before
+	public void setUp() throws Throwable {
+		this.connector = AmqpConnector.create(AmqpConnectorTest.configuration,
+				AmqpConnectorTest.threading);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
-		AmqpConnectorTest.connector.destroy();
 		AmqpConnectorTest.driverStub.destroy();
 	}
 
+	@After
+	public void tearDown() throws Throwable {
+		this.connector.destroy();
+	}
+
 	public void testConnector() throws InterruptedException, ExecutionException {
-		Assert.assertNotNull(AmqpConnectorTest.connector);
+		Assert.assertNotNull(this.connector);
 	}
 
 	private List<IOperationCompletionHandler<Boolean>> getHandlers(
@@ -109,9 +114,8 @@ public class AmqpConnectorTest {
 				String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("declare exchange");
 
-		IResult<Boolean> r = AmqpConnectorTest.connector.declareExchange(
-				exchange, AmqpExchangeType.DIRECT, false, false, false,
-				handlers, null);
+		IResult<Boolean> r = this.connector.declareExchange(exchange,
+				AmqpExchangeType.DIRECT, false, false, false, handlers, null);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -121,8 +125,8 @@ public class AmqpConnectorTest {
 				AmqpConnectorTest.configuration, "consumer.amqp.queue",
 				String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("declare queue");
-		IResult<Boolean> r = AmqpConnectorTest.connector.declareQueue(queue,
-				true, false, true, false, handlers, null);
+		IResult<Boolean> r = this.connector.declareQueue(queue, true, false,
+				true, false, handlers, null);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -137,8 +141,8 @@ public class AmqpConnectorTest {
 				AmqpConnectorTest.configuration, "consumer.amqp.queue",
 				String.class, "");
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("bind queue");
-		IResult<Boolean> r = AmqpConnectorTest.connector.bindQueue(exchange,
-				queue, routingKey, handlers, null);
+		IResult<Boolean> r = this.connector.bindQueue(exchange, queue,
+				routingKey, handlers, null);
 
 		Assert.assertTrue(r.getResult());
 	}

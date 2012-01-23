@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.google.common.base.Preconditions;
 
@@ -44,29 +43,26 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
-@RunWith(SerialJunitRunner.class)
-@Serial
 public class KeyValueConnectorTest {
 
-	private static KeyValueStoreConnector<String> connector;
+	private KeyValueStoreConnector<String> connector;
+	private static ThreadingContext threading;
 	private static String keyPrefix;
 	private static KeyValueStub driverStub;
 	private static String storeType;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
-		BasicThreadingSecurityManager.initialize ();
-		ThreadingContext threading = BasicThreadingContext.create(
+		BasicThreadingSecurityManager.initialize();
+		KeyValueConnectorTest.threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
@@ -77,27 +73,38 @@ public class KeyValueConnectorTest {
 		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				threading, AbortingExceptionTracer.defaultInstance);
+				KeyValueConnectorTest.threading,
+				AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
 
 		KeyValueConnectorTest.driverStub = KeyValueStub.create(config,
-				driverChannel);
-		KeyValueConnectorTest.connector = KeyValueStoreConnector.create(config,
-				new PojoDataEncoder<String>(String.class),
-				Threading.sequezeThreadingContextOutOfDryRock());
+				KeyValueConnectorTest.threading, driverChannel);
 		KeyValueConnectorTest.keyPrefix = UUID.randomUUID().toString();
+	}
+
+	@Before
+	public void setUp() throws Throwable {
+		IConfiguration config = PropertyTypeConfiguration.create(
+				KeyValueConnectorTest.class.getClassLoader(), "kv-test.prop");
+		this.connector = KeyValueStoreConnector.create(config,
+				new PojoDataEncoder<String>(String.class),
+				KeyValueConnectorTest.threading);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
-		KeyValueConnectorTest.connector.destroy();
 		KeyValueConnectorTest.driverStub.destroy();
 	}
 
+	@After
+	public void tearDown() throws Throwable {
+		this.connector.destroy();
+	}
+
 	public void testConnection() {
-		Assert.assertNotNull(KeyValueConnectorTest.connector);
+		Assert.assertNotNull(this.connector);
 	}
 
 	private static <T> List<IOperationCompletionHandler<T>> getHandlers(
@@ -112,14 +119,13 @@ public class KeyValueConnectorTest {
 	public void testSet() throws IOException {
 		String k1 = KeyValueConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
-		IResult<Boolean> r1 = KeyValueConnectorTest.connector.set(k1,
-				"fantastic", handlers1, null);
+		IResult<Boolean> r1 = this.connector.set(k1, "fantastic", handlers1,
+				null);
 		Assert.assertNotNull(r1);
 
 		String k2 = KeyValueConnectorTest.keyPrefix + "_key_famous";
 		List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers("set 2");
-		IResult<Boolean> r2 = KeyValueConnectorTest.connector.set(k2, "famous",
-				handlers2, null);
+		IResult<Boolean> r2 = this.connector.set(k2, "famous", handlers2, null);
 		Assert.assertNotNull(r2);
 
 		try {
@@ -137,8 +143,7 @@ public class KeyValueConnectorTest {
 	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = KeyValueConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<String>> handlers = getHandlers("get");
-		IResult<String> r1 = KeyValueConnectorTest.connector.get(k1, handlers,
-				null);
+		IResult<String> r1 = this.connector.get(k1, handlers, null);
 
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().toString());
@@ -154,8 +159,7 @@ public class KeyValueConnectorTest {
 	public void testDelete() {
 		String k1 = KeyValueConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
-		IResult<Boolean> r1 = KeyValueConnectorTest.connector.delete(k1,
-				handlers, null);
+		IResult<Boolean> r1 = this.connector.delete(k1, handlers, null);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -167,8 +171,7 @@ public class KeyValueConnectorTest {
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after delete");
-		IResult<String> r2 = KeyValueConnectorTest.connector.get(k1, handlers1,
-				null);
+		IResult<String> r2 = this.connector.get(k1, handlers1, null);
 
 		try {
 			Assert.assertNull(r2.getResult());
@@ -184,8 +187,7 @@ public class KeyValueConnectorTest {
 	public void testList() {
 		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
-		IResult<List<String>> r1 = KeyValueConnectorTest.connector.list(
-				handlers, null);
+		IResult<List<String>> r1 = this.connector.list(handlers, null);
 		try {
 			if (KeyValueConnectorTest.storeType.equalsIgnoreCase("memcached")) {
 				Assert.assertNull(r1.getResult());
@@ -211,16 +213,16 @@ public class KeyValueConnectorTest {
 	}
 
 	public static void main() throws Throwable {
-		BasicThreadingSecurityManager.initialize ();
+		BasicThreadingSecurityManager.initialize();
 		ThreadingContext threading = BasicThreadingContext.create(
-				MemcachedConnectorTest.class,
+				KeyValueConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				KeyValueConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
 		KeyValueStoreConnector<String> connector = KeyValueStoreConnector
 				.create(config, new PojoDataEncoder<String>(String.class),
-						Threading.sequezeThreadingContextOutOfDryRock());
+						threading);
 		String keyPrefix = UUID.randomUUID().toString();
 		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
@@ -229,7 +231,8 @@ public class KeyValueConnectorTest {
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
-		KeyValueStub driverStub = KeyValueStub.create(config, driverChannel);
+		KeyValueStub driverStub = KeyValueStub.create(config, threading,
+				driverChannel);
 
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("add 1");

@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -35,6 +33,7 @@ import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 public class SpecialTest {
@@ -42,7 +41,7 @@ public class SpecialTest {
 	private static boolean done = false;
 
 	public static void main(String[] args) {
-		BasicThreadingSecurityManager.initialize ();
+		BasicThreadingSecurityManager.initialize();
 		ThreadingContext threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
@@ -53,8 +52,7 @@ public class SpecialTest {
 					"special-test.prop");
 
 			connector = KeyValueStoreConnector.create(config,
-					new PojoDataEncoder<String>(String.class),
-					Threading.sequezeThreadingContextOutOfDryRock());
+					new PojoDataEncoder<String>(String.class), threading);
 			Threading.registerExitCallback(threading, SpecialTest.class,
 					"exit-hook", new Worker());
 			while (!SpecialTest.done) {
