@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractFuture;
 import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Service.State;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackFuture;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
@@ -42,6 +43,7 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -65,7 +67,13 @@ public final class BasicCallbackReactor
 	
 	public final void initialize ()
 	{
-		this.delegate.startAndWait ();
+		this.initialize (0);
+	}
+	
+	public final boolean initialize (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.start (), timeout);
+		return (state == State.RUNNING);
 	}
 	
 	@Override
@@ -81,9 +89,15 @@ public final class BasicCallbackReactor
 	}
 	
 	@Override
-	public final void terminate ()
+	public void terminate ()
 	{
-		this.delegate.stop ();
+		this.terminate (0);
+	}
+	
+	public final boolean terminate (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.stop (), timeout);
+		return (state == State.TERMINATED);
 	}
 	
 	@Override
@@ -244,6 +258,7 @@ public final class BasicCallbackReactor
 				this.transcript.traceDebugging ("stopping...");
 				for (final Proxy proxy : this.proxies.values ())
 					this.unregister ((Callbacks) proxy.trigger);
+				this.executor.shutdown ();
 				this.notifyStopped ();
 			}
 		}

@@ -103,9 +103,9 @@ public final class BasicComponentHarnessMain
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, threading, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
-		reactor.initialize ();
-		channel.initialize ();
-		component.initialize ();
+		reactor.initialize (-1);
+		channel.initialize (-1);
+		component.initialize (-1);
 		component.assign (callbacks);
 		while (true) {
 			if (!component.isActive ())
@@ -113,9 +113,9 @@ public final class BasicComponentHarnessMain
 			if (!Threading.sleep (BasicComponentHarnessMain.defaultPollTimeout))
 				break;
 		}
-		component.terminate ();
-		channel.terminate ();
-		reactor.terminate ();
+		component.terminate (-1);
+		channel.terminate (-1);
+		reactor.terminate (-1);
 	}
 	
 	public static final void main (final ComponentCallbacks callbacks, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
@@ -157,8 +157,8 @@ public final class BasicComponentHarnessMain
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
 	{
-		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		BasicThreadingSecurityManager.initialize ();
+		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
 		threading.join ();

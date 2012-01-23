@@ -34,7 +34,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
@@ -50,6 +49,7 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -170,14 +170,18 @@ public final class ZeroMqChannel
 		}
 	}
 	
+	public final void terminate ()
+	{
+		this.terminate (0);
+	}
+	
 	public final boolean terminate (final long timeout)
-			throws InterruptedException
 	{
 		synchronized (this.state.monitor) {
 			this.socket.terminate ();
 			this.executor.shutdown ();
+			return (Threading.join (this.executor, timeout));
 		}
-		return (this.executor.awaitTermination (timeout, TimeUnit.MILLISECONDS));
 	}
 	
 	final void dispatchSessionCreated (final Session session)

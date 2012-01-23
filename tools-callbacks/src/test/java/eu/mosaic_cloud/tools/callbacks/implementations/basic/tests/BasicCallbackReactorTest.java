@@ -46,11 +46,11 @@ public final class BasicCallbackReactorTest
 	public final void test ()
 			throws Exception
 	{
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		BasicThreadingSecurityManager.initialize ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
-		reactor.initialize ();
+		Assert.assertTrue (reactor.initialize (BasicCallbackReactorTest.defaultPollTimeout));
 		final LinkedList<QueueCallbacks<Integer>> triggers = new LinkedList<QueueCallbacks<Integer>> ();
 		for (int index = 0; index < BasicCallbackReactorTest.defaultQueueCount; index++) {
 			final QueueCallbacks<Integer> trigger = reactor.register (QueueCallbacks.class, null);
@@ -92,8 +92,8 @@ public final class BasicCallbackReactorTest
 			for (final QueueingQueueCallbacks<Integer> callback : callbacks)
 				Assert.assertNull (callback.queue.poll ());
 		}
-		reactor.terminate ();
-		Threading.sleep (BasicCallbackReactorTest.defaultPollTimeout);
+		Assert.assertTrue (reactor.terminate (BasicCallbackReactorTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

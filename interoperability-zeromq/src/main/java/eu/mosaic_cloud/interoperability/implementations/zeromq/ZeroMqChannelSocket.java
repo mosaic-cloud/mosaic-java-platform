@@ -58,11 +58,11 @@ public final class ZeroMqChannelSocket
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("accepting on `%s`...", endpoint);
 		if (this.socket == null)
-			Threading.sleep (100);
+			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.bind (endpoint);
-		Threading.sleep (100);
+		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 	}
 	
 	public final void connect (final String endpoint)
@@ -70,11 +70,11 @@ public final class ZeroMqChannelSocket
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("connecting to `%s`...", endpoint);
 		if (this.socket == null)
-			Threading.sleep (100);
+			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		this.socket.connect (endpoint);
-		Threading.sleep (100);
+		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 	}
 	
 	public final ZeroMqChannelPacket dequeue (final long timeout)
@@ -87,15 +87,16 @@ public final class ZeroMqChannelSocket
 		return (Threading.offer (this.outboundPackets, packet, timeout));
 	}
 	
-	public final boolean join (final long timeout)
+	public final void terminate ()
 	{
-		return (Threading.join (this.loop, timeout));
+		this.terminate (0);
 	}
 	
-	public final void terminate ()
+	public final boolean terminate (final long timeout)
 	{
 		this.transcript.traceDebugging ("terminating...");
 		this.shouldStop = true;
+		return (Threading.join (this.loop, timeout));
 	}
 	
 	final void loop ()
@@ -268,6 +269,7 @@ public final class ZeroMqChannelSocket
 		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
 	}
 	
+	public static final long defaultDelay = 50;
 	static final ZMQ.Context defaultContext = ZMQ.context (1);
 	
 	private final class Loop

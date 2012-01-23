@@ -174,6 +174,20 @@ public final class Threading
 		}
 	}
 	
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future)
+	{
+		return (Threading.awaitOrCatch (future, -1));
+	}
+	
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout)
+	{
+		try {
+			return (Threading.await (future, timeout));
+		} catch (final ExecutionException exception) {
+			return (null);
+		}
+	}
+	
 	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
 		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true), runnable));

@@ -46,16 +46,16 @@ public final class BasicChannelTest
 	public final void test ()
 			throws Exception
 	{
+		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		BasicThreadingSecurityManager.initialize ();
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, threading, exceptions);
 		final QueueingChannelCallbacks callbacks = QueueingChannelCallbacks.create (channel);
-		reactor.initialize ();
-		channel.initialize ();
+		Assert.assertTrue (reactor.initialize (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (channel.initialize (BasicChannelTest.defaultPollTimeout));
 		callbacks.assign ();
 		for (int index = 0; index < BasicChannelTest.defaultTries; index++) {
 			final ChannelMessage outboundMessage = RandomMessageGenerator.defaultInstance.generateChannelMessage ();
@@ -66,11 +66,11 @@ public final class BasicChannelTest
 			Assert.assertEquals (outboundMessage.data, inboundMessage.data);
 		}
 		pipe.sink ().close ();
-		while (channel.isActive ())
-			Threading.sleep (BasicChannelTest.defaultPollTimeout);
 		Threading.sleep (BasicChannelTest.defaultPollTimeout);
-		reactor.terminate ();
-		Threading.sleep (BasicChannelTest.defaultPollTimeout);
+		Assert.assertFalse (channel.isActive ());
+		Assert.assertTrue (channel.terminate (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.terminate (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (BasicChannelTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

@@ -28,6 +28,7 @@ import java.util.UUID;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBiMap;
 import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Service.State;
 import eu.mosaic_cloud.components.core.Channel;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelFlow;
@@ -44,6 +45,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -79,7 +81,13 @@ public final class BasicComponent
 	
 	public final void initialize ()
 	{
-		this.delegate.startAndWait ();
+		this.initialize (0);
+	}
+	
+	public final boolean initialize (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.start (), timeout);
+		return (state == State.RUNNING);
 	}
 	
 	public final boolean isActive ()
@@ -100,9 +108,15 @@ public final class BasicComponent
 	}
 	
 	@Override
-	public final void terminate ()
+	public void terminate ()
 	{
-		this.delegate.stop ();
+		this.terminate (0);
+	}
+	
+	public final boolean terminate (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.stop (), timeout);
+		return (state == State.TERMINATED);
 	}
 	
 	final Component delegate;
@@ -143,7 +157,6 @@ public final class BasicComponent
 				this.transcript = Transcript.create (this.facade);
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 				this.channel = channel;
-				this.channel.assign (this);
 				this.callbackReactor = callbackReactor;
 				this.callbackTrigger = this.callbackReactor.register (ComponentCallbacks.class, callbacks);
 				this.inboundCalls = HashBiMap.create ();
@@ -157,10 +170,7 @@ public final class BasicComponent
 		{
 			Preconditions.checkState (channel == this.channel);
 			synchronized (this.monitor) {
-				if (flow == ChannelFlow.Inbound) {
-					this.callbackTrigger.terminated (this.facade);
-					this.stop ();
-				}
+				this.stop ();
 			}
 			return (null);
 		}
@@ -308,7 +318,11 @@ public final class BasicComponent
 		
 		@Override
 		public final void registered (final ChannelCallbacks trigger)
-		{}
+		{
+			synchronized (this.monitor) {
+				this.notifyStarted ();
+			}
+		}
 		
 		@Override
 		public final CallbackReference terminated (final Channel channel)
@@ -324,14 +338,18 @@ public final class BasicComponent
 		@Override
 		public final void unregistered (final ChannelCallbacks trigger)
 		{
-			this.callbackReactor.unregister (this.callbackTrigger);
+			synchronized (this.monitor) {
+				this.callbackReactor.unregister (this.callbackTrigger);
+				this.stop ();
+				this.notifyStopped ();
+			}
 		}
 		
 		@Override
 		protected final void doStart ()
 		{
 			synchronized (this.monitor) {
-				this.notifyStarted ();
+				this.channel.assign (this);
 			}
 		}
 		
@@ -341,8 +359,6 @@ public final class BasicComponent
 			synchronized (this.monitor) {
 				this.channel.close (ChannelFlow.Inbound);
 				this.channel.close (ChannelFlow.Outbound);
-				this.channel.terminate ();
-				this.notifyStopped ();
 			}
 		}
 		

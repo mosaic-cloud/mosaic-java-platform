@@ -50,9 +50,9 @@ public final class BasicComponentTest
 	public final void test ()
 			throws Exception
 	{
+		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		BasicThreadingSecurityManager.initialize ();
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
@@ -60,9 +60,9 @@ public final class BasicComponentTest
 		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, threading, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
 		final QueueingComponentCallbacks callbacks = QueueingComponentCallbacks.create (component);
-		reactor.initialize ();
-		channel.initialize ();
-		component.initialize ();
+		Assert.assertTrue (reactor.initialize (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (channel.initialize (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (component.initialize (BasicComponentTest.defaultPollTimeout));
 		callbacks.assign ();
 		for (int index = 0; index < BasicComponentTest.defaultTries; index++) {
 			final ComponentCallRequest outboundRequest = RandomMessageGenerator.defaultInstance.generateComponentCallRequest ();
@@ -81,11 +81,12 @@ public final class BasicComponentTest
 			Assert.assertEquals (outboundRequest.data, inboundReply.data);
 		}
 		pipe.sink ().close ();
-		while (component.isActive ())
-			Threading.sleep (BasicComponentTest.defaultPollTimeout);
 		Threading.sleep (BasicComponentTest.defaultPollTimeout);
-		reactor.terminate ();
-		Threading.sleep (BasicComponentTest.defaultPollTimeout);
+		Assert.assertFalse (component.isActive ());
+		Assert.assertTrue (component.terminate (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (channel.terminate (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.terminate (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (BasicComponentTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

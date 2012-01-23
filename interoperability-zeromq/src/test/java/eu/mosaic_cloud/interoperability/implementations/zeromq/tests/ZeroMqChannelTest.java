@@ -30,7 +30,6 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,34 +39,36 @@ public final class ZeroMqChannelTest
 {
 	@Test
 	public final void test ()
-			throws Exception
 	{
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		BasicThreadingSecurityManager.initialize ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
-		final ByteBuffer header = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
-		final ByteBuffer payload = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
 		final ZeroMqChannelSocket server = ZeroMqChannelSocket.create (serverIdentifier, null, threading, exceptions);
-		server.accept (ZeroMqChannelTest.defaultServerEndpoint);
 		final ZeroMqChannelSocket client = ZeroMqChannelSocket.create (clientIdentifier, null, threading, exceptions);
+		server.accept (ZeroMqChannelTest.defaultServerEndpoint);
 		client.connect (ZeroMqChannelTest.defaultServerEndpoint);
-		Threading.sleep (ZeroMqChannelTest.defaultPollTimeout);
-		final ZeroMqChannelPacket packet1 = ZeroMqChannelPacket.create (serverIdentifier, header, payload);
-		client.enqueue (packet1, ZeroMqChannelTest.defaultPollTimeout);
-		final ZeroMqChannelPacket packet2 = server.dequeue (ZeroMqChannelTest.defaultPollTimeout);
-		server.enqueue (packet2, ZeroMqChannelTest.defaultPollTimeout);
-		final ZeroMqChannelPacket packet3 = client.dequeue (ZeroMqChannelTest.defaultPollTimeout);
-		packet1.header.flip ();
-		packet1.payload.flip ();
-		Assert.assertEquals (packet1.header, packet3.header);
-		Assert.assertEquals (packet1.payload, packet3.payload);
-		server.terminate ();
-		client.terminate ();
+		for (int index = 0; index < ZeroMqChannelTest.defaultTries; index++) {
+			final ByteBuffer header = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
+			final ByteBuffer payload = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
+			final ZeroMqChannelPacket packet1 = ZeroMqChannelPacket.create (serverIdentifier, header, payload);
+			client.enqueue (packet1, ZeroMqChannelTest.defaultPollTimeout);
+			final ZeroMqChannelPacket packet2 = server.dequeue (ZeroMqChannelTest.defaultPollTimeout);
+			server.enqueue (packet2, ZeroMqChannelTest.defaultPollTimeout);
+			final ZeroMqChannelPacket packet3 = client.dequeue (ZeroMqChannelTest.defaultPollTimeout);
+			packet1.header.flip ();
+			packet1.payload.flip ();
+			Assert.assertEquals (packet1.header, packet3.header);
+			Assert.assertEquals (packet1.payload, packet3.payload);
+		}
+		Assert.assertTrue (server.terminate (ZeroMqChannelTest.defaultPollTimeout));
+		Assert.assertTrue (client.terminate (ZeroMqChannelTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (ZeroMqChannelTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	
 	public static final long defaultPollTimeout = 1000;
 	public static final String defaultServerEndpoint = "tcp://127.0.0.1:31027";
+	public static final int defaultTries = 16;
 }

@@ -22,15 +22,13 @@ package eu.mosaic_cloud.examples.interoperability.kv;
 
 
 import java.util.UUID;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,11 +38,10 @@ public final class KvTest
 {
 	@Test
 	public final void test ()
-			throws Exception
 	{
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		BasicThreadingSecurityManager.initialize ();
-		final ThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
 		final ZeroMqChannel serverChannel = ZeroMqChannel.create (serverIdentifier, threading, exceptions);
@@ -53,22 +50,19 @@ public final class KvTest
 		final ZeroMqChannel clientChannel = ZeroMqChannel.create (clientIdentifier, threading, exceptions);
 		clientChannel.register (KvSession.Client);
 		clientChannel.connect (KvTest.defaultServerEndpoint);
-		final KvServer server = new KvServer (exceptions);
+		final KvServer server = new KvServer (exceptions, KvTest.defaultPollTimeout);
 		server.initialize (serverChannel);
 		final KvClient client_1 = new KvClient ();
-		Assert.assertTrue (client_1.initialize (clientChannel, serverIdentifier).get ().booleanValue ());
-		final Future<Boolean> put_a = client_1.put ("a", "1");
-		final Future<Boolean> put_b = client_1.put ("b", "2");
-		Assert.assertTrue (put_a.get (KvTest.defaultPollTimeout, TimeUnit.MILLISECONDS).booleanValue ());
-		Assert.assertTrue (put_b.get (KvTest.defaultPollTimeout * 3, TimeUnit.MILLISECONDS).booleanValue ());
+		Assert.assertEquals (Boolean.TRUE, Threading.awaitOrCatch (client_1.initialize (clientChannel, serverIdentifier), KvTest.defaultPollTimeout));
+		Assert.assertEquals (Boolean.TRUE, Threading.awaitOrCatch (client_1.put ("a", "1"), KvTest.defaultPollTimeout));
+		Assert.assertEquals (Boolean.TRUE, Threading.awaitOrCatch (client_1.put ("b", "2"), KvTest.defaultPollTimeout));
 		final KvClient client_2 = new KvClient ();
-		Assert.assertTrue (client_2.initialize (clientChannel, serverIdentifier).get ().booleanValue ());
-		final Future<String> get_a = client_2.get ("a");
-		final Future<String> get_b = client_2.get ("b");
-		Assert.assertEquals ("1", get_a.get (KvTest.defaultPollTimeout, TimeUnit.MILLISECONDS));
-		Assert.assertEquals ("2", get_b.get (KvTest.defaultPollTimeout, TimeUnit.MILLISECONDS));
-		serverChannel.terminate (KvTest.defaultPollTimeout);
-		clientChannel.terminate (KvTest.defaultPollTimeout);
+		Assert.assertEquals (Boolean.TRUE, Threading.awaitOrCatch (client_2.initialize (clientChannel, serverIdentifier), KvTest.defaultPollTimeout));
+		Assert.assertEquals ("1", Threading.awaitOrCatch (client_2.get ("a"), KvTest.defaultPollTimeout));
+		Assert.assertEquals ("2", Threading.awaitOrCatch (client_2.get ("b"), KvTest.defaultPollTimeout));
+		Assert.assertTrue (serverChannel.terminate (KvTest.defaultPollTimeout));
+		Assert.assertTrue (clientChannel.terminate (KvTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (KvTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

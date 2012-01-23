@@ -93,8 +93,8 @@ public final class AbortingExceptionTracer
 		}
 	}
 	
+	public static final long defaulExitTimeout = 2000;
 	public static final int defaultExitCode = 254;
-	public static final long defaultExitTimeout = 2000;
 	public static final AbortingExceptionTracer defaultInstance = new AbortingExceptionTracer (null);
 	private static final long defaultExitTimeoutResolution = 100;
 	private static final Exiter exiter = new Exiter (null);
@@ -121,13 +121,17 @@ public final class AbortingExceptionTracer
 				}
 			}, AbortingExceptionTracer.class.getCanonicalName () + "#halter");
 			this.exitThread.setDaemon (true);
-			Runtime.getRuntime ().addShutdownHook (this.haltThread);
 		}
 		
 		public final void maybeStart ()
 		{
 			synchronized (this) {
-				if (!this.exitThread.isAlive ())
+				if (!this.exitThread.isAlive ()) {
+					try {
+						Runtime.getRuntime ().addShutdownHook (this.haltThread);
+					} catch (final Throwable exception1) {
+						AbortingExceptionTracer.trace (exception1, this.transcript);
+					}
 					try {
 						this.exitThread.start ();
 					} catch (final Throwable exception1) {
@@ -138,6 +142,7 @@ public final class AbortingExceptionTracer
 							AbortingExceptionTracer.trace (exception2, this.transcript);
 						}
 					}
+				}
 			}
 		}
 		
@@ -152,7 +157,7 @@ public final class AbortingExceptionTracer
 		
 		private final void halt ()
 		{
-			for (int timeoutStep = 0; timeoutStep < AbortingExceptionTracer.defaultExitTimeout / AbortingExceptionTracer.defaultExitTimeoutResolution; timeoutStep++)
+			for (int timeoutStep = 0; timeoutStep < AbortingExceptionTracer.defaulExitTimeout / AbortingExceptionTracer.defaultExitTimeoutResolution; timeoutStep++)
 				try {
 					Thread.sleep (AbortingExceptionTracer.defaultExitTimeoutResolution);
 				} catch (final InterruptedException exception1) {
