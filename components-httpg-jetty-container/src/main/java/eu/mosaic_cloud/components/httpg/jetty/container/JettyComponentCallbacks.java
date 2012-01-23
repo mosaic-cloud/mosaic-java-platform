@@ -294,7 +294,7 @@ public final class JettyComponentCallbacks
 			final Server jettyServer;
 			jettyServer = ServerCommandLine.createServer (jettyProperties);
 			this.jettyServer = jettyServer;
-			final Thread jettyLoop = this.threading.newThread (new ThreadConfiguration (jettyServer, "jetty"), new Runnable () {
+			final Thread jettyLoop = this.threading.newThread (ThreadConfiguration.create (jettyServer, "jetty"), new Runnable () {
 				@Override
 				public final void run ()
 				{

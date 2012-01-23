@@ -176,12 +176,12 @@ public class CloudletExecutor {
 
 		// FIXME get threads from workers from a thread pool
 		this.worker = new Worker();
-		this.worker.thread = threading.newThread(new ThreadConfiguration(this,
+		this.worker.thread = threading.newThread(ThreadConfiguration.create(this,
 				"worker", true).setClassLoader(loader), this.worker);
 		this.worker.thread.start();
 
 		this.backupWorker = new BackupWorker();
-		this.backupWorker.thread = threading.newThread(new ThreadConfiguration(
+		this.backupWorker.thread = threading.newThread(ThreadConfiguration.create(
 				this, "backup-worker", true).setClassLoader(loader),
 				this.backupWorker);
 		this.backupWorker.thread.start();

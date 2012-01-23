@@ -278,7 +278,7 @@ public final class BasicComponentHarnessMain
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
-			this.thread = this.threading.newThread (new ThreadConfiguration (this, "piper", this), this);
+			this.thread = this.threading.newThread (ThreadConfiguration.create (this, "piper", this), this);
 			this.thread.start ();
 		}
 		

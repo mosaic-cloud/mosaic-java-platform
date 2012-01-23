@@ -174,12 +174,12 @@ public final class Threading
 	
 	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createAndStartThread (threading, new ThreadConfiguration (owner, name, true), runnable));
+		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
 	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createAndStartThread (threading, new ThreadConfiguration (owner, name, false), runnable));
+		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
 	}
 	
 	public static final Thread createAndStartThread (final ThreadingContext threading, final ThreadConfiguration configuration, final Runnable runnable)
@@ -191,12 +191,12 @@ public final class Threading
 	
 	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createThread (threading, new ThreadConfiguration (owner, name, true), runnable));
+		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
 	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createThread (threading, new ThreadConfiguration (owner, name, false), runnable));
+		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
 	}
 	
 	public static final Thread createThread (final ThreadingContext threading, final ThreadConfiguration configuration, final Runnable runnable)
@@ -530,7 +530,7 @@ public final class Threading
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkNotNull (runnable);
 		Preconditions.checkNotNull (runnable);
-		Runtime.getRuntime ().addShutdownHook (context.newThread (new ThreadConfiguration (owner, name, true), runnable));
+		Runtime.getRuntime ().addShutdownHook (context.newThread (ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
 	public static final <_Object_ extends Object> Reference<? extends _Object_> remove (final ReferenceQueue<_Object_> queue)

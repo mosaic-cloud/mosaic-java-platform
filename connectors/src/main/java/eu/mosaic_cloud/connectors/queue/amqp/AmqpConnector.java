@@ -67,7 +67,7 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		this.proxy = proxy;
 		this.threading = threading;
 		this.executor = this.threading.newFixedThreadPool(
-				new ThreadConfiguration(this, "operations"), noThreads);
+				ThreadConfiguration.create(this, "operations"), noThreads);
 	}
 
 	/**

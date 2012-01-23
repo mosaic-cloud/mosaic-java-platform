@@ -222,7 +222,7 @@ public final class BasicCallbackReactor
 				this.threading = threading;
 				this.transcript = Transcript.create (this.facade);
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
-				this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this.facade, "callbacks", this.exceptions.catcher));
+				this.executor = this.threading.newCachedThreadPool (ThreadConfiguration.create (this.facade, "callbacks", this.exceptions.catcher));
 				this.proxies = new WeakHashMap<CallbackTrigger, Proxy> ();
 				this.actions = new WeakHashMap<CallbackReference, Action> ();
 			}

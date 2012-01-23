@@ -11,46 +11,6 @@ import com.google.common.base.Preconditions;
 public final class ThreadConfiguration
 		extends Object
 {
-	public ThreadConfiguration (final Object owner)
-	{
-		this (owner, null, true, -1, null);
-	}
-	
-	public ThreadConfiguration (final Object owner, final String name)
-	{
-		this (owner, name, true, -1, null);
-	}
-	
-	public ThreadConfiguration (final Object owner, final String name, final boolean daemon)
-	{
-		this (owner, name, daemon, -1, null);
-	}
-	
-	public ThreadConfiguration (final Object owner, final String name, final boolean daemon, final int priority)
-	{
-		this (owner, name, daemon, priority, null);
-	}
-	
-	public ThreadConfiguration (final Object owner, final String name, final boolean daemon, final int priority, final Thread.UncaughtExceptionHandler catcher)
-	{
-		this (new WeakReference<Object> (owner), name, daemon, priority, catcher, null);
-	}
-	
-	public ThreadConfiguration (final Object owner, final String name, final boolean daemon, final Thread.UncaughtExceptionHandler catcher)
-	{
-		this (owner, name, daemon, -1, catcher);
-	}
-	
-	public ThreadConfiguration (final Object owner, final String name, final Thread.UncaughtExceptionHandler catcher)
-	{
-		this (owner, name, true, -1, catcher);
-	}
-	
-	public ThreadConfiguration (final Object owner, final Thread.UncaughtExceptionHandler catcher)
-	{
-		this (owner, null, true, -1, catcher);
-	}
-	
 	private ThreadConfiguration (final Reference<Object> owner, final String name, final boolean daemon, final int priority, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
 	{
 		super ();
@@ -81,4 +41,44 @@ public final class ThreadConfiguration
 	public final String name;
 	public final Reference<Object> owner;
 	public final int priority;
+	
+	public static final ThreadConfiguration create (final Object owner)
+	{
+		return (ThreadConfiguration.create (owner, null, true, -1, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name)
+	{
+		return (ThreadConfiguration.create (owner, name, true, -1, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, -1, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, priority, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority, final Thread.UncaughtExceptionHandler catcher)
+	{
+		return (new ThreadConfiguration (new WeakReference<Object> (owner), name, daemon, priority, catcher, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final Thread.UncaughtExceptionHandler catcher)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, -1, catcher));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final Thread.UncaughtExceptionHandler catcher)
+	{
+		return (ThreadConfiguration.create (owner, name, true, -1, catcher));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final Thread.UncaughtExceptionHandler catcher)
+	{
+		return (ThreadConfiguration.create (owner, null, true, -1, catcher));
+	}
 }
