@@ -41,6 +41,7 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 public class RiakPBDriverTest {
@@ -58,6 +59,7 @@ public class RiakPBDriverTest {
 	public void setUp() throws Exception {
 		QueueingExceptionTracer exceptions = QueueingExceptionTracer
 				.create(NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
 		this.wrapper = RiakPBDriver.create(PropertyTypeConfiguration.create(

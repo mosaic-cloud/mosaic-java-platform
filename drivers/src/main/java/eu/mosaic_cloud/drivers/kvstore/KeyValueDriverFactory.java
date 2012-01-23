@@ -25,6 +25,7 @@ import eu.mosaic_cloud.drivers.DriverNotFoundException;
 import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * A factory for key-value drivers.
@@ -59,12 +60,15 @@ public final class KeyValueDriverFactory {
 	 *            the name of the driver
 	 * @param config
 	 *            the configuration for the driver
+	 * @param threadingContext
+	 *            the context used for creating threads
 	 * @return the driver
 	 * @throws ConnectorNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
 	public static AbstractKeyValueDriver createDriver(String driverName,
-			IConfiguration config) throws DriverNotFoundException {
+			IConfiguration config, ThreadingContext threadingContext)
+			throws DriverNotFoundException {
 		DriverType type = null;
 		AbstractKeyValueDriver driver = null;
 
@@ -78,9 +82,9 @@ public final class KeyValueDriverFactory {
 			try {
 				Class<?> driverClass = type.getDriverClass();
 				Method createMethod = driverClass.getMethod("create",
-						IConfiguration.class);
+						IConfiguration.class, ThreadingContext.class);
 				driver = (AbstractKeyValueDriver) createMethod.invoke(null,
-						config);
+						config, threadingContext);
 			} catch (Exception e) {
 				ExceptionTracer.traceIgnored(e);
 				DriverNotFoundException exception = new DriverNotFoundException(

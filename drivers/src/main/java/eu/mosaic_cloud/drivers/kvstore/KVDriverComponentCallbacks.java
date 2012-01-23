@@ -259,7 +259,7 @@ public final class KVDriverComponentCallbacks extends
 								.getString("KVDriverComponentCallbacks.3"),
 						KeyValueSession.DRIVER);
 				this.stub = KeyValueStub.create(getDriverConfiguration(),
-						driverChannel);
+						this.threading, driverChannel);
 
 			} else {
 				throw new IllegalStateException();

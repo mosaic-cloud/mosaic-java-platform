@@ -43,6 +43,7 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
 public class MemcachedDriverTest {
 
@@ -59,6 +60,7 @@ public class MemcachedDriverTest {
 	public void setUp() throws IOException {
 		QueueingExceptionTracer exceptions = QueueingExceptionTracer
 				.create(NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
 		this.wrapper = MemcachedDriver.create(PropertyTypeConfiguration.create(
