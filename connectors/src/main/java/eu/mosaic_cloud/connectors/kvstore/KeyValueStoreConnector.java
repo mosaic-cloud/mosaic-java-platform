@@ -60,7 +60,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 			ThreadingContext threading, int noThreads, DataEncoder<T> encoder) {
 		this.proxy = proxy;
 		this.threading = threading;
-		this.executor = this.threading.newFixedThreadPool(
+		this.executor = this.threading.createFixedThreadPool(
 				ThreadConfiguration.create(this, "operations", true), noThreads);
 		this.dataEncoder = encoder;
 	}

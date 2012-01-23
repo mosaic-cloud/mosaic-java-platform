@@ -45,7 +45,7 @@ public class SerialJunitRunner extends BlockJUnit4ClassRunner {
 			ThreadingContext threading = Threading
 					.sequezeThreadingContextOutOfDryRock();
 			ExecutorService executorService = this.threading
-					.newFixedThreadPool(ThreadConfiguration.create(this, "tests", true),
+					.createFixedThreadPool(ThreadConfiguration.create(this, "tests", true),
 							1);
 			CompletionService<Void> completionService = new ExecutorCompletionService<Void>(
 					this.executorService);

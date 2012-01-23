@@ -77,7 +77,7 @@ public final class SerialSuite extends Suite {
 			ThreadingContext threading = Threading
 					.sequezeThreadingContextOutOfDryRock();
 			ExecutorService executorService = this.threading
-					.newFixedThreadPool(ThreadConfiguration.create(this, null, true), 1);
+					.createFixedThreadPool(ThreadConfiguration.create(this, null, true), 1);
 			CompletionService<Void> completionService = new ExecutorCompletionService<Void>(
 					this.executorService);
 			Queue<Future<Void>> tasks = new LinkedList<Future<Void>>();

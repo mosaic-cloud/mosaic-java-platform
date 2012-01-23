@@ -228,7 +228,7 @@ public final class Threading
 		Preconditions.checkNotNull (context);
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (runnable);
-		final Thread thread = context.newThread (configuration, runnable);
+		final Thread thread = context.createThread (configuration, runnable);
 		if (start)
 			thread.start ();
 		return (thread);
@@ -559,7 +559,7 @@ public final class Threading
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkNotNull (runnable);
 		Preconditions.checkNotNull (runnable);
-		Runtime.getRuntime ().addShutdownHook (context.newThread (ThreadConfiguration.create (owner, name, true), runnable));
+		Runtime.getRuntime ().addShutdownHook (context.createThread (ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
 	public static final <_Object_ extends Object> Reference<? extends _Object_> remove (final ReferenceQueue<_Object_> queue)

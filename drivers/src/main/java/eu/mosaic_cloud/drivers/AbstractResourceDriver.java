@@ -51,7 +51,7 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 */
 	protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
 		this.pendingResults = new ArrayList<IResult<?>>();
-		this.executor = threading.newFixedThreadPool(ThreadConfiguration.create(
+		this.executor = threading.createFixedThreadPool(ThreadConfiguration.create(
 				this, "operations", true), noThreads);
 	}
 

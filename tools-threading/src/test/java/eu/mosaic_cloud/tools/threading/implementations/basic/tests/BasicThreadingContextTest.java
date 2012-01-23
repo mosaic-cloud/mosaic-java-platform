@@ -38,7 +38,7 @@ public final class BasicThreadingContextTest
 	public final void testManagedForker ()
 	{
 		final int forkCount = Forker.getCount (this.forkLevel, this.forkFanout, true);
-		final ThreadFactory creator = this.threading.newThreadFactory (ThreadConfiguration.create (this, "forkers", true));
+		final ThreadFactory creator = this.threading.createThreadFactory (ThreadConfiguration.create (this, "forkers", true));
 		final Waiter waiter = new Waiter (forkCount, this.waitTimeout, null);
 		final Forker forker = new Forker (creator, this.forkLevel, this.forkFanout, waiter);
 		forker.fork ();

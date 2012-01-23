@@ -72,7 +72,7 @@ public final class ZeroMqChannel
 		this.state = new State ();
 		this.handlers = new ConcurrentLinkedQueue<ZeroMqChannel.Handler> ();
 		this.idle = new Semaphore (1);
-		this.executor = this.threading.newCachedThreadPool (ThreadConfiguration.create (this, "zeromq-callbacks", true));
+		this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this, "zeromq-callbacks", true));
 		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger (), this.threading, exceptions);
 	}
 	

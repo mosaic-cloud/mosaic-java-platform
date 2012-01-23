@@ -145,7 +145,7 @@ public final class BasicChannel
 				this.coder = coder;
 				this.callbackReactor = callbackReactor;
 				this.callbackTrigger = this.callbackReactor.register (ChannelCallbacks.class, callbacks);
-				this.executor = this.threading.newCachedThreadPool (ThreadConfiguration.create (this.facade, "services", true, this.exceptions.catcher));
+				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "services", true, this.exceptions.catcher));
 				this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.inboundMessages = new LinkedBlockingQueue<ChannelMessage> ();

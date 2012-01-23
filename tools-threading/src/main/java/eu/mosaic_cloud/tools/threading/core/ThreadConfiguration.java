@@ -4,6 +4,7 @@ package eu.mosaic_cloud.tools.threading.core;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.regex.Pattern;
 
 import com.google.common.base.Preconditions;
 
@@ -15,7 +16,7 @@ public final class ThreadConfiguration
 	{
 		super ();
 		Preconditions.checkNotNull (owner);
-		Preconditions.checkArgument ((name == null) || ThreadingContext.namePattern.matcher (name).matches ());
+		Preconditions.checkArgument ((name == null) || ThreadConfiguration.namePattern.matcher (name).matches ());
 		Preconditions.checkArgument ((priority == -1) || ((priority >= Thread.MIN_PRIORITY) && (priority <= Thread.MAX_PRIORITY)));
 		this.owner = owner;
 		this.name = name;
@@ -61,4 +62,6 @@ public final class ThreadConfiguration
 	{
 		return (ThreadConfiguration.create (owner, name, daemon, -1, catcher));
 	}
+	
+	public static final Pattern namePattern = Pattern.compile ("^[a-z0-9]([a-z0-9-]*[a-z0-9])?$");
 }
