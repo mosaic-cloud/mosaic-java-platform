@@ -73,12 +73,12 @@ public class AbacusTest
 		clientComponent.initialize ();
 		serverComponent.assign (serverCallbacks);
 		clientCallbacks.assign ();
-		for (int index = 0; index < AbacusTest.tries; index++) {
+		for (int index = 0; index < AbacusTest.defaultTries; index++) {
 			final double operandA = Math.random () * 10;
 			final double operandB = Math.random () * 10;
 			final ComponentCallRequest request = ComponentCallRequest.create ("+", Arrays.asList (Double.valueOf (operandA), Double.valueOf (operandB)), ByteBuffer.allocate (0), ComponentCallReference.create ());
 			clientComponent.call (peer, request);
-			final ComponentCallReply reply = (ComponentCallReply) clientCallbacks.queue.poll (AbacusTest.pollTimeout, TimeUnit.MILLISECONDS);
+			final ComponentCallReply reply = (ComponentCallReply) clientCallbacks.queue.poll (AbacusTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (reply);
 			Assert.assertTrue (reply.ok);
 			Assert.assertNotNull (reply.outputsOrError);
@@ -88,11 +88,10 @@ public class AbacusTest
 		pipe1.sink ().close ();
 		pipe2.sink ().close ();
 		while (serverComponent.isActive () || clientComponent.isActive ())
-			Threading.sleep (AbacusTest.sleepTimeout);
+			Threading.sleep (AbacusTest.defaultPollTimeout);
 		reactor.terminate ();
 	}
 	
-	private static final long pollTimeout = 1000;
-	private static final long sleepTimeout = 100;
-	private static final int tries = 16;
+	public static final long defaultPollTimeout = 1000;
+	public static final int defaultTries = 16;
 }

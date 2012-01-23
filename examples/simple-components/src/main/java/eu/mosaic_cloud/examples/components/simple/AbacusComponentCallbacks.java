@@ -181,10 +181,10 @@ public final class AbacusComponentCallbacks
 	
 	private static enum Status
 	{
-		Created,
-		Initialized,
-		Registered,
-		Terminated,
-		Unregistered;
+		Created (),
+		Initialized (),
+		Registered (),
+		Terminated (),
+		Unregistered ();
 	}
 }

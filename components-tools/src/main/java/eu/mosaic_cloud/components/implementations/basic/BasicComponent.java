@@ -105,7 +105,7 @@ public final class BasicComponent
 		this.delegate.stop ();
 	}
 	
-	private final Component delegate;
+	final Component delegate;
 	
 	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
 	{

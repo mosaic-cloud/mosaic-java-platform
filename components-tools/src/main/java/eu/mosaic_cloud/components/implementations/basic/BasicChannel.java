@@ -110,7 +110,7 @@ public final class BasicChannel
 		return (new BasicChannel (input, output, coder, reactor, null, threading, exceptions));
 	}
 	
-	private static final long defaultPollTimeout = 1000;
+	static final long defaultPollTimeout = 1000;
 	
 	private static final class Channel
 			extends AbstractService

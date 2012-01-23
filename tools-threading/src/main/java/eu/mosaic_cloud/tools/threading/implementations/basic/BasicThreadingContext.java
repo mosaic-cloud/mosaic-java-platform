@@ -213,7 +213,7 @@ public final class BasicThreadingContext
 		catcher.uncaughtException (thread, exception);
 	}
 	
-	final ThreadConfiguration configuration;
+	private final ThreadConfiguration configuration;
 	private final BasicThreadGroup defaultGroup;
 	private final BasicThreadGroup group;
 	private final AtomicBoolean sealed;
@@ -320,7 +320,7 @@ public final class BasicThreadingContext
 			super.run ();
 		}
 		
-		final ThreadConfiguration configuration;
+		private final ThreadConfiguration configuration;
 		private final BasicThreadGroup group;
 		private final int index;
 		private final AtomicBoolean running;
@@ -354,7 +354,7 @@ public final class BasicThreadingContext
 			return (new BasicThread (this.group, this.configuration.setName (null), runnable, this.index != null ? this.index.incrementAndGet () : -1));
 		}
 		
-		final ThreadConfiguration configuration;
+		private final ThreadConfiguration configuration;
 		private final BasicThreadGroup group;
 		private final AtomicInteger index;
 	}
@@ -462,6 +462,6 @@ public final class BasicThreadingContext
 			BasicThreadingContext.this.handleException (thread, exception);
 		}
 		
-		final ThreadConfiguration configuration;
+		private final ThreadConfiguration configuration;
 	}
 }

@@ -80,8 +80,8 @@ public final class ThreadBundle<_Thread_ extends Thread>
 		}
 	}
 	
-	final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
 	private final ReferenceQueue<_Thread_> collector;
+	private final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
 	
 	public static final <_Thread_ extends Thread> ThreadBundle<_Thread_> create ()
 	{

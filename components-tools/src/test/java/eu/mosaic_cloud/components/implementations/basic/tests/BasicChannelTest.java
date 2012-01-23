@@ -57,24 +57,23 @@ public final class BasicChannelTest
 		reactor.initialize ();
 		channel.initialize ();
 		callbacks.assign ();
-		for (int index = 0; index < BasicChannelTest.tries; index++) {
+		for (int index = 0; index < BasicChannelTest.defaultTries; index++) {
 			final ChannelMessage outboundMessage = RandomMessageGenerator.defaultInstance.generateChannelMessage ();
 			channel.send (outboundMessage);
-			final ChannelMessage inboundMessage = callbacks.queue.poll (BasicChannelTest.pollTimeout, TimeUnit.MILLISECONDS);
+			final ChannelMessage inboundMessage = callbacks.queue.poll (BasicChannelTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundMessage);
 			Assert.assertEquals (outboundMessage.metaData, inboundMessage.metaData);
 			Assert.assertEquals (outboundMessage.data, inboundMessage.data);
 		}
 		pipe.sink ().close ();
 		while (channel.isActive ())
-			Threading.sleep (BasicChannelTest.sleepTimeout);
-		Threading.sleep (BasicChannelTest.sleepTimeout);
+			Threading.sleep (BasicChannelTest.defaultPollTimeout);
+		Threading.sleep (BasicChannelTest.defaultPollTimeout);
 		reactor.terminate ();
-		Threading.sleep (BasicChannelTest.sleepTimeout);
+		Threading.sleep (BasicChannelTest.defaultPollTimeout);
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	
-	private static final long pollTimeout = 1000;
-	private static final long sleepTimeout = 100;
-	private static final int tries = 16;
+	public static final long defaultPollTimeout = 1000;
+	public static final int defaultTries = 16;
 }

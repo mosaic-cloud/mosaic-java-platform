@@ -64,17 +64,17 @@ public final class BasicComponentTest
 		channel.initialize ();
 		component.initialize ();
 		callbacks.assign ();
-		for (int index = 0; index < BasicComponentTest.tries; index++) {
+		for (int index = 0; index < BasicComponentTest.defaultTries; index++) {
 			final ComponentCallRequest outboundRequest = RandomMessageGenerator.defaultInstance.generateComponentCallRequest ();
 			component.call (peer, outboundRequest);
-			final ComponentCallRequest inboundRequest = (ComponentCallRequest) callbacks.queue.poll (BasicComponentTest.pollTimeout * 10000, TimeUnit.MILLISECONDS);
+			final ComponentCallRequest inboundRequest = (ComponentCallRequest) callbacks.queue.poll (BasicComponentTest.defaultPollTimeout * 10000, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundRequest);
 			Assert.assertEquals (outboundRequest.operation, inboundRequest.operation);
 			Assert.assertEquals (outboundRequest.inputs, inboundRequest.inputs);
 			Assert.assertEquals (outboundRequest.data, inboundRequest.data);
 			final ComponentCallReply outboundReply = RandomMessageGenerator.defaultInstance.generateComponentCallReply (inboundRequest);
 			component.reply (outboundReply);
-			final ComponentCallReply inboundReply = (ComponentCallReply) callbacks.queue.poll (BasicComponentTest.pollTimeout, TimeUnit.MILLISECONDS);
+			final ComponentCallReply inboundReply = (ComponentCallReply) callbacks.queue.poll (BasicComponentTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundReply);
 			Assert.assertEquals (outboundRequest.reference, inboundReply.reference);
 			Assert.assertEquals (outboundRequest.inputs, inboundReply.outputsOrError);
@@ -82,14 +82,13 @@ public final class BasicComponentTest
 		}
 		pipe.sink ().close ();
 		while (component.isActive ())
-			Threading.sleep (BasicComponentTest.sleepTimeout);
-		Threading.sleep (BasicComponentTest.sleepTimeout);
+			Threading.sleep (BasicComponentTest.defaultPollTimeout);
+		Threading.sleep (BasicComponentTest.defaultPollTimeout);
 		reactor.terminate ();
-		Threading.sleep (BasicComponentTest.sleepTimeout);
+		Threading.sleep (BasicComponentTest.defaultPollTimeout);
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	
-	private static final long pollTimeout = 1000;
-	private static final long sleepTimeout = 100;
-	private static final int tries = 16;
+	public static final long defaultPollTimeout = 1000;
+	public static final int defaultTries = 16;
 }

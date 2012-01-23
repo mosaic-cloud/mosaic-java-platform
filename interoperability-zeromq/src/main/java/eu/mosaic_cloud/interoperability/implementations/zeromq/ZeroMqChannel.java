@@ -46,7 +46,6 @@ import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSocket.Packet;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
@@ -235,7 +234,7 @@ public final class ZeroMqChannel
 	final void handlePacketDequeue ()
 	{
 		synchronized (this.state.monitor) {
-			final Packet packet = this.socket.dequeue (0);
+			final ZeroMqChannelPacket packet = this.socket.dequeue (0);
 			if (packet == null)
 				throw (new IllegalStateException ());
 			final String sessionIdentifier;
@@ -387,7 +386,7 @@ public final class ZeroMqChannel
 				this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}
-			final Packet packet = Packet.create (session.peerIdentifier, ByteBuffer.wrap (header), payload);
+			final ZeroMqChannelPacket packet = ZeroMqChannelPacket.create (session.peerIdentifier, ByteBuffer.wrap (header), payload);
 			if (!this.socket.enqueue (packet, 1000))
 				throw (new IllegalStateException ());
 			if (coder.messageType == MessageType.Termination)
@@ -461,15 +460,15 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	private final TranscriptExceptionTracer exceptions;
-	private final ExecutorService executor;
-	private final ConcurrentLinkedQueue<Handler> handlers;
-	private final Semaphore idle;
-	private final String selfIdentifier;
-	private final ZeroMqChannelSocket socket;
-	private final State state;
-	private final ThreadingContext threading;
-	private final Transcript transcript;
+	final TranscriptExceptionTracer exceptions;
+	final ExecutorService executor;
+	final ConcurrentLinkedQueue<Handler> handlers;
+	final Semaphore idle;
+	final String selfIdentifier;
+	final ZeroMqChannelSocket socket;
+	final State state;
+	final ThreadingContext threading;
+	final Transcript transcript;
 	
 	public static final ZeroMqChannel create (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{

@@ -110,7 +110,7 @@ public final class BasicComponentHarnessMain
 		while (true) {
 			if (!component.isActive ())
 				break;
-			if (!Threading.sleep (BasicComponentHarnessMain.sleepTimeout))
+			if (!Threading.sleep (BasicComponentHarnessMain.defaultPollTimeout))
 				break;
 		}
 		component.terminate ();
@@ -261,7 +261,7 @@ public final class BasicComponentHarnessMain
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument);
 	}
 	
-	private static final long sleepTimeout = 100;
+	private static final long defaultPollTimeout = 100;
 	
 	private static final class Piper
 			extends Object
@@ -277,7 +277,7 @@ public final class BasicComponentHarnessMain
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
-			this.thread = Threading.createAndStartDaemonThread (threading, this, "piper", this, this);
+			this.thread = Threading.createAndStartDaemonThread (this.threading, this, "piper", this, this);
 		}
 		
 		public final boolean join ()
