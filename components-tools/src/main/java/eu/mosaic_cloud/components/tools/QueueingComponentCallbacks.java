@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.components.tools;
 
 
+import java.nio.BufferOverflowException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -34,6 +35,7 @@ import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public final class QueueingComponentCallbacks
@@ -42,13 +44,15 @@ public final class QueueingComponentCallbacks
 			ComponentCallbacks,
 			CallbackHandler<ComponentCallbacks>
 {
-	private QueueingComponentCallbacks (final Component component, final BlockingQueue<ComponentMessage> queue)
+	private QueueingComponentCallbacks (final Component component, final BlockingQueue<ComponentMessage> queue, final long waitTimeout)
 	{
 		super ();
 		Preconditions.checkNotNull (component);
 		Preconditions.checkNotNull (queue);
+		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
 		this.component = component;
 		this.queue = queue;
+		this.waitTimeout = waitTimeout;
 	}
 	
 	public final void assign ()
@@ -61,7 +65,8 @@ public final class QueueingComponentCallbacks
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (request);
-		this.queue.add (request);
+		if (!Threading.offer (this.queue, request, this.waitTimeout))
+			throw (new BufferOverflowException ());
 		return (null);
 	}
 	
@@ -69,7 +74,9 @@ public final class QueueingComponentCallbacks
 	public final CallbackReference callReturned (final Component component, final ComponentCallReply reply)
 	{
 		Preconditions.checkArgument (this.component == component);
-		this.queue.add (reply);
+		Preconditions.checkNotNull (reply);
+		if (!Threading.offer (this.queue, reply, this.waitTimeout))
+			throw (new BufferOverflowException ());
 		return (null);
 	}
 	
@@ -78,7 +85,8 @@ public final class QueueingComponentCallbacks
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (request);
-		this.queue.add (request);
+		if (!Threading.offer (this.queue, request, this.waitTimeout))
+			throw (new BufferOverflowException ());
 		return (null);
 	}
 	
@@ -131,14 +139,15 @@ public final class QueueingComponentCallbacks
 	
 	public final BlockingQueue<ComponentMessage> queue;
 	private final Component component;
+	private final long waitTimeout;
 	
 	public static final QueueingComponentCallbacks create (final Component component)
 	{
-		return (new QueueingComponentCallbacks (component, new LinkedBlockingQueue<ComponentMessage> ()));
+		return (new QueueingComponentCallbacks (component, new LinkedBlockingQueue<ComponentMessage> (), 0));
 	}
 	
-	public static final QueueingComponentCallbacks create (final Component component, final BlockingQueue<ComponentMessage> queue)
+	public static final QueueingComponentCallbacks create (final Component component, final BlockingQueue<ComponentMessage> queue, final long waitTimeout)
 	{
-		return (new QueueingComponentCallbacks (component, queue));
+		return (new QueueingComponentCallbacks (component, queue, waitTimeout));
 	}
 }

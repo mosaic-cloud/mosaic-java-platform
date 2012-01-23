@@ -50,6 +50,7 @@ import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -88,16 +89,8 @@ public final class BasicComponentHarnessMain
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (exception);
 		} finally {
-			try {
-				inputPiper.join ();
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
-			try {
-				outputPiper.join ();
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
+			inputPiper.join ();
+			outputPiper.join ();
 		}
 	}
 	
@@ -166,8 +159,10 @@ public final class BasicComponentHarnessMain
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
 	{
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
-		final ThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		BasicThreadingSecurityManager.initialize ();
+		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
+		threading.join ();
 	}
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ThreadingContext threading, final ExceptionTracer exceptions)
@@ -287,10 +282,9 @@ public final class BasicComponentHarnessMain
 			this.thread.start ();
 		}
 		
-		public final void join ()
-				throws InterruptedException
+		public final boolean join ()
 		{
-			this.thread.join ();
+			return (Threading.join (this.thread));
 		}
 		
 		@Override

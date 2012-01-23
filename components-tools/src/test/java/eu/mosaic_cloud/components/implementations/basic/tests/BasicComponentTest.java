@@ -37,6 +37,7 @@ import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReacto
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
@@ -51,6 +52,7 @@ public final class BasicComponentTest
 	{
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize ();
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);

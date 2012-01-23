@@ -235,7 +235,7 @@ public final class ZeroMqChannel
 	final void handlePacketDequeue ()
 	{
 		synchronized (this.state.monitor) {
-			final Packet packet = this.socket.dequeue ();
+			final Packet packet = this.socket.dequeue (0);
 			if (packet == null)
 				throw (new IllegalStateException ());
 			final String sessionIdentifier;

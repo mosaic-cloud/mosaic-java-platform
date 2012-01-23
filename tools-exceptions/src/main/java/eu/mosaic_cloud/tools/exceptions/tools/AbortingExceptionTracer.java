@@ -33,7 +33,6 @@ public final class AbortingExceptionTracer
 	private AbortingExceptionTracer (final PrintStream transcript)
 	{
 		super ();
-		Preconditions.checkNotNull (transcript);
 		this.transcript = transcript;
 	}
 	
@@ -87,18 +86,18 @@ public final class AbortingExceptionTracer
 	
 	static final void trace (final Throwable exception, final PrintStream transcript)
 	{
+		final PrintStream finalTranscript = ((transcript != null) ? transcript : System.err);
 		try {
-			exception.printStackTrace (transcript);
+			exception.printStackTrace (finalTranscript);
 		} catch (final Throwable exception1) {
 			// intentional
 		}
 	}
 	
-	public static final AbortingExceptionTracer defaultInstance = new AbortingExceptionTracer (AbortingExceptionTracer.defaultTranscript);
+	public static final AbortingExceptionTracer defaultInstance = new AbortingExceptionTracer (null);
 	private static final int defaultExitCode = 254;
 	private static final long defaultExitTimeout = 2000;
-	private static final PrintStream defaultTranscript = System.err;
-	private static final Exiter exiter = new Exiter (AbortingExceptionTracer.defaultExitCode, AbortingExceptionTracer.defaultExitTimeout, AbortingExceptionTracer.defaultTranscript);
+	private static final Exiter exiter = new Exiter (AbortingExceptionTracer.defaultExitCode, AbortingExceptionTracer.defaultExitTimeout, null);
 	
 	private static final class Exiter
 			extends Thread
@@ -108,7 +107,6 @@ public final class AbortingExceptionTracer
 			super ();
 			Preconditions.checkArgument ((code >= 0) && (code <= 255));
 			Preconditions.checkArgument (timeout > 0);
-			Preconditions.checkNotNull (transcript);
 			this.code = code;
 			this.timeout = timeout;
 			this.transcript = transcript;

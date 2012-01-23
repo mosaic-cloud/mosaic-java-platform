@@ -28,6 +28,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSock
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
@@ -41,6 +42,7 @@ public final class ZeroMqChannelTest
 			throws Exception
 	{
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize ();
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();

@@ -33,6 +33,7 @@ import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReacto
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
@@ -47,6 +48,7 @@ public final class BasicChannelTest
 	{
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize ();
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;

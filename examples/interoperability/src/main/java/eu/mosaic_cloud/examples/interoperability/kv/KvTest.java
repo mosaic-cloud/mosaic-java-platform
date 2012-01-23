@@ -30,6 +30,7 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,6 +43,7 @@ public final class KvTest
 			throws Exception
 	{
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize ();
 		final ThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
