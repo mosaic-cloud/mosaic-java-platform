@@ -88,7 +88,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		this.shutdownListener = new ConnectionShutdownListener();
 		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
 		this.executor = threading.newFixedThreadPool(ThreadConfiguration.create(
-				this, "operations"), 1);
+				this, "operations", true), 1);
 	}
 
 	/**

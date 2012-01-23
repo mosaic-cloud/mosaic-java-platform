@@ -2,6 +2,7 @@
 package eu.mosaic_cloud.tools.threading.tools;
 
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.concurrent.BlockingQueue;
@@ -177,16 +178,24 @@ public final class Threading
 		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
+	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
+	{
+		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true, catcher), runnable));
+	}
+	
 	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
 		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
 	}
 	
-	public static final Thread createAndStartThread (final ThreadingContext threading, final ThreadConfiguration configuration, final Runnable runnable)
+	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
 	{
-		final Thread thread = Threading.createThread (threading, configuration, runnable);
-		thread.start ();
-		return (thread);
+		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false, catcher), runnable));
+	}
+	
+	public static final Thread createAndStartThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)
+	{
+		return (Threading.createThread (context, configuration, runnable, true));
 	}
 	
 	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
@@ -194,15 +203,35 @@ public final class Threading
 		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
+	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
+	{
+		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true, catcher), runnable));
+	}
+	
 	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
 		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
 	}
 	
-	public static final Thread createThread (final ThreadingContext threading, final ThreadConfiguration configuration, final Runnable runnable)
+	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
 	{
-		Preconditions.checkNotNull (threading);
-		return (threading.newThread (configuration, runnable));
+		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false, catcher), runnable));
+	}
+	
+	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)
+	{
+		return (Threading.createThread (context, configuration, runnable, false));
+	}
+	
+	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable, final boolean start)
+	{
+		Preconditions.checkNotNull (context);
+		Preconditions.checkNotNull (configuration);
+		Preconditions.checkNotNull (runnable);
+		final Thread thread = context.newThread (configuration, runnable);
+		if (start)
+			thread.start ();
+		return (thread);
 	}
 	
 	public static final <_Object_ extends Object> _Object_ exchange (final Exchanger<_Object_> exchanger, final _Object_ sent)

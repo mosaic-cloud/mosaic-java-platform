@@ -42,7 +42,6 @@ import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
-import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -267,7 +266,6 @@ public final class JettyComponentCallbacks
 			Preconditions.checkState (this.status != Status.Unregistered);
 			if (this.jettyServer != null)
 				this.stopJetty ();
-			this.stopJetty ();
 			this.component = null;
 			this.status = Status.Unregistered;
 		}
@@ -294,7 +292,7 @@ public final class JettyComponentCallbacks
 			final Server jettyServer;
 			jettyServer = ServerCommandLine.createServer (jettyProperties);
 			this.jettyServer = jettyServer;
-			final Thread jettyLoop = this.threading.newThread (ThreadConfiguration.create (jettyServer, "jetty"), new Runnable () {
+			this.jettyThread = Threading.createAndStartDaemonThread (this.threading, jettyServer, "jetty", new Runnable () {
 				@Override
 				public final void run ()
 				{
@@ -306,7 +304,6 @@ public final class JettyComponentCallbacks
 					}
 				}
 			});
-			jettyLoop.start ();
 		}
 	}
 	
@@ -316,10 +313,12 @@ public final class JettyComponentCallbacks
 			try {
 				if (this.jettyServer != null)
 					this.jettyServer.stop ();
+				Threading.join (this.jettyThread);
 			} catch (final Throwable exception) {
 				this.exceptions.traceIgnoredException (exception, "error encountered while stopping Jetty; ignoring!");
 			}
 			this.jettyServer = null;
+			this.jettyThread = null;
 		}
 	}
 	
@@ -328,6 +327,7 @@ public final class JettyComponentCallbacks
 	final Transcript transcript;
 	private Component component;
 	private Server jettyServer;
+	private Thread jettyThread;
 	private final Monitor monitor;
 	private final IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
 	private ComponentCallReference pendingReference;

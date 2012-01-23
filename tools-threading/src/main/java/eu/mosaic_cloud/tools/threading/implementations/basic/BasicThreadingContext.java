@@ -267,7 +267,7 @@ public final class BasicThreadingContext
 	
 	public static final BasicThreadingContext create (final Object owner, final Thread.UncaughtExceptionHandler catcher)
 	{
-		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, catcher)));
+		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, null, true, catcher)));
 	}
 	
 	public final class BasicThread

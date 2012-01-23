@@ -42,16 +42,6 @@ public final class ThreadConfiguration
 	public final Reference<Object> owner;
 	public final int priority;
 	
-	public static final ThreadConfiguration create (final Object owner)
-	{
-		return (ThreadConfiguration.create (owner, null, true, -1, null));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name)
-	{
-		return (ThreadConfiguration.create (owner, name, true, -1, null));
-	}
-	
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon)
 	{
 		return (ThreadConfiguration.create (owner, name, daemon, -1, null));
@@ -70,15 +60,5 @@ public final class ThreadConfiguration
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final Thread.UncaughtExceptionHandler catcher)
 	{
 		return (ThreadConfiguration.create (owner, name, daemon, -1, catcher));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name, final Thread.UncaughtExceptionHandler catcher)
-	{
-		return (ThreadConfiguration.create (owner, name, true, -1, catcher));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final Thread.UncaughtExceptionHandler catcher)
-	{
-		return (ThreadConfiguration.create (owner, null, true, -1, catcher));
 	}
 }

@@ -70,7 +70,7 @@ public class ResourceFinder {
 		OutcomeFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks
 				.findDriver(type);
 		Worker worker = new Worker(replyFuture, callback);
-		Threading.createAndStartNormalThread(
+		Threading.createAndStartDaemonThread(
 				Threading.sequezeThreadingContextOutOfDryRock(), this,
 				"callback", worker);
 	}
