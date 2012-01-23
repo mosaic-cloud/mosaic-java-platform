@@ -48,12 +48,12 @@ public final class ZeroMqChannelTest
 		final String clientIdentifier = UUID.randomUUID ().toString ();
 		final ByteBuffer header = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
 		final ByteBuffer payload = ByteBuffer.wrap (UUID.randomUUID ().toString ().getBytes ());
-		final ZeroMqChannelSocket server = new ZeroMqChannelSocket (serverIdentifier, null, threading, exceptions);
+		final ZeroMqChannelSocket server = ZeroMqChannelSocket.create (serverIdentifier, null, threading, exceptions);
 		server.accept (ZeroMqChannelTest.serverEndpoint);
-		final ZeroMqChannelSocket client = new ZeroMqChannelSocket (clientIdentifier, null, threading, exceptions);
+		final ZeroMqChannelSocket client = ZeroMqChannelSocket.create (clientIdentifier, null, threading, exceptions);
 		client.connect (ZeroMqChannelTest.serverEndpoint);
 		Threading.sleep (ZeroMqChannelTest.pollTimeout);
-		final ZeroMqChannelSocket.Packet packet1 = new ZeroMqChannelSocket.Packet (serverIdentifier, header, payload);
+		final ZeroMqChannelSocket.Packet packet1 = ZeroMqChannelSocket.Packet.create (serverIdentifier, header, payload);
 		client.enqueue (packet1, ZeroMqChannelTest.pollTimeout);
 		final ZeroMqChannelSocket.Packet packet2 = server.dequeue (ZeroMqChannelTest.pollTimeout);
 		server.enqueue (packet2, ZeroMqChannelTest.pollTimeout);

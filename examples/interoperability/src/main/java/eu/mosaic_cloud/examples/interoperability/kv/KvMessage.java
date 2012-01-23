@@ -46,7 +46,7 @@ public enum KvMessage
 		this.identifier = Identifiers.generate (this);
 		this.type = type;
 		if (clasz != null)
-			this.coder = new DefaultJavaSerializationPayloadCoder (clasz, false);
+			this.coder = DefaultJavaSerializationPayloadCoder.create (clasz, false);
 		else
 			this.coder = null;
 	}

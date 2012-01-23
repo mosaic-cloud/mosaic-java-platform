@@ -37,7 +37,7 @@ import net.minidev.json.JSONObject;
 
 public class RandomMessageGenerator
 {
-	public RandomMessageGenerator ()
+	private RandomMessageGenerator ()
 	{
 		super ();
 		this.random = new Random ();
@@ -113,5 +113,11 @@ public class RandomMessageGenerator
 	}
 	
 	protected final Random random;
-	public static final RandomMessageGenerator defaultInstance = new RandomMessageGenerator ();
+	
+	public static final RandomMessageGenerator create ()
+	{
+		return (new RandomMessageGenerator ());
+	}
+	
+	public static final RandomMessageGenerator defaultInstance = RandomMessageGenerator.create ();
 }

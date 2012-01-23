@@ -76,7 +76,7 @@ public class MemcachedConnectorTest {
 				MemcachedConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
 
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
 				threading, AbortingExceptionTracer.defaultInstance);
@@ -406,7 +406,7 @@ public class MemcachedConnectorTest {
 				.create(config, new PojoDataEncoder<String>(String.class),
 						Threading.sequezeThreadingContextOutOfDryRock());
 		String keyPrefix = UUID.randomUUID().toString();
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
 				threading, AbortingExceptionTracer.defaultInstance);

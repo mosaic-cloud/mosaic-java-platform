@@ -47,10 +47,10 @@ public final class KvTest
 		final ThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
-		final ZeroMqChannel serverChannel = new ZeroMqChannel (serverIdentifier, threading, exceptions);
+		final ZeroMqChannel serverChannel = ZeroMqChannel.create (serverIdentifier, threading, exceptions);
 		serverChannel.register (KvSession.Server);
 		serverChannel.accept (KvTest.serverEndpoint);
-		final ZeroMqChannel clientChannel = new ZeroMqChannel (clientIdentifier, threading, exceptions);
+		final ZeroMqChannel clientChannel = ZeroMqChannel.create (clientIdentifier, threading, exceptions);
 		clientChannel.register (KvSession.Client);
 		clientChannel.connect (KvTest.serverEndpoint);
 		final KvServer server = new KvServer (exceptions);

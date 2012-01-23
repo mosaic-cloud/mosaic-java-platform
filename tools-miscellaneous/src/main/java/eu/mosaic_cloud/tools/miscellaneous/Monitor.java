@@ -37,4 +37,6 @@ public final class Monitor
 		Preconditions.checkNotNull (owner);
 		return (new Monitor ());
 	}
+	
+	public static final Monitor globalInstance = Monitor.create (Monitor.class);
 }

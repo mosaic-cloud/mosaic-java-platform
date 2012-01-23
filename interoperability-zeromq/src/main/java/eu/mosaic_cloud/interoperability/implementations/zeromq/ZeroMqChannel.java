@@ -60,7 +60,7 @@ public final class ZeroMqChannel
 		implements
 			Channel
 {
-	public ZeroMqChannel (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
+	private ZeroMqChannel (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (self);
@@ -73,7 +73,7 @@ public final class ZeroMqChannel
 		this.handlers = new ConcurrentLinkedQueue<ZeroMqChannel.Handler> ();
 		this.idle = new Semaphore (1);
 		this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this, "zeromq-callbacks", true));
-		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger (), this.threading, exceptions);
+		this.socket = ZeroMqChannelSocket.create (this.selfIdentifier, new PacketDequeueTrigger (), this.threading, exceptions);
 	}
 	
 	@Override
@@ -387,7 +387,7 @@ public final class ZeroMqChannel
 				this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}
-			final Packet packet = new Packet (session.peerIdentifier, ByteBuffer.wrap (header), payload);
+			final Packet packet = Packet.create (session.peerIdentifier, ByteBuffer.wrap (header), payload);
 			if (!this.socket.enqueue (packet, 1000))
 				throw (new IllegalStateException ());
 			if (coder.messageType == MessageType.Termination)
@@ -470,6 +470,11 @@ public final class ZeroMqChannel
 	private final State state;
 	private final ThreadingContext threading;
 	private final Transcript transcript;
+	
+	public static final ZeroMqChannel create (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		return (new ZeroMqChannel (self, threading, exceptions));
+	}
 	
 	private static final class Acceptor
 			extends Object

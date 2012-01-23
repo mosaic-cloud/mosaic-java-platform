@@ -95,7 +95,7 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		MosaicLogger.getLogger().debug(
 				"Connector working with driver on " + driverIdentifier + "("
 						+ driverChannel + ")");
-		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
+		ZeroMqChannel channel = ZeroMqChannel.create(connectorIdentifier,
 				threading, AbortingExceptionTracer.defaultInstance);
 		channel.register(AmqpSession.CONNECTOR);
 		channel.connect(driverChannel);

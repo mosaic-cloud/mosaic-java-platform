@@ -67,7 +67,7 @@ public class AmqpConnectorTest {
 		AmqpConnectorTest.configuration = PropertyTypeConfiguration.create(
 				AmqpConnectorTest.class.getClassLoader(), "amqp-test.prop");
 
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(AmqpConnectorTest.configuration,
 						"interop.driver.identifier", String.class, ""),
 				threading, AbortingExceptionTracer.defaultInstance);

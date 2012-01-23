@@ -37,7 +37,7 @@ import org.zeromq.ZMQ;
 public final class ZeroMqChannelSocket
 		extends Object
 {
-	public ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
+	private ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (self);
@@ -262,12 +262,18 @@ public final class ZeroMqChannelSocket
 	private ZMQ.Socket socket;
 	private final ThreadingContext threading;
 	private final Transcript transcript;
+	
+	public static final ZeroMqChannelSocket create (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
+	}
+	
 	private static final ZMQ.Context context = ZMQ.context (1);
 	
 	public static final class Packet
 			extends Object
 	{
-		public Packet (final String peer, final ByteBuffer header, final ByteBuffer payload)
+		private Packet (final String peer, final ByteBuffer header, final ByteBuffer payload)
 		{
 			super ();
 			Preconditions.checkNotNull (peer);
@@ -280,6 +286,11 @@ public final class ZeroMqChannelSocket
 		public final ByteBuffer header;
 		public final ByteBuffer payload;
 		public final String peer;
+		
+		public static final Packet create (final String peer, final ByteBuffer header, final ByteBuffer payload)
+		{
+			return (new Packet (peer, header, payload));
+		}
 	}
 	
 	private final class Loop
