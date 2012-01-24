@@ -81,10 +81,9 @@ public final class BasicComponentTest
 			Assert.assertEquals (outboundRequest.data, inboundReply.data);
 		}
 		pipe.sink ().close ();
-		Threading.sleep (BasicComponentTest.defaultPollTimeout);
-		Assert.assertFalse (component.isActive ());
 		Assert.assertTrue (component.terminate (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (channel.terminate (BasicComponentTest.defaultPollTimeout));
+		Threading.sleep (BasicComponentTest.defaultPollTimeout);
 		Assert.assertTrue (reactor.terminate (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (threading.join (BasicComponentTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());

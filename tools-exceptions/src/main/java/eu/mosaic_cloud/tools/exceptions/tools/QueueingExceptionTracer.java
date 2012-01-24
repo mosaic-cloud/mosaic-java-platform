@@ -64,6 +64,8 @@ public final class QueueingExceptionTracer
 	
 	private final void enqueue (final CaughtException exception)
 	{
+		if (exception.getResolution () == ExceptionResolution.Handled)
+			return;
 		try {
 			final boolean enqueued;
 			if (this.waitTimeout > 0)

@@ -87,13 +87,11 @@ public class AbacusTest
 		}
 		pipe1.sink ().close ();
 		pipe2.sink ().close ();
-		Threading.sleep (AbacusTest.defaultPollTimeout);
-		Assert.assertFalse (serverComponent.isActive ());
-		Assert.assertFalse (clientComponent.isActive ());
 		Assert.assertTrue (serverComponent.terminate (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (clientComponent.terminate (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (serverChannel.terminate (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (clientChannel.terminate (AbacusTest.defaultPollTimeout));
+		Threading.sleep (AbacusTest.defaultPollTimeout);
 		Assert.assertTrue (reactor.terminate (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (threading.join (AbacusTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());

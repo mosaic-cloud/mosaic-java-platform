@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
@@ -209,6 +210,7 @@ public final class BasicChannel
 				this.encoder.stopAndWait ();
 				this.decoder.stopAndWait ();
 				this.executor.shutdown ();
+				this.callbackReactor.unregister (this.callbackTrigger);
 				this.notifyStopped ();
 			}
 		}
@@ -546,9 +548,13 @@ public final class BasicChannel
 				if (inputValid && this.inputKey.isReadable ()) {
 					this.transcript.traceDebugging ("accessing input stream...");
 					try {
-						final int outcome = this.input.read (this.inputPending);
-						if (outcome == -1)
-							this.input.close ();
+						try {
+							final int outcome = this.input.read (this.inputPending);
+							if (outcome == -1)
+								this.input.close ();
+						} catch (final ClosedChannelException exception) {
+							this.exceptions.traceHandledException (exception);
+						}
 					} catch (final IOException exception) {
 						throw (new IgnoredException (exception, "i/o error encountered while accessing input stream; aborting!"));
 					}
@@ -560,7 +566,11 @@ public final class BasicChannel
 				if (outputValid && this.outputKey.isWritable ()) {
 					this.transcript.traceDebugging ("accessing output stream...");
 					try {
-						this.output.write (this.outputPending);
+						try {
+							this.output.write (this.outputPending);
+						} catch (final ClosedChannelException exception) {
+							this.exceptions.traceHandledException (exception);
+						}
 					} catch (final IOException exception) {
 						throw (new IgnoredException (exception, "i/o error encountered while accessing output stream; aborting!"));
 					}

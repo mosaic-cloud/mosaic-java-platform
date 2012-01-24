@@ -115,6 +115,7 @@ public final class BasicComponentHarnessMain
 		}
 		component.terminate (-1);
 		channel.terminate (-1);
+		Threading.sleep (BasicComponentHarnessMain.defaultPollTimeout);
 		reactor.terminate (-1);
 	}
 	

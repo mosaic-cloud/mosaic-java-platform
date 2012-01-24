@@ -169,9 +169,7 @@ public final class BasicComponent
 		public final CallbackReference closed (final Channel channel, final ChannelFlow flow)
 		{
 			Preconditions.checkState (channel == this.channel);
-			synchronized (this.monitor) {
-				this.stop ();
-			}
+			this.channel.terminate ();
 			return (null);
 		}
 		
@@ -187,7 +185,6 @@ public final class BasicComponent
 			Preconditions.checkState (channel == this.channel);
 			synchronized (this.monitor) {
 				this.callbackTrigger.failed (this.facade, exception);
-				this.stop ();
 			}
 			return (null);
 		}
@@ -330,7 +327,6 @@ public final class BasicComponent
 			Preconditions.checkState (channel == this.channel);
 			synchronized (this.monitor) {
 				this.callbackTrigger.terminated (this.facade);
-				this.stop ();
 			}
 			return (null);
 		}
@@ -357,14 +353,15 @@ public final class BasicComponent
 		protected final void doStop ()
 		{
 			synchronized (this.monitor) {
-				this.channel.close (ChannelFlow.Inbound);
-				this.channel.close (ChannelFlow.Outbound);
+				this.channel.terminate ();
 			}
 		}
 		
 		final void assign (final ComponentCallbacks callbacks)
 		{
-			this.callbackReactor.assign (this.callbackTrigger, callbacks);
+			synchronized (this.monitor) {
+				this.callbackReactor.assign (this.callbackTrigger, callbacks);
+			}
 		}
 		
 		final void call (final ComponentIdentifier identifier, final ComponentCallRequest request)
