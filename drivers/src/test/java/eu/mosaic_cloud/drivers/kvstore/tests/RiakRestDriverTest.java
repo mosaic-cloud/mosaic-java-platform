@@ -24,12 +24,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RiakRestDriver;
@@ -37,42 +36,47 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
-@RunWith(SerialJunitRunner.class)
 public class RiakRestDriverTest {
 
-	private static AbstractKeyValueDriver wrapper;
+	private AbstractKeyValueDriver wrapper;
+	private ThreadingContext threadingContext;
 	private static String keyPrefix;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		RiakRestDriverTest.wrapper = RiakRestDriver.create(
-				PropertyTypeConfiguration.create(
-						RiakRestDriverTest.class.getClassLoader(),
-						"riakrest-test.prop"), Threading
-						.sequezeThreadingContextOutOfDryRock());
 		RiakRestDriverTest.keyPrefix = UUID.randomUUID().toString();
-		RiakRestDriverTest.wrapper.registerClient(RiakRestDriverTest.keyPrefix,
-				"test");
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		RiakRestDriverTest.wrapper
-				.unregisterClient(RiakRestDriverTest.keyPrefix);
-		RiakRestDriverTest.wrapper.destroy();
 	}
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
+		QueueingExceptionTracer exceptions = QueueingExceptionTracer
+				.create(NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize();
+		this.threadingContext = BasicThreadingContext.create(this,
+				exceptions.catcher);
+		this.wrapper = RiakRestDriver.create(
+				PropertyTypeConfiguration.create(
+						RiakRestDriverTest.class.getClassLoader(),
+						"riakrest-test.prop"), this.threadingContext);
+		this.wrapper.registerClient(RiakRestDriverTest.keyPrefix, "test");
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		this.wrapper.unregisterClient(RiakRestDriverTest.keyPrefix);
+		this.wrapper.destroy();
 	}
 
 	public void testConnection() {
-		Assert.assertNotNull(RiakRestDriverTest.wrapper);
+		Assert.assertNotNull(this.wrapper);
 	}
 
 	public void testSet() throws IOException {
@@ -80,7 +84,7 @@ public class RiakRestDriverTest {
 		byte[] b1 = SerDesUtils.pojoToBytes("fantastic");
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"set 1");
-		IResult<Boolean> r1 = RiakRestDriverTest.wrapper.invokeSetOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeSetOperation(
 				RiakRestDriverTest.keyPrefix, k1, b1, handler1);
 		Assert.assertNotNull(r1);
 
@@ -88,7 +92,7 @@ public class RiakRestDriverTest {
 		byte[] b2 = SerDesUtils.pojoToBytes("famous");
 		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
 				"set 2");
-		IResult<Boolean> r2 = RiakRestDriverTest.wrapper.invokeSetOperation(
+		IResult<Boolean> r2 = this.wrapper.invokeSetOperation(
 				RiakRestDriverTest.keyPrefix, k2, b2, handler2);
 		Assert.assertNotNull(r2);
 
@@ -108,7 +112,7 @@ public class RiakRestDriverTest {
 		String k1 = RiakRestDriverTest.keyPrefix + "_key_famous";
 		IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>(
 				"get");
-		IResult<byte[]> r1 = RiakRestDriverTest.wrapper.invokeGetOperation(
+		IResult<byte[]> r1 = this.wrapper.invokeGetOperation(
 				RiakRestDriverTest.keyPrefix, k1, handler);
 
 		try {
@@ -131,8 +135,8 @@ public class RiakRestDriverTest {
 		// keys.add(k2);
 		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
 				"list");
-		IResult<List<String>> r1 = RiakRestDriverTest.wrapper
-				.invokeListOperation(RiakRestDriverTest.keyPrefix, handler);
+		IResult<List<String>> r1 = this.wrapper.invokeListOperation(
+				RiakRestDriverTest.keyPrefix, handler);
 
 		try {
 			List<String> lresult = r1.getResult();
@@ -153,7 +157,7 @@ public class RiakRestDriverTest {
 		String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
 		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
 				"delete 1");
-		IResult<Boolean> r1 = RiakRestDriverTest.wrapper.invokeDeleteOperation(
+		IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(
 				RiakRestDriverTest.keyPrefix, k1, handler1);
 
 		try {
@@ -168,7 +172,7 @@ public class RiakRestDriverTest {
 
 		IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
 				"check deleted");
-		IResult<byte[]> r3 = RiakRestDriverTest.wrapper.invokeGetOperation(
+		IResult<byte[]> r3 = this.wrapper.invokeGetOperation(
 				RiakRestDriverTest.keyPrefix, k1, handler3);
 
 		try {

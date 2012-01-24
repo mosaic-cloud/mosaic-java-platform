@@ -43,7 +43,6 @@ import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -69,8 +68,10 @@ public final class JettyComponentCallbacks
 			this.threading = Threading.getCurrentContext ();
 			this.transcript = Transcript.create (this);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
-			JettyComponentContext.callbacks = this;
+			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
 			this.status = Status.WaitingRegistered;
+			JettyComponentContext.callbacks = this;
+			JettyComponent.create ();
 		}
 	}
 	
@@ -267,7 +268,6 @@ public final class JettyComponentCallbacks
 			Preconditions.checkState (this.status != Status.Unregistered);
 			if (this.jettyServer != null)
 				this.stopJetty ();
-			this.stopJetty ();
 			this.component = null;
 			this.status = Status.Unregistered;
 		}
@@ -294,7 +294,7 @@ public final class JettyComponentCallbacks
 			final Server jettyServer;
 			jettyServer = ServerCommandLine.createServer (jettyProperties);
 			this.jettyServer = jettyServer;
-			final Thread jettyLoop = this.threading.newThread (new ThreadConfiguration (jettyServer, "jetty"), new Runnable () {
+			this.jettyThread = Threading.createAndStartDaemonThread (this.threading, jettyServer, "jetty", new Runnable () {
 				@Override
 				public final void run ()
 				{
@@ -306,7 +306,6 @@ public final class JettyComponentCallbacks
 					}
 				}
 			});
-			jettyLoop.start ();
 		}
 	}
 	
@@ -316,29 +315,32 @@ public final class JettyComponentCallbacks
 			try {
 				if (this.jettyServer != null)
 					this.jettyServer.stop ();
+				Threading.join (this.jettyThread);
 			} catch (final Throwable exception) {
 				this.exceptions.traceIgnoredException (exception, "error encountered while stopping Jetty; ignoring!");
 			}
 			this.jettyServer = null;
+			this.jettyThread = null;
 		}
 	}
 	
-	final TranscriptExceptionTracer exceptions;
-	final ThreadingContext threading;
-	final Transcript transcript;
 	private Component component;
+	private final TranscriptExceptionTracer exceptions;
 	private Server jettyServer;
+	private Thread jettyThread;
 	private final Monitor monitor;
-	private final IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
+	private final IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingCallReturnFutures;
 	private ComponentCallReference pendingReference;
 	private Status status;
+	private final ThreadingContext threading;
+	private final Transcript transcript;
 	
 	private static enum Status
 	{
-		Terminated,
-		Unregistered,
-		WaitingInitialized,
-		WaitingRabbitmqResolveReturn,
-		WaitingRegistered;
+		Terminated (),
+		Unregistered (),
+		WaitingInitialized (),
+		WaitingRabbitmqResolveReturn (),
+		WaitingRegistered ();
 	}
 }

@@ -22,6 +22,7 @@ package eu.mosaic_cloud.components.implementations.basic;
 
 
 import java.io.IOException;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ReadableByteChannel;
@@ -32,11 +33,11 @@ import java.nio.channels.WritableByteChannel;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Service.State;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
@@ -46,8 +47,9 @@ import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.IgnoredException;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -75,9 +77,15 @@ public final class BasicChannel
 		this.delegate.close (flow);
 	}
 	
-	public void initialize ()
+	public final void initialize ()
 	{
-		this.delegate.startAndWait ();
+		this.initialize (0);
+	}
+	
+	public final boolean initialize (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.start (), timeout);
+		return (state == State.RUNNING);
 	}
 	
 	public final boolean isActive ()
@@ -94,7 +102,13 @@ public final class BasicChannel
 	@Override
 	public void terminate ()
 	{
-		this.delegate.stop ();
+		this.terminate (0);
+	}
+	
+	public final boolean terminate (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.stop (), timeout);
+		return (state == State.TERMINATED);
 	}
 	
 	final Channel delegate;
@@ -109,7 +123,7 @@ public final class BasicChannel
 		return (new BasicChannel (input, output, coder, reactor, null, threading, exceptions));
 	}
 	
-	private static final long defaultPollTimeout = 1000;
+	static final long defaultPollTimeout = 100;
 	
 	private static final class Channel
 			extends AbstractService
@@ -144,7 +158,7 @@ public final class BasicChannel
 				this.coder = coder;
 				this.callbackReactor = callbackReactor;
 				this.callbackTrigger = this.callbackReactor.register (ChannelCallbacks.class, callbacks);
-				this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this.facade, "services", true, this.exceptions.catcher));
+				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "services", true, this.exceptions.catcher));
 				this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.inboundMessages = new LinkedBlockingQueue<ChannelMessage> ();
@@ -153,6 +167,7 @@ public final class BasicChannel
 				this.encoder = new Encoder (this);
 				this.decoder = new Decoder (this);
 				this.dispatcher = new Dispatcher (this);
+				this.pollTimeout = BasicChannel.defaultPollTimeout;
 			}
 		}
 		
@@ -161,10 +176,10 @@ public final class BasicChannel
 		{
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("opening channel...");
-				this.ioputer.start ();
-				this.encoder.start ();
-				this.decoder.start ();
-				this.dispatcher.start ();
+				this.encoder.startAndWait ();
+				this.decoder.startAndWait ();
+				this.ioputer.startAndWait ();
+				this.dispatcher.startAndWait ();
 				this.notifyStarted ();
 			}
 		}
@@ -174,11 +189,6 @@ public final class BasicChannel
 		{
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("closing channel...");
-				this.ioputer.stop ();
-				this.encoder.stop ();
-				this.decoder.stop ();
-				this.dispatcher.stop ();
-				this.notifyStopped ();
 				try {
 					this.input.close ();
 				} catch (final Throwable exception) {
@@ -194,6 +204,12 @@ public final class BasicChannel
 				} catch (final Throwable exception) {
 					this.exceptions.traceIgnoredException (exception);
 				}
+				this.dispatcher.stopAndWait ();
+				this.ioputer.stopAndWait ();
+				this.encoder.stopAndWait ();
+				this.decoder.stopAndWait ();
+				this.executor.shutdown ();
+				this.notifyStopped ();
 			}
 		}
 		
@@ -232,7 +248,8 @@ public final class BasicChannel
 			Preconditions.checkNotNull (message);
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("sending message...");
-				this.outboundMessages.add (message);
+				if (!Threading.offer (this.outboundMessages, message, this.pollTimeout))
+					throw (new BufferOverflowException ());
 			}
 		}
 		
@@ -253,6 +270,7 @@ public final class BasicChannel
 		final LinkedBlockingQueue<ChannelMessage> outboundMessages;
 		final LinkedBlockingQueue<ByteBuffer> outboundPackets;
 		final WritableByteChannel output;
+		final long pollTimeout;
 		final Selector selector;
 		final ThreadingContext threading;
 		final Transcript transcript;
@@ -274,12 +292,7 @@ public final class BasicChannel
 				throws CaughtException
 		{
 			this.transcript.traceDebugging ("executing decoder worker...");
-			final ByteBuffer packet;
-			try {
-				packet = this.inboundPackets.poll (this.pollTimeout, TimeUnit.MILLISECONDS);
-			} catch (final InterruptedException exception) {
-				throw (new IgnoredException (exception, "unexpected error encountered while dequeueing inbound packet; aborting!"));
-			}
+			final ByteBuffer packet = Threading.poll (this.inboundPackets, this.pollTimeout);
 			if (packet != null) {
 				this.transcript.traceDebugging ("decoding inbound message...");
 				final ChannelMessage message;
@@ -289,11 +302,8 @@ public final class BasicChannel
 				} catch (final Throwable exception) {
 					throw (new IgnoredException (exception, "unexpected error encountered while decoding the inbound packet; aborting!"));
 				}
-				try {
-					this.inboundMessages.add (message);
-				} catch (final IllegalStateException exception) {
-					throw (new IgnoredException (exception, "queue overflow error encountered while enqueueing inbound message; aborting!"));
-				}
+				if (!Threading.offer (this.inboundMessages, message, this.pollTimeout))
+					throw (new IgnoredException (new BufferOverflowException (), "queue overflow error encountered while enqueueing inbound message; aborting!"));
 			}
 		}
 		
@@ -331,12 +341,7 @@ public final class BasicChannel
 				throws CaughtException
 		{
 			this.transcript.traceDebugging ("executing dispatcher worker...");
-			final ChannelMessage message;
-			try {
-				message = this.inboundMessages.poll (this.pollTimeout, TimeUnit.MILLISECONDS);
-			} catch (final InterruptedException exception) {
-				throw (new IgnoredException (exception, "unexpected error encountered while dequeueing inbound message; aborting!"));
-			}
+			final ChannelMessage message = Threading.poll (this.inboundMessages, this.pollTimeout);
 			if (message != null) {
 				if (this.inboundActive) {
 					this.transcript.traceDebugging ("dispatching receive callback...");
@@ -419,12 +424,7 @@ public final class BasicChannel
 				throws CaughtException
 		{
 			this.transcript.traceDebugging ("executing encoder worker...");
-			final ChannelMessage message;
-			try {
-				message = this.outboundMessages.poll (this.pollTimeout, TimeUnit.MILLISECONDS);
-			} catch (final InterruptedException exception) {
-				throw (new IgnoredException (exception, "unexpected error encountered while polling outbound messages; aborting!"));
-			}
+			final ChannelMessage message = Threading.poll (this.outboundMessages, this.pollTimeout);
 			if (message != null) {
 				this.transcript.traceDebugging ("encoding outbound message...");
 				final ByteBuffer packet;
@@ -434,11 +434,8 @@ public final class BasicChannel
 				} catch (final Throwable exception) {
 					throw (new IgnoredException (exception, "unexpected error encountered while encoding the outbound message; aborting!"));
 				}
-				try {
-					this.outboundPackets.add (packet);
-				} catch (final IllegalStateException exception) {
-					throw (new IgnoredException (exception, "unexpected queue overflow error encountered while enqueueing outbound packet; aborting!"));
-				}
+				if (!Threading.offer (this.outboundPackets, packet, this.pollTimeout))
+					throw (new IgnoredException (new BufferOverflowException (), "unexpected queue overflow error encountered while enqueueing outbound packet; aborting!"));
 				this.channel.selector.wakeup ();
 			}
 		}
@@ -602,11 +599,8 @@ public final class BasicChannel
 							packet = null;
 						if (packet != null) {
 							packet.flip ();
-							try {
-								this.inboundPackets.add (packet.asReadOnlyBuffer ());
-							} catch (final IllegalStateException exception) {
-								throw (new IgnoredException (exception, "unexpected queue overflow error encountered while enqueueing inbound packet; aborting!"));
-							}
+							if (!Threading.offer (this.inboundPackets, packet.asReadOnlyBuffer (), this.pollTimeout))
+								throw (new IgnoredException (new BufferOverflowException (), "unexpected queue overflow error encountered while enqueueing inbound packet; aborting!"));
 						}
 					}
 					if ((this.inputPending == null) || (this.inputPending.position () < 4) || ((this.inputPendingSize != -1) && (this.inputPendingSize > this.inputPending.position ())))
@@ -623,7 +617,6 @@ public final class BasicChannel
 		
 		@Override
 		protected final void shutDown_1 ()
-				throws CaughtException
 		{
 			this.transcript.traceDebugging ("finalizing channels worker...");
 			if (this.inputKey != null)
@@ -703,8 +696,6 @@ public final class BasicChannel
 		{
 			try {
 				while (true) {
-					if (!this.channel.isRunning ())
-						this.triggerShutdown ();
 					if (!this.isRunning ())
 						break;
 					this.loop_1 ();

@@ -35,7 +35,10 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
 public class AmqpConnectorCompTest {
 
@@ -145,9 +148,12 @@ public class AmqpConnectorCompTest {
 							channel.getChannelIdentifier());
 			AmqpConnectorCompTest.this.configuration.addParameter(
 					"interop.channel.address", channel.getChannelEndpoint());
+			BasicThreadingSecurityManager.initialize();
+			ThreadingContext threading = BasicThreadingContext.create(
+					AmqpConnectorCompTest.class,
+					AbortingExceptionTracer.defaultInstance.catcher);
 			AmqpConnectorCompTest.this.connector = AmqpConnector.create(
-					AmqpConnectorCompTest.this.configuration,
-					Threading.sequezeThreadingContextOutOfDryRock());
+					AmqpConnectorCompTest.this.configuration, threading);
 			AmqpConnectorCompTest.this.testConn();
 			AmqpConnectorCompTest.this.destroy();
 		}

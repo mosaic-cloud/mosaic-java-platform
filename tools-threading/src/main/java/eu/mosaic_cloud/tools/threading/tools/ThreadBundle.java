@@ -80,8 +80,8 @@ public final class ThreadBundle<_Thread_ extends Thread>
 		}
 	}
 	
-	final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
 	private final ReferenceQueue<_Thread_> collector;
+	private final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
 	
 	public static final <_Thread_ extends Thread> ThreadBundle<_Thread_> create ()
 	{
@@ -131,7 +131,9 @@ public final class ThreadBundle<_Thread_ extends Thread>
 				this.advance ();
 			if (this.current == null)
 				throw (new NoSuchElementException ());
-			return (this.current);
+			final _Thread_ current = this.current;
+			this.current = null;
+			return (current);
 		}
 		
 		@Override

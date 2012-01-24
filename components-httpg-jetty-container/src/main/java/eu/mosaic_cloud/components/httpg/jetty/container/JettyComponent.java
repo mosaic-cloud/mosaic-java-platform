@@ -22,6 +22,7 @@ package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
@@ -82,5 +83,26 @@ public final class JettyComponent
 		callbacks.terminate ();
 	}
 	
-	public static final JettyComponent component = new JettyComponent ();
+	public static final JettyComponent create ()
+	{
+		final JettyComponent component;
+		synchronized (JettyComponent.currentComponent) {
+			if (JettyComponent.currentComponent.get () == null) {
+				component = new JettyComponent ();
+				if (!JettyComponent.currentComponent.compareAndSet (null, component))
+					throw (new AssertionError ());
+			} else
+				throw (new IllegalStateException ());
+		}
+		return (component);
+	}
+	
+	public static final JettyComponent get ()
+	{
+		final JettyComponent component = JettyComponent.currentComponent.get ();
+		Preconditions.checkState (component != null);
+		return (component);
+	}
+	
+	private static final AtomicReference<JettyComponent> currentComponent = new AtomicReference<JettyComponent> (null);
 }

@@ -89,5 +89,5 @@ public final class DefaultJsonCoder
 		return (new DefaultJsonCoder ());
 	}
 	
-	public static final DefaultJsonCoder defaultInstance = new DefaultJsonCoder ();
+	public static final DefaultJsonCoder defaultInstance = DefaultJsonCoder.create ();
 }

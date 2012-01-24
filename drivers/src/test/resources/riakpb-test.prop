@@ -3,5 +3,5 @@ kvstore.driver_name = RIAKPB
 kvstore.driver_threads = 2
 
 kvstore.host = 127.0.0.1
-kvstore.port = 22652
+kvstore.port = 8087
 kvstore.bucket = 10

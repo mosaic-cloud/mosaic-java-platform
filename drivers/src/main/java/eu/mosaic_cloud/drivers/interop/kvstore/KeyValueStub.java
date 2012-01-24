@@ -56,6 +56,7 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Stub for the driver for key-value distributed storage systems. This is used
@@ -94,12 +95,14 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 	 * 
 	 * @param config
 	 *            the configuration data for the stub and driver
+	 * @param the
+	 *            context for creating threads
 	 * @param channel
 	 *            the channel used by the driver for receiving requests
 	 * @return the driver stub
 	 */
 	public static KeyValueStub create(IConfiguration config,
-			ZeroMqChannel channel) {
+			ThreadingContext threadingContext, ZeroMqChannel channel) {
 		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
 		KeyValueStub stub;
 		synchronized (AbstractDriverStub.LOCK) {
@@ -116,7 +119,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 									ConfigProperties
 											.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 					AbstractKeyValueDriver driver = KeyValueDriverFactory
-							.createDriver(driverName, config);
+							.createDriver(driverName, config, threadingContext);
 					stub = new KeyValueStub(config, transmitter, driver,
 							channel);
 					stub.driverClass = KeyValueDriverFactory.DriverType

@@ -23,7 +23,6 @@ package eu.mosaic_cloud.examples.interoperability.kv;
 
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
@@ -36,7 +35,7 @@ public enum KvSession
 {
 	Client (KvRole.Client, KvRole.Server),
 	Server (KvRole.Server, KvRole.Client);
-	KvSession (final KvRole selfRole, final KvRole peerRole)
+	private KvSession (final KvRole selfRole, final KvRole peerRole)
 	{
 		this.selfRole = selfRole;
 		this.peerRole = peerRole;
@@ -70,7 +69,7 @@ public enum KvSession
 		return (this.selfRole);
 	}
 	
-	public final List<KvMessage> messages;
+	public final Iterable<KvMessage> messages;
 	public final KvRole peerRole;
 	public final KvRole selfRole;
 }

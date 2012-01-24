@@ -86,11 +86,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 		synchronized (this) {
 			this.driver.destroy();
 			this.transmitter.destroy();
-			try {
-				this.commChannel.terminate(500);
-			} catch (InterruptedException e) {
-				ExceptionTracer.traceIgnored(e);
-			}
+			this.commChannel.terminate(500);
 			MosaicLogger.getLogger().trace("DriverStub destroyed.");
 		}
 	}

@@ -35,7 +35,7 @@ public final class Slf4jTranscriptBackend
 		implements
 			TranscriptBackend
 {
-	Slf4jTranscriptBackend (final Logger logger, final ExtendedFormatter formatter)
+	private Slf4jTranscriptBackend (final Logger logger, final ExtendedFormatter formatter)
 	{
 		super ();
 		Preconditions.checkNotNull (logger);

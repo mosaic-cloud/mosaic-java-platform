@@ -8,8 +8,10 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
+import sun.security.util.SecurityConstants;
 
 
+@SuppressWarnings ("restriction")
 public final class BasicThreadingSecurityManager
 		extends SecurityManager
 		implements
@@ -26,10 +28,8 @@ public final class BasicThreadingSecurityManager
 		Preconditions.checkNotNull (thread);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
-			final ThreadGroup group = thread.getThreadGroup ();
-			if (group != null)
-				if (!context.isManaged (group))
-					throw (new SecurityException ());
+			if (!context.isManaged (thread))
+				throw (new SecurityException ());
 		}
 		super.checkAccess (thread);
 	}
@@ -49,14 +49,14 @@ public final class BasicThreadingSecurityManager
 	@Override
 	public final void checkPermission (final Permission permission)
 	{
-		if (BasicThreadingSecurityManager.permissionSetSecurityManager.equals (permission))
-			throw (new SecurityException ());
+		this.checkPermission_ (permission);
 		// super.checkPermission (permission);
 	}
 	
 	@Override
 	public final void checkPermission (final Permission permission, final Object context)
 	{
+		this.checkPermission_ (permission);
 		// super.checkPermission (permission, context);
 	}
 	
@@ -73,6 +73,32 @@ public final class BasicThreadingSecurityManager
 		return (super.getThreadGroup ());
 	}
 	
+	private final void checkPermission_ (final Permission permission)
+	{
+		if (BasicThreadingSecurityManager.permissionSetSecurityManager.equals (permission))
+			throw (new SecurityException ());
+		boolean checkRead = false;
+		boolean checkWrite = false;
+		if (BasicThreadingSecurityManager.permissionGetContextClassLoader.equals (permission))
+			checkRead |= true;
+		if (BasicThreadingSecurityManager.permissionSetContextClassLoader.equals (permission))
+			checkWrite |= true;
+		if (BasicThreadingSecurityManager.permissionOverrideContextClassLoader.equals (permission))
+			checkWrite |= true;
+		if (BasicThreadingSecurityManager.permissionGetStackTrace.equals (permission))
+			checkRead |= true;
+		if (BasicThreadingSecurityManager.permissionModifyThreadGroup.equals (permission))
+			checkWrite |= true;
+		if (BasicThreadingSecurityManager.permissionSetDefaultUncaughtExceptionHandler.equals (permission))
+			checkWrite |= true;
+		if (BasicThreadingSecurityManager.permissionStop.equals (permission))
+			checkWrite |= true;
+		checkRead |= checkWrite;
+		if (checkRead || checkWrite) {
+			// ...
+		}
+	}
+	
 	public static final void initialize ()
 	{
 		synchronized (System.class) {
@@ -86,5 +112,12 @@ public final class BasicThreadingSecurityManager
 		}
 	}
 	
+	private static final RuntimePermission permissionGetContextClassLoader = SecurityConstants.GET_CLASSLOADER_PERMISSION;
+	private static final RuntimePermission permissionGetStackTrace = SecurityConstants.GET_STACK_TRACE_PERMISSION;
+	private static final RuntimePermission permissionModifyThreadGroup = SecurityConstants.MODIFY_THREADGROUP_PERMISSION;
+	private static final RuntimePermission permissionOverrideContextClassLoader = new RuntimePermission ("enableContextClassLoaderOverride");
+	private static final RuntimePermission permissionSetContextClassLoader = new RuntimePermission ("setContextClassLoader");
+	private static final RuntimePermission permissionSetDefaultUncaughtExceptionHandler = new RuntimePermission ("setDefaultUncaughtExceptionHandler");
 	private static final RuntimePermission permissionSetSecurityManager = new RuntimePermission ("setSecurityManager");
+	private static final RuntimePermission permissionStop = SecurityConstants.STOP_THREAD_PERMISSION;
 }

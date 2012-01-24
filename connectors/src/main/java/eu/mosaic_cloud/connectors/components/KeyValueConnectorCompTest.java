@@ -38,7 +38,10 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
 public class KeyValueConnectorCompTest {
 
@@ -192,10 +195,14 @@ public class KeyValueConnectorCompTest {
 							channel.getChannelIdentifier());
 			KeyValueConnectorCompTest.this.configuration.addParameter(
 					"interop.channel.address", channel.getChannelEndpoint());
+			BasicThreadingSecurityManager.initialize();
+			ThreadingContext threading = BasicThreadingContext.create(
+					KeyValueConnectorCompTest.class,
+					AbortingExceptionTracer.defaultInstance.catcher);
 			KeyValueConnectorCompTest.this.connector = KeyValueStoreConnector
 					.create(KeyValueConnectorCompTest.this.configuration,
 							new PojoDataEncoder<String>(String.class),
-							Threading.sequezeThreadingContextOutOfDryRock());
+							threading);
 			KeyValueConnectorCompTest.this.testConnector();
 			KeyValueConnectorCompTest.this.connector.destroy();
 		}

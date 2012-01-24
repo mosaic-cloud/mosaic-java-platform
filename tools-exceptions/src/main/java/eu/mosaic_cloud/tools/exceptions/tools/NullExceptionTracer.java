@@ -37,15 +37,21 @@ public class NullExceptionTracer
 	
 	@Override
 	public void trace (final ExceptionResolution resolution, final Throwable exception)
-	{}
+	{
+		exception.printStackTrace (System.err);
+	}
 	
 	@Override
 	public void trace (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{}
+	{
+		exception.printStackTrace (System.err);
+	}
 	
 	@Override
 	public void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{}
+	{
+		exception.printStackTrace (System.err);
+	}
 	
 	public static final NullExceptionTracer defaultInstance = new NullExceptionTracer ();
 }

@@ -48,7 +48,6 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -89,16 +88,8 @@ public final class BasicComponentHarnessMain
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (exception);
 		} finally {
-			try {
-				inputPiper.join ();
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
-			try {
-				outputPiper.join ();
-			} catch (final InterruptedException exception) {
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
+			inputPiper.join ();
+			outputPiper.join ();
 		}
 	}
 	
@@ -112,19 +103,19 @@ public final class BasicComponentHarnessMain
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, threading, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
-		reactor.initialize ();
-		channel.initialize ();
-		component.initialize ();
+		reactor.initialize (-1);
+		channel.initialize (-1);
+		component.initialize (-1);
 		component.assign (callbacks);
 		while (true) {
 			if (!component.isActive ())
 				break;
-			if (!Threading.sleep (BasicComponentHarnessMain.sleepTimeout))
+			if (!Threading.sleep (BasicComponentHarnessMain.defaultPollTimeout))
 				break;
 		}
-		component.terminate ();
-		channel.terminate ();
-		reactor.terminate ();
+		component.terminate (-1);
+		channel.terminate (-1);
+		reactor.terminate (-1);
 	}
 	
 	public static final void main (final ComponentCallbacks callbacks, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
@@ -166,8 +157,8 @@ public final class BasicComponentHarnessMain
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
 	{
-		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		BasicThreadingSecurityManager.initialize ();
+		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
 		threading.join ();
@@ -270,7 +261,7 @@ public final class BasicComponentHarnessMain
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument);
 	}
 	
-	private static final long sleepTimeout = 100;
+	private static final long defaultPollTimeout = 100;
 	
 	private static final class Piper
 			extends Object
@@ -286,14 +277,12 @@ public final class BasicComponentHarnessMain
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
-			this.thread = this.threading.newThread (new ThreadConfiguration (this, "piper", this), this);
-			this.thread.start ();
+			this.thread = Threading.createAndStartDaemonThread (this.threading, this, "piper", this, this);
 		}
 		
-		public final void join ()
-				throws InterruptedException
+		public final boolean join ()
 		{
-			this.thread.join ();
+			return (Threading.join (this.thread));
 		}
 		
 		@Override

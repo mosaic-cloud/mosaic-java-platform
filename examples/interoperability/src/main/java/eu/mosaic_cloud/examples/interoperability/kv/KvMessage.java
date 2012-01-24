@@ -41,12 +41,12 @@ public enum KvMessage
 	GetRequest (MessageType.Exchange, KvPayloads.GetRequest.class),
 	Ok (MessageType.Exchange, KvPayloads.Ok.class),
 	PutRequest (MessageType.Exchange, KvPayloads.PutRequest.class);
-	KvMessage (final MessageType type, final Class<? extends Serializable> clasz)
+	private KvMessage (final MessageType type, final Class<? extends Serializable> clasz)
 	{
 		this.identifier = Identifiers.generate (this);
 		this.type = type;
 		if (clasz != null)
-			this.coder = new DefaultJavaSerializationPayloadCoder (clasz, false);
+			this.coder = DefaultJavaSerializationPayloadCoder.create (clasz, false);
 		else
 			this.coder = null;
 	}

@@ -31,7 +31,7 @@ public final class Transcript
 		implements
 			TranscriptBackend
 {
-	Transcript (final TranscriptBackend backend)
+	private Transcript (final TranscriptBackend backend)
 	{
 		super ();
 		Preconditions.checkNotNull (backend);

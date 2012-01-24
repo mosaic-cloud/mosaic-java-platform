@@ -31,7 +31,7 @@ public enum KvRole
 {
 	Client (),
 	Server ();
-	KvRole ()
+	private KvRole ()
 	{
 		this.identifier = Identifiers.generate (this);
 	}

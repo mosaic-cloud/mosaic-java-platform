@@ -19,14 +19,15 @@
  */
 package eu.mosaic_cloud.drivers.amqp.tests;
 
+import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
@@ -35,35 +36,45 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
-@RunWith(SerialJunitRunner.class)
-@Serial
 public class AmqpDriverTest {
 
 	private static IConfiguration configuration;
-	private static AmqpDriver wrapper;
+	private AmqpDriver wrapper;
 	private String clientId = UUID.randomUUID().toString();
+	private ThreadingContext threadingContext;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		AmqpDriverTest.configuration = PropertyTypeConfiguration.create(
 				AmqpDriverTest.class.getClassLoader(), "amqp-test.prop");
-		AmqpDriverTest.wrapper = AmqpDriver.create(
-				AmqpDriverTest.configuration,
-				Threading.sequezeThreadingContextOutOfDryRock());
+
 	}
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		AmqpDriverTest.wrapper.destroy();
+	@After
+	public void tearDown() throws Exception {
+		this.wrapper.destroy();
+	}
+
+	@Before
+	public void setUp() throws IOException {
+		QueueingExceptionTracer exceptions = QueueingExceptionTracer
+				.create(NullExceptionTracer.defaultInstance);
+		BasicThreadingSecurityManager.initialize();
+		this.threadingContext = BasicThreadingContext.create(this,
+				exceptions.catcher);
+		this.wrapper = AmqpDriver.create(AmqpDriverTest.configuration,
+				this.threadingContext);
 	}
 
 	public void testDriver() throws InterruptedException, ExecutionException {
-		Assert.assertNotNull(AmqpDriverTest.wrapper);
+		Assert.assertNotNull(this.wrapper);
 	}
 
 	public void testDeclareExchange() throws InterruptedException,
@@ -74,9 +85,9 @@ public class AmqpDriverTest {
 
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare exchange");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.declareExchange(
-				this.clientId, exchange, AmqpExchangeType.DIRECT, false, false,
-				false, handler);
+		IResult<Boolean> r = this.wrapper
+				.declareExchange(this.clientId, exchange,
+						AmqpExchangeType.DIRECT, false, false, false, handler);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -87,8 +98,8 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"declare queue");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.declareQueue(this.clientId,
-				queue, true, false, true, false, handler);
+		IResult<Boolean> r = this.wrapper.declareQueue(this.clientId, queue,
+				true, false, true, false, handler);
 		Assert.assertTrue(r.getResult());
 	}
 
@@ -104,8 +115,8 @@ public class AmqpDriverTest {
 				String.class, "");
 		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
 				"bind queue");
-		IResult<Boolean> r = AmqpDriverTest.wrapper.bindQueue(this.clientId,
-				exchange, queue, routingKey, handler);
+		IResult<Boolean> r = this.wrapper.bindQueue(this.clientId, exchange,
+				queue, routingKey, handler);
 		Assert.assertTrue(r.getResult());
 	}
 

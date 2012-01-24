@@ -28,6 +28,7 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
@@ -62,17 +63,19 @@ public class ResourceFinder {
 	 * 
 	 * @param type
 	 *            the type of resource to find
+	 * @param threading
+	 *            threading context for creating threads
 	 * @param callback
 	 *            the callback to be called when the resource is found
 	 */
-	public void findResource(ResourceType type, IFinderCallback callback) {
+	public void findResource(ResourceType type, ThreadingContext threading,
+			IFinderCallback callback) {
 		MosaicLogger.getLogger().trace("ResourceFinder - find resource");
 		OutcomeFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks
 				.findDriver(type);
 		Worker worker = new Worker(replyFuture, callback);
-		Threading.createAndStartNormalThread(
-				Threading.sequezeThreadingContextOutOfDryRock(), this,
-				"callback", worker);
+		Threading.createAndStartDaemonThread(threading, this, "callback",
+				worker);
 	}
 
 	class Worker implements Runnable {

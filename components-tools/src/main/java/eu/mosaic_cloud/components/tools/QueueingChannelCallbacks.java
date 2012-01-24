@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.components.tools;
 
 
+import java.nio.BufferOverflowException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -31,6 +32,7 @@ import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public final class QueueingChannelCallbacks
@@ -39,13 +41,15 @@ public final class QueueingChannelCallbacks
 			ChannelCallbacks,
 			CallbackHandler<ChannelCallbacks>
 {
-	private QueueingChannelCallbacks (final Channel channel, final BlockingQueue<ChannelMessage> queue)
+	private QueueingChannelCallbacks (final Channel channel, final BlockingQueue<ChannelMessage> queue, final long waitTimeout)
 	{
 		super ();
 		Preconditions.checkNotNull (channel);
 		Preconditions.checkNotNull (queue);
+		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
 		this.channel = channel;
 		this.queue = queue;
+		this.waitTimeout = waitTimeout;
 	}
 	
 	public final void assign ()
@@ -58,7 +62,7 @@ public final class QueueingChannelCallbacks
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		if (flow == ChannelFlow.Inbound)
-			channel.terminate ();
+			this.channel.terminate ();
 		return (null);
 	}
 	
@@ -93,7 +97,8 @@ public final class QueueingChannelCallbacks
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		Preconditions.checkNotNull (message);
-		this.queue.add (message);
+		if (!Threading.offer (this.queue, message, this.waitTimeout))
+			throw (new BufferOverflowException ());
 		return (null);
 	}
 	
@@ -114,14 +119,15 @@ public final class QueueingChannelCallbacks
 	
 	public final BlockingQueue<ChannelMessage> queue;
 	private final Channel channel;
+	private final long waitTimeout;
 	
 	public static final QueueingChannelCallbacks create (final Channel channel)
 	{
-		return (new QueueingChannelCallbacks (channel, new LinkedBlockingQueue<ChannelMessage> ()));
+		return (new QueueingChannelCallbacks (channel, new LinkedBlockingQueue<ChannelMessage> (), 0));
 	}
 	
-	public static final QueueingChannelCallbacks create (final Channel channel, final BlockingQueue<ChannelMessage> queue)
+	public static final QueueingChannelCallbacks create (final Channel channel, final BlockingQueue<ChannelMessage> queue, final long waitTimeout)
 	{
-		return (new QueueingChannelCallbacks (channel, queue));
+		return (new QueueingChannelCallbacks (channel, queue, waitTimeout));
 	}
 }

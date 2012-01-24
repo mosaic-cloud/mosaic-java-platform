@@ -94,8 +94,8 @@ public final class MosBasicComponentLauncher
 	public static final void main (final String[] arguments, final ClassLoader loader)
 			throws Throwable
 	{
-		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		BasicThreadingSecurityManager.initialize ();
+		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
 		MosBasicComponentLauncher.main (arguments, loader, threading, exceptions);
 		threading.join ();
@@ -120,7 +120,7 @@ public final class MosBasicComponentLauncher
 						@Override
 						public final void run ()
 						{
-							Threading.sleep (2000);
+							Threading.sleep (AbortingExceptionTracer.defaulExitTimeout);
 							Threading.halt ();
 						}
 					});
@@ -201,7 +201,7 @@ public final class MosBasicComponentLauncher
 			};
 		} else
 			throw (new IllegalStateException ());
-		final Thread main = Threading.createNormalThread (threading, MosBasicComponentLauncher.class, "main", run);
+		final Thread main = Threading.createDaemonThread (threading, MosBasicComponentLauncher.class, "main", run);
 		final String[] identifier = new String[] {null};
 		{
 			Threading.registerExitCallback (threading, MosBasicComponentLauncher.class, "exit-hook-3", new Runnable () {
@@ -222,7 +222,7 @@ public final class MosBasicComponentLauncher
 		}
 		logger.debug ("starting main...");
 		main.start ();
-		Threading.sleep (1000);
+		Threading.sleep (MosBasicComponentLauncher.defaultCreateDelay);
 		logger.debug ("creating component...");
 		try {
 			final URL createUrl = new URL (controller, String.format ("/processes/create?%s", Joiner.on ("&").join (Arrays.asList (createParameters))));
@@ -254,4 +254,6 @@ public final class MosBasicComponentLauncher
 		logger.info ("started: {}", identifier);
 		main.join ();
 	}
+	
+	public static final long defaultCreateDelay = 1000;
 }

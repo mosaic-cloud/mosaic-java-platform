@@ -26,14 +26,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.google.common.base.Preconditions;
 
@@ -46,8 +44,6 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.Serial;
-import eu.mosaic_cloud.platform.core.tests.SerialJunitRunner;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
@@ -55,52 +51,63 @@ import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-@RunWith(SerialJunitRunner.class)
-@Serial
-@Ignore
 public class MemcachedConnectorTest {
 
-	private static MemcachedStoreConnector<String> connector;
+	private MemcachedStoreConnector<String> connector;
+	private static ThreadingContext threading;
 	private static String keyPrefix;
 	private static MemcachedStub driverStub;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Throwable {
-		BasicThreadingSecurityManager.initialize ();
-		ThreadingContext threading = BasicThreadingContext.create(
+		BasicThreadingSecurityManager.initialize();
+		MemcachedConnectorTest.threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
 		IConfiguration config = PropertyTypeConfiguration.create(
 				MemcachedConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
 
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
-				threading, AbortingExceptionTracer.defaultInstance);
+				MemcachedConnectorTest.threading,
+				AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(KeyValueSession.DRIVER);
 		driverChannel.register(MemcachedSession.DRIVER);
 		driverChannel.accept(ConfigUtils.resolveParameter(config,
 				"interop.channel.address", String.class, ""));
 
 		MemcachedConnectorTest.driverStub = MemcachedStub.create(config,
-				driverChannel, Threading.sequezeThreadingContextOutOfDryRock());
-		MemcachedConnectorTest.connector = MemcachedStoreConnector.create(
-				config, new PojoDataEncoder<String>(String.class),
-				Threading.sequezeThreadingContextOutOfDryRock());
+				driverChannel, MemcachedConnectorTest.threading);
 		MemcachedConnectorTest.keyPrefix = UUID.randomUUID().toString();
+	}
+
+	@Before
+	public void setUp() throws Throwable {
+		IConfiguration config = PropertyTypeConfiguration.create(
+				MemcachedConnectorTest.class.getClassLoader(),
+				"memcached-test.prop");
+		this.connector = MemcachedStoreConnector.create(config,
+				new PojoDataEncoder<String>(String.class),
+				MemcachedConnectorTest.threading);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
-		MemcachedConnectorTest.connector.destroy();
 		MemcachedConnectorTest.driverStub.destroy();
 	}
 
+	@After
+	public void tearDown() throws Throwable {
+		this.connector.destroy();
+	}
+
 	public void testConnection() {
-		Assert.assertNotNull(MemcachedConnectorTest.connector);
+		Assert.assertNotNull(this.connector);
 	}
 
 	private static <T> List<IOperationCompletionHandler<T>> getHandlers(
@@ -115,14 +122,14 @@ public class MemcachedConnectorTest {
 	public void testSet() throws IOException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("set 1");
-		IResult<Boolean> r1 = MemcachedConnectorTest.connector.set(k1, 30,
-				"fantastic", handlers1, null);
+		IResult<Boolean> r1 = this.connector.set(k1, 30, "fantastic",
+				handlers1, null);
 		Assert.assertNotNull(r1);
 
 		String k2 = MemcachedConnectorTest.keyPrefix + "_key_famous";
 		List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers("set 2");
-		IResult<Boolean> r2 = MemcachedConnectorTest.connector.set(k2, 30,
-				"famous", handlers2, null);
+		IResult<Boolean> r2 = this.connector.set(k2, 30, "famous", handlers2,
+				null);
 		Assert.assertNotNull(r2);
 
 		try {
@@ -140,8 +147,7 @@ public class MemcachedConnectorTest {
 	public void testGet() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<String>> handlers = getHandlers("get");
-		IResult<String> r1 = MemcachedConnectorTest.connector.get(k1, handlers,
-				null);
+		IResult<String> r1 = this.connector.get(k1, handlers, null);
 
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().toString());
@@ -163,8 +169,8 @@ public class MemcachedConnectorTest {
 		List<IOperationCompletionHandler<Map<String, String>>> handlersMap = new ArrayList<IOperationCompletionHandler<Map<String, String>>>();
 		handlersMap
 				.add(new TestLoggingHandler<Map<String, String>>("get bulk"));
-		IResult<Map<String, String>> r1 = MemcachedConnectorTest.connector
-				.getBulk(keys, handlersMap, null);
+		IResult<Map<String, String>> r1 = this.connector.getBulk(keys,
+				handlersMap, null);
 
 		try {
 			Assert.assertEquals("fantastic", r1.getResult().get(k1).toString());
@@ -185,10 +191,10 @@ public class MemcachedConnectorTest {
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("add 1");
 		List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers("add 2");
 
-		IResult<Boolean> r1 = MemcachedConnectorTest.connector.add(k1, 30,
-				"wrong", handlers1, null);
-		IResult<Boolean> r2 = MemcachedConnectorTest.connector.add(k2, 30,
-				"fabulous", handlers2, null);
+		IResult<Boolean> r1 = this.connector.add(k1, 30, "wrong", handlers1,
+				null);
+		IResult<Boolean> r2 = this.connector.add(k2, 30, "fabulous", handlers2,
+				null);
 
 		try {
 			Assert.assertFalse(r1.getResult());
@@ -206,8 +212,8 @@ public class MemcachedConnectorTest {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("replace");
 
-		IResult<Boolean> r1 = MemcachedConnectorTest.connector.replace(k1, 30,
-				"fantabulous", handlers, null);
+		IResult<Boolean> r1 = this.connector.replace(k1, 30, "fantabulous",
+				handlers, null);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -219,8 +225,7 @@ public class MemcachedConnectorTest {
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after replace");
-		IResult<String> r2 = MemcachedConnectorTest.connector.get(k1,
-				handlers1, null);
+		IResult<String> r2 = this.connector.get(k1, handlers1, null);
 
 		try {
 			Assert.assertEquals("fantabulous", r2.getResult().toString());
@@ -238,8 +243,8 @@ public class MemcachedConnectorTest {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("append");
 
-		IResult<Boolean> r1 = MemcachedConnectorTest.connector.append(k1,
-				" and miraculous", handlers, null);
+		IResult<Boolean> r1 = this.connector.append(k1, " and miraculous",
+				handlers, null);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -253,8 +258,7 @@ public class MemcachedConnectorTest {
 		try {
 			Threading.sleep(1000);
 			List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after append");
-			IResult<String> r2 = MemcachedConnectorTest.connector.get(k1,
-					handlers1, null);
+			IResult<String> r2 = this.connector.get(k1, handlers1, null);
 
 			Assert.assertEquals("fantabulous and miraculous", r2.getResult()
 					.toString());
@@ -271,8 +275,8 @@ public class MemcachedConnectorTest {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("prepend");
 
-		IResult<Boolean> r1 = MemcachedConnectorTest.connector.prepend(k1,
-				"it is ", handlers, null);
+		IResult<Boolean> r1 = this.connector.prepend(k1, "it is ", handlers,
+				null);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -284,8 +288,7 @@ public class MemcachedConnectorTest {
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after prepend");
-		IResult<String> r2 = MemcachedConnectorTest.connector.get(k1,
-				handlers1, null);
+		IResult<String> r2 = this.connector.get(k1, handlers1, null);
 
 		try {
 			Assert.assertEquals("it is fantabulous and miraculous", r2
@@ -302,8 +305,8 @@ public class MemcachedConnectorTest {
 	public void testCas() throws IOException, ClassNotFoundException {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("cas");
-		IResult<Boolean> r1 = MemcachedConnectorTest.connector.cas(k1,
-				"replaced by dummy", handlers, null);
+		IResult<Boolean> r1 = this.connector.cas(k1, "replaced by dummy",
+				handlers, null);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -315,8 +318,7 @@ public class MemcachedConnectorTest {
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after cas");
-		IResult<String> r2 = MemcachedConnectorTest.connector.get(k1,
-				handlers1, null);
+		IResult<String> r2 = this.connector.get(k1, handlers1, null);
 
 		try {
 			Assert.assertEquals("replaced by dummy", r2.getResult().toString());
@@ -332,8 +334,7 @@ public class MemcachedConnectorTest {
 	public void testDelete() {
 		String k1 = MemcachedConnectorTest.keyPrefix + "_key_fabulous";
 		List<IOperationCompletionHandler<Boolean>> handlers = getHandlers("delete");
-		IResult<Boolean> r1 = MemcachedConnectorTest.connector.delete(k1,
-				handlers, null);
+		IResult<Boolean> r1 = this.connector.delete(k1, handlers, null);
 		try {
 			Assert.assertTrue(r1.getResult());
 		} catch (InterruptedException e) {
@@ -345,8 +346,7 @@ public class MemcachedConnectorTest {
 		}
 
 		List<IOperationCompletionHandler<String>> handlers1 = getHandlers("get after delete");
-		IResult<String> r2 = MemcachedConnectorTest.connector.get(k1,
-				handlers1, null);
+		IResult<String> r2 = this.connector.get(k1, handlers1, null);
 
 		try {
 			Assert.assertNull(r2.getResult());
@@ -362,8 +362,7 @@ public class MemcachedConnectorTest {
 	public void testList() {
 		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
 		handlers.add(new TestLoggingHandler<List<String>>("list"));
-		IResult<List<String>> r1 = MemcachedConnectorTest.connector.list(
-				handlers, null);
+		IResult<List<String>> r1 = this.connector.list(handlers, null);
 		try {
 			Assert.assertNull(r1.getResult());
 		} catch (InterruptedException e) {
@@ -395,7 +394,7 @@ public class MemcachedConnectorTest {
 	}
 
 	public static void main(String... args) throws Throwable {
-		BasicThreadingSecurityManager.initialize ();
+		BasicThreadingSecurityManager.initialize();
 		ThreadingContext threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
@@ -404,9 +403,9 @@ public class MemcachedConnectorTest {
 				"memcached-test.prop");
 		MemcachedStoreConnector<String> connector = MemcachedStoreConnector
 				.create(config, new PojoDataEncoder<String>(String.class),
-						Threading.sequezeThreadingContextOutOfDryRock());
+						threading);
 		String keyPrefix = UUID.randomUUID().toString();
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
 				threading, AbortingExceptionTracer.defaultInstance);
@@ -414,7 +413,7 @@ public class MemcachedConnectorTest {
 				"interop.channel.address", String.class, ""));
 
 		MemcachedStub driverStub = MemcachedStub.create(config, driverChannel,
-				Threading.sequezeThreadingContextOutOfDryRock());
+				threading);
 
 		String k1 = keyPrefix + "_key_fantastic";
 		List<IOperationCompletionHandler<Boolean>> handlers1 = getHandlers("add 1");

@@ -46,20 +46,20 @@ public final class BasicCallbackReactorTest
 	public final void test ()
 			throws Exception
 	{
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		BasicThreadingSecurityManager.initialize ();
+		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
-		reactor.initialize ();
+		Assert.assertTrue (reactor.initialize (BasicCallbackReactorTest.defaultPollTimeout));
 		final LinkedList<QueueCallbacks<Integer>> triggers = new LinkedList<QueueCallbacks<Integer>> ();
-		for (int index = 0; index < BasicCallbackReactorTest.queueCount; index++) {
+		for (int index = 0; index < BasicCallbackReactorTest.defaultQueueCount; index++) {
 			final QueueCallbacks<Integer> trigger = reactor.register (QueueCallbacks.class, null);
 			triggers.add (trigger);
 		}
 		final ConcurrentLinkedQueue<CallbackFuture> futures = new ConcurrentLinkedQueue<CallbackFuture> ();
 		{
 			int counter = 0;
-			for (int index = 0; index < BasicCallbackReactorTest.callCount; index++) {
+			for (int index = 0; index < BasicCallbackReactorTest.defaultCallCount; index++) {
 				for (final QueueCallbacks<Integer> trigger : triggers) {
 					final CallbackReference reference = trigger.enqueue (Integer.valueOf (counter));
 					final CallbackFuture future = reactor.resolve (reference);
@@ -74,17 +74,17 @@ public final class BasicCallbackReactorTest
 			Assert.assertTrue (future.cancel (false));
 		}
 		final LinkedList<QueueingQueueCallbacks<Integer>> callbacks = new LinkedList<QueueingQueueCallbacks<Integer>> ();
-		for (int index = 0; index < BasicCallbackReactorTest.queueCount; index++) {
+		for (int index = 0; index < BasicCallbackReactorTest.defaultQueueCount; index++) {
 			final QueueingQueueCallbacks<Integer> callback = QueueingQueueCallbacks.create ();
 			callbacks.add (callback);
 			reactor.assign (triggers.get (index), callback);
 		}
 		for (final CallbackFuture future : futures)
-			Assert.assertNull (future.get (BasicCallbackReactorTest.pollTimeout, TimeUnit.MILLISECONDS));
-		Threading.sleep (BasicCallbackReactorTest.sleepTimeout);
+			Assert.assertNull (future.get (BasicCallbackReactorTest.defaultPollTimeout, TimeUnit.MILLISECONDS));
+		Threading.sleep (BasicCallbackReactorTest.defaultPollTimeout);
 		{
 			int counter = 0;
-			for (int index = 0; index < BasicCallbackReactorTest.callCount; index++)
+			for (int index = 0; index < BasicCallbackReactorTest.defaultCallCount; index++)
 				for (final QueueingQueueCallbacks<Integer> callback : callbacks) {
 					Assert.assertEquals (Integer.valueOf (counter), callback.queue.poll ());
 					counter++;
@@ -92,13 +92,12 @@ public final class BasicCallbackReactorTest
 			for (final QueueingQueueCallbacks<Integer> callback : callbacks)
 				Assert.assertNull (callback.queue.poll ());
 		}
-		reactor.terminate ();
-		Threading.sleep (BasicCallbackReactorTest.sleepTimeout);
+		Assert.assertTrue (reactor.terminate (BasicCallbackReactorTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	
-	private static final int callCount = 16;
-	private static final long pollTimeout = 1000;
-	private static final int queueCount = 16;
-	private static final long sleepTimeout = 100;
+	public static final int defaultCallCount = 16;
+	public static final long defaultPollTimeout = 1000;
+	public static final int defaultQueueCount = 16;
 }
