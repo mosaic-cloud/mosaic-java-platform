@@ -92,36 +92,36 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ContainerComponentCallbacks.callbacks = this;
-//		try {
-			IConfiguration configuration = PropertyTypeConfiguration.create(
-					ContainerComponentCallbacks.class.getClassLoader(),
-					"resource-container.properties"); //$NON-NLS-1$
-			this.amqpGroup = ComponentIdentifier
-					.resolve(ConfigUtils.resolveParameter(
-							configuration,
-							ConfigProperties
-									.getString("ContainerComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-			this.kvGroup = ComponentIdentifier.resolve(ConfigUtils
-					.resolveParameter(configuration, ConfigProperties
-							.getString("ContainerComponentCallbacks.1"), //$NON-NLS-1$
-							String.class, "")); //$NON-NLS-1$
-			this.mcGroup = ComponentIdentifier
-					.resolve(ConfigUtils.resolveParameter(
-							configuration,
-							ConfigProperties
-									.getString("ContainerComponentCallbacks.2"), String.class, //$NON-NLS-1$
-							"")); //$NON-NLS-1$
-			this.selfGroup = ComponentIdentifier
-					.resolve(ConfigUtils.resolveParameter(
-							configuration,
-							ConfigProperties
-									.getString("ContainerComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-			synchronized (this) {
-				this.status = Status.Created;
-			}
-//		} catch (Throwable e) {
-//			e.printStackTrace(System.err);
-//		}
+		// try {
+		IConfiguration configuration = PropertyTypeConfiguration.create(
+				ContainerComponentCallbacks.class.getClassLoader(),
+				"resource-container.properties"); //$NON-NLS-1$
+		this.amqpGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ContainerComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+		this.kvGroup = ComponentIdentifier.resolve(ConfigUtils
+				.resolveParameter(configuration, ConfigProperties
+						.getString("ContainerComponentCallbacks.1"), //$NON-NLS-1$
+						String.class, "")); //$NON-NLS-1$
+		this.mcGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ContainerComponentCallbacks.2"), String.class, //$NON-NLS-1$
+						"")); //$NON-NLS-1$
+		this.selfGroup = ComponentIdentifier
+				.resolve(ConfigUtils.resolveParameter(
+						configuration,
+						ConfigProperties
+								.getString("ContainerComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+		synchronized (this) {
+			this.status = Status.Created;
+		}
+		// } catch (Throwable e) {
+		// e.printStackTrace(System.err);
+		// }
 	}
 
 	@Override
@@ -182,6 +182,12 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			String configurationFile) {
 		final IConfiguration configuration = PropertyTypeConfiguration.create(
 				loader, configurationFile);
+		if (configuration == null) {
+			MosaicLogger.getLogger().error(
+					"Cloudlet configuration " + configurationFile
+							+ " can not be found.");
+			return null;
+		}
 		final CloudletManager container = new CloudletManager(loader,
 				configuration);
 
