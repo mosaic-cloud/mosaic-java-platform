@@ -401,28 +401,25 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	protected Channel getChannel(String clientId) {
 		Channel channel = this.channels.get(clientId);
 		if (channel == null) {
-			channel = this.openChannel(clientId);
-			this.channels.put(clientId, channel);
-		}
-		return channel;
-	}
-
-	private Channel openChannel(String clientId) {
-		Channel channel = null; // NOPMD by georgiana on 10/12/11 4:21 PM
-		synchronized (this) {
-			try {
-				if (this.connected) {
-					channel = this.connection.createChannel();
-					channel.setDefaultConsumer(null);
-					channel.addReturnListener(this.returnCallback);
-					channel.basicQos(1);
-					this.channels.put(clientId, channel);
+			synchronized (this) { // Double checked locking
+				channel = this.channels.get(clientId);
+				if (channel == null) {
+					try {
+						if (this.connected) {
+							channel = this.connection.createChannel();
+							channel.setDefaultConsumer(null);
+							channel.addReturnListener(this.returnCallback);
+							channel.basicQos(1);
+							this.channels.put(clientId, channel);
+						} else {
+							// What happends when we are not connected ?
+						}
+					} catch (IOException e) {
+						ExceptionTracer.traceIgnored(e);
+					}
 				}
-			} catch (IOException e) {
-				ExceptionTracer.traceIgnored(e);
 			}
 		}
-
 		return channel;
 	}
 
