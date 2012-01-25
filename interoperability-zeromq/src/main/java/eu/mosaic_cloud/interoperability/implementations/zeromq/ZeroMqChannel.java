@@ -49,8 +49,8 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannelSocket.Packet;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -72,7 +72,7 @@ public final class ZeroMqChannel
 		this.state = new State ();
 		this.handlers = new ConcurrentLinkedQueue<ZeroMqChannel.Handler> ();
 		this.idle = new Semaphore (1);
-		this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this, "zeromq-callbacks"));
+		this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this, "zeromq-callbacks", true));
 		this.socket = new ZeroMqChannelSocket (this.selfIdentifier, new PacketDequeueTrigger (), this.threading, exceptions);
 	}
 	

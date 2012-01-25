@@ -206,6 +206,12 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			String configurationFile) {
 		final IConfiguration configuration = PropertyTypeConfiguration.create(
 				loader, configurationFile);
+		if (configuration == null) {
+			MosaicLogger.getLogger().error(
+					"Cloudlet configuration file " + configurationFile
+							+ " is missing.");
+			return null;
+		}
 		int noInstances = ConfigUtils.resolveParameter(configuration,
 				ConfigProperties.getString("CloudletDummyContainer.3"),
 				Integer.class, 1);

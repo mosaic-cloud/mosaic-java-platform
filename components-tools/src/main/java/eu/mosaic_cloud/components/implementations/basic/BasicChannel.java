@@ -46,8 +46,8 @@ import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.IgnoredException;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -145,7 +145,7 @@ public final class BasicChannel
 				this.coder = coder;
 				this.callbackReactor = callbackReactor;
 				this.callbackTrigger = this.callbackReactor.register (ChannelCallbacks.class, callbacks);
-				this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this.facade, "services", true, this.exceptions.catcher));
+				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "services", true, this.exceptions.catcher));
 				this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.inboundMessages = new LinkedBlockingQueue<ChannelMessage> ();

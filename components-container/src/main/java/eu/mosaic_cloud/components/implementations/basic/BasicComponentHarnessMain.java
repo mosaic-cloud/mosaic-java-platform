@@ -48,7 +48,6 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -278,8 +277,7 @@ public final class BasicComponentHarnessMain
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
-			this.thread = this.threading.newThread (new ThreadConfiguration (this, "piper", this), this);
-			this.thread.start ();
+			this.thread = Threading.createAndStartDaemonThread (threading, this, "piper", this, this);
 		}
 		
 		public final boolean join ()

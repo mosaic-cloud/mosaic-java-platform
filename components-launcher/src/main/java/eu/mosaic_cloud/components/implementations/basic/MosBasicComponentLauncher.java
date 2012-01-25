@@ -201,7 +201,7 @@ public final class MosBasicComponentLauncher
 			};
 		} else
 			throw (new IllegalStateException ());
-		final Thread main = Threading.createNormalThread (threading, MosBasicComponentLauncher.class, "main", run);
+		final Thread main = Threading.createDaemonThread (threading, MosBasicComponentLauncher.class, "main", run);
 		final String[] identifier = new String[] {null};
 		{
 			Threading.registerExitCallback (threading, MosBasicComponentLauncher.class, "exit-hook-3", new Runnable () {

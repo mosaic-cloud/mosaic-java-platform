@@ -25,10 +25,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
 
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
+
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Base class for the resource drivers.
@@ -50,8 +51,8 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 */
 	protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
 		this.pendingResults = new ArrayList<IResult<?>>();
-		this.executor = threading.newFixedThreadPool(new ThreadConfiguration(
-				this, "operations"), noThreads);
+		this.executor = threading.createFixedThreadPool(ThreadConfiguration.create(
+				this, "operations", true), noThreads);
 	}
 
 	@Override

@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
+
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
@@ -46,7 +48,6 @@ import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 
 /**
  * Driver class for the AMQP-based management systems.
@@ -86,8 +87,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		this.returnCallback = new ReturnCallback();
 		this.shutdownListener = new ConnectionShutdownListener();
 		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
-		this.executor = threading.newFixedThreadPool(new ThreadConfiguration(
-				this, "operations"), 1);
+		this.executor = threading.createFixedThreadPool(ThreadConfiguration.create(
+				this, "operations", true), 1);
 	}
 
 	/**
@@ -402,7 +403,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		Channel channel = this.channels.get(clientId);
 		if (channel == null) {
 			channel = this.openChannel(clientId);
-			this.channels.put(clientId, channel);
+//			this.channels.put(clientId, channel);
 		}
 		return channel;
 	}

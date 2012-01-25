@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadController;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.ThreadBundle;
@@ -39,6 +40,50 @@ public final class BasicThreadingContext
 		this.defaultGroup = new BasicThreadGroup (this.group, configuration.setName ("default"));
 		this.threads = ThreadBundle.create ();
 		this.sealed = new AtomicBoolean (false);
+	}
+	
+	@Override
+	public final ExecutorService createCachedThreadPool (final ThreadConfiguration configuration)
+	{
+		return (Executors.unconfigurableExecutorService (Executors.newCachedThreadPool (this.newThreadFactory (configuration, true))));
+	}
+	
+	@Override
+	public final ExecutorService createFixedThreadPool (final ThreadConfiguration configuration, final int threads)
+	{
+		return (Executors.unconfigurableExecutorService (Executors.newFixedThreadPool (threads, this.newThreadFactory (configuration, true))));
+	}
+	
+	@Override
+	public final ScheduledExecutorService createScheduledThreadPool (final ThreadConfiguration configuration, final int coreThreads)
+	{
+		return (Executors.unconfigurableScheduledExecutorService (Executors.newScheduledThreadPool (coreThreads, this.newThreadFactory (configuration, true))));
+	}
+	
+	@Override
+	public final ExecutorService createSingleThreadExecutor (final ThreadConfiguration configuration)
+	{
+		return (Executors.unconfigurableExecutorService (Executors.newSingleThreadExecutor (this.newThreadFactory (configuration, false))));
+	}
+	
+	@Override
+	public final ScheduledExecutorService createSingleThreadScheduledExecutor (final ThreadConfiguration configuration)
+	{
+		return (Executors.unconfigurableScheduledExecutorService (Executors.newSingleThreadScheduledExecutor (this.newThreadFactory (configuration, false))));
+	}
+	
+	@Override
+	public final Thread createThread (final ThreadConfiguration configuration, final Runnable runnable)
+	{
+		final Object thisOwner = this.configuration.owner.get ();
+		Preconditions.checkNotNull (thisOwner);
+		return (new BasicThread (this.group, configuration, runnable, -1));
+	}
+	
+	@Override
+	public final ThreadFactory createThreadFactory (final ThreadConfiguration configuration)
+	{
+		return (this.newThreadFactory (configuration, true));
 	}
 	
 	@Override
@@ -93,50 +138,6 @@ public final class BasicThreadingContext
 	public final boolean join (final long timeout)
 	{
 		return (this.threads.join (timeout));
-	}
-	
-	@Override
-	public final ExecutorService newCachedThreadPool (final ThreadConfiguration configuration)
-	{
-		return (Executors.unconfigurableExecutorService (Executors.newCachedThreadPool (this.newThreadFactory (configuration, true))));
-	}
-	
-	@Override
-	public final ExecutorService newFixedThreadPool (final ThreadConfiguration configuration, final int threads)
-	{
-		return (Executors.unconfigurableExecutorService (Executors.newFixedThreadPool (threads, this.newThreadFactory (configuration, true))));
-	}
-	
-	@Override
-	public final ScheduledExecutorService newScheduledThreadPool (final ThreadConfiguration configuration, final int coreThreads)
-	{
-		return (Executors.unconfigurableScheduledExecutorService (Executors.newScheduledThreadPool (coreThreads, this.newThreadFactory (configuration, true))));
-	}
-	
-	@Override
-	public final ExecutorService newSingleThreadExecutor (final ThreadConfiguration configuration)
-	{
-		return (Executors.unconfigurableExecutorService (Executors.newSingleThreadExecutor (this.newThreadFactory (configuration, false))));
-	}
-	
-	@Override
-	public final ScheduledExecutorService newSingleThreadScheduledExecutor (final ThreadConfiguration configuration)
-	{
-		return (Executors.unconfigurableScheduledExecutorService (Executors.newSingleThreadScheduledExecutor (this.newThreadFactory (configuration, false))));
-	}
-	
-	@Override
-	public final Thread newThread (final ThreadConfiguration configuration, final Runnable runnable)
-	{
-		final Object thisOwner = this.configuration.owner.get ();
-		Preconditions.checkNotNull (thisOwner);
-		return (new BasicThread (this.group, configuration, runnable, -1));
-	}
-	
-	@Override
-	public final ThreadFactory newThreadFactory (final ThreadConfiguration configuration)
-	{
-		return (this.newThreadFactory (configuration, true));
 	}
 	
 	public final ThreadFactory newThreadFactory (final ThreadConfiguration configuration, final boolean index)
@@ -223,7 +224,7 @@ public final class BasicThreadingContext
 		Preconditions.checkNotNull (configuration);
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
-		Preconditions.checkArgument ((configuration.name == null) || ThreadingContext.namePattern.matcher (configuration.name).matches ());
+		Preconditions.checkArgument ((configuration.name == null) || ThreadConfiguration.namePattern.matcher (configuration.name).matches ());
 		final String ownerName;
 		if (owner instanceof Class)
 			ownerName = ((Class<?>) owner).getCanonicalName ();
@@ -243,7 +244,7 @@ public final class BasicThreadingContext
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkArgument ((index == -1) || (index >= 1));
-		Preconditions.checkArgument ((configuration.name == null) || ThreadingContext.namePattern.matcher (configuration.name).matches ());
+		Preconditions.checkArgument ((configuration.name == null) || ThreadConfiguration.namePattern.matcher (configuration.name).matches ());
 		final String ownerName;
 		if (group != null)
 			ownerName = group.getName ();
@@ -266,7 +267,7 @@ public final class BasicThreadingContext
 	
 	public static final BasicThreadingContext create (final Object owner, final Thread.UncaughtExceptionHandler catcher)
 	{
-		return (new BasicThreadingContext (Threading.getRootThreadGroup (), new ThreadConfiguration (owner, catcher)));
+		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, null, true, catcher)));
 	}
 	
 	public final class BasicThread

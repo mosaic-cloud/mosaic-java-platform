@@ -40,8 +40,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackTrigger;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ThreadConfiguration;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -222,7 +222,7 @@ public final class BasicCallbackReactor
 				this.threading = threading;
 				this.transcript = Transcript.create (this.facade);
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
-				this.executor = this.threading.newCachedThreadPool (new ThreadConfiguration (this.facade, "callbacks", this.exceptions.catcher));
+				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "callbacks", true, this.exceptions.catcher));
 				this.proxies = new WeakHashMap<CallbackTrigger, Proxy> ();
 				this.actions = new WeakHashMap<CallbackReference, Action> ();
 			}
