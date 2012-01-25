@@ -23,7 +23,6 @@ package eu.mosaic_cloud.tools.exceptions.tools;
 
 import java.io.PrintStream;
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 
 
@@ -94,59 +93,85 @@ public final class AbortingExceptionTracer
 		}
 	}
 	
+	public static final long defaulExitTimeout = 2000;
+	public static final int defaultExitCode = 254;
 	public static final AbortingExceptionTracer defaultInstance = new AbortingExceptionTracer (null);
-	private static final int defaultExitCode = 254;
-	private static final long defaultExitTimeout = 2000;
-	private static final Exiter exiter = new Exiter (AbortingExceptionTracer.defaultExitCode, AbortingExceptionTracer.defaultExitTimeout, null);
+	private static final long defaultExitTimeoutResolution = 100;
+	private static final Exiter exiter = new Exiter (null);
 	
 	private static final class Exiter
-			extends Thread
+			extends Object
 	{
-		public Exiter (final int code, final long timeout, final PrintStream transcript)
+		public Exiter (final PrintStream transcript)
 		{
 			super ();
-			Preconditions.checkArgument ((code >= 0) && (code <= 255));
-			Preconditions.checkArgument (timeout > 0);
-			this.code = code;
-			this.timeout = timeout;
 			this.transcript = transcript;
-			this.setName (AbortingExceptionTracer.class.getCanonicalName () + "#exiter");
-			this.setDaemon (true);
+			this.exitThread = new Thread (new Runnable () {
+				@Override
+				public final void run ()
+				{
+					Exiter.this.exit ();
+				}
+			}, AbortingExceptionTracer.class.getCanonicalName () + "#exiter");
+			this.haltThread = new Thread (new Runnable () {
+				@Override
+				public final void run ()
+				{
+					Exiter.this.halt ();
+				}
+			}, AbortingExceptionTracer.class.getCanonicalName () + "#halter");
+			this.exitThread.setDaemon (true);
 		}
 		
 		public final void maybeStart ()
 		{
 			synchronized (this) {
-				if (!this.isAlive ())
+				if (!this.exitThread.isAlive ()) {
 					try {
-						this.start ();
+						Runtime.getRuntime ().addShutdownHook (this.haltThread);
+					} catch (final Throwable exception1) {
+						AbortingExceptionTracer.trace (exception1, this.transcript);
+					}
+					try {
+						this.exitThread.start ();
 					} catch (final Throwable exception1) {
 						AbortingExceptionTracer.trace (exception1, this.transcript);
 						try {
-							Runtime.getRuntime ().halt (this.code);
+							Runtime.getRuntime ().halt (AbortingExceptionTracer.defaultExitCode);
 						} catch (final Throwable exception2) {
 							AbortingExceptionTracer.trace (exception2, this.transcript);
 						}
 					}
+				}
 			}
 		}
 		
-		@Override
-		public final void run ()
+		private final void exit ()
 		{
-			System.exit (this.code);
-			for (int timeoutStep = 0; timeoutStep < this.timeout / Exiter.defaultTimeoutResolution; timeoutStep++)
+			try {
+				Runtime.getRuntime ().exit (AbortingExceptionTracer.defaultExitCode);
+			} catch (final Throwable exception) {
+				AbortingExceptionTracer.trace (exception, this.transcript);
+			}
+		}
+		
+		private final void halt ()
+		{
+			for (int timeoutStep = 0; timeoutStep < AbortingExceptionTracer.defaulExitTimeout / AbortingExceptionTracer.defaultExitTimeoutResolution; timeoutStep++)
 				try {
-					Thread.sleep (Exiter.defaultTimeoutResolution);
+					Thread.sleep (AbortingExceptionTracer.defaultExitTimeoutResolution);
 				} catch (final InterruptedException exception1) {
 					// intentional
 				}
-			Runtime.getRuntime ().halt (this.code);
+			try {
+				Runtime.getRuntime ().halt (AbortingExceptionTracer.defaultExitCode);
+			} catch (final Throwable exception) {
+				AbortingExceptionTracer.trace (exception, this.transcript);
+			}
 		}
 		
-		private final int code;
-		private final long timeout;
+		private final Thread exitThread;
+		private final Thread haltThread;
 		private final PrintStream transcript;
-		private static final long defaultTimeoutResolution = 100;
 	}
 }

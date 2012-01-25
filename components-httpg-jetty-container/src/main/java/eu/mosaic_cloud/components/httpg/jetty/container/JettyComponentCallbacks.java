@@ -68,8 +68,10 @@ public final class JettyComponentCallbacks
 			this.threading = Threading.getCurrentContext ();
 			this.transcript = Transcript.create (this);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
-			JettyComponentContext.callbacks = this;
+			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
 			this.status = Status.WaitingRegistered;
+			JettyComponentContext.callbacks = this;
+			JettyComponent.create ();
 		}
 	}
 	
@@ -322,23 +324,23 @@ public final class JettyComponentCallbacks
 		}
 	}
 	
-	final TranscriptExceptionTracer exceptions;
-	final ThreadingContext threading;
-	final Transcript transcript;
 	private Component component;
+	private final TranscriptExceptionTracer exceptions;
 	private Server jettyServer;
 	private Thread jettyThread;
 	private final Monitor monitor;
-	private final IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
+	private final IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingCallReturnFutures;
 	private ComponentCallReference pendingReference;
 	private Status status;
+	private final ThreadingContext threading;
+	private final Transcript transcript;
 	
 	private static enum Status
 	{
-		Terminated,
-		Unregistered,
-		WaitingInitialized,
-		WaitingRabbitmqResolveReturn,
-		WaitingRegistered;
+		Terminated (),
+		Unregistered (),
+		WaitingInitialized (),
+		WaitingRabbitmqResolveReturn (),
+		WaitingRegistered ();
 	}
 }

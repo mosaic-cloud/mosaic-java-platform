@@ -52,33 +52,33 @@ public class AbacusTest
 	public final void test ()
 			throws Throwable
 	{
+		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe1 = Pipe.open ();
 		final Pipe pipe2 = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		BasicThreadingSecurityManager.initialize ();
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final BasicChannel serverChannel = BasicChannel.create (pipe1.source (), pipe2.sink (), coder, reactor, threading, exceptions);
 		final BasicChannel clientChannel = BasicChannel.create (pipe2.source (), pipe1.sink (), coder, reactor, threading, exceptions);
-		final BasicComponent clientComponent = BasicComponent.create (clientChannel, reactor, exceptions);
 		final BasicComponent serverComponent = BasicComponent.create (serverChannel, reactor, exceptions);
+		final BasicComponent clientComponent = BasicComponent.create (clientChannel, reactor, exceptions);
 		final AbacusComponentCallbacks serverCallbacks = new AbacusComponentCallbacks (exceptions);
 		final QueueingComponentCallbacks clientCallbacks = QueueingComponentCallbacks.create (clientComponent);
-		reactor.initialize ();
-		serverChannel.initialize ();
-		clientChannel.initialize ();
-		serverComponent.initialize ();
-		clientComponent.initialize ();
+		Assert.assertTrue (reactor.initialize (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (serverChannel.initialize (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (clientChannel.initialize (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (serverComponent.initialize (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (clientComponent.initialize (AbacusTest.defaultPollTimeout));
 		serverComponent.assign (serverCallbacks);
 		clientCallbacks.assign ();
-		for (int index = 0; index < AbacusTest.tries; index++) {
-			final double operandA = Math.random () * 10;
-			final double operandB = Math.random () * 10;
+		for (int index = 0; index < AbacusTest.defaultTries; index++) {
+			final double operandA = (int) (Math.random () * 10);
+			final double operandB = (int) (Math.random () * 10);
 			final ComponentCallRequest request = ComponentCallRequest.create ("+", Arrays.asList (Double.valueOf (operandA), Double.valueOf (operandB)), ByteBuffer.allocate (0), ComponentCallReference.create ());
 			clientComponent.call (peer, request);
-			final ComponentCallReply reply = (ComponentCallReply) clientCallbacks.queue.poll (AbacusTest.pollTimeout, TimeUnit.MILLISECONDS);
+			final ComponentCallReply reply = (ComponentCallReply) clientCallbacks.queue.poll (AbacusTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (reply);
 			Assert.assertTrue (reply.ok);
 			Assert.assertNotNull (reply.outputsOrError);
@@ -87,12 +87,18 @@ public class AbacusTest
 		}
 		pipe1.sink ().close ();
 		pipe2.sink ().close ();
-		while (serverComponent.isActive () || clientComponent.isActive ())
-			Threading.sleep (AbacusTest.sleepTimeout);
-		reactor.terminate ();
+		Threading.sleep (AbacusTest.defaultPollTimeout);
+		Assert.assertFalse (serverComponent.isActive ());
+		Assert.assertFalse (clientComponent.isActive ());
+		Assert.assertTrue (serverComponent.terminate (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (clientComponent.terminate (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (serverChannel.terminate (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (clientChannel.terminate (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.terminate (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (AbacusTest.defaultPollTimeout));
+		Assert.assertNull (exceptions.queue.poll ());
 	}
 	
-	private static final long pollTimeout = 1000;
-	private static final long sleepTimeout = 100;
-	private static final int tries = 16;
+	public static final long defaultPollTimeout = 1000;
+	public static final int defaultTries = 16;
 }

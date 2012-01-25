@@ -17,8 +17,7 @@
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48logger{48}][%-32thread]
-				%msg%n</pattern>
+			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48.48logger{48}][%-48.48thread] %msg%n</pattern>
 		</encoder>
 	</appender>
 	

@@ -62,7 +62,7 @@ public final class QueueingChannelCallbacks
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		if (flow == ChannelFlow.Inbound)
-			channel.terminate ();
+			this.channel.terminate ();
 		return (null);
 	}
 	

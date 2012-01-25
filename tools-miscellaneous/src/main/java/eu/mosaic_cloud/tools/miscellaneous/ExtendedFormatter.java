@@ -153,7 +153,7 @@ public final class ExtendedFormatter
 		return (new ExtendedFormatter (locale));
 	}
 	
-	public static final ExtendedFormatter defaultInstance = new ExtendedFormatter (Locale.getDefault ());
+	public static final ExtendedFormatter defaultInstance = ExtendedFormatter.create ();
 	private static final Pattern extendedFormatPattern = Pattern.compile (ExtendedFormatter.extendedFormatPatternSpecification);
 	private static final String extendedFormatPatternSpecification = "(%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%]))|(%\\{[a-z:-]+\\})";
 }

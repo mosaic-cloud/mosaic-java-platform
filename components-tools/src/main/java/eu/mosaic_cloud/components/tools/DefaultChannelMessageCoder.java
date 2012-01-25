@@ -113,5 +113,5 @@ public final class DefaultChannelMessageCoder
 		return (new DefaultChannelMessageCoder (DefaultJsonCoder.defaultInstance));
 	}
 	
-	public static final DefaultChannelMessageCoder defaultInstance = new DefaultChannelMessageCoder (DefaultJsonCoder.defaultInstance);
+	public static final DefaultChannelMessageCoder defaultInstance = DefaultChannelMessageCoder.create ();
 }

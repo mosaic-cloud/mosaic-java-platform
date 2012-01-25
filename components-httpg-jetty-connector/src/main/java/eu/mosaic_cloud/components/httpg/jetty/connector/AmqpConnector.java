@@ -101,7 +101,7 @@ public class AmqpConnector extends AbstractConnector {
 
 	@Override
 	public void close() throws IOException {
-
+		
 	}
 
 	protected org.eclipse.jetty.io.Connection newConnection(EndPoint endp) {

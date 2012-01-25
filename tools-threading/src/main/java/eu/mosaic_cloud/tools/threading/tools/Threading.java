@@ -21,6 +21,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ManagedThread;
@@ -169,6 +170,20 @@ public final class Threading
 			Threading.interruptCurrentThread ();
 			return (null);
 		} catch (final TimeoutException exception) {
+			return (null);
+		}
+	}
+	
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future)
+	{
+		return (Threading.awaitOrCatch (future, -1));
+	}
+	
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout)
+	{
+		try {
+			return (Threading.await (future, timeout));
+		} catch (final ExecutionException exception) {
 			return (null);
 		}
 	}
@@ -685,8 +700,8 @@ public final class Threading
 		}
 	}
 	
-	public static final int defaultAbortExitCode = 1;
-	public static final int defaultHaltExitCode = 255;
+	public static final int defaultAbortExitCode = AbortingExceptionTracer.defaultExitCode;
+	public static final int defaultHaltExitCode = AbortingExceptionTracer.defaultExitCode;
 	
 	private static final class CurrentContext
 			extends ThreadLocal<ThreadingContext>

@@ -57,8 +57,12 @@ public class KeyValueConnectorCompTest {
 		this.storeType = ConfigUtils.resolveParameter(this.configuration,
 				"kvstore.driver_name", String.class, "");
 		this.keyPrefix = UUID.randomUUID().toString();
+		BasicThreadingSecurityManager.initialize();
+		ThreadingContext threading = BasicThreadingContext.create(
+				KeyValueConnectorCompTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		ResourceFinder.getResourceFinder().findResource(ResourceType.KEY_VALUE,
-				new Callback());
+				threading, new Callback());
 
 	}
 

@@ -68,7 +68,7 @@ public class RedisConnectorTest {
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
 				RedisConnectorTest.threading,
@@ -225,7 +225,7 @@ public class RedisConnectorTest {
 						threading);
 		String keyPrefix = UUID.randomUUID().toString();
 
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
 				threading, AbortingExceptionTracer.defaultInstance);

@@ -37,6 +37,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Service.State;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
@@ -76,9 +77,15 @@ public final class BasicChannel
 		this.delegate.close (flow);
 	}
 	
-	public void initialize ()
+	public final void initialize ()
 	{
-		this.delegate.startAndWait ();
+		this.initialize (0);
+	}
+	
+	public final boolean initialize (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.start (), timeout);
+		return (state == State.RUNNING);
 	}
 	
 	public final boolean isActive ()
@@ -95,7 +102,13 @@ public final class BasicChannel
 	@Override
 	public void terminate ()
 	{
-		this.delegate.stop ();
+		this.terminate (0);
+	}
+	
+	public final boolean terminate (final long timeout)
+	{
+		final State state = Threading.awaitOrCatch (this.delegate.stop (), timeout);
+		return (state == State.TERMINATED);
 	}
 	
 	final Channel delegate;
@@ -110,7 +123,7 @@ public final class BasicChannel
 		return (new BasicChannel (input, output, coder, reactor, null, threading, exceptions));
 	}
 	
-	private static final long defaultPollTimeout = 1000;
+	static final long defaultPollTimeout = 100;
 	
 	private static final class Channel
 			extends AbstractService
@@ -163,10 +176,10 @@ public final class BasicChannel
 		{
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("opening channel...");
-				this.ioputer.start ();
-				this.encoder.start ();
-				this.decoder.start ();
-				this.dispatcher.start ();
+				this.encoder.startAndWait ();
+				this.decoder.startAndWait ();
+				this.ioputer.startAndWait ();
+				this.dispatcher.startAndWait ();
 				this.notifyStarted ();
 			}
 		}
@@ -176,11 +189,6 @@ public final class BasicChannel
 		{
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("closing channel...");
-				this.ioputer.stop ();
-				this.encoder.stop ();
-				this.decoder.stop ();
-				this.dispatcher.stop ();
-				this.notifyStopped ();
 				try {
 					this.input.close ();
 				} catch (final Throwable exception) {
@@ -196,6 +204,12 @@ public final class BasicChannel
 				} catch (final Throwable exception) {
 					this.exceptions.traceIgnoredException (exception);
 				}
+				this.dispatcher.stopAndWait ();
+				this.ioputer.stopAndWait ();
+				this.encoder.stopAndWait ();
+				this.decoder.stopAndWait ();
+				this.executor.shutdown ();
+				this.notifyStopped ();
 			}
 		}
 		
@@ -682,8 +696,6 @@ public final class BasicChannel
 		{
 			try {
 				while (true) {
-					if (!this.channel.isRunning ())
-						this.triggerShutdown ();
 					if (!this.isRunning ())
 						break;
 					this.loop_1 ();

@@ -70,7 +70,7 @@ public class KeyValueConnectorTest {
 		KeyValueConnectorTest.storeType = ConfigUtils.resolveParameter(config,
 				"kvstore.driver_name", String.class, "");
 
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
 				KeyValueConnectorTest.threading,
@@ -224,7 +224,7 @@ public class KeyValueConnectorTest {
 				.create(config, new PojoDataEncoder<String>(String.class),
 						threading);
 		String keyPrefix = UUID.randomUUID().toString();
-		ZeroMqChannel driverChannel = new ZeroMqChannel(
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(
 				ConfigUtils.resolveParameter(config,
 						"interop.driver.identifier", String.class, ""),
 				threading, AbortingExceptionTracer.defaultInstance);

@@ -53,9 +53,12 @@ public class AmqpConnectorCompTest {
 		MosaicLogger.getLogger().info(
 				"AMQP Connector test: configuration loaded. "
 						+ this.configuration);
-
+		BasicThreadingSecurityManager.initialize();
+		ThreadingContext threading = BasicThreadingContext.create(
+				AmqpConnectorCompTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		ResourceFinder.getResourceFinder().findResource(ResourceType.AMQP,
-				new Callback());
+				threading, new Callback());
 	}
 
 	public void destroy() throws Throwable {

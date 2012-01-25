@@ -38,7 +38,7 @@ public final class DefaultJavaSerializationPayloadCoder
 		implements
 			PayloadCoder
 {
-	public DefaultJavaSerializationPayloadCoder (final Class<? extends Serializable> clasz, final boolean nullAllowed)
+	private DefaultJavaSerializationPayloadCoder (final Class<? extends Serializable> clasz, final boolean nullAllowed)
 	{
 		super ();
 		Preconditions.checkNotNull (clasz);
@@ -80,4 +80,9 @@ public final class DefaultJavaSerializationPayloadCoder
 	
 	private final Class<? extends Serializable> clasz;
 	private final boolean nullAllowed;
+	
+	public static final DefaultJavaSerializationPayloadCoder create (final Class<? extends Serializable> clasz, final boolean nullAllowed)
+	{
+		return (new DefaultJavaSerializationPayloadCoder (clasz, nullAllowed));
+	}
 }

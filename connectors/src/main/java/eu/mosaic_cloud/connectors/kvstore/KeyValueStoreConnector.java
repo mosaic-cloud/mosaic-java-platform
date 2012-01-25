@@ -94,7 +94,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 				ConfigProperties.getString("AllConnector.0"), String.class, "");
 		String driverIdentifier = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("AllConnector.1"), String.class, "");
-		ZeroMqChannel channel = new ZeroMqChannel(connectorIdentifier,
+		ZeroMqChannel channel = ZeroMqChannel.create(connectorIdentifier,
 				threading, AbortingExceptionTracer.defaultInstance);
 		channel.register(KeyValueSession.CONNECTOR);
 		channel.connect(driverChannel);

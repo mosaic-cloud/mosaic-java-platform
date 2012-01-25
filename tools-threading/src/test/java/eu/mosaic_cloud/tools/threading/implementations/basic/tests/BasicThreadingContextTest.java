@@ -110,7 +110,7 @@ public final class BasicThreadingContextTest
 	@After
 	public final void unprepare ()
 	{
-		this.threading.join (this.waitTimeout);
+		Assert.assertTrue (this.threading.join (this.waitTimeout));
 		Assert.assertNull (this.exceptions.queue.poll ());
 	}
 	

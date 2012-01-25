@@ -50,9 +50,9 @@ public final class BasicComponentTest
 	public final void test ()
 			throws Exception
 	{
+		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		BasicThreadingSecurityManager.initialize ();
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
@@ -60,36 +60,36 @@ public final class BasicComponentTest
 		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, threading, exceptions);
 		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
 		final QueueingComponentCallbacks callbacks = QueueingComponentCallbacks.create (component);
-		reactor.initialize ();
-		channel.initialize ();
-		component.initialize ();
+		Assert.assertTrue (reactor.initialize (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (channel.initialize (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (component.initialize (BasicComponentTest.defaultPollTimeout));
 		callbacks.assign ();
-		for (int index = 0; index < BasicComponentTest.tries; index++) {
+		for (int index = 0; index < BasicComponentTest.defaultTries; index++) {
 			final ComponentCallRequest outboundRequest = RandomMessageGenerator.defaultInstance.generateComponentCallRequest ();
 			component.call (peer, outboundRequest);
-			final ComponentCallRequest inboundRequest = (ComponentCallRequest) callbacks.queue.poll (BasicComponentTest.pollTimeout * 10000, TimeUnit.MILLISECONDS);
+			final ComponentCallRequest inboundRequest = (ComponentCallRequest) callbacks.queue.poll (BasicComponentTest.defaultPollTimeout * 10000, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundRequest);
 			Assert.assertEquals (outboundRequest.operation, inboundRequest.operation);
 			Assert.assertEquals (outboundRequest.inputs, inboundRequest.inputs);
 			Assert.assertEquals (outboundRequest.data, inboundRequest.data);
 			final ComponentCallReply outboundReply = RandomMessageGenerator.defaultInstance.generateComponentCallReply (inboundRequest);
 			component.reply (outboundReply);
-			final ComponentCallReply inboundReply = (ComponentCallReply) callbacks.queue.poll (BasicComponentTest.pollTimeout, TimeUnit.MILLISECONDS);
+			final ComponentCallReply inboundReply = (ComponentCallReply) callbacks.queue.poll (BasicComponentTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundReply);
 			Assert.assertEquals (outboundRequest.reference, inboundReply.reference);
 			Assert.assertEquals (outboundRequest.inputs, inboundReply.outputsOrError);
 			Assert.assertEquals (outboundRequest.data, inboundReply.data);
 		}
 		pipe.sink ().close ();
-		while (component.isActive ())
-			Threading.sleep (BasicComponentTest.sleepTimeout);
-		Threading.sleep (BasicComponentTest.sleepTimeout);
-		reactor.terminate ();
-		Threading.sleep (BasicComponentTest.sleepTimeout);
+		Threading.sleep (BasicComponentTest.defaultPollTimeout);
+		Assert.assertFalse (component.isActive ());
+		Assert.assertTrue (component.terminate (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (channel.terminate (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.terminate (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (threading.join (BasicComponentTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	
-	private static final long pollTimeout = 1000;
-	private static final long sleepTimeout = 100;
-	private static final int tries = 16;
+	public static final long defaultPollTimeout = 1000;
+	public static final int defaultTries = 16;
 }

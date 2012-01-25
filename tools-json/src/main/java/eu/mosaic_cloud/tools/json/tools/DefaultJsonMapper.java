@@ -178,5 +178,5 @@ public final class DefaultJsonMapper
 		return (new DefaultJsonMapper ());
 	}
 	
-	public static final DefaultJsonMapper defaultInstance = new DefaultJsonMapper ();
+	public static final DefaultJsonMapper defaultInstance = DefaultJsonMapper.create ();
 }
