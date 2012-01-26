@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.AbstractFuture;
 import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackIsolate;
@@ -20,9 +22,6 @@ import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.v2.Callbacks;
-
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.AbstractFuture;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;

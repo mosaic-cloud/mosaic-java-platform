@@ -54,6 +54,11 @@ public final class CallbackReference
 		return (Threading.awaitOrCatch (this.completion, timeout, null, null) == Boolean.TRUE);
 	}
 	
+	public final CallbackCompletion getCompletion ()
+	{
+		return (this.completion);
+	}
+	
 	public final CallbackReactor getReactor ()
 	{
 		final CallbackReactor reactor = this.reactorReference.get ();
@@ -61,13 +66,8 @@ public final class CallbackReference
 		return (reactor);
 	}
 	
-	public final CallbackCompletion getCompletion ()
-	{
-		return (this.completion);
-	}
-	
+	private final CallbackCompletion completion;
 	private final Reference<? extends CallbackReactor> reactorReference;
-	private CallbackCompletion completion;
 	
 	public static final CallbackReference create (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
 	{

@@ -40,6 +40,11 @@ public final class CallbackIsolate
 		return (this.getReactor ().destroyIsolate (this));
 	}
 	
+	public final CallbackCompletion getCompletion ()
+	{
+		return (this.completion);
+	}
+	
 	public final CallbackReactor getReactor ()
 	{
 		final CallbackReactor reactor = this.reactorReference.get ();
@@ -47,13 +52,8 @@ public final class CallbackIsolate
 		return (reactor);
 	}
 	
-	public final CallbackCompletion getCompletion ()
-	{
-		return (this.completion);
-	}
-	
-	private final Reference<? extends CallbackReactor> reactorReference;
 	private final CallbackCompletion completion;
+	private final Reference<? extends CallbackReactor> reactorReference;
 	
 	public static final CallbackIsolate create (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
 	{

@@ -93,7 +93,7 @@ public final class BasicCallbackReactorTest
 				Assert.assertNull (callback.queue.poll ());
 		}
 		Assert.assertTrue (reactor.terminate (BasicCallbackReactorTest.defaultPollTimeout));
-		Assert.assertTrue (threading.join (BasicCallbackReactorTest.defaultPollTimeout));
+		Assert.assertTrue (threading.await (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	
