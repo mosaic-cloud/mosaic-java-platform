@@ -148,10 +148,22 @@ public final class Threading
 	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future)
 			throws ExecutionException
 	{
-		return (Threading.await (future, -1));
+		return (Threading.await (future, null));
+	}
+	
+	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future, final _Object_ timeoutMarker)
+			throws ExecutionException
+	{
+		return (Threading.await (future, -1, timeoutMarker));
 	}
 	
 	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future, final long timeout)
+			throws ExecutionException
+	{
+		return (Threading.await (future, timeout, null));
+	}
+	
+	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future, final long timeout, final _Object_ timeoutMarker)
 			throws ExecutionException
 	{
 		Preconditions.checkNotNull (future);
@@ -164,27 +176,36 @@ public final class Threading
 				received = future.get ();
 			else
 				throw (new AssertionError ());
-			Preconditions.checkNotNull (received);
 			return (received);
 		} catch (final InterruptedException exception) {
 			Threading.interruptCurrentThread ();
-			return (null);
+			return (timeoutMarker);
 		} catch (final TimeoutException exception) {
-			return (null);
+			return (timeoutMarker);
 		}
 	}
 	
 	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future)
 	{
-		return (Threading.awaitOrCatch (future, -1));
+		return (Threading.awaitOrCatch (future, null, null));
+	}
+	
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final _Object_ timeoutMarker, final _Object_ exceptionMarker)
+	{
+		return (Threading.awaitOrCatch (future, -1, timeoutMarker, exceptionMarker));
 	}
 	
 	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout)
 	{
+		return (Threading.awaitOrCatch (future, timeout, null, null));
+	}
+	
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout, final _Object_ timeoutMarker, final _Object_ exceptionMarker)
+	{
 		try {
-			return (Threading.await (future, timeout));
+			return (Threading.await (future, timeout, timeoutMarker));
 		} catch (final ExecutionException exception) {
-			return (null);
+			return (exceptionMarker);
 		}
 	}
 	

@@ -62,7 +62,7 @@ public final class KvTest
 		Assert.assertEquals ("2", Threading.awaitOrCatch (client_2.get ("b"), KvTest.defaultPollTimeout));
 		Assert.assertTrue (serverChannel.terminate (KvTest.defaultPollTimeout));
 		Assert.assertTrue (clientChannel.terminate (KvTest.defaultPollTimeout));
-		Assert.assertTrue (threading.join (KvTest.defaultPollTimeout));
+		Assert.assertTrue (threading.await (KvTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

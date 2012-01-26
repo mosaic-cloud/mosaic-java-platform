@@ -43,6 +43,18 @@ public final class BasicThreadingContext
 	}
 	
 	@Override
+	public final boolean await ()
+	{
+		return (this.threads.await ());
+	}
+	
+	@Override
+	public final boolean await (final long timeout)
+	{
+		return (this.threads.await (timeout));
+	}
+	
+	@Override
 	public final ExecutorService createCachedThreadPool (final ThreadConfiguration configuration)
 	{
 		return (Executors.unconfigurableExecutorService (Executors.newCachedThreadPool (this.newThreadFactory (configuration, true))));
@@ -126,18 +138,6 @@ public final class BasicThreadingContext
 	public final Iterator<Thread> iterator ()
 	{
 		return (this.threads.iterator ());
-	}
-	
-	@Override
-	public final boolean join ()
-	{
-		return (this.threads.join ());
-	}
-	
-	@Override
-	public final boolean join (final long timeout)
-	{
-		return (this.threads.join (timeout));
 	}
 	
 	public final ThreadFactory newThreadFactory (final ThreadConfiguration configuration, final boolean index)
@@ -297,6 +297,18 @@ public final class BasicThreadingContext
 				this.setContextClassLoader (this.configuration.classLoader);
 			this.setName (BasicThreadingContext.buildThreadName (this.group, this.configuration, this.index));
 			BasicThreadingContext.this.registerThread (this);
+		}
+		
+		@Override
+		public final boolean await ()
+		{
+			return (Threading.join (this));
+		}
+		
+		@Override
+		public final boolean await (final long timeout)
+		{
+			return (Threading.join (this, timeout));
 		}
 		
 		@Override

@@ -162,7 +162,7 @@ public final class BasicComponentHarnessMain
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
-		threading.join ();
+		threading.await ();
 	}
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ThreadingContext threading, final ExceptionTracer exceptions)

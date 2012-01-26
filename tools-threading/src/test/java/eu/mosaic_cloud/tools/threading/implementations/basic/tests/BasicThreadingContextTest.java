@@ -80,7 +80,7 @@ public final class BasicThreadingContextTest
 		forker.fork ();
 		waiter.trigger ();
 		Assert.assertTrue (waiter.awaitCompleted (this.waitTimeout));
-		Assert.assertTrue (this.threading.join (this.waitTimeout));
+		Assert.assertTrue (this.threading.await (this.waitTimeout));
 		{
 			final CaughtException exception = this.exceptions.queue.poll ();
 			Assert.assertNotNull (exception);
@@ -110,7 +110,7 @@ public final class BasicThreadingContextTest
 	@After
 	public final void unprepare ()
 	{
-		Assert.assertTrue (this.threading.join (this.waitTimeout));
+		Assert.assertTrue (this.threading.await (this.waitTimeout));
 		Assert.assertNull (this.exceptions.queue.poll ());
 	}
 	

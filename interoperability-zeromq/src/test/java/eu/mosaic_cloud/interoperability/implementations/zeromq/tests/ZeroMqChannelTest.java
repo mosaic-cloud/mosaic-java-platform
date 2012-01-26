@@ -64,7 +64,7 @@ public final class ZeroMqChannelTest
 		}
 		Assert.assertTrue (server.terminate (ZeroMqChannelTest.defaultPollTimeout));
 		Assert.assertTrue (client.terminate (ZeroMqChannelTest.defaultPollTimeout));
-		Assert.assertTrue (threading.join (ZeroMqChannelTest.defaultPollTimeout));
+		Assert.assertTrue (threading.await (ZeroMqChannelTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

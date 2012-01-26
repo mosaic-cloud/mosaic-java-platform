@@ -28,6 +28,20 @@ public final class ThreadBundle<_Thread_ extends Thread>
 	}
 	
 	@Override
+	public final boolean await ()
+	{
+		this.collect ();
+		return (Threading.join (this));
+	}
+	
+	@Override
+	public final boolean await (final long timeout)
+	{
+		this.collect ();
+		return (Threading.join (this, timeout));
+	}
+	
+	@Override
 	public final void interrupt ()
 	{
 		this.collect ();
@@ -39,20 +53,6 @@ public final class ThreadBundle<_Thread_ extends Thread>
 	{
 		this.collect ();
 		return (new ThreadIterator<_Thread_> (this.threads.iterator ()));
-	}
-	
-	@Override
-	public final boolean join ()
-	{
-		this.collect ();
-		return (Threading.join (this));
-	}
-	
-	@Override
-	public final boolean join (final long timeout)
-	{
-		this.collect ();
-		return (Threading.join (this, timeout));
 	}
 	
 	public final void register (final _Thread_ thread)

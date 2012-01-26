@@ -93,7 +93,7 @@ public class AbacusTest
 		Assert.assertTrue (clientChannel.terminate (AbacusTest.defaultPollTimeout));
 		Threading.sleep (AbacusTest.defaultPollTimeout);
 		Assert.assertTrue (reactor.terminate (AbacusTest.defaultPollTimeout));
-		Assert.assertTrue (threading.join (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (threading.await (AbacusTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

@@ -8,6 +8,8 @@ import java.util.concurrent.ThreadFactory;
 
 
 public interface ThreadingContext
+		extends
+			Joinable
 {
 	public abstract ExecutorService createCachedThreadPool (final ThreadConfiguration configuration);
 	
@@ -34,6 +36,8 @@ public interface ThreadingContext
 	public abstract void registerThread (final Thread thread);
 	
 	public static interface ManagedThread
+			extends
+				Joinable
 	{
 		public abstract ThreadingContext getContext ();
 	}
