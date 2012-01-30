@@ -59,12 +59,14 @@
 					<execution>
 						<phase>verify</phase>
 						<goals>
+							<goal>download-licenses</goal>
 							<goal>update-project-license</goal>
 							<goal>update-file-header</goal>
 						</goals>
 						<configuration>
-							<canUpdateCopyright>true</canUpdateCopyright>
 							<canUpdateDescription>true</canUpdateDescription>
+							<canUpdateCopyright>true</canUpdateCopyright>
+							<canUpdateLicense>true</canUpdateLicense>
 						</configuration>
 					</execution>
 				</executions>
