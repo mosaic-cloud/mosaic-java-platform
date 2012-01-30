@@ -1,25 +1,4 @@
 /*
- * #%L
- * mosaic-tools-zeromq
- * %%
- * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
- * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 3 of the 
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public 
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-3.0.html>.
- * #L%
- */
-/*
   Copyright (c) 2007-2010 iMatix Corporation
 
   This file is part of 0MQ.
@@ -48,9 +27,12 @@ import java.util.LinkedList;
  * 
  */
 public class ZMQ {
-    static {
-        System.loadLibrary ("jzmq");
-    }
+	
+	static {
+		// if no embedded native library, revert to loading from java.library.path
+		if (!EmbeddedLibraryTools.LOADED_EMBEDDED_LIBRARY)
+			System.loadLibrary ("jzmq");
+	}
 
     // Values for flags in Socket's send and recv functions.
     /**
@@ -69,11 +51,11 @@ public class ZMQ {
      */
     public static final int PAIR = 0;
     /**
-     * Flag to specify a PUB socket, receiving side must be a SUB.
+     * Flag to specify a PUB socket, receiving side must be a SUB or XSUB.
      */
     public static final int PUB = 1;
     /**
-     * Flag to specify the receiving part of the PUB socket.
+     * Flag to specify the receiving part of the PUB or XPUB socket.
      */
     public static final int SUB = 2;
     /**
@@ -85,13 +67,35 @@ public class ZMQ {
      */
     public static final int REP = 4;
     /**
-     * Flag to specify a XREQ socket, receiving side must be a XREP.
+     * Flag to specify a DEALER socket (aka XREQ). 
+     * DEALER is really a combined ventilator / sink 
+     * that does load-balancing on output and fair-queuing on input 
+     * with no other semantics. It is the only socket type that lets 
+     * you shuffle messages out to N nodes and shuffle the replies 
+     * back, in a raw bidirectional asynch pattern.
      */
-    public static final int XREQ = 5;
+    public static final int DEALER = 5;
     /**
-     * Flag to specify the receiving part of a XREQ socket.
+     * Old alias for DEALER flag.
+     * Flag to specify a XREQ socket, receiving side must be a XREP.
+     *
+     * @deprecated  As of release 3.0 of zeromq, replaced by {@link #DEALER}
      */
-    public static final int XREP = 6;
+    public static final int XREQ = DEALER;
+    /**
+     * Flag to specify ROUTER socket (aka XREP).
+     * ROUTER is the socket that creates and consumes request-reply 
+     * routing envelopes. It is the only socket type that lets you route 
+     * messages to specific connections if you know their identities.
+     */
+    public static final int ROUTER = 6;
+    /**
+     * Old alias for ROUTER flag.
+     * Flag to specify the receiving part of a XREQ socket.
+     *
+     * @deprecated  As of release 3.0 of zeromq, replaced by {@link #ROUTER}
+     */
+    public static final int XREP = ROUTER;
     /**
      * Flag to specify the receiving part of a PUSH socket.
      */
@@ -100,6 +104,16 @@ public class ZMQ {
      * Flag to specify a PUSH socket, receiving side must be a PULL.
      */
     public static final int PUSH = 8;
+    /**
+     * Flag to specify a XPUB socket, receiving side must be a SUB or XSUB.
+     * Subscriptions can be received as a message. Subscriptions start with
+     * a '1' byte. Unsubscriptions start with a '0' byte.
+     */
+    public static final int XPUB = 9;
+    /**
+     * Flag to specify the receiving part of the PUB or XPUB socket. Allows
+     */
+    public static final int XSUB = 10;
 
     /**
      * Flag to specify a STREAMER device.
@@ -126,6 +140,70 @@ public class ZMQ {
      */
     @Deprecated
         public static final int DOWNSTREAM = PUSH;
+
+
+    /**
+     * @return Major version number of the ZMQ library.
+     */
+    public static int getMajorVersion ()
+    {
+      return version_major ();
+    }
+  
+  
+    /**
+     * @return Major version number of the ZMQ library.
+     */
+    public static int getMinorVersion ()
+    {
+      return version_minor ();
+    }
+  
+  
+    /**
+     * @return Major version number of the ZMQ library.
+     */
+    public static int getPatchVersion ()
+    {
+      return version_patch ();
+    }
+  
+  
+    /**
+     * @return Full version number of the ZMQ library used for comparing versions.
+     */
+    public static int getFullVersion ()
+    {
+      return version_full ();
+    }
+  
+  
+    /**
+     * @param major Version major component.
+     * @param minor Version minor component.
+     * @param patch Version patch component.
+     * 
+     * @return Comparible single int version number.
+     */
+    public static int makeVersion ( final int major,
+                                    final int minor,
+                                    final int patch )
+    {
+      return make_version ( major, minor, patch );
+    }
+  
+  
+    /**
+     * @return String version number in the form major.minor.patch.
+     */
+    public static String getVersionString ()
+    {
+      return String.format ( "%d.%d.%d",
+                             version_major (),
+                             version_minor (),
+                             version_patch () );
+    }
+  
 
     protected static native int version_full();
     protected static native int version_major();
@@ -301,11 +379,11 @@ public class ZMQ {
          * @return the socket type.
          * @since 2.1.0
          */
-        public long getType () {
+        public int getType () {
             if (ZMQ.version_full() < ZMQ.make_version(2, 1, 0))
                 return -1;
 
-            return getLongSockopt (TYPE);
+            return (int) getLongSockopt (TYPE);
         }
 
         /**
@@ -465,10 +543,88 @@ public class ZMQ {
          * @return the Multicast Loop.
          */
         public boolean hasMulticastLoop () {
-            if (ZMQ.version_full() >= ZMQ.make_version(3, 0, 0))
+            if (ZMQ.version_full() < ZMQ.make_version(3, 0, 0))
                 return false;
 
             return getLongSockopt (MCAST_LOOP) != 0;
+        }
+
+        /**
+         * Sets the time-to-live field in every multicast packet sent from this socket.
+         * The default is 1 which means that the multicast packets don't leave the local
+         * network.
+         * 
+         * @param mcast_hops
+         */
+        public void setMulticastHops (long mcast_hops) {
+            if (ZMQ.version_full() < ZMQ.make_version(3, 0, 0))
+                return;
+
+            setLongSockopt (MULTICAST_HOPS, mcast_hops);
+        }
+
+        /**
+         * @see #setMulticastHops(long)
+         * 
+         * @return the Multicast Hops.
+         */
+        public long getMulticastHops () {
+			if (ZMQ.version_full() < ZMQ.make_version(3, 0, 0))
+                return 1;
+            return getLongSockopt (MULTICAST_HOPS);
+        }
+        /**
+         * Sets the timeout for receive operation on the socket. If the value is 0, recv 
+         * will return immediately, with a EAGAIN error if there is no message to receive. 
+         * If the value is -1, it will block until a message is available. For all other 
+         * values, it will wait for a message for that amount of time before returning with
+         * an EAGAIN error.
+         * 
+         * @param timeout
+         */
+        public void setReceiveTimeOut (long timeout) {
+            if (ZMQ.version_full() < ZMQ.make_version(3, 0, 0))
+                return;
+
+            setLongSockopt (RCVTIMEO, timeout);
+        }
+
+        /**
+         * @see #setReceiveTimeOut(long)
+         * 
+         * @return the Receive Timeout
+         */
+        public long getReceiveTimeOut () {
+			if (ZMQ.version_full() < ZMQ.make_version(3, 0, 0))
+                return -1;
+            return getLongSockopt (RCVTIMEO);
+        }
+
+        /**
+         * Sets the timeout for send operation on the socket. If the value is 0, send
+         * will return immediately, with a EAGAIN error if the message cannot be sent.
+         * If the value is -1, it will block until the message is sent. For all other
+         * values, it will try to send the message for that amount of time before
+         * returning with an EAGAIN error.
+         * 
+         * @param timeout
+         */
+        public void setSendTimeOut (long timeout) {
+            if (ZMQ.version_full() < ZMQ.make_version(3, 0, 0))
+                return;
+
+            setLongSockopt (SNDTIMEO, timeout);
+        }
+
+        /**
+         * @see #setSendTimeOut(long)
+         * 
+         * @return the Send Timeout.
+         */
+        public long getSendTimeOut () {
+			if (ZMQ.version_full() < ZMQ.make_version(3, 0, 0))
+                return -1;
+            return getLongSockopt (SNDTIMEO);
         }
 
         /**
@@ -826,6 +982,23 @@ public class ZMQ {
         public native byte [] recv (int flags);
 
         /**
+         * Receive a message in to a specified buffer.
+         * 
+         * @param buffer
+         *            byte[] to copy zmq message payload in to.
+         * @param offset
+         *            offset in buffer to write data
+         * @param len
+         *            max bytes to write to buffer.  
+         *            If len is smaller than the incoming message size, 
+         *            the message will be truncated.
+         * @param flags
+         *            the flags to apply to the receive operation.
+         * @return the number of bytes read, -1 on error
+         */
+        public native int recv (byte[] buffer, int offset, int len, int flags);
+
+        /**
          * Class constructor.
          * 
          * @param context
@@ -922,6 +1095,9 @@ public class ZMQ {
         private static final int MAXMSGSIZE = 22;
         private static final int SNDHWM = 23;
         private static final int RCVHWM = 24;
+        private static final int MULTICAST_HOPS = 25;
+        private static final int RCVTIMEO = 27;
+        private static final int SNDTIMEO = 28;
     }
 
     /**
@@ -1014,7 +1190,7 @@ public class ZMQ {
                     this.freeSlots.add(i);
                     --this.used;
 
-                    // break; ** ciprian@volution.ro **
+                    break;
                 }
             }
         }
@@ -1091,13 +1267,19 @@ public class ZMQ {
 
         /**
          * Issue a poll call, using the specified timeout value.
+         * <p>
+         * Since ZeroMQ 3.0, the timeout parameter is in <i>milliseconds<i>,
+         * but prior to this the unit was <i>microseconds</i>.
          * 
          * @param tout
-         *            the timeout in microseconds, as per zmq_poll ();
+         *            the timeout, as per zmq_poll ();
          *            if -1, it will block indefinitely until an event
          *            happens; if 0, it will return immediately;
          *            otherwise, it will wait for at most that many
-         *            microseconds.
+         *            milliseconds/microseconds (see above).
+         *            
+         * @see http://api.zeromq.org/2-1:zmq-poll
+         * @see http://api.zeromq.org/3-0:zmq-poll
          *
          * @return how many objects where signalled by poll ()
          */
@@ -1181,6 +1363,9 @@ public class ZMQ {
 
         /**
          * Issue a poll call on the specified 0MQ sockets.
+         * <p>
+         * Since ZeroMQ 3.0, the timeout parameter is in <i>milliseconds<i>,
+         * but prior to this the unit was <i>microseconds</i>.
          * 
          * @param sockets
          *            an array of 0MQ Socket objects to poll.
@@ -1189,8 +1374,10 @@ public class ZMQ {
          * @param revents
          *            an array of short values with the results.
          * @param timeout
-         *            the maximum timeout in microseconds.
+         *            the maximum timeout in milliseconds/microseconds (see above).
          * @return how many objects where signalled by poll ().
+         * @see http://api.zeromq.org/2-1:zmq-poll
+         * @see http://api.zeromq.org/3-0:zmq-poll
          */
         private native long run_poll (int count, Socket [] sockets, short [] events, short [] revents, long timeout);
 
