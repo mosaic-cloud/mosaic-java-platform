@@ -26,29 +26,30 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackIsolate;
+import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackReference;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
-public final class QueueingQueueCallbacks<_Element_ extends Object>
+public final class QueueingQueueCallbackHandler<_Element_ extends Object>
 		extends Object
 		implements
 			QueueCallbacks<_Element_>,
 			CallbackHandler<QueueCallbacks<_Element_>>
 {
-	private QueueingQueueCallbacks (final BlockingQueue<_Element_> queue, final long waitTimeout)
+	private QueueingQueueCallbackHandler (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
+		Preconditions.checkNotNull (exceptions);
 		this.queue = queue;
 		this.waitTimeout = waitTimeout;
+		this.exceptions = exceptions;
 	}
-	
-	@Override
-	public final void deassigned (final QueueCallbacks<_Element_> trigger, final QueueCallbacks<_Element_> newCallbacks)
-	{}
 	
 	@Override
 	public final CallbackReference enqueue (final _Element_ element)
@@ -59,27 +60,30 @@ public final class QueueingQueueCallbacks<_Element_ extends Object>
 	}
 	
 	@Override
-	public final void reassigned (final QueueCallbacks<_Element_> trigger, final QueueCallbacks<_Element_> oldCallbacks)
+	public final void failedCallbacks (final QueueCallbacks<_Element_> proxy, final Throwable exception)
+	{
+		this.exceptions.trace (ExceptionResolution.Ignored, exception);
+	}
+	
+	@Override
+	public final void registeredCallbacks (final QueueCallbacks<_Element_> proxy, final CallbackIsolate isolate)
 	{}
 	
 	@Override
-	public final void registered (final QueueCallbacks<_Element_> trigger)
-	{}
-	
-	@Override
-	public final void unregistered (final QueueCallbacks<_Element_> trigger)
+	public final void unregisteredCallbacks (final QueueCallbacks<_Element_> proxy)
 	{}
 	
 	public final BlockingQueue<_Element_> queue;
+	private final ExceptionTracer exceptions;
 	private final long waitTimeout;
 	
-	public static final <_Element_ extends Object> QueueingQueueCallbacks<_Element_> create ()
+	public static final <_Element_ extends Object> QueueingQueueCallbackHandler<_Element_> create (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
-		return (new QueueingQueueCallbacks<_Element_> (new LinkedBlockingQueue<_Element_> (), 0));
+		return (new QueueingQueueCallbackHandler<_Element_> (queue, waitTimeout, exceptions));
 	}
 	
-	public static final <_Element_ extends Object> QueueingQueueCallbacks<_Element_> create (final BlockingQueue<_Element_> queue, final long waitTimeout)
+	public static final <_Element_ extends Object> QueueingQueueCallbackHandler<_Element_> create (final ExceptionTracer exceptions)
 	{
-		return (new QueueingQueueCallbacks<_Element_> (queue, waitTimeout));
+		return (new QueueingQueueCallbackHandler<_Element_> (new LinkedBlockingQueue<_Element_> (), 0, exceptions));
 	}
 }

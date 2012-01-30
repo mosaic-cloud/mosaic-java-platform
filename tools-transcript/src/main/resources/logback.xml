@@ -17,14 +17,14 @@
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.err</target>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-48.48logger{48}][%-48.48thread] %msg%n</pattern>
+			<pattern>[%5property{jvm_pid}][%-5level][%8relative][%-24.24logger{24}][%-24.24thread] %msg%n</pattern>
 		</encoder>
 	</appender>
 	
 	<logger name="eu.mosaic_cloud.platform.core.log" level="debug" />
 	<logger name="eu.mosaic_cloud.platform.core.exceptions" level="debug" />
 	
-	<root level="info">
+	<root level="trace">
 		<appender-ref ref="console" />
 	</root>
 	

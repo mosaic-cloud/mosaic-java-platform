@@ -22,19 +22,16 @@ package eu.mosaic_cloud.tools.callbacks.implementations.basic.tests;
 
 
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackFuture;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
+import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackIsolate;
+import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.implementations.basic.v2.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.tools.QueueCallbacks;
-import eu.mosaic_cloud.tools.callbacks.tools.QueueingQueueCallbacks;
+import eu.mosaic_cloud.tools.callbacks.tools.QueueingQueueCallbackHandler;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -44,55 +41,53 @@ public final class BasicCallbackReactorTest
 {
 	@Test
 	public final void test ()
-			throws Exception
 	{
 		BasicThreadingSecurityManager.initialize ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		Assert.assertTrue (reactor.initialize (BasicCallbackReactorTest.defaultPollTimeout));
+		final CallbackIsolate isolate = reactor.createIsolate ();
+		Assert.assertNotNull (isolate);
 		final LinkedList<QueueCallbacks<Integer>> triggers = new LinkedList<QueueCallbacks<Integer>> ();
 		for (int index = 0; index < BasicCallbackReactorTest.defaultQueueCount; index++) {
-			final QueueCallbacks<Integer> trigger = reactor.register (QueueCallbacks.class, null);
-			triggers.add (trigger);
+			final QueueCallbacks<Integer> proxy = reactor.createProxy (QueueCallbacks.class);
+			triggers.add (proxy);
 		}
-		final ConcurrentLinkedQueue<CallbackFuture> futures = new ConcurrentLinkedQueue<CallbackFuture> ();
+		final LinkedList<CallbackReference> callbacks = new LinkedList<CallbackReference> ();
 		{
 			int counter = 0;
 			for (int index = 0; index < BasicCallbackReactorTest.defaultCallCount; index++) {
 				for (final QueueCallbacks<Integer> trigger : triggers) {
-					final CallbackReference reference = trigger.enqueue (Integer.valueOf (counter));
-					final CallbackFuture future = reactor.resolve (reference);
-					futures.add (future);
+					final CallbackReference callback = trigger.enqueue (Integer.valueOf (counter));
+					callbacks.add (callback);
 					counter++;
 				}
 			}
 		}
-		for (final QueueCallbacks<Integer> trigger : triggers) {
-			final CallbackReference reference = trigger.enqueue (Integer.valueOf (-1));
-			final CallbackFuture future = reactor.resolve (reference);
-			Assert.assertTrue (future.cancel (false));
-		}
-		final LinkedList<QueueingQueueCallbacks<Integer>> callbacks = new LinkedList<QueueingQueueCallbacks<Integer>> ();
+		final LinkedList<QueueingQueueCallbackHandler<Integer>> handlers = new LinkedList<QueueingQueueCallbackHandler<Integer>> ();
 		for (int index = 0; index < BasicCallbackReactorTest.defaultQueueCount; index++) {
-			final QueueingQueueCallbacks<Integer> callback = QueueingQueueCallbacks.create ();
+			final QueueingQueueCallbackHandler<Integer> handler = QueueingQueueCallbackHandler.create (exceptions);
+			final CallbackReference callback = reactor.assignHandler (triggers.get (index), handler, isolate);
+			handlers.add (handler);
 			callbacks.add (callback);
-			reactor.assign (triggers.get (index), callback);
 		}
-		for (final CallbackFuture future : futures)
-			Assert.assertNull (future.get (BasicCallbackReactorTest.defaultPollTimeout, TimeUnit.MILLISECONDS));
-		Threading.sleep (BasicCallbackReactorTest.defaultPollTimeout);
+		for (final CallbackReference reference : callbacks)
+			Assert.assertTrue (reference.await (BasicCallbackReactorTest.defaultPollTimeout));
 		{
 			int counter = 0;
 			for (int index = 0; index < BasicCallbackReactorTest.defaultCallCount; index++)
-				for (final QueueingQueueCallbacks<Integer> callback : callbacks) {
-					Assert.assertEquals (Integer.valueOf (counter), callback.queue.poll ());
+				for (final QueueingQueueCallbackHandler<Integer> handler : handlers) {
+					Assert.assertEquals (Integer.valueOf (counter), handler.queue.poll ());
 					counter++;
 				}
-			for (final QueueingQueueCallbacks<Integer> callback : callbacks)
-				Assert.assertNull (callback.queue.poll ());
+			for (final QueueingQueueCallbackHandler<Integer> handler : handlers)
+				Assert.assertNull (handler.queue.poll ());
 		}
-		Assert.assertTrue (reactor.terminate (BasicCallbackReactorTest.defaultPollTimeout));
+		isolate.destroy ();
+		Assert.assertTrue (isolate.await (BasicCallbackReactorTest.defaultPollTimeout));
+		reactor.destoy ();
+		Assert.assertTrue (reactor.await (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertTrue (threading.await (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}

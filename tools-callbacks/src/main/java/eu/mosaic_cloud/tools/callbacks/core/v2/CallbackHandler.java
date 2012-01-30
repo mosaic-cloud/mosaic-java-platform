@@ -23,9 +23,9 @@ package eu.mosaic_cloud.tools.callbacks.core.v2;
 
 public interface CallbackHandler<_Callbacks_ extends Callbacks>
 {
-	public abstract void failed (final _Callbacks_ proxy, final Throwable exception);
+	public abstract void failedCallbacks (final _Callbacks_ proxy, final Throwable exception);
 	
 	public abstract void registeredCallbacks (final _Callbacks_ proxy, final CallbackIsolate isolate);
 	
-	public abstract void unregisteredCallbacks (final _Callbacks_ proxy, final CallbackIsolate isolate);
+	public abstract void unregisteredCallbacks (final _Callbacks_ proxy);
 }
