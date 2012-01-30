@@ -41,6 +41,7 @@ public abstract class AbstractConnectorReactor {
 
 	private ResponseHandlerMap dispatcher;
 	private Session session;
+	protected MosaicLogger logger;
 
 	/**
 	 * Creates the reactor for the connector proxy.
@@ -52,6 +53,7 @@ public abstract class AbstractConnectorReactor {
 	 */
 	protected AbstractConnectorReactor() {
 		super();
+		logger = MosaicLogger.createLogger(this);
 	}
 
 	/**
@@ -148,7 +150,7 @@ public abstract class AbstractConnectorReactor {
 		requestId = token.getMessageId();
 		handlers = this.getDispatcher().removeRequestHandlers(requestId);
 		if (handlers == null) {
-			MosaicLogger.getLogger().error(
+			this.logger.error(
 					"No handler found for request token: " + requestId);
 		}
 		return handlers;

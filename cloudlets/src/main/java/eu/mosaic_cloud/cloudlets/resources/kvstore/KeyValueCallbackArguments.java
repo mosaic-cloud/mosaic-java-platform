@@ -31,10 +31,10 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the state of the cloudlet
+ * @param <C>
+ *            the context of the cloudlet
  */
-public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
+public class KeyValueCallbackArguments<C> extends CallbackArguments<C> {
 
 	private final List<String> keys;
 	private final Object value;
@@ -53,7 +53,7 @@ public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KeyValueCallbackArguments(ICloudletController<S> cloudlet,
+	public KeyValueCallbackArguments(ICloudletController<C> cloudlet,
 			String key, Object value, Object extra) {
 		super(cloudlet);
 		this.keys = new ArrayList<String>();
@@ -76,7 +76,7 @@ public class KeyValueCallbackArguments<S> extends CallbackArguments<S> {
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KeyValueCallbackArguments(ICloudletController<S> cloudlet,
+	public KeyValueCallbackArguments(ICloudletController<C> cloudlet,
 			List<String> keys, Object value, Object extra) {
 		super(cloudlet);
 		this.keys = keys;

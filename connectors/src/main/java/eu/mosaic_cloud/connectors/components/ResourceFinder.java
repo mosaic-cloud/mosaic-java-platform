@@ -40,6 +40,8 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
 public class ResourceFinder {
 
 	private static ResourceFinder finder;
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(ResourceFinder.class);
 
 	private ResourceFinder() {
 
@@ -70,7 +72,7 @@ public class ResourceFinder {
 	 */
 	public void findResource(ResourceType type, ThreadingContext threading,
 			IFinderCallback callback) {
-		MosaicLogger.getLogger().trace("ResourceFinder - find resource");
+		logger.trace("ResourceFinder - find resource");
 		OutcomeFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks
 				.findDriver(type);
 		Worker worker = new Worker(replyFuture, callback);
@@ -100,7 +102,7 @@ public class ResourceFinder {
 					Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
 					channel = new ChannelData(outcome.get("channelIdentifier"),
 							outcome.get("channelEndpoint"));
-					MosaicLogger.getLogger().debug(
+					logger.debug(
 							"Found driver on channel " + channel);
 					this.callback.resourceFound(channel);
 				} else {

@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
 
-import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
-
+import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -42,6 +42,7 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	private final List<IResult<?>> pendingResults;
 	private final ExecutorService executor;
 	private boolean destroyed = false;
+	protected MosaicLogger logger;
 
 	/**
 	 * Constructs a driver.
@@ -51,8 +52,11 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	 */
 	protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
 		this.pendingResults = new ArrayList<IResult<?>>();
-		this.executor = threading.createFixedThreadPool(ThreadConfiguration.create(
-				this, "operations", true), noThreads);
+		this.executor = threading
+				.createFixedThreadPool(
+						ThreadConfiguration.create(this, "operations", true),
+						noThreads);
+		this.logger = MosaicLogger.createLogger(this);
 	}
 
 	@Override
@@ -99,21 +103,21 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	public int countPendingOperations() {
-		//		synchronized (this) {
+		// synchronized (this) {
 		return this.pendingResults.size();
-		//		}
+		// }
 	}
 
 	public void removePendingOperation(IResult<?> pendingOp) {
-		//		synchronized (this) {
+		// synchronized (this) {
 		this.pendingResults.remove(pendingOp);
-		//		}
+		// }
 	}
 
 	public void addPendingOperation(IResult<?> pendingOp) {
-		//		synchronized (this) {
+		// synchronized (this) {
 		this.pendingResults.add(pendingOp);
-		//		}
+		// }
 	}
 
 	/**

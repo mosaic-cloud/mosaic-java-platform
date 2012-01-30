@@ -31,16 +31,16 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 /**
- * Ccloudlet-level accessor for memcached-based key value storages. Cloudlets
+ * Cloudlet-level accessor for memcached-based key value storages. Cloudlets
  * will use an object of this type to get access to a memcached storage.
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using the accessor
+ * @param <C>
+ *            the type of the context of the cloudlet using the accessor
  */
-public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
-		IMemcachedAccessor<S> {
+public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
+		IMemcachedAccessor<C> {
 
 	/**
 	 * Creates a new accessor.
@@ -53,7 +53,7 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 	 *            encoder used for serializing data
 	 */
 	public MemcachedAccessor(IConfiguration config,
-			ICloudletController<S> cloudlet, DataEncoder<?> encoder) {
+			ICloudletController<C> cloudlet, DataEncoder<?> encoder) {
 		super(config, cloudlet, encoder);
 	}
 
@@ -65,20 +65,20 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, value, extra);
 				getCallback(IMemcachedAccessorCallback.class).setSucceeded(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 
 			}
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, error, extra);
 				getCallback(IMemcachedAccessorCallback.class).setFailed(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -95,20 +95,20 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, value, extra);
 				getCallback(IMemcachedAccessorCallback.class).addSucceeded(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 
 			}
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, error, extra);
 				(getCallback(IMemcachedAccessorCallback.class)).addFailed(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -125,20 +125,20 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, value, extra);
 				getCallback(IMemcachedAccessorCallback.class).appendSucceeded(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 
 			}
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, error, extra);
 				(getCallback(IMemcachedAccessorCallback.class)).appendFailed(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -155,20 +155,20 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, value, extra);
 				getCallback(IMemcachedAccessorCallback.class).prependSucceeded(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 
 			}
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, error, extra);
 				(getCallback(IMemcachedAccessorCallback.class)).prependFailed(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -185,20 +185,20 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, value, extra);
 				getCallback(IMemcachedAccessorCallback.class).casSucceeded(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 
 			}
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, error, extra);
 				(getCallback(IMemcachedAccessorCallback.class)).casFailed(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -215,20 +215,20 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, value, extra);
 				getCallback(IMemcachedAccessorCallback.class).replaceSucceeded(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 
 			}
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, key, error, extra);
 				(getCallback(IMemcachedAccessorCallback.class)).replaceFailed(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -246,20 +246,20 @@ public class MemcachedAccessor<S> extends KeyValueAccessor<S> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Map<String, Object> result) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, keys, result, extra);
 				getCallback(IMemcachedAccessorCallback.class).getBulkSucceeded(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 
 			}
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<S> arguments = new KeyValueCallbackArguments<S>(
+				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
 						MemcachedAccessor.this.cloudlet, keys, error, extra);
 				(getCallback(IMemcachedAccessorCallback.class)).getBulkFailed(
-						MemcachedAccessor.this.cloudletState, arguments);
+						MemcachedAccessor.this.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Map<String, Object>>> handlers = new ArrayList<IOperationCompletionHandler<Map<String, Object>>>();

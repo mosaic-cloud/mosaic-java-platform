@@ -75,7 +75,7 @@ public class TestRunner {
 
 	private static CloudletManager startCloudlet(IConfiguration configuration) {
 		final CloudletManager container = new CloudletManager(
-				Threading.getCurrentContext(),
+				Threading.getDefaultContext(),
 				TestRunner.class.getClassLoader(), configuration);
 
 		try {

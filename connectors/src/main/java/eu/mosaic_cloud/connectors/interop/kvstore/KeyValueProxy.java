@@ -34,7 +34,6 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
@@ -161,7 +160,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 
 		String identifier = UUID.randomUUID().toString();
 
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"KeyValueProxy - Sending DELETE request [" + identifier
 						+ "]..."); // NOPMD by georgiana on 10/13/11 12:36 PM
 
@@ -197,7 +196,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 
 	public void list(List<IOperationCompletionHandler<List<String>>> handlers) {
 		String identifier = UUID.randomUUID().toString();
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"KeyValueProxy - Sending LIST request [" + identifier + "]...");
 
 		// build token
@@ -231,7 +230,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 	protected void sendSetMessage(String key, T data,
 			List<IOperationCompletionHandler<Boolean>> handlers, Integer... exp) {
 		String identifier = UUID.randomUUID().toString();
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"KeyValueProxy - Sending SET request [" + identifier + "]...");
 
 		// build token
@@ -273,7 +272,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 	protected <D extends Object> void sendGetMessage(List<String> keys,
 			List<IOperationCompletionHandler<D>> handlers) {
 		String identifier = UUID.randomUUID().toString();
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"KeyValueProxy - Sending GET request [" + identifier + "]...");
 
 		// build token

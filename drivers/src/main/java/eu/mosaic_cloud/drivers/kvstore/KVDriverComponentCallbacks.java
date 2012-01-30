@@ -43,7 +43,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
@@ -66,7 +65,7 @@ public final class KVDriverComponentCallbacks extends
 	 * Creates a driver callback.
 	 */
 	public KVDriverComponentCallbacks() {
-		super(Threading.getCurrentContext());
+		super(Threading.getDefaultContext());
 		this.monitor = Monitor.create(this);
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
@@ -87,7 +86,6 @@ public final class KVDriverComponentCallbacks extends
 					getDriverConfiguration(),
 					ConfigProperties.getString("KVStoreDriver.6"), //$NON-NLS-1$
 					String.class, ""); //$NON-NLS-1$
-
 			this.status = Status.Created;
 		} catch (IOException e) {
 			ExceptionTracer.traceIgnored(e);
@@ -149,7 +147,7 @@ public final class KVDriverComponentCallbacks extends
 			Preconditions.checkState(this.component == component);
 			if (this.pendingReference == reply.reference) {
 				if (this.status == Status.WaitingResourceResolved) {
-					//					this.pendingReference = null;
+					// this.pendingReference = null;
 					String ipAddress;
 					Integer port;
 					try {
@@ -157,8 +155,8 @@ public final class KVDriverComponentCallbacks extends
 						Preconditions
 								.checkArgument(reply.outputsOrError instanceof Map);
 						final Map<?, ?> outputs = (Map<?, ?>) reply.outputsOrError;
-						MosaicLogger.getLogger().trace(
-								"Resource search returned " + outputs);
+						this.logger
+								.trace("Resource search returned " + outputs);
 
 						ipAddress = (String) outputs.get("ip"); //$NON-NLS-1$
 						Preconditions.checkArgument(ipAddress != null);
@@ -173,9 +171,8 @@ public final class KVDriverComponentCallbacks extends
 										reply.outputsOrError);
 						throw new IllegalStateException(exception);
 					}
-					MosaicLogger.getLogger().trace(
-							"Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
-									+ port);
+					this.logger.trace("Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
+							+ port);
 					this.configureDriver(ipAddress, port.toString());
 					if (this.selfGroup != null) {
 						this.pendingReference = ComponentCallReference.create();
@@ -226,8 +223,7 @@ public final class KVDriverComponentCallbacks extends
 							operation, null, callReference));
 			this.pendingReference = callReference;
 			this.status = Status.WaitingResourceResolved;
-			MosaicLogger.getLogger().trace(
-					"Key Value driver callback initialized.");
+			this.logger.trace("Key Value driver callback initialized.");
 		}
 		return null;
 	}
@@ -238,7 +234,7 @@ public final class KVDriverComponentCallbacks extends
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			if (this.pendingReference == reference) {
-				//				this.pendingReference = null;
+				// this.pendingReference = null;
 				if (!success) {
 					Exception e = new Exception(
 							"failed registering to group; terminating!"); //$NON-NLS-1$
@@ -246,8 +242,7 @@ public final class KVDriverComponentCallbacks extends
 					this.component.terminate();
 					throw (new IllegalStateException(e));
 				}
-				MosaicLogger
-						.getLogger()
+				this.logger
 						.info("Key Value Store driver callback registered to group " + this.selfGroup); //$NON-NLS-1$
 				this.status = Status.Registered;
 

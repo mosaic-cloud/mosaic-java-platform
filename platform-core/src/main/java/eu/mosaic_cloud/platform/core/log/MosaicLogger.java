@@ -30,26 +30,40 @@ import org.slf4j.LoggerFactory;
  */
 public final class MosaicLogger {
 
-	private static MosaicLogger mLogger;
-
 	private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
 
-	private MosaicLogger() {
-		this.logger = LoggerFactory.getLogger(MosaicLogger.class);
+	private MosaicLogger(Class<?> owner) {
+		this.logger = LoggerFactory.getLogger(owner);
 	}
 
 	/**
-	 * Returns the mOSAIC logger.
+	 * Returns a mOSAIC logger.
+	 * 
+	 * @param owner
+	 *            logged object
 	 * 
 	 * @return the logger
 	 */
-	public static MosaicLogger getLogger() { // NOPMD by georgiana
+	public static MosaicLogger createLogger(Object owner) { // NOPMD by
+															// georgiana
 		// on 9/27/11 7:15
 		// PM
-		if (MosaicLogger.mLogger == null) {
-			MosaicLogger.mLogger = new MosaicLogger();
-		}
-		return MosaicLogger.mLogger;
+		return new MosaicLogger(owner.getClass());
+	}
+
+	/**
+	 * Returns a mOSAIC logger.
+	 * 
+	 * @param owner
+	 *            logged object
+	 * 
+	 * @return the logger
+	 */
+	public static MosaicLogger createLogger(Class<?> owner) { // NOPMD by
+																// georgiana
+		// on 9/27/11 7:15
+		// PM
+		return new MosaicLogger(owner);
 	}
 
 	/**

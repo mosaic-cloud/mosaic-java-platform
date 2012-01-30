@@ -49,6 +49,8 @@ public class KeyValueConnectorCompTest {
 	private KeyValueStoreConnector<String> connector;
 	private String keyPrefix;
 	private String storeType;
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(KeyValueConnectorCompTest.class);
 
 	public KeyValueConnectorCompTest() throws Throwable {
 		this.configuration = PropertyTypeConfiguration.create(
@@ -219,7 +221,7 @@ public class KeyValueConnectorCompTest {
 		 */
 		@Override
 		public void resourceNotFound() {
-			MosaicLogger.getLogger().error("Callback - Resource not found");
+			logger.error("Callback - Resource not found");
 		}
 	}
 }

@@ -32,7 +32,6 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -43,17 +42,17 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state object
+ * @param <C>
+ *            the type of the cloudlet context object
  * @param <D>
  *            the type of the messages consumed by the cloudlet
  */
-public class AmqpQueueConsumer<S, D extends Object> extends
-		AmqpQueueAccessor<S, D> implements IAmqpQueueConsumer<S, D> {
+public class AmqpQueueConsumer<C, D extends Object> extends
+		AmqpQueueAccessor<C, D> implements IAmqpQueueConsumer<C, D> {
 
 	private String consumer;
 	private boolean autoAck;
-	private IAmqpQueueConsumerCallback<S, D> callback;
+	private IAmqpQueueConsumerCallback<C, D> callback;
 
 	/**
 	 * Creates a new AMQP queue consumer.
@@ -78,7 +77,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	 *            encoder used for serializing data
 	 */
 	public AmqpQueueConsumer(IConfiguration config,
-			ICloudletController<S> cloudlet, Class<D> dataClass,
+			ICloudletController<C> cloudlet, Class<D> dataClass,
 			DataEncoder<D> encoder) {
 		super(config, cloudlet, dataClass, true, encoder);
 		String specification = ConfigProperties
@@ -88,11 +87,11 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	}
 
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state,
+	public void initialize(IResourceAccessorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		if (callback instanceof IAmqpQueueConsumerCallback) {
-			super.initialize(callback, state, threading);
-			this.callback = (IAmqpQueueConsumerCallback<S, D>) callback;
+			super.initialize(callback, context, threading);
+			this.callback = (IAmqpQueueConsumerCallback<C, D>) callback;
 		} else {
 			IllegalArgumentException e = new IllegalArgumentException(
 					"The callback argument must be of type " //$NON-NLS-1$
@@ -100,12 +99,12 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 									.getCanonicalName());
 
 			@SuppressWarnings("unchecked")
-			IAmqpQueueConsumerCallback<S, D> proxy = this.cloudlet
+			IAmqpQueueConsumerCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueueConsumerCallback.class);
-			CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueConsumer.this.cloudlet, e);
-			proxy.initializeFailed(state, arguments);
+			proxy.initializeFailed(context, arguments);
 			throw e;
 		}
 	}
@@ -125,7 +124,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 	}
 
 	@Override
-	protected void finishRegister(final IAmqpQueueAccessorCallback<S> callback) {
+	protected void finishRegister(final IAmqpQueueAccessorCallback<C> callback) {
 		IOperationCompletionHandler<String> cHandler = new IOperationCompletionHandler<String>() {
 
 			@Override
@@ -133,23 +132,23 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 				synchronized (AmqpQueueConsumer.this) {
 					//					if (AmqpQueueConsumer.super.registered)
 					//						return;
-					MosaicLogger.getLogger().trace(
+					AmqpQueueConsumer.this.logger.trace(
 							"AmqpQueueConsumer: received consume response message, consumer="
 									+ result);
 					AmqpQueueConsumer.this.consumer = result;
 					//					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
 					//							AmqpQueueConsumer.super.cloudlet, result);
 					//					AmqpQueueConsumer.this.callback.registerSucceeded(
-					//							AmqpQueueConsumer.this.cloudletState, arguments);
+					//							AmqpQueueConsumer.this.cloudletcontext, arguments);
 					AmqpQueueConsumer.super.registered = true;
 				}
 			}
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, String>(
 						AmqpQueueConsumer.super.cloudlet, error);
-				callback.registerFailed(AmqpQueueConsumer.super.cloudletState,
+				callback.registerFailed(AmqpQueueConsumer.super.cloudletContext,
 						arguments);
 			}
 		};
@@ -184,7 +183,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 						// AmqpQueueConsumer.super.cloudlet, result);
 						// AmqpQueueConsumer.this.callback
 						// .unregisterSucceeded(
-						// AmqpQueueConsumer.this.cloudletState,
+						// AmqpQueueConsumer.this.cloudletcontext,
 						// arguments);
 						AmqpQueueConsumer.super.registered = false;
 					}
@@ -192,10 +191,10 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
-					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+					CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 							AmqpQueueConsumer.super.cloudlet, error);
 					AmqpQueueConsumer.this.callback.unregisterFailed(
-							AmqpQueueConsumer.super.cloudletState, arguments);
+							AmqpQueueConsumer.super.cloudletContext, arguments);
 				}
 			};
 			List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -217,18 +216,18 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 			@Override
 			public void onSuccess(Boolean result) {
-				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueConsumer.super.cloudlet, result);
 				AmqpQueueConsumer.this.callback.acknowledgeSucceeded(
-						AmqpQueueConsumer.super.cloudletState, arguments);
+						AmqpQueueConsumer.super.cloudletContext, arguments);
 			}
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueConsumer.super.cloudlet, error);
 				AmqpQueueConsumer.this.callback.acknowledgeFailed(
-						AmqpQueueConsumer.super.cloudletState, arguments);
+						AmqpQueueConsumer.super.cloudletContext, arguments);
 			}
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
@@ -242,7 +241,7 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 		// OperationResultCallbackArguments<S, Boolean>(
 		// AmqpQueueConsumer.super.cloudlet, true);
 		// callback.acknowledgeSucceeded(
-		// AmqpQueueConsumer.super.cloudletState, arguments);
+		// AmqpQueueConsumer.super.cloudletcontext, arguments);
 		// }
 	}
 
@@ -258,15 +257,15 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 
 		@Override
 		public void handleCancelOk(String consumerTag) {
-			MosaicLogger.getLogger().trace(
+			AmqpQueueConsumer.this.logger.trace(
 					"AmqpQueueConsumer: received CANCEL ok message.");
 			if (!AmqpQueueConsumer.super.registered) {
 				return;
 			}
-			CallbackArguments<S> arguments = new CallbackArguments<S>(
+			CallbackArguments<C> arguments = new CallbackArguments<C>(
 					AmqpQueueConsumer.this.cloudlet);
 			AmqpQueueConsumer.this.callback.unregisterSucceeded(
-					AmqpQueueConsumer.this.cloudletState, arguments);
+					AmqpQueueConsumer.this.cloudletContext, arguments);
 			AmqpQueueConsumer.super.registered = false;
 		}
 
@@ -275,13 +274,13 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 			if (AmqpQueueConsumer.super.registered) {
 				return;
 			}
-			MosaicLogger.getLogger().trace(
+			AmqpQueueConsumer.this.logger.trace(
 					"AmqpQueueConsumer: received CONSUME ok message.");
 			AmqpQueueConsumer.this.consumer = consumerTag;
-			CallbackArguments<S> arguments = new CallbackArguments<S>(
+			CallbackArguments<C> arguments = new CallbackArguments<C>(
 					AmqpQueueConsumer.this.cloudlet);
 			AmqpQueueConsumer.this.callback.registerSucceeded(
-					AmqpQueueConsumer.this.cloudletState, arguments);
+					AmqpQueueConsumer.this.cloudletContext, arguments);
 			AmqpQueueConsumer.super.registered = true;
 		}
 
@@ -293,10 +292,10 @@ public class AmqpQueueConsumer<S, D extends Object> extends
 						.getData());
 				AmqpQueueConsumeMessage<D> mssg = new AmqpQueueConsumeMessage<D>(
 						AmqpQueueConsumer.this, message, data);
-				AmqpQueueConsumeCallbackArguments<S, D> arguments = new AmqpQueueConsumeCallbackArguments<S, D>(
+				AmqpQueueConsumeCallbackArguments<C, D> arguments = new AmqpQueueConsumeCallbackArguments<C, D>(
 						AmqpQueueConsumer.this.cloudlet, mssg);
 				AmqpQueueConsumer.this.callback.consume(
-						AmqpQueueConsumer.this.cloudletState, arguments);
+						AmqpQueueConsumer.this.cloudletContext, arguments);
 			} catch (Exception e) {
 				ExceptionTracer.traceIgnored(e);
 			}

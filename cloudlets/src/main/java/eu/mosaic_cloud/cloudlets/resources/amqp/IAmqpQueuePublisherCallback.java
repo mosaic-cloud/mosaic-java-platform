@@ -25,13 +25,13 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  * @param <D>
  *            the type of published data
  */
-public interface IAmqpQueuePublisherCallback<S, D> extends
-		IAmqpQueueAccessorCallback<S> {
+public interface IAmqpQueuePublisherCallback<C, D> extends
+		IAmqpQueueAccessorCallback<C> {
 
 	/**
 	 * Called when the publisher receives confirmation that the message
@@ -39,24 +39,24 @@ public interface IAmqpQueuePublisherCallback<S, D> extends
 	 * 
 	 * @param <D>
 	 *            the type of the published message
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void publishSucceeded(S state,
-			AmqpQueuePublishCallbackArguments<S, D> arguments);
+	void publishSucceeded(C context,
+			AmqpQueuePublishCallbackArguments<C, D> arguments);
 
 	/**
 	 * Called when the publisher receives notification that the message
 	 * publishing could not be finished with success.
 	 * 
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void publishFailed(S state,
-			AmqpQueuePublishCallbackArguments<S, D> arguments);
+	void publishFailed(C context,
+			AmqpQueuePublishCallbackArguments<C, D> arguments);
 }

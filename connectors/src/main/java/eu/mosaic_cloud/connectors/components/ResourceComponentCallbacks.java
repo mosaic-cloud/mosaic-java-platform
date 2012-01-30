@@ -80,6 +80,9 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	private ComponentIdentifier mcGroup;
 	private ComponentIdentifier selfGroup;
 
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(ResourceComponentCallbacks.class);
+
 	/**
 	 * Creates a callback which is used by the mOSAIC platform to communicate
 	 * with the connectors.
@@ -140,7 +143,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 			if (this.status == Status.Ready) {
 				if (request.operation.equals(ConfigProperties
 						.getString("ResourceComponentCallbacks.7"))) { //$NON-NLS-1$
-					MosaicLogger.getLogger().debug("Testing AMQP connector"); //$NON-NLS-1$
+					logger.debug("Testing AMQP connector"); //$NON-NLS-1$
 					try {
 						AmqpConnectorCompTest.test();
 						succeeded = true;
@@ -154,8 +157,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					component.reply(reply);
 				} else if (request.operation.equals(ConfigProperties
 						.getString("ResourceComponentCallbacks.8"))) {
-					MosaicLogger.getLogger().debug(
-							"Testing KV connector connector"); //$NON-NLS-1$
+					logger.debug("Testing KV connector connector"); //$NON-NLS-1$
 					try {
 						KeyValueConnectorCompTest.test();
 						succeeded = true;
@@ -237,8 +239,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 			OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
 			this.pendingReferences.put(callReference, result.trigger);
 			this.status = Status.Unregistered;
-			MosaicLogger.getLogger().trace(
-					"Connector component callback initialized."); //$NON-NLS-1$
+			logger.trace("Connector component callback initialized."); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -259,9 +260,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					throw (new IllegalStateException(e));
 
 				}
-				MosaicLogger
-						.getLogger()
-						.info("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
+				logger.info("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
 				this.status = Status.Ready;
 			} else {
 				throw (new IllegalStateException());
@@ -278,8 +277,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 					&& (this.status != Status.Unregistered));
 			this.component = null;
 			this.status = Status.Terminated;
-			MosaicLogger.getLogger().info(
-					"Connector component callback terminated."); //$NON-NLS-1$
+			logger.info("Connector component callback terminated."); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -313,8 +311,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	 *         retrieving the response
 	 */
 	public OutcomeFuture<ComponentCallReply> findDriver(ResourceType type) {
-		MosaicLogger.getLogger()
-				.trace("Finding " + type.toString() + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
+		logger.trace("Finding " + type.toString() + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
 		Preconditions.checkState(this.status == Status.Ready);
 
 		ComponentCallReference callReference = ComponentCallReference.create();

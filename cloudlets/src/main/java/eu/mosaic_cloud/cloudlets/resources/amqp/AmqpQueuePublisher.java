@@ -29,7 +29,6 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -40,15 +39,15 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state object
+ * @param <C>
+ *            the type of the cloudlet context object
  * @param <D>
  *            the type of the messages published by the cloudlet
  */
-public class AmqpQueuePublisher<S, D extends Object> extends
-		AmqpQueueAccessor<S, D> implements IAmqpQueuePublisher<S, D> {
+public class AmqpQueuePublisher<C, D extends Object> extends
+		AmqpQueueAccessor<C, D> implements IAmqpQueuePublisher<C, D> {
 
-	private IAmqpQueuePublisherCallback<S, D> callback;
+	private IAmqpQueuePublisherCallback<C, D> callback;
 
 	/**
 	 * Creates a new AMQP publisher.
@@ -75,7 +74,7 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	 *            encoder used for serializing data
 	 */
 	public AmqpQueuePublisher(IConfiguration config,
-			ICloudletController<S> cloudlet, Class<D> dataClass,
+			ICloudletController<C> cloudlet, Class<D> dataClass,
 			DataEncoder<D> encoder) {
 		super(config, cloudlet, dataClass, false, encoder);
 	}
@@ -89,24 +88,24 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	 * java.lang.Object)
 	 */
 	@Override
-	public void initialize(IResourceAccessorCallback<S> callback, S state,
+	public void initialize(IResourceAccessorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this) {
 			if (callback instanceof IAmqpQueuePublisherCallback) {
-				super.initialize(callback, state, threading);
-				this.callback = (IAmqpQueuePublisherCallback<S, D>) callback;
+				super.initialize(callback, context, threading);
+				this.callback = (IAmqpQueuePublisherCallback<C, D>) callback;
 			} else {
 				IllegalArgumentException e = new IllegalArgumentException(
 						"The callback argument must be of type " //$NON-NLS-1$
 								+ IAmqpQueuePublisherCallback.class
 										.getCanonicalName());
 				@SuppressWarnings("unchecked")
-				IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
+				IAmqpQueuePublisherCallback<C, D> proxy = this.cloudlet
 						.buildCallbackInvoker(this.callback,
 								IAmqpQueuePublisherCallback.class);
-				CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, Boolean>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueuePublisher.this.cloudlet, e);
-				proxy.initializeFailed(state, arguments);
+				proxy.initializeFailed(context, arguments);
 				throw e;
 			}
 		}
@@ -121,13 +120,13 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	}
 
 	@Override
-	protected void finishRegister(IAmqpQueueAccessorCallback<S> callback) {
+	protected void finishRegister(IAmqpQueueAccessorCallback<C> callback) {
 		if (AmqpQueuePublisher.super.registered) {
 			return;
 		}
-		CallbackArguments<S> arguments = new CallbackArguments<S>(
+		CallbackArguments<C> arguments = new CallbackArguments<C>(
 				AmqpQueuePublisher.super.cloudlet);
-		this.callback.registerSucceeded(AmqpQueuePublisher.this.cloudletState,
+		this.callback.registerSucceeded(AmqpQueuePublisher.this.cloudletContext,
 				arguments);
 		synchronized (AmqpQueuePublisher.this) {
 			AmqpQueuePublisher.super.registered = true;
@@ -143,10 +142,10 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 			}
 			AmqpQueuePublisher.super.registered = false;
 		}
-		CallbackArguments<S> arguments = new CallbackArguments<S>(
+		CallbackArguments<C> arguments = new CallbackArguments<C>(
 				AmqpQueuePublisher.super.cloudlet);
 		this.callback.unregisterSucceeded(
-				AmqpQueuePublisher.this.cloudletState, arguments);
+				AmqpQueuePublisher.this.cloudletContext, arguments);
 	}
 
 	@Override
@@ -164,19 +163,19 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 			super.getConnector().publish(message, handlers,
 					this.cloudlet.getResponseInvocationHandler(cHandler));
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpQueuePublisher - published message " + data);
 		} catch (Exception e) {
 			ExceptionTracer.traceDeferred(e);
 			@SuppressWarnings("unchecked")
-			IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
+			IAmqpQueuePublisherCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueuePublisherCallback.class);
 			AmqpQueuePublishMessage<D> pMessage = new AmqpQueuePublishMessage<D>(
 					AmqpQueuePublisher.this, null, token);
-			AmqpQueuePublishCallbackArguments<S, D> arguments = new AmqpQueuePublishCallbackArguments<S, D>(
+			AmqpQueuePublishCallbackArguments<C, D> arguments = new AmqpQueuePublishCallbackArguments<C, D>(
 					AmqpQueuePublisher.this.cloudlet, pMessage);
-			proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
+			proxy.publishFailed(AmqpQueuePublisher.this.cloudletContext,
 					arguments);
 		}
 
@@ -202,19 +201,19 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 
 			super.getConnector().publish(message, handlers,
 					this.cloudlet.getResponseInvocationHandler(cHandler));
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpQueuePublisher - published message " + data);
 		} catch (Exception e) {
 			ExceptionTracer.traceDeferred(e);
 			@SuppressWarnings("unchecked")
-			IAmqpQueuePublisherCallback<S, D> proxy = this.cloudlet
+			IAmqpQueuePublisherCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueuePublisherCallback.class);
 			AmqpQueuePublishMessage<D> pMessage = new AmqpQueuePublishMessage<D>(
 					AmqpQueuePublisher.this, null, token);
-			AmqpQueuePublishCallbackArguments<S, D> arguments = new AmqpQueuePublishCallbackArguments<S, D>(
+			AmqpQueuePublishCallbackArguments<C, D> arguments = new AmqpQueuePublishCallbackArguments<C, D>(
 					AmqpQueuePublisher.this.cloudlet, pMessage);
-			proxy.publishFailed(AmqpQueuePublisher.this.cloudletState,
+			proxy.publishFailed(AmqpQueuePublisher.this.cloudletContext,
 					arguments);
 		}
 
@@ -223,26 +222,26 @@ public class AmqpQueuePublisher<S, D extends Object> extends
 	final class PublishCompletionHandler implements
 			IOperationCompletionHandler<Boolean> {
 
-		private AmqpQueuePublishCallbackArguments<S, D> arguments;
+		private AmqpQueuePublishCallbackArguments<C, D> arguments;
 
 		public PublishCompletionHandler(AmqpOutboundMessage message,
 				Object token) {
 			AmqpQueuePublishMessage<D> pMessage = new AmqpQueuePublishMessage<D>(
 					AmqpQueuePublisher.this, message, token);
-			this.arguments = new AmqpQueuePublishCallbackArguments<S, D>(
+			this.arguments = new AmqpQueuePublishCallbackArguments<C, D>(
 					AmqpQueuePublisher.super.cloudlet, pMessage);
 		}
 
 		@Override
 		public void onSuccess(Boolean result) {
 			AmqpQueuePublisher.this.callback.publishSucceeded(
-					AmqpQueuePublisher.super.cloudletState, this.arguments);
+					AmqpQueuePublisher.super.cloudletContext, this.arguments);
 		}
 
 		@Override
 		public <E extends Throwable> void onFailure(E error) {
 			AmqpQueuePublisher.this.callback.publishFailed(
-					AmqpQueuePublisher.super.cloudletState, this.arguments);
+					AmqpQueuePublisher.super.cloudletContext, this.arguments);
 		}
 	}
 

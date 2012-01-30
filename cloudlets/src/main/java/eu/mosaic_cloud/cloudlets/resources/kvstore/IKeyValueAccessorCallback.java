@@ -28,73 +28,73 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  */
-public interface IKeyValueAccessorCallback<S> extends
-		IResourceAccessorCallback<S> {
+public interface IKeyValueAccessorCallback<C> extends
+		IResourceAccessorCallback<C> {
 
 	/**
 	 * Called when the set operation completed successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void setSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void setSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the set operation completed unsuccessfully. The error can be
 	 * retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void setFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void setFailed(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the get operation completed successfully. The result of the
 	 * get operation can be retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void getSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the get operation completed unsuccessfully. The error can be
 	 * retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void getFailed(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the delete operation completed successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void deleteSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void deleteSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the delete operation completed unsuccessfully. The error can
 	 * be retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void deleteFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void deleteFailed(C context, KeyValueCallbackArguments<C> arguments);
 }

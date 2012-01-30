@@ -27,10 +27,10 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  */
-public interface IAmqpQueueAccessor<S> extends IResourceAccessor<S> {
+public interface IAmqpQueueAccessor<C> extends IResourceAccessor<C> {
 
 	/**
 	 * Register the accessor with the queuing system.

@@ -31,7 +31,6 @@ import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public class IndexerCloudlet {
@@ -42,7 +41,7 @@ public class IndexerCloudlet {
 		@Override
 		public void initialize(IndexerCloudletContext context,
 				CallbackArguments<IndexerCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"FeedIndexerCloudlet is being initialized.");
 			ICloudletController<IndexerCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -93,7 +92,7 @@ public class IndexerCloudlet {
 		@Override
 		public void initializeSucceeded(IndexerCloudletContext context,
 				CallbackArguments<IndexerCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Feeds IndexerCloudlet initialized successfully.");
 			ICloudletController<IndexerCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -130,7 +129,7 @@ public class IndexerCloudlet {
 		@Override
 		public void destroy(IndexerCloudletContext context,
 				CallbackArguments<IndexerCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Feeds IndexerCloudlet is being destroyed.");
 			ICloudletController<IndexerCloudletContext> cloudlet = arguments
 					.getCloudlet();

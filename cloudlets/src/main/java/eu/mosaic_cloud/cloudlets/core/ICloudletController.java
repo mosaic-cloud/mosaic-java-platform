@@ -52,11 +52,11 @@ public interface ICloudletController<C> extends ICloudlet {
 	 * @param callbackHandler
 	 *            the cloudlet callback handler which must handle callbacks to
 	 *            operations invoked on the accessor
-	 * @param cloudletState
+	 * @param cloudletContext
 	 *            the cloudlet context
 	 */
 	void initializeResource(IResourceAccessor<C> accessor,
-			IResourceAccessorCallback<C> callbackHandler, C cloudletState);
+			IResourceAccessorCallback<C> callbackHandler, C cloudletContext);
 
 	/**
 	 * Destroys the resource accessor for a given resource.

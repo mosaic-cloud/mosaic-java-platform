@@ -44,7 +44,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 public abstract class AbstractDriverStub implements SessionCallbacks {
 
 	protected IConfiguration configuration;
-
+	protected MosaicLogger logger;
 	private final ResponseTransmitter transmitter;
 	private final IResourceDriver driver;
 	private final List<Session> sessions;
@@ -71,6 +71,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 			ZeroMqChannel commChannel) {
 		super();
 		this.configuration = config;
+		this.logger = MosaicLogger.createLogger(this);
 		this.sessions = new ArrayList<Session>();
 		this.commChannel = commChannel;
 
@@ -87,7 +88,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 			this.driver.destroy();
 			this.transmitter.destroy();
 			this.commChannel.terminate(500);
-			MosaicLogger.getLogger().trace("DriverStub destroyed.");
+			this.logger.trace("DriverStub destroyed.");
 		}
 	}
 
@@ -140,14 +141,14 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	@Override
 	public CallbackReference destroyed(Session session) {
 		// handle session destroyed
-		MosaicLogger.getLogger().trace("Session destroyed.");
+		this.logger.trace("Session destroyed.");
 		this.sessions.remove(session);
 		return null;
 	}
 
 	@Override
 	public CallbackReference failed(Session session, Throwable exception) {
-		MosaicLogger.getLogger().error("Session failed");
+		this.logger.error("Session failed");
 		return null;
 	}
 

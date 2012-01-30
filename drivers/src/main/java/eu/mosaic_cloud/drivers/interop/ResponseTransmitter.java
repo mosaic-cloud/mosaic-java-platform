@@ -31,11 +31,17 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
  */
 public class ResponseTransmitter {
 
+	protected MosaicLogger logger;
+
+	public ResponseTransmitter() {
+		this.logger = MosaicLogger.createLogger(this);
+	}
+
 	/**
 	 * Destroys the transmitter.
 	 */
 	public void destroy() {
-		MosaicLogger.getLogger().trace("ResponseTransmitter destroyed.");
+		this.logger.trace("ResponseTransmitter destroyed.");
 	}
 
 	/**

@@ -64,7 +64,8 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12/11 2:56 PM
+public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
+													// 10/12/11 2:56 PM
 
 	private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub>();
 
@@ -100,13 +101,13 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 	public static MemcachedStub create(IConfiguration config,
 			ZeroMqChannel channel, ThreadingContext threading) {
 		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
+		MosaicLogger sLogger = MosaicLogger.createLogger(MemcachedStub.class);
 		MemcachedStub stub;
 		synchronized (AbstractDriverStub.LOCK) {
 			stub = MemcachedStub.stubs.get(cData);
 			try {
 				if (stub == null) {
-					MosaicLogger.getLogger().trace(
-							"MemcachedStub: create new stub.");
+					sLogger.trace("MemcachedStub: create new stub.");
 
 					MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
 					MemcachedDriver driver = MemcachedDriver.create(config,
@@ -118,8 +119,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 					channel.accept(KeyValueSession.DRIVER, stub);
 					channel.accept(MemcachedSession.DRIVER, stub);
 				} else {
-					MosaicLogger.getLogger().trace(
-							"MemcachedStub: use existing stub.");
+					sLogger.trace("MemcachedStub: use existing stub.");
 					incDriverReference(stub);
 				}
 			} catch (IOException e) {
@@ -149,7 +149,11 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void startOperation(Message message, Session session) // NOPMD by georgiana on 10/12/11 2:55 PM
+	protected void startOperation(Message message, Session session) // NOPMD by
+																	// georgiana
+																	// on
+																	// 10/12/11
+																	// 2:55 PM
 			throws IOException, ClassNotFoundException {
 		Preconditions
 				.checkArgument((message.specification instanceof KeyValueMessage)
@@ -162,8 +166,19 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 		IResult<Boolean> resultStore;
 		DriverOperationFinishedHandler callback;
 
-		MemcachedDriver driver = super.getDriver(MemcachedDriver.class); // NOPMD by georgiana on 10/12/11 2:54 PM
-		String mssgPrefix = "MemcachedStub - Received request for "; // NOPMD by georgiana on 10/12/11 2:54 PM
+		MemcachedDriver driver = super.getDriver(MemcachedDriver.class); // NOPMD
+																			// by
+																			// georgiana
+																			// on
+																			// 10/12/11
+																			// 2:54
+																			// PM
+		String mssgPrefix = "MemcachedStub - Received request for "; // NOPMD by
+																		// georgiana
+																		// on
+																		// 10/12/11
+																		// 2:54
+																		// PM
 		if (message.specification instanceof KeyValueMessage) {
 			// handle set with exp
 			boolean handle = false; // NOPMD by georgiana on 10/12/11 2:54 PM
@@ -174,8 +189,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 					token = setRequest.getToken();
 					key = setRequest.getKey();
 
-					MosaicLogger.getLogger().trace(
-							mssgPrefix + " SET key: " + key);
+					this.logger.trace(mssgPrefix + " SET key: " + key);
 
 					exp = setRequest.getExpTime();
 					data = setRequest.getValue().toByteArray();
@@ -192,9 +206,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 				KeyValuePayloads.GetRequest getRequest = (GetRequest) message.payload;
 				if (getRequest.getKeyCount() > 1) {
 					token = getRequest.getToken();
-					MosaicLogger.getLogger().trace(
-							mssgPrefix + "GET_BULK  - request id: "
-									+ token.getMessageId());
+					this.logger.trace(mssgPrefix + "GET_BULK  - request id: "
+							+ token.getMessageId());
 
 					callback = new DriverOperationFinishedHandler(token,
 							session, MemcachedDriver.class,
@@ -223,8 +236,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 			token = addRequest.getToken();
 			key = addRequest.getKey();
 
-			MosaicLogger.getLogger().trace(
-					mssgPrefix + mcMessage.toString() + " key: " + key); // NOPMD by georgiana on 10/12/11 2:56 PM
+			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+					+ key); // NOPMD by georgiana on 10/12/11 2:56 PM
 
 			exp = addRequest.getExpTime();
 			data = addRequest.getValue().toByteArray();
@@ -240,10 +253,11 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 			token = appendRequest.getToken();
 			key = appendRequest.getKey();
 
-			MosaicLogger.getLogger().trace(
-					mssgPrefix + mcMessage.toString() + " key: " + key);
+			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+					+ key);
 
-			exp = appendRequest.getExpTime(); // NOPMD by georgiana on 10/12/11 2:54 PM
+			exp = appendRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
+												// 2:54 PM
 			data = appendRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,
@@ -257,10 +271,11 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 			token = prependRequest.getToken();
 			key = prependRequest.getKey();
 
-			MosaicLogger.getLogger().trace(
-					mssgPrefix + mcMessage.toString() + " key: " + key);
+			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+					+ key);
 
-			exp = prependRequest.getExpTime(); // NOPMD by georgiana on 10/12/11 2:55 PM
+			exp = prependRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
+												// 2:55 PM
 			data = prependRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,
@@ -274,8 +289,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 			token = replaceRequest.getToken();
 			key = replaceRequest.getKey();
 
-			MosaicLogger.getLogger().trace(
-					mssgPrefix + mcMessage.toString() + " key: " + key);
+			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+					+ key);
 
 			exp = replaceRequest.getExpTime();
 			data = replaceRequest.getValue().toByteArray();
@@ -291,12 +306,12 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on 10/12
 			token = casRequest.getToken();
 			key = casRequest.getKey();
 
-			MosaicLogger.getLogger().trace(
-					mssgPrefix + mcMessage.toString() + " key: " + key
-							+ " - request id: " + token.getMessageId()
-							+ " client id: " + token.getClientId());
+			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+					+ key + " - request id: " + token.getMessageId()
+					+ " client id: " + token.getClientId());
 
-			exp = casRequest.getExpTime(); // NOPMD by georgiana on 10/12/11 2:55 PM
+			exp = casRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
+											// 2:55 PM
 			data = casRequest.getValue().toByteArray();
 
 			callback = new DriverOperationFinishedHandler(token, session,

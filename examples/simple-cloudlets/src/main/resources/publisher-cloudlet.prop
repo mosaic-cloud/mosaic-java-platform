@@ -1,5 +1,5 @@
-cloudlet.main_class=eu.mosaic_cloud.cloudlets.tests.PublisherCloudlet$LifeCycleHandler
-cloudlet.context_class=eu.mosaic_cloud.cloudlets.tests.PublisherCloudlet$PublisherCloudletContext
+cloudlet.main_class=eu.mosaic_cloud.examples.cloudlets.simple.PublisherCloudlet$LifeCycleHandler
+cloudlet.context_class=eu.mosaic_cloud.examples.cloudlets.simple.PublisherCloudlet$PublisherCloudletContext
 cloudlet.resource_file=publisher-cloudlet.prop
 
 queue.publisher.amqp.exchange=simple-exchange

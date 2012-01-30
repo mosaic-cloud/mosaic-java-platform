@@ -24,26 +24,26 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this callback
+ * @param <C>
+ *            the type of the context of the cloudlet using this callback
  * @param <D>
  *            the type of published data
  */
-public class DefaultAmqpPublisherCallback<S, D> extends
-		DefaultAmqpAccessorCallback<S> implements
-		IAmqpQueuePublisherCallback<S, D> {
+public class DefaultAmqpPublisherCallback<C, D> extends
+		DefaultAmqpAccessorCallback<C> implements
+		IAmqpQueuePublisherCallback<C, D> {
 
 	@Override
-	public void publishSucceeded(S state,
-			AmqpQueuePublishCallbackArguments<S, D> arguments) {
+	public void publishSucceeded(C context,
+			AmqpQueuePublishCallbackArguments<C, D> arguments) {
 		this.handleUnhandledCallback(arguments, "Publish Succeeded", true,
 				false);
 
 	}
 
 	@Override
-	public void publishFailed(S state,
-			AmqpQueuePublishCallbackArguments<S, D> arguments) {
+	public void publishFailed(C context,
+			AmqpQueuePublishCallbackArguments<C, D> arguments) {
 		this.handleUnhandledCallback(arguments, "Publish Failed", false, false);
 
 	}

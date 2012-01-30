@@ -44,13 +44,15 @@ public class AmqpConnectorCompTest {
 
 	private IConfiguration configuration;
 	private AmqpConnector connector;
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(AmqpConnectorCompTest.class);
 
 	public AmqpConnectorCompTest() throws Throwable {
 		this.configuration = PropertyTypeConfiguration.create(
 				AmqpConnectorCompTest.class.getClassLoader(),
 				"amqp-conn-test.prop");
 
-		MosaicLogger.getLogger().info(
+		logger.info(
 				"AMQP Connector test: configuration loaded. "
 						+ this.configuration);
 		BasicThreadingSecurityManager.initialize();
@@ -64,14 +66,14 @@ public class AmqpConnectorCompTest {
 	public void destroy() throws Throwable {
 		if (this.connector != null) {
 			this.connector.destroy();
-			MosaicLogger.getLogger().info(
+			logger.info(
 					"AMQP Connector test: connector destroyed.");
 		}
 	}
 
 	public void testConnector() throws InterruptedException, ExecutionException {
 		Preconditions.checkNotNull(this.connector);
-		MosaicLogger.getLogger()
+		logger
 				.info("AMQP Connector test: connector created.");
 	}
 
@@ -93,7 +95,7 @@ public class AmqpConnectorCompTest {
 		IResult<Boolean> r = this.connector.declareExchange(exchange,
 				AmqpExchangeType.DIRECT, false, false, false, handlers, null);
 		Preconditions.checkState(r.getResult(), "ERROR: exchange not declared");
-		MosaicLogger.getLogger()
+		logger
 				.info("AMQP Connector test: exchange declared.");
 	}
 
@@ -105,7 +107,7 @@ public class AmqpConnectorCompTest {
 		IResult<Boolean> r = this.connector.declareQueue(queue, true, false,
 				true, false, handlers, null);
 		Preconditions.checkState(r.getResult(), "ERROR: queue not declared");
-		MosaicLogger.getLogger().info("AMQP Connector test: queue declared.");
+		logger.info("AMQP Connector test: queue declared.");
 	}
 
 	public void testBindQueue() throws InterruptedException, ExecutionException {
@@ -120,7 +122,7 @@ public class AmqpConnectorCompTest {
 				routingKey, handlers, null);
 
 		Preconditions.checkState(r.getResult(), "ERROR: queue not bounded");
-		MosaicLogger.getLogger()
+		logger
 				.info("AMQP Connector test: connector bounded.");
 	}
 
@@ -169,7 +171,7 @@ public class AmqpConnectorCompTest {
 		 */
 		@Override
 		public void resourceNotFound() {
-			MosaicLogger.getLogger().error("Callback - Resource not found");
+			logger.error("Callback - Resource not found");
 		}
 	}
 

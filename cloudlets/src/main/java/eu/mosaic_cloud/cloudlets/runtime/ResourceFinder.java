@@ -35,6 +35,8 @@ import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 public class ResourceFinder {
 
 	private static ResourceFinder finder;
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(ResourceFinder.class);
 
 	private ResourceFinder() {
 
@@ -66,7 +68,7 @@ public class ResourceFinder {
 		boolean found = false;
 
 		channel = ContainerComponentCallbacks.callbacks.findDriver(type);
-		MosaicLogger.getLogger().trace(
+		logger.trace(
 				"ResourceFinder - found resource " + channel);
 		if (channel != null) {
 			String prefix = (configuration.getRootIdentifier().getIdentifier() + ".")
@@ -83,7 +85,7 @@ public class ResourceFinder {
 
 			configuration.addParameter(id1, channel.getChannelIdentifier());
 			configuration.addParameter(id2, channel.getChannelEndpoint());
-			// MosaicLogger.getLogger().debug(
+			// logger.debug(
 			// "ResourceFinder - config: " + configuration);
 			found = true;
 		}

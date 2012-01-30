@@ -45,7 +45,13 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * @author Carmine Di Biase, Georgiana Macariu
  * 
  */
-public final class RiakPBOperationFactory implements IOperationFactory { // NOPMD by georgiana on 10/12/11 4:49 PM
+public final class RiakPBOperationFactory implements IOperationFactory { // NOPMD
+																			// by
+																			// georgiana
+																			// on
+																			// 10/12/11
+																			// 4:49
+																			// PM
 
 	private final RiakClient riakcl;
 	private final String bucket;
@@ -70,12 +76,14 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
 	 */
 	public static RiakPBOperationFactory getFactory(String riakHost, int port,
 			String bucket) {
-		RiakPBOperationFactory factory = null; // NOPMD by georgiana on 10/12/11 4:49 PM
+		RiakPBOperationFactory factory = null; // NOPMD by georgiana on 10/12/11
+												// 4:49 PM
 		try {
 			factory = new RiakPBOperationFactory(riakHost, port, bucket);
-			MosaicLogger.getLogger().trace(
-					"Created Riak PB factory for " + riakHost + ":" + port
-							+ " bucket " + bucket);
+			MosaicLogger sLogger = MosaicLogger
+					.createLogger(RiakRestOperationFactory.class);
+			sLogger.trace("Created Riak PB factory for " + riakHost + ":"
+					+ port + " bucket " + bucket);
 		} catch (IOException e) {
 			ExceptionTracer.traceIgnored(e);
 		}
@@ -83,11 +91,21 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
 	}
 
 	@Override
-	public IOperation<?> getOperation(final IOperationType type, // NOPMD by georgiana on 10/12/11 4:49 PM
+	public IOperation<?> getOperation(final IOperationType type, // NOPMD by
+																	// georgiana
+																	// on
+																	// 10/12/11
+																	// 4:49 PM
 			Object... parameters) {
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
-			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:49 PM
+			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
+																			// by
+																			// georgiana
+																			// on
+																			// 10/12/11
+																			// 4:49
+																			// PM
 
 						@Override
 						public Object call()
@@ -103,19 +121,29 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
 		try {
 			switch (mType) {
 			case SET:
-				operation = buildSetOperation(parameters); // NOPMD by georgiana on 10/12/11 4:49 PM
+				operation = buildSetOperation(parameters); // NOPMD by georgiana
+															// on 10/12/11 4:49
+															// PM
 				break;
 			case GET:
-				operation = buildGetOperation(parameters); // NOPMD by georgiana on 10/12/11 4:49 PM
+				operation = buildGetOperation(parameters); // NOPMD by georgiana
+															// on 10/12/11 4:49
+															// PM
 				break;
 			case LIST:
-				operation = buildListOperation(); // NOPMD by georgiana on 10/12/11 4:49 PM
+				operation = buildListOperation(); // NOPMD by georgiana on
+													// 10/12/11 4:49 PM
 				break;
 			case DELETE:
-				operation = buildDeleteOperation(parameters); // NOPMD by georgiana on 10/12/11 4:49 PM
+				operation = buildDeleteOperation(parameters); // NOPMD by
+																// georgiana on
+																// 10/12/11 4:49
+																// PM
 				break;
 			default:
-				operation = new GenericOperation<Object>( // NOPMD by georgiana on 10/12/11 4:48 PM
+				operation = new GenericOperation<Object>( // NOPMD by georgiana
+															// on 10/12/11 4:48
+															// PM
 						new Callable<Object>() {
 
 							@Override
@@ -130,10 +158,19 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
 			}
 		} catch (final Exception e) {
 			ExceptionTracer.traceDeferred(e);
-			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:48 PM
+			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
+																				// by
+																				// georgiana
+																				// on
+																				// 10/12/11
+																				// 4:48
+																				// PM
 
 						@Override
-						public Object call() throws Exception { // NOPMD by georgiana on 10/12/11 4:49 PM
+						public Object call() throws Exception { // NOPMD by
+																// georgiana on
+																// 10/12/11 4:49
+																// PM
 							throw e;
 						}
 

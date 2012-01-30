@@ -23,7 +23,6 @@ import eu.mosaic_cloud.cloudlets.container.CloudletContainerLauncher;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public class HelloWorldCloudlet {
 
@@ -33,14 +32,14 @@ public class HelloWorldCloudlet {
 		@Override
 		public void initialize(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"HelloWorld cloudlet is initializing...");
 		}
 
 		@Override
 		public void initializeSucceeded(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"HelloWorld cloudlet was initialized successfully.");
 			System.out.println("Hello world!");
 			ICloudletController<HelloCloudletContext> cloudlet = arguments
@@ -51,14 +50,14 @@ public class HelloWorldCloudlet {
 		@Override
 		public void destroy(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"HelloWorld cloudlet is being destroyed.");
 		}
 
 		@Override
 		public void destroySucceeded(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"HelloWorld cloudlet was destroyed successfully.");
 		}
 

@@ -48,6 +48,8 @@ public class ConnectorProxy implements SessionCallbacks {
 	private final ResponseHandlerMap handlerMap;
 	private final AbstractConnectorReactor responseReactor;
 
+	protected MosaicLogger logger;
+
 	/**
 	 * Creates a proxy for a resource.
 	 * 
@@ -72,6 +74,8 @@ public class ConnectorProxy implements SessionCallbacks {
 		this.handlerMap = new ResponseHandlerMap();
 		this.responseReactor = reactor;
 		this.responseReactor.setDispatcher(this.handlerMap);
+
+		this.logger = MosaicLogger.createLogger(this);
 	}
 
 	protected void connect(String driverIdentifier,
@@ -89,7 +93,7 @@ public class ConnectorProxy implements SessionCallbacks {
 			this.responseReactor.destroy();
 			this.commChannel.terminate(500);
 		}
-		MosaicLogger.getLogger().trace("ConnectorProxy destroyed.");
+		this.logger.trace("ConnectorProxy destroyed.");
 	}
 
 	/**
@@ -103,9 +107,9 @@ public class ConnectorProxy implements SessionCallbacks {
 	 */
 	protected void sendRequest(Session session, Message request)
 			throws IOException {
-		//		synchronized (this) {
+		// synchronized (this) {
 		session.send(request);
-		//		}
+		// }
 	}
 
 	/**

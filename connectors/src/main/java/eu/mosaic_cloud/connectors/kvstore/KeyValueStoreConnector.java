@@ -55,14 +55,18 @@ public class KeyValueStoreConnector<T extends Object> implements
 	private final ThreadingContext threading;
 	private final ExecutorService executor;
 	protected DataEncoder<?> dataEncoder;
+	protected MosaicLogger logger;
 
 	protected KeyValueStoreConnector(KeyValueProxy<T> proxy,
 			ThreadingContext threading, int noThreads, DataEncoder<T> encoder) {
 		this.proxy = proxy;
 		this.threading = threading;
-		this.executor = this.threading.createFixedThreadPool(
-				ThreadConfiguration.create(this, "operations", true), noThreads);
+		this.executor = this.threading
+				.createFixedThreadPool(
+						ThreadConfiguration.create(this, "operations", true),
+						noThreads);
 		this.dataEncoder = encoder;
+		this.logger = MosaicLogger.createLogger(this);
 	}
 
 	/**
@@ -101,9 +105,10 @@ public class KeyValueStoreConnector<T extends Object> implements
 		KeyValueProxy<T> proxy = KeyValueProxy
 				.create(config, connectorIdentifier, driverIdentifier, bucket,
 						channel, encoder);
-		MosaicLogger.getLogger().debug(
-				"KeyValueConnector connecting to " + driverChannel + " bucket "
-						+ bucket);
+		MosaicLogger sLogger = MosaicLogger
+				.createLogger(KeyValueStoreConnector.class);
+		sLogger.debug("KeyValueConnector connecting to " + driverChannel
+				+ " bucket " + bucket);
 		return new KeyValueStoreConnector<T>(proxy, threading, noThreads,
 				encoder);
 	}
@@ -117,7 +122,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 	public void destroy() throws Throwable {
 		this.proxy.destroy();
 		this.executor.shutdown();
-		MosaicLogger.getLogger().trace("KeyValueStoreConnector destroyed.");
+		this.logger.trace("KeyValueStoreConnector destroyed.");
 	}
 
 	@Override

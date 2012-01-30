@@ -93,6 +93,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	public static ContainerComponentCallbacks callbacks = null;
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(ContainerComponentCallbacks.class);
 
 	private Status status;
 	private Component component;
@@ -111,11 +113,11 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	 */
 	public ContainerComponentCallbacks() {
 		super();
-		this.threading = Threading.getCurrentContext();
+		this.threading = Threading.getDefaultContext();
 		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ContainerComponentCallbacks.callbacks = this;
-		//		try {
+		// try {
 		IConfiguration configuration = PropertyTypeConfiguration.create(
 				ContainerComponentCallbacks.class.getClassLoader(),
 				"resource-container.properties"); //$NON-NLS-1$
@@ -142,9 +144,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		synchronized (this) {
 			this.status = Status.Created;
 		}
-		//		} catch (Throwable e) {
-		//			ExceptionTracer.traceIgnored(e);
-		//		}
+		// } catch (Throwable e) {
+		// ExceptionTracer.traceIgnored(e);
+		// }
 	}
 
 	@Override
@@ -164,10 +166,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					ClassLoader loader = getCloudletClassLoader(operands.get(0)
 							.toString());
 					for (int i = 1; i < operands.size(); i++) {
-						MosaicLogger.getLogger().debug(
-								"Loading cloudlet in JAR " + operands.get(0)
-										+ " with configuration "
-										+ operands.get(i));
+						logger.debug("Loading cloudlet in JAR "
+								+ operands.get(0) + " with configuration "
+								+ operands.get(i));
 						containers = startCloudlet(loader, operands.get(i)
 								.toString());
 						if (containers != null) {
@@ -182,7 +183,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				}
 				// else if (request.operation.equals(ConfigProperties
 				//						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
-				// MosaicLogger.getLogger().debug(
+				// logger.debug(
 				// "mOSAIC container - running test cloudlets");
 				// container = TestRunner.runHelloWorld();
 				// if (container != null)
@@ -207,9 +208,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		final IConfiguration configuration = PropertyTypeConfiguration.create(
 				loader, configurationFile);
 		if (configuration == null) {
-			MosaicLogger.getLogger().error(
-					"Cloudlet configuration file " + configurationFile
-							+ " is missing.");
+			logger.error("Cloudlet configuration file " + configurationFile
+					+ " is missing.");
 			return null;
 		}
 		int noInstances = ConfigUtils.resolveParameter(configuration,
@@ -223,9 +223,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			try {
 				container.start();
 				containers.add(container);
-				MosaicLogger.getLogger().trace(
-						"Starting cloudlet with config file "
-								+ configurationFile);
+				logger.trace("Starting cloudlet with config file "
+						+ configurationFile);
 			} catch (CloudletException e) {
 				ExceptionTracer.traceIgnored(e);
 			}
@@ -254,8 +253,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						throw (new IllegalArgumentException(String.format(
 								"invalid class-path URL `%s`", classpathPart)));
 					}
-					MosaicLogger.getLogger().trace(
-							"Loading cloudlet from " + classpathUrl + "...");
+					logger.trace("Loading cloudlet from " + classpathUrl
+							+ "...");
 					classLoaderUrls.add(classpathUrl);
 				}
 			}
@@ -289,7 +288,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	public void terminate() {
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component != null);
-			//			System.out.println("ContainerComponentCallbacks.terminate()");
+			// System.out.println("ContainerComponentCallbacks.terminate()");
 			this.component.terminate();
 		}
 	}
@@ -307,8 +306,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	@Override
 	public CallbackReference failed(Component component, Throwable exception) {
-		MosaicLogger.getLogger().trace(
-				"Component container failed " + exception.getMessage());
+		logger.trace("Component container failed " + exception.getMessage());
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState(this.status != Status.Terminated);
@@ -336,8 +334,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			this.component.register(this.selfGroup, callReference);
 			OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
 			this.pendingReferences.put(callReference, result.trigger);
-			MosaicLogger.getLogger().trace(
-					"Container component callback initialized."); //$NON-NLS-1$
+			logger.trace("Container component callback initialized."); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -358,9 +355,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 					throw (new IllegalStateException(e));
 				}
 				this.status = Status.Ready;
-				MosaicLogger
-						.getLogger()
-						.info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
+				logger.info(
+						"Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
 
 				if (CloudletContainerParameters.configFile != null) {
 					ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
@@ -370,7 +366,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 						this.cloudletRunners.addAll(containers);
 					}
 				} else {
-					MosaicLogger.getLogger().error("Missing config file");
+					logger.error("Missing config file");
 				}
 			} else {
 				throw (new IllegalStateException());
@@ -381,8 +377,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	@Override
 	public CallbackReference terminated(Component component) {
-		MosaicLogger.getLogger().info(
-				"Container component callback terminating.");
+		logger.info("Container component callback terminating.");
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState(this.status != Status.Terminated);
@@ -393,8 +388,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			}
 			this.component = null;
 			this.status = Status.Terminated;
-			MosaicLogger.getLogger().info(
-					"Container component callback terminated."); //$NON-NLS-1$
+			logger.info("Container component callback terminated."); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -428,8 +422,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	 *         retrieving the response
 	 */
 	public ChannelData findDriver(ResourceType type) {
-		MosaicLogger.getLogger()
-				.trace("Finding " + type.toString() + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
+		logger.trace("Finding " + type.toString() + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
 		Preconditions.checkState(this.status == Status.Ready);
 
 		ComponentCallReference callReference = ComponentCallReference.create();
@@ -466,8 +459,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
 				channel = new ChannelData(outcome.get("channelIdentifier"),
 						outcome.get("channelEndpoint"));
-				MosaicLogger.getLogger().debug(
-						"Found driver on channel " + channel);
+				logger.debug("Found driver on channel " + channel);
 			}
 		} catch (InterruptedException e) {
 			ExceptionTracer.traceIgnored(e);

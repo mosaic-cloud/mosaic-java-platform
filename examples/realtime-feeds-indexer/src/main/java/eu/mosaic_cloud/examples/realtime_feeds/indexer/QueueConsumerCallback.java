@@ -26,7 +26,6 @@ import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArgument
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpConsumerCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public class QueueConsumerCallback extends
 		DefaultAmqpConsumerCallback<IndexerCloudletContext, JSONObject> {
@@ -34,7 +33,7 @@ public class QueueConsumerCallback extends
 	@Override
 	public void registerSucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
-		MosaicLogger.getLogger().info(
+		this.logger.info(
 				"Index Message consumer registered successfully.");
 	}
 

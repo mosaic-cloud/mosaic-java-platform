@@ -36,7 +36,6 @@ import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 
 public class PongCloudlet {
@@ -47,8 +46,7 @@ public class PongCloudlet {
 		@Override
 		public void initialize(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger()
-					.info("Pong Cloudlet is being initialized.");
+			this.logger.info("Pong Cloudlet is being initialized.");
 			ICloudletController<PongCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			IConfiguration configuration = cloudlet.getConfiguration();
@@ -73,8 +71,7 @@ public class PongCloudlet {
 		@Override
 		public void initializeSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet initialized successfully.");
+			this.logger.info("Pong Cloudlet initialized successfully.");
 			ICloudletController<PongCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.initializeResource(context.kvStore,
@@ -89,14 +86,13 @@ public class PongCloudlet {
 		@Override
 		public void destroy(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info("Pong Cloudlet is being destroyed.");
+			this.logger.info("Pong Cloudlet is being destroyed.");
 		}
 
 		@Override
 		public void destroySucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet was destroyed successfully.");
+			this.logger.info("Pong Cloudlet was destroyed successfully.");
 		}
 
 	}
@@ -107,8 +103,7 @@ public class PongCloudlet {
 		@Override
 		public void initializeSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger
-					.getLogger()
+			this.logger
 					.info("Pong Cloudlet - KeyValue accessor initialized successfully");
 		}
 
@@ -124,8 +119,7 @@ public class PongCloudlet {
 		@Override
 		public void getSucceeded(PongCloudletContext context,
 				KeyValueCallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet - key value fetch data succeeded");
+			this.logger.info("Pong Cloudlet - key value fetch data succeeded");
 
 			// send reply to Ping Cloudlet
 			PongMessage pong = new PongMessage(arguments.getKey(),
@@ -149,15 +143,14 @@ public class PongCloudlet {
 		@Override
 		public void registerSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet consumer registered successfully.");
+			this.logger.info("Pong Cloudlet consumer registered successfully.");
 		}
 
 		@Override
 		public void unregisterSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet consumer unregistered successfully.");
+			this.logger
+					.info("Pong Cloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<PongCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -175,8 +168,8 @@ public class PongCloudlet {
 		@Override
 		public void destroySucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet consumer was destroyed successfully.");
+			this.logger
+					.info("Pong Cloudlet consumer was destroyed successfully.");
 			if ((context.publisher == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();
 			}
@@ -198,9 +191,8 @@ public class PongCloudlet {
 
 			// retrieve message data
 			PingMessage data = message.getData();
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet received fetch request for key "
-							+ data.getKey());
+			this.logger.info("Pong Cloudlet received fetch request for key "
+					+ data.getKey());
 
 			// get value from key value store
 			context.kvStore.get(data.getKey(), null);
@@ -216,15 +208,15 @@ public class PongCloudlet {
 		@Override
 		public void registerSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet publisher registered successfully.");
+			this.logger
+					.info("Pong Cloudlet publisher registered successfully.");
 		}
 
 		@Override
 		public void unregisterSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet publisher unregistered successfully.");
+			this.logger
+					.info("Pong Cloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<PongCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -242,8 +234,8 @@ public class PongCloudlet {
 		@Override
 		public void destroySucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
-					"Pong Cloudlet publisher was destroyed successfully.");
+			this.logger
+					.info("Pong Cloudlet publisher was destroyed successfully.");
 			context.publisher = null;
 			if ((context.consumer == null) && (context.kvStore == null)) {
 				arguments.getCloudlet().destroy();

@@ -32,7 +32,6 @@ import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpPublisherCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
 public class SimpleLoggingCloudlet {
@@ -43,7 +42,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void initialize(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet is being initialized.");
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -64,7 +63,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void initializeSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet initialized successfully.");
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -78,14 +77,14 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void destroy(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger()
+			this.logger
 					.info("LoggingCloudlet is being destroyed.");
 		}
 
 		@Override
 		public void destroySucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet was destroyed successfully.");
 		}
 
@@ -97,7 +96,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void registerSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet consumer registered successfully.");
 			context.consumerRunning = true;
 		}
@@ -105,7 +104,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void unregisterSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
@@ -125,7 +124,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void destroySucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet consumer was destroyed successfully.");
 			context.consumer = null;
 			if (context.publisher == null) {
@@ -147,7 +146,7 @@ public class SimpleLoggingCloudlet {
 			AmqpQueueConsumeMessage<LoggingData> message = arguments
 					.getMessage();
 			LoggingData data = message.getData();
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet received logging message for user "
 							+ data.user);
 
@@ -168,7 +167,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void registerSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet publisher registered successfully.");
 			context.publisherRunning = true;
 		}
@@ -176,7 +175,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void unregisterSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
@@ -196,7 +195,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public void destroySucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet publisher was destroyed successfully.");
 			context.publisher = null;
 			if (context.consumer == null) {

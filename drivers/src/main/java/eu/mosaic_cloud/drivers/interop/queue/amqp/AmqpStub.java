@@ -67,7 +67,8 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/12/11 3:32 PM
+public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
+													// 10/12/11 3:32 PM
 
 	private static AmqpStub stub;
 
@@ -100,6 +101,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 	 */
 	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel,
 			ThreadingContext threading) {
+		MosaicLogger sLogger = MosaicLogger.createLogger(AmqpStub.class);
 		synchronized (AbstractDriverStub.LOCK) {
 			if (AmqpStub.stub == null) {
 				AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
@@ -108,9 +110,9 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 						channel);
 				incDriverReference(AmqpStub.stub);
 				channel.accept(AmqpSession.DRIVER, AmqpStub.stub);
-				MosaicLogger.getLogger().trace("AmqpStub: created new stub."); //$NON-NLS-1$
+				sLogger.trace("AmqpStub: created new stub."); //$NON-NLS-1$
 			} else {
-				MosaicLogger.getLogger().trace("AmqpStub: use existing stub."); //$NON-NLS-1$
+				sLogger.trace("AmqpStub: use existing stub."); //$NON-NLS-1$
 				incDriverReference(AmqpStub.stub);
 			}
 		}
@@ -127,7 +129,11 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected void startOperation(Message message, Session session) // NOPMD by georgiana on 10/12/11 3:31 PM
+	protected void startOperation(Message message, Session session) // NOPMD by
+																	// georgiana
+																	// on
+																	// 10/12/11
+																	// 3:31 PM
 			throws IOException, ClassNotFoundException {
 		Preconditions
 				.checkArgument(message.specification instanceof AmqpMessage);
@@ -146,14 +152,17 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 		String consumer;
 		String routingKey;
 		byte[] dataBytes;
-		AmqpDriver driver = super.getDriver(AmqpDriver.class); // NOPMD by georgiana on 10/12/11 3:24 PM
+		AmqpDriver driver = super.getDriver(AmqpDriver.class); // NOPMD by
+																// georgiana on
+																// 10/12/11 3:24
+																// PM
 
 		switch (amqpMessage) {
 		case ACCESS:
-			MosaicLogger.getLogger().trace("Received initiation message"); //$NON-NLS-1$
+			this.logger.trace("Received initiation message"); //$NON-NLS-1$
 			break;
 		case ABORTED:
-			MosaicLogger.getLogger().trace("Received termination message"); //$NON-NLS-1$
+			this.logger.trace("Received termination message"); //$NON-NLS-1$
 			break;
 		case DECL_EXCHANGE_REQUEST:
 			AmqpPayloads.DeclareExchangeRequest declExchange = (DeclareExchangeRequest) message.payload;
@@ -164,7 +173,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			autoDelete = declExchange.getAutoDelete();
 			passive = declExchange.getPassive();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpStub - Received request for DECLARE EXCHANGE ");//$NON-NLS-1$
 
 			// execute operation
@@ -185,7 +194,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			autoDelete = declQueue.getAutoDelete();
 			passive = declQueue.getPassive();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpStub - Received request for DECLARE QUEUE");//$NON-NLS-1$
 
 			// execute operation
@@ -203,7 +212,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			queue = bindQueue.getQueue();
 			routingKey = bindQueue.getRoutingKey();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpStub - Received request for BIND QUEUE");//$NON-NLS-1$
 
 			// execute operation
@@ -238,7 +247,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 					replyTo, null, publish.getContentType(), correlationId,
 					null);
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpStub - Received request for PUBLISH"); //$NON-NLS-1$
 
 			// execute operation
@@ -259,7 +268,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			dataBytes = cop.getExtra().toByteArray();
 			Object extra = SerDesUtils.toObject(dataBytes);
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpStub - Received request for CONSUME"); //$NON-NLS-1$
 
 			// execute operation
@@ -277,7 +286,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			queue = gop.getQueue();
 			autoAck = gop.getAutoAck();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpStub - Received request for GET"); //$NON-NLS-1$
 
 			// execute operation
@@ -293,7 +302,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			token = clop.getToken();
 			consumer = clop.getConsumer();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpStub - Received request for CANCEL"); //$NON-NLS-1$
 
 			// execute operation
@@ -308,7 +317,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 			long delivery = aop.getDelivery();
 			boolean multiple = aop.getMultiple();
 
-			MosaicLogger.getLogger().trace("AmqpStub - Received  ACK "); //$NON-NLS-1$ 
+			this.logger.trace("AmqpStub - Received  ACK "); //$NON-NLS-1$ 
 
 			// execute operation
 			DriverOperationFinishedHandler ackHandler = new DriverOperationFinishedHandler(
@@ -322,7 +331,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on 10/1
 					null, session);
 			driver.handleUnsupportedOperationError(amqpMessage.toString(),
 					errHandler);
-			MosaicLogger.getLogger().error(
+			this.logger.error(
 					"Unknown amqp message: " + amqpMessage.toString()); //$NON-NLS-1$
 			break;
 		}

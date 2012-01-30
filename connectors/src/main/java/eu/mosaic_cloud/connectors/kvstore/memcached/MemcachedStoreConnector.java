@@ -29,7 +29,6 @@ import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenOperation;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
@@ -105,7 +104,7 @@ public final class MemcachedStoreConnector<T extends Object> extends
 	@Override
 	public void destroy() throws Throwable {
 		super.destroy();
-		MosaicLogger.getLogger().trace("MemcachedConnector destroyed.");
+		this.logger.trace("MemcachedConnector destroyed.");
 	}
 
 	@Override
