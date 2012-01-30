@@ -349,6 +349,13 @@ public final class Threading
 		return (Thread.currentThread ().getThreadGroup ());
 	}
 	
+	public static final ThreadingContext getDefaultContext ()
+	{
+		final ThreadingContext context = Threading.defaultContext.get ();
+		Preconditions.checkState (context != null);
+		return (context);
+	}
+	
 	public static final ThreadGroup getRootThreadGroup ()
 	{
 		final ThreadGroup root;
@@ -642,9 +649,9 @@ public final class Threading
 		}
 	}
 	
-	public static final ThreadingContext sequezeThreadingContextOutOfDryRock ()
+	public static final void setDefaultContext (final ThreadingContext context)
 	{
-		throw (new UnsupportedOperationException ());
+		Threading.defaultContext.set (context);
 	}
 	
 	public static final boolean sleep (final long timeout)
@@ -739,18 +746,6 @@ public final class Threading
 				}
 			}
 		}
-	}
-
-	public static final ThreadingContext getDefaultContext ()
-	{
-		final ThreadingContext context = defaultContext.get();
-		Preconditions.checkState(context != null);
-		return (context);
-	}
-	
-	public static final void setDefaultContext (final ThreadingContext context)
-	{
-		defaultContext.set(context);
 	}
 	
 	public static final int defaultAbortExitCode = AbortingExceptionTracer.defaultExitCode;

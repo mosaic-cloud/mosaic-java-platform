@@ -406,6 +406,8 @@ public final class BasicThreadingContext
 			super (group, BasicThreadingContext.buildThreadGroupName (configuration));
 			Preconditions.checkNotNull (group);
 			this.configuration = configuration;
+			// !!!!
+			// super.setDaemon (this.configuration.daemon);
 			super.setDaemon (false);
 			if (configuration.priority != -1)
 				this.setMaxPriority (configuration.priority);

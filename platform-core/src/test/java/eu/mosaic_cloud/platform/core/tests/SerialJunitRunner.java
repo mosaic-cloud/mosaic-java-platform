@@ -43,7 +43,7 @@ public class SerialJunitRunner extends BlockJUnit4ClassRunner {
 		setScheduler(new RunnerScheduler() {
 
 			ThreadingContext threading = Threading
-					.sequezeThreadingContextOutOfDryRock();
+					.getDefaultContext();
 			ExecutorService executorService = this.threading
 					.createFixedThreadPool(ThreadConfiguration.create(this, "tests", true),
 							1);

@@ -47,8 +47,9 @@ public final class BasicThreadingSecurityManager
 		Preconditions.checkNotNull (thread);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
-//			if (!context.isManaged (thread))
-//				throw (new SecurityException ());
+			// !!!!
+			//	if (!context.isManaged (thread))
+			//		throw (new SecurityException ());
 		}
 		super.checkAccess (thread);
 	}
@@ -59,8 +60,9 @@ public final class BasicThreadingSecurityManager
 		Preconditions.checkNotNull (group);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
-//			if (!context.isManaged (group))
-//				throw (new SecurityException ());
+			// !!!!
+			//	if (!context.isManaged (group))
+			//		throw (new SecurityException ());
 		}
 		super.checkAccess (group);
 	}
@@ -68,15 +70,17 @@ public final class BasicThreadingSecurityManager
 	@Override
 	public final void checkPermission (final Permission permission)
 	{
-		this.checkPermission_ (permission);
+		// !!!!
 		// super.checkPermission (permission);
+		this.checkPermission_ (permission);
 	}
 	
 	@Override
 	public final void checkPermission (final Permission permission, final Object context)
 	{
-		this.checkPermission_ (permission);
+		// !!!!
 		// super.checkPermission (permission, context);
+		this.checkPermission_ (permission);
 	}
 	
 	@Override

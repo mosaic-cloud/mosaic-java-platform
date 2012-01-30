@@ -75,7 +75,7 @@ public final class SerialSuite extends Suite {
 		setScheduler(new RunnerScheduler() {
 
 			ThreadingContext threading = Threading
-					.sequezeThreadingContextOutOfDryRock();
+					.getDefaultContext();
 			ExecutorService executorService = this.threading
 					.createFixedThreadPool(ThreadConfiguration.create(this, null, true), 1);
 			CompletionService<Void> completionService = new ExecutorCompletionService<Void>(
