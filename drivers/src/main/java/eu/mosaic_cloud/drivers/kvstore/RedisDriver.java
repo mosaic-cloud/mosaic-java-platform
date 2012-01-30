@@ -24,7 +24,6 @@ import java.io.IOException;
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
@@ -124,7 +123,7 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	@Override
 	public void destroy() {
 		super.destroy();
-		MosaicLogger.getLogger().trace("RedisDriver destroyed."); //$NON-NLS-1$
+		this.logger.trace("RedisDriver destroyed."); //$NON-NLS-1$
 	}
 
 	@Override

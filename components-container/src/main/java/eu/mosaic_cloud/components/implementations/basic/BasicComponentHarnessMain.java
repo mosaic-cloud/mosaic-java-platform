@@ -201,7 +201,9 @@ public final class BasicComponentHarnessMain
 		Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (componentClass), "invalid component class `%s` (not an instance of `ComponentCallbacks`)", componentClass.getName ());
 		final ComponentCallbacks callbacks;
 		try {
+			Threading.setDefaultContext (threading);
 			callbacks = (ComponentCallbacks) componentClass.newInstance ();
+			Threading.setDefaultContext (null);
 		} catch (final Exception exception) {
 			exceptions.trace (ExceptionResolution.Deferred, exception);
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while instantiating)", componentClass.getName ()), exception));

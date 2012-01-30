@@ -31,7 +31,6 @@ import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpConsumerCallback;
 import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpPublisherCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 
 public class PingCloudlet {
@@ -42,7 +41,7 @@ public class PingCloudlet {
 		@Override
 		public void initialize(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger()
+			this.logger
 					.info("Ping Cloudlet is being initialized.");
 			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -62,7 +61,7 @@ public class PingCloudlet {
 		@Override
 		public void initializeSucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet initialized successfully.");
 			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -75,14 +74,14 @@ public class PingCloudlet {
 		@Override
 		public void destroy(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info("Ping Cloudlet is being destroyed.");
+			this.logger.info("Ping Cloudlet is being destroyed.");
 
 		}
 
 		@Override
 		public void destroySucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet was destroyed successfully.");
 		}
 
@@ -94,14 +93,14 @@ public class PingCloudlet {
 		@Override
 		public void registerSucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet consumer registered successfully.");
 		}
 
 		@Override
 		public void unregisterSucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<PingCloudletContext> cloudlet = arguments
@@ -120,7 +119,7 @@ public class PingCloudlet {
 		@Override
 		public void destroySucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet consumer was destroyed successfully.");
 			context.consumer = null;
 			if (context.publisher == null) {
@@ -144,7 +143,7 @@ public class PingCloudlet {
 			PongMessage data = message.getData();
 			String key = data.getKey();
 			PingPongData value = data.getValue();
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet received key-value pair: (" + key + ", "
 							+ value + ")");
 
@@ -159,7 +158,7 @@ public class PingCloudlet {
 		@Override
 		public void registerSucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet publisher registered successfully.");
 			PingMessage data = new PingMessage("pingpong");
 			context.publisher.publish(data, null, "");
@@ -168,7 +167,7 @@ public class PingCloudlet {
 		@Override
 		public void unregisterSucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<PingCloudletContext> cloudlet = arguments
@@ -187,7 +186,7 @@ public class PingCloudlet {
 		@Override
 		public void destroySucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Ping Cloudlet publisher was destroyed successfully.");
 			context.publisher = null;
 			if (context.consumer == null) {

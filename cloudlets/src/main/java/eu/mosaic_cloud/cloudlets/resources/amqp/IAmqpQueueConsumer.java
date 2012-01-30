@@ -24,12 +24,12 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this accessor
+ * @param <C>
+ *            the type of the context of the cloudlet using this accessor
  * @param <D>
  *            the type of the consumed data
  */
-public interface IAmqpQueueConsumer<S, D> extends IAmqpQueueAccessor<S> {
+public interface IAmqpQueueConsumer<C, D> extends IAmqpQueueAccessor<C> {
 
 	/**
 	 * Acknowledges a message.

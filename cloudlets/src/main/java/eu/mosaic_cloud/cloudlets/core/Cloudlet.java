@@ -60,6 +60,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 	private ICloudletCallback<C> controllerCallback;
 	private C context;
 	private ThreadingContext threading;
+	private static MosaicLogger logger= MosaicLogger.createLogger(Cloudlet.class);
 
 	/**
 	 * Creates a new cloudlet instance.
@@ -205,19 +206,17 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 					destroyOperation);
 			this.executor.handleRequest(destroyOperation.getOperation());
 			try {
-				MosaicLogger.getLogger().trace(
-						"Cloudlet.destroy() - Waiting for destroy.");
+				logger.trace("Cloudlet.destroy() - Waiting for destroy.");
 				result.getResult();
-				MosaicLogger.getLogger().trace(
-						"Cloudlet.destroy() - Cloudlet destroyed.");
+				logger.trace("Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
 				ExceptionTracer.traceIgnored(e);
 			}
-			//			this.executor.shutdown();
-			//			// TODO
-			//			destroyed = true;
+			// this.executor.shutdown();
+			// // TODO
+			// destroyed = true;
 		}
 		return true;
 	}
@@ -233,7 +232,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 	}
 
 	private synchronized void initializeResource(IResourceAccessor<C> accessor,
-			IResourceAccessorCallback<C> callbackHandler, C cloudletState) {
+			IResourceAccessorCallback<C> callbackHandler, C cloudletContext) {
 		accessor.initialize(callbackHandler, this.context, this.threading);
 	}
 
@@ -285,9 +284,9 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 
 		@Override
 		public void initializeResource(IResourceAccessor<C> accessor,
-				IResourceAccessorCallback<C> callbackHandler, C cloudletState) {
+				IResourceAccessorCallback<C> callbackHandler, C cloudletContext) {
 			Cloudlet.this.initializeResource(accessor, callbackHandler,
-					cloudletState);
+					cloudletContext);
 
 		}
 

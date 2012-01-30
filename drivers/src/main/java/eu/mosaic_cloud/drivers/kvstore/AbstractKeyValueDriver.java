@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.google.common.base.Preconditions;
 
 import eu.mosaic_cloud.drivers.AbstractResourceDriver;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -89,12 +88,12 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 				bucketData = new BucketData(bucket);
 				this.bucketFactories.put(bucket, bucketData);
 				bucketData.noClients.incrementAndGet();
-				MosaicLogger.getLogger().trace(
+				this.logger.trace(
 						"Create new client for bucket " + bucket);
 			}
 			this.clientBucketMap.put(clientId, bucketData);
 		}
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"Registered client " + clientId + " for bucket " + bucket);
 	}
 
@@ -116,7 +115,7 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 			}
 			this.clientBucketMap.remove(clientId);
 		}
-		MosaicLogger.getLogger().trace("Unregistered client " + clientId);
+		this.logger.trace("Unregistered client " + clientId);
 	}
 
 	public IResult<Boolean> invokeSetOperation(String clientId, String key,

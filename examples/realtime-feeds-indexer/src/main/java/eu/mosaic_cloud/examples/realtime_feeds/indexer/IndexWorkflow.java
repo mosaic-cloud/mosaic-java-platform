@@ -41,7 +41,9 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 public class IndexWorkflow {
 
 	private static final String INDEX_TASK_TYPE = "index-data";
-	private static Map<UUID, IndexWorkflow> indexers = new HashMap<UUID, IndexWorkflow>();;
+	private static Map<UUID, IndexWorkflow> indexers = new HashMap<UUID, IndexWorkflow>();
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(IndexWorkflow.class);
 
 	private AmqpQueueConsumeMessage<JSONObject> recvMessage = null;
 	private UUID key;
@@ -86,7 +88,7 @@ public class IndexWorkflow {
 
 		IndexWorkflow aIndexer = IndexWorkflow.createIndexer(context,
 				recvMessage);
-		MosaicLogger.getLogger().trace(
+		logger.trace(
 				"New indexer created for message " + aIndexer.indexMessage);
 		aIndexer.fetchLatestFeed();
 	}
@@ -98,7 +100,7 @@ public class IndexWorkflow {
 	 */
 	private void fetchLatestFeed() {
 		try {
-			MosaicLogger.getLogger().info(
+			logger.info(
 					"indexing " + this.indexMessage.getString("url")
 							+ " (from data) step 2 (fetching latest data)...");
 			this.context.dataStore.get(this.indexMessage.getString("data"),
@@ -127,7 +129,7 @@ public class IndexWorkflow {
 	 */
 	private void parseFeed(Object fetchedData) {
 		try {
-			MosaicLogger.getLogger().trace(
+			logger.trace(
 					"indexing " + this.indexMessage.getString("url")
 							+ " (from data) step 2 (parsing latest data)...");
 			byte[] data = (byte[]) fetchedData;
@@ -145,7 +147,7 @@ public class IndexWorkflow {
 	private void indexFeed() throws JSONException {
 		String feedKey = StoreUtils.generateFeedKey(this.indexMessage
 				.getString("url"));
-		MosaicLogger.getLogger().trace(
+		logger.trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
 						+ " step 3 (fetching latest meta-data)...");
 		// FIXME
@@ -157,7 +159,7 @@ public class IndexWorkflow {
 	}
 
 	private void doFeedDiff(Object fetchedData) {
-		MosaicLogger.getLogger().trace(
+		logger.trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
 						+ " step 4 (diff-ing latest feed)...");
 
@@ -232,7 +234,7 @@ public class IndexWorkflow {
 				this.currentFeedMetaData.put("timelines",
 						this.newTimeline.getString("key"));
 
-				MosaicLogger.getLogger().trace(
+				logger.trace(
 						"Current timeline has  " + items.length()
 								+ " new items.");
 				JSONArray prevTimelines = null;
@@ -269,7 +271,7 @@ public class IndexWorkflow {
 	}
 
 	private void handleMetadataUpdate() {
-		MosaicLogger.getLogger().trace(
+		logger.trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
 						+ " step 5 (updating meta-data)...");
 		try {
@@ -297,7 +299,7 @@ public class IndexWorkflow {
 	}
 
 	private void storeIndexOutcome() {
-		MosaicLogger.getLogger().trace(
+		logger.trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
 						+ " step 6 (updating index task)...");
 
@@ -327,10 +329,10 @@ public class IndexWorkflow {
 		}
 	}
 
-	//	public static void sendAcknowledge(Object extra) {
-	//		getIndexer((UUID) extra).recvMessage.acknowledge();
-	//		MosaicLogger.getLogger().trace("finished indexing...");
-	//	}
+	// public static void sendAcknowledge(Object extra) {
+	// getIndexer((UUID) extra).recvMessage.acknowledge();
+	// logger.trace("finished indexing...");
+	// }
 
 	private void handleError(Exception e) {
 		ExceptionTracer.traceDeferred(e);
@@ -346,7 +348,7 @@ public class IndexWorkflow {
 		for (Map.Entry<String, String> entry : errorMessages.entrySet()) {
 			errorBuilder.append(entry.getKey() + ": " + entry.getValue());
 		}
-		MosaicLogger.getLogger().error(errorBuilder.toString());
+		logger.error(errorBuilder.toString());
 		// getIndexer((UUID) extra).recvMessage.acknowledge();
 	}
 

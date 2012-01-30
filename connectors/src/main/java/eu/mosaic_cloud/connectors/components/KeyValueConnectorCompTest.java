@@ -49,6 +49,8 @@ public class KeyValueConnectorCompTest {
 	private KeyValueStoreConnector<String> connector;
 	private String keyPrefix;
 	private String storeType;
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(KeyValueConnectorCompTest.class);
 
 	public KeyValueConnectorCompTest() throws Throwable {
 		this.configuration = PropertyTypeConfiguration.create(
@@ -57,8 +59,12 @@ public class KeyValueConnectorCompTest {
 		this.storeType = ConfigUtils.resolveParameter(this.configuration,
 				"kvstore.driver_name", String.class, "");
 		this.keyPrefix = UUID.randomUUID().toString();
+		BasicThreadingSecurityManager.initialize();
+		ThreadingContext threading = BasicThreadingContext.create(
+				KeyValueConnectorCompTest.class,
+				AbortingExceptionTracer.defaultInstance.catcher);
 		ResourceFinder.getResourceFinder().findResource(ResourceType.KEY_VALUE,
-				new Callback());
+				threading, new Callback());
 
 	}
 
@@ -215,7 +221,7 @@ public class KeyValueConnectorCompTest {
 		 */
 		@Override
 		public void resourceNotFound() {
-			MosaicLogger.getLogger().error("Callback - Resource not found");
+			logger.error("Callback - Resource not found");
 		}
 	}
 }

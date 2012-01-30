@@ -26,43 +26,43 @@ import eu.mosaic_cloud.cloudlets.resources.DefaultResourceAccessorCallback;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this callback
+ * @param <C>
+ *            the type of the context of the cloudlet using this callback
  */
-public class DefaultKeyValueAccessorCallback<S> extends
-		DefaultResourceAccessorCallback<S> implements
-		IKeyValueAccessorCallback<S> {
+public class DefaultKeyValueAccessorCallback<C> extends
+		DefaultResourceAccessorCallback<C> implements
+		IKeyValueAccessorCallback<C> {
 
 	@Override
-	public void setSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void setSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
 
 	}
 
 	@Override
-	public void setFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void setFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Set Failed", false, false);
 	}
 
 	@Override
-	public void getSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void getSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Get Succeeded", true, false);
 
 	}
 
 	@Override
-	public void getFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void getFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Get Failed", false, false);
 	}
 
 	@Override
-	public void deleteSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void deleteSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Delete Succeeded", true, false);
 
 	}
 
 	@Override
-	public void deleteFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void deleteFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Delete Failed", false, false);
 	}
 

@@ -35,7 +35,6 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
@@ -282,7 +281,7 @@ public final class AmqpProxy extends ConnectorProxy {
 			super.sendRequest(getResponseReactor(AmqpConnectorReactor.class)
 					.getSession(), message);
 			//			}
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");
 		} catch (IOException e) {

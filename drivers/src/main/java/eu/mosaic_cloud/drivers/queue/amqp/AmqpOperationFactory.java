@@ -41,7 +41,10 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * @author Georgiana Macariu
  * 
  */
-final class AmqpOperationFactory implements IOperationFactory { // NOPMD by georgiana on 10/12/11 4:13 PM
+final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
+																// georgiana on
+																// 10/12/11 4:13
+																// PM
 
 	/**
 	 * 
@@ -61,11 +64,21 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 	 * .platform.core.IOperationType , java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation(final IOperationType type, // NOPMD by georgiana on 10/12/11 4:13 PM
+	public IOperation<?> getOperation(final IOperationType type, // NOPMD by
+																	// georgiana
+																	// on
+																	// 10/12/11
+																	// 4:13 PM
 			Object... parameters) {
 		IOperation<?> operation;
 		if (!(type instanceof AmqpOperations)) {
-			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:13 PM
+			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
+																			// by
+																			// georgiana
+																			// on
+																			// 10/12/11
+																			// 4:13
+																			// PM
 
 						@Override
 						public Object call()
@@ -105,7 +118,13 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 			operation = buildCancelOperation(parameters);
 			break;
 		default:
-			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:14 PM
+			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
+																				// by
+																				// georgiana
+																				// on
+																				// 10/12/11
+																				// 4:14
+																				// PM
 
 						@Override
 						public Object call()
@@ -129,7 +148,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				boolean succeeded = false;
 				String consumer = (String) parameters[0];
 
-				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				final Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(consumer);
 				if (channel != null) {
@@ -140,7 +159,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						ExceptionTracer.traceIgnored(e);
 					}
 				}
-				//				}
+				// }
 				return succeeded;
 			}
 
@@ -157,7 +176,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				boolean multiple = (Boolean) parameters[1];
 				String consumer = (String) parameters[2];
 
-				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				final Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(consumer);
 				if (channel != null) {
@@ -168,7 +187,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						ExceptionTracer.traceIgnored(e);
 					}
 				}
-				//				}
+				// }
 				return succeeded;
 			}
 
@@ -186,7 +205,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 						boolean autoAck = (Boolean) parameters[1];
 						String clientId = (String) parameters[2];
 
-						//						synchronized (AmqpOperationFactory.this.amqpDriver) {
+						// synchronized (AmqpOperationFactory.this.amqpDriver) {
 
 						final Channel channel = AmqpOperationFactory.this.amqpDriver
 								.getChannel(clientId);
@@ -217,7 +236,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 								ExceptionTracer.traceIgnored(e);
 							}
 						}
-						//						}
+						// }
 						return message;
 					}
 
@@ -237,7 +256,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
 				String consumerTag;
 
-				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(consumer);
 				if (channel != null) {
@@ -255,13 +274,13 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 									AmqpOperationFactory.this.amqpDriver.new ConsumerCallback(
 											extra));
 					if (!consumer.equals(consumerTag)) {
-						MosaicLogger
-								.getLogger()
-								.error("Received different consumer tag: consumerTag = "
-										+ consumerTag + " consumer " + consumer);
+						MosaicLogger sLogger = MosaicLogger
+								.createLogger(AmqpOperationFactory.class);
+						sLogger.error("Received different consumer tag: consumerTag = "
+								+ consumerTag + " consumer " + consumer);
 					}
 				}
-				//				}
+				// }
 
 				return consumer;
 			}
@@ -278,7 +297,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				AmqpOutboundMessage message = (AmqpOutboundMessage) parameters[0];
 				String clientId = (String) parameters[1];
 
-				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(clientId);
 
@@ -295,7 +314,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 							message.getData());
 					succeeded = true;
 				}
-				//				}
+				// }
 				return succeeded;
 			}
 
@@ -313,7 +332,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				String routingKey = (String) parameters[2];
 				String clientId = (String) parameters[3];
 
-				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 
 				try {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
@@ -326,7 +345,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				} catch (IOException e) {
 					ExceptionTracer.traceIgnored(e);
 				}
-				//				}
+				// }
 				return succeeded;
 			}
 
@@ -346,7 +365,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				boolean passive = (Boolean) parameters[4];
 				String clientId = (String) parameters[5];
 
-				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(clientId);
 				if (channel != null) {
@@ -359,7 +378,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 					}
 					succeeded = (outcome != null);
 				}
-				//				}
+				// }
 				return succeeded;
 			}
 
@@ -380,7 +399,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 				AmqpExchangeType eType = (AmqpExchangeType) parameters[1];
 				String clientId = (String) parameters[5];
 
-				//				synchronized (AmqpOperationFactory.this.amqpDriver) {
+				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(clientId);
 				if (channel != null) {
@@ -393,7 +412,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by geor
 					}
 					succeeded = (outcome != null);
 				}
-				//				}
+				// }
 				return succeeded;
 			}
 

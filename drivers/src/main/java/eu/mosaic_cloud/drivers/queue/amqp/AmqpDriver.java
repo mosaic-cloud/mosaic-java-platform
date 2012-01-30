@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
-import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
-
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
@@ -42,11 +40,11 @@ import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -55,7 +53,9 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana on 10/12/11 4:24 PM
+public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
+															// on 10/12/11 4:24
+															// PM
 
 	private boolean connected;
 	private final IConfiguration configuration;
@@ -87,8 +87,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		this.returnCallback = new ReturnCallback();
 		this.shutdownListener = new ConnectionShutdownListener();
 		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
-		this.executor = threading.createFixedThreadPool(ThreadConfiguration.create(
-				this, "operations", true), 1);
+		this.executor = threading.createFixedThreadPool(
+				ThreadConfiguration.create(this, "operations", true), 1);
 	}
 
 	/**
@@ -99,7 +99,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 * @return an AMQP driver
 	 */
 	public static AmqpDriver create(IConfiguration configuration,
-			ThreadingContext threading) { // NOPMD by georgiana on 10/12/11 4:19 PM
+			ThreadingContext threading) { // NOPMD by georgiana on 10/12/11 4:19
+											// PM
 		int noThreads = ConfigUtils.resolveParameter(configuration,
 				ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
 		AmqpDriver driver = new AmqpDriver(configuration, threading, noThreads);
@@ -151,12 +152,12 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 				this.connection.addShutdownListener(this.shutdownListener);
 				this.channels = new ConcurrentHashMap<String, Channel>();
 				this.connected = true;
-				MosaicLogger.getLogger().debug(
-						"AMQP driver connected to " + amqpServerHost + ":"
-								+ amqpServerPort);
+				this.logger.debug("AMQP driver connected to " + amqpServerHost
+						+ ":" + amqpServerPort);
 			} catch (IOException e) {
 				ExceptionTracer.traceIgnored(e);
-				this.connection = null; // NOPMD by georgiana on 10/12/11 3:38 PM
+				this.connection = null; // NOPMD by georgiana on 10/12/11 3:38
+										// PM
 			}
 		}
 	}
@@ -177,12 +178,12 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 					this.connected = false;
 				} catch (IOException e) {
 					ExceptionTracer.traceIgnored(e);
-					MosaicLogger.getLogger().error(
-							"AMQP cannot close connection with server."); //$NON-NLS-1$
+					this.logger
+							.error("AMQP cannot close connection with server."); //$NON-NLS-1$
 				}
 			}
 		}
-		MosaicLogger.getLogger().trace("AmqpDriver destroyed."); //$NON-NLS-1$
+		this.logger.trace("AmqpDriver destroyed."); //$NON-NLS-1$
 	}
 
 	/**
@@ -403,7 +404,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		Channel channel = this.channels.get(clientId);
 		if (channel == null) {
 			channel = this.openChannel(clientId);
-			this.channels.put(clientId, channel);
+			// this.channels.put(clientId, channel);
 		}
 		return channel;
 	}
@@ -451,7 +452,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 	 * @author Georgiana Macariu
 	 * 
 	 */
-	final class ConsumerCallback implements Consumer { // NOPMD by georgiana on 10/12/11 4:24 PM
+	final class ConsumerCallback implements Consumer { // NOPMD by georgiana on
+														// 10/12/11 4:24 PM
 
 		private final Object extra;
 
@@ -462,8 +464,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 
 		@Override
 		public void handleCancelOk(final String consumer) {
-			MosaicLogger
-					.getLogger()
+			AmqpDriver.this.logger
 					.trace("AmqpDriver - Received CANCEL Ok callback for consumer " + consumer //$NON-NLS-1$
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
@@ -483,16 +484,14 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 
 		@Override
 		public void handleConsumeOk(final String consumer) {
-			MosaicLogger
-					.getLogger()
+			AmqpDriver.this.logger
 					.trace("AmqpDriver - Received CONSUME Ok callback for consumer " + consumer //$NON-NLS-1$
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.get(consumer);
 
 			if (consumeCallback == null) {
-				MosaicLogger
-						.getLogger()
+				AmqpDriver.this.logger
 						.error("AmqpDriver - no callback to handle CONSUME Ok message"); //$NON-NLS-1$
 			} else {
 				Runnable task = new Runnable() {
@@ -543,8 +542,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 		@Override
 		public void handleShutdownSignal(final String consumer,
 				final ShutdownSignalException signal) {
-			MosaicLogger.getLogger().trace(
-					"AmqpDriver - Received SHUTDOWN callback for consumer " //$NON-NLS-1$
+			AmqpDriver.this.logger
+					.trace("AmqpDriver - Received SHUTDOWN callback for consumer " //$NON-NLS-1$
 							+ consumer + "."); //$NON-NLS-1$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers
 					.remove(consumer);
@@ -564,8 +563,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 
 		@Override
 		public void handleCancel(final String consumer) throws IOException {
-			MosaicLogger
-					.getLogger()
+			AmqpDriver.this.logger
 					.trace("AmqpDriver - Received CANCEL callback for consumer " + consumer //$NON-NLS-1$
 							+ "."); //$NON-NLS-1$
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers
@@ -602,8 +600,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 					properties.getReplyTo(), properties.getContentEncoding(),
 					properties.getContentType(), properties.getCorrelationId(),
 					properties.getMessageId());
-			MosaicLogger
-					.getLogger()
+			AmqpDriver.this.logger
 					.trace("AmqpDriver - Received RETURN callback for " + message.getDelivery()); //$NON-NLS-1$
 			// TODO
 		}
@@ -640,8 +637,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 				if (AmqpDriver.super.isDestroyed()) {
 					return;
 				}
-				MosaicLogger
-						.getLogger()
+				AmqpDriver.this.logger
 						.trace("AMQP server closed connection with driver. Trying to reconnect..."); //$NON-NLS-1$
 				AmqpDriver.this.connected = false;
 				int tries = 0;
@@ -662,8 +658,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana o
 				}
 				if (!AmqpDriver.this.connected
 						&& !AmqpDriver.super.isDestroyed()) {
-					MosaicLogger.getLogger().error(
-							"Could not reconnect to AMQP resource."); //$NON-NLS-1$
+					AmqpDriver.this.logger
+							.error("Could not reconnect to AMQP resource."); //$NON-NLS-1$
 				}
 			}
 		}

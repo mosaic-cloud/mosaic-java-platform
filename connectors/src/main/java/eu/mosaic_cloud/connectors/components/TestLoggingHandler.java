@@ -26,6 +26,8 @@ public class TestLoggingHandler<T extends Object> implements
 		IOperationCompletionHandler<T> {
 
 	private String testName = "";
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(TestLoggingHandler.class);
 
 	public TestLoggingHandler(String testName) {
 		super();
@@ -34,13 +36,13 @@ public class TestLoggingHandler<T extends Object> implements
 
 	@Override
 	public void onSuccess(T result) {
-		MosaicLogger.getLogger().trace(
+		logger.trace(
 				"Test " + this.testName + " finished with result: " + result);
 	}
 
 	@Override
 	public <E extends Throwable> void onFailure(E error) {
-		MosaicLogger.getLogger().error(
+		logger.error(
 				"Test " + this.testName + " finished with error: "
 						+ error.getMessage());
 	}

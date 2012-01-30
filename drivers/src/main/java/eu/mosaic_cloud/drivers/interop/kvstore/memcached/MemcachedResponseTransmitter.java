@@ -29,7 +29,6 @@ import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error.Builder;
@@ -54,7 +53,7 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
 			KeyValueOperations operation, Object result, boolean isError) {
 		Message message;
 
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"MemcachedTransmitter: send response for " + operation
 						+ " request " + token.getMessageId() + " client id "
 						+ token.getClientId());

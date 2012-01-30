@@ -26,7 +26,6 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -110,7 +109,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 
 		// send response
 		publishResponse(session, message);
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"AmqpResponseTransmitter: sent response for " + operation
 						+ " request " + token.getMessageId() + " client id "
 						+ token.getClientId());
@@ -133,7 +132,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 
 		// send response
 		publishResponse(session, message);
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"AmqpResponseTransmitter - Sent CANCEL ok message");
 	}
 
@@ -153,7 +152,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 				cancelPayload.build());
 
 		publishResponse(session, message);
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"AmqpResponseTransmitter - Sent CANCEL message");
 	}
 
@@ -173,7 +172,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 				consumePayload.build());
 
 		publishResponse(session, message);
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"AmqpResponseTransmitter - Sent CONSUME Ok callback for consumer "
 						+ consumerTag + ".");
 	}
@@ -209,7 +208,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 
 		// send response
 		publishResponse(session, mssg);
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"AmqpResponseTransmitter - Delivered message");
 	}
 
@@ -233,7 +232,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 
 		// send response
 		publishResponse(session, message);
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"AmqpResponseTransmitter - Sent Shutdown message");
 	}
 

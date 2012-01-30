@@ -26,43 +26,43 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
  * which need to receive messages from a queue.
  * 
  * @author Georgiana Macariu
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  * @param <D>
  *            the type of consumed data
  * 
  */
-public interface IAmqpQueueConsumerCallback<S, D> extends
-		IAmqpQueueAccessorCallback<S> {
+public interface IAmqpQueueConsumerCallback<C, D> extends
+		IAmqpQueueAccessorCallback<C> {
 
 	/**
 	 * Handles successful message acknowledge events.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void acknowledgeSucceeded(S state, CallbackArguments<S> arguments);
+	void acknowledgeSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Handles unsuccessful message acknowledge events.
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void acknowledgeFailed(S state, CallbackArguments<S> arguments);
+	void acknowledgeFailed(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when this consumer receives a message. This will deliver the
 	 * message
 	 * 
-	 * @param state
-	 *            the state of the cloudlet
+	 * @param context
+	 *            the context of the cloudlet
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void consume(S state, AmqpQueueConsumeCallbackArguments<S, D> arguments);
+	void consume(C context, AmqpQueueConsumeCallbackArguments<C, D> arguments);
 }

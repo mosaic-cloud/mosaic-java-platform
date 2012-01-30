@@ -26,136 +26,136 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  */
-public interface IMemcachedAccessorCallback<S> extends
-		IKeyValueAccessorCallback<S> {
+public interface IMemcachedAccessorCallback<C> extends
+		IKeyValueAccessorCallback<C> {
 
 	/**
 	 * Called when the add operation completed successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void addSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void addSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the add operation completed unsuccessfully. The error can be
 	 * retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void addFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void addFailed(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the append operation completed successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void appendSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void appendSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the append operation completed unsuccessfully. The error can
 	 * be retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void appendFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void appendFailed(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the prepend operation completed successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void prependSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void prependSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the prepend operation completed unsuccessfully. The error can
 	 * be retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void prependFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void prependFailed(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the replace operation completed successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void replaceSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void replaceSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the replace operation completed unsuccessfully. The error can
 	 * be retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void replaceFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void replaceFailed(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the getBulk operation completed successfully. The result of
 	 * the get operation can be retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getBulkSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void getBulkSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the getBulk operation completed unsuccessfully. The error can
 	 * be retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getBulkFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void getBulkFailed(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the cas operation completed successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void casSucceeded(S state, KeyValueCallbackArguments<S> arguments);
+	void casSucceeded(C context, KeyValueCallbackArguments<C> arguments);
 
 	/**
 	 * Called when the cas operation completed unsuccessfully. The error can be
 	 * retrieved from the <i>arguments</i> parameter.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void casFailed(S state, KeyValueCallbackArguments<S> arguments);
+	void casFailed(C context, KeyValueCallbackArguments<C> arguments);
 }

@@ -39,7 +39,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
@@ -51,7 +50,7 @@ public class LoggingCloudlet {
 		@Override
 		public void initialize(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet is being initialized.");
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -78,7 +77,7 @@ public class LoggingCloudlet {
 		@Override
 		public void initializeSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet initialized successfully.");
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -94,14 +93,14 @@ public class LoggingCloudlet {
 		@Override
 		public void destroy(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger()
+			this.logger
 					.info("LoggingCloudlet is being destroyed.");
 		}
 
 		@Override
 		public void destroySucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet was destroyed successfully.");
 		}
 
@@ -115,8 +114,7 @@ public class LoggingCloudlet {
 		@Override
 		public void initializeSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger
-					.getLogger()
+			this.logger
 					.info("LoggingCloudlet - KeyValue accessor initialized successfully");
 			String user = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.user", String.class, "error");
@@ -138,7 +136,7 @@ public class LoggingCloudlet {
 		public void setSucceeded(LoggingCloudletContext context,
 				KeyValueCallbackArguments<LoggingCloudletContext> arguments) {
 			KeyValueCallback.sets++;
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet - KeyValue succeeded set no. "
 							+ KeyValueCallback.sets);
 			if (KeyValueCallback.sets == 2) {
@@ -148,7 +146,7 @@ public class LoggingCloudlet {
 					cloudlet.destroyResource(context.kvStore, this);
 				} catch (Exception e) {
 					ExceptionTracer.traceIgnored(e);
-					MosaicLogger.getLogger().error(
+					this.logger.error(
 							"LoggingCloudlet.KeyValueCallback.setSucceeded() - caught exception "
 									+ e.getClass().getCanonicalName());
 				}
@@ -163,7 +161,7 @@ public class LoggingCloudlet {
 		@Override
 		public void registerSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet consumer registered successfully.");
 			context.consumerRunning = true;
 		}
@@ -171,7 +169,7 @@ public class LoggingCloudlet {
 		@Override
 		public void unregisterSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
@@ -191,7 +189,7 @@ public class LoggingCloudlet {
 		@Override
 		public void destroySucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet consumer was destroyed successfully.");
 			context.consumer = null;
 			if ((context.publisher == null) && (context.kvStore == null)) {
@@ -213,7 +211,7 @@ public class LoggingCloudlet {
 			AmqpQueueConsumeMessage<LoggingData> message = arguments
 					.getMessage();
 			LoggingData data = message.getData();
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet received logging message for user "
 							+ data.user);
 			IResult<Object> result = context.kvStore.get(data.user, null);
@@ -250,7 +248,7 @@ public class LoggingCloudlet {
 		@Override
 		public void registerSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet publisher registered successfully.");
 			context.publisherRunning = true;
 		}
@@ -258,7 +256,7 @@ public class LoggingCloudlet {
 		@Override
 		public void unregisterSucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
@@ -278,7 +276,7 @@ public class LoggingCloudlet {
 		@Override
 		public void destroySucceeded(LoggingCloudletContext context,
 				CallbackArguments<LoggingCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"LoggingCloudlet publisher was destroyed successfully.");
 			context.publisher = null;
 			if ((context.consumer == null) && (context.kvStore == null)) {

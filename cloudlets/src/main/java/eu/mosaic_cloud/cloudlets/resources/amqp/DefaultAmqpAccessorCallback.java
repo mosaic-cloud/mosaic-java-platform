@@ -27,32 +27,32 @@ import eu.mosaic_cloud.cloudlets.resources.DefaultResourceAccessorCallback;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this callback
+ * @param <C>
+ *            the type of the context of the cloudlet using this callback
  */
-public class DefaultAmqpAccessorCallback<S> extends
-		DefaultResourceAccessorCallback<S> implements
-		IAmqpQueueAccessorCallback<S> {
+public class DefaultAmqpAccessorCallback<C> extends
+		DefaultResourceAccessorCallback<C> implements
+		IAmqpQueueAccessorCallback<C> {
 
 	@Override
-	public void registerSucceeded(S state, CallbackArguments<S> arguments) {
+	public void registerSucceeded(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Register Succeeded", true,
 				false);
 	}
 
 	@Override
-	public void registerFailed(S state, CallbackArguments<S> arguments) {
+	public void registerFailed(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Register Failed", false, true);
 	}
 
 	@Override
-	public void unregisterSucceeded(S state, CallbackArguments<S> arguments) {
+	public void unregisterSucceeded(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Unregister Succeeded", true,
 				false);
 	}
 
 	@Override
-	public void unregisterFailed(S state, CallbackArguments<S> arguments) {
+	public void unregisterFailed(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Unregister Failed", false,
 				true);
 	}

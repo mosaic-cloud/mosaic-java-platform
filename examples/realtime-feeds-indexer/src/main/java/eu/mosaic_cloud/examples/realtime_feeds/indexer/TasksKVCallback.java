@@ -26,7 +26,6 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public class TasksKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletContext> {
@@ -48,7 +47,7 @@ public class TasksKVCallback extends
 	private void handleError(
 			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
-		MosaicLogger.getLogger().warn(
+		this.logger.warn(
 				"failed fetch (" + TasksKVCallback.BUCKET_NAME + "," + key
 						+ ")");
 		Map<String, String> errorMssg = new HashMap<String, String>(4);

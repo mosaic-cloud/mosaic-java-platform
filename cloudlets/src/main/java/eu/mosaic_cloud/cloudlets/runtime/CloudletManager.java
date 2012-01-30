@@ -54,6 +54,9 @@ public class CloudletManager {
 	private ClassLoader classLoader;
 
 	private IConfiguration configuration;
+	
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(CloudletManager.class);
 
 	/**
 	 * Creates a new container.
@@ -153,7 +156,7 @@ public class CloudletManager {
 			this.cloudletPool.add(cloudlet);
 		} catch (ClassNotFoundException e) {
 			ExceptionTracer.traceDeferred(e);
-			MosaicLogger.getLogger().error(
+			logger.error(
 					"Could not resolve class: " + e.getMessage()); //$NON-NLS-1$
 			throw new IllegalArgumentException(e);
 		}
@@ -164,7 +167,7 @@ public class CloudletManager {
 		try {
 			instance = clasz.newInstance();
 		} catch (final Throwable exception) {
-			MosaicLogger.getLogger().error(
+			logger.error(
 					"Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
 			ExceptionTracer.traceIgnored(exception);
 			throw new IllegalArgumentException();
@@ -177,7 +180,7 @@ public class CloudletManager {
 		boolean isCallback = implementsType(clasz, ICloudletCallback.class);
 
 		if (!isCallback) {
-			MosaicLogger.getLogger().error(
+			logger.error(
 					"Missmatched object class: `" + clasz.getName() + "`"); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new IllegalArgumentException();
 		}
@@ -185,7 +188,7 @@ public class CloudletManager {
 			instance = clasz.newInstance();
 		} catch (final Throwable exception) {
 			ExceptionTracer.traceDeferred(exception);
-			MosaicLogger.getLogger().error(
+			logger.error(
 					"Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new IllegalArgumentException(exception);
 		}

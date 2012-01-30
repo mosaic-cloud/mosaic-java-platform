@@ -30,7 +30,6 @@ import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallba
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public final class MetadataKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletContext> {
@@ -72,7 +71,7 @@ public final class MetadataKVCallback extends
 	public void getSucceeded(IndexerCloudletContext context,
 			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + ","
 						+ key + ")");
 		Object value = arguments.getValue();
@@ -93,7 +92,7 @@ public final class MetadataKVCallback extends
 	private void handleError(
 			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
-		MosaicLogger.getLogger().warn(
+		this.logger.warn(
 				"failed fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key
 						+ ")");
 		Map<String, String> errorMssg = new HashMap<String, String>(4);

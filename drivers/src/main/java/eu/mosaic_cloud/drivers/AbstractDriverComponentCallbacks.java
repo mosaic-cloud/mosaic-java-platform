@@ -52,6 +52,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 
 	protected AbstractDriverComponentCallbacks(ThreadingContext threading) {
 		this.threading = threading;
+		this.logger = MosaicLogger.createLogger(this);
 	}
 
 	protected static enum Status {
@@ -67,6 +68,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	protected ComponentIdentifier selfGroup;
 	protected IConfiguration driverConfiguration;
 	protected ThreadingContext threading;
+	protected MosaicLogger logger;
 
 	public void terminate() {
 		synchronized (this.monitor) {
@@ -88,7 +90,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 
 	@Override
 	public CallbackReference failed(Component component, Throwable exception) {
-		MosaicLogger.getLogger().trace("AMQP driver callback failed.");
+		this.logger.trace("AMQP driver callback failed.");
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
@@ -111,7 +113,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 					&& (this.status != Status.Unregistered));
 			if (this.stub != null) {
 				this.stub.destroy();
-				MosaicLogger.getLogger().trace("Driver callbacks terminated.");
+				this.logger.trace("Driver callbacks terminated.");
 			}
 			this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
 			this.status = Status.Terminated;
@@ -137,8 +139,8 @@ public abstract class AbstractDriverComponentCallbacks implements
 			String channelEndpointProp, SessionSpecification role) {
 		// create stub and interop channel
 		Preconditions.checkNotNull(this.driverConfiguration);
-		ZeroMqChannel driverChannel = ZeroMqChannel.create(
-				ConfigUtils.resolveParameter(this.driverConfiguration,
+		ZeroMqChannel driverChannel = ZeroMqChannel.create(ConfigUtils
+				.resolveParameter(this.driverConfiguration,
 						channelIdentifierProp, String.class, ""),
 				this.threading, AbortingExceptionTracer.defaultInstance);
 		driverChannel.register(role);

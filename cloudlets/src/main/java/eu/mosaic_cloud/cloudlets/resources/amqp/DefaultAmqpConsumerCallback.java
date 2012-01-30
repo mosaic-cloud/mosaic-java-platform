@@ -26,30 +26,30 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this callback
+ * @param <C>
+ *            the type of the context of the cloudlet using this callback
  * @param <D>
  *            the type of consumed data
  */
-public class DefaultAmqpConsumerCallback<S, D> extends
-		DefaultAmqpAccessorCallback<S> implements
-		IAmqpQueueConsumerCallback<S, D> {
+public class DefaultAmqpConsumerCallback<C, D> extends
+		DefaultAmqpAccessorCallback<C> implements
+		IAmqpQueueConsumerCallback<C, D> {
 
 	@Override
-	public void acknowledgeSucceeded(S state, CallbackArguments<S> arguments) {
+	public void acknowledgeSucceeded(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Acknowledge Succeeded", true,
 				false);
 	}
 
 	@Override
-	public void acknowledgeFailed(S state, CallbackArguments<S> arguments) {
+	public void acknowledgeFailed(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Acknowledge Failed", false,
 				false);
 	}
 
 	@Override
-	public void consume(S state,
-			AmqpQueueConsumeCallbackArguments<S, D> arguments) {
+	public void consume(C context,
+			AmqpQueueConsumeCallbackArguments<C, D> arguments) {
 		this.handleUnhandledCallback(arguments, "Consume", true, false);
 	}
 

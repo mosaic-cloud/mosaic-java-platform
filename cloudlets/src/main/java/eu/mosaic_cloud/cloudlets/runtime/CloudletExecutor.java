@@ -162,6 +162,9 @@ public class CloudletExecutor {
 
 	private ClassLoader loader;
 
+	private static MosaicLogger logger = MosaicLogger
+			.createLogger(CloudletExecutor.class);
+
 	/**
 	 * Creates a new CloudletExecutor.
 	 * 
@@ -176,19 +179,19 @@ public class CloudletExecutor {
 
 		// FIXME get threads from workers from a thread pool
 		this.worker = new Worker();
-		this.worker.thread = Threading.createAndStartThread (threading,
-				ThreadConfiguration.create(this, "worker", true).setClassLoader(loader),
-				this.worker);
+		this.worker.thread = Threading.createAndStartThread(threading,
+				ThreadConfiguration.create(this, "worker", true)
+						.setClassLoader(loader), this.worker);
 
 		this.backupWorker = new BackupWorker();
-		this.backupWorker.thread = Threading.createAndStartThread (threading,
-				ThreadConfiguration.create(this, "backup-worker", true).setClassLoader(loader),
-				this.backupWorker);
+		this.backupWorker.thread = Threading.createAndStartThread(threading,
+				ThreadConfiguration.create(this, "backup-worker", true)
+						.setClassLoader(loader), this.backupWorker);
 
 		this.runningWorkers = 2;
 		this.runState = CloudletExecutor.RUNNING;
 		this.loader = loader;
-		MosaicLogger.getLogger().trace("CloudletExecutor started.");
+		logger.trace("CloudletExecutor started.");
 	}
 
 	/**
@@ -260,7 +263,7 @@ public class CloudletExecutor {
 			}
 
 			tryTerminate(); // Terminate now if queues empty
-			MosaicLogger.getLogger().trace("CloudletExecutor shuted down.");
+			logger.trace("CloudletExecutor shuted down.");
 		} finally {
 			this.mainLock.unlock();
 		}
@@ -380,9 +383,8 @@ public class CloudletExecutor {
 					&& this.requestQueue.offer(request)) {
 				this.queuesNotEmpty.signal();
 			} else {
-				MosaicLogger.getLogger().info(
-						"CloudletExecutor rejects requests execution. Cloudlet state is "
-								+ this.runState);
+				logger.info("CloudletExecutor rejects requests execution. Cloudlet state is "
+						+ this.runState);
 				reject(request); // is shutdown
 			}
 		} finally {
@@ -414,9 +416,8 @@ public class CloudletExecutor {
 			}
 
 			if (reject) {
-				MosaicLogger.getLogger().info(
-						"CloudletExecutor rejects requests execution. Cloudlet state is "
-								+ this.runState);
+				logger.info("CloudletExecutor rejects requests execution. Cloudlet state is "
+						+ this.runState);
 				reject(request);
 			} else {
 				this.queuesNotEmpty.signal();

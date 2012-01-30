@@ -29,7 +29,6 @@ import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -75,7 +74,7 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 			KeyValueOperations operation, Object result, boolean isError) {
 		Message message;
 
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"KeyValueResponseTransmitter: send response for " + operation
 						+ " request " + token.getMessageId() + " client id "
 						+ token.getClientId());

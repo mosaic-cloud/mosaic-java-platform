@@ -29,7 +29,6 @@ import eu.mosaic_cloud.connectors.queue.amqp.AmqpCallbacksMap;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
@@ -109,7 +108,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			IdlCommon.Ok okPayload = (Ok) message.payload;
 			token = okPayload.getToken();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
@@ -125,7 +124,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			IdlCommon.NotOk nokPayload = (NotOk) message.payload;
 			token = nokPayload.getToken();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
@@ -141,7 +140,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			IdlCommon.Error errorPayload = (Error) message.payload;
 			token = errorPayload.getToken();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
@@ -158,7 +157,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			AmqpPayloads.ConsumeReply consumePayload = (ConsumeReply) message.payload;
 			token = consumePayload.getToken();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					mssgPrefix + amqpMessage.toString() + " for request id "
 							+ token.getMessageId());
 
@@ -174,7 +173,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 		case CANCEL_OK:
 			AmqpPayloads.CancelOkMessage cancelOkPayload = (CancelOkMessage) message.payload;
 			consumerId = cancelOkPayload.getConsumerTag();
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpConnectorReactor - Received CANCEL Ok "
 							+ " for consumer " + consumerId);
 			callback = this.callbacksMap.removeConsumerCallback(consumerId);
@@ -183,7 +182,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 		case SERVER_CANCEL:
 			AmqpPayloads.ServerCancelRequest scancelPayload = (ServerCancelRequest) message.payload;
 			consumerId = scancelPayload.getConsumerTag();
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpConnectorReactor - Received SERVER CANCEL "
 							+ " for consumer " + consumerId);
 			callback = this.callbacksMap.removeConsumerCallback(consumerId);
@@ -192,7 +191,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 		case CONSUME_OK:
 			AmqpPayloads.ConsumeOkMessage consumeOkPayload = (ConsumeOkMessage) message.payload;
 			consumerId = consumeOkPayload.getConsumerTag();
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpConnectorReactor - Received CONSUME Ok "
 							+ " for consumer " + consumerId);
 			callback = this.callbacksMap.getRequestHandlers(consumerId);
@@ -202,7 +201,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 			AmqpPayloads.DeliveryMessage delivery = (DeliveryMessage) message.payload;
 			consumerId = delivery.getConsumerTag();
 
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"AmqpConnectorReactor - Received delivery "
 							+ " for consumer " + consumerId);
 

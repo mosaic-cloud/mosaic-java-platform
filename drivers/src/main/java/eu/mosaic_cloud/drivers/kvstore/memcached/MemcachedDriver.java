@@ -33,7 +33,6 @@ import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -170,7 +169,7 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 	@Override
 	public void destroy() {
 		super.destroy();
-		MosaicLogger.getLogger().trace("MemcachedDriver destroyed."); //$NON-NLS-1$
+		this.logger.trace("MemcachedDriver destroyed."); //$NON-NLS-1$
 	}
 
 	public IResult<Boolean> invokeSetOperation(String clientId, String key,

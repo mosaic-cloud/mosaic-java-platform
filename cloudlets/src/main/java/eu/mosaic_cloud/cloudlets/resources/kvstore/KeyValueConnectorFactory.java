@@ -28,6 +28,7 @@ import eu.mosaic_cloud.connectors.kvstore.memcached.MemcachedStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * A factory for key-value connectors.
@@ -47,7 +48,7 @@ public class KeyValueConnectorFactory {
 			this.connectorClass = canonicalClassName;
 		}
 
-		public Class<? extends IKeyValueStore> getDriverClass() {
+		public Class<? extends IKeyValueStore> getConnectorClass() {
 			return this.connectorClass;
 		}
 	}
@@ -61,12 +62,15 @@ public class KeyValueConnectorFactory {
 	 *            the configuration for the connector
 	 * @param encoder
 	 *            encoder used for serializing data
+	 * @param threadingContext
+	 *            the context used for creating threads
 	 * @return the connector
 	 * @throws ConnectorNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
 	public static IKeyValueStore createConnector(String connectorName,
-			IConfiguration config, DataEncoder<?> encoder)
+			IConfiguration config, DataEncoder<?> encoder,
+			ThreadingContext threadingContext)
 			throws ConnectorNotFoundException {
 		ConnectorType type = null;
 		IKeyValueStore connector = null;
@@ -79,11 +83,12 @@ public class KeyValueConnectorFactory {
 		}
 		if (type != null) {
 			try {
-				Class<?> connectorClass = type.getDriverClass();
+				Class<?> connectorClass = type.getConnectorClass();
 				Method createMethod = connectorClass.getMethod("create",
-						IConfiguration.class, DataEncoder.class);
+						IConfiguration.class, DataEncoder.class,
+						ThreadingContext.class);
 				connector = (IKeyValueStore) createMethod.invoke(null, config,
-						encoder);
+						encoder, threadingContext);
 			} catch (Exception e) {
 				ExceptionTracer.traceIgnored(e);
 				ConnectorNotFoundException ex = new ConnectorNotFoundException(

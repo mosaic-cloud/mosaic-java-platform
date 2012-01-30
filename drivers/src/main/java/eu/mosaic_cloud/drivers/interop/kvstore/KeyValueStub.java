@@ -65,7 +65,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public class KeyValueStub extends AbstractDriverStub { // NOPMD 
+public class KeyValueStub extends AbstractDriverStub { // NOPMD
 
 	private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub>();
 
@@ -104,13 +104,13 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 	public static KeyValueStub create(IConfiguration config,
 			ThreadingContext threadingContext, ZeroMqChannel channel) {
 		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
+		MosaicLogger sLogger = MosaicLogger.createLogger(KeyValueStub.class);
 		KeyValueStub stub;
 		synchronized (AbstractDriverStub.LOCK) {
 			stub = KeyValueStub.stubs.get(cData);
 			try {
 				if (stub == null) {
-					MosaicLogger.getLogger().trace(
-							"KeyValueStub: create new stub."); //$NON-NLS-1$
+					sLogger.trace("KeyValueStub: create new stub."); //$NON-NLS-1$
 
 					KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter();
 					String driverName = ConfigUtils
@@ -129,8 +129,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 					incDriverReference(stub);
 					channel.accept(KeyValueSession.DRIVER, stub);
 				} else {
-					MosaicLogger.getLogger().trace(
-							"KeyValueStub: use existing stub."); //$NON-NLS-1$
+					sLogger.trace("KeyValueStub: use existing stub."); //$NON-NLS-1$
 					incDriverReference(stub);
 				}
 			} catch (DriverNotFoundException e) {
@@ -192,18 +191,24 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 		KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
 		CompletionToken token = null; // NOPMD by georgiana on 9/30/11 2:37 PM
 		String key;
-		String messagePrefix = "KeyValueStub - Received request for "; // NOPMD by georgiana on 10/12/11 2:11 PM
+		String messagePrefix = "KeyValueStub - Received request for "; // NOPMD
+																		// by
+																		// georgiana
+																		// on
+																		// 10/12/11
+																		// 2:11
+																		// PM
 
 		switch (kvMessage) {
 		case ACCESS:
-			MosaicLogger.getLogger().trace("Received initiation message");
+			this.logger.trace("Received initiation message");
 			KeyValuePayloads.InitRequest initRequest = (InitRequest) message.payload;
 			token = initRequest.getToken();
 			String bucket = initRequest.getBucket();
 			driver.registerClient(token.getClientId(), bucket);
 			break;
 		case ABORTED:
-			MosaicLogger.getLogger().trace("Received termination message");
+			this.logger.trace("Received termination message");
 			IdlCommon.AbortRequest abortRequest = (AbortRequest) message.payload;
 			token = abortRequest.getToken();
 			driver.unregisterClient(token.getClientId());
@@ -214,8 +219,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			key = setRequest.getKey();
 			data = setRequest.getValue().toByteArray();
 
-			MosaicLogger.getLogger().trace(
-					messagePrefix + kvMessage.toString() + " key: " + key);
+			this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
+					+ key);
 
 			// execute operation
 			DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
@@ -232,16 +237,16 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 
 			if (getRequest.getKeyCount() != 1) {
 				// error - the simple driver can handle only single-key get
-				MosaicLogger.getLogger().error(
-						"Basic driver can handle only single-key GET.");
+				this.logger
+						.error("Basic driver can handle only single-key GET.");
 				driver.handleUnsupportedOperationError(kvMessage.toString(),
 						getCallback);
 				break;
 			}
 			key = getRequest.getKey(0);
 
-			MosaicLogger.getLogger().trace(
-					messagePrefix + kvMessage.toString() + " key: " + key);
+			this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
+					+ key);
 
 			IResult<byte[]> resultGet = driver.invokeGetOperation(
 					token.getClientId(), key, getCallback);
@@ -252,8 +257,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			token = delRequest.getToken();
 			key = delRequest.getKey();
 
-			MosaicLogger.getLogger().trace(
-					messagePrefix + kvMessage.toString() + " key: " + key);
+			this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
+					+ key);
 
 			DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler(
 					token, session, driver.getClass(), transmitterClass);
@@ -265,10 +270,9 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			KeyValuePayloads.ListRequest listRequest = (ListRequest) message.payload;
 			token = listRequest.getToken();
 
-			MosaicLogger.getLogger().trace(
-					messagePrefix + kvMessage.toString() + " - request id: "
-							+ token.getMessageId() + " client id: "
-							+ token.getClientId());
+			this.logger.trace(messagePrefix + kvMessage.toString()
+					+ " - request id: " + token.getMessageId() + " client id: "
+					+ token.getClientId());
 
 			DriverOperationFinishedHandler listCallback = new DriverOperationFinishedHandler(
 					token, session, driver.getClass(), transmitterClass);
@@ -306,8 +310,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			AbstractKeyValueDriver driver, String messageType,
 			CompletionToken token,
 			Class<? extends KeyValueResponseTransmitter> transmitterClass) {
-		MosaicLogger.getLogger().error(
-				"Unexpected message type: " + messageType);
+		this.logger.error("Unexpected message type: " + messageType);
 		// create callback
 		DriverOperationFinishedHandler failCallback = new DriverOperationFinishedHandler(
 				token, session, driver.getClass(), transmitterClass);

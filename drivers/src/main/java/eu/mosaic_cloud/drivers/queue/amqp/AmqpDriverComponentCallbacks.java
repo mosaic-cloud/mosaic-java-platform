@@ -43,7 +43,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
@@ -64,7 +63,7 @@ public final class AmqpDriverComponentCallbacks extends
 	 * Creates a driver callback.
 	 */
 	public AmqpDriverComponentCallbacks() {
-		super(Threading.getCurrentContext());
+		super(Threading.getDefaultContext());
 		this.monitor = Monitor.create(this);
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
@@ -166,8 +165,7 @@ public final class AmqpDriverComponentCallbacks extends
 					if (!"tcp".equals(rabbitmqTransport) || (brokerIp == null)
 							|| (brokerPort == null)) {
 						this.terminate();
-						MosaicLogger
-								.getLogger()
+						this.logger
 								.error("failed resolving RabbitMQ broker endpoint: `" + reply.outputsOrError + "`; terminating!" //$NON-NLS-1$
 								);
 						throw new IllegalStateException();
@@ -180,7 +178,7 @@ public final class AmqpDriverComponentCallbacks extends
 					password = password != null ? password : "";
 					virtualHost = virtualHost != null ? virtualHost : "";
 
-					MosaicLogger.getLogger().debug(
+					this.logger.debug(
 							"Resolved RabbitMQ on " + brokerIp + ":" //$NON-NLS-1$ //$NON-NLS-2$
 									+ brokerPort + " user = " + user
 									+ " password = " + password + " vhost = "
@@ -238,7 +236,7 @@ public final class AmqpDriverComponentCallbacks extends
 							callReference));
 			this.pendingReference = callReference;
 			this.status = Status.WaitingResourceResolved;
-			MosaicLogger.getLogger().trace("AMQP driver callback initialized.");
+			this.logger.trace("AMQP driver callback initialized.");
 		}
 		return null;
 	}
@@ -257,8 +255,7 @@ public final class AmqpDriverComponentCallbacks extends
 					this.component.terminate();
 					throw (new IllegalStateException(e));
 				}
-				MosaicLogger
-						.getLogger()
+				this.logger
 						.info("AMQP driver callback registered to group " + this.selfGroup); //$NON-NLS-1$
 				this.status = Status.Registered;
 

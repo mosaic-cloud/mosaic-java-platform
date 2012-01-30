@@ -29,10 +29,10 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet
+ * @param <C>
+ *            the type of the context of the cloudlet
  */
-public interface IMemcachedAccessor<S> extends IKeyValueAccessor<S> {
+public interface IMemcachedAccessor<C> extends IKeyValueAccessor<C> {
 
 	/**
 	 * Stores the given data and associates it with the specified key.

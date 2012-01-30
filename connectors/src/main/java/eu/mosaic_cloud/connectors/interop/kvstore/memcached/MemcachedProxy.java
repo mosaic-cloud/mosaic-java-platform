@@ -176,7 +176,7 @@ public final class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 			Message message;
 
 			String identifier = UUID.randomUUID().toString();
-			MosaicLogger.getLogger().trace(
+			this.logger.trace(
 					"KeyValueProxy - Sending " + mcMessage.toString()
 							+ " request [" + identifier + "]...");
 

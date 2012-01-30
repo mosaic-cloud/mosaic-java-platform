@@ -36,7 +36,6 @@ import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RedisDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
@@ -56,7 +55,6 @@ public class RedisDriverTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
-		MosaicLogger.getLogger().trace("KEY: " + RedisDriverTest.keyPrefix);
 	}
 
 	@Before

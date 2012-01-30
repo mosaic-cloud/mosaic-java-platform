@@ -95,8 +95,8 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
 		// String bucket = ConfigUtils.resolveParameter(config,
 		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
 		// String.class, "");
-
-		MosaicLogger.getLogger().trace(
+		MosaicLogger sLogger = MosaicLogger.createLogger(RiakRestDriver.class);
+		sLogger.trace(
 				"Created Riak REST driver for host " + host + ":" + port
 						+ " [threads=" + noThreads + "]");
 		return new RiakRestDriver(threading, noThreads, host, port);
@@ -109,7 +109,7 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
 	@Override
 	public void destroy() {
 		super.destroy();
-		MosaicLogger.getLogger().trace("RiakDriver destroyed."); //$NON-NLS-1$
+		this.logger.trace("RiakDriver destroyed."); //$NON-NLS-1$
 	}
 
 	@Override

@@ -24,84 +24,84 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the state of the cloudlet using this callback
+ * @param <C>
+ *            the type of the context of the cloudlet using this callback
  */
-public class DefaultMemcachedAccessorCallback<S> extends
-		DefaultKeyValueAccessorCallback<S> implements
-		IMemcachedAccessorCallback<S> {
+public class DefaultMemcachedAccessorCallback<C> extends
+		DefaultKeyValueAccessorCallback<C> implements
+		IMemcachedAccessorCallback<C> {
 
 	@Override
-	public void addSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void addSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Add Succeeded", true, false);
 
 	}
 
 	@Override
-	public void addFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void addFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Add Failed", false, false);
 
 	}
 
 	@Override
-	public void appendSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void appendSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Append Succeeded", true, false);
 
 	}
 
 	@Override
-	public void appendFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void appendFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Append Failed", false, false);
 
 	}
 
 	@Override
-	public void prependSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void prependSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Prepend Succeeded", true,
 				false);
 
 	}
 
 	@Override
-	public void prependFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void prependFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Prepend Failed", false, false);
 
 	}
 
 	@Override
-	public void replaceSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void replaceSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Replace Succeeded", true,
 				false);
 
 	}
 
 	@Override
-	public void replaceFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void replaceFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Replace Failed", false, false);
 
 	}
 
 	@Override
-	public void getBulkSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void getBulkSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "GetBulk Succeeded", true,
 				false);
 
 	}
 
 	@Override
-	public void getBulkFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void getBulkFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "GetBulk Failed", false, false);
 
 	}
 
 	@Override
-	public void casSucceeded(S state, KeyValueCallbackArguments<S> arguments) {
+	public void casSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Cas Succeeded", true, false);
 
 	}
 
 	@Override
-	public void casFailed(S state, KeyValueCallbackArguments<S> arguments) {
+	public void casFailed(C context, KeyValueCallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Cas Failed", false, false);
 
 	}

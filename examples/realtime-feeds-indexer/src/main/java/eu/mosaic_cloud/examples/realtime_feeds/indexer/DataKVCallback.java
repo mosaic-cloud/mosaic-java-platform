@@ -26,7 +26,6 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 
 public class DataKVCallback extends
 		DefaultKeyValueAccessorCallback<IndexerCloudletContext> {
@@ -43,7 +42,7 @@ public class DataKVCallback extends
 	public void getSucceeded(IndexerCloudletContext context,
 			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
-		MosaicLogger.getLogger().trace(
+		this.logger.trace(
 				"succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key
 						+ ")");
 		IndexWorkflow.parseLatestFeed(arguments.getValue(),
@@ -54,7 +53,7 @@ public class DataKVCallback extends
 	public void getFailed(IndexerCloudletContext context,
 			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
-		MosaicLogger.getLogger()
+		this.logger
 				.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key
 						+ ")");
 		Map<String, String> errorMssg = new HashMap<String, String>(4);

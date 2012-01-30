@@ -27,7 +27,6 @@ import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
 import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpPublisherCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 
 public class PublisherCloudlet {
@@ -38,7 +37,7 @@ public class PublisherCloudlet {
 		@Override
 		public void initialize(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"PublisherCloudlet is being initialized.");
 			ICloudletController<PublisherCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -55,7 +54,7 @@ public class PublisherCloudlet {
 		@Override
 		public void initializeSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"PublisherCloudlet initialized successfully.");
 			ICloudletController<PublisherCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -67,14 +66,14 @@ public class PublisherCloudlet {
 		@Override
 		public void destroy(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"PublisherCloudlet is being destroyed.");
 		}
 
 		@Override
 		public void destroySucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"Publisher cloudlet was destroyed successfully.");
 		}
 	}
@@ -86,7 +85,7 @@ public class PublisherCloudlet {
 		@Override
 		public void registerSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"PublisherCloudlet publisher registered successfully.");
 			context.publisher.publish("TEST MESSAGE!!!!", null, "text/plain");
 		}
@@ -94,7 +93,7 @@ public class PublisherCloudlet {
 		@Override
 		public void unregisterSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"PublisherCloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<PublisherCloudletContext> cloudlet = arguments
@@ -113,7 +112,7 @@ public class PublisherCloudlet {
 		@Override
 		public void destroySucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			MosaicLogger.getLogger().info(
+			this.logger.info(
 					"PublisherCloudlet publisher was destroyed successfully.");
 			context.publisher = null;
 			arguments.getCloudlet().destroy();

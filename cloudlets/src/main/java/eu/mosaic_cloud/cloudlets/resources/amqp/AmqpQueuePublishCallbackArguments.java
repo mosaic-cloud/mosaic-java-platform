@@ -27,13 +27,13 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the state of the cloudlet
+ * @param <C>
+ *            the context of the cloudlet
  * @param <D>
  *            the type of the published data
  */
-public class AmqpQueuePublishCallbackArguments<S, D> extends
-		CallbackArguments<S> {
+public class AmqpQueuePublishCallbackArguments<C, D> extends
+		CallbackArguments<C> {
 
 	private AmqpQueuePublishMessage<D> message;
 
@@ -45,7 +45,7 @@ public class AmqpQueuePublishCallbackArguments<S, D> extends
 	 * @param message
 	 *            information about the publish request
 	 */
-	public AmqpQueuePublishCallbackArguments(ICloudletController<S> cloudlet,
+	public AmqpQueuePublishCallbackArguments(ICloudletController<C> cloudlet,
 			AmqpQueuePublishMessage<D> message) {
 		super(cloudlet);
 		this.message = message;

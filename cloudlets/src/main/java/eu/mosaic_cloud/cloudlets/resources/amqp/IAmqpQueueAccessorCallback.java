@@ -27,49 +27,49 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
  * 
  * @author Georgiana Macariu
  * 
- * @param <S>
- *            the type of the cloudlet state
+ * @param <C>
+ *            the type of the cloudlet context
  */
-public interface IAmqpQueueAccessorCallback<S> extends
-		IResourceAccessorCallback<S> {
+public interface IAmqpQueueAccessorCallback<C> extends
+		IResourceAccessorCallback<C> {
 
 	/**
 	 * Called when consumer or publisher registered successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void registerSucceeded(S state, CallbackArguments<S> arguments);
+	void registerSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when consumer or publisher failed to register.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void registerFailed(S state, CallbackArguments<S> arguments);
+	void registerFailed(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when consumer or publisher unregistered successfully.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void unregisterSucceeded(S state, CallbackArguments<S> arguments);
+	void unregisterSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when consumer or publisher failed to unregister.
 	 * 
-	 * @param state
-	 *            cloudlet state
+	 * @param context
+	 *            cloudlet context
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void unregisterFailed(S state, CallbackArguments<S> arguments);
+	void unregisterFailed(C context, CallbackArguments<C> arguments);
 }
