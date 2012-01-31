@@ -118,22 +118,27 @@ public final class ZeroMqChannelSocket
 			else
 				outboundPollIndex = -1;
 			errorPollIndex = poller.register (this.socket, ZMQ.Poller.POLLERR);
-			if (poller.poll (5 * 1000) > 0) {
-				if (poller.pollerr (errorPollIndex) || ((this.socket.getEvents () & ZMQ.Poller.POLLERR) != 0))
+			if (poller.poll (5) > 0) {
+				if (((errorPollIndex >= 0) && poller.pollerr (errorPollIndex)) || ((this.socket.getEvents () & ZMQ.Poller.POLLERR) != 0))
 					this.failed ();
 				if ((inboundPollIndex >= 0) && poller.pollin (inboundPollIndex))
 					this.receive ();
 				if ((outboundPollIndex >= 0) && poller.pollout (outboundPollIndex))
 					this.send ();
 			}
-			poller.unregister (this.socket);
+			if (inboundPollIndex != -1)
+				poller.unregister (this.socket);
+			if (outboundPollIndex != -1)
+				poller.unregister (this.socket);
+			if (errorPollIndex != -1)
+				poller.unregister (this.socket);
 		}
 	}
 	
 	final void setup ()
 	{
 		this.transcript.traceDebugging ("setting-up...");
-		this.socket = ZeroMqChannelSocket.defaultContext.socket (ZMQ.XREP);
+		this.socket = ZeroMqChannelSocket.defaultContext.socket (ZMQ.ROUTER);
 		this.socket.setIdentity (this.self.getBytes ());
 	}
 	
