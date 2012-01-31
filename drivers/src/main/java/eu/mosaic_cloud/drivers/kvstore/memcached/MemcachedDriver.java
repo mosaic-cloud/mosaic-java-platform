@@ -20,7 +20,6 @@
 package eu.mosaic_cloud.drivers.kvstore.memcached;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -47,7 +46,11 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by georgiana on 10/12/11 10:07 AM
+public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
+																	// georgiana
+																	// on
+																	// 10/12/11
+																	// 10:07 AM
 
 	private final static boolean USE_BUCKET = false;
 	private final List<?> hosts;
@@ -94,12 +97,15 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 	 */
 	public static MemcachedDriver create(IConfiguration config,
 			ThreadingContext threading) throws IOException {
-		List<URI> nodesURI = new ArrayList<URI>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
-		List<InetSocketAddress> nodesISA = new ArrayList<InetSocketAddress>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
+		List<URI> nodesURI = new ArrayList<URI>(10); // NOPMD by georgiana on
+														// 10/12/11 12:51 PM
 		int noNodes = 0; // NOPMD by georgiana on 10/12/11 10:07 AM
 		int port, noThreads;
-		List<String> hosts = new ArrayList<String>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
-		List<Integer> ports = new ArrayList<Integer>(10); // NOPMD by georgiana on 10/12/11 12:51 PM
+		List<String> hosts = new ArrayList<String>(10); // NOPMD by georgiana on
+														// 10/12/11 12:51 PM
+		List<Integer> ports = new ArrayList<Integer>(10); // NOPMD by georgiana
+															// on 10/12/11 12:51
+															// PM
 		MemcachedDriver driver;
 
 		while (true) {
@@ -121,18 +127,18 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 		}
 
 		for (int index = 0; index < noNodes; index++) {
-			if (MemcachedDriver.USE_BUCKET) {
-				try {
-					URI address = new URI("http://" + hosts.get(index) + ":" // NOPMD by georgiana on 10/12/11 12:50 PM
-							+ ports.get(index) + "/pools");
-					nodesURI.add(address);
-				} catch (URISyntaxException e) {
-					ExceptionTracer.traceIgnored(e);
-				}
-			} else {
-				InetSocketAddress address = new InetSocketAddress( // NOPMD by georgiana on 10/12/11 12:50 PM
-						hosts.get(index), ports.get(index)); // NOPMD by georgiana on 10/12/11 10:07 AM
-				nodesISA.add(address);
+			try {
+				URI address = new URI("http://" + hosts.get(index) + ":" // NOPMD
+																			// by
+																			// georgiana
+																			// on
+																			// 10/12/11
+																			// 12:50
+																			// PM
+						+ ports.get(index) + "/pools");
+				nodesURI.add(address);
+			} catch (URISyntaxException e) {
+				ExceptionTracer.traceIgnored(e);
 			}
 		}
 
@@ -140,9 +146,9 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		//		String bucket = ConfigUtils
-		//				.resolveParameter(
-		//						config,
+		// String bucket = ConfigUtils
+		// .resolveParameter(
+		// config,
 		//						ConfigProperties.getString("KVStoreDriver.3"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 		String user = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.5"), //$NON-NLS-1$
@@ -152,13 +158,8 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by 
 						config,
 						ConfigProperties.getString("KVStoreDriver.4"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 
-		if (MemcachedDriver.USE_BUCKET) {
-			driver = new MemcachedDriver(threading, noThreads, nodesURI, user,
-					passwd);
-		} else {
-			driver = new MemcachedDriver(threading, noThreads, nodesISA, user,
-					passwd);
-		}
+		driver = new MemcachedDriver(threading, noThreads, nodesURI, user,
+				passwd);
 		return driver;
 	}
 
