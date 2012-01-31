@@ -21,10 +21,11 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import com.google.common.util.concurrent.ListenableFuture;
+import java.util.concurrent.ExecutionException;
 
 
-public interface CallbackFuture
-		extends
-			ListenableFuture<Void>
-{}
+public final class CallbackCanceled
+		extends ExecutionException
+{
+	private static final long serialVersionUID = 1L;
+}

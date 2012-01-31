@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.tools.callbacks.tools;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackReference;
-import eu.mosaic_cloud.tools.callbacks.core.v2.Callbacks;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface QueueCallbacks<_Element_ extends Object>

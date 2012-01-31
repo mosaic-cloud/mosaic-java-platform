@@ -21,23 +21,26 @@
 package eu.mosaic_cloud.tools.callbacks.implementations.basic;
 
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.WeakHashMap;
+import java.lang.reflect.Proxy;
+import java.util.Comparator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractFuture;
-import com.google.common.util.concurrent.AbstractService;
-import com.google.common.util.concurrent.Service.State;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackFuture;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCanceled;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackTrigger;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
@@ -53,121 +56,485 @@ public final class BasicCallbackReactor
 		implements
 			CallbackReactor
 {
-	private BasicCallbackReactor (final ThreadingContext threading, final ExceptionTracer exceptions)
+	BasicCallbackReactor (final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Reactor (this, threading, exceptions);
+		this.reactor = new Reactor (this, threading, exceptions);
 	}
 	
 	@Override
-	public final <_Callbacks_ extends Callbacks> CallbackReference assign (final _Callbacks_ trigger, final _Callbacks_ handler)
+	public final <_Callbacks_ extends Callbacks> CallbackReference assignHandler (final _Callbacks_ proxy, final CallbackHandler<_Callbacks_> handler, final CallbackIsolate isolate)
 	{
-		return (this.delegate.assign (trigger, handler));
+		return (this.reactor.triggerAssign (proxy, handler, isolate));
 	}
 	
-	public final void initialize ()
+	@Override
+	public final boolean await ()
 	{
-		this.initialize (0);
+		return (this.await (0));
+	}
+	
+	@Override
+	public final boolean await (final long timeout)
+	{
+		return (this.reactor.await (timeout));
+	}
+	
+	@Override
+	public final CallbackIsolate createIsolate ()
+	{
+		return (this.reactor.createIsolate ());
+	}
+	
+	@Override
+	public final <_Callbacks_ extends Callbacks> _Callbacks_ createProxy (final Class<_Callbacks_> specification)
+	{
+		return (this.reactor.createProxy (specification));
+	}
+	
+	public final boolean destoy ()
+	{
+		return (this.destroy (0));
+	}
+	
+	public final boolean destroy (final long timeout)
+	{
+		this.reactor.triggerDestroy ();
+		return (this.reactor.await (timeout));
+	}
+	
+	@Override
+	public final CallbackReference destroyIsolate (final CallbackIsolate isolate)
+	{
+		return (this.reactor.triggerDestroyIsolate (isolate));
+	}
+	
+	@Override
+	public final <_Callbacks_ extends Callbacks> CallbackReference destroyProxy (final _Callbacks_ proxy)
+	{
+		return (this.reactor.triggerDestroyProxy (proxy));
+	}
+	
+	public final boolean initialize ()
+	{
+		return (this.initialize (0));
 	}
 	
 	public final boolean initialize (final long timeout)
 	{
-		final State state = Threading.awaitOrCatch (this.delegate.start (), timeout);
-		return (state == State.RUNNING);
+		Preconditions.checkArgument (timeout >= -1);
+		return (true);
 	}
 	
-	@Override
-	public final <_Callbacks_ extends Callbacks> _Callbacks_ register (final Class<_Callbacks_> specification, final _Callbacks_ handler)
-	{
-		return (this.delegate.register (specification, handler));
-	}
-	
-	@Override
-	public final CallbackFuture resolve (final CallbackReference reference)
-	{
-		return (this.delegate.resolve (reference));
-	}
-	
-	@Override
-	public void terminate ()
-	{
-		this.terminate (0);
-	}
-	
-	public final boolean terminate (final long timeout)
-	{
-		final State state = Threading.awaitOrCatch (this.delegate.stop (), timeout);
-		return (state == State.TERMINATED);
-	}
-	
-	@Override
-	public final <_Callbacks_ extends Callbacks> CallbackReference unregister (final _Callbacks_ trigger)
-	{
-		return (this.delegate.unregister (trigger));
-	}
-	
-	final Reactor delegate;
+	final Reactor reactor;
 	
 	public static final BasicCallbackReactor create (final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		return (new BasicCallbackReactor (threading, exceptions));
 	}
 	
-	private static abstract class Action
-			extends AbstractFuture<Void>
-			implements
-				CallbackFuture
+	static abstract class Action<_Target_ extends ActionTarget>
+			extends Object
 	{
-		Action (final Proxy proxy, final CallbackReference reference)
+		Action (final Reactor reactor, final _Target_ target, final Completion completion)
 		{
 			super ();
-			this.proxy = proxy;
-			this.reference = reference;
+			this.reactor = reactor;
+			this.target = target;
+			this.completion = completion;
+			if (this.completion != null)
+				this.reference = CallbackReference.create (this.reactor.reference, this.completion);
+			else
+				this.reference = null;
+		}
+		
+		final Completion completion;
+		final Reactor reactor;
+		final CallbackReference reference;
+		final _Target_ target;
+	}
+	
+	static interface ActionTarget
+	{}
+	
+	static final class Actor<_Callbacks_ extends Callbacks>
+			extends Object
+			implements
+				ActionTarget,
+				InvocationHandler
+	{
+		Actor (final Reactor reactor, final Class<_Callbacks_> specification)
+		{
+			super ();
+			this.monitor = Monitor.create (this);
+			synchronized (this.monitor) {
+				this.reactor = reactor;
+				this.specification = specification;
+				this.destroyCompletion = new Completion (this.reactor);
+				this.proxy = (CallbackProxy) Proxy.newProxyInstance (specification.getClassLoader (), new Class[] {specification, CallbackProxy.class}, this);
+				this.actions = new ConcurrentLinkedQueue<ActorAction> ();
+				this.handler = new AtomicReference<CallbackHandler<_Callbacks_>> (null);
+				this.scheduler = new AtomicReference<Scheduler> (null);
+				this.failed = new AtomicReference<Throwable> (null);
+				this.assignAction = new AtomicReference<ActorAssignAction> (null);
+				this.destroyAction = new AtomicReference<ActorDestroyAction> (null);
+				this.handlerStatus = new AtomicReference<HandlerStatus> (HandlerStatus.Unassigned);
+				this.scheduleStatus = new AtomicReference<ScheduleStatus> (ScheduleStatus.Idle);
+				this.status = new AtomicReference<Status> (Status.Active);
+				this.reactor.registerActor (this);
+				this.reactor.transcript.traceDebugging ("created proxy `%{object:identity}` (owned by actor `%{object:identity}` from reactor `%{object:identity}`).", this.proxy, this, this.reactor.facade);
+			}
 		}
 		
 		@Override
-		public final boolean cancel (final boolean maybeInterrupt)
+		public final Object invoke (final Object callbacks, final Method method, final Object[] arguments)
+				throws Throwable
 		{
-			return (super.cancel (maybeInterrupt));
+			if (method.getDeclaringClass () == Object.class)
+				return (method.invoke (this, arguments));
+			if (method.getReturnType () != CallbackReference.class)
+				throw (new IllegalAccessError ());
+			synchronized (this.monitor) {
+				this.reactor.transcript.traceDebugging ("invocking (triggered) for proxy `%{object:identity}` the method `%{method}` with arguments `%{array}`...", this.proxy, method, arguments);
+				Preconditions.checkState (this.status.get () == Status.Active);
+				final ActorCallbackAction action = new ActorCallbackAction (this, method, arguments);
+				this.enqueueAction (action);
+				return (action.reference);
+			}
 		}
 		
-		final void triggerCancel ()
+		final void enqueueAction (final ActorAction action)
 		{
-			this.cancel (true);
+			synchronized (this.monitor) {
+				this.reactor.transcript.traceDebugging ("enqueueing action `%{object}` on actor `%{object:identity}`...", action, this);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				if (action instanceof ActorCallbackAction) {
+					Preconditions.checkState (this.actions.offer (action));
+					this.schedule (false);
+				} else if (action instanceof ActorAssignAction) {
+					Preconditions.checkState (this.assignAction.compareAndSet (null, (ActorAssignAction) action));
+					this.schedule (true);
+				} else if (action instanceof ActorDestroyAction) {
+					Preconditions.checkState (this.destroyAction.compareAndSet (null, (ActorDestroyAction) action));
+					this.schedule (true);
+				} else
+					throw (new IllegalStateException ());
+			}
 		}
 		
-		final void triggerFail (final Throwable exception)
+		final void executeActions ()
 		{
-			this.setException (exception);
+			this.reactor.transcript.traceDebugging ("executing enqueued actions on actor `%{object:identity}`...", this);
+			Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Scheduled, ScheduleStatus.Running));
+			while (true) {
+				boolean reschedule = false;
+				if ((this.assignAction.get () != null) && (this.failed.get () == null)) {
+					this.executeAssign ();
+					reschedule |= true;
+				}
+				while (true) {
+					if (this.failed.get () != null)
+						break;
+					final ActorAction action = this.actions.poll ();
+					if (action == null)
+						break;
+					if (action instanceof ActorCallbackAction) {
+						this.executeInvokeCallback ((ActorCallbackAction) action);
+						reschedule |= true;
+					} else
+						throw (new IllegalStateException ());
+				}
+				if (this.destroyAction.get () != null) {
+					this.executeDestroy ();
+					reschedule |= true;
+				}
+				if (!reschedule)
+					break;
+			}
+			Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Running, ScheduleStatus.Idle));
+			this.reactor.transcript.traceDebugging ("executed enqueued actions on actor `%{object:identity}`...", this);
 		}
 		
-		final void triggerSucceed ()
+		final void executeAssign ()
 		{
-			this.set (null);
+			synchronized (this.monitor) {
+				final ActorAssignAction action = this.assignAction.get ();
+				Preconditions.checkState (action != null);
+				this.reactor.transcript.traceDebugging ("executing action `%{object}` on actor `%{object:identity}`...", action, this);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				Preconditions.checkState (this.handlerStatus.get () == HandlerStatus.Registering);
+				final CallbackHandler<_Callbacks_> handler = this.handler.get ();
+				Preconditions.checkState ((handler != null) && (handler == action.handler));
+				final Scheduler scheduler = this.scheduler.get ();
+				Preconditions.checkState ((scheduler != null) && (scheduler == action.scheduler));
+				this.reactor.transcript.traceDebugging ("assigning handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
+				this.reactor.transcript.traceDebugging ("invocking register callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
+				try {
+					handler.registeredCallbacks (this.specification.cast (this.proxy), scheduler.isolate);
+				} catch (final Throwable exception) {
+					this.reactor.exceptions.traceDeferredException (exception);
+					this.triggerFailure (exception);
+					return;
+				}
+				action.completion.triggerSuccess ();
+				Preconditions.checkState (this.assignAction.compareAndSet (action, null));
+				Preconditions.checkState (this.handlerStatus.compareAndSet (HandlerStatus.Registering, HandlerStatus.Assigned));
+				this.reactor.transcript.traceDebugging ("assigned handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`).", handler, this.proxy, this, scheduler.isolate, scheduler);
+				this.reactor.transcript.traceDebugging ("executed action `%{object}` on actor `%{object:identity}`...", action, this);
+			}
 		}
 		
-		final Proxy proxy;
-		final CallbackReference reference;
+		final void executeDestroy ()
+		{
+			synchronized (this.monitor) {
+				final ActorDestroyAction destroy = this.destroyAction.get ();
+				Preconditions.checkState (destroy != null);
+				this.reactor.transcript.traceDebugging ("executing action `%{object}` on actor `%{object:identity}`...", destroy, this);
+				Preconditions.checkState (this.status.get () == Status.Destroying);
+				switch (this.handlerStatus.get ()) {
+					case Unassigned :
+					case Registering :
+					case Assigned :
+						break;
+					default:
+						throw (new IllegalStateException ());
+				}
+				this.reactor.transcript.traceDebugging ("destroying proxy `%{object:identity}` (owned by actor `%{object:identity}`)...", this.proxy, this);
+				final Throwable failure = this.failed.get ();
+				if (failure == null) {
+					final ActorAssignAction assign = this.assignAction.get ();
+					final CallbackHandler<_Callbacks_> handler = this.handler.get ();
+					if ((this.handler != null) && (assign == null)) {
+						final Scheduler scheduler = this.scheduler.get ();
+						Preconditions.checkState (scheduler != null);
+						this.reactor.transcript.traceDebugging ("invocking unregister callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
+						try {
+							handler.unregisteredCallbacks (this.specification.cast (this.proxy));
+						} catch (final Throwable exception) {
+							this.reactor.exceptions.traceDeferredException (exception);
+							this.triggerFailure (exception);
+							return;
+						}
+						scheduler.unregisterActor (this);
+						Preconditions.checkState (this.handler.compareAndSet (handler, null));
+						Preconditions.checkState (this.scheduler.compareAndSet (scheduler, null));
+					} else {
+						if (assign != null) {
+							assign.completion.triggerFailure (new CallbackCanceled ());
+							Preconditions.checkState (this.assignAction.compareAndSet (assign, null));
+						}
+						for (final ActorAction action : this.actions)
+							action.completion.triggerFailure (new CallbackCanceled ());
+						this.actions.clear ();
+					}
+				} else {
+					final ActorAssignAction assign = this.assignAction.get ();
+					final CallbackHandler<_Callbacks_> handler = this.handler.get ();
+					if (this.handler != null) {
+						final Scheduler scheduler = this.scheduler.get ();
+						Preconditions.checkState (scheduler != null);
+						this.reactor.transcript.traceDebugging ("invocking failure callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
+						try {
+							handler.failedCallbacks (this.specification.cast (this.proxy), failure);
+						} catch (final Throwable exception) {
+							this.reactor.exceptions.traceIgnoredException (exception);
+						}
+						scheduler.unregisterActor (this);
+						Preconditions.checkState (this.handler.compareAndSet (handler, null));
+						Preconditions.checkState (this.scheduler.compareAndSet (scheduler, null));
+					}
+					if (assign != null) {
+						assign.completion.triggerFailure (failure);
+						Preconditions.checkState (this.assignAction.compareAndSet (assign, null));
+					}
+					for (final ActorAction action : this.actions)
+						action.completion.triggerFailure (failure);
+					this.actions.clear ();
+				}
+				Preconditions.checkState (this.assignAction.get () == null);
+				Preconditions.checkState (this.handler.get () == null);
+				Preconditions.checkState (this.scheduler.get () == null);
+				this.reactor.unregisterActor (this);
+				if (failure == null)
+					destroy.completion.triggerSuccess ();
+				else
+					destroy.completion.triggerFailure (failure);
+				Preconditions.checkState (this.destroyAction.compareAndSet (destroy, null));
+				Preconditions.checkState (this.status.compareAndSet (Status.Destroying, Status.Destroyed));
+				this.reactor.transcript.traceDebugging ("destroyed proxy `%{object:identity}` (owned by actor `%{object:identity}`).", this.proxy, this);
+				this.reactor.transcript.traceDebugging ("executed action `%{object}` on actor `%{object:identity}`.", destroy, this);
+			}
+		}
+		
+		final void executeInvokeCallback (final ActorCallbackAction action)
+		{
+			Preconditions.checkState (action != null);
+			this.reactor.transcript.traceDebugging ("executing action `%{object}` on actor `%{object:identity}`...", action, this);
+			final CallbackHandler<_Callbacks_> handler;
+			final Scheduler scheduler;
+			synchronized (this.monitor) {
+				Preconditions.checkState (this.status.get () == Status.Active);
+				Preconditions.checkState (this.handlerStatus.get () == HandlerStatus.Assigned);
+				handler = this.handler.get ();
+				Preconditions.checkState (handler != null);
+				scheduler = this.scheduler.get ();
+				Preconditions.checkState (scheduler != null);
+			}
+			this.reactor.transcript.traceDebugging ("invocking method callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`) the method `%{method}` with arguments `%{array}`...", handler, this.proxy, this, scheduler.isolate, scheduler, action.method, action.arguments);
+			try {
+				action.method.invoke (handler, action.arguments);
+			} catch (final Throwable exception) {
+				this.reactor.exceptions.traceDeferredException (exception);
+				this.triggerFailure (exception);
+				return;
+			}
+			action.completion.triggerSuccess ();
+			this.reactor.transcript.traceDebugging ("executed action `%{object}` on actor `%{object:identity}`...", action, this);
+		}
+		
+		final void schedule (final boolean force)
+		{
+			synchronized (this.monitor) {
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				if (!force) {
+					switch (this.handlerStatus.get ()) {
+						case Assigned :
+						case Registering :
+							break;
+						case Unassigned :
+							return;
+						default:
+							throw (new IllegalStateException ());
+					}
+					if (this.handler.get () == null)
+						return;
+				}
+				if ((this.scheduleStatus.get () == ScheduleStatus.Scheduled) || (this.scheduleStatus.get () == ScheduleStatus.Running))
+					return;
+				final Scheduler scheduler = this.scheduler.get ();
+				Preconditions.checkNotNull (scheduler);
+				scheduler.enqueueActor (this);
+				Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Idle, ScheduleStatus.Scheduled));
+				this.reactor.transcript.traceDebugging ("scheduled actor `%{object:identity}`.", this);
+			}
+		}
+		
+		final CallbackReference triggerAssign (final CallbackHandler<?> handler, final Scheduler scheduler)
+		{
+			Preconditions.checkNotNull (scheduler);
+			Preconditions.checkNotNull (handler);
+			Preconditions.checkArgument (this.specification.isInstance (handler));
+			synchronized (this.monitor) {
+				this.reactor.transcript.traceDebugging ("assigning (triggered) handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
+				Preconditions.checkState (this.status.get () == Status.Active);
+				Preconditions.checkState (this.handlerStatus.compareAndSet (HandlerStatus.Unassigned, HandlerStatus.Registering));
+				Preconditions.checkState (this.handler.compareAndSet (null, (CallbackHandler<_Callbacks_>) handler));
+				Preconditions.checkState (this.scheduler.compareAndSet (null, scheduler));
+				scheduler.registerActor (this);
+				final ActorAssignAction action = new ActorAssignAction (this, handler, scheduler);
+				this.enqueueAction (action);
+				return (action.reference);
+			}
+		}
+		
+		final CallbackReference triggerDestroy ()
+		{
+			this.reactor.transcript.traceDebugging ("destroying (triggered) proxy `%{object:identity}` (owned by actor `%{object:identity}`)...", this.proxy, this);
+			synchronized (this.monitor) {
+				if (!this.status.compareAndSet (Status.Active, Status.Destroying)) {
+					switch (this.status.get ()) {
+						case Destroying :
+						case Destroyed :
+							final ActorDestroyAction action = this.destroyAction.get ();
+							Preconditions.checkState (action != null);
+							return (action.reference);
+						default:
+							throw (new IllegalStateException ());
+					}
+				}
+				final ActorDestroyAction action = new ActorDestroyAction (this, this.destroyCompletion);
+				this.enqueueAction (action);
+				return (action.reference);
+			}
+		}
+		
+		final void triggerFailure (final Throwable exception)
+		{
+			synchronized (this.monitor) {
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				this.failed.compareAndSet (null, exception);
+				this.triggerDestroy ();
+			}
+		}
+		
+		final ConcurrentLinkedQueue<ActorAction> actions;
+		final AtomicReference<ActorAssignAction> assignAction;
+		final AtomicReference<ActorDestroyAction> destroyAction;
+		final Completion destroyCompletion;
+		final AtomicReference<Throwable> failed;
+		final AtomicReference<CallbackHandler<_Callbacks_>> handler;
+		final AtomicReference<HandlerStatus> handlerStatus;
+		final Monitor monitor;
+		final CallbackProxy proxy;
+		final Reactor reactor;
+		final AtomicReference<Scheduler> scheduler;
+		final AtomicReference<ScheduleStatus> scheduleStatus;
+		final Class<_Callbacks_> specification;
+		final AtomicReference<Status> status;
+		
+		static enum HandlerStatus
+		{
+			Assigned (),
+			Registering (),
+			Unassigned (),
+			Unregistered ();
+		}
+		
+		static enum ScheduleStatus
+		{
+			Idle (),
+			Running (),
+			RunningReschedule (),
+			Scheduled ();
+		}
+		
+		static enum Status
+		{
+			Active (),
+			Destroyed (),
+			Destroying ();
+		}
 	}
 	
-	private static final class AssignAction
-			extends Action
+	static abstract class ActorAction
+			extends Action<Actor<?>>
 	{
-		AssignAction (final Proxy proxy, final CallbackReference reference, final CallbackHandler<? extends Callbacks> handler)
+		ActorAction (final Actor<?> actor, final Completion completion)
 		{
-			super (proxy, reference);
+			super (actor.reactor, actor, completion);
+		}
+	}
+	
+	static final class ActorAssignAction
+			extends ActorAction
+	{
+		ActorAssignAction (final Actor<?> actor, final CallbackHandler<?> handler, final Scheduler scheduler)
+		{
+			super (actor, new Completion (actor.reactor));
 			this.handler = handler;
+			this.scheduler = scheduler;
 		}
 		
-		final CallbackHandler<? extends Callbacks> handler;
+		final CallbackHandler<?> handler;
+		final Scheduler scheduler;
 	}
 	
-	private static final class InvokeAction
-			extends Action
+	static final class ActorCallbackAction
+			extends ActorAction
 	{
-		InvokeAction (final Proxy proxy, final CallbackReference reference, final Method method, final Object[] arguments)
+		ActorCallbackAction (final Actor<?> actor, final Method method, final Object[] arguments)
 		{
-			super (proxy, reference);
+			super (actor, new Completion (actor.reactor));
 			this.method = method;
 			this.arguments = arguments;
 		}
@@ -176,361 +543,525 @@ public final class BasicCallbackReactor
 		final Method method;
 	}
 	
-	private static final class Proxy
-			extends Object
-			implements
-				InvocationHandler,
-				Runnable
+	static final class ActorDestroyAction
+			extends ActorAction
 	{
-		Proxy (final Reactor reactor, final Class<? extends Callbacks> specification)
+		ActorDestroyAction (final Actor<?> actor, final Completion completion)
+		{
+			super (actor, completion);
+		}
+	}
+	
+	static final class Completion
+			extends AbstractFuture<Boolean>
+			implements
+				CallbackCompletion
+	{
+		Completion (final Reactor reactor)
 		{
 			super ();
 			this.reactor = reactor;
-			this.specification = specification;
-			this.trigger = (CallbackTrigger) java.lang.reflect.Proxy.newProxyInstance (specification.getClassLoader (), new Class[] {specification, CallbackTrigger.class}, this);
-			this.handler = new AtomicReference<Object> (null);
-			this.actions = new ConcurrentLinkedQueue<Action> ();
-			this.scheduled = new AtomicReference<Action> (null);
-			this.failed = new AtomicBoolean (false);
 		}
 		
 		@Override
-		public final Object invoke (final Object callbacks, final Method method, final Object[] arguments)
-				throws Exception
+		public final boolean cancel (final boolean interrupt)
 		{
-			if (method.getDeclaringClass () == Object.class)
-				return (method.invoke (this, arguments));
-			return (this.reactor.trigger (this, method, arguments));
+			if (interrupt)
+				throw (new UnsupportedOperationException ());
+			return (false);
+		}
+		
+		@Override
+		protected final void interruptTask ()
+		{
+			throw (new UnsupportedOperationException ());
+		}
+		
+		final void triggerFailure (final Throwable exception)
+		{
+			this.setException (exception);
+		}
+		
+		final void triggerSuccess ()
+		{
+			this.set (Boolean.TRUE);
+		}
+		
+		final Reactor reactor;
+	}
+	
+	static final class IdentityComparator
+			extends Object
+			implements
+				Comparator<Object>
+	{
+		IdentityComparator ()
+		{
+			super ();
+		}
+		
+		@Override
+		public final int compare (final Object left, final Object right)
+		{
+			return ((left.hashCode () - right.hashCode ()));
+		}
+	}
+	
+	final static class Reactor
+			extends Object
+			implements
+				ActionTarget
+	{
+		Reactor (final BasicCallbackReactor facade, final ThreadingContext threading, final ExceptionTracer exceptions)
+		{
+			super ();
+			Preconditions.checkNotNull (facade);
+			Preconditions.checkNotNull (threading);
+			Preconditions.checkNotNull (exceptions);
+			this.monitor = Monitor.create (this);
+			synchronized (this.monitor) {
+				this.facade = facade;
+				this.reference = this.facade.new Reference ();
+				this.threading = threading;
+				this.transcript = Transcript.create (this.facade);
+				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
+				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "isolates", true));
+				this.schedulers = new ConcurrentHashMap<CallbackIsolate, BasicCallbackReactor.Scheduler> ();
+				this.actors = new ConcurrentHashMap<CallbackProxy, BasicCallbackReactor.Actor<?>> ();
+				this.status = new AtomicReference<BasicCallbackReactor.Reactor.Status> (Status.Active);
+				this.transcript.traceDebugging ("created reactor `%{object:identity}`.", this.facade);
+			}
+		}
+		
+		final boolean await (final long timeout)
+		{
+			return (Threading.join (this.executor, timeout));
+		}
+		
+		final CallbackIsolate createIsolate ()
+		{
+			synchronized (this.monitor) {
+				Preconditions.checkState (this.status.get () == Status.Active);
+				final Scheduler scheduler = new Scheduler (this);
+				return (scheduler.isolate);
+			}
+		}
+		
+		final <_Callbacks_ extends Callbacks> _Callbacks_ createProxy (final Class<_Callbacks_> specification)
+		{
+			Preconditions.checkNotNull (specification);
+			Preconditions.checkArgument (Callbacks.class.isAssignableFrom (specification));
+			Preconditions.checkArgument (!CallbackProxy.class.isAssignableFrom (specification));
+			Preconditions.checkArgument (!CallbackHandler.class.isAssignableFrom (specification));
+			synchronized (this.monitor) {
+				Preconditions.checkState (this.status.get () == Status.Active);
+				final Actor<_Callbacks_> actor = new Actor<_Callbacks_> (this, specification);
+				return (specification.cast (actor.proxy));
+			}
+		}
+		
+		final void enqueueRunnable (final Runnable runnable)
+		{
+			synchronized (this.monitor) {
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				this.transcript.traceDebugging ("enqueueing runnable `%{object}` on reactor `%{object:identity}`...", runnable, this.facade);
+				this.executor.execute (runnable);
+			}
+		}
+		
+		final void executeDestroy ()
+		{
+			this.transcript.traceDebugging ("destroying reactor `%{object:identity}`...", this.facade);
+			synchronized (this.monitor) {
+				Preconditions.checkState (this.status.get () == Status.Destroying);
+				if (!this.schedulers.isEmpty ()) {
+					for (final Scheduler scheduler : this.schedulers.values ())
+						scheduler.triggerDestroy ();
+					this.transcript.traceDebugging ("defer destroying reactor `%{object:identity}` due to registered schedulers...", this.facade);
+					this.enqueueRunnable (new ReactorDestroyAction (this));
+					return;
+				}
+				Preconditions.checkState (this.schedulers.isEmpty ());
+				Preconditions.checkState (this.actors.isEmpty ());
+				this.executor.shutdown ();
+				Preconditions.checkState (this.status.compareAndSet (Status.Destroying, Status.Destroyed));
+			}
+			this.transcript.traceDebugging ("destroyed reactor `%{object:identity}`.", this.facade);
+		}
+		
+		final void registerActor (final Actor<?> actor)
+		{
+			synchronized (this.monitor) {
+				this.transcript.traceDebugging ("registering actor `%{object:identity}` on reactor `%{object:identity}`...", actor, this.facade);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				Preconditions.checkState (this.actors.put (actor.proxy, actor) == null);
+			}
+		}
+		
+		final void registerScheduler (final Scheduler scheduler)
+		{
+			synchronized (this.monitor) {
+				this.transcript.traceDebugging ("registering scheduler `%{object:identity}` on reactor `%{object:identity}`...", scheduler, this.facade);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				Preconditions.checkState (this.schedulers.put (scheduler.isolate, scheduler) == null);
+			}
+		}
+		
+		final <_Callbacks_ extends Callbacks> CallbackReference triggerAssign (final _Callbacks_ proxy, final CallbackHandler<_Callbacks_> handler, final CallbackIsolate isolate)
+		{
+			Preconditions.checkNotNull (proxy);
+			Preconditions.checkNotNull (isolate);
+			Preconditions.checkNotNull (handler);
+			Preconditions.checkArgument (Callbacks.class.isInstance (handler));
+			Preconditions.checkArgument (!CallbackProxy.class.isInstance (handler));
+			Preconditions.checkArgument (CallbackHandler.class.isInstance (handler));
+			synchronized (this.monitor) {
+				Preconditions.checkState (this.status.get () == Status.Active);
+				final Actor<?> actor = this.actors.get (proxy);
+				Preconditions.checkNotNull (actor);
+				final Scheduler scheduler = this.schedulers.get (isolate);
+				Preconditions.checkNotNull (scheduler);
+				return (actor.triggerAssign (handler, scheduler));
+			}
+		}
+		
+		final void triggerDestroy ()
+		{
+			synchronized (this.monitor) {
+				if (!this.status.compareAndSet (Status.Active, Status.Destroying)) {
+					switch (this.status.get ()) {
+						case Destroying :
+						case Destroyed :
+							return;
+						default:
+							throw (new IllegalStateException ());
+					}
+				}
+				this.enqueueRunnable (new ReactorDestroyAction (this));
+			}
+		}
+		
+		final CallbackReference triggerDestroyIsolate (final CallbackIsolate isolate)
+		{
+			Preconditions.checkNotNull (isolate);
+			synchronized (this.monitor) {
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				final Scheduler scheduler = this.schedulers.get (isolate);
+				Preconditions.checkNotNull (scheduler);
+				return (scheduler.triggerDestroy ());
+			}
+		}
+		
+		final <_Callbacks_ extends Callbacks> CallbackReference triggerDestroyProxy (final _Callbacks_ proxy)
+		{
+			Preconditions.checkNotNull (proxy);
+			synchronized (this.monitor) {
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				final Actor<?> actor = this.actors.get (proxy);
+				Preconditions.checkNotNull (actor);
+				return (actor.triggerDestroy ());
+			}
+		}
+		
+		final void unregisterActor (final Actor<?> actor)
+		{
+			synchronized (this.monitor) {
+				this.transcript.traceDebugging ("unregistering actor `%{object:identity}` from reactor `%{object:identity}`...", actor, this.facade);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				Preconditions.checkState (this.actors.remove (actor.proxy) == actor);
+			}
+		}
+		
+		final void unregisterScheduler (final Scheduler scheduler)
+		{
+			synchronized (this.monitor) {
+				this.transcript.traceDebugging ("unregistering scheduler `%{object:identity}` from reactor `%{object:identity}`...", scheduler, this.facade);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				Preconditions.checkState (this.schedulers.remove (scheduler.isolate) == scheduler);
+			}
+		}
+		
+		final ConcurrentHashMap<CallbackProxy, Actor<?>> actors;
+		final TranscriptExceptionTracer exceptions;
+		final ExecutorService executor;
+		final BasicCallbackReactor facade;
+		final Monitor monitor;
+		final Reference reference;
+		final ConcurrentHashMap<CallbackIsolate, Scheduler> schedulers;
+		final AtomicReference<Status> status;
+		final ThreadingContext threading;
+		final Transcript transcript;
+		
+		static enum Status
+		{
+			Active (),
+			Destroyed (),
+			Destroying ();
+		}
+	}
+	
+	static abstract class ReactorAction
+			extends Action<Reactor>
+	{
+		ReactorAction (final Reactor reactor, final Completion completion)
+		{
+			super (reactor, reactor, completion);
+		}
+	}
+	
+	static final class ReactorDestroyAction
+			extends ReactorAction
+			implements
+				Runnable
+	{
+		ReactorDestroyAction (final Reactor reactor)
+		{
+			super (reactor, null);
 		}
 		
 		@Override
 		public final void run ()
 		{
-			try {
-				this.reactor.execute (this);
-			} catch (final Throwable exception) {
-				this.reactor.exceptions.traceIgnoredException (exception);
-				this.reactor.stop ();
-			}
+			this.reactor.executeDestroy ();
 		}
-		
-		final ConcurrentLinkedQueue<Action> actions;
-		final AtomicBoolean failed;
-		final AtomicReference<Object> handler;
-		final Reactor reactor;
-		final AtomicReference<Action> scheduled;
-		final Class<? extends Callbacks> specification;
-		final CallbackTrigger trigger;
 	}
 	
-	static private final class Reactor
-			extends AbstractService
+	final class Reference
+			extends WeakReference<BasicCallbackReactor>
 	{
-		Reactor (final BasicCallbackReactor facade, final ThreadingContext threading, final ExceptionTracer exceptions)
+		Reference ()
 		{
-			Preconditions.checkNotNull (facade);
-			Preconditions.checkNotNull (threading);
-			this.facade = facade;
-			this.monitor = Monitor.create (this.facade);
-			synchronized (this.monitor) {
-				this.threading = threading;
-				this.transcript = Transcript.create (this.facade);
-				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
-				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "callbacks", true, this.exceptions.catcher));
-				this.proxies = new WeakHashMap<CallbackTrigger, Proxy> ();
-				this.actions = new WeakHashMap<CallbackReference, Action> ();
-			}
+			super (BasicCallbackReactor.this);
 		}
 		
 		@Override
-		protected final void doStart ()
+		public final void clear ()
 		{
-			synchronized (this.monitor) {
-				this.transcript.traceDebugging ("starting...");
-				this.notifyStarted ();
-			}
+			throw (new UnsupportedOperationException ());
 		}
 		
 		@Override
-		protected final void doStop ()
+		public final boolean enqueue ()
+		{
+			return (super.enqueue ());
+		}
+		
+		@Override
+		public BasicCallbackReactor get ()
+		{
+			return (super.get ());
+		}
+		
+		@Override
+		public final boolean isEnqueued ()
+		{
+			return (super.isEnqueued ());
+		}
+	}
+	
+	static final class Scheduler
+			extends Object
+			implements
+				ActionTarget
+	{
+		Scheduler (final Reactor reactor)
+		{
+			super ();
+			this.monitor = Monitor.create (this);
+			synchronized (this.monitor) {
+				this.reactor = reactor;
+				this.destroyCompletion = new Completion (this.reactor);
+				this.isolate = CallbackIsolate.create (this.reactor.reference, this.destroyCompletion);
+				this.actorsRegistered = new ConcurrentSkipListSet<BasicCallbackReactor.Actor<?>> (new IdentityComparator ());
+				this.actorsEnqueued = new ConcurrentLinkedQueue<BasicCallbackReactor.Actor<?>> ();
+				this.destroyAction = new AtomicReference<SchedulerDestroyAction> (null);
+				this.scheduleStatus = new AtomicReference<ScheduleStatus> (ScheduleStatus.Idle);
+				this.status = new AtomicReference<Status> (Status.Active);
+				this.reactor.registerScheduler (this);
+				this.reactor.transcript.traceDebugging ("created isolate `%{object:identity}` (owned by scheduler `%{object:identity}` from reactor `%{object:identity}`).", this.isolate, this, this.reactor.facade);
+			}
+		}
+		
+		final void enqueueActor (final Actor<?> actor)
 		{
 			synchronized (this.monitor) {
-				this.transcript.traceDebugging ("stopping...");
-				for (final Proxy proxy : this.proxies.values ())
-					this.unregister ((Callbacks) proxy.trigger);
-				this.executor.shutdown ();
-				this.notifyStopped ();
+				this.reactor.transcript.traceDebugging ("enqueueing actor `%{object:identity}` on scheduler `%{object:identity}`...", actor, this);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				this.actorsEnqueued.add (actor);
+				this.schedule (false);
 			}
 		}
 		
-		final <_Callbacks_ extends Callbacks> CallbackReference assign (final _Callbacks_ trigger, final _Callbacks_ handler)
+		final void executeActions ()
 		{
-			Preconditions.checkNotNull (trigger);
-			Preconditions.checkArgument (trigger instanceof CallbackTrigger);
-			final CallbackReference reference;
-			synchronized (this.monitor) {
-				this.transcript.traceDebugging ("replacing trigger `%{object:identity}`...", trigger);
-				final Proxy proxy = this.proxies.get (trigger);
-				Preconditions.checkNotNull (proxy);
-				if (handler != null) {
-					Preconditions.checkArgument (proxy.specification.isInstance (handler));
-					Preconditions.checkArgument (handler instanceof CallbackHandler);
-					Preconditions.checkArgument (!(handler instanceof CallbackTrigger));
-				}
-				final Action pending = proxy.actions.peek ();
-				if (!(pending instanceof RegisterAction) || !proxy.handler.compareAndSet (null, handler)) {
-					reference = CallbackReference.create (this.facade);
-					final AssignAction action = new AssignAction (proxy, reference, (CallbackHandler<?>) handler);
-					proxy.actions.add (action);
-					this.actions.put (reference, action);
-					this.transcript.traceDebugging ("enqueued assign action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`;", reference, trigger, proxy.specification, handler);
-				} else {
-					reference = pending.reference;
-					this.transcript.traceDebugging ("continued register action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`;", reference, trigger, proxy.specification, handler);
-				}
-				this.schedule (proxy);
-			}
-			return (reference);
-		}
-		
-		final void execute (final AssignAction action)
-		{
-			final Proxy proxy = action.proxy;
-			final Object oldHandler = proxy.handler.get ();
-			final Object newHandler = action.handler;
-			Preconditions.checkState ((oldHandler != null) || (newHandler != null));
-			Preconditions.checkState (proxy.handler.compareAndSet (oldHandler, newHandler));
-			this.transcript.traceDebugging ("invocking assign callbacks for trigger `%{object:identity}` for class `%{class}` with old-handler `%{object}` and new-handler `%{object}`...", proxy.trigger, proxy.specification, oldHandler, newHandler);
-			try {
-				if (oldHandler != null)
-					((CallbackHandler<Callbacks>) oldHandler).deassigned ((Callbacks) proxy.trigger, (Callbacks) newHandler);
-				if (newHandler != null)
-					((CallbackHandler<Callbacks>) newHandler).reassigned ((Callbacks) proxy.trigger, (Callbacks) oldHandler);
-				action.triggerSucceed ();
-			} catch (final Throwable exception) {
-				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking assign callbacks for trigger `%{object:identity}` for class `%{class}` with old-handler `%{object}` and new-handle `%{object}`; deferring!", proxy.trigger, proxy.specification, oldHandler, newHandler);
-				action.triggerFail (exception);
-				proxy.failed.set (true);
-			}
-			this.schedule (proxy);
-		}
-		
-		final void execute (final InvokeAction action)
-		{
-			final Proxy proxy = action.proxy;
-			final Object handler = proxy.handler.get ();
-			if (handler == null) {
-				Preconditions.checkState (proxy.scheduled.compareAndSet (action, null));
-				this.transcript.traceDebugging ("deferring action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}` due to missing handler;", action.reference, proxy.trigger, proxy.specification);
-				return;
-			}
-			this.transcript.traceDebugging ("invocking callback `%{method}` `%{array}` for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`...", action.method, action.arguments, proxy.trigger, proxy.specification, handler);
-			try {
-				action.method.invoke (handler, action.arguments);
-				action.triggerSucceed ();
-			} catch (final Throwable exception) {
-				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking callback `%{method}` `%{array}` for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`; deferring!", action.method, action.arguments, proxy.trigger, proxy.specification, handler);
-				action.triggerFail (exception);
-				proxy.failed.set (true);
-			}
-			this.schedule (proxy);
-		}
-		
-		final void execute (final Proxy proxy)
-		{
-			final Action action = proxy.actions.peek ();
-			Preconditions.checkState (action != null);
-			Preconditions.checkState (action == proxy.scheduled.get ());
-			this.transcript.traceDebugging ("executing action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}`...", action.reference, proxy.trigger, proxy.specification);
-			if (action instanceof InvokeAction)
-				this.execute ((InvokeAction) action);
-			else if (action instanceof RegisterAction)
-				this.execute ((RegisterAction) action);
-			else if (action instanceof UnregisterAction)
-				this.execute ((UnregisterAction) action);
-			else if (action instanceof AssignAction)
-				this.execute ((AssignAction) action);
-			else
-				throw (new IllegalStateException ());
-		}
-		
-		final void execute (final RegisterAction action)
-		{
-			final Proxy proxy = action.proxy;
-			final Object handler = proxy.handler.get ();
-			if (handler == null) {
-				Preconditions.checkState (proxy.scheduled.compareAndSet (action, null));
-				this.transcript.traceDebugging ("deferring action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}` due to missing handler;", action.reference, proxy.trigger, proxy.specification);
-				return;
-			}
-			this.transcript.traceDebugging ("invocking register callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`...", proxy.trigger, proxy.specification, handler);
-			try {
-				((CallbackHandler<Callbacks>) handler).registered ((Callbacks) proxy.trigger);
-				action.triggerSucceed ();
-			} catch (final Throwable exception) {
-				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking register callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`; deferring!", proxy.trigger, proxy.specification, handler);
-				action.triggerFail (exception);
-				proxy.failed.set (true);
-			}
-			this.schedule (proxy);
-		}
-		
-		final void execute (final UnregisterAction action)
-		{
-			final Proxy proxy = action.proxy;
-			final Object handler = proxy.handler.get ();
-			if (handler == null) {
-				Preconditions.checkState (proxy.scheduled.compareAndSet (action, null));
-				this.transcript.traceDebugging ("deferring action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}` due to missing handler;", action.reference, proxy.trigger, proxy.specification);
-				return;
-			}
-			Preconditions.checkState (proxy.handler.compareAndSet (handler, null));
-			this.transcript.traceDebugging ("invocking unregister callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`...", proxy.trigger, proxy.specification, handler);
-			try {
-				((CallbackHandler<Callbacks>) handler).unregistered ((Callbacks) proxy.trigger);
-				action.triggerSucceed ();
-			} catch (final Throwable exception) {
-				this.exceptions.traceDeferredException (exception, "unexpected error encountered while invocking unregister callback for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`; deferring!", proxy.trigger, proxy.specification, handler);
-				action.triggerFail (exception);
-				proxy.failed.set (true);
-			}
-			this.schedule (proxy);
-		}
-		
-		final <_Callbacks_ extends Callbacks> _Callbacks_ register (final Class<_Callbacks_> specification, final _Callbacks_ handler)
-		{
-			Preconditions.checkNotNull (specification);
-			Preconditions.checkArgument (Callbacks.class.isAssignableFrom (specification));
-			if (handler != null) {
-				Preconditions.checkArgument (specification.isInstance (handler));
-				Preconditions.checkArgument (handler instanceof CallbackHandler);
-				Preconditions.checkArgument (!(handler instanceof CallbackTrigger));
-			}
-			final CallbackTrigger trigger;
-			synchronized (this.monitor) {
-				this.transcript.traceDebugging ("registering trigger for class `%{class}` with handler `%{object}`...", specification, handler);
-				final Proxy proxy;
-				try {
-					proxy = new Proxy (this, specification);
-				} catch (final Throwable exception) {
-					this.exceptions.traceDeferredException (exception, "unexpected error encountered while registering trigger for class `%{class}` with handler `%{object}`; re-throwing!", specification, handler);
-					throw (new Error (exception));
-				}
-				trigger = proxy.trigger;
-				this.proxies.put (trigger, proxy);
-				Preconditions.checkState (proxy.handler.compareAndSet (null, handler));
-				final CallbackReference reference = CallbackReference.create (this.facade);
-				final RegisterAction action = new RegisterAction (proxy, reference);
-				proxy.actions.add (action);
-				this.actions.put (reference, action);
-				this.transcript.traceDebugging ("enqueued register action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}` with handler `%{object}`;", reference, trigger, specification, handler);
-				this.schedule (proxy);
-			}
-			return (specification.cast (trigger));
-		}
-		
-		final CallbackFuture resolve (final CallbackReference reference)
-		{
-			Preconditions.checkNotNull (reference);
-			synchronized (this.monitor) {
-				final Action action = this.actions.get (reference);
-				Preconditions.checkNotNull (action);
-				return (action);
-			}
-		}
-		
-		final void schedule (final Proxy proxy)
-		{
-			synchronized (this.monitor) {
+			Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Scheduled, ScheduleStatus.Running));
+			while (true) {
+				this.reactor.transcript.traceDebugging ("executing enqueued actors on scheduler `%{object:identity}`...", this);
 				while (true) {
-					final Action action = proxy.actions.peek ();
-					if (action == null)
+					final Actor<?> actor = this.actorsEnqueued.poll ();
+					if (actor == null)
 						break;
-					if (action.isDone ()) {
-						Preconditions.checkState (proxy.actions.remove () == action);
-						proxy.scheduled.compareAndSet (action, null);
-						continue;
-					}
-					if ((action instanceof RegisterAction) && (proxy.handler.get () == null))
+					actor.executeActions ();
+				}
+				this.reactor.transcript.traceDebugging ("executed enqueued actors on scheduler `%{object:identity}.`", this);
+				if (this.destroyAction.get () != null)
+					this.executeDestroy ();
+				if (this.scheduleStatus.get () == ScheduleStatus.RunningReschedule) {
+					Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.RunningReschedule, ScheduleStatus.Running));
+					continue;
+				}
+				break;
+			}
+			Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Running, ScheduleStatus.Idle));
+		}
+		
+		final void executeDestroy ()
+		{
+			synchronized (this.monitor) {
+				this.reactor.transcript.traceDebugging ("destroying scheduler `%{object:identity}`...", this);
+				Preconditions.checkState (this.status.get () == Status.Destroying);
+				final SchedulerDestroyAction action = this.destroyAction.get ();
+				Preconditions.checkNotNull (action);
+				if (!this.actorsRegistered.isEmpty ()) {
+					for (final Actor<?> actor : this.actorsRegistered)
+						actor.triggerDestroy ();
+					this.reactor.transcript.traceDebugging ("defer destroying scheduler `%{object:identity}` due to registered actors...", this);
+					this.schedule (true);
+					return;
+				}
+				Preconditions.checkState (this.actorsRegistered.isEmpty ());
+				Preconditions.checkState (this.actorsEnqueued.isEmpty ());
+				Preconditions.checkState (this.destroyAction.compareAndSet (action, null));
+				Preconditions.checkState (this.status.compareAndSet (Status.Destroying, Status.Destroyed));
+				this.reactor.unregisterScheduler (this);
+				action.completion.triggerSuccess ();
+				this.reactor.transcript.traceDebugging ("destroyed isolate `%{object:identity}` (owned by scheduler `%{object:identity}).`", this.isolate, this);
+			}
+		}
+		
+		final void registerActor (final Actor<?> actor)
+		{
+			synchronized (this.monitor) {
+				this.reactor.transcript.traceDebugging ("registering actor `%{object:identity}` on scheduler `%{object:identity}`...", actor, this);
+				Preconditions.checkState (this.status.get () == Status.Active);
+				Preconditions.checkState (this.actorsRegistered.add (actor));
+			}
+		}
+		
+		final void schedule (final boolean reschedule)
+		{
+			synchronized (this.monitor) {
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				switch (this.scheduleStatus.get ()) {
+					case Idle :
+						Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Idle, ScheduleStatus.Scheduled));
+						this.reactor.enqueueRunnable (new SchedulerExecuteAction (this));
+						this.reactor.transcript.traceDebugging ("scheduled scheduler `%{object:identity}`.", this);
 						break;
-					if (proxy.failed.get ())
+					case Scheduled :
 						break;
-					if (proxy.scheduled.compareAndSet (null, action)) {
-						this.transcript.traceDebugging ("scheduling action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}`...", action.reference, proxy.trigger, proxy.specification);
-						try {
-							this.executor.execute (proxy);
-						} catch (final Throwable exception) {
-							Preconditions.checkState (proxy.scheduled.compareAndSet (action, null));
-							this.exceptions.traceIgnoredException (exception);
-						}
-					}
-					break;
+					case Running :
+						if (!reschedule)
+							break;
+						Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Running, ScheduleStatus.RunningReschedule));
+						break;
+					case RunningReschedule :
+						break;
+					default:
+						throw (new IllegalStateException ());
 				}
 			}
 		}
 		
-		final CallbackReference trigger (final Proxy proxy, final Method method, final Object[] arguments)
+		final CallbackReference triggerDestroy ()
 		{
-			Preconditions.checkState ((method.getReturnType () == Void.class) || (method.getReturnType () == CallbackReference.class));
-			this.transcript.traceDebugging ("triggering callback `%{method}` `%{array}` for trigger `%{object:identity}` for class `%{class}`...", method, arguments, proxy.trigger, proxy.specification);
-			final CallbackReference reference;
 			synchronized (this.monitor) {
-				reference = CallbackReference.create (this.facade);
-				final InvokeAction action = new InvokeAction (proxy, reference, method, arguments);
-				proxy.actions.add (action);
-				this.actions.put (reference, action);
-				this.transcript.traceDebugging ("enqueued invoke action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}`...", reference, proxy.trigger, proxy.specification);
-				this.schedule (proxy);
+				this.reactor.transcript.traceDebugging ("destroying (triggered) for scheduler `%{object:identity}`...", this);
+				if (!this.status.compareAndSet (Status.Active, Status.Destroying)) {
+					switch (this.status.get ()) {
+						case Destroying :
+						case Destroyed :
+							final SchedulerDestroyAction action = this.destroyAction.get ();
+							Preconditions.checkNotNull (action);
+							return (action.reference);
+						default:
+							throw (new IllegalStateException ());
+					}
+				}
+				final SchedulerDestroyAction action = new SchedulerDestroyAction (this, this.destroyCompletion);
+				Preconditions.checkState (this.destroyAction.compareAndSet (null, action));
+				this.schedule (false);
+				return (action.reference);
 			}
-			return (reference);
 		}
 		
-		final <_Callbacks_ extends Callbacks> CallbackReference unregister (final _Callbacks_ trigger)
+		final void unregisterActor (final Actor<?> actor)
 		{
-			Preconditions.checkNotNull (trigger);
-			final CallbackReference reference;
 			synchronized (this.monitor) {
-				this.transcript.traceDebugging ("unregistering trigger `%{object:identity}`...", trigger);
-				final Proxy proxy = this.proxies.get (trigger);
-				Preconditions.checkNotNull (proxy);
-				for (final Action action : this.actions.values ())
-					if (!(action instanceof RegisterAction))
-						action.triggerCancel ();
-				reference = CallbackReference.create (this.facade);
-				final UnregisterAction action = new UnregisterAction (proxy, reference);
-				proxy.actions.add (action);
-				this.actions.put (reference, action);
-				this.transcript.traceDebugging ("enqueued unregister action `%{object:identity}` for trigger `%{object:identity}` for class `%{class}`;", reference, trigger, proxy.specification);
-				this.schedule (proxy);
+				this.reactor.transcript.traceDebugging ("unregistering actor `%{object:identity}` from scheduler `%{object:identity}`...", actor, this);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				Preconditions.checkState (this.actorsRegistered.remove (actor));
 			}
-			return (reference);
 		}
 		
-		final WeakHashMap<CallbackReference, Action> actions;
-		final TranscriptExceptionTracer exceptions;
-		final ExecutorService executor;
-		final BasicCallbackReactor facade;
+		final ConcurrentLinkedQueue<Actor<?>> actorsEnqueued;
+		final ConcurrentSkipListSet<Actor<?>> actorsRegistered;
+		final AtomicReference<SchedulerDestroyAction> destroyAction;
+		final Completion destroyCompletion;
+		final CallbackIsolate isolate;
 		final Monitor monitor;
-		final WeakHashMap<CallbackTrigger, Proxy> proxies;
-		final ThreadingContext threading;
-		final Transcript transcript;
-	}
-	
-	private static final class RegisterAction
-			extends Action
-	{
-		RegisterAction (final Proxy proxy, final CallbackReference reference)
+		final Reactor reactor;
+		final AtomicReference<ScheduleStatus> scheduleStatus;
+		final AtomicReference<Status> status;
+		
+		static enum ScheduleStatus
 		{
-			super (proxy, reference);
+			Idle (),
+			Running (),
+			RunningReschedule (),
+			Scheduled ();
+		}
+		
+		static enum Status
+		{
+			Active (),
+			Destroyed (),
+			Destroying ();
 		}
 	}
 	
-	private static final class UnregisterAction
-			extends Action
+	static abstract class SchedulerAction
+			extends Action<Scheduler>
 	{
-		UnregisterAction (final Proxy proxy, final CallbackReference reference)
+		SchedulerAction (final Scheduler scheduler, final Completion completion)
 		{
-			super (proxy, reference);
+			super (scheduler.reactor, scheduler, completion);
+		}
+	}
+	
+	static final class SchedulerDestroyAction
+			extends SchedulerAction
+	{
+		SchedulerDestroyAction (final Scheduler scheduler, final Completion completion)
+		{
+			super (scheduler, completion);
+		}
+	}
+	
+	static final class SchedulerExecuteAction
+			extends SchedulerAction
+			implements
+				Runnable
+	{
+		SchedulerExecuteAction (final Scheduler scheduler)
+		{
+			super (scheduler, null);
+		}
+		
+		@Override
+		public final void run ()
+		{
+			this.target.executeActions ();
 		}
 	}
 }
