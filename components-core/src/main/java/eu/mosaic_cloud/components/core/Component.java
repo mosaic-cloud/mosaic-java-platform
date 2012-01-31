@@ -21,9 +21,12 @@
 package eu.mosaic_cloud.components.core;
 
 
+import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+
+
 public interface Component
 {
-	public abstract void assign (final ComponentCallbacks callbacks);
+	public abstract void assign (final CallbackHandler<ComponentCallbacks> callbacks);
 	
 	public abstract void call (final ComponentIdentifier component, final ComponentCallRequest request);
 	

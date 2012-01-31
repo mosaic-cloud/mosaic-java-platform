@@ -34,6 +34,7 @@ import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
@@ -91,17 +92,15 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final void deassigned (final ComponentCallbacks trigger, final ComponentCallbacks newCallbacks)
-	{
-		Preconditions.checkState (false);
-	}
-	
-	@Override
 	public final CallbackReference failed (final Component component, final Throwable exception)
 	{
 		Preconditions.checkArgument (this.component == component);
 		return (null);
 	}
+	
+	@Override
+	public final void failedCallbacks (final ComponentCallbacks trigger, final Throwable exception)
+	{}
 	
 	@Override
 	public final CallbackReference initialized (final Component component)
@@ -111,13 +110,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final void reassigned (final ComponentCallbacks trigger, final ComponentCallbacks oldCallbacks)
-	{
-		Preconditions.checkState (false);
-	}
-	
-	@Override
-	public final void registered (final ComponentCallbacks trigger)
+	public final void registeredCallbacks (final ComponentCallbacks trigger, final CallbackIsolate isolate)
 	{}
 	
 	@Override
@@ -134,7 +127,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final void unregistered (final ComponentCallbacks trigger)
+	public final void unregisteredCallbacks (final ComponentCallbacks trigger)
 	{}
 	
 	public final BlockingQueue<ComponentMessage> queue;

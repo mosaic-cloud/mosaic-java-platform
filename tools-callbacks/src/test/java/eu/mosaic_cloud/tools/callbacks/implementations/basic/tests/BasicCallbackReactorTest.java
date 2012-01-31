@@ -23,9 +23,9 @@ package eu.mosaic_cloud.tools.callbacks.implementations.basic.tests;
 
 import java.util.LinkedList;
 
-import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackIsolate;
-import eu.mosaic_cloud.tools.callbacks.core.v2.CallbackReference;
-import eu.mosaic_cloud.tools.callbacks.implementations.basic.v2.BasicCallbackReactor;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.tools.QueueCallbacks;
 import eu.mosaic_cloud.tools.callbacks.tools.QueueingQueueCallbackHandler;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;

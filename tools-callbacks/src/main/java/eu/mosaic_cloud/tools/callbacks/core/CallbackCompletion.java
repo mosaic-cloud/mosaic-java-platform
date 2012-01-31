@@ -18,8 +18,13 @@
  * #L%
  */
 
-package eu.mosaic_cloud.tools.callbacks.core.v2;
+package eu.mosaic_cloud.tools.callbacks.core;
 
 
-public interface CallbackProxy
+import com.google.common.util.concurrent.ListenableFuture;
+
+
+public interface CallbackCompletion
+		extends
+			ListenableFuture<Boolean>
 {}

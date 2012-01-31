@@ -68,7 +68,7 @@ public final class BasicChannelTest
 		pipe.sink ().close ();
 		Assert.assertTrue (channel.terminate (BasicChannelTest.defaultPollTimeout));
 		Threading.sleep (BasicChannelTest.defaultPollTimeout);
-		Assert.assertTrue (reactor.terminate (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.destroy (BasicChannelTest.defaultPollTimeout));
 		Assert.assertTrue (threading.await (BasicChannelTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}

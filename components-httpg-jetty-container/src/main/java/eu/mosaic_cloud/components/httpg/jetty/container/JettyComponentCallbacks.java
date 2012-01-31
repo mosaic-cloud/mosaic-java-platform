@@ -36,6 +36,7 @@ import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
@@ -91,7 +92,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public CallbackReference called (final Component component, final ComponentCallRequest request)
+	public final CallbackReference called (final Component component, final ComponentCallRequest request)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -101,7 +102,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public CallbackReference callReturned (final Component component, final ComponentCallReply reply)
+	public final CallbackReference callReturned (final Component component, final ComponentCallReply reply)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -159,7 +160,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public CallbackReference casted (final Component component, final ComponentCastRequest request)
+	public final CallbackReference casted (final Component component, final ComponentCastRequest request)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -169,13 +170,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public void deassigned (final ComponentCallbacks trigger, final ComponentCallbacks newCallbacks)
-	{
-		throw (new IllegalStateException ());
-	}
-	
-	@Override
-	public CallbackReference failed (final Component component, final Throwable exception)
+	public final CallbackReference failed (final Component component, final Throwable exception)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -190,7 +185,13 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public CallbackReference initialized (final Component component)
+	public final void failedCallbacks (final ComponentCallbacks trigger, final Throwable exception)
+	{
+		this.failed (this.component, exception);
+	}
+	
+	@Override
+	public final CallbackReference initialized (final Component component)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == null);
@@ -205,13 +206,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public void reassigned (final ComponentCallbacks trigger, final ComponentCallbacks oldCallbacks)
-	{
-		throw (new IllegalStateException ());
-	}
-	
-	@Override
-	public void registered (final ComponentCallbacks trigger)
+	public final void registeredCallbacks (final ComponentCallbacks trigger, final CallbackIsolate isolate)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == null);
@@ -248,7 +243,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public CallbackReference terminated (final Component component)
+	public final CallbackReference terminated (final Component component)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -262,7 +257,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public void unregistered (final ComponentCallbacks trigger)
+	public void unregisteredCallbacks (final ComponentCallbacks trigger)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.status != Status.Unregistered);

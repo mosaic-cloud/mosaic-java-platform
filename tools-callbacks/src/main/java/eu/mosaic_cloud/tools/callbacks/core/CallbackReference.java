@@ -21,23 +21,56 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
+import java.lang.ref.Reference;
+
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.threading.core.Joinable;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public final class CallbackReference
 		extends Object
+		implements
+			Joinable
 {
-	private CallbackReference (final CallbackReactor reactor)
+	private CallbackReference (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
 	{
 		super ();
 		Preconditions.checkNotNull (reactor);
-		this.reactor = reactor;
+		Preconditions.checkNotNull (completion);
+		this.reactorReference = reactor;
+		this.completion = completion;
 	}
 	
-	public final CallbackReactor reactor;
-	
-	public static final CallbackReference create (final CallbackReactor reactor)
+	@Override
+	public final boolean await ()
 	{
-		return (new CallbackReference (reactor));
+		return (Threading.awaitOrCatch (this.completion, null, null) == Boolean.TRUE);
+	}
+	
+	@Override
+	public final boolean await (final long timeout)
+	{
+		return (Threading.awaitOrCatch (this.completion, timeout, null, null) == Boolean.TRUE);
+	}
+	
+	public final CallbackCompletion getCompletion ()
+	{
+		return (this.completion);
+	}
+	
+	public final CallbackReactor getReactor ()
+	{
+		final CallbackReactor reactor = this.reactorReference.get ();
+		Preconditions.checkState (reactor != null);
+		return (reactor);
+	}
+	
+	private final CallbackCompletion completion;
+	private final Reference<? extends CallbackReactor> reactorReference;
+	
+	public static final CallbackReference create (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
+	{
+		return (new CallbackReference (reactor, completion));
 	}
 }

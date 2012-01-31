@@ -18,14 +18,8 @@
  * #L%
  */
 
-package eu.mosaic_cloud.tools.callbacks.core.v2;
+package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import java.util.concurrent.ExecutionException;
-
-
-public final class CallbackCanceled
-		extends ExecutionException
-{
-	private static final long serialVersionUID = 1L;
-}
+public interface CallbackProxy
+{}

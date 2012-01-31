@@ -34,6 +34,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
@@ -122,18 +123,17 @@ public abstract class AbstractDriverComponentCallbacks implements
 	}
 
 	@Override
-	public abstract void deassigned(ComponentCallbacks trigger,
-			ComponentCallbacks newCallbacks);
+	public final void failedCallbacks(ComponentCallbacks trigger, Throwable exception) {
+		this.failed(this.component, exception);
+	}
 
 	@Override
-	public abstract void reassigned(ComponentCallbacks trigger,
-			ComponentCallbacks oldCallbacks);
+	public final void registeredCallbacks(ComponentCallbacks trigger, CallbackIsolate isolate) {
+	}
 
 	@Override
-	public abstract void registered(ComponentCallbacks trigger);
-
-	@Override
-	public abstract void unregistered(ComponentCallbacks trigger);
+	public final void unregisteredCallbacks(ComponentCallbacks trigger) {
+	}
 
 	protected ZeroMqChannel createDriverChannel(String channelIdentifierProp,
 			String channelEndpointProp, SessionSpecification role) {

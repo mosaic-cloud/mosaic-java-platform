@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.tools.callbacks.core.v2;
+package eu.mosaic_cloud.tools.callbacks.core;
 
 
 import java.lang.ref.Reference;
@@ -28,12 +28,12 @@ import eu.mosaic_cloud.tools.threading.core.Joinable;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
-public final class CallbackReference
+public final class CallbackIsolate
 		extends Object
 		implements
 			Joinable
 {
-	private CallbackReference (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
+	private CallbackIsolate (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
 	{
 		super ();
 		Preconditions.checkNotNull (reactor);
@@ -54,6 +54,11 @@ public final class CallbackReference
 		return (Threading.awaitOrCatch (this.completion, timeout, null, null) == Boolean.TRUE);
 	}
 	
+	public final CallbackReference destroy ()
+	{
+		return (this.getReactor ().destroyIsolate (this));
+	}
+	
 	public final CallbackCompletion getCompletion ()
 	{
 		return (this.completion);
@@ -69,8 +74,8 @@ public final class CallbackReference
 	private final CallbackCompletion completion;
 	private final Reference<? extends CallbackReactor> reactorReference;
 	
-	public static final CallbackReference create (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
+	public static final CallbackIsolate create (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
 	{
-		return (new CallbackReference (reactor, completion));
+		return (new CallbackIsolate (reactor, completion));
 	}
 }

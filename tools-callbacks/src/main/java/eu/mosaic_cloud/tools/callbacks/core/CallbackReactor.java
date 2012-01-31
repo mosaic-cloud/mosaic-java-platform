@@ -21,15 +21,20 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
+import eu.mosaic_cloud.tools.threading.core.Joinable;
+
+
 public interface CallbackReactor
+		extends
+			Joinable
 {
-	public abstract <_Callbacks_ extends Callbacks> CallbackReference assign (final _Callbacks_ trigger, final _Callbacks_ delegate);
+	public abstract <_Callbacks_ extends Callbacks> CallbackReference assignHandler (final _Callbacks_ proxy, final CallbackHandler<_Callbacks_> handler, final CallbackIsolate isolate);
 	
-	public abstract <_Callbacks_ extends Callbacks> _Callbacks_ register (final Class<_Callbacks_> specification, final _Callbacks_ delegate);
+	public abstract CallbackIsolate createIsolate ();
 	
-	public abstract CallbackFuture resolve (final CallbackReference reference);
+	public abstract <_Callbacks_ extends Callbacks> _Callbacks_ createProxy (final Class<_Callbacks_> specification);
 	
-	public abstract void terminate ();
+	public abstract CallbackReference destroyIsolate (final CallbackIsolate isolate);
 	
-	public abstract <_Callbacks_ extends Callbacks> CallbackReference unregister (final _Callbacks_ trigger);
+	public abstract <_Callbacks_ extends Callbacks> CallbackReference destroyProxy (final _Callbacks_ proxy);
 }

@@ -38,6 +38,7 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
@@ -282,24 +283,6 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 		return null;
 	}
 
-	@Override
-	public void deassigned(ComponentCallbacks trigger,
-			ComponentCallbacks newCallbacks) {
-	}
-
-	@Override
-	public void reassigned(ComponentCallbacks trigger,
-			ComponentCallbacks oldCallbacks) {
-	}
-
-	@Override
-	public void registered(ComponentCallbacks trigger) {
-	}
-
-	@Override
-	public void unregistered(ComponentCallbacks trigger) {
-	}
-
 	/**
 	 * Sends a request to the platform in order to find a driver for a resource
 	 * of the specified type. Returns a future object which can be used for
@@ -340,4 +323,15 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 		return replyFuture;
 	}
 
+	@Override
+	public void registeredCallbacks(ComponentCallbacks trigger, CallbackIsolate isolate) {
+	}
+
+	@Override
+	public void unregisteredCallbacks(ComponentCallbacks trigger) {
+	}
+
+	@Override
+	public void failedCallbacks(ComponentCallbacks trigger, Throwable exception) {
+	}
 }
