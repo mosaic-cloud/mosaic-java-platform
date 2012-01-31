@@ -39,10 +39,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.AbstractService;
 import com.google.common.util.concurrent.Service.State;
+import eu.mosaic_cloud.components.core.Channel;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -58,16 +61,16 @@ import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 public final class BasicChannel
 		extends Object
 		implements
-			eu.mosaic_cloud.components.core.Channel
+			Channel
 {
-	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ThreadingContext threading, final ExceptionTracer exceptions)
+	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Channel (this, input, output, coder, callbackReactor, callbacks, threading, exceptions);
+		this.delegate = new Channel (this, input, output, coder, callbackReactor, threading, exceptions);
 	}
 	
 	@Override
-	public void assign (final ChannelCallbacks callbacks)
+	public void assign (final CallbackHandler<ChannelCallbacks> callbacks)
 	{
 		this.delegate.assign (callbacks);
 	}
@@ -114,14 +117,9 @@ public final class BasicChannel
 	
 	final Channel delegate;
 	
-	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ChannelCallbacks callbacks, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new BasicChannel (input, output, coder, reactor, callbacks, threading, exceptions));
-	}
-	
 	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		return (new BasicChannel (input, output, coder, reactor, null, threading, exceptions));
+		return (new BasicChannel (input, output, coder, reactor, threading, exceptions));
 	}
 	
 	static final long defaultPollTimeout = 100;
@@ -129,7 +127,7 @@ public final class BasicChannel
 	private static final class Channel
 			extends AbstractService
 	{
-		Channel (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ChannelCallbacks callbacks, final ThreadingContext threading, final ExceptionTracer exceptions)
+		Channel (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor callbackReactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 		{
 			super ();
 			Preconditions.checkNotNull (facade);
@@ -158,7 +156,8 @@ public final class BasicChannel
 				this.selector = selector;
 				this.coder = coder;
 				this.callbackReactor = callbackReactor;
-				this.callbackTrigger = this.callbackReactor.register (ChannelCallbacks.class, callbacks);
+				this.callbackIsolate = this.callbackReactor.createIsolate ();
+				this.callbackTrigger = this.callbackReactor.createProxy (ChannelCallbacks.class);
 				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "services", true, this.exceptions.catcher));
 				this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 				this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
@@ -210,14 +209,15 @@ public final class BasicChannel
 				this.encoder.stopAndWait ();
 				this.decoder.stopAndWait ();
 				this.executor.shutdown ();
-				this.callbackReactor.unregister (this.callbackTrigger);
+				this.callbackReactor.destroyProxy (this.callbackTrigger);
+				this.callbackReactor.destroyIsolate (this.callbackIsolate);
 				this.notifyStopped ();
 			}
 		}
 		
-		final void assign (final ChannelCallbacks callbacks)
+		final void assign (final CallbackHandler<ChannelCallbacks> callbacks)
 		{
-			this.callbackReactor.assign (this.callbackTrigger, callbacks);
+			this.callbackReactor.assignHandler (this.callbackTrigger, callbacks, this.callbackIsolate);
 		}
 		
 		final void close (final ChannelFlow flow)
@@ -255,6 +255,7 @@ public final class BasicChannel
 			}
 		}
 		
+		final CallbackIsolate callbackIsolate;
 		final CallbackReactor callbackReactor;
 		final ChannelCallbacks callbackTrigger;
 		final ChannelMessageCoder coder;

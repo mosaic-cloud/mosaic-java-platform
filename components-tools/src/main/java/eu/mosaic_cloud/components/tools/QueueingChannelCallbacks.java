@@ -31,6 +31,7 @@ import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
@@ -67,12 +68,6 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final void deassigned (final ChannelCallbacks trigger, final ChannelCallbacks newCallbacks)
-	{
-		Preconditions.checkState (false);
-	}
-	
-	@Override
 	public final CallbackReference failed (final Channel channel, final Throwable exception)
 	{
 		Preconditions.checkArgument (this.channel == channel);
@@ -80,16 +75,14 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
+	public final void failedCallbacks (final ChannelCallbacks trigger, final Throwable exception)
+	{}
+	
+	@Override
 	public final CallbackReference initialized (final Channel channel)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		return (null);
-	}
-	
-	@Override
-	public final void reassigned (final ChannelCallbacks trigger, final ChannelCallbacks oldCallbacks)
-	{
-		Preconditions.checkState (false);
 	}
 	
 	@Override
@@ -103,7 +96,7 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final void registered (final ChannelCallbacks trigger)
+	public final void registeredCallbacks (final ChannelCallbacks trigger, final CallbackIsolate isolate)
 	{}
 	
 	@Override
@@ -114,7 +107,7 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final void unregistered (final ChannelCallbacks trigger)
+	public final void unregisteredCallbacks (final ChannelCallbacks trigger)
 	{}
 	
 	public final BlockingQueue<ChannelMessage> queue;

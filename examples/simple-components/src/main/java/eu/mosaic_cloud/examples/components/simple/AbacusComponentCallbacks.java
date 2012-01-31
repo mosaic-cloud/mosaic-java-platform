@@ -33,6 +33,7 @@ import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
@@ -112,18 +113,18 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void deassigned (final ComponentCallbacks trigger, final ComponentCallbacks newCallbacks)
-	{
-		throw (new IllegalStateException ());
-	}
-	
-	@Override
 	public final CallbackReference failed (final Component component, final Throwable exception)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		this.exceptions.traceIgnoredException (exception);
 		return (null);
+	}
+	
+	@Override
+	public final void failedCallbacks (final ComponentCallbacks trigger, final Throwable exception)
+	{
+		this.failed (this.component, exception);
 	}
 	
 	@Override
@@ -137,13 +138,7 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void reassigned (final ComponentCallbacks trigger, final ComponentCallbacks oldCallbacks)
-	{
-		throw (new IllegalStateException ());
-	}
-	
-	@Override
-	public final void registered (final ComponentCallbacks trigger)
+	public final void registeredCallbacks (final ComponentCallbacks trigger, final CallbackIsolate isolate)
 	{
 		Preconditions.checkState (this.status == Status.Created);
 		Preconditions.checkState (this.component == null);
@@ -167,7 +162,7 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void unregistered (final ComponentCallbacks trigger)
+	public final void unregisteredCallbacks (final ComponentCallbacks trigger)
 	{
 		Preconditions.checkState ((this.status == Status.Registered) || (this.status == Status.Initialized) || (this.status == Status.Terminated));
 		this.component = null;

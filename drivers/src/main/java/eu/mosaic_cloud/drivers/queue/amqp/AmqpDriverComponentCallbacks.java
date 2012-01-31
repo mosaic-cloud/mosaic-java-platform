@@ -276,26 +276,4 @@ public final class AmqpDriverComponentCallbacks extends
 		return null;
 	}
 
-	@Override
-	public void deassigned(ComponentCallbacks trigger,
-			ComponentCallbacks newCallbacks) {
-		// nothing to do here
-	}
-
-	@Override
-	public void reassigned(ComponentCallbacks trigger,
-			ComponentCallbacks oldCallbacks) {
-		// nothing to do here
-	}
-
-	@Override
-	public void registered(ComponentCallbacks trigger) {
-		// nothing to do here
-	}
-
-	@Override
-	public void unregistered(ComponentCallbacks trigger) {
-		// nothing to do here
-	}
-
 }

@@ -34,6 +34,7 @@ import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
+import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -41,6 +42,7 @@ import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -53,16 +55,16 @@ import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 public final class BasicComponent
 		extends Object
 		implements
-			eu.mosaic_cloud.components.core.Component
+			Component
 {
-	private BasicComponent (final Channel channel, final CallbackReactor callbackReactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
+	private BasicComponent (final Channel channel, final CallbackReactor callbackReactor, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.delegate = new Component (this, channel, callbackReactor, callbacks, exceptions);
+		this.delegate = new Component (this, channel, callbackReactor, exceptions);
 	}
 	
 	@Override
-	public final void assign (final ComponentCallbacks callbacks)
+	public final void assign (final CallbackHandler<ComponentCallbacks> callbacks)
 	{
 		this.delegate.assign (callbacks);
 	}
@@ -121,14 +123,9 @@ public final class BasicComponent
 	
 	final Component delegate;
 	
-	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
-	{
-		return (new BasicComponent (channel, reactor, callbacks, exceptions));
-	}
-	
 	public static final BasicComponent create (final Channel channel, final CallbackReactor reactor, final ExceptionTracer exceptions)
 	{
-		return (new BasicComponent (channel, reactor, null, exceptions));
+		return (new BasicComponent (channel, reactor, exceptions));
 	}
 	
 	private static enum Action
@@ -145,7 +142,7 @@ public final class BasicComponent
 				ChannelCallbacks,
 				CallbackHandler<ChannelCallbacks>
 	{
-		Component (final BasicComponent facade, final Channel channel, final CallbackReactor callbackReactor, final ComponentCallbacks callbacks, final ExceptionTracer exceptions)
+		Component (final BasicComponent facade, final Channel channel, final CallbackReactor callbackReactor, final ExceptionTracer exceptions)
 		{
 			super ();
 			Preconditions.checkNotNull (facade);
@@ -158,7 +155,8 @@ public final class BasicComponent
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 				this.channel = channel;
 				this.callbackReactor = callbackReactor;
-				this.callbackTrigger = this.callbackReactor.register (ComponentCallbacks.class, callbacks);
+				this.callbackIsolate = this.callbackReactor.createIsolate ();
+				this.callbackTrigger = this.callbackReactor.createProxy (ComponentCallbacks.class);
 				this.inboundCalls = HashBiMap.create ();
 				this.outboundCalls = HashBiMap.create ();
 				this.registers = HashBiMap.create ();
@@ -174,12 +172,6 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final void deassigned (final ChannelCallbacks trigger, final ChannelCallbacks newCallbacks)
-		{
-			Preconditions.checkState (false);
-		}
-		
-		@Override
 		public final CallbackReference failed (final Channel channel, final Throwable exception)
 		{
 			Preconditions.checkState (channel == this.channel);
@@ -190,6 +182,13 @@ public final class BasicComponent
 		}
 		
 		@Override
+		public final void failedCallbacks (final ChannelCallbacks trigger, final Throwable exception)
+		{
+			Preconditions.checkState (trigger == this.callbackTrigger);
+			this.failed (this.channel, exception);
+		}
+		
+		@Override
 		public final CallbackReference initialized (final Channel channel)
 		{
 			Preconditions.checkState (channel == this.channel);
@@ -197,12 +196,6 @@ public final class BasicComponent
 				this.callbackTrigger.initialized (this.facade);
 			}
 			return (null);
-		}
-		
-		@Override
-		public final void reassigned (final ChannelCallbacks trigger, final ChannelCallbacks oldCallbacks)
-		{
-			Preconditions.checkState (false);
 		}
 		
 		@Override
@@ -314,8 +307,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final void registered (final ChannelCallbacks trigger)
+		public final void registeredCallbacks (final ChannelCallbacks trigger, final CallbackIsolate isolate)
 		{
+			Preconditions.checkState (trigger == this.callbackTrigger);
+			Preconditions.checkState (isolate == this.callbackIsolate);
 			synchronized (this.monitor) {
 				this.notifyStarted ();
 			}
@@ -332,10 +327,12 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final void unregistered (final ChannelCallbacks trigger)
+		public final void unregisteredCallbacks (final ChannelCallbacks trigger)
 		{
+			Preconditions.checkState (trigger == this.callbackTrigger);
 			synchronized (this.monitor) {
-				this.callbackReactor.unregister (this.callbackTrigger);
+				this.callbackReactor.destroyIsolate (this.callbackIsolate);
+				this.callbackReactor.destroyProxy (this.callbackTrigger);
 				this.stop ();
 				this.notifyStopped ();
 			}
@@ -357,10 +354,10 @@ public final class BasicComponent
 			}
 		}
 		
-		final void assign (final ComponentCallbacks callbacks)
+		final void assign (final CallbackHandler<ComponentCallbacks> callbacks)
 		{
 			synchronized (this.monitor) {
-				this.callbackReactor.assign (this.callbackTrigger, callbacks);
+				this.callbackReactor.assignHandler (this.callbackTrigger, callbacks, this.callbackIsolate);
 			}
 		}
 		
@@ -434,6 +431,7 @@ public final class BasicComponent
 			}
 		}
 		
+		final CallbackIsolate callbackIsolate;
 		final CallbackReactor callbackReactor;
 		final ComponentCallbacks callbackTrigger;
 		final Channel channel;
