@@ -210,7 +210,8 @@ public final class BasicChannel
 				this.decoder.stopAndWait ();
 				this.executor.shutdown ();
 				this.callbackReactor.destroyProxy (this.callbackTrigger);
-				this.callbackReactor.destroyIsolate (this.callbackIsolate);
+				// !!!!
+				// this.callbackReactor.destroyIsolate (this.callbackIsolate);
 				this.notifyStopped ();
 			}
 		}

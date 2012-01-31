@@ -184,7 +184,6 @@ public final class BasicComponent
 		@Override
 		public final void failedCallbacks (final ChannelCallbacks trigger, final Throwable exception)
 		{
-			Preconditions.checkState (trigger == this.callbackTrigger);
 			this.failed (this.channel, exception);
 		}
 		
@@ -309,8 +308,6 @@ public final class BasicComponent
 		@Override
 		public final void registeredCallbacks (final ChannelCallbacks trigger, final CallbackIsolate isolate)
 		{
-			Preconditions.checkState (trigger == this.callbackTrigger);
-			Preconditions.checkState (isolate == this.callbackIsolate);
 			synchronized (this.monitor) {
 				this.notifyStarted ();
 			}
@@ -329,10 +326,10 @@ public final class BasicComponent
 		@Override
 		public final void unregisteredCallbacks (final ChannelCallbacks trigger)
 		{
-			Preconditions.checkState (trigger == this.callbackTrigger);
 			synchronized (this.monitor) {
-				this.callbackReactor.destroyIsolate (this.callbackIsolate);
 				this.callbackReactor.destroyProxy (this.callbackTrigger);
+				// !!!!
+				// this.callbackReactor.destroyIsolate (this.callbackIsolate);
 				this.stop ();
 				this.notifyStopped ();
 			}

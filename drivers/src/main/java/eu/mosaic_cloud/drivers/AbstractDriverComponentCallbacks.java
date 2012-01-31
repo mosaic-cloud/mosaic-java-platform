@@ -122,6 +122,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 		return null;
 	}
 
+	@Override
 	public final void failedCallbacks(ComponentCallbacks trigger, Throwable exception) {
 		this.failed(this.component, exception);
 	}
@@ -130,6 +131,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	public final void registeredCallbacks(ComponentCallbacks trigger, CallbackIsolate isolate) {
 	}
 
+	@Override
 	public final void unregisteredCallbacks(ComponentCallbacks trigger) {
 	}
 

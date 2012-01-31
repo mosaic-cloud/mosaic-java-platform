@@ -373,7 +373,7 @@ public final class BasicCallbackReactor
 			final CallbackHandler<_Callbacks_> handler;
 			final Scheduler scheduler;
 			synchronized (this.monitor) {
-				Preconditions.checkState (this.status.get () == Status.Active);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
 				Preconditions.checkState (this.handlerStatus.get () == HandlerStatus.Assigned);
 				handler = this.handler.get ();
 				Preconditions.checkState (handler != null);
@@ -413,8 +413,8 @@ public final class BasicCallbackReactor
 					return;
 				final Scheduler scheduler = this.scheduler.get ();
 				Preconditions.checkNotNull (scheduler);
-				scheduler.enqueueActor (this);
 				Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Idle, ScheduleStatus.Scheduled));
+				scheduler.enqueueActor (this);
 				this.reactor.transcript.traceDebugging ("scheduled actor `%{object:identity}`.", this);
 			}
 		}
