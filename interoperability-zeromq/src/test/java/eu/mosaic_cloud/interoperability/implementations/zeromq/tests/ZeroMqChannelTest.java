@@ -55,8 +55,10 @@ public final class ZeroMqChannelTest
 			final ZeroMqChannelPacket packet1 = ZeroMqChannelPacket.create (serverIdentifier, header, payload);
 			client.enqueue (packet1, ZeroMqChannelTest.defaultPollTimeout);
 			final ZeroMqChannelPacket packet2 = server.dequeue (ZeroMqChannelTest.defaultPollTimeout);
+			Assert.assertNotNull (packet2);
 			server.enqueue (packet2, ZeroMqChannelTest.defaultPollTimeout);
 			final ZeroMqChannelPacket packet3 = client.dequeue (ZeroMqChannelTest.defaultPollTimeout);
+			Assert.assertNotNull (packet3);
 			packet1.header.flip ();
 			packet1.payload.flip ();
 			Assert.assertEquals (packet1.header, packet3.header);
