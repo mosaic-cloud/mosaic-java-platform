@@ -21,8 +21,6 @@ package eu.mosaic_cloud.drivers.kvstore;
 
 import java.io.IOException;
 
-import com.basho.riak.client.RiakException;
-
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

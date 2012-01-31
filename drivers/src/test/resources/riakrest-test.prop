@@ -2,6 +2,6 @@
 kvstore.driver_name = RIAKREST
 kvstore.driver_threads = 2
 
-kvstore.host = 194.102.62.140
-kvstore.port = 33022
+kvstore.host = 127.0.0.1
+kvstore.port = 8098
 kvstore.bucket = 10
