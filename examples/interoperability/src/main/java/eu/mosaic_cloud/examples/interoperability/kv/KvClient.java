@@ -21,8 +21,11 @@
 package eu.mosaic_cloud.examples.interoperability.kv;
 
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.interoperability.core.Channel;
@@ -42,9 +45,9 @@ public final class KvClient
 	public KvClient ()
 	{
 		this.logger = LoggerFactory.getLogger (this.getClass ());
-		this.futures = new HashMap<Long, OutcomeFuture<?>> ();
+		this.futures = Collections.synchronizedMap (new HashMap<Long, OutcomeFuture<?>> ());
 		this.session = null;
-		this.sequence = 0;
+		this.sequence = new AtomicLong (0);
 	}
 	
 	@Override
@@ -62,9 +65,11 @@ public final class KvClient
 	public final synchronized CallbackReference destroyed (final Session session)
 	{
 		Preconditions.checkState (this.session == session);
-		for (final OutcomeFuture<?> future : this.futures.values ())
-			future.cancel (true);
-		this.futures.clear ();
+		synchronized (this.futures) {
+			for (final OutcomeFuture<?> future : this.futures.values ())
+				future.cancel (true);
+			this.futures.clear ();
+		}
 		return (null);
 	}
 	
@@ -78,7 +83,7 @@ public final class KvClient
 	public final synchronized Future<String> get (final String key)
 	{
 		Preconditions.checkState (this.session != null);
-		final long sequence = this.sequence++;
+		final long sequence = this.sequence.incrementAndGet ();
 		final OutcomeFuture<String> future = OutcomeFuture.create ();
 		this.futures.put (Long.valueOf (sequence), future);
 		this.session.send (new Message (KvMessage.GetRequest, new KvPayloads.GetRequest (sequence, key)));
@@ -88,7 +93,7 @@ public final class KvClient
 	public final synchronized Future<Boolean> initialize (final Channel channel, final String serverIdentifier)
 	{
 		Preconditions.checkState (this.session == null);
-		Preconditions.checkState (this.sequence == 0);
+		Preconditions.checkState (this.sequence.get () == 0);
 		final OutcomeFuture<Boolean> future = OutcomeFuture.create ();
 		this.futures.put (Long.valueOf (0), future);
 		channel.connect (serverIdentifier, KvSession.Client, new Message (KvMessage.Access, null), this);
@@ -98,7 +103,7 @@ public final class KvClient
 	public final synchronized Future<Boolean> put (final String key, final String value)
 	{
 		Preconditions.checkState (this.session != null);
-		final long sequence = this.sequence++;
+		final long sequence = this.sequence.incrementAndGet ();
 		final OutcomeFuture<Boolean> future = OutcomeFuture.create ();
 		this.futures.put (Long.valueOf (sequence), future);
 		this.session.send (new Message (KvMessage.PutRequest, new KvPayloads.PutRequest (sequence, key, value)));
@@ -143,8 +148,8 @@ public final class KvClient
 		return (null);
 	}
 	
-	private final HashMap<Long, OutcomeFuture<?>> futures;
+	private final Map<Long, OutcomeFuture<?>> futures;
 	private final Logger logger;
-	private long sequence;
+	private AtomicLong sequence;
 	private Session session;
 }

@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletExecutor;
@@ -61,6 +63,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 	private C context;
 	private ThreadingContext threading;
 	private static MosaicLogger logger= MosaicLogger.createLogger(Cloudlet.class);
+	private Monitor monitor = Monitor.create (this);
 
 	/**
 	 * Creates a new cloudlet instance.
@@ -75,7 +78,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 	public Cloudlet(C context, ICloudletCallback<C> callback,
 			ThreadingContext threading, ClassLoader loader)
 			throws CloudletException {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			this.context = context;
 			this.threading = threading;
 			this.active = false;
@@ -97,29 +100,28 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 
 	@Override
 	public boolean initialize(IConfiguration config) {
-		boolean initialized = false;
-		this.configuration = config;
-
-		synchronized (this) {
+		synchronized (this.monitor) {
+			boolean initialized = false;
+			this.configuration = config;
 			IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object>() {
-
+	
 				@Override
 				public void onSuccess(Object result) {
 					Cloudlet.this.controllerCallback.initializeSucceeded(
 							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
 				}
-
+	
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					Cloudlet.this.controllerCallback.initializeFailed(
 							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
-
+	
 				}
-
+	
 			};
-
+	
 			List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>>();
 			CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object>(
 					complHandler);
@@ -127,7 +129,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 			final EventDrivenOperation<Object> initOperation = new EventDrivenOperation<Object>(
 					handlers, iHandler);
 			initOperation.setOperation(new Runnable() {
-
+	
 				@Override
 				public void run() {
 					// call the user defined init
@@ -153,16 +155,16 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 			} catch (ExecutionException e) {
 				ExceptionTracer.traceIgnored(e);
 			}
+			return initialized;
 		}
-		return initialized;
 	}
 
 	@Override
 	public boolean destroy() {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			this.active = false;
 			IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object>() {
-
+	
 				@Override
 				public void onSuccess(Object result) {
 					Cloudlet.this.controllerCallback.destroySucceeded(
@@ -170,7 +172,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 									Cloudlet.this.controller));
 					Cloudlet.this.executor.shutdown();
 				}
-
+	
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					Cloudlet.this.controllerCallback.destroyFailed(
@@ -178,9 +180,9 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 									Cloudlet.this.controller));
 					Cloudlet.this.executor.shutdown();
 				}
-
+	
 			};
-
+	
 			List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>>();
 			CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object>(
 					complHandler);
@@ -188,7 +190,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 			final EventDrivenOperation<Object> destroyOperation = new EventDrivenOperation<Object>(
 					handlers, iHandler);
 			destroyOperation.setOperation(new Runnable() {
-
+	
 				@Override
 				public void run() {
 					// call the user defined init
@@ -217,8 +219,8 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 			// this.executor.shutdown();
 			// // TODO
 			// destroyed = true;
+			return true;
 		}
-		return true;
 	}
 
 	@Override
@@ -226,14 +228,18 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		return this.active;
 	}
 
-	private synchronized void destroyResource(IResourceAccessor<C> accessor,
+	private void destroyResource(IResourceAccessor<C> accessor,
 			IResourceAccessorCallback<C> callbackHandler) {
-		accessor.destroy(callbackHandler);
+		synchronized (this.monitor) {
+			accessor.destroy(callbackHandler);
+		}
 	}
 
-	private synchronized void initializeResource(IResourceAccessor<C> accessor,
+	private void initializeResource(IResourceAccessor<C> accessor,
 			IResourceAccessorCallback<C> callbackHandler, C cloudletContext) {
-		accessor.initialize(callbackHandler, this.context, this.threading);
+		synchronized (this.monitor) {
+			accessor.initialize(callbackHandler, this.context, this.threading);
+		}
 	}
 
 	private <T> CompletionInvocationHandler<T> getResponseHandler(

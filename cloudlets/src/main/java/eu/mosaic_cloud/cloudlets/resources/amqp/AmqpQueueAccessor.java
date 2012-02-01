@@ -22,6 +22,8 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ContainerException;
@@ -74,6 +76,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 	protected AmqpExchangeType exchangeType = AmqpExchangeType.DIRECT;
 	protected boolean registered;
 	protected MosaicLogger logger;
+	protected Monitor monitor = Monitor.create (this);
 
 	/**
 	 * Creates a new AMQP resource accessor.
@@ -92,67 +95,69 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 	public AmqpQueueAccessor(IConfiguration config,
 			ICloudletController<C> cloudlet, Class<D> dataClass,
 			boolean consumer, DataEncoder<D> encoder) {
-		this.configuration = config;
-		this.logger=MosaicLogger.createLogger(this);
-		this.cloudlet = cloudlet;
-		this.status = ResourceStatus.CREATED;
-		this.dataClass = dataClass;
-		this.dataEncoder = encoder;
-		this.registered = false;
-		String specification = ConfigProperties
-				.getString("AmqpQueueAccessor.3"); //$NON-NLS-1$
-		if (consumer) {
-			specification = ConfigProperties.getString("AmqpQueueAccessor.4"); //$NON-NLS-1$
+		synchronized (this.monitor) {
+			this.configuration = config;
+			this.logger=MosaicLogger.createLogger(this);
+			this.cloudlet = cloudlet;
+			this.status = ResourceStatus.CREATED;
+			this.dataClass = dataClass;
+			this.dataEncoder = encoder;
+			this.registered = false;
+			String specification = ConfigProperties
+					.getString("AmqpQueueAccessor.3"); //$NON-NLS-1$
+			if (consumer) {
+				specification = ConfigProperties.getString("AmqpQueueAccessor.4"); //$NON-NLS-1$
+			}
+			IConfiguration accessorConfig = config
+					.spliceConfiguration(ConfigurationIdentifier
+							.resolveRelative(specification));
+			this.configuration = accessorConfig;
+			this.exchange = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.0"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+			this.routingKey = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+			this.queue = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.2"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+			String type = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.5"), String.class, "").toUpperCase();//$NON-NLS-1$ //$NON-NLS-2$
+			if (!type.equals("") && (AmqpExchangeType.valueOf(type) != null)) {
+				this.exchangeType = AmqpExchangeType.valueOf(type);
+			}
+			this.exclusive = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.6"), Boolean.class, true); //$NON-NLS-1$ 
+			this.autoDelete = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.7"), Boolean.class, true); //$NON-NLS-1$
+			this.passive = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.8"), Boolean.class, false); //$NON-NLS-1$ 
+			this.durable = ConfigUtils
+					.resolveParameter(
+							accessorConfig,
+							ConfigProperties.getString("AmqpQueueAccessor.9"), Boolean.class, false); //$NON-NLS-1$ 
+			this.logger.trace(
+					"Queue accessor for exchange '" + this.exchange
+							+ "', routing key '" + this.routingKey
+							+ "' and queue '" + this.queue + "'");
 		}
-		IConfiguration accessorConfig = config
-				.spliceConfiguration(ConfigurationIdentifier
-						.resolveRelative(specification));
-		this.configuration = accessorConfig;
-		this.exchange = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.0"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-		this.routingKey = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-		this.queue = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.2"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-		String type = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.5"), String.class, "").toUpperCase();//$NON-NLS-1$ //$NON-NLS-2$
-		if (!type.equals("") && (AmqpExchangeType.valueOf(type) != null)) {
-			this.exchangeType = AmqpExchangeType.valueOf(type);
-		}
-		this.exclusive = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.6"), Boolean.class, true); //$NON-NLS-1$ 
-		this.autoDelete = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.7"), Boolean.class, true); //$NON-NLS-1$
-		this.passive = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.8"), Boolean.class, false); //$NON-NLS-1$ 
-		this.durable = ConfigUtils
-				.resolveParameter(
-						accessorConfig,
-						ConfigProperties.getString("AmqpQueueAccessor.9"), Boolean.class, false); //$NON-NLS-1$ 
-		this.logger.trace(
-				"Queue accessor for exchange '" + this.exchange
-						+ "', routing key '" + this.routingKey
-						+ "' and queue '" + this.queue + "'");
 	}
 
 	@Override
 	public void initialize(IResourceAccessorCallback<C> callback, C context,
 			ThreadingContext threading) {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			@SuppressWarnings("unchecked")
 			IResourceAccessorCallback<C> proxy = this.cloudlet
 					.buildCallbackInvoker(callback,
@@ -168,7 +173,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 				}
 				this.connector = AmqpConnector.create(this.configuration,
 						threading);
-
+	
 				// IOperationCompletionHandler<Boolean> cHandler = new
 				// ConnectionOpenHandler(
 				// callback);
@@ -177,7 +182,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 				// handlers.add(cHandler);
 				// this.connector.openConnection(handlers,
 				// this.cloudlet.getResponseInvocationHandler(cHandler));
-
+	
 				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, true);
 				proxy.initializeSucceeded(AmqpQueueAccessor.this.cloudletContext,
@@ -194,7 +199,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 	@Override
 	public void destroy(IResourceAccessorCallback<C> callback) {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			this.status = ResourceStatus.DESTROYING;
 			@SuppressWarnings("unchecked")
 			IResourceAccessorCallback<C> proxy = this.cloudlet
@@ -343,9 +348,9 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 		public void onSuccess(Boolean result) {
 			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueAccessor.this.cloudlet, result);
-			this.callback.initializeSucceeded(
-					AmqpQueueAccessor.this.cloudletContext, arguments);
-			synchronized (AmqpQueueAccessor.this) {
+			synchronized (AmqpQueueAccessor.this.monitor) {
+				this.callback.initializeSucceeded(
+						AmqpQueueAccessor.this.cloudletContext, arguments);
 				AmqpQueueAccessor.this.status = ResourceStatus.READY;
 			}
 		}
@@ -380,9 +385,9 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 		public void onSuccess(Boolean result) {
 			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueAccessor.this.cloudlet, result);
-			this.callback.destroySucceeded(
-					AmqpQueueAccessor.this.cloudletContext, arguments);
-			synchronized (AmqpQueueAccessor.this) {
+			synchronized (AmqpQueueAccessor.this.monitor) {
+				this.callback.destroySucceeded(
+						AmqpQueueAccessor.this.cloudletContext, arguments);
 				AmqpQueueAccessor.this.status = ResourceStatus.DESTROYED;
 			}
 		}

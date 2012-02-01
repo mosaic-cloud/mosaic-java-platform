@@ -67,9 +67,8 @@ public class KeyValueConnectorReactor extends AbstractConnectorReactor { // NOPM
 	 * Destroys this reactor.
 	 */
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		// nothing to do here
-		// if it does something don'y forget synchronized
 	}
 
 	@Override

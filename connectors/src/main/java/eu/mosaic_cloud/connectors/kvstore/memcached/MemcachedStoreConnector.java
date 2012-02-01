@@ -102,7 +102,7 @@ public final class MemcachedStoreConnector<T extends Object> extends
 	 * @see eu.mosaic_cloud.connectors.IResourceConnector#destroy()
 	 */
 	@Override
-	public void destroy() throws Throwable {
+	public synchronized void destroy() throws Throwable {
 		super.destroy();
 		this.logger.trace("MemcachedConnector destroyed.");
 	}

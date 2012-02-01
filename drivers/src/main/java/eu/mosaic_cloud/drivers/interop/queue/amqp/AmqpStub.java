@@ -102,7 +102,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 	public static AmqpStub create(IConfiguration config, ZeroMqChannel channel,
 			ThreadingContext threading) {
 		MosaicLogger sLogger = MosaicLogger.createLogger(AmqpStub.class);
-		synchronized (AbstractDriverStub.LOCK) {
+		synchronized (AbstractDriverStub.MONITOR) {
 			if (AmqpStub.stub == null) {
 				AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
 				AmqpDriver driver = AmqpDriver.create(config, threading);
@@ -120,8 +120,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 	}
 
 	@Override
-	public void destroy() {
-		synchronized (AbstractDriverStub.LOCK) {
+	public synchronized void destroy() {
+		synchronized (AbstractDriverStub.MONITOR) {
 			decDriverReference(this);
 		}
 		super.destroy();

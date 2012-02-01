@@ -124,6 +124,16 @@ public final class BasicThreadingSecurityManager
 	
 	public static final void initialize ()
 	{
+		/*
+		 * We apply the well known "singleton initialization pattern".
+		 * 
+		 * We synchronize on `System.class` because in the Sun / Oracle JRE 1.7.0 implementation the static method
+		 * `setSecurityManager` delegates to a private method which in turn synchronizes on `System.class`.
+		 * Thus we eliminate a possible race condition.
+		 * 
+		 * We recurse after setting (in practice at most once) to be sure that we indeed initialized the correct
+		 * security manager.
+		 */
 		synchronized (System.class) {
 			final SecurityManager manager = System.getSecurityManager ();
 			if (manager instanceof BasicThreadingSecurityManager)

@@ -69,9 +69,8 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 	 * Destroys this reactor.
 	 */
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		// nothing to do here
-		// if it does something don'y forget synchronized
 	}
 
 	/**
@@ -85,9 +84,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 	 *            the callback
 	 */
 	protected void addCallback(String requestId, IAmqpConsumerCallback callback) {
-		synchronized (this) {
-			this.callbacksMap.addHandlers(requestId, callback);
-		}
+		this.callbacksMap.addHandlers(requestId, callback);
 	}
 
 	@Override

@@ -90,7 +90,6 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 		super();
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ResourceComponentCallbacks.setComponentCallbacks(this);
-		// try {
 		IConfiguration configuration = PropertyTypeConfiguration.create(
 				ResourceComponentCallbacks.class.getClassLoader(),
 				"resource-conn.properties"); //$NON-NLS-1$
@@ -115,12 +114,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 						configuration,
 						ConfigProperties
 								.getString("ResourceComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-		synchronized (this) {
-			this.status = Status.Created;
-		}
-		// } catch (Throwable e) {
-		// ExceptionTracer.traceIgnored(e);
-		// }
+		this.status = Status.Created;
 	}
 
 	private static void setComponentCallbacks(

@@ -80,10 +80,12 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 			ICloudletController<C> cloudlet, Class<D> dataClass,
 			DataEncoder<D> encoder) {
 		super(config, cloudlet, dataClass, true, encoder);
-		String specification = ConfigProperties
-				.getString("AmqpQueueAccessor.4") + "." + ConfigProperties.getString("AmqpQueueConsumer.0"); //$NON-NLS-1$
-		this.autoAck = ConfigUtils.resolveParameter(config, specification,
-				Boolean.class, false);
+		synchronized (this.monitor) {
+			String specification = ConfigProperties
+					.getString("AmqpQueueAccessor.4") + "." + ConfigProperties.getString("AmqpQueueConsumer.0"); //$NON-NLS-1$
+			this.autoAck = ConfigUtils.resolveParameter(config, specification,
+					Boolean.class, false);
+		}
 	}
 
 	@Override
@@ -117,8 +119,8 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 	 */
 	@Override
 	public void register() {
-		// declare queue and in case of success register as consumer
-		synchronized (this) {
+		synchronized (this.monitor) {
+			// declare queue and in case of success register as consumer
 			startRegister(this.callback);
 		}
 	}
@@ -129,7 +131,7 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 
 			@Override
 			public void onSuccess(String result) {
-				synchronized (AmqpQueueConsumer.this) {
+				synchronized (AmqpQueueConsumer.this.monitor) {
 					//					if (AmqpQueueConsumer.super.registered)
 					//						return;
 					AmqpQueueConsumer.this.logger.trace(
@@ -170,12 +172,12 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 
 	@Override
 	public void unregister() {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
-
+	
 				@Override
 				public void onSuccess(Boolean result) {
-					synchronized (AmqpQueueConsumer.this) {
+					synchronized (AmqpQueueConsumer.this.monitor) {
 						// if (!AmqpQueueConsumer.super.registered)
 						// return;
 						// CallbackArguments<S> arguments = new
@@ -188,7 +190,7 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 						AmqpQueueConsumer.super.registered = false;
 					}
 				}
-
+	
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
 					CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(

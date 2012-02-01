@@ -59,16 +59,14 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 	}
 
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		super.destroy();
-		synchronized (this) {
-			for (Map.Entry<String, BucketData> bucket : this.bucketFactories
-					.entrySet()) {
-				bucket.getValue().destroy();
-			}
-			this.clientBucketMap.clear();
-			this.bucketFactories.clear();
+		for (Map.Entry<String, BucketData> bucket : this.bucketFactories
+				.entrySet()) {
+			bucket.getValue().destroy();
 		}
+		this.clientBucketMap.clear();
+		this.bucketFactories.clear();
 	}
 
 	/**
@@ -79,20 +77,18 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 	 * @param bucket
 	 *            the bucket used by the client
 	 */
-	public void registerClient(String clientId, String bucket) {
-		synchronized (this) {
-			Preconditions.checkArgument(!this.clientBucketMap
-					.containsKey(clientId));
-			BucketData bucketData = this.bucketFactories.get(bucket);
-			if (bucketData == null) {
-				bucketData = new BucketData(bucket);
-				this.bucketFactories.put(bucket, bucketData);
-				bucketData.noClients.incrementAndGet();
-				this.logger.trace(
-						"Create new client for bucket " + bucket);
-			}
-			this.clientBucketMap.put(clientId, bucketData);
+	public synchronized void registerClient(String clientId, String bucket) {
+		Preconditions.checkArgument(!this.clientBucketMap
+				.containsKey(clientId));
+		BucketData bucketData = this.bucketFactories.get(bucket);
+		if (bucketData == null) {
+			bucketData = new BucketData(bucket);
+			this.bucketFactories.put(bucket, bucketData);
+			bucketData.noClients.incrementAndGet();
+			this.logger.trace(
+					"Create new client for bucket " + bucket);
 		}
+		this.clientBucketMap.put(clientId, bucketData);
 		this.logger.trace(
 				"Registered client " + clientId + " for bucket " + bucket);
 	}
@@ -103,18 +99,16 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
 	 * @param clientId
 	 *            the unique ID of the client
 	 */
-	public void unregisterClient(String clientId) {
-		synchronized (this) {
-			Preconditions.checkArgument(this.clientBucketMap
-					.containsKey(clientId));
-			BucketData bucketData = this.clientBucketMap.get(clientId);
-			int noClients = bucketData.noClients.decrementAndGet();
-			if (noClients == 0) {
-				bucketData.destroy();
-				this.bucketFactories.remove(bucketData.bucketName);
-			}
-			this.clientBucketMap.remove(clientId);
+	public synchronized void unregisterClient(String clientId) {
+		Preconditions.checkArgument(this.clientBucketMap
+				.containsKey(clientId));
+		BucketData bucketData = this.clientBucketMap.get(clientId);
+		int noClients = bucketData.noClients.decrementAndGet();
+		if (noClients == 0) {
+			bucketData.destroy();
+			this.bucketFactories.remove(bucketData.bucketName);
 		}
+		this.clientBucketMap.remove(clientId);
 		this.logger.trace("Unregistered client " + clientId);
 	}
 

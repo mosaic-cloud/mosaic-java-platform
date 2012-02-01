@@ -90,7 +90,7 @@ public class AmqpQueuePublisher<C, D extends Object> extends
 	@Override
 	public void initialize(IResourceAccessorCallback<C> callback, C context,
 			ThreadingContext threading) {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			if (callback instanceof IAmqpQueuePublisherCallback) {
 				super.initialize(callback, context, threading);
 				this.callback = (IAmqpQueuePublisherCallback<C, D>) callback;
@@ -114,7 +114,7 @@ public class AmqpQueuePublisher<C, D extends Object> extends
 	@Override
 	public void register() {
 		// declare queue and in case of success register as consumer
-		synchronized (this) {
+		synchronized (this.monitor) {
 			startRegister(this.callback);
 		}
 	}
@@ -128,7 +128,7 @@ public class AmqpQueuePublisher<C, D extends Object> extends
 				AmqpQueuePublisher.super.cloudlet);
 		this.callback.registerSucceeded(AmqpQueuePublisher.this.cloudletContext,
 				arguments);
-		synchronized (AmqpQueuePublisher.this) {
+		synchronized (this.monitor) {
 			AmqpQueuePublisher.super.registered = true;
 		}
 
@@ -136,7 +136,7 @@ public class AmqpQueuePublisher<C, D extends Object> extends
 
 	@Override
 	public void unregister() {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			if (!AmqpQueuePublisher.super.registered) {
 				return;
 			}

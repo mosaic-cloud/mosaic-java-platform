@@ -20,6 +20,7 @@
 package eu.mosaic_cloud.connectors.interop;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
  */
 public class ResponseHandlerMap {
 
-	private final Map<String, List<IOperationCompletionHandler<? extends Object>>> handlerMap = new HashMap<String, List<IOperationCompletionHandler<?>>>();
+	private final Map<String, List<IOperationCompletionHandler<? extends Object>>> handlerMap = Collections.synchronizedMap(new HashMap<String, List<IOperationCompletionHandler<?>>>());
 
 	public ResponseHandlerMap() {
 		super();
@@ -52,19 +53,19 @@ public class ResponseHandlerMap {
 	 */
 	public <T extends Object> void addHandlers(String requestId,
 			List<IOperationCompletionHandler<T>> handlers) {
-		//		synchronized (this) {
-		List<IOperationCompletionHandler<?>> eHandlers = this.handlerMap
-				.get(requestId);
-		if (eHandlers == null) {
-			eHandlers = new ArrayList<IOperationCompletionHandler<?>>();
-			for (IOperationCompletionHandler<T> handler : handlers) {
-				eHandlers.add(handler);
+		synchronized (this.handlerMap) {
+			List<IOperationCompletionHandler<?>> eHandlers = this.handlerMap
+					.get(requestId);
+			if (eHandlers == null) {
+				eHandlers = new ArrayList<IOperationCompletionHandler<?>>();
+				for (IOperationCompletionHandler<T> handler : handlers) {
+					eHandlers.add(handler);
+				}
+				this.handlerMap.put(requestId, eHandlers);
+			} else {
+				eHandlers.addAll(handlers);
 			}
-			this.handlerMap.put(requestId, eHandlers);
-		} else {
-			eHandlers.addAll(handlers);
 		}
-		//		}
 	}
 
 	/**
@@ -76,11 +77,7 @@ public class ResponseHandlerMap {
 	 */
 	public List<IOperationCompletionHandler<?>> removeRequestHandlers(
 			String requestId) {
-		//		synchronized (this) {
-		List<IOperationCompletionHandler<?>> handlers = this.handlerMap
-				.remove(requestId);
-		return handlers;
-		//		}
+		return this.handlerMap.remove(requestId);
 	}
 
 	/**
@@ -92,17 +89,13 @@ public class ResponseHandlerMap {
 	 */
 	public List<IOperationCompletionHandler<?>> getRequestHandlers(
 			String requestId) {
-		//		synchronized (this) {
 		return this.handlerMap.get(requestId);
-		//		}
 	}
 
 	/**
 	 * Removes from the handler map all pending requests.
 	 */
 	public void cancelAllRequests() {
-		//		synchronized (this) {
 		this.handlerMap.clear();
-		//		}
 	}
 }

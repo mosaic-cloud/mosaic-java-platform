@@ -106,15 +106,13 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 		AmqpDriver driver = new AmqpDriver(configuration, threading, noThreads);
 		// open connection - moved to the stub
 		driver.connectResource();
-		synchronized (driver) {
-			if (!driver.connected) {
-				driver = null; // NOPMD by georgiana on 10/12/11 3:38 PM
-			}
+		if (!driver.connected) {
+			driver = null; // NOPMD by georgiana on 10/12/11 3:38 PM
 		}
 		return driver;
 	}
 
-	private void connectResource() {
+	private synchronized void connectResource() {
 		String amqpServerHost = ConfigUtils.resolveParameter(
 				this.configuration,
 				ConfigProperties.getString("AmqpDriver.1"), String.class, //$NON-NLS-1$
@@ -145,42 +143,36 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 			factory.setUsername(amqpServerUser);
 			factory.setPassword(amqpServerPasswd);
 		}
-
-		synchronized (this) {
-			try {
-				this.connection = factory.newConnection();
-				this.connection.addShutdownListener(this.shutdownListener);
-				this.channels = new ConcurrentHashMap<String, Channel>();
-				this.connected = true;
-				this.logger.debug("AMQP driver connected to " + amqpServerHost
-						+ ":" + amqpServerPort);
-			} catch (IOException e) {
-				ExceptionTracer.traceIgnored(e);
-				this.connection = null; // NOPMD by georgiana on 10/12/11 3:38
-										// PM
-			}
+		try {
+			this.connection = factory.newConnection();
+			this.connection.addShutdownListener(this.shutdownListener);
+			this.channels = new ConcurrentHashMap<String, Channel>();
+			this.connected = true;
+			this.logger.debug("AMQP driver connected to " + amqpServerHost
+					+ ":" + amqpServerPort);
+		} catch (IOException e) {
+			ExceptionTracer.traceIgnored(e);
+			this.connection = null; // NOPMD by georgiana on 10/12/11 3:38
+									// PM
 		}
 	}
 
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		super.destroy();
-
-		synchronized (this) {
-			// close any existing connection
-			if (this.connected) {
-				try {
-					for (Map.Entry<String, Channel> channel : AmqpDriver.this.channels
-							.entrySet()) {
-						channel.getValue().close();
-					}
-					this.connection.close();
-					this.connected = false;
-				} catch (IOException e) {
-					ExceptionTracer.traceIgnored(e);
-					this.logger
-							.error("AMQP cannot close connection with server."); //$NON-NLS-1$
+		// close any existing connection
+		if (this.connected) {
+			try {
+				for (Map.Entry<String, Channel> channel : AmqpDriver.this.channels
+						.entrySet()) {
+					channel.getValue().close();
 				}
+				this.connection.close();
+				this.connected = false;
+			} catch (IOException e) {
+				ExceptionTracer.traceIgnored(e);
+				this.logger
+						.error("AMQP cannot close connection with server."); //$NON-NLS-1$
 			}
 		}
 		this.logger.trace("AmqpDriver destroyed."); //$NON-NLS-1$
@@ -409,22 +401,19 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 		return channel;
 	}
 
-	private Channel openChannel(String clientId) {
+	private synchronized Channel openChannel(String clientId) {
 		Channel channel = null; // NOPMD by georgiana on 10/12/11 4:21 PM
-		synchronized (this) {
-			try {
-				if (this.connected) {
-					channel = this.connection.createChannel();
-					channel.setDefaultConsumer(null);
-					channel.addReturnListener(this.returnCallback);
-					channel.basicQos(1);
-					this.channels.put(clientId, channel);
-				}
-			} catch (IOException e) {
-				ExceptionTracer.traceIgnored(e);
+		try {
+			if (this.connected) {
+				channel = this.connection.createChannel();
+				channel.setDefaultConsumer(null);
+				channel.addReturnListener(this.returnCallback);
+				channel.basicQos(1);
+				this.channels.put(clientId, channel);
 			}
+		} catch (IOException e) {
+			ExceptionTracer.traceIgnored(e);
 		}
-
 		return channel;
 	}
 

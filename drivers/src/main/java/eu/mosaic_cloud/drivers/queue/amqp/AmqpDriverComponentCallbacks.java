@@ -80,9 +80,7 @@ public final class AmqpDriverComponentCallbacks extends
 									.getString("AmqpDriverComponentCallbacks.1"), //$NON-NLS-1$
 							String.class, "")); //$NON-NLS-1$
 
-			synchronized (this) {
-				this.status = Status.Created;
-			}
+			this.status = Status.Created;
 		} catch (IOException e) {
 			ExceptionTracer.traceIgnored(e);
 		}

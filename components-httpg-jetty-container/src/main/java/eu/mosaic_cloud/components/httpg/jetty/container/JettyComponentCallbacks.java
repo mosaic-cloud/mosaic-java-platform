@@ -65,7 +65,7 @@ public final class JettyComponentCallbacks
 	{
 		super ();
 		this.monitor = Monitor.create (this);
-		synchronized (this) {
+		synchronized (this.monitor) {
 			this.threading = Threading.getDefaultContext ();
 			this.transcript = Transcript.create (this);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);

@@ -119,7 +119,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 	 * @see eu.mosaic_cloud.connectors.IResourceConnector#destroy()
 	 */
 	@Override
-	public void destroy() throws Throwable {
+	public synchronized void destroy() throws Throwable {
 		this.proxy.destroy();
 		this.executor.shutdown();
 		this.logger.trace("KeyValueStoreConnector destroyed.");

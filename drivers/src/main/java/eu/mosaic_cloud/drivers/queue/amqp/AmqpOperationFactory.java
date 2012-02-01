@@ -147,8 +147,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 			public Boolean call() {
 				boolean succeeded = false;
 				String consumer = (String) parameters[0];
-
-				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				final Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(consumer);
 				if (channel != null) {
@@ -159,7 +157,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 						ExceptionTracer.traceIgnored(e);
 					}
 				}
-				// }
 				return succeeded;
 			}
 
@@ -175,8 +172,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				long delivery = (Long) parameters[0];
 				boolean multiple = (Boolean) parameters[1];
 				String consumer = (String) parameters[2];
-
-				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				final Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(consumer);
 				if (channel != null) {
@@ -187,7 +182,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 						ExceptionTracer.traceIgnored(e);
 					}
 				}
-				// }
 				return succeeded;
 			}
 
@@ -204,9 +198,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 						String queue = (String) parameters[0];
 						boolean autoAck = (Boolean) parameters[1];
 						String clientId = (String) parameters[2];
-
-						// synchronized (AmqpOperationFactory.this.amqpDriver) {
-
 						final Channel channel = AmqpOperationFactory.this.amqpDriver
 								.getChannel(clientId);
 						if (channel != null) {
@@ -236,7 +227,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 								ExceptionTracer.traceIgnored(e);
 							}
 						}
-						// }
 						return message;
 					}
 
@@ -255,8 +245,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				Object extra = parameters[4];
 				IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
 				String consumerTag;
-
-				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(consumer);
 				if (channel != null) {
@@ -280,8 +268,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 								+ consumerTag + " consumer " + consumer);
 					}
 				}
-				// }
-
 				return consumer;
 			}
 
@@ -296,8 +282,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				boolean succeeded = false;
 				AmqpOutboundMessage message = (AmqpOutboundMessage) parameters[0];
 				String clientId = (String) parameters[1];
-
-				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(clientId);
 
@@ -314,7 +298,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 							message.getData());
 					succeeded = true;
 				}
-				// }
 				return succeeded;
 			}
 
@@ -331,9 +314,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				String queue = (String) parameters[1];
 				String routingKey = (String) parameters[2];
 				String clientId = (String) parameters[3];
-
-				// synchronized (AmqpOperationFactory.this.amqpDriver) {
-
 				try {
 					Channel channel = AmqpOperationFactory.this.amqpDriver
 							.getChannel(clientId);
@@ -345,7 +325,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				} catch (IOException e) {
 					ExceptionTracer.traceIgnored(e);
 				}
-				// }
 				return succeeded;
 			}
 
@@ -364,8 +343,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				boolean autoDelete = (Boolean) parameters[3];
 				boolean passive = (Boolean) parameters[4];
 				String clientId = (String) parameters[5];
-
-				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(clientId);
 				if (channel != null) {
@@ -378,7 +355,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 					}
 					succeeded = (outcome != null);
 				}
-				// }
 				return succeeded;
 			}
 
@@ -398,8 +374,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				boolean passive = (Boolean) parameters[4];
 				AmqpExchangeType eType = (AmqpExchangeType) parameters[1];
 				String clientId = (String) parameters[5];
-
-				// synchronized (AmqpOperationFactory.this.amqpDriver) {
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(clientId);
 				if (channel != null) {
@@ -412,10 +386,8 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 					}
 					succeeded = (outcome != null);
 				}
-				// }
 				return succeeded;
 			}
-
 		});
 	}
 

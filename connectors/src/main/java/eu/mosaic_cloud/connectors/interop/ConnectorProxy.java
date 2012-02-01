@@ -88,11 +88,9 @@ public class ConnectorProxy implements SessionCallbacks {
 	 * 
 	 * @throws Throwable
 	 */
-	public void destroy() throws Throwable {
-		synchronized (this) {
-			this.responseReactor.destroy();
-			this.commChannel.terminate(500);
-		}
+	public synchronized void destroy() throws Throwable {
+		this.responseReactor.destroy();
+		this.commChannel.terminate(500);
 		this.logger.trace("ConnectorProxy destroyed.");
 	}
 
@@ -107,9 +105,7 @@ public class ConnectorProxy implements SessionCallbacks {
 	 */
 	protected void sendRequest(Session session, Message request)
 			throws IOException {
-		// synchronized (this) {
 		session.send(request);
-		// }
 	}
 
 	/**

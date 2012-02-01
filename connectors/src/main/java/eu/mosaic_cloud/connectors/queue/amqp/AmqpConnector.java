@@ -84,7 +84,7 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static synchronized AmqpConnector create(IConfiguration config,
+	public static AmqpConnector create(IConfiguration config,
 			ThreadingContext threading) throws Throwable {
 		String connectorIdentifier = UUID.randomUUID().toString();
 		int noThreads = ConfigUtils
@@ -108,7 +108,7 @@ public class AmqpConnector implements IAmqpQueueConnector {
 	}
 
 	@Override
-	public void destroy() throws Throwable {
+	public synchronized void destroy() throws Throwable {
 		this.proxy.destroy();
 		this.executor.shutdownNow();
 		logger.trace("AmqpConnector was destroyed.");
@@ -130,7 +130,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -144,8 +143,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<Boolean>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 
@@ -164,7 +161,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -179,8 +175,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<Boolean>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 
@@ -198,7 +192,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -212,8 +205,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<Boolean>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 
@@ -229,7 +220,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -243,8 +233,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<Boolean>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 
@@ -264,7 +252,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			CompletionInvocationHandler<String> iHandler,
 			final IAmqpConsumerCallback consumerCallback) {
 		IResult<String> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<String> op = new EventDrivenOperation<String>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -279,8 +266,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<String>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 
@@ -296,7 +281,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -310,8 +294,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<Boolean>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 
@@ -327,7 +309,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -341,8 +322,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<Boolean>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 
@@ -358,7 +337,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 			List<IOperationCompletionHandler<Boolean>> handlers,
 			CompletionInvocationHandler<Boolean> iHandler) {
 		IResult<Boolean> result = null;
-		// synchronized (this) {
 		final EventDrivenOperation<Boolean> op = new EventDrivenOperation<Boolean>(
 				handlers, iHandler);
 		op.setOperation(new Runnable() {
@@ -372,8 +350,6 @@ public class AmqpConnector implements IAmqpQueueConnector {
 		});
 		result = new EventDrivenResult<Boolean>(op);
 		this.executor.submit(op.getOperation());
-		// }
-
 		return result;
 	}
 

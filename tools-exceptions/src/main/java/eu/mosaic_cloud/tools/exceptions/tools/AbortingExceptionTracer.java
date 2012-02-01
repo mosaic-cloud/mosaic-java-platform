@@ -125,7 +125,7 @@ public final class AbortingExceptionTracer
 		
 		public final void maybeStart ()
 		{
-			synchronized (this) {
+			synchronized (this.monitor) {
 				if (!this.exitThread.isAlive ()) {
 					try {
 						Runtime.getRuntime ().addShutdownHook (this.haltThread);
@@ -173,5 +173,6 @@ public final class AbortingExceptionTracer
 		private final Thread exitThread;
 		private final Thread haltThread;
 		private final PrintStream transcript;
+		private final Object monitor = new Object ();
 	}
 }

@@ -106,7 +106,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
 		MosaicLogger sLogger = MosaicLogger.createLogger(KeyValueStub.class);
 		KeyValueStub stub;
-		synchronized (AbstractDriverStub.LOCK) {
+		synchronized (AbstractDriverStub.MONITOR) {
 			stub = KeyValueStub.stubs.get(cData);
 			try {
 				if (stub == null) {
@@ -144,8 +144,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 	}
 
 	@Override
-	public void destroy() {
-		synchronized (AbstractDriverStub.LOCK) {
+	public synchronized void destroy() {
+		synchronized (AbstractDriverStub.MONITOR) {
 			int ref = decDriverReference(this);
 			if ((ref == 0)) {
 				DriverConnectionData cData = KeyValueStub
