@@ -51,6 +51,7 @@ public final class BasicThreadingContextTest
 		BasicThreadingSecurityManager.initialize ();
 		this.exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		this.threading = BasicThreadingContext.create (this, this.exceptions.catcher);
+		Assert.assertTrue (this.threading.initialize (this.waitTimeout));
 	}
 	
 	@Test
@@ -99,18 +100,12 @@ public final class BasicThreadingContextTest
 		forker.fork ();
 		waiter.trigger ();
 		Assert.assertTrue (waiter.awaitCompleted (this.waitTimeout));
-		Assert.assertTrue (this.threading.await (this.waitTimeout));
-		{
-			final CaughtException exception = this.exceptions.queue.poll ();
-			Assert.assertNotNull (exception);
-			Assert.assertTrue (exception.getCause () instanceof SecurityException);
-		}
-		Assert.assertTrue (Threading.sleep (100));
+		Assert.assertTrue (this.threading.destroy (this.waitTimeout));
 		while (true) {
 			final CaughtException exception = this.exceptions.queue.poll ();
 			if (exception == null)
 				break;
-			Assert.assertTrue (exception.getCause () instanceof SecurityException);
+			Assert.assertTrue ((exception.getCause () instanceof SecurityException) || (exception.getCause () instanceof AssertionError));
 		}
 	}
 	
@@ -129,7 +124,7 @@ public final class BasicThreadingContextTest
 	@After
 	public final void unprepare ()
 	{
-		Assert.assertTrue (this.threading.await (this.waitTimeout));
+		Assert.assertTrue (this.threading.destroy (this.waitTimeout));
 		Assert.assertNull (this.exceptions.queue.poll ());
 	}
 	
