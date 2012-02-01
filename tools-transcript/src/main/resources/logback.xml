@@ -37,7 +37,7 @@
 	<logger name="eu.mosaic_cloud.cloudlets" level="debug" />
 	<logger name="eu.mosaic_cloud.platform" level="debug" />
 	
-	<root level="debug">
+	<root level="info">
 		<appender-ref ref="console" />
 	</root>
 	

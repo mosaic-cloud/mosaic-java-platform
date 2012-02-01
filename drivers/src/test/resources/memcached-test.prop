@@ -3,7 +3,7 @@ kvstore.driver_name = MEMCACHED
 kvstore.driver_threads = 10
 
 memcached.host_1 = 127.0.0.1
-memcached.port_1 = 11210
+memcached.port_1 = 8091
 kvstore.user = test
 kvstore.passwd = test
-kvstore.bucket = 11
+kvstore.bucket = test

@@ -115,9 +115,11 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
 	@Override
 	protected IOperationFactory createOperationFactory(Object... params) {
 		String bucket = params[0].toString();
-		IOperationFactory opFactory = RiakPBOperationFactory.getFactory(
-				this.riakHost, this.riakPort, bucket);
+		IOperationFactory opFactory;
+		opFactory = RiakPBOperationFactory.getFactory(this.riakHost,
+				this.riakPort, bucket);
 		return opFactory;
+
 	}
 
 	/*

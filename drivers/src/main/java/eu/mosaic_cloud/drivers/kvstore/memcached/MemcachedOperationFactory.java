@@ -20,7 +20,6 @@
 package eu.mosaic_cloud.drivers.kvstore.memcached;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -30,9 +29,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.CASResponse;
 import net.spy.memcached.MemcachedClient;
+
+import com.couchbase.client.CouchbaseClient;
+import com.couchbase.client.CouchbaseConnectionFactory;
+
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
@@ -47,7 +49,13 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * @author Georgiana Macariu
  * 
  */
-public final class MemcachedOperationFactory implements IOperationFactory { // NOPMD by georgiana on 10/12/11 4:57 PM
+public final class MemcachedOperationFactory implements IOperationFactory { // NOPMD
+																			// by
+																			// georgiana
+																			// on
+																			// 10/12/11
+																			// 4:57
+																			// PM
 
 	private final MemcachedClient mcClient;
 
@@ -58,12 +66,13 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
 		if (useBucket) {
 			@SuppressWarnings("unchecked")
 			List<URI> nodes = (List<URI>) servers;
-			this.mcClient = new MemcachedClient(nodes, bucket, user, password);
+			this.mcClient = new CouchbaseClient(nodes, bucket, user, password);
 		} else {
 			@SuppressWarnings("unchecked")
-			List<InetSocketAddress> nodes = (List<InetSocketAddress>) servers;
-			this.mcClient = new MemcachedClient(new BinaryConnectionFactory(),
-					nodes);
+			List<URI> nodes = (List<URI>) servers;
+			CouchbaseConnectionFactory factory = new CouchbaseConnectionFactory(
+					nodes, "default", "");
+			this.mcClient = new CouchbaseClient(factory);
 		}
 	}
 
@@ -85,7 +94,13 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
 	public static MemcachedOperationFactory getFactory(List<?> hosts,
 			String user, String password, String bucket, boolean useBucket) {
 		try {
-			return new MemcachedOperationFactory(hosts, user, password, bucket, // NOPMD by georgiana on 10/12/11 4:56 PM
+			return new MemcachedOperationFactory(hosts, user, password, bucket, // NOPMD
+																				// by
+																				// georgiana
+																				// on
+																				// 10/12/11
+																				// 4:56
+																				// PM
 					useBucket);
 		} catch (IOException e) {
 			ExceptionTracer.traceIgnored(e);
@@ -101,11 +116,22 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
 	 * .platform.core.IOperationType, java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation(final IOperationType type, // NOPMD by georgiana on 10/12/11 4:57 PM
+	public IOperation<?> getOperation(final IOperationType type, // NOPMD by
+																	// georgiana
+																	// on
+																	// 10/12/11
+																	// 4:57 PM
 			Object... parameters) {
-		IOperation<?> operation = null; // NOPMD by georgiana on 10/12/11 4:56 PM
+		IOperation<?> operation = null; // NOPMD by georgiana on 10/12/11 4:56
+										// PM
 		if (!(type instanceof KeyValueOperations)) {
-			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:56 PM
+			return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
+						// by
+						// georgiana
+						// on
+						// 10/12/11
+						// 4:56
+						// PM
 
 						@Override
 						public Object call()
@@ -148,7 +174,13 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
 			operation = buildDeleteOperation(parameters);
 			break;
 		default:
-			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD by georgiana on 10/12/11 4:56 PM
+			operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
+																				// by
+																				// georgiana
+																				// on
+																				// 10/12/11
+																				// 4:56
+																				// PM
 
 						@Override
 						public Object call()
