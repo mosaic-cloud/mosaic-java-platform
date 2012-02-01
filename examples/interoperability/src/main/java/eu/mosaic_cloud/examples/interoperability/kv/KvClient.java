@@ -150,6 +150,6 @@ public final class KvClient
 	
 	private final Map<Long, OutcomeFuture<?>> futures;
 	private final Logger logger;
-	private AtomicLong sequence;
+	private final AtomicLong sequence;
 	private Session session;
 }

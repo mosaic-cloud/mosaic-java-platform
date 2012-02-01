@@ -172,7 +172,7 @@ public final class AbortingExceptionTracer
 		
 		private final Thread exitThread;
 		private final Thread haltThread;
-		private final PrintStream transcript;
 		private final Object monitor = new Object ();
+		private final PrintStream transcript;
 	}
 }
