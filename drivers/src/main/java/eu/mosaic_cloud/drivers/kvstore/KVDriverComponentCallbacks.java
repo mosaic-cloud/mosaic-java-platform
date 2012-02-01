@@ -32,7 +32,6 @@ import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
-import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
 import eu.mosaic_cloud.drivers.ConfigProperties;
@@ -45,7 +44,6 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
@@ -66,7 +64,6 @@ public final class KVDriverComponentCallbacks extends
 	 */
 	public KVDriverComponentCallbacks() {
 		super(Threading.getDefaultContext());
-		this.monitor = Monitor.create(this);
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(KVDriverComponentCallbacks.class
@@ -95,97 +92,93 @@ public final class KVDriverComponentCallbacks extends
 	@Override
 	public CallbackReference called(Component component,
 			ComponentCallRequest request) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions
-					.checkState((this.status != KVDriverComponentCallbacks.Status.Terminated)
-							&& (this.status != KVDriverComponentCallbacks.Status.Unregistered));
-			if (this.status == KVDriverComponentCallbacks.Status.Registered) {
-				if (request.operation.equals(ConfigProperties
-						.getString("KVDriverComponentCallbacks.5"))) { //$NON-NLS-1$
-					String channelEndpoint = ConfigUtils.resolveParameter(
-							getDriverConfiguration(), ConfigProperties
-									.getString("KVDriverComponentCallbacks.3"), //$NON-NLS-1$
-							String.class, "");
-					// FIXME
-					try {
-						if (System.getenv("mosaic_node_ip") != null) {
-							channelEndpoint = channelEndpoint.replace(
-									"0.0.0.0", System.getenv("mosaic_node_ip"));
-						} else {
-							channelEndpoint = channelEndpoint.replace(
-									"0.0.0.0", InetAddress.getLocalHost()
-											.getHostAddress());
-						}
-					} catch (UnknownHostException e) {
-						ExceptionTracer.traceIgnored(e);
+		Preconditions.checkState(this.component == component);
+		Preconditions
+				.checkState((this.status != KVDriverComponentCallbacks.Status.Terminated)
+						&& (this.status != KVDriverComponentCallbacks.Status.Unregistered));
+		if (this.status == KVDriverComponentCallbacks.Status.Registered) {
+			if (request.operation.equals(ConfigProperties
+					.getString("KVDriverComponentCallbacks.5"))) { //$NON-NLS-1$
+				String channelEndpoint = ConfigUtils.resolveParameter(
+						getDriverConfiguration(), ConfigProperties
+								.getString("KVDriverComponentCallbacks.3"), //$NON-NLS-1$
+						String.class, "");
+				// FIXME
+				try {
+					if (System.getenv("mosaic_node_ip") != null) {
+						channelEndpoint = channelEndpoint.replace(
+								"0.0.0.0", System.getenv("mosaic_node_ip"));
+					} else {
+						channelEndpoint = channelEndpoint.replace(
+								"0.0.0.0", InetAddress.getLocalHost()
+										.getHostAddress());
 					}
-					String channelId = ConfigUtils.resolveParameter(
-							getDriverConfiguration(), ConfigProperties
-									.getString("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
-							String.class, "");
-					Map<String, String> outcome = new HashMap<String, String>();
-					outcome.put("channelEndpoint", channelEndpoint);
-					outcome.put("channelIdentifier", channelId);
-					ComponentCallReply reply = ComponentCallReply.create(true,
-							outcome, ByteBuffer.allocate(0), request.reference);
-					component.reply(reply);
-				} else {
-					throw new UnsupportedOperationException();
+				} catch (UnknownHostException e) {
+					ExceptionTracer.traceIgnored(e);
 				}
+				String channelId = ConfigUtils.resolveParameter(
+						getDriverConfiguration(), ConfigProperties
+								.getString("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
+						String.class, "");
+				Map<String, String> outcome = new HashMap<String, String>();
+				outcome.put("channelEndpoint", channelEndpoint);
+				outcome.put("channelIdentifier", channelId);
+				ComponentCallReply reply = ComponentCallReply.create(true,
+						outcome, ByteBuffer.allocate(0), request.reference);
+				component.reply(reply);
 			} else {
 				throw new UnsupportedOperationException();
 			}
-			return null;
+		} else {
+			throw new UnsupportedOperationException();
 		}
+		return null;
 	}
 
 	@Override
 	public CallbackReference callReturned(Component component,
 			ComponentCallReply reply) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			if (this.pendingReference == reply.reference) {
-				if (this.status == Status.WaitingResourceResolved) {
-					// this.pendingReference = null;
-					String ipAddress;
-					Integer port;
-					try {
-						Preconditions.checkArgument(reply.ok);
-						Preconditions
-								.checkArgument(reply.outputsOrError instanceof Map);
-						final Map<?, ?> outputs = (Map<?, ?>) reply.outputsOrError;
-						this.logger
-								.trace("Resource search returned " + outputs);
+		Preconditions.checkState(this.component == component);
+		if (this.pendingReference == reply.reference) {
+			if (this.status == Status.WaitingResourceResolved) {
+				// this.pendingReference = null;
+				String ipAddress;
+				Integer port;
+				try {
+					Preconditions.checkArgument(reply.ok);
+					Preconditions
+							.checkArgument(reply.outputsOrError instanceof Map);
+					final Map<?, ?> outputs = (Map<?, ?>) reply.outputsOrError;
+					this.logger
+							.trace("Resource search returned " + outputs);
 
-						ipAddress = (String) outputs.get("ip"); //$NON-NLS-1$
-						Preconditions.checkArgument(ipAddress != null);
-						port = (Integer) outputs.get("port"); //$NON-NLS-1$
-						Preconditions.checkArgument(port != null);
-					} catch (IllegalArgumentException exception) {
-						this.terminate();
-						ExceptionTracer
-								.traceDeferred(
-										exception,
-										"failed resolving Riak broker endpoint: `%s`; terminating!", //$NON-NLS-1$
-										reply.outputsOrError);
-						throw new IllegalStateException(exception);
-					}
-					this.logger.trace("Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
-							+ port);
-					this.configureDriver(ipAddress, port.toString());
-					if (this.selfGroup != null) {
-						this.pendingReference = ComponentCallReference.create();
-						this.status = Status.Unregistered;
-						this.component.register(this.selfGroup,
-								this.pendingReference);
-					}
-				} else {
-					throw new IllegalStateException();
+					ipAddress = (String) outputs.get("ip"); //$NON-NLS-1$
+					Preconditions.checkArgument(ipAddress != null);
+					port = (Integer) outputs.get("port"); //$NON-NLS-1$
+					Preconditions.checkArgument(port != null);
+				} catch (IllegalArgumentException exception) {
+					this.terminate();
+					ExceptionTracer
+							.traceDeferred(
+									exception,
+									"failed resolving Riak broker endpoint: `%s`; terminating!", //$NON-NLS-1$
+									reply.outputsOrError);
+					throw new IllegalStateException(exception);
+				}
+				this.logger.trace("Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
+						+ port);
+				this.configureDriver(ipAddress, port.toString());
+				if (this.selfGroup != null) {
+					this.pendingReference = ComponentCallReference.create();
+					this.status = Status.Unregistered;
+					this.component.register(this.selfGroup,
+							this.pendingReference);
 				}
 			} else {
 				throw new IllegalStateException();
 			}
+		} else {
+			throw new IllegalStateException();
 		}
 		return null;
 	}
@@ -202,63 +195,59 @@ public final class KVDriverComponentCallbacks extends
 
 	@Override
 	public CallbackReference initialized(Component component) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == null);
-			Preconditions.checkState(this.status == Status.Created);
-			this.component = component;
-			final ComponentCallReference callReference = ComponentCallReference
-					.create();
-			String operation;
-			if (this.driverName
-					.equalsIgnoreCase(KeyValueDriverFactory.DriverType.RIAKPB
-							.toString())) {
-				operation = ConfigProperties
-						.getString("KVDriverComponentCallbacks.2");//$NON-NLS-1$
-			} else {
-				operation = ConfigProperties
-						.getString("KVDriverComponentCallbacks.6");//$NON-NLS-1$
-			}
-			this.component
-					.call(this.resourceGroup, ComponentCallRequest.create(
-							operation, null, callReference));
-			this.pendingReference = callReference;
-			this.status = Status.WaitingResourceResolved;
-			this.logger.trace("Key Value driver callback initialized.");
+		Preconditions.checkState(this.component == null);
+		Preconditions.checkState(this.status == Status.Created);
+		this.component = component;
+		final ComponentCallReference callReference = ComponentCallReference
+				.create();
+		String operation;
+		if (this.driverName
+				.equalsIgnoreCase(KeyValueDriverFactory.DriverType.RIAKPB
+						.toString())) {
+			operation = ConfigProperties
+					.getString("KVDriverComponentCallbacks.2");//$NON-NLS-1$
+		} else {
+			operation = ConfigProperties
+					.getString("KVDriverComponentCallbacks.6");//$NON-NLS-1$
 		}
+		this.component
+				.call(this.resourceGroup, ComponentCallRequest.create(
+						operation, null, callReference));
+		this.pendingReference = callReference;
+		this.status = Status.WaitingResourceResolved;
+		this.logger.trace("Key Value driver callback initialized.");
 		return null;
 	}
 
 	@Override
 	public CallbackReference registerReturn(Component component,
 			ComponentCallReference reference, boolean success) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			if (this.pendingReference == reference) {
-				// this.pendingReference = null;
-				if (!success) {
-					Exception e = new Exception(
-							"failed registering to group; terminating!"); //$NON-NLS-1$
-					ExceptionTracer.traceDeferred(e);
-					this.component.terminate();
-					throw (new IllegalStateException(e));
-				}
-				this.logger
-						.info("Key Value Store driver callback registered to group " + this.selfGroup); //$NON-NLS-1$
-				this.status = Status.Registered;
-
-				// create stub and interop channel
-				ZeroMqChannel driverChannel = createDriverChannel(
-						ConfigProperties
-								.getString("KVDriverComponentCallbacks.4"),
-						ConfigProperties
-								.getString("KVDriverComponentCallbacks.3"),
-						KeyValueSession.DRIVER);
-				this.stub = KeyValueStub.create(getDriverConfiguration(),
-						this.threading, driverChannel);
-
-			} else {
-				throw new IllegalStateException();
+		Preconditions.checkState(this.component == component);
+		if (this.pendingReference == reference) {
+			// this.pendingReference = null;
+			if (!success) {
+				Exception e = new Exception(
+						"failed registering to group; terminating!"); //$NON-NLS-1$
+				ExceptionTracer.traceDeferred(e);
+				this.component.terminate();
+				throw (new IllegalStateException(e));
 			}
+			this.logger
+					.info("Key Value Store driver callback registered to group " + this.selfGroup); //$NON-NLS-1$
+			this.status = Status.Registered;
+
+			// create stub and interop channel
+			ZeroMqChannel driverChannel = createDriverChannel(
+					ConfigProperties
+							.getString("KVDriverComponentCallbacks.4"),
+					ConfigProperties
+							.getString("KVDriverComponentCallbacks.3"),
+					KeyValueSession.DRIVER);
+			this.stub = KeyValueStub.create(getDriverConfiguration(),
+					this.threading, driverChannel);
+
+		} else {
+			throw new IllegalStateException();
 		}
 		return null;
 	}

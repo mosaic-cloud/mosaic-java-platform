@@ -52,7 +52,6 @@ import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -101,7 +100,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	private Status status;
 	private Component component;
 	private ThreadingContext threading;
-	private Monitor monitor;
 	private IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingReferences;
 	private ComponentIdentifier amqpGroup;
 	private ComponentIdentifier kvGroup;
@@ -116,7 +114,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	public ContainerComponentCallbacks() {
 		super();
 		this.threading = Threading.getDefaultContext();
-		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ContainerComponentCallbacks.callbacks = this;
 		// try {
@@ -155,54 +152,52 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	public CallbackReference called(Component component,
 			ComponentCallRequest request) {
 		List<CloudletManager> containers = null;
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
-			if (this.status == Status.Ready) {
-				if (request.operation.equals(ConfigProperties
-						.getString("ContainerComponentCallbacks.4"))) {
-					// TODO
-					List<?> operands = DefaultJsonMapper.defaultInstance
-							.decode(request.inputs, List.class);
-					ClassLoader loader = getCloudletClassLoader(operands.get(0)
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState((this.status != Status.Terminated)
+				&& (this.status != Status.Unregistered));
+		if (this.status == Status.Ready) {
+			if (request.operation.equals(ConfigProperties
+					.getString("ContainerComponentCallbacks.4"))) {
+				// TODO
+				List<?> operands = DefaultJsonMapper.defaultInstance
+						.decode(request.inputs, List.class);
+				ClassLoader loader = getCloudletClassLoader(operands.get(0)
+						.toString());
+				for (int i = 1; i < operands.size(); i++) {
+					logger.debug("Loading cloudlet in JAR "
+							+ operands.get(0) + " with configuration "
+							+ operands.get(i));
+					containers = startCloudlet(loader, operands.get(i)
 							.toString());
-					for (int i = 1; i < operands.size(); i++) {
-						logger.debug("Loading cloudlet in JAR "
-								+ operands.get(0) + " with configuration "
-								+ operands.get(i));
-						containers = startCloudlet(loader, operands.get(i)
-								.toString());
-						if (containers != null) {
-							this.cloudletRunners.addAll(containers);
-						}
+					if (containers != null) {
+						this.cloudletRunners.addAll(containers);
 					}
-					ComponentCallReply reply = ComponentCallReply.create(true,
-							Boolean.valueOf(true), ByteBuffer.allocate(0),
-							request.reference);
-					component.reply(reply);
-					return null;
 				}
-				// else if (request.operation.equals(ConfigProperties
-				//						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
-				// logger.debug(
-				// "mOSAIC container - running test cloudlets");
-				// container = TestRunner.runHelloWorld();
-				// if (container != null)
-				// cloudletRunners.add(container);
-				//
-				// ComponentCallReply reply = ComponentCallReply.create(true,
-				// new Boolean(true), ByteBuffer.allocate(0),
-				// request.reference);
-				// component.reply(reply);
-				// return null;
-				// }
-				else {
-					throw new UnsupportedOperationException();
-				}
+				ComponentCallReply reply = ComponentCallReply.create(true,
+						Boolean.valueOf(true), ByteBuffer.allocate(0),
+						request.reference);
+				component.reply(reply);
+				return null;
 			}
-			throw new UnsupportedOperationException();
+			// else if (request.operation.equals(ConfigProperties
+			//						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
+			// logger.debug(
+			// "mOSAIC container - running test cloudlets");
+			// container = TestRunner.runHelloWorld();
+			// if (container != null)
+			// cloudletRunners.add(container);
+			//
+			// ComponentCallReply reply = ComponentCallReply.create(true,
+			// new Boolean(true), ByteBuffer.allocate(0),
+			// request.reference);
+			// component.reply(reply);
+			// return null;
+			// }
+			else {
+				throw new UnsupportedOperationException();
+			}
 		}
+		throw new UnsupportedOperationException();
 	}
 
 	private List<CloudletManager> startCloudlet(ClassLoader loader,
@@ -272,107 +267,94 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	@Override
 	public CallbackReference callReturned(Component component,
 			ComponentCallReply reply) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState(this.status == Status.Ready);
-			if (this.pendingReferences.containsKey(reply.reference)) {
-				OutcomeTrigger<ComponentCallReply> trigger = this.pendingReferences
-						.remove(reply.reference);
-				trigger.succeeded(reply);
-			} else {
-				throw (new IllegalStateException());
-			}
-
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState(this.status == Status.Ready);
+		if (this.pendingReferences.containsKey(reply.reference)) {
+			OutcomeTrigger<ComponentCallReply> trigger = this.pendingReferences
+					.remove(reply.reference);
+			trigger.succeeded(reply);
+		} else {
+			throw (new IllegalStateException());
 		}
 		return null;
 	}
 
 	public void terminate() {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component != null);
-			// System.out.println("ContainerComponentCallbacks.terminate()");
-			this.component.terminate();
-		}
+		Preconditions.checkState(this.component != null);
+		// System.out.println("ContainerComponentCallbacks.terminate()");
+		this.component.terminate();
 	}
 
 	@Override
 	public CallbackReference casted(Component component,
 			ComponentCastRequest request) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
-			throw (new UnsupportedOperationException());
-		}
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState((this.status != Status.Terminated)
+				&& (this.status != Status.Unregistered));
+		throw (new UnsupportedOperationException());
 	}
 
 	@Override
 	public CallbackReference failed(Component component, Throwable exception) {
 		logger.trace("Component container failed " + exception.getMessage());
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState(this.status != Status.Terminated);
-			Preconditions.checkState(this.status != Status.Unregistered);
-			// also stop and destroy connector & cloudlets
-			for (CloudletManager container : this.cloudletRunners) {
-				container.stop();
-			}
-			this.component = null;
-			this.status = Status.Terminated;
-			ExceptionTracer.traceHandled(exception);
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState(this.status != Status.Terminated);
+		Preconditions.checkState(this.status != Status.Unregistered);
+		// also stop and destroy connector & cloudlets
+		for (CloudletManager container : this.cloudletRunners) {
+			container.stop();
 		}
+		this.component = null;
+		this.status = Status.Terminated;
+		ExceptionTracer.traceHandled(exception);
 		return null;
 	}
 
 	@Override
 	public CallbackReference initialized(Component component) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == null);
-			Preconditions.checkState(this.status == Status.Created);
-			this.component = component;
-			this.status = Status.Unregistered;
-			ComponentCallReference callReference = ComponentCallReference
-					.create();
-			this.component.register(this.selfGroup, callReference);
-			OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
-			this.pendingReferences.put(callReference, result.trigger);
-			logger.trace("Container component callback initialized."); //$NON-NLS-1$
-		}
+		Preconditions.checkState(this.component == null);
+		Preconditions.checkState(this.status == Status.Created);
+		this.component = component;
+		this.status = Status.Unregistered;
+		ComponentCallReference callReference = ComponentCallReference
+				.create();
+		this.component.register(this.selfGroup, callReference);
+		OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
+		this.pendingReferences.put(callReference, result.trigger);
+		logger.trace("Container component callback initialized."); //$NON-NLS-1$
 		return null;
 	}
 
 	@Override
 	public CallbackReference registerReturn(Component component,
 			ComponentCallReference reference, boolean ok) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
-					.remove(reference);
-			if (pendingReply != null) {
-				if (!ok) {
-					Exception e = new Exception(
-							"failed registering to group; terminating!"); //$NON-NLS-1$
-					ExceptionTracer.traceDeferred(e);
-					this.component.terminate();
-					throw (new IllegalStateException(e));
-				}
-				this.status = Status.Ready;
-				logger.info(
-						"Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
+		Preconditions.checkState(this.component == component);
+		OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
+				.remove(reference);
+		if (pendingReply != null) {
+			if (!ok) {
+				Exception e = new Exception(
+						"failed registering to group; terminating!"); //$NON-NLS-1$
+				ExceptionTracer.traceDeferred(e);
+				this.component.terminate();
+				throw (new IllegalStateException(e));
+			}
+			this.status = Status.Ready;
+			logger.info(
+					"Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
 
-				if (CloudletContainerParameters.configFile != null) {
-					ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
-					List<CloudletManager> containers = startCloudlet(loader,
-							CloudletContainerParameters.configFile);
-					if (containers != null) {
-						this.cloudletRunners.addAll(containers);
-					}
-				} else {
-					logger.error("Missing config file");
+			if (CloudletContainerParameters.configFile != null) {
+				ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
+				List<CloudletManager> containers = startCloudlet(loader,
+						CloudletContainerParameters.configFile);
+				if (containers != null) {
+					this.cloudletRunners.addAll(containers);
 				}
 			} else {
-				throw (new IllegalStateException());
+				logger.error("Missing config file");
 			}
+		} else {
+			throw (new IllegalStateException());
 		}
 		return null;
 	}
@@ -380,18 +362,16 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	@Override
 	public CallbackReference terminated(Component component) {
 		logger.info("Container component callback terminating.");
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState(this.status != Status.Terminated);
-			Preconditions.checkState(this.status != Status.Unregistered);
-			// also stop and destroy connector & cloudlets
-			for (CloudletManager container : this.cloudletRunners) {
-				container.stop();
-			}
-			this.component = null;
-			this.status = Status.Terminated;
-			logger.info("Container component callback terminated."); //$NON-NLS-1$
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState(this.status != Status.Terminated);
+		Preconditions.checkState(this.status != Status.Unregistered);
+		// also stop and destroy connector & cloudlets
+		for (CloudletManager container : this.cloudletRunners) {
+			container.stop();
 		}
+		this.component = null;
+		this.status = Status.Terminated;
+		logger.info("Container component callback terminated."); //$NON-NLS-1$
 		return null;
 	}
 

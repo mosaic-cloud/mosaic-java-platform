@@ -40,7 +40,6 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
 
@@ -74,7 +73,6 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 
 	private Status status;
 	private Component component;
-	private Monitor monitor;
 	private IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingReferences;
 	private ComponentIdentifier amqpGroup;
 	private ComponentIdentifier kvGroup;
@@ -90,7 +88,6 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	 */
 	public ResourceComponentCallbacks() {
 		super();
-		this.monitor = Monitor.create(this);
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ResourceComponentCallbacks.setComponentCallbacks(this);
 		// try {
@@ -136,45 +133,42 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 			ComponentCallRequest request) {
 		ComponentCallReply reply = null;
 		boolean succeeded = false;
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState((this.status != Status.Terminated)
+				&& (this.status != Status.Unregistered));
+		if (this.status == Status.Ready) {
+			if (request.operation.equals(ConfigProperties
+					.getString("ResourceComponentCallbacks.7"))) { //$NON-NLS-1$
+				logger.debug("Testing AMQP connector"); //$NON-NLS-1$
+				try {
+					AmqpConnectorCompTest.test();
+					succeeded = true;
 
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
-			if (this.status == Status.Ready) {
-				if (request.operation.equals(ConfigProperties
-						.getString("ResourceComponentCallbacks.7"))) { //$NON-NLS-1$
-					logger.debug("Testing AMQP connector"); //$NON-NLS-1$
-					try {
-						AmqpConnectorCompTest.test();
-						succeeded = true;
-
-					} catch (Throwable e) {
-						ExceptionTracer.traceIgnored(e);
-					}
-					reply = ComponentCallReply.create(true,
-							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
-							request.reference);
-					component.reply(reply);
-				} else if (request.operation.equals(ConfigProperties
-						.getString("ResourceComponentCallbacks.8"))) {
-					logger.debug("Testing KV connector connector"); //$NON-NLS-1$
-					try {
-						KeyValueConnectorCompTest.test();
-						succeeded = true;
-					} catch (Throwable e) {
-						ExceptionTracer.traceIgnored(e);
-					}
-					reply = ComponentCallReply.create(true,
-							Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
-							request.reference);
-					component.reply(reply);
-				} else {
-					throw new UnsupportedOperationException();
+				} catch (Throwable e) {
+					ExceptionTracer.traceIgnored(e);
 				}
+				reply = ComponentCallReply.create(true,
+						Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
+						request.reference);
+				component.reply(reply);
+			} else if (request.operation.equals(ConfigProperties
+					.getString("ResourceComponentCallbacks.8"))) {
+				logger.debug("Testing KV connector connector"); //$NON-NLS-1$
+				try {
+					KeyValueConnectorCompTest.test();
+					succeeded = true;
+				} catch (Throwable e) {
+					ExceptionTracer.traceIgnored(e);
+				}
+				reply = ComponentCallReply.create(true,
+						Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
+						request.reference);
+				component.reply(reply);
 			} else {
 				throw new UnsupportedOperationException();
 			}
+		} else {
+			throw new UnsupportedOperationException();
 		}
 		return null;
 	}
@@ -182,104 +176,89 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	@Override
 	public CallbackReference callReturned(Component component,
 			ComponentCallReply reply) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState(this.status == Status.Ready);
-			if (this.pendingReferences.containsKey(reply.reference)) {
-				OutcomeTrigger<ComponentCallReply> trigger = this.pendingReferences
-						.remove(reply.reference);
-				trigger.succeeded(reply);
-			} else {
-				throw (new IllegalStateException());
-			}
-
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState(this.status == Status.Ready);
+		if (this.pendingReferences.containsKey(reply.reference)) {
+			OutcomeTrigger<ComponentCallReply> trigger = this.pendingReferences
+					.remove(reply.reference);
+			trigger.succeeded(reply);
+		} else {
+			throw (new IllegalStateException());
 		}
 		return null;
 	}
 
 	public void terminate() {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component != null);
-			this.component.terminate();
-		}
+		Preconditions.checkState(this.component != null);
+		this.component.terminate();
 	}
 
 	@Override
 	public CallbackReference casted(Component component,
 			ComponentCastRequest request) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
-			throw (new UnsupportedOperationException());
-		}
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState((this.status != Status.Terminated)
+				&& (this.status != Status.Unregistered));
+		throw (new UnsupportedOperationException());
 	}
 
 	@Override
 	public CallbackReference failed(Component component, Throwable exception) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
-			this.component = null;
-			this.status = Status.Terminated;
-			ExceptionTracer.traceIgnored(exception);
-		}
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState((this.status != Status.Terminated)
+				&& (this.status != Status.Unregistered));
+		this.component = null;
+		this.status = Status.Terminated;
+		ExceptionTracer.traceIgnored(exception);
 		return null;
 	}
 
 	@Override
 	public CallbackReference initialized(Component component) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == null);
-			Preconditions.checkState(this.status == Status.Created);
-			this.component = component;
-			ComponentCallReference callReference = ComponentCallReference
-					.create();
-			this.component.register(this.selfGroup, callReference);
-			OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
-			this.pendingReferences.put(callReference, result.trigger);
-			this.status = Status.Unregistered;
-			logger.trace("Connector component callback initialized."); //$NON-NLS-1$
-		}
+		Preconditions.checkState(this.component == null);
+		Preconditions.checkState(this.status == Status.Created);
+		this.component = component;
+		ComponentCallReference callReference = ComponentCallReference
+				.create();
+		this.component.register(this.selfGroup, callReference);
+		OutcomeFuture<ComponentCallReply> result = OutcomeFuture.create();
+		this.pendingReferences.put(callReference, result.trigger);
+		this.status = Status.Unregistered;
+		logger.trace("Connector component callback initialized."); //$NON-NLS-1$
 		return null;
 	}
 
 	@Override
 	public CallbackReference registerReturn(Component component,
 			ComponentCallReference reference, boolean ok) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
-					.remove(reference);
-			if (pendingReply != null) {
-				if (!ok) {
-					Exception e = new Exception(
-							"failed registering to group; terminating!"); //$NON-NLS-1$
-					ExceptionTracer.traceDeferred(e);
-					this.component.terminate();
-					throw (new IllegalStateException(e));
+		Preconditions.checkState(this.component == component);
+		OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
+				.remove(reference);
+		if (pendingReply != null) {
+			if (!ok) {
+				Exception e = new Exception(
+						"failed registering to group; terminating!"); //$NON-NLS-1$
+				ExceptionTracer.traceDeferred(e);
+				this.component.terminate();
+				throw (new IllegalStateException(e));
 
-				}
-				logger.info("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
-				this.status = Status.Ready;
-			} else {
-				throw (new IllegalStateException());
 			}
+			logger.info("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
+			this.status = Status.Ready;
+		} else {
+			throw (new IllegalStateException());
 		}
 		return null;
 	}
 
 	@Override
 	public CallbackReference terminated(Component component) {
-		synchronized (this.monitor) {
-			Preconditions.checkState(this.component == component);
-			Preconditions.checkState((this.status != Status.Terminated)
-					&& (this.status != Status.Unregistered));
-			this.component = null;
-			this.status = Status.Terminated;
-			logger.info("Connector component callback terminated."); //$NON-NLS-1$
-		}
+		Preconditions.checkState(this.component == component);
+		Preconditions.checkState((this.status != Status.Terminated)
+				&& (this.status != Status.Unregistered));
+		this.component = null;
+		this.status = Status.Terminated;
+		logger.info("Connector component callback terminated."); //$NON-NLS-1$
 		return null;
 	}
 
