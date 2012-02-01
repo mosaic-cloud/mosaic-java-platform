@@ -42,6 +42,7 @@ public final class KvTest
 		BasicThreadingSecurityManager.initialize ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		Assert.assertTrue (threading.initialize (KvTest.defaultPollTimeout));
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
 		final ZeroMqChannel serverChannel = ZeroMqChannel.create (serverIdentifier, threading, exceptions);
@@ -62,7 +63,7 @@ public final class KvTest
 		Assert.assertEquals ("2", Threading.awaitOrCatch (client_2.get ("b"), KvTest.defaultPollTimeout));
 		Assert.assertTrue (serverChannel.terminate (KvTest.defaultPollTimeout));
 		Assert.assertTrue (clientChannel.terminate (KvTest.defaultPollTimeout));
-		Assert.assertTrue (threading.await (KvTest.defaultPollTimeout));
+		Assert.assertTrue (threading.destroy (KvTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

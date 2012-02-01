@@ -26,16 +26,19 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
@@ -43,26 +46,23 @@ public final class QueueingComponentCallbacks
 		extends Object
 		implements
 			ComponentCallbacks,
-			CallbackHandler<ComponentCallbacks>
+			CallbackHandler
 {
-	private QueueingComponentCallbacks (final Component component, final BlockingQueue<ComponentMessage> queue, final long waitTimeout)
+	private QueueingComponentCallbacks (final ComponentController component, final BlockingQueue<ComponentMessage> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (component);
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
+		Preconditions.checkNotNull (exceptions);
 		this.component = component;
 		this.queue = queue;
 		this.waitTimeout = waitTimeout;
-	}
-	
-	public final void assign ()
-	{
-		this.component.assign (this);
+		this.exceptions = exceptions;
 	}
 	
 	@Override
-	public final CallbackReference called (final Component component, final ComponentCallRequest request)
+	public final CallbackReference called (final ComponentController component, final ComponentCallRequest request)
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (request);
@@ -72,7 +72,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference callReturned (final Component component, final ComponentCallReply reply)
+	public final CallbackReference callReturned (final ComponentController component, final ComponentCallReply reply)
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (reply);
@@ -82,7 +82,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference casted (final Component component, final ComponentCastRequest request)
+	public final CallbackReference casted (final ComponentController component, final ComponentCastRequest request)
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (request);
@@ -92,55 +92,59 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference failed (final Component component, final Throwable exception)
+	public final CallbackReference failed (final ComponentController component, final Throwable exception)
+	{
+		Preconditions.checkArgument (this.component == component);
+		this.exceptions.trace (ExceptionResolution.Ignored, exception);
+		return (null);
+	}
+	
+	@Override
+	public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
+	{
+		this.exceptions.trace (ExceptionResolution.Ignored, exception);
+	}
+	
+	@Override
+	public final CallbackReference initialized (final ComponentController component)
 	{
 		Preconditions.checkArgument (this.component == component);
 		return (null);
 	}
 	
 	@Override
-	public final void failedCallbacks (final ComponentCallbacks trigger, final Throwable exception)
+	public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
 	{}
 	
 	@Override
-	public final CallbackReference initialized (final Component component)
-	{
-		Preconditions.checkArgument (this.component == component);
-		return (null);
-	}
-	
-	@Override
-	public final void registeredCallbacks (final ComponentCallbacks trigger, final CallbackIsolate isolate)
-	{}
-	
-	@Override
-	public final CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok)
+	public final CallbackReference registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
 	{
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final CallbackReference terminated (final Component component)
+	public final CallbackReference terminated (final ComponentController component)
 	{
 		Preconditions.checkArgument (this.component == component);
 		return (null);
 	}
 	
 	@Override
-	public final void unregisteredCallbacks (final ComponentCallbacks trigger)
+	public final void unregisteredCallbacks (final Callbacks proxy)
 	{}
 	
 	public final BlockingQueue<ComponentMessage> queue;
-	private final Component component;
+	private final ComponentController component;
+	private final ExceptionTracer exceptions;
 	private final long waitTimeout;
 	
-	public static final QueueingComponentCallbacks create (final Component component)
+	public static final QueueingComponentCallbacks create (final ComponentController component, final BlockingQueue<ComponentMessage> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
-		return (new QueueingComponentCallbacks (component, new LinkedBlockingQueue<ComponentMessage> (), 0));
+		return (new QueueingComponentCallbacks (component, queue, waitTimeout, exceptions));
 	}
 	
-	public static final QueueingComponentCallbacks create (final Component component, final BlockingQueue<ComponentMessage> queue, final long waitTimeout)
+	public static final QueueingComponentCallbacks create (final ComponentController component, final ExceptionTracer exceptions)
 	{
-		return (new QueueingComponentCallbacks (component, queue, waitTimeout));
+		return (new QueueingComponentCallbacks (component, new LinkedBlockingQueue<ComponentMessage> (), 0, exceptions));
 	}
 }

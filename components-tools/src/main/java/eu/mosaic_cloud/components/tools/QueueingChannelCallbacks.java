@@ -26,13 +26,16 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.components.core.Channel;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
+import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
@@ -40,26 +43,23 @@ public final class QueueingChannelCallbacks
 		extends Object
 		implements
 			ChannelCallbacks,
-			CallbackHandler<ChannelCallbacks>
+			CallbackHandler
 {
-	private QueueingChannelCallbacks (final Channel channel, final BlockingQueue<ChannelMessage> queue, final long waitTimeout)
+	private QueueingChannelCallbacks (final ChannelController channel, final BlockingQueue<ChannelMessage> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
 		super ();
 		Preconditions.checkNotNull (channel);
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
+		Preconditions.checkNotNull (exceptions);
 		this.channel = channel;
 		this.queue = queue;
 		this.waitTimeout = waitTimeout;
-	}
-	
-	public final void assign ()
-	{
-		this.channel.assign (this);
+		this.exceptions = exceptions;
 	}
 	
 	@Override
-	public final CallbackReference closed (final Channel channel, final ChannelFlow flow)
+	public final CallbackReference closed (final ChannelController channel, final ChannelFlow flow)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		if (flow == ChannelFlow.Inbound)
@@ -68,25 +68,28 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final CallbackReference failed (final Channel channel, final Throwable exception)
+	public final CallbackReference failed (final ChannelController channel, final Throwable exception)
+	{
+		Preconditions.checkArgument (this.channel == channel);
+		this.exceptions.trace (ExceptionResolution.Ignored, exception);
+		return (null);
+	}
+	
+	@Override
+	public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
+	{
+		this.exceptions.trace (ExceptionResolution.Ignored, exception);
+	}
+	
+	@Override
+	public final CallbackReference initialized (final ChannelController channel)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		return (null);
 	}
 	
 	@Override
-	public final void failedCallbacks (final ChannelCallbacks trigger, final Throwable exception)
-	{}
-	
-	@Override
-	public final CallbackReference initialized (final Channel channel)
-	{
-		Preconditions.checkArgument (this.channel == channel);
-		return (null);
-	}
-	
-	@Override
-	public final CallbackReference received (final Channel channel, final ChannelMessage message)
+	public final CallbackReference received (final ChannelController channel, final ChannelMessage message)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		Preconditions.checkNotNull (message);
@@ -96,31 +99,32 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final void registeredCallbacks (final ChannelCallbacks trigger, final CallbackIsolate isolate)
+	public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
 	{}
 	
 	@Override
-	public final CallbackReference terminated (final Channel channel)
+	public final CallbackReference terminated (final ChannelController channel)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		return (null);
 	}
 	
 	@Override
-	public final void unregisteredCallbacks (final ChannelCallbacks trigger)
+	public final void unregisteredCallbacks (final Callbacks proxy)
 	{}
 	
 	public final BlockingQueue<ChannelMessage> queue;
-	private final Channel channel;
+	private final ChannelController channel;
+	private final ExceptionTracer exceptions;
 	private final long waitTimeout;
 	
-	public static final QueueingChannelCallbacks create (final Channel channel)
+	public static final QueueingChannelCallbacks create (final ChannelController channel, final BlockingQueue<ChannelMessage> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
-		return (new QueueingChannelCallbacks (channel, new LinkedBlockingQueue<ChannelMessage> (), 0));
+		return (new QueueingChannelCallbacks (channel, queue, waitTimeout, exceptions));
 	}
 	
-	public static final QueueingChannelCallbacks create (final Channel channel, final BlockingQueue<ChannelMessage> queue, final long waitTimeout)
+	public static final QueueingChannelCallbacks create (final ChannelController channel, final ExceptionTracer exceptions)
 	{
-		return (new QueueingChannelCallbacks (channel, queue, waitTimeout));
+		return (new QueueingChannelCallbacks (channel, new LinkedBlockingQueue<ChannelMessage> (), 0, exceptions));
 	}
 }

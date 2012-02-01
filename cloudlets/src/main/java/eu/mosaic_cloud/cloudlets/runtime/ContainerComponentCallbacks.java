@@ -29,19 +29,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
-
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
-import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -50,7 +47,9 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
@@ -66,7 +65,7 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
  * 
  */
 public final class ContainerComponentCallbacks implements ComponentCallbacks,
-		CallbackHandler<ComponentCallbacks> {
+		CallbackHandler {
 
 	static enum Status {
 		Created, Terminated, Unregistered, Ready;
@@ -98,7 +97,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			.createLogger(ContainerComponentCallbacks.class);
 
 	private Status status;
-	private Component component;
+	private ComponentController component;
 	private ThreadingContext threading;
 	private IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingReferences;
 	private ComponentIdentifier amqpGroup;
@@ -143,7 +142,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference called(Component component,
+	public CallbackReference called(ComponentController component,
 			ComponentCallRequest request) {
 		List<CloudletManager> containers = null;
 		Preconditions.checkState(this.component == component);
@@ -170,7 +169,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				ComponentCallReply reply = ComponentCallReply.create(true,
 						Boolean.valueOf(true), ByteBuffer.allocate(0),
 						request.reference);
-				component.reply(reply);
+				component.callReturn(reply);
 				return null;
 			}
 			// else if (request.operation.equals(ConfigProperties
@@ -259,7 +258,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference callReturned(Component component,
+	public CallbackReference callReturned(ComponentController component,
 			ComponentCallReply reply) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status == Status.Ready);
@@ -280,7 +279,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference casted(Component component,
+	public CallbackReference casted(ComponentController component,
 			ComponentCastRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
@@ -289,8 +288,8 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference failed(Component component, Throwable exception) {
-		logger.trace("Component container failed " + exception.getMessage());
+	public CallbackReference failed(ComponentController component, Throwable exception) {
+		logger.trace("ComponentController container failed " + exception.getMessage());
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status != Status.Terminated);
 		Preconditions.checkState(this.status != Status.Unregistered);
@@ -305,7 +304,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference initialized(Component component) {
+	public CallbackReference initialized(ComponentController component) {
 		Preconditions.checkState(this.component == null);
 		Preconditions.checkState(this.status == Status.Created);
 		this.component = component;
@@ -320,7 +319,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference registerReturn(Component component,
+	public CallbackReference registerReturned(ComponentController component,
 			ComponentCallReference reference, boolean ok) {
 		Preconditions.checkState(this.component == component);
 		OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
@@ -354,7 +353,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference terminated(Component component) {
+	public CallbackReference terminated(ComponentController component) {
 		logger.info("Container component callback terminating.");
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status != Status.Terminated);
@@ -429,14 +428,14 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public void registeredCallbacks(ComponentCallbacks trigger, CallbackIsolate isolate) {
+	public void registeredCallbacks(Callbacks trigger, CallbackIsolate isolate) {
 	}
 
 	@Override
-	public void unregisteredCallbacks(ComponentCallbacks trigger) {
+	public void unregisteredCallbacks(Callbacks trigger) {
 	}
 
 	@Override
-	public void failedCallbacks(ComponentCallbacks trigger, Throwable exception) {
+	public void failedCallbacks(Callbacks trigger, Throwable exception) {
 	}
 }

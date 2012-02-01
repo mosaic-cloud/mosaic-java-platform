@@ -1,9 +1,9 @@
 package org.zeromq;
 
 
-import org.zeromq.ZMQ.Socket;
-
 import java.util.Arrays;
+
+import org.zeromq.ZMQ.Socket;
 
 /**
  * ZFrame

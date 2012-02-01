@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
 import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;

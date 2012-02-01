@@ -24,7 +24,6 @@ import java.util.concurrent.CountDownLatch;
 
 import com.google.common.base.Preconditions;
 import com.rabbitmq.client.ConnectionFactory;
-
 import eu.mosaic_cloud.drivers.IResourceDriver;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;

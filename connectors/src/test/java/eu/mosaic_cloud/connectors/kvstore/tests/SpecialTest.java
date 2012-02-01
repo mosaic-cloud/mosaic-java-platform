@@ -31,7 +31,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -42,9 +41,10 @@ public class SpecialTest {
 
 	public static void main(String[] args) {
 		BasicThreadingSecurityManager.initialize();
-		ThreadingContext threading = BasicThreadingContext.create(
+		BasicThreadingContext threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		threading.initialize();
 		KeyValueStoreConnector<String> connector = null;
 		try {
 			IConfiguration config = PropertyTypeConfiguration.create(
@@ -62,8 +62,8 @@ public class SpecialTest {
 			ExceptionTracer.traceIgnored(e);
 		} finally {
 			shutDown(connector);
+			threading.destroy();
 		}
-
 	}
 
 	private static void shutDown(KeyValueStoreConnector<?> connector) {

@@ -26,14 +26,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -44,14 +37,19 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class KeyValueConnectorOnlyTest {
 
 	private KeyValueStoreConnector<String> connector;
-	private ThreadingContext threadingContext;
+	private BasicThreadingContext threadingContext;
 
 	private static String keyPrefix;
 	private static final long timeout = 1000 * 1000;
@@ -80,6 +78,7 @@ public class KeyValueConnectorOnlyTest {
 	@After
 	public void tearDown() throws Throwable {
 		this.connector.destroy();
+		this.threadingContext.destroy();
 	}
 
 	private static <T> List<IOperationCompletionHandler<T>> getHandlers(

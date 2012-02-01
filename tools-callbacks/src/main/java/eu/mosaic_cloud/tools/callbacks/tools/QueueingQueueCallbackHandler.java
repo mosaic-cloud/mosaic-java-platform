@@ -29,6 +29,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -38,7 +39,7 @@ public final class QueueingQueueCallbackHandler<_Element_ extends Object>
 		extends Object
 		implements
 			QueueCallbacks<_Element_>,
-			CallbackHandler<QueueCallbacks<_Element_>>
+			CallbackHandler
 {
 	private QueueingQueueCallbackHandler (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
@@ -60,17 +61,17 @@ public final class QueueingQueueCallbackHandler<_Element_ extends Object>
 	}
 	
 	@Override
-	public final void failedCallbacks (final QueueCallbacks<_Element_> proxy, final Throwable exception)
+	public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
 	{
 		this.exceptions.trace (ExceptionResolution.Ignored, exception);
 	}
 	
 	@Override
-	public final void registeredCallbacks (final QueueCallbacks<_Element_> proxy, final CallbackIsolate isolate)
+	public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
 	{}
 	
 	@Override
-	public final void unregisteredCallbacks (final QueueCallbacks<_Element_> proxy)
+	public final void unregisteredCallbacks (final Callbacks proxy)
 	{}
 	
 	public final BlockingQueue<_Element_> queue;

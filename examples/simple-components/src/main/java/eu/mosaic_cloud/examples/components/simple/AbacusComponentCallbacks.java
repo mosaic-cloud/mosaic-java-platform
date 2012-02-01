@@ -26,15 +26,16 @@ import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
@@ -46,7 +47,7 @@ public final class AbacusComponentCallbacks
 		extends Object
 		implements
 			ComponentCallbacks,
-			CallbackHandler<ComponentCallbacks>
+			CallbackHandler
 {
 	public AbacusComponentCallbacks ()
 	{
@@ -63,7 +64,7 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference called (final Component component, final ComponentCallRequest request)
+	public final CallbackReference called (final ComponentController component, final ComponentCallRequest request)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
@@ -91,13 +92,13 @@ public final class AbacusComponentCallbacks
 			} else
 				throw (new IllegalArgumentException ());
 			final ComponentCallReply reply = ComponentCallReply.create (true, Double.valueOf (outcome), ByteBuffer.allocate (0), request.reference);
-			component.reply (reply);
+			component.callReturn (reply);
 		}
 		return (null);
 	}
 	
 	@Override
-	public final CallbackReference callReturned (final Component component, final ComponentCallReply reply)
+	public final CallbackReference callReturned (final ComponentController component, final ComponentCallReply reply)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
@@ -105,7 +106,7 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference casted (final Component component, final ComponentCastRequest request)
+	public final CallbackReference casted (final ComponentController component, final ComponentCastRequest request)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
@@ -113,7 +114,7 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference failed (final Component component, final Throwable exception)
+	public final CallbackReference failed (final ComponentController component, final Throwable exception)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
@@ -122,13 +123,13 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void failedCallbacks (final ComponentCallbacks trigger, final Throwable exception)
+	public final void failedCallbacks (final Callbacks trigger, final Throwable exception)
 	{
 		this.failed (this.component, exception);
 	}
 	
 	@Override
-	public final CallbackReference initialized (final Component component)
+	public final CallbackReference initialized (final ComponentController component)
 	{
 		Preconditions.checkState (this.status == Status.Registered);
 		Preconditions.checkState (this.component == null);
@@ -138,7 +139,7 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void registeredCallbacks (final ComponentCallbacks trigger, final CallbackIsolate isolate)
+	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate)
 	{
 		Preconditions.checkState (this.status == Status.Created);
 		Preconditions.checkState (this.component == null);
@@ -146,13 +147,13 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok)
+	public CallbackReference registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
 	{
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public final CallbackReference terminated (final Component component)
+	public final CallbackReference terminated (final ComponentController component)
 	{
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
@@ -162,14 +163,14 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void unregisteredCallbacks (final ComponentCallbacks trigger)
+	public final void unregisteredCallbacks (final Callbacks trigger)
 	{
 		Preconditions.checkState ((this.status == Status.Registered) || (this.status == Status.Initialized) || (this.status == Status.Terminated));
 		this.component = null;
 		this.status = Status.Unregistered;
 	}
 	
-	private Component component;
+	private ComponentController component;
 	private final TranscriptExceptionTracer exceptions;
 	private Status status;
 	private final Transcript transcript;

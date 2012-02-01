@@ -24,12 +24,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RiakRestDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -40,14 +34,19 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class RiakRestDriverTest {
 
 	private AbstractKeyValueDriver wrapper;
-	private ThreadingContext threadingContext;
+	private BasicThreadingContext threadingContext;
 	private static String keyPrefix;
 
 	@BeforeClass
@@ -62,6 +61,7 @@ public class RiakRestDriverTest {
 		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
+		this.threadingContext.initialize();
 		this.wrapper = RiakRestDriver.create(
 				PropertyTypeConfiguration.create(
 						RiakRestDriverTest.class.getClassLoader(),
@@ -73,6 +73,7 @@ public class RiakRestDriverTest {
 	public void tearDown() throws Exception {
 		this.wrapper.unregisterClient(RiakRestDriverTest.keyPrefix);
 		this.wrapper.destroy();
+		this.threadingContext.destroy();
 	}
 
 	public void testConnection() {

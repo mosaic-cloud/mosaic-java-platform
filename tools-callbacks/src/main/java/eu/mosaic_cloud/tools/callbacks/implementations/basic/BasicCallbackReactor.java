@@ -29,11 +29,15 @@ import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractFuture;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCanceled;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -63,7 +67,13 @@ public final class BasicCallbackReactor
 	}
 	
 	@Override
-	public final <_Callbacks_ extends Callbacks> CallbackReference assignHandler (final _Callbacks_ proxy, final CallbackHandler<_Callbacks_> handler, final CallbackIsolate isolate)
+	public final <_Callbacks_ extends Callbacks> CallbackReference assignDelegate (final _Callbacks_ proxy, final _Callbacks_ delegate)
+	{
+		return (this.reactor.triggerAssign (proxy, delegate));
+	}
+	
+	@Override
+	public final <_Callbacks_ extends Callbacks> CallbackReference assignHandler (final _Callbacks_ proxy, final CallbackHandler handler, final CallbackIsolate isolate)
 	{
 		return (this.reactor.triggerAssign (proxy, handler, isolate));
 	}
@@ -92,9 +102,9 @@ public final class BasicCallbackReactor
 		return (this.reactor.createProxy (specification));
 	}
 	
-	public final boolean destoy ()
+	public final void destroy ()
 	{
-		return (this.destroy (0));
+		Preconditions.checkState (this.destroy (-1));
 	}
 	
 	public final boolean destroy (final long timeout)
@@ -115,9 +125,9 @@ public final class BasicCallbackReactor
 		return (this.reactor.triggerDestroyProxy (proxy));
 	}
 	
-	public final boolean initialize ()
+	public final void initialize ()
 	{
-		return (this.initialize (0));
+		Preconditions.checkState (this.initialize (-1));
 	}
 	
 	public final boolean initialize (final long timeout)
@@ -133,6 +143,52 @@ public final class BasicCallbackReactor
 		return (new BasicCallbackReactor (threading, exceptions));
 	}
 	
+	public static final class Completion
+			extends AbstractFuture<Boolean>
+			implements
+				CallbackCompletion
+	{
+		public Completion (final WeakReference<CallbackReactor> reactor)
+		{
+			super ();
+			Preconditions.checkState (reactor != null);
+			this.reference = CallbackReference.create (reactor, this);
+		}
+		
+		Completion (final Reactor reactor)
+		{
+			super ();
+			Preconditions.checkState (reactor != null);
+			this.reference = CallbackReference.create (reactor.reference, this);
+		}
+		
+		@Override
+		public final boolean cancel (final boolean interrupt)
+		{
+			if (interrupt)
+				throw (new UnsupportedOperationException ());
+			return (false);
+		}
+		
+		public final void triggerFailure (final Throwable exception)
+		{
+			this.setException (exception);
+		}
+		
+		public final void triggerSuccess ()
+		{
+			this.set (Boolean.TRUE);
+		}
+		
+		@Override
+		protected final void interruptTask ()
+		{
+			throw (new UnsupportedOperationException ());
+		}
+		
+		public final CallbackReference reference;
+	}
+	
 	static abstract class Action<_Target_ extends ActionTarget>
 			extends Object
 	{
@@ -142,15 +198,10 @@ public final class BasicCallbackReactor
 			this.reactor = reactor;
 			this.target = target;
 			this.completion = completion;
-			if (this.completion != null)
-				this.reference = CallbackReference.create (this.reactor.reference, this.completion);
-			else
-				this.reference = null;
 		}
 		
 		final Completion completion;
 		final Reactor reactor;
-		final CallbackReference reference;
 		final _Target_ target;
 	}
 	
@@ -173,8 +224,9 @@ public final class BasicCallbackReactor
 				this.destroyCompletion = new Completion (this.reactor);
 				this.proxy = (CallbackProxy) Proxy.newProxyInstance (specification.getClassLoader (), new Class[] {specification, CallbackProxy.class}, this);
 				this.actions = new ConcurrentLinkedQueue<ActorAction> ();
-				this.handler = new AtomicReference<CallbackHandler<_Callbacks_>> (null);
+				this.handler = new AtomicReference<CallbackHandler> (null);
 				this.scheduler = new AtomicReference<Scheduler> (null);
+				this.delegate = new AtomicReference<_Callbacks_> ();
 				this.failed = new AtomicReference<Throwable> (null);
 				this.assignAction = new AtomicReference<ActorAssignAction> (null);
 				this.destroyAction = new AtomicReference<ActorDestroyAction> (null);
@@ -197,10 +249,59 @@ public final class BasicCallbackReactor
 			synchronized (this.monitor) {
 				this.reactor.transcript.traceDebugging ("invocking (triggered) for proxy `%{object:identity}` the method `%{method}` with arguments `%{array}`...", this.proxy, method, arguments);
 				Preconditions.checkState (this.status.get () == Status.Active);
-				final ActorCallbackAction action = new ActorCallbackAction (this, method, arguments);
-				this.enqueueAction (action);
-				return (action.reference);
+				if (this.handlerStatus.get () != HandlerStatus.Delegated) {
+					final ActorCallbackAction action = new ActorCallbackAction (this, method, arguments);
+					this.enqueueAction (action);
+					return (action.completion.reference);
+				}
 			}
+			return (this.delegateInvokeCallback (method, arguments, null));
+		}
+		
+		final void delegateInvokeCallback (final ActorCallbackAction action)
+		{
+			this.delegateInvokeCallback (action.method, action.arguments, action.completion);
+		}
+		
+		final CallbackReference delegateInvokeCallback (final Method method, final Object[] arguments, final Completion chainedCompletion)
+		{
+			final Object delegate = this.delegate.get ();
+			Preconditions.checkState (delegate != null);
+			this.reactor.transcript.traceDebugging ("invocking method callback on delegate `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) the method `%{method}` with arguments `%{array}`...", delegate, this.proxy, this, method, arguments);
+			CallbackReference reference;
+			try {
+				reference = (CallbackReference) method.invoke (delegate, arguments);
+			} catch (final Throwable exception) {
+				this.reactor.exceptions.traceDeferredException (exception);
+				final Completion completion = new Completion (this.reactor);
+				completion.triggerFailure (exception);
+				this.triggerFailure (exception);
+				reference = completion.reference;
+			}
+			Preconditions.checkState (reference != null);
+			if (chainedCompletion != null) {
+				final ListenableFuture<?> completion = reference.getCompletion ();
+				completion.addListener (new Runnable () {
+					@Override
+					public final void run ()
+					{
+						try {
+							Preconditions.checkState (completion.isDone ());
+							completion.get (0, TimeUnit.MILLISECONDS);
+							chainedCompletion.triggerSuccess ();
+						} catch (final ExecutionException exception) {
+							final Throwable cause = exception.getCause ();
+							Actor.this.reactor.exceptions.traceDeferredException (cause);
+							Actor.this.reactor.exceptions.traceHandledException (exception);
+							chainedCompletion.triggerFailure (cause);
+						} catch (final Throwable exception) {
+							Actor.this.reactor.exceptions.traceDeferredException (exception);
+							chainedCompletion.triggerFailure (exception);
+						}
+					}
+				}, MoreExecutors.sameThreadExecutor ());
+			}
+			return (reference);
 		}
 		
 		final void enqueueAction (final ActorAction action)
@@ -263,7 +364,7 @@ public final class BasicCallbackReactor
 				this.reactor.transcript.traceDebugging ("executing action `%{object}` on actor `%{object:identity}`...", action, this);
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
 				Preconditions.checkState (this.handlerStatus.get () == HandlerStatus.Registering);
-				final CallbackHandler<_Callbacks_> handler = this.handler.get ();
+				final CallbackHandler handler = this.handler.get ();
 				Preconditions.checkState ((handler != null) && (handler == action.handler));
 				final Scheduler scheduler = this.scheduler.get ();
 				Preconditions.checkState ((scheduler != null) && (scheduler == action.scheduler));
@@ -295,6 +396,7 @@ public final class BasicCallbackReactor
 					case Unassigned :
 					case Registering :
 					case Assigned :
+					case Delegated :
 						break;
 					default:
 						throw (new IllegalStateException ());
@@ -303,8 +405,8 @@ public final class BasicCallbackReactor
 				final Throwable failure = this.failed.get ();
 				if (failure == null) {
 					final ActorAssignAction assign = this.assignAction.get ();
-					final CallbackHandler<_Callbacks_> handler = this.handler.get ();
-					if ((this.handler != null) && (assign == null)) {
+					final CallbackHandler handler = this.handler.get ();
+					if ((handler != null) && (assign == null)) {
 						final Scheduler scheduler = this.scheduler.get ();
 						Preconditions.checkState (scheduler != null);
 						this.reactor.transcript.traceDebugging ("invocking unregister callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
@@ -329,8 +431,8 @@ public final class BasicCallbackReactor
 					}
 				} else {
 					final ActorAssignAction assign = this.assignAction.get ();
-					final CallbackHandler<_Callbacks_> handler = this.handler.get ();
-					if (this.handler != null) {
+					final CallbackHandler handler = this.handler.get ();
+					if (handler != null) {
 						final Scheduler scheduler = this.scheduler.get ();
 						Preconditions.checkState (scheduler != null);
 						this.reactor.transcript.traceDebugging ("invocking failure callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
@@ -370,7 +472,7 @@ public final class BasicCallbackReactor
 		{
 			Preconditions.checkState (action != null);
 			this.reactor.transcript.traceDebugging ("executing action `%{object}` on actor `%{object:identity}`...", action, this);
-			final CallbackHandler<_Callbacks_> handler;
+			final CallbackHandler handler;
 			final Scheduler scheduler;
 			synchronized (this.monitor) {
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
@@ -382,7 +484,10 @@ public final class BasicCallbackReactor
 			}
 			this.reactor.transcript.traceDebugging ("invocking method callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`) the method `%{method}` with arguments `%{array}`...", handler, this.proxy, this, scheduler.isolate, scheduler, action.method, action.arguments);
 			try {
-				action.method.invoke (handler, action.arguments);
+				final Object outcome = action.method.invoke (handler, action.arguments);
+				// !!!!
+				// if (outcome != null)
+				//	throw (new IllegalArgumentException ());
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);
 				this.triggerFailure (exception);
@@ -419,7 +524,7 @@ public final class BasicCallbackReactor
 			}
 		}
 		
-		final CallbackReference triggerAssign (final CallbackHandler<?> handler, final Scheduler scheduler)
+		final CallbackReference triggerAssign (final CallbackHandler handler, final Scheduler scheduler)
 		{
 			Preconditions.checkNotNull (scheduler);
 			Preconditions.checkNotNull (handler);
@@ -428,12 +533,35 @@ public final class BasicCallbackReactor
 				this.reactor.transcript.traceDebugging ("assigning (triggered) handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
 				Preconditions.checkState (this.status.get () == Status.Active);
 				Preconditions.checkState (this.handlerStatus.compareAndSet (HandlerStatus.Unassigned, HandlerStatus.Registering));
-				Preconditions.checkState (this.handler.compareAndSet (null, (CallbackHandler<_Callbacks_>) handler));
+				Preconditions.checkState (this.handler.compareAndSet (null, handler));
 				Preconditions.checkState (this.scheduler.compareAndSet (null, scheduler));
+				Preconditions.checkState (this.delegate.get () == null);
 				scheduler.registerActor (this);
 				final ActorAssignAction action = new ActorAssignAction (this, handler, scheduler);
 				this.enqueueAction (action);
-				return (action.reference);
+				return (action.completion.reference);
+			}
+		}
+		
+		final CallbackReference triggerAssign (final Callbacks delegate)
+		{
+			Preconditions.checkNotNull (delegate);
+			Preconditions.checkArgument (this.specification.isInstance (delegate));
+			synchronized (this.monitor) {
+				this.reactor.transcript.traceDebugging ("assigning (triggered) delegate `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`)...", delegate, this.proxy, this);
+				Preconditions.checkState (this.status.get () == Status.Active);
+				Preconditions.checkState (this.handlerStatus.compareAndSet (HandlerStatus.Unassigned, HandlerStatus.Delegated));
+				Preconditions.checkState (this.delegate.compareAndSet (null, (_Callbacks_) delegate));
+				Preconditions.checkState (this.handler.get () == null);
+				Preconditions.checkState (this.scheduler.get () == null);
+				for (final Action<?> action : this.actions)
+					if (action instanceof ActorCallbackAction)
+						this.delegateInvokeCallback ((ActorCallbackAction) action);
+					else
+						throw (new IllegalStateException ());
+				final Completion completion = new Completion (this.reactor);
+				completion.triggerSuccess ();
+				return (completion.reference);
 			}
 		}
 		
@@ -445,16 +573,26 @@ public final class BasicCallbackReactor
 					switch (this.status.get ()) {
 						case Destroying :
 						case Destroyed :
-							final ActorDestroyAction action = this.destroyAction.get ();
-							Preconditions.checkState (action != null);
-							return (action.reference);
+							return (this.destroyCompletion.reference);
 						default:
 							throw (new IllegalStateException ());
 					}
 				}
 				final ActorDestroyAction action = new ActorDestroyAction (this, this.destroyCompletion);
-				this.enqueueAction (action);
-				return (action.reference);
+				switch (this.handlerStatus.get ()) {
+					case Unassigned :
+					case Delegated :
+						Preconditions.checkState (this.destroyAction.compareAndSet (null, action));
+						this.executeDestroy ();
+						break;
+					case Registering :
+					case Assigned :
+						this.enqueueAction (action);
+						break;
+					default:
+						throw (new IllegalStateException ());
+				}
+				return (action.completion.reference);
 			}
 		}
 		
@@ -469,10 +607,11 @@ public final class BasicCallbackReactor
 		
 		final ConcurrentLinkedQueue<ActorAction> actions;
 		final AtomicReference<ActorAssignAction> assignAction;
+		final AtomicReference<_Callbacks_> delegate;
 		final AtomicReference<ActorDestroyAction> destroyAction;
 		final Completion destroyCompletion;
 		final AtomicReference<Throwable> failed;
-		final AtomicReference<CallbackHandler<_Callbacks_>> handler;
+		final AtomicReference<CallbackHandler> handler;
 		final AtomicReference<HandlerStatus> handlerStatus;
 		final Monitor monitor;
 		final CallbackProxy proxy;
@@ -485,9 +624,9 @@ public final class BasicCallbackReactor
 		static enum HandlerStatus
 		{
 			Assigned (),
+			Delegated (),
 			Registering (),
-			Unassigned (),
-			Unregistered ();
+			Unassigned ();
 		}
 		
 		static enum ScheduleStatus
@@ -518,14 +657,14 @@ public final class BasicCallbackReactor
 	static final class ActorAssignAction
 			extends ActorAction
 	{
-		ActorAssignAction (final Actor<?> actor, final CallbackHandler<?> handler, final Scheduler scheduler)
+		ActorAssignAction (final Actor<?> actor, final CallbackHandler handler, final Scheduler scheduler)
 		{
 			super (actor, new Completion (actor.reactor));
 			this.handler = handler;
 			this.scheduler = scheduler;
 		}
 		
-		final CallbackHandler<?> handler;
+		final CallbackHandler handler;
 		final Scheduler scheduler;
 	}
 	
@@ -550,44 +689,6 @@ public final class BasicCallbackReactor
 		{
 			super (actor, completion);
 		}
-	}
-	
-	static final class Completion
-			extends AbstractFuture<Boolean>
-			implements
-				CallbackCompletion
-	{
-		Completion (final Reactor reactor)
-		{
-			super ();
-			this.reactor = reactor;
-		}
-		
-		@Override
-		public final boolean cancel (final boolean interrupt)
-		{
-			if (interrupt)
-				throw (new UnsupportedOperationException ());
-			return (false);
-		}
-		
-		@Override
-		protected final void interruptTask ()
-		{
-			throw (new UnsupportedOperationException ());
-		}
-		
-		final void triggerFailure (final Throwable exception)
-		{
-			this.setException (exception);
-		}
-		
-		final void triggerSuccess ()
-		{
-			this.set (Boolean.TRUE);
-		}
-		
-		final Reactor reactor;
 	}
 	
 	static final class IdentityComparator
@@ -674,13 +775,22 @@ public final class BasicCallbackReactor
 			this.transcript.traceDebugging ("destroying reactor `%{object:identity}`...", this.facade);
 			synchronized (this.monitor) {
 				Preconditions.checkState (this.status.get () == Status.Destroying);
-				if (!this.schedulers.isEmpty ()) {
-					for (final Scheduler scheduler : this.schedulers.values ())
-						scheduler.triggerDestroy ();
-					this.transcript.traceDebugging ("defer destroying reactor `%{object:identity}` due to registered schedulers...", this.facade);
-					this.enqueueRunnable (new ReactorDestroyAction (this));
-					return;
-				}
+			}
+			if (!this.actors.isEmpty ()) {
+				for (final Actor<?> actor : this.actors.values ())
+					actor.triggerDestroy ();
+				this.transcript.traceDebugging ("defer destroying reactor `%{object:identity}` due to registered actors...", this.facade);
+				this.enqueueRunnable (new ReactorDestroyAction (this));
+				return;
+			}
+			if (!this.schedulers.isEmpty ()) {
+				for (final Scheduler scheduler : this.schedulers.values ())
+					scheduler.triggerDestroy ();
+				this.transcript.traceDebugging ("defer destroying reactor `%{object:identity}` due to registered schedulers...", this.facade);
+				this.enqueueRunnable (new ReactorDestroyAction (this));
+				return;
+			}
+			synchronized (this.monitor) {
 				Preconditions.checkState (this.schedulers.isEmpty ());
 				Preconditions.checkState (this.actors.isEmpty ());
 				this.executor.shutdown ();
@@ -707,7 +817,22 @@ public final class BasicCallbackReactor
 			}
 		}
 		
-		final <_Callbacks_ extends Callbacks> CallbackReference triggerAssign (final _Callbacks_ proxy, final CallbackHandler<_Callbacks_> handler, final CallbackIsolate isolate)
+		final <_Callbacks_ extends Callbacks> CallbackReference triggerAssign (final _Callbacks_ proxy, final _Callbacks_ delegate)
+		{
+			Preconditions.checkNotNull (proxy);
+			Preconditions.checkNotNull (delegate);
+			Preconditions.checkArgument (Callbacks.class.isInstance (delegate));
+			Preconditions.checkArgument (CallbackProxy.class.isInstance (delegate));
+			Preconditions.checkArgument (!CallbackHandler.class.isInstance (delegate));
+			synchronized (this.monitor) {
+				Preconditions.checkState (this.status.get () == Status.Active);
+				final Actor<?> actor = this.actors.get (proxy);
+				Preconditions.checkNotNull (actor);
+				return (actor.triggerAssign (delegate));
+			}
+		}
+		
+		final <_Callbacks_ extends Callbacks> CallbackReference triggerAssign (final _Callbacks_ proxy, final CallbackHandler handler, final CallbackIsolate isolate)
 		{
 			Preconditions.checkNotNull (proxy);
 			Preconditions.checkNotNull (isolate);
@@ -822,7 +947,11 @@ public final class BasicCallbackReactor
 		@Override
 		public final void run ()
 		{
-			this.reactor.executeDestroy ();
+			try {
+				this.reactor.executeDestroy ();
+			} catch (final Throwable exception) {
+				this.reactor.exceptions.traceIgnoredException (exception);
+			}
 		}
 	}
 	
@@ -981,9 +1110,7 @@ public final class BasicCallbackReactor
 					switch (this.status.get ()) {
 						case Destroying :
 						case Destroyed :
-							final SchedulerDestroyAction action = this.destroyAction.get ();
-							Preconditions.checkNotNull (action);
-							return (action.reference);
+							return (this.destroyCompletion.reference);
 						default:
 							throw (new IllegalStateException ());
 					}
@@ -991,7 +1118,7 @@ public final class BasicCallbackReactor
 				final SchedulerDestroyAction action = new SchedulerDestroyAction (this, this.destroyCompletion);
 				Preconditions.checkState (this.destroyAction.compareAndSet (null, action));
 				this.schedule (false);
-				return (action.reference);
+				return (action.completion.reference);
 			}
 		}
 		
@@ -1061,7 +1188,11 @@ public final class BasicCallbackReactor
 		@Override
 		public final void run ()
 		{
-			this.target.executeActions ();
+			try {
+				this.target.executeActions ();
+			} catch (final Throwable exception) {
+				this.reactor.exceptions.traceIgnoredException (exception);
+			}
 		}
 	}
 }

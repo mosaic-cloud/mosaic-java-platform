@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.drivers;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
 /**

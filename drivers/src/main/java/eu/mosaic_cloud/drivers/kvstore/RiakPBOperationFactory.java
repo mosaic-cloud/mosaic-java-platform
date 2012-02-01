@@ -30,7 +30,6 @@ import com.basho.riak.pbc.KeySource;
 import com.basho.riak.pbc.RiakClient;
 import com.basho.riak.pbc.RiakObject;
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;

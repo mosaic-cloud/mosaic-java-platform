@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletExecutor;
@@ -40,6 +38,7 @@ import eu.mosaic_cloud.platform.core.ops.EventDrivenOperation;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**

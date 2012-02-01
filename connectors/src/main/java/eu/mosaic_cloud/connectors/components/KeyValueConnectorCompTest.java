@@ -26,7 +26,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -39,7 +38,6 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
@@ -60,12 +58,13 @@ public class KeyValueConnectorCompTest {
 				"kvstore.driver_name", String.class, "");
 		this.keyPrefix = UUID.randomUUID().toString();
 		BasicThreadingSecurityManager.initialize();
-		ThreadingContext threading = BasicThreadingContext.create(
+		// !!!!
+		BasicThreadingContext threading = BasicThreadingContext.create(
 				KeyValueConnectorCompTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		threading.initialize();
 		ResourceFinder.getResourceFinder().findResource(ResourceType.KEY_VALUE,
 				threading, new Callback());
-
 	}
 
 	public void testConnection() {
@@ -202,15 +201,17 @@ public class KeyValueConnectorCompTest {
 			KeyValueConnectorCompTest.this.configuration.addParameter(
 					"interop.channel.address", channel.getChannelEndpoint());
 			BasicThreadingSecurityManager.initialize();
-			ThreadingContext threading = BasicThreadingContext.create(
+			BasicThreadingContext threading = BasicThreadingContext.create(
 					KeyValueConnectorCompTest.class,
 					AbortingExceptionTracer.defaultInstance.catcher);
+			threading.initialize();
 			KeyValueConnectorCompTest.this.connector = KeyValueStoreConnector
 					.create(KeyValueConnectorCompTest.this.configuration,
 							new PojoDataEncoder<String>(String.class),
 							threading);
 			KeyValueConnectorCompTest.this.testConnector();
 			KeyValueConnectorCompTest.this.connector.destroy();
+			threading.destroy();
 		}
 
 		/*

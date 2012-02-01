@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;

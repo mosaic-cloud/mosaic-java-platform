@@ -27,11 +27,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
+import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
 import eu.mosaic_cloud.drivers.ConfigProperties;
@@ -90,7 +89,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference called(Component component,
+	public CallbackReference called(ComponentController component,
 			ComponentCallRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions
@@ -125,7 +124,7 @@ public final class KVDriverComponentCallbacks extends
 				outcome.put("channelIdentifier", channelId);
 				ComponentCallReply reply = ComponentCallReply.create(true,
 						outcome, ByteBuffer.allocate(0), request.reference);
-				component.reply(reply);
+				component.callReturn(reply);
 			} else {
 				throw new UnsupportedOperationException();
 			}
@@ -136,7 +135,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference callReturned(Component component,
+	public CallbackReference callReturned(ComponentController component,
 			ComponentCallReply reply) {
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reply.reference) {
@@ -194,7 +193,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference initialized(Component component) {
+	public CallbackReference initialized(ComponentController component) {
 		Preconditions.checkState(this.component == null);
 		Preconditions.checkState(this.status == Status.Created);
 		this.component = component;
@@ -220,7 +219,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference registerReturn(Component component,
+	public CallbackReference registerReturned(ComponentController component,
 			ComponentCallReference reference, boolean success) {
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reference) {

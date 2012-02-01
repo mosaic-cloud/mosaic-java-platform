@@ -23,8 +23,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.core.Cloudlet;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
@@ -35,6 +33,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**

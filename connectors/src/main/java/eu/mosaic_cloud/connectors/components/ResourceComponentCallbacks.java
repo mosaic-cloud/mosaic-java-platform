@@ -23,13 +23,12 @@ import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
 import com.google.common.base.Preconditions;
-
-import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.connectors.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -40,6 +39,7 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
 
@@ -52,7 +52,7 @@ import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
  * 
  */
 public final class ResourceComponentCallbacks implements ComponentCallbacks,
-		CallbackHandler<ComponentCallbacks> {
+		CallbackHandler {
 
 	static enum Status {
 		Created, Terminated, Unregistered, Ready;
@@ -72,7 +72,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	public static ResourceComponentCallbacks callbacks = null;
 
 	private Status status;
-	private Component component;
+	private ComponentController component;
 	private IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingReferences;
 	private ComponentIdentifier amqpGroup;
 	private ComponentIdentifier kvGroup;
@@ -123,7 +123,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference called(Component component,
+	public CallbackReference called(ComponentController component,
 			ComponentCallRequest request) {
 		ComponentCallReply reply = null;
 		boolean succeeded = false;
@@ -144,7 +144,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 				reply = ComponentCallReply.create(true,
 						Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
 						request.reference);
-				component.reply(reply);
+				component.callReturn(reply);
 			} else if (request.operation.equals(ConfigProperties
 					.getString("ResourceComponentCallbacks.8"))) {
 				logger.debug("Testing KV connector connector"); //$NON-NLS-1$
@@ -157,7 +157,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 				reply = ComponentCallReply.create(true,
 						Boolean.valueOf(succeeded), ByteBuffer.allocate(0),
 						request.reference);
-				component.reply(reply);
+				component.callReturn(reply);
 			} else {
 				throw new UnsupportedOperationException();
 			}
@@ -168,7 +168,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference callReturned(Component component,
+	public CallbackReference callReturned(ComponentController component,
 			ComponentCallReply reply) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status == Status.Ready);
@@ -188,7 +188,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference casted(Component component,
+	public CallbackReference casted(ComponentController component,
 			ComponentCastRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
@@ -197,7 +197,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference failed(Component component, Throwable exception) {
+	public CallbackReference failed(ComponentController component, Throwable exception) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
 				&& (this.status != Status.Unregistered));
@@ -208,7 +208,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference initialized(Component component) {
+	public CallbackReference initialized(ComponentController component) {
 		Preconditions.checkState(this.component == null);
 		Preconditions.checkState(this.status == Status.Created);
 		this.component = component;
@@ -223,7 +223,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference registerReturn(Component component,
+	public CallbackReference registerReturned(ComponentController component,
 			ComponentCallReference reference, boolean ok) {
 		Preconditions.checkState(this.component == component);
 		OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
@@ -246,7 +246,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference terminated(Component component) {
+	public CallbackReference terminated(ComponentController component) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
 				&& (this.status != Status.Unregistered));
@@ -297,14 +297,14 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public void registeredCallbacks(ComponentCallbacks trigger, CallbackIsolate isolate) {
+	public void registeredCallbacks(Callbacks trigger, CallbackIsolate isolate) {
 	}
 
 	@Override
-	public void unregisteredCallbacks(ComponentCallbacks trigger) {
+	public void unregisteredCallbacks(Callbacks trigger) {
 	}
 
 	@Override
-	public void failedCallbacks(ComponentCallbacks trigger, Throwable exception) {
+	public void failedCallbacks(Callbacks trigger, Throwable exception) {
 	}
 }

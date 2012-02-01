@@ -43,6 +43,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -66,7 +67,7 @@ public final class BasicComponentHarnessMain
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final CallbackHandler<ComponentCallbacks> callbacks, final InputStream input, final OutputStream output, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final CallbackHandler callbacks, final InputStream input, final OutputStream output, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		Preconditions.checkNotNull (callbacks);
 		Preconditions.checkNotNull (input);
@@ -94,33 +95,32 @@ public final class BasicComponentHarnessMain
 		}
 	}
 	
-	public static final void main (final CallbackHandler<ComponentCallbacks> callbacks, final ReadableByteChannel input, final WritableByteChannel output, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final CallbackHandler callbackHandler, final ReadableByteChannel input, final WritableByteChannel output, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		Preconditions.checkNotNull (callbacks);
+		Preconditions.checkNotNull (callbackHandler);
 		Preconditions.checkNotNull (input);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.create ();
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, threading, exceptions);
-		final BasicComponent component = BasicComponent.create (channel, reactor, exceptions);
-		reactor.initialize (-1);
-		channel.initialize (-1);
-		component.initialize (-1);
-		component.assign (callbacks);
-		while (true) {
-			if (!component.isActive ())
-				break;
-			if (!Threading.sleep (BasicComponentHarnessMain.defaultPollTimeout))
-				break;
-		}
-		component.terminate (-1);
-		channel.terminate (-1);
+		final BasicComponent component = BasicComponent.create (reactor, exceptions);
+		component.bind (channel.getController ());
+		reactor.initialize ();
+		channel.initialize ();
+		component.initialize ();
+		final CallbackIsolate callbackIsolate = reactor.createIsolate ();
+		final ComponentCallbacks callbackProxy = reactor.createProxy (ComponentCallbacks.class);
+		reactor.assignHandler (callbackProxy, callbackHandler, callbackIsolate);
+		Preconditions.checkState (component.getController ().assign (callbackProxy).await ());
+		Preconditions.checkState (component.await ());
+		component.destroy ();
+		channel.destroy ();
 		Threading.sleep (BasicComponentHarnessMain.defaultPollTimeout);
-		reactor.destroy (-1);
+		reactor.destroy ();
 	}
 	
-	public static final void main (final CallbackHandler<ComponentCallbacks> callbacks, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final CallbackHandler callbacks, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		Preconditions.checkNotNull (callbacks);
 		Preconditions.checkNotNull (address);
@@ -162,8 +162,9 @@ public final class BasicComponentHarnessMain
 		BasicThreadingSecurityManager.initialize ();
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		threading.initialize ();
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
-		threading.await ();
+		threading.destroy ();
 	}
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ThreadingContext threading, final ExceptionTracer exceptions)
@@ -200,10 +201,10 @@ public final class BasicComponentHarnessMain
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while resolving)", componentArgument), exception));
 		}
 		Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (componentClass), "invalid component class `%s` (not an instance of `ComponentCallbacks`)", componentClass.getName ());
-		final CallbackHandler<ComponentCallbacks> callbacks;
+		final CallbackHandler callbacks;
 		try {
 			Threading.setDefaultContext (threading);
-			callbacks = (CallbackHandler<ComponentCallbacks>) componentClass.newInstance ();
+			callbacks = (CallbackHandler) componentClass.newInstance ();
 			Threading.setDefaultContext (null);
 		} catch (final Exception exception) {
 			exceptions.trace (ExceptionResolution.Deferred, exception);

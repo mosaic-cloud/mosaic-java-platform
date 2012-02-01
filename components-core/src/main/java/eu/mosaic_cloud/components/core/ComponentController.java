@@ -21,20 +21,23 @@
 package eu.mosaic_cloud.components.core;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-public interface Component
+public interface ComponentController
+		extends
+			Callbacks
 {
-	public abstract void assign (final CallbackHandler<ComponentCallbacks> callbacks);
+	public abstract CallbackReference assign (final ComponentCallbacks callbacks);
 	
-	public abstract void call (final ComponentIdentifier component, final ComponentCallRequest request);
+	public abstract CallbackReference call (final ComponentIdentifier component, final ComponentCallRequest request);
 	
-	public abstract void cast (final ComponentIdentifier component, final ComponentCastRequest request);
+	public abstract CallbackReference callReturn (final ComponentCallReply reply);
 	
-	public abstract void register (final ComponentIdentifier group, final ComponentCallReference reference);
+	public abstract CallbackReference cast (final ComponentIdentifier component, final ComponentCastRequest request);
 	
-	public abstract void reply (final ComponentCallReply reply);
+	public abstract CallbackReference register (final ComponentIdentifier group, final ComponentCallReference reference);
 	
-	public abstract void terminate ();
+	public abstract CallbackReference terminate ();
 }

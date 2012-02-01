@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;

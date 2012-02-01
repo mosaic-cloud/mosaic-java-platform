@@ -34,7 +34,6 @@ import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ReturnListener;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
-
 import eu.mosaic_cloud.drivers.AbstractResourceDriver;
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -435,7 +434,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 	 * <p>
 	 * Note: all methods of this class are invoked inside the Connection's
 	 * thread. This means they a) should be non-blocking and generally do little
-	 * work, b) must not call Channel or Connection methods, or a deadlock will
+	 * work, b) must not call ChannelController or Connection methods, or a deadlock will
 	 * ensue.
 	 * 
 	 * @author Georgiana Macariu

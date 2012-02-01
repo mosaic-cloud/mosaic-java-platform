@@ -23,13 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import eu.mosaic_cloud.connectors.kvstore.tests.MemcachedConnectorTest;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
@@ -43,15 +36,21 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class AmqpConnectorTest {
 
 	private AmqpConnector connector;
 	private static IConfiguration configuration;
-	private static ThreadingContext threading;
+	private static BasicThreadingContext threading;
 	private static AmqpStub driverStub;
 
 	@BeforeClass
@@ -60,6 +59,7 @@ public class AmqpConnectorTest {
 		AmqpConnectorTest.threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		AmqpConnectorTest.threading.initialize();
 		AmqpConnectorTest.configuration = PropertyTypeConfiguration.create(
 				AmqpConnectorTest.class.getClassLoader(), "amqp-test.prop");
 
@@ -87,6 +87,7 @@ public class AmqpConnectorTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
 		AmqpConnectorTest.driverStub.destroy();
+		AmqpConnectorTest.threading.destroy();
 	}
 
 	@After

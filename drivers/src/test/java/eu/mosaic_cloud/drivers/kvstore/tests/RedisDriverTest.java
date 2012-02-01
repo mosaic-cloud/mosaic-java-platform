@@ -25,13 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RedisDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -42,15 +35,21 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
 
 public class RedisDriverTest {
 
 	private AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;
-	private ThreadingContext threadingContext;
+	private BasicThreadingContext threadingContext;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -64,6 +63,7 @@ public class RedisDriverTest {
 		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
+		this.threadingContext.initialize();
 		this.wrapper = RedisDriver.create(PropertyTypeConfiguration.create(
 				RedisDriverTest.class.getClassLoader(), "redis-test.prop"),
 				this.threadingContext);
@@ -74,6 +74,7 @@ public class RedisDriverTest {
 	public void tearDown() throws Exception {
 		this.wrapper.unregisterClient(RedisDriverTest.keyPrefix);
 		this.wrapper.destroy();
+		this.threadingContext.destroy();
 	}
 
 	public void testConnection() {

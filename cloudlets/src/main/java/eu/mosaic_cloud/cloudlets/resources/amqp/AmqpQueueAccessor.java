@@ -22,8 +22,6 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ContainerException;
@@ -43,6 +41,7 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**

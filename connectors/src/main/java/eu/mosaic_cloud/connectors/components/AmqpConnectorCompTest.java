@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.connectors.components.ResourceComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
@@ -36,7 +35,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
@@ -56,9 +54,11 @@ public class AmqpConnectorCompTest {
 				"AMQP Connector test: configuration loaded. "
 						+ this.configuration);
 		BasicThreadingSecurityManager.initialize();
-		ThreadingContext threading = BasicThreadingContext.create(
+		// !!!!
+		BasicThreadingContext threading = BasicThreadingContext.create(
 				AmqpConnectorCompTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		threading.initialize();
 		ResourceFinder.getResourceFinder().findResource(ResourceType.AMQP,
 				threading, new Callback());
 	}
@@ -154,13 +154,15 @@ public class AmqpConnectorCompTest {
 			AmqpConnectorCompTest.this.configuration.addParameter(
 					"interop.channel.address", channel.getChannelEndpoint());
 			BasicThreadingSecurityManager.initialize();
-			ThreadingContext threading = BasicThreadingContext.create(
+			BasicThreadingContext threading = BasicThreadingContext.create(
 					AmqpConnectorCompTest.class,
 					AbortingExceptionTracer.defaultInstance.catcher);
+			threading.initialize();
 			AmqpConnectorCompTest.this.connector = AmqpConnector.create(
 					AmqpConnectorCompTest.this.configuration, threading);
 			AmqpConnectorCompTest.this.testConn();
 			AmqpConnectorCompTest.this.destroy();
+			threading.destroy();
 		}
 
 		/*

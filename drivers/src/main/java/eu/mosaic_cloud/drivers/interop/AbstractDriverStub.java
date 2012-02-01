@@ -25,8 +25,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-
 import eu.mosaic_cloud.drivers.IResourceDriver;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
@@ -36,6 +34,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 
 /**
  * Base class for driver stubs.
