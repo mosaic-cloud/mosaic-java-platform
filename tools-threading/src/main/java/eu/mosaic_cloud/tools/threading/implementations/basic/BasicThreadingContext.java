@@ -60,6 +60,11 @@ public final class BasicThreadingContext
 		this.sealed = new AtomicBoolean (false);
 	}
 	
+	// !!!!
+	/*
+	 * Returned executors should extend `ThreadPoolExecutor` (or the like) and override certain methods for logging
+	 * and error handling.
+	 */
 	@Override
 	public final boolean await ()
 	{

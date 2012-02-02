@@ -23,6 +23,8 @@ package eu.mosaic_cloud.tools.exceptions.core;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.util.concurrent.Atomics;
+
 
 public interface ExceptionTracer
 {
@@ -32,5 +34,5 @@ public interface ExceptionTracer
 	
 	public abstract void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens);
 	
-	public static final AtomicReference<ExceptionTracer> defaultInstance = new AtomicReference<ExceptionTracer> (null);
+	public static final AtomicReference<ExceptionTracer> defaultInstance = Atomics.newReference (null);
 }

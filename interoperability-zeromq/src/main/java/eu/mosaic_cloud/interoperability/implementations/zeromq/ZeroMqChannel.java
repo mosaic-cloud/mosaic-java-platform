@@ -37,6 +37,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
@@ -637,8 +638,8 @@ public final class ZeroMqChannel
 			this.dispatchers = new ConcurrentLinkedQueue<ZeroMqChannel.Dispatcher> ();
 			this.idle = new Semaphore (1);
 			this.dispatchContinued = new ThreadLocal<Boolean> ();
-			this.callbacks = new AtomicReference<SessionCallbacks> (callbacks);
-			this.executor = new AtomicReference<Executor> (executor);
+			this.callbacks = Atomics.newReference (callbacks);
+			this.executor = Atomics.newReference (executor);
 		}
 		
 		@Override

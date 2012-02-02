@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.exceptions.ResultSetException;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -63,8 +64,8 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 			final List<IOperationCompletionHandler<T>> complHandlers) {
 		super();
 		this.doneSignal = new CountDownLatch(1);
-		this.result = new AtomicReference<T>();
-		this.exception = new AtomicReference<Throwable>();
+		this.result = Atomics.newReference(null);
+		this.exception = Atomics.newReference(null);
 		this.completionHandlers = new ArrayList<IOperationCompletionHandler<T>>();
 		this.completionHandlers.add(this);
 		this.completionHandlers.addAll(complHandlers);

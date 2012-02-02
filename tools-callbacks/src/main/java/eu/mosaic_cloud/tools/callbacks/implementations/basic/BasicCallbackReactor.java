@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractFuture;
+import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCanceled;
@@ -224,15 +225,15 @@ public final class BasicCallbackReactor
 				this.destroyCompletion = new Completion (this.reactor);
 				this.proxy = (CallbackProxy) Proxy.newProxyInstance (specification.getClassLoader (), new Class[] {specification, CallbackProxy.class}, this);
 				this.actions = new ConcurrentLinkedQueue<ActorAction> ();
-				this.handler = new AtomicReference<CallbackHandler> (null);
-				this.scheduler = new AtomicReference<Scheduler> (null);
-				this.delegate = new AtomicReference<_Callbacks_> ();
-				this.failed = new AtomicReference<Throwable> (null);
-				this.assignAction = new AtomicReference<ActorAssignAction> (null);
-				this.destroyAction = new AtomicReference<ActorDestroyAction> (null);
-				this.handlerStatus = new AtomicReference<HandlerStatus> (HandlerStatus.Unassigned);
-				this.scheduleStatus = new AtomicReference<ScheduleStatus> (ScheduleStatus.Idle);
-				this.status = new AtomicReference<Status> (Status.Active);
+				this.handler = Atomics.newReference (null);
+				this.scheduler = Atomics.newReference (null);
+				this.delegate = Atomics.newReference (null);
+				this.failed = Atomics.newReference (null);
+				this.assignAction = Atomics.newReference (null);
+				this.destroyAction = Atomics.newReference (null);
+				this.handlerStatus = Atomics.newReference (HandlerStatus.Unassigned);
+				this.scheduleStatus = Atomics.newReference (ScheduleStatus.Idle);
+				this.status = Atomics.newReference (Status.Active);
 				this.reactor.registerActor (this);
 				this.reactor.transcript.traceDebugging ("created proxy `%{object:identity}` (owned by actor `%{object:identity}` from reactor `%{object:identity}`).", this.proxy, this, this.reactor.facade);
 			}
@@ -729,7 +730,7 @@ public final class BasicCallbackReactor
 				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "isolates", true));
 				this.schedulers = new ConcurrentHashMap<CallbackIsolate, BasicCallbackReactor.Scheduler> ();
 				this.actors = new ConcurrentHashMap<CallbackProxy, BasicCallbackReactor.Actor<?>> ();
-				this.status = new AtomicReference<BasicCallbackReactor.Reactor.Status> (Status.Active);
+				this.status = Atomics.newReference (Status.Active);
 				this.transcript.traceDebugging ("created reactor `%{object:identity}`.", this.facade);
 			}
 		}
@@ -1003,9 +1004,9 @@ public final class BasicCallbackReactor
 				this.isolate = CallbackIsolate.create (this.reactor.reference, this.destroyCompletion);
 				this.actorsRegistered = new ConcurrentSkipListSet<BasicCallbackReactor.Actor<?>> (new IdentityComparator ());
 				this.actorsEnqueued = new ConcurrentLinkedQueue<BasicCallbackReactor.Actor<?>> ();
-				this.destroyAction = new AtomicReference<SchedulerDestroyAction> (null);
-				this.scheduleStatus = new AtomicReference<ScheduleStatus> (ScheduleStatus.Idle);
-				this.status = new AtomicReference<Status> (Status.Active);
+				this.destroyAction = Atomics.newReference (null);
+				this.scheduleStatus = Atomics.newReference (ScheduleStatus.Idle);
+				this.status = Atomics.newReference (Status.Active);
 				this.reactor.registerScheduler (this);
 				this.reactor.transcript.traceDebugging ("created isolate `%{object:identity}` (owned by scheduler `%{object:identity}` from reactor `%{object:identity}`).", this.isolate, this, this.reactor.facade);
 			}
