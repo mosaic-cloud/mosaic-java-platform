@@ -141,7 +141,7 @@ public final class ZeroMqChannelSocket
 	final void setup ()
 	{
 		this.transcript.traceDebugging ("setting-up...");
-		this.socket = ZeroMqChannelSocket.defaultContext.socket (ZMQ.ROUTER);
+		this.socket = ZeroMqChannelSocket.defaultContext.socket (ZMQ.XREP);
 		this.socket.setIdentity (this.self.getBytes ());
 	}
 	
