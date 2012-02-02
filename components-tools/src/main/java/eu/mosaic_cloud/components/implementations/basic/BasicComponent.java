@@ -261,6 +261,7 @@ public final class BasicComponent
 		public final CallbackReference initialized (final ChannelController channelController)
 		{
 			Preconditions.checkState (channelController == this.channelController);
+			this.reactor.assignDelegate (this.channelControllerProxy, this.channelController);
 			return (null);
 		}
 		
@@ -406,7 +407,7 @@ public final class BasicComponent
 		public final CallbackReference terminated (final ChannelController channelController)
 		{
 			Preconditions.checkState (channelController == this.channelController);
-			this.channelControllerProxy.terminate ();
+			this.isolate.destroy ();
 			return (null);
 		}
 		

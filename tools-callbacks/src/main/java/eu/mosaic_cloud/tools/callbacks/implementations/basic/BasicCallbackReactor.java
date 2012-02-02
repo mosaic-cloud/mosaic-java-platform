@@ -249,7 +249,7 @@ public final class BasicCallbackReactor
 				throw (new IllegalAccessError ());
 			synchronized (this.monitor) {
 				this.reactor.transcript.traceDebugging ("invocking (triggered) for proxy `%{object:identity}` the method `%{method}` with arguments `%{array}`...", this.proxy, method, arguments);
-				Preconditions.checkState (this.status.get () == Status.Active);
+				Preconditions.checkState (this.status.get () == Status.Active || this.status.get () == Status.Destroying);
 				if (this.handlerStatus.get () != HandlerStatus.Delegated) {
 					final ActorCallbackAction action = new ActorCallbackAction (this, method, arguments);
 					this.enqueueAction (action);
