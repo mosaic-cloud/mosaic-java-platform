@@ -28,8 +28,6 @@ import java.util.UUID;
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 
 
 public final class JettyComponentPreMain
@@ -51,7 +49,6 @@ public final class JettyComponentPreMain
 			JettyComponentContext.appWar = new File (arguments[1]);
 			Preconditions.checkArgument (JettyComponentContext.appWar.isFile (), "invalid appWar file; (does not exist)");
 			Preconditions.checkArgument (JettyComponentContext.appWar.canRead (), "invalid appWar file; (can not read)");
-			ExceptionTracer.defaultInstance.set (AbortingExceptionTracer.defaultInstance);
 			BasicComponentHarnessPreMain.main (new String[] {JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks")});
 		} else if ((arguments.length == 1) || "00000000cf14614e8810102fa887b6bc90dc2a40".equals (arguments[0])) {
 			final String temporary;

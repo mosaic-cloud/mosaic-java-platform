@@ -22,7 +22,7 @@ package eu.mosaic_cloud.tools.exceptions.core;
 
 
 public class CaughtException
-		extends Exception
+		extends Error
 {
 	public CaughtException (final ExceptionResolution resolution, final Throwable exception)
 	{

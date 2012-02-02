@@ -32,12 +32,12 @@
 		</encoder>
 	</appender>
 	
-	<logger name="eu.mosaic_cloud.drivers" level="trace" />
+	<logger name="eu.mosaic_cloud.drivers" level="debug" />
 	<logger name="eu.mosaic_cloud.connectors" level="debug" />
 	<logger name="eu.mosaic_cloud.cloudlets" level="debug" />
 	<logger name="eu.mosaic_cloud.platform" level="debug" />
 	
-	<root level="info">
+	<root level="${logback.rootLevel:-info}">
 		<appender-ref ref="console" />
 	</root>
 	
