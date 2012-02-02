@@ -1,5 +1,7 @@
 package mosaic.driver.kvstore;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -91,6 +93,18 @@ public final class KVDriverComponentCallbacks extends
 							ConfigProperties
 									.getString("KVDriverComponentCallbacks.3"), //$NON-NLS-1$
 							String.class, "");
+					try {
+						if (System.getenv("mosaic_node_ip") != null) {
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", System.getenv("mosaic_node_ip"));
+						} else {
+							channelEndpoint = channelEndpoint.replace(
+									"0.0.0.0", InetAddress.getLocalHost()
+											.getHostAddress());
+						}
+					} catch (UnknownHostException e) {
+						ExceptionTracer.traceIgnored(e);
+					}
 					String channelId = ConfigUtils.resolveParameter(
 							AbstractResourceDriver.driverConfiguration,
 							ConfigProperties
