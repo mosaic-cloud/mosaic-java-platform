@@ -91,7 +91,6 @@ public abstract class AbstractDriverComponentCallbacks implements
 
 	@Override
 	public CallbackReference failed(Component component, Throwable exception) {
-		this.logger.trace("AMQP driver callback failed.");
 		synchronized (this.monitor) {
 			Preconditions.checkState(this.component == component);
 			Preconditions.checkState((this.status != Status.Terminated)
