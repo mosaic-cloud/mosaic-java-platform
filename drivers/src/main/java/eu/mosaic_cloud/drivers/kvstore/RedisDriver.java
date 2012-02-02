@@ -121,7 +121,7 @@ public final class RedisDriver extends AbstractKeyValueDriver {
 	 * the driver object.
 	 */
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		super.destroy();
 		this.logger.trace("RedisDriver destroyed."); //$NON-NLS-1$
 	}

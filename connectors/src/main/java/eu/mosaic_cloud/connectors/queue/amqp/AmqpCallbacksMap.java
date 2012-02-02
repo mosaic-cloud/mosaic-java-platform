@@ -19,6 +19,7 @@
  */
 package eu.mosaic_cloud.connectors.queue.amqp;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 public class AmqpCallbacksMap {
 
-	private Map<String, IAmqpConsumerCallback> handlerMap = new HashMap<String, IAmqpConsumerCallback>();
+	private Map<String, IAmqpConsumerCallback> handlerMap = Collections.synchronizedMap(new HashMap<String, IAmqpConsumerCallback>());
 
 	public AmqpCallbacksMap() {
 		super();

@@ -21,25 +21,69 @@
 package eu.mosaic_cloud.components.core;
 
 
+import java.util.Map;
+
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
 public interface ComponentCallbacks
 		extends
 			Callbacks
 {
-	public abstract CallbackReference called (final Component component, final ComponentCallRequest request);
+	public abstract CallbackReference called (final ComponentController component, final ComponentCallRequest request);
 	
-	public abstract CallbackReference callReturned (final Component component, final ComponentCallReply reply);
+	public abstract CallbackReference callReturned (final ComponentController component, final ComponentCallReply reply);
 	
-	public abstract CallbackReference casted (final Component component, final ComponentCastRequest request);
+	public abstract CallbackReference casted (final ComponentController component, final ComponentCastRequest request);
 	
-	public abstract CallbackReference failed (final Component component, final Throwable exception);
+	public abstract CallbackReference failed (final ComponentController component, final Throwable exception);
 	
-	public abstract CallbackReference initialized (final Component component);
+	public abstract CallbackReference initialized (final ComponentController component);
 	
-	public abstract CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok);
+	public abstract CallbackReference registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok);
 	
-	public abstract CallbackReference terminated (final Component component);
+	public abstract CallbackReference terminated (final ComponentController component);
+	
+	public static final class Context
+			extends Object
+	{
+		private Context (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> environment)
+		{
+			super ();
+			Preconditions.checkNotNull (component);
+			Preconditions.checkNotNull (classLoader);
+			Preconditions.checkNotNull (reactor);
+			Preconditions.checkNotNull (threading);
+			Preconditions.checkNotNull (exceptions);
+			Preconditions.checkNotNull (environment);
+			this.component = component;
+			this.classLoader = classLoader;
+			this.reactor = reactor;
+			this.threading = threading;
+			this.exceptions = exceptions;
+			this.environment = environment;
+		}
+		
+		public final ClassLoader classLoader;
+		public final ComponentController component;
+		public final Map<String, Object> environment;
+		public final ExceptionTracer exceptions;
+		public final CallbackReactor reactor;
+		public final ThreadingContext threading;
+		
+		public static final Context create (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> environment)
+		{
+			return (new Context (component, classLoader, reactor, threading, exceptions, environment));
+		}
+	}
+	
+	public static interface Provider
+	{
+		public abstract ComponentCallbacks provide (final Context context);
+	}
 }

@@ -23,12 +23,6 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -39,16 +33,21 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class AmqpDriverTest {
 
 	private static IConfiguration configuration;
 	private AmqpDriver wrapper;
 	private String clientId = UUID.randomUUID().toString();
-	private ThreadingContext threadingContext;
+	private BasicThreadingContext threadingContext;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -60,6 +59,7 @@ public class AmqpDriverTest {
 	@After
 	public void tearDown() throws Exception {
 		this.wrapper.destroy();
+		this.threadingContext.destroy();
 	}
 
 	@Before
@@ -69,6 +69,7 @@ public class AmqpDriverTest {
 		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
+		this.threadingContext.initialize();
 		this.wrapper = AmqpDriver.create(AmqpDriverTest.configuration,
 				this.threadingContext);
 	}

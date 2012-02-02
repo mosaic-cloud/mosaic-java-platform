@@ -59,6 +59,12 @@ public final class CallbackIsolate
 		return (this.getReactor ().destroyIsolate (this));
 	}
 	
+	public final boolean destroy (final long timeout)
+	{
+		this.destroy ();
+		return (this.await (timeout));
+	}
+	
 	public final CallbackCompletion getCompletion ()
 	{
 		return (this.completion);

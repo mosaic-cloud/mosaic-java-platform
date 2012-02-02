@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>parent</artifactId>
 	<version>0.4.2_mosaic_dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
+	
 	<name>mosaic-parent</name>
 	<url>http://developers.mosaic-cloud.eu/</url>
 	<inceptionYear>2010</inceptionYear>
-
+	
 	<modules>
 		<module>./platform-parent</module>
 		<module>./components-parent</module>
@@ -22,7 +23,7 @@
 		<module>./components-httpg-jetty-container</module>
 		<module>./components-httpg-jetty-connector</module>
 	</modules>
-
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -99,7 +100,7 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
 	<reporting>
 		<plugins>
 			<plugin>
@@ -124,9 +125,9 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
+	
 	<properties>
-
+		
 		<versions.dependencies.amqp>2.7.1</versions.dependencies.amqp>
 		<versions.dependencies.commons-cli>1.2</versions.dependencies.commons-cli>
 		<versions.dependencies.guava>11.0</versions.dependencies.guava>
@@ -146,7 +147,7 @@
 		<versions.dependencies.slf4j>1.6.4</versions.dependencies.slf4j>
 		<versions.dependencies.spy>2.8.0</versions.dependencies.spy>
 		<versions.dependencies.couchbase>1.0.1</versions.dependencies.couchbase>
-
+		
 		<versions.plugins.antrun>1.7</versions.plugins.antrun>
 		<versions.plugins.assembly>2.2.2</versions.plugins.assembly>
 		<versions.plugins.compiler>2.3.2</versions.plugins.compiler>
@@ -161,18 +162,18 @@
 		<versions.plugins.surefire>2.11</versions.plugins.surefire>
 		<versions.plugins.wagon>1.0</versions.plugins.wagon>
 		<versions.plugins.war>2.1.1</versions.plugins.war>
-
+		
 		<versions.java.compiler>1.7</versions.java.compiler>
-
+		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+		
 		<license.licenseName>apache_v2</license.licenseName>
-
+		
 		<_maven_pom_phase />
 		<_maven_pom_package />
-
+		
 	</properties>
-
+	
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -180,7 +181,7 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
+	
 	<repositories>
 		<!-- <repository> <id>developers.mosaic-cloud.eu</id> <name>mOSAIC Repository</name> 
 			<layout>default</layout> <url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url> 
@@ -195,17 +196,17 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+	
 	<scm>
 		<connection>scm:hg:https://bitbucket.org/mosaic/mosaic-java-platform</connection>
 		<developerConnection>scm:hg:ssh://hg@bitbucket.org/mosaic/mosaic-java-platform</developerConnection>
 	</scm>
-
+	
 	<organization>
 		<name>Institute e-Austria Timisoara (Romania)</name>
 		<url>http://www.ieat.ro/</url>
 	</organization>
-
+	
 	<developers>
 		<developer>
 			<id>georgiana</id>
@@ -244,7 +245,7 @@
 			<timezone>+3</timezone>
 		</developer>
 	</developers>
-
+	
 	<distributionManagement>
 		<site>
 			<id>builder.mosaic.ieat.ro</id>
@@ -262,15 +263,15 @@
 			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
-
+	
 	<issueManagement>
 		<system>jira</system>
 		<url>http://developers.mosaic-cloud.eu/jira</url>
 	</issueManagement>
-
+	
 	<ciManagement>
 		<system>bamboo</system>
 		<url>http://developers.mosaic-cloud.eu/bamboo</url>
 	</ciManagement>
-
+	
 </project>

@@ -43,6 +43,7 @@ public final class ZeroMqChannelTest
 		BasicThreadingSecurityManager.initialize ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		Assert.assertTrue (threading.initialize (ZeroMqChannelTest.defaultPollTimeout));
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
 		final ZeroMqChannelSocket server = ZeroMqChannelSocket.create (serverIdentifier, null, threading, exceptions);
@@ -66,7 +67,7 @@ public final class ZeroMqChannelTest
 		}
 		Assert.assertTrue (server.terminate (ZeroMqChannelTest.defaultPollTimeout));
 		Assert.assertTrue (client.terminate (ZeroMqChannelTest.defaultPollTimeout));
-		Assert.assertTrue (threading.await (ZeroMqChannelTest.defaultPollTimeout));
+		Assert.assertTrue (threading.destroy (ZeroMqChannelTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

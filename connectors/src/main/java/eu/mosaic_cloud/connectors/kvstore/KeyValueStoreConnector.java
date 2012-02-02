@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
-import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
-
 import eu.mosaic_cloud.connectors.ConfigProperties;
 import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
@@ -39,6 +37,7 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -119,7 +118,7 @@ public class KeyValueStoreConnector<T extends Object> implements
 	 * @see eu.mosaic_cloud.connectors.IResourceConnector#destroy()
 	 */
 	@Override
-	public void destroy() throws Throwable {
+	public synchronized void destroy() throws Throwable {
 		this.proxy.destroy();
 		this.executor.shutdown();
 		this.logger.trace("KeyValueStoreConnector destroyed.");

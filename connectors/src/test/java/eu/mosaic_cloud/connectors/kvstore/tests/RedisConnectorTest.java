@@ -25,16 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
@@ -48,14 +39,21 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
 
 public class RedisConnectorTest {
 
 	private KeyValueStoreConnector<String> connector;
-	private static ThreadingContext threading;
+	private static BasicThreadingContext threading;
 	private static String keyPrefix;
 	private static KeyValueStub driverStub;
 
@@ -65,6 +63,7 @@ public class RedisConnectorTest {
 		RedisConnectorTest.threading = BasicThreadingContext.create(
 				RedisConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		RedisConnectorTest.threading.initialize();
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 
@@ -94,6 +93,7 @@ public class RedisConnectorTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
 		RedisConnectorTest.driverStub.destroy();
+		RedisConnectorTest.threading.destroy();
 	}
 
 	@After
@@ -215,9 +215,10 @@ public class RedisConnectorTest {
 
 	public static void _main(String... args) throws Throwable {
 		BasicThreadingSecurityManager.initialize();
-		ThreadingContext threading = BasicThreadingContext.create(
+		BasicThreadingContext threading = BasicThreadingContext.create(
 				RedisConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		threading.initialize();
 		IConfiguration config = PropertyTypeConfiguration.create(
 				RedisConnectorTest.class.getClassLoader(), "redis-test.prop");
 		KeyValueStoreConnector<String> connector = KeyValueStoreConnector
@@ -260,5 +261,6 @@ public class RedisConnectorTest {
 
 		connector.destroy();
 		driverStub.destroy();
+		threading.destroy();
 	}
 }

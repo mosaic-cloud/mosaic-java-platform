@@ -60,18 +60,16 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	@Override
-	public void destroy() {
-		synchronized (this) {
-			IResult<?> pResult;
-			this.destroyed = true;
-			this.executor.shutdown();
-			// cancel all pending operations
-			Iterator<IResult<?>> iter = this.pendingResults.iterator();
-			while (iter.hasNext()) {
-				pResult = iter.next();
-				pResult.cancel();
-				iter.remove();
-			}
+	public synchronized void destroy() {
+		IResult<?> pResult;
+		this.destroyed = true;
+		this.executor.shutdown();
+		// cancel all pending operations
+		Iterator<IResult<?>> iter = this.pendingResults.iterator();
+		while (iter.hasNext()) {
+			pResult = iter.next();
+			pResult.cancel();
+			iter.remove();
 		}
 	}
 
@@ -103,21 +101,15 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 	}
 
 	public int countPendingOperations() {
-		// synchronized (this) {
 		return this.pendingResults.size();
-		// }
 	}
 
 	public void removePendingOperation(IResult<?> pendingOp) {
-		// synchronized (this) {
 		this.pendingResults.remove(pendingOp);
-		// }
 	}
 
 	public void addPendingOperation(IResult<?> pendingOp) {
-		// synchronized (this) {
 		this.pendingResults.add(pendingOp);
-		// }
 	}
 
 	/**
@@ -144,10 +136,8 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 		executeOperation(task);
 	}
 
-	protected boolean isDestroyed() {
-		synchronized (this) {
+	protected synchronized boolean isDestroyed() {
 			return this.destroyed;
-		}
 	}
 
 }

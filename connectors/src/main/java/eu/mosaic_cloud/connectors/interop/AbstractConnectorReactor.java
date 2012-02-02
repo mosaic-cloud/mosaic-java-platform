@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;

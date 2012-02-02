@@ -20,7 +20,6 @@
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 

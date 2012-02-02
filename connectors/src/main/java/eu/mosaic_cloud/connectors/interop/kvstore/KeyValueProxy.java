@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
 import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
@@ -127,7 +126,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 	}
 
 	@Override
-	public void destroy() throws Throwable {
+	public synchronized void destroy() throws Throwable {
 		// build token
 		CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
 		tokenBuilder.setMessageId(UUID.randomUUID().toString());

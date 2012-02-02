@@ -27,17 +27,18 @@ import java.util.Properties;
 import java.util.concurrent.Future;
 
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.components.core.Component;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
@@ -54,7 +55,7 @@ public final class JettyComponentCallbacks
 		extends Object
 		implements
 			ComponentCallbacks,
-			CallbackHandler<ComponentCallbacks>
+			CallbackHandler
 {
 	public JettyComponentCallbacks ()
 	{
@@ -65,7 +66,7 @@ public final class JettyComponentCallbacks
 	{
 		super ();
 		this.monitor = Monitor.create (this);
-		synchronized (this) {
+		synchronized (this.monitor) {
 			this.threading = Threading.getDefaultContext ();
 			this.transcript = Transcript.create (this);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
@@ -92,7 +93,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference called (final Component component, final ComponentCallRequest request)
+	public final CallbackReference called (final ComponentController component, final ComponentCallRequest request)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -102,7 +103,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference callReturned (final Component component, final ComponentCallReply reply)
+	public final CallbackReference callReturned (final ComponentController component, final ComponentCallReply reply)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -160,7 +161,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference casted (final Component component, final ComponentCastRequest request)
+	public final CallbackReference casted (final ComponentController component, final ComponentCastRequest request)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -170,7 +171,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference failed (final Component component, final Throwable exception)
+	public final CallbackReference failed (final ComponentController component, final Throwable exception)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -185,13 +186,13 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final void failedCallbacks (final ComponentCallbacks trigger, final Throwable exception)
+	public final void failedCallbacks (final Callbacks trigger, final Throwable exception)
 	{
 		this.failed (this.component, exception);
 	}
 	
 	@Override
-	public final CallbackReference initialized (final Component component)
+	public final CallbackReference initialized (final ComponentController component)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == null);
@@ -206,7 +207,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final void registeredCallbacks (final ComponentCallbacks trigger, final CallbackIsolate isolate)
+	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == null);
@@ -216,7 +217,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference registerReturn (final Component component, final ComponentCallReference reference, final boolean ok)
+	public final CallbackReference registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -243,7 +244,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference terminated (final Component component)
+	public final CallbackReference terminated (final ComponentController component)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -257,7 +258,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public void unregisteredCallbacks (final ComponentCallbacks trigger)
+	public void unregisteredCallbacks (final Callbacks trigger)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.status != Status.Unregistered);
@@ -319,7 +320,7 @@ public final class JettyComponentCallbacks
 		}
 	}
 	
-	private Component component;
+	private ComponentController component;
 	private final TranscriptExceptionTracer exceptions;
 	private Server jettyServer;
 	private Thread jettyThread;

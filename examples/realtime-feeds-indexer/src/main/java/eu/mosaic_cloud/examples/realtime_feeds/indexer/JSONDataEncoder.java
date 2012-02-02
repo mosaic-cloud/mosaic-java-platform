@@ -27,10 +27,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public class JSONDataEncoder implements DataEncoder<JSONObject> {
 

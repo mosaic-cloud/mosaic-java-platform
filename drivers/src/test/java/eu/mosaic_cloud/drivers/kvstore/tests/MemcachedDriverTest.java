@@ -26,12 +26,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -41,13 +35,18 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 public class MemcachedDriverTest {
 
-	private ThreadingContext threadingContext;
+	private BasicThreadingContext threadingContext;
 	private MemcachedDriver wrapper;
 	private static String keyPrefix;
 
@@ -63,6 +62,7 @@ public class MemcachedDriverTest {
 		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
+		this.threadingContext.initialize();
 		this.wrapper = MemcachedDriver.create(PropertyTypeConfiguration.create(
 				MemcachedDriverTest.class.getClassLoader(),
 				"memcached-test.prop"), this.threadingContext);
@@ -73,6 +73,7 @@ public class MemcachedDriverTest {
 	public void tearDown() throws Exception {
 		this.wrapper.unregisterClient(MemcachedDriverTest.keyPrefix);
 		this.wrapper.destroy();
+		this.threadingContext.destroy();
 	}
 
 	public void testConnection() {

@@ -21,16 +21,19 @@
 package eu.mosaic_cloud.components.core;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-public interface Channel
+public interface ChannelController
+		extends
+			Callbacks
 {
-	public abstract void assign (final CallbackHandler<ChannelCallbacks> callbacks);
+	public abstract CallbackReference assign (final ChannelCallbacks callbacks);
 	
-	public abstract void close (final ChannelFlow flow);
+	public abstract CallbackReference close (final ChannelFlow flow);
 	
-	public abstract void send (final ChannelMessage message);
+	public abstract CallbackReference send (final ChannelMessage message);
 	
-	public abstract void terminate ();
+	public abstract CallbackReference terminate ();
 }

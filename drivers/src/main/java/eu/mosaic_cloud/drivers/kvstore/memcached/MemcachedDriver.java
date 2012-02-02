@@ -168,7 +168,7 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
 	 * the driver object.
 	 */
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		super.destroy();
 		this.logger.trace("MemcachedDriver destroyed."); //$NON-NLS-1$
 	}

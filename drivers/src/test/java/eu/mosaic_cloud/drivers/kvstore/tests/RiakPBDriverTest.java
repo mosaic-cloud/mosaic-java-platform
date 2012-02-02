@@ -24,12 +24,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import eu.mosaic_cloud.drivers.kvstore.RiakPBDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -39,15 +33,20 @@ import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 public class RiakPBDriverTest {
 
 	private RiakPBDriver wrapper;
-	private ThreadingContext threadingContext;
+	private BasicThreadingContext threadingContext;
 	private static String keyPrefix;
 
 	@BeforeClass
@@ -62,6 +61,7 @@ public class RiakPBDriverTest {
 		BasicThreadingSecurityManager.initialize();
 		this.threadingContext = BasicThreadingContext.create(this,
 				exceptions.catcher);
+		this.threadingContext.initialize();
 		this.wrapper = RiakPBDriver.create(PropertyTypeConfiguration.create(
 				RiakPBDriverTest.class.getClassLoader(), "riakpb-test.prop"),
 				this.threadingContext);
@@ -72,6 +72,7 @@ public class RiakPBDriverTest {
 	public void tearDown() throws Exception {
 		this.wrapper.unregisterClient(RiakPBDriverTest.keyPrefix);
 		this.wrapper.destroy();
+		this.threadingContext.destroy();
 	}
 
 	public void testConnection() {

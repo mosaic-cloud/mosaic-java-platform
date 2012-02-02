@@ -24,6 +24,7 @@ package eu.mosaic_cloud.tools.callbacks.core;
 import java.lang.ref.Reference;
 
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.ListenableFuture;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
@@ -33,7 +34,7 @@ public final class CallbackReference
 		implements
 			Joinable
 {
-	private CallbackReference (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
+	private CallbackReference (final Reference<? extends CallbackReactor> reactor, final ListenableFuture<?> completion)
 	{
 		super ();
 		Preconditions.checkNotNull (reactor);
@@ -54,7 +55,8 @@ public final class CallbackReference
 		return (Threading.awaitOrCatch (this.completion, timeout, null, null) == Boolean.TRUE);
 	}
 	
-	public final CallbackCompletion getCompletion ()
+	@Deprecated
+	public final ListenableFuture<?> getCompletion ()
 	{
 		return (this.completion);
 	}
@@ -66,10 +68,16 @@ public final class CallbackReference
 		return (reactor);
 	}
 	
-	private final CallbackCompletion completion;
+	private final ListenableFuture<?> completion;
 	private final Reference<? extends CallbackReactor> reactorReference;
 	
 	public static final CallbackReference create (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
+	{
+		return (new CallbackReference (reactor, completion));
+	}
+	
+	@Deprecated
+	public static final CallbackReference create (final Reference<? extends CallbackReactor> reactor, final ListenableFuture<?> completion)
 	{
 		return (new CallbackReference (reactor, completion));
 	}

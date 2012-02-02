@@ -50,17 +50,21 @@ public final class BasicThreadingContext
 		super ();
 		Preconditions.checkNotNull (group);
 		Preconditions.checkNotNull (configuration);
-		if (!(System.getSecurityManager () instanceof BasicThreadingSecurityManager))
-			throw (new IllegalThreadStateException ());
-		final Object owner = configuration.owner.get ();
-		Preconditions.checkNotNull (owner);
+		Preconditions.checkState (System.getSecurityManager () instanceof BasicThreadingSecurityManager);
+		this.owner = BasicThreadingContext.buildOwner (configuration);
 		this.configuration = configuration;
 		this.group = new BasicThreadGroup (group, this.configuration);
 		this.defaultGroup = new BasicThreadGroup (this.group, configuration.setName ("default"));
 		this.threads = ThreadBundle.create ();
+		this.initialized = new AtomicBoolean (false);
 		this.sealed = new AtomicBoolean (false);
 	}
 	
+	// !!!!
+	/*
+	 * Returned executors should extend `ThreadPoolExecutor` (or the like) and override certain methods for logging
+	 * and error handling.
+	 */
 	@Override
 	public final boolean await ()
 	{
@@ -76,45 +80,63 @@ public final class BasicThreadingContext
 	@Override
 	public final ExecutorService createCachedThreadPool (final ThreadConfiguration configuration)
 	{
-		return (Executors.unconfigurableExecutorService (Executors.newCachedThreadPool (this.newThreadFactory (configuration, true))));
+		return (Executors.unconfigurableExecutorService (Executors.newCachedThreadPool (this.createThreadFactory (configuration, true))));
 	}
 	
 	@Override
 	public final ExecutorService createFixedThreadPool (final ThreadConfiguration configuration, final int threads)
 	{
-		return (Executors.unconfigurableExecutorService (Executors.newFixedThreadPool (threads, this.newThreadFactory (configuration, true))));
+		return (Executors.unconfigurableExecutorService (Executors.newFixedThreadPool (threads, this.createThreadFactory (configuration, true))));
 	}
 	
 	@Override
 	public final ScheduledExecutorService createScheduledThreadPool (final ThreadConfiguration configuration, final int coreThreads)
 	{
-		return (Executors.unconfigurableScheduledExecutorService (Executors.newScheduledThreadPool (coreThreads, this.newThreadFactory (configuration, true))));
+		return (Executors.unconfigurableScheduledExecutorService (Executors.newScheduledThreadPool (coreThreads, this.createThreadFactory (configuration, true))));
 	}
 	
 	@Override
 	public final ExecutorService createSingleThreadExecutor (final ThreadConfiguration configuration)
 	{
-		return (Executors.unconfigurableExecutorService (Executors.newSingleThreadExecutor (this.newThreadFactory (configuration, false))));
+		return (Executors.unconfigurableExecutorService (Executors.newSingleThreadExecutor (this.createThreadFactory (configuration, false))));
 	}
 	
 	@Override
 	public final ScheduledExecutorService createSingleThreadScheduledExecutor (final ThreadConfiguration configuration)
 	{
-		return (Executors.unconfigurableScheduledExecutorService (Executors.newSingleThreadScheduledExecutor (this.newThreadFactory (configuration, false))));
+		return (Executors.unconfigurableScheduledExecutorService (Executors.newSingleThreadScheduledExecutor (this.createThreadFactory (configuration, false))));
 	}
 	
 	@Override
 	public final Thread createThread (final ThreadConfiguration configuration, final Runnable runnable)
 	{
-		final Object thisOwner = this.configuration.owner.get ();
-		Preconditions.checkNotNull (thisOwner);
+		Preconditions.checkState (this.isActive ());
+		Preconditions.checkState (!this.isSealed ());
 		return (new BasicThread (this.group, configuration, runnable, -1));
 	}
 	
 	@Override
 	public final ThreadFactory createThreadFactory (final ThreadConfiguration configuration)
 	{
-		return (this.newThreadFactory (configuration, true));
+		return (this.createThreadFactory (configuration, true));
+	}
+	
+	public final ThreadFactory createThreadFactory (final ThreadConfiguration configuration, final boolean index)
+	{
+		Preconditions.checkState (this.isActive ());
+		Preconditions.checkState (!this.isSealed ());
+		return (new BasicThreadFactory (new BasicThreadGroup (this.group, configuration), configuration, index));
+	}
+	
+	public final void destroy ()
+	{
+		Preconditions.checkState (this.destroy (-1));
+	}
+	
+	public final boolean destroy (final long timeout)
+	{
+		this.interrupt ();
+		return (this.await (timeout));
 	}
 	
 	@Override
@@ -123,10 +145,33 @@ public final class BasicThreadingContext
 		return (this.defaultGroup);
 	}
 	
+	public final void initialize ()
+	{
+		Preconditions.checkState (this.initialize (-1));
+	}
+	
+	public final boolean initialize (final long timeout)
+	{
+		Preconditions.checkArgument (timeout >= -1);
+		Preconditions.checkState (this.initialized.compareAndSet (false, true));
+		return (true);
+	}
+	
 	@Override
 	public final void interrupt ()
 	{
 		this.threads.interrupt ();
+	}
+	
+	@Override
+	public final boolean isActive ()
+	{
+		if (!this.initialized.get ())
+			return (false);
+		final Object owner = this.configuration.owner.get ();
+		if (owner == null)
+			return (false);
+		return (true);
 	}
 	
 	@Override
@@ -139,6 +184,7 @@ public final class BasicThreadingContext
 	@Override
 	public final boolean isManaged (final ThreadGroup group)
 	{
+		Preconditions.checkNotNull (group);
 		for (ThreadGroup parent = group; true; parent = parent.getParent ()) {
 			if (parent == this.group)
 				return (true);
@@ -159,13 +205,6 @@ public final class BasicThreadingContext
 		return (this.threads.iterator ());
 	}
 	
-	public final ThreadFactory newThreadFactory (final ThreadConfiguration configuration, final boolean index)
-	{
-		final Object thisOwner = this.configuration.owner.get ();
-		Preconditions.checkNotNull (thisOwner);
-		return (new BasicThreadFactory (new BasicThreadGroup (this.group, configuration), configuration, index));
-	}
-	
 	@Override
 	public final void registerThread (final Thread thread)
 	{
@@ -176,12 +215,6 @@ public final class BasicThreadingContext
 	public final void seal ()
 	{
 		this.sealed.set (true);
-	}
-	
-	final WeakReference<Object> buildOwner (final ThreadConfiguration configuration)
-	{
-		Preconditions.checkNotNull (configuration.owner);
-		return (new WeakReference<Object> (configuration.owner));
 	}
 	
 	final void handleException (final Thread thread, final Throwable exception)
@@ -235,8 +268,18 @@ public final class BasicThreadingContext
 	private final ThreadConfiguration configuration;
 	private final BasicThreadGroup defaultGroup;
 	private final BasicThreadGroup group;
+	private final AtomicBoolean initialized;
+	private final WeakReference<Object> owner;
 	private final AtomicBoolean sealed;
 	private final ThreadBundle<Thread> threads;
+	
+	public static final WeakReference<Object> buildOwner (final ThreadConfiguration configuration)
+	{
+		Preconditions.checkNotNull (configuration.owner);
+		final Object owner = configuration.owner.get ();
+		Preconditions.checkNotNull (owner);
+		return (new WeakReference<Object> (owner));
+	}
 	
 	public static final String buildThreadGroupName (final ThreadConfiguration configuration)
 	{

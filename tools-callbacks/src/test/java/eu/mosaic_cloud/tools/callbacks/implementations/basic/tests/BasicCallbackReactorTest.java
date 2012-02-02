@@ -45,6 +45,7 @@ public final class BasicCallbackReactorTest
 		BasicThreadingSecurityManager.initialize ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		Assert.assertTrue (threading.initialize (BasicCallbackReactorTest.defaultPollTimeout));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		Assert.assertTrue (reactor.initialize (BasicCallbackReactorTest.defaultPollTimeout));
 		final CallbackIsolate isolate = reactor.createIsolate ();
@@ -84,11 +85,9 @@ public final class BasicCallbackReactorTest
 			for (final QueueingQueueCallbackHandler<Integer> handler : handlers)
 				Assert.assertNull (handler.queue.poll ());
 		}
-		isolate.destroy ();
-		Assert.assertTrue (isolate.await (BasicCallbackReactorTest.defaultPollTimeout));
-		reactor.destoy ();
-		Assert.assertTrue (reactor.await (BasicCallbackReactorTest.defaultPollTimeout));
-		Assert.assertTrue (threading.await (BasicCallbackReactorTest.defaultPollTimeout));
+		Assert.assertTrue (isolate.destroy (BasicCallbackReactorTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.destroy (BasicCallbackReactorTest.defaultPollTimeout));
+		Assert.assertTrue (threading.destroy (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

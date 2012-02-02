@@ -97,8 +97,9 @@ public final class MosBasicComponentLauncher
 		BasicThreadingSecurityManager.initialize ();
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		threading.initialize ();
 		MosBasicComponentLauncher.main (arguments, loader, threading, exceptions);
-		threading.await ();
+		threading.destroy ();
 	}
 	
 	public static final void main (final String[] arguments, final ClassLoader loader, final ThreadingContext threading, final ExceptionTracer exceptions)

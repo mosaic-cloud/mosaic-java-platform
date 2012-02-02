@@ -20,6 +20,7 @@
 package eu.mosaic_cloud.components.httpg.jetty.connector;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class AmqpConnector extends AbstractConnector {
 		_virtualHost = virtualHost;
 		_inputQueueName = queueName;
 		_autoDeclareQueue = autoDeclareQueue;
-		_connections = new HashSet<EndPoint>();
+		_connections = Collections.synchronizedSet (new HashSet<EndPoint>());
 	}
 
 	@Override
@@ -241,9 +242,7 @@ public class AmqpConnector extends AbstractConnector {
 			// Log.warn("Running...");
 			try {
 				connectionOpened(getConnection());
-				synchronized (_connections) {
-					_connections.add(this);
-				}
+				_connections.add(this);
 
 				while (isStarted() && isOpen()) {
 					if (_jettyConnection.isIdle()) {
@@ -275,9 +274,7 @@ public class AmqpConnector extends AbstractConnector {
 
 			finally {
 				connectionClosed(_jettyConnection);
-				synchronized (_connections) {
-					_connections.remove(this);
-				}
+				_connections.remove(this);
 			}
 		}
 

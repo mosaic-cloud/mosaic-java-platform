@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.interoperability.core.Message;

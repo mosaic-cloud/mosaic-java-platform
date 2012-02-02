@@ -28,7 +28,9 @@ public interface CallbackReactor
 		extends
 			Joinable
 {
-	public abstract <_Callbacks_ extends Callbacks> CallbackReference assignHandler (final _Callbacks_ proxy, final CallbackHandler<_Callbacks_> handler, final CallbackIsolate isolate);
+	public abstract <_Callbacks_ extends Callbacks> CallbackReference assignDelegate (final _Callbacks_ proxy, _Callbacks_ delegate);
+	
+	public abstract <_Callbacks_ extends Callbacks> CallbackReference assignHandler (final _Callbacks_ proxy, final CallbackHandler handler, final CallbackIsolate isolate);
 	
 	public abstract CallbackIsolate createIsolate ();
 	

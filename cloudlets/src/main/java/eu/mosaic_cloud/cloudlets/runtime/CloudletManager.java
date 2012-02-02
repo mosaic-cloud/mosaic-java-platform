@@ -33,6 +33,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -52,6 +53,7 @@ public class CloudletManager {
 
 	private ThreadingContext threading;
 	private ClassLoader classLoader;
+	private Monitor monitor = Monitor.create (this);
 
 	private IConfiguration configuration;
 	
@@ -70,11 +72,13 @@ public class CloudletManager {
 	public CloudletManager(ThreadingContext threading, ClassLoader classLoader,
 			IConfiguration configuration) {
 		super();
-		this.threading = threading;
-		this.classLoader = classLoader;
-		this.configuration = configuration;
-		this.cloudletPool = new ArrayList<ICloudlet>();
-		// TODO
+		synchronized (this.monitor) {
+			this.threading = threading;
+			this.classLoader = classLoader;
+			this.configuration = configuration;
+			this.cloudletPool = new ArrayList<ICloudlet>();
+			// TODO
+		}
 	}
 
 	/**
@@ -83,7 +87,7 @@ public class CloudletManager {
 	 * @throws CloudletException
 	 */
 	public void start() throws CloudletException {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			createCloudletInstance();
 		}
 	}
@@ -92,7 +96,7 @@ public class CloudletManager {
 	 * Stops the container and destroys all hosted cloudlets.
 	 */
 	public final void stop() {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			for (ICloudlet cloudlet : this.cloudletPool) {
 				if (cloudlet.isActive()) {
 					cloudlet.destroy();

@@ -34,6 +34,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 
 /**
  * Base class for driver stubs.
@@ -50,7 +51,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	private final List<Session> sessions;
 	private final ZeroMqChannel commChannel;
 
-	protected static final Object LOCK = new Object();
+	protected static final Object MONITOR = Monitor.create (AbstractDriverStub.class);
 	private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer>();
 
 	/**
@@ -83,17 +84,15 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	 * Destroys this stub.
 	 * 
 	 */
-	public void destroy() {
-		synchronized (this) {
-			this.driver.destroy();
-			this.transmitter.destroy();
-			this.commChannel.terminate(500);
-			this.logger.trace("DriverStub destroyed.");
-		}
+	public synchronized void destroy() {
+		this.driver.destroy();
+		this.transmitter.destroy();
+		this.commChannel.terminate(500);
+		this.logger.trace("DriverStub destroyed.");
 	}
 
 	protected static void incDriverReference(AbstractDriverStub stub) {
-		synchronized (AbstractDriverStub.class) {
+		synchronized (AbstractDriverStub.MONITOR) {
 			Integer ref = AbstractDriverStub.references.get(stub);
 			if (ref == null) {
 				ref = 0; // NOPMD by georgiana on 10/12/11 3:14 PM
@@ -104,7 +103,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	}
 
 	protected static int decDriverReference(AbstractDriverStub stub) {
-		synchronized (AbstractDriverStub.class) {
+		synchronized (AbstractDriverStub.MONITOR) {
 			Integer ref = AbstractDriverStub.references.get(stub);
 			if (ref == null) {
 				ref = 0; // NOPMD by georgiana on 10/12/11 3:15 PM

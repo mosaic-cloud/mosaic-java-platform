@@ -41,6 +41,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -750,7 +751,7 @@ public final class Threading
 	
 	public static final int defaultAbortExitCode = AbortingExceptionTracer.defaultExitCode;
 	public static final int defaultHaltExitCode = AbortingExceptionTracer.defaultExitCode;
-	private static final AtomicReference<ThreadingContext> defaultContext = new AtomicReference<ThreadingContext> (null);
+	private static final AtomicReference<ThreadingContext> defaultContext = Atomics.newReference (null);
 	
 	private static final class CurrentContext
 			extends ThreadLocal<ThreadingContext>

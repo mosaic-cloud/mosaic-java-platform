@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
@@ -103,7 +102,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 		DriverConnectionData cData = KeyValueStub.readConnectionData(config);
 		MosaicLogger sLogger = MosaicLogger.createLogger(MemcachedStub.class);
 		MemcachedStub stub;
-		synchronized (AbstractDriverStub.LOCK) {
+		synchronized (AbstractDriverStub.MONITOR) {
 			stub = MemcachedStub.stubs.get(cData);
 			try {
 				if (stub == null) {
@@ -134,8 +133,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 	}
 
 	@Override
-	public void destroy() {
-		synchronized (AbstractDriverStub.LOCK) {
+	public synchronized void destroy() {
+		synchronized (AbstractDriverStub.MONITOR) {
 			int ref = decDriverReference(this);
 			if ((ref == 0)) {
 				DriverConnectionData cData = KeyValueStub

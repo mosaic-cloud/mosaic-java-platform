@@ -20,7 +20,6 @@
 package eu.mosaic_cloud.drivers.interop.queue.amqp;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;

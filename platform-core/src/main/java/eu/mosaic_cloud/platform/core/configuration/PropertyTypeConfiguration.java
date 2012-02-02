@@ -157,9 +157,7 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 			key_ = this.root.resolve(identifier).getIdentifier();
 		}
 		final String key = key_.substring(1).replace('/', '.');
-		synchronized (this) {
-			return this.properties.getProperty(key, null);
-		}
+		return this.properties.getProperty(key, null);
 	}
 
 	/*

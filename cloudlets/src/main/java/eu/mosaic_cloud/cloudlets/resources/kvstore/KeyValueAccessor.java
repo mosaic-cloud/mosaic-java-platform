@@ -38,6 +38,7 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.Miscellaneous;
+import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -59,6 +60,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 	private IKeyValueStore connector;
 	private IKeyValueAccessorCallback<C> callback;
 	private IKeyValueAccessorCallback<C> callbackProxy;
+	private Monitor monitor = Monitor.create (this);
 
 	/**
 	 * Creates a new accessor.
@@ -72,17 +74,19 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 	 */
 	public KeyValueAccessor(IConfiguration config,
 			ICloudletController<C> cloudlet, DataEncoder<?> encoder) {
-		this.configuration = config;
-		this.cloudlet = cloudlet;
-		this.dataEncoder = encoder;
-		this.status = ResourceStatus.CREATED;
+		synchronized (this.monitor) {
+			this.configuration = config;
+			this.cloudlet = cloudlet;
+			this.dataEncoder = encoder;
+			this.status = ResourceStatus.CREATED;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(IResourceAccessorCallback<C> callback, C context,
 			ThreadingContext threading) {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			this.status = ResourceStatus.INITIALIZING;
 			this.cloudletContext = context;
 			this.callback = Miscellaneous.cast(IKeyValueAccessorCallback.class,
@@ -127,7 +131,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 
 	@Override
 	public void destroy(IResourceAccessorCallback<C> callback) {
-		synchronized (this) {
+		synchronized (this.monitor) {
 			this.status = ResourceStatus.DESTROYING;
 			try {
 				this.connector.destroy();

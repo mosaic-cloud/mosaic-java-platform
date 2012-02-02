@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.interop.kvstore.KeyValueProxy;
 import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Message;
@@ -32,7 +31,6 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;

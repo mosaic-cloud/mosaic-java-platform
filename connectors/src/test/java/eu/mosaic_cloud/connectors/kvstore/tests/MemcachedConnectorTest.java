@@ -26,15 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.connectors.kvstore.memcached.MemcachedStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
@@ -49,15 +41,21 @@ import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 public class MemcachedConnectorTest {
 
 	private MemcachedStoreConnector<String> connector;
-	private static ThreadingContext threading;
+	private static BasicThreadingContext threading;
 	private static String keyPrefix;
 	private static MemcachedStub driverStub;
 
@@ -67,6 +65,7 @@ public class MemcachedConnectorTest {
 		MemcachedConnectorTest.threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		MemcachedConnectorTest.threading.initialize();
 		IConfiguration config = PropertyTypeConfiguration.create(
 				MemcachedConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
@@ -99,6 +98,7 @@ public class MemcachedConnectorTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Throwable {
 		MemcachedConnectorTest.driverStub.destroy();
+		MemcachedConnectorTest.threading.destroy();
 	}
 
 	@After
@@ -395,9 +395,10 @@ public class MemcachedConnectorTest {
 
 	public static void main(String... args) throws Throwable {
 		BasicThreadingSecurityManager.initialize();
-		ThreadingContext threading = BasicThreadingContext.create(
+		BasicThreadingContext threading = BasicThreadingContext.create(
 				MemcachedConnectorTest.class,
 				AbortingExceptionTracer.defaultInstance.catcher);
+		threading.destroy();
 		IConfiguration config = PropertyTypeConfiguration.create(
 				MemcachedConnectorTest.class.getClassLoader(),
 				"memcached-test.prop");
@@ -439,6 +440,6 @@ public class MemcachedConnectorTest {
 		// null);
 		connector.destroy();
 		driverStub.destroy();
-
+		threading.destroy();
 	}
 }

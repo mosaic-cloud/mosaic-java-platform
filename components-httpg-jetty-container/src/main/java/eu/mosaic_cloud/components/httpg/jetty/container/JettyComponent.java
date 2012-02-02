@@ -25,6 +25,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -104,5 +105,5 @@ public final class JettyComponent
 		return (component);
 	}
 	
-	private static final AtomicReference<JettyComponent> currentComponent = new AtomicReference<JettyComponent> (null);
+	private static final AtomicReference<JettyComponent> currentComponent = Atomics.newReference (null);
 }

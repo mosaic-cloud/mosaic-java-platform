@@ -24,17 +24,19 @@ package eu.mosaic_cloud.components.implementations.basic.tests;
 import java.nio.channels.Pipe;
 import java.util.concurrent.TimeUnit;
 
+import eu.mosaic_cloud.components.core.ChannelCallbacks;
+import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingChannelCallbacks;
 import eu.mosaic_cloud.components.tools.tests.RandomMessageGenerator;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,26 +52,31 @@ public final class BasicChannelTest
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		Assert.assertTrue (threading.initialize (BasicChannelTest.defaultPollTimeout));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
+		Assert.assertTrue (reactor.initialize (BasicChannelTest.defaultPollTimeout));
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final BasicChannel channel = BasicChannel.create (pipe.source (), pipe.sink (), coder, reactor, threading, exceptions);
-		final QueueingChannelCallbacks callbacks = QueueingChannelCallbacks.create (channel);
-		Assert.assertTrue (reactor.initialize (BasicChannelTest.defaultPollTimeout));
 		Assert.assertTrue (channel.initialize (BasicChannelTest.defaultPollTimeout));
-		callbacks.assign ();
+		final ChannelController channelController = channel.getController ();
+		final ChannelCallbacks channelCallbacksProxy = reactor.createProxy (ChannelCallbacks.class);
+		Assert.assertTrue (channelController.assign (channelCallbacksProxy).await (BasicChannelTest.defaultPollTimeout));
+		final QueueingChannelCallbacks channelCallbacks = QueueingChannelCallbacks.create (channelController, exceptions);
+		final CallbackIsolate channelCallbacksIsolate = reactor.createIsolate ();
+		Assert.assertTrue (reactor.assignHandler (channelCallbacksProxy, channelCallbacks, channelCallbacksIsolate).await (BasicChannelTest.defaultPollTimeout));
 		for (int index = 0; index < BasicChannelTest.defaultTries; index++) {
 			final ChannelMessage outboundMessage = RandomMessageGenerator.defaultInstance.generateChannelMessage ();
-			channel.send (outboundMessage);
-			final ChannelMessage inboundMessage = callbacks.queue.poll (BasicChannelTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
+			Assert.assertTrue (channelController.send (outboundMessage).await (BasicChannelTest.defaultPollTimeout));
+			final ChannelMessage inboundMessage = channelCallbacks.queue.poll (BasicChannelTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundMessage);
 			Assert.assertEquals (outboundMessage.metaData, inboundMessage.metaData);
 			Assert.assertEquals (outboundMessage.data, inboundMessage.data);
 		}
 		pipe.sink ().close ();
-		Assert.assertTrue (channel.terminate (BasicChannelTest.defaultPollTimeout));
-		Threading.sleep (BasicChannelTest.defaultPollTimeout);
+		Assert.assertTrue (channel.destroy (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (channelCallbacksIsolate.destroy (BasicChannelTest.defaultPollTimeout));
 		Assert.assertTrue (reactor.destroy (BasicChannelTest.defaultPollTimeout));
-		Assert.assertTrue (threading.await (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (threading.destroy (BasicChannelTest.defaultPollTimeout));
 		Assert.assertNull (exceptions.queue.poll ());
 	}
 	

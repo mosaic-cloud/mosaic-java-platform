@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.interop.ConnectorProxy;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
@@ -275,12 +274,10 @@ public final class AmqpProxy extends ConnectorProxy {
 	private <V extends Object> void sendMessage(Message message,
 			CompletionToken token, List<IOperationCompletionHandler<V>> handlers) {
 		try {
-			//			synchronized (this) {
 			// store token and completion handlers
 			super.registerHandlers(token.getMessageId(), handlers);
 			super.sendRequest(getResponseReactor(AmqpConnectorReactor.class)
 					.getSession(), message);
-			//			}
 			this.logger.trace(
 					"AmqpProxy - Sent " + message.specification.toString()
 							+ " request [" + token.getMessageId() + "]...");

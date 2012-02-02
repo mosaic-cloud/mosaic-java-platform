@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.connectors.interop.AbstractConnectorReactor;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpCallbacksMap;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
@@ -69,9 +68,8 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 	 * Destroys this reactor.
 	 */
 	@Override
-	public void destroy() {
+	public synchronized void destroy() {
 		// nothing to do here
-		// if it does something don'y forget synchronized
 	}
 
 	/**
@@ -85,9 +83,7 @@ public class AmqpConnectorReactor extends AbstractConnectorReactor { // NOPMD by
 	 *            the callback
 	 */
 	protected void addCallback(String requestId, IAmqpConsumerCallback callback) {
-		synchronized (this) {
-			this.callbacksMap.addHandlers(requestId, callback);
-		}
+		this.callbacksMap.addHandlers(requestId, callback);
 	}
 
 	@Override

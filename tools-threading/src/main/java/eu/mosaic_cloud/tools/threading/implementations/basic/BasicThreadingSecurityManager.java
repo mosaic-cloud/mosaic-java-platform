@@ -48,8 +48,8 @@ public final class BasicThreadingSecurityManager
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
 			// !!!!
-			//	if (!context.isManaged (thread))
-			//		throw (new SecurityException ());
+			if (!context.isManaged (thread))
+				throw (new SecurityException ());
 		}
 		super.checkAccess (thread);
 	}
@@ -61,8 +61,8 @@ public final class BasicThreadingSecurityManager
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
 			// !!!!
-			//	if (!context.isManaged (group))
-			//		throw (new SecurityException ());
+			if (!context.isManaged (group))
+				throw (new SecurityException ());
 		}
 		super.checkAccess (group);
 	}
@@ -70,17 +70,17 @@ public final class BasicThreadingSecurityManager
 	@Override
 	public final void checkPermission (final Permission permission)
 	{
+		this.checkPermission_ (permission);
 		// !!!!
 		// super.checkPermission (permission);
-		this.checkPermission_ (permission);
 	}
 	
 	@Override
 	public final void checkPermission (final Permission permission, final Object context)
 	{
-		// !!!!
-		// super.checkPermission (permission, context);
 		this.checkPermission_ (permission);
+		// !!!!
+		super.checkPermission (permission, context);
 	}
 	
 	@Override
@@ -118,12 +118,22 @@ public final class BasicThreadingSecurityManager
 			checkWrite |= true;
 		checkRead |= checkWrite;
 		if (checkRead || checkWrite) {
-			// ...
+			// !!!!
 		}
 	}
 	
 	public static final void initialize ()
 	{
+		/*
+		 * We apply the well known "singleton initialization pattern".
+		 * 
+		 * We synchronize on `System.class` because in the Sun / Oracle JRE 1.7.0 implementation the static method
+		 * `setSecurityManager` delegates to a private method which in turn synchronizes on `System.class`.
+		 * Thus we eliminate a possible race condition.
+		 * 
+		 * We recurse after setting (in practice at most once) to be sure that we indeed initialized the correct
+		 * security manager.
+		 */
 		synchronized (System.class) {
 			final SecurityManager manager = System.getSecurityManager ();
 			if (manager instanceof BasicThreadingSecurityManager)
