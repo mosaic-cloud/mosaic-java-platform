@@ -157,7 +157,7 @@ public final class AbortingExceptionTracer
 		
 		private final void halt ()
 		{
-			for (int timeoutStep = 0; timeoutStep < AbortingExceptionTracer.defaulExitTimeout / AbortingExceptionTracer.defaultExitTimeoutResolution; timeoutStep++)
+			for (int timeoutStep = 0; timeoutStep < (AbortingExceptionTracer.defaulExitTimeout / AbortingExceptionTracer.defaultExitTimeoutResolution); timeoutStep++)
 				try {
 					Thread.sleep (AbortingExceptionTracer.defaultExitTimeoutResolution);
 				} catch (final InterruptedException exception1) {

@@ -65,7 +65,7 @@ public final class ErlangSpecificationDumper
 		for (int index = 0; index < sessions.length; index++) {
 			ErlangSpecificationDumper.indent (builder, 1);
 			ErlangSpecificationDumper.dump (sessions[index], builder, 1);
-			builder.append ((index < sessions.length - 1) ? ",\n" : "].\n");
+			builder.append ((index < (sessions.length - 1)) ? ",\n" : "].\n");
 		}
 		return (builder);
 	}
@@ -89,7 +89,7 @@ public final class ErlangSpecificationDumper
 		for (int index = 0; index < messages.length; index++) {
 			ErlangSpecificationDumper.indent (builder, indent + 2);
 			ErlangSpecificationDumper.dump (messages[index], builder, indent + 2);
-			builder.append ((index < messages.length - 1) ? ",\n" : "]}");
+			builder.append ((index < (messages.length - 1)) ? ",\n" : "]}");
 		}
 	}
 	

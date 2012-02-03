@@ -82,10 +82,10 @@ public final class KvServer
 				this.logger.info ("get requested [{}]: {}", request.sequence, request.key);
 				final String value = this.bucket.get (request.key);
 				session.continueDispatch ();
-				Threading.sleep (this.maxDelay / 5 * 1);
+				Threading.sleep ((this.maxDelay / 5) * 1);
 				this.logger.info ("get replied [{}]: {}", request.sequence, value);
 				session.send (new Message (KvMessage.GetReply, new KvPayloads.GetReply (request.sequence, value)));
-				Threading.sleep (this.maxDelay / 5 * 3);
+				Threading.sleep ((this.maxDelay / 5) * 3);
 				this.logger.info ("get finished [{}]", request.sequence);
 			}
 				break;
@@ -94,10 +94,10 @@ public final class KvServer
 				this.logger.info ("put requested [{}]: {} -> {}", new Object[] {request.sequence, request.key, request.value});
 				this.bucket.put (request.key, request.value);
 				session.continueDispatch ();
-				Threading.sleep (this.maxDelay / 5 * 1);
+				Threading.sleep ((this.maxDelay / 5) * 1);
 				this.logger.info ("put replied [{}]", request.sequence);
 				session.send (new Message (KvMessage.Ok, new KvPayloads.Ok (request.sequence)));
-				Threading.sleep (this.maxDelay / 5 * 3);
+				Threading.sleep ((this.maxDelay / 5) * 3);
 				this.logger.info ("put finished: [{}]", request.sequence);
 			}
 				break;
