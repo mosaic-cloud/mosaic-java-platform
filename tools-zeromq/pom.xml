@@ -15,6 +15,15 @@
 	<artifactId>tools-zeromq</artifactId>
 	<name>mosaic-tools-zeromq</name>
 	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${versions.dependencies.junit}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
