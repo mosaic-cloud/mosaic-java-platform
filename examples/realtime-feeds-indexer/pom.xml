@@ -19,18 +19,28 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>cloudlets</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>${versions.dependencies.json}</version>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>cloudlets</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-container</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${versions.dependencies.guava}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.basho.riak</groupId>
+			<artifactId>riak-client</artifactId>
+			<version>${versions.dependencies.riak}</version>
 		</dependency>
 		<dependency>
 			<groupId>rome</groupId>

@@ -39,19 +39,49 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.interoperability</groupId>
 			<artifactId>interoperability-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.interoperability</groupId>
-			<artifactId>interoperability-tools</artifactId>
+			<artifactId>interoperability-zeromq</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.interoperability</groupId>
-			<artifactId>interoperability-zeromq</artifactId>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-callbacks</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-threading</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-exceptions</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-miscellaneous</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${versions.dependencies.guava}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${versions.dependencies.protobuf}</version>
 		</dependency>
 	</dependencies>
 	

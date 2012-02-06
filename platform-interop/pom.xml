@@ -27,11 +27,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.interoperability</groupId>
-			<artifactId>interoperability-zeromq</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
 			<version>${versions.dependencies.protobuf}</version>

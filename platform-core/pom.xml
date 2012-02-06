@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-json</artifactId>
+			<artifactId>tools-threading</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -28,18 +28,18 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-threading</artifactId>
+			<artifactId>tools-exceptions</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${versions.dependencies.logback}</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${versions.dependencies.slf4j}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>${versions.dependencies.json}</version>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${versions.dependencies.jackson}</version>
 		</dependency>
 	</dependencies>
 	

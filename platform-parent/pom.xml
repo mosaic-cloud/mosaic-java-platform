@@ -25,54 +25,6 @@
 		<module>../platform-interop</module>
 	</modules>
 	
-	<dependencies>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${versions.dependencies.guava}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${versions.dependencies.junit}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${versions.plugins.compiler}</version>
-				<configuration>
-					<source>${versions.java.compiler}</source>
-					<target>${versions.java.compiler}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${versions.plugins.jar}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${versions.plugins.surefire}</version>
-				<configuration>
-					<argLine>-Djava.library.path=${java.library.path}:${project.basedir}/lib</argLine>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	
 	<properties>
 		<license.licenseName>apache_v2</license.licenseName>
 	</properties>

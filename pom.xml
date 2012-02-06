@@ -36,6 +36,51 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${versions.plugins.compiler}</version>
+				<configuration>
+					<source>${versions.java.compiler}</source>
+					<target>${versions.java.compiler}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>${versions.plugins.dependency}</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>analyze-only</goal>
+						</goals>
+						<configuration>
+							<failOnWarning>true</failOnWarning>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${versions.plugins.jar}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${versions.plugins.surefire}</version>
+				<configuration>
+					<argLine>-Djava.library.path=${java.library.path}:${project.basedir}/lib</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>${versions.plugins.site}</version>
 				<dependencies>
@@ -158,23 +203,24 @@
 		
 		<versions.dependencies.amqp>2.7.1</versions.dependencies.amqp>
 		<versions.dependencies.commons-cli>1.2</versions.dependencies.commons-cli>
+		<versions.dependencies.couchbase>1.0.1</versions.dependencies.couchbase>
 		<versions.dependencies.guava>11.0</versions.dependencies.guava>
 		<versions.dependencies.jackson>1.9.3</versions.dependencies.jackson>
-		<versions.dependencies.jetty>8.0.0.M3</versions.dependencies.jetty> <!-- TO UPGRADE -->
+		<versions.dependencies.jetty-eclipse>8.0.0.M3</versions.dependencies.jetty-eclipse> <!-- TO UPGRADE -->
 		<versions.dependencies.json>20090211</versions.dependencies.json>
 		<versions.dependencies.json-smart>1.0.9</versions.dependencies.json-smart>
-		<versions.dependencies.jsp-api>2.1</versions.dependencies.jsp-api> <!-- TO UPGRADE -->
-		<versions.dependencies.jsp-glassfish>2.1.v20100127</versions.dependencies.jsp-glassfish> <!-- TO UPGRADE -->
-		<versions.dependencies.jsp-jetty>7.4.2.v20110526</versions.dependencies.jsp-jetty> <!-- TO UPGRADE -->
+		<versions.dependencies.jsp-eclipse>7.4.2.v20110526</versions.dependencies.jsp-eclipse> <!-- TO UPGRADE -->
+		<versions.dependencies.jsp-javax>2.1</versions.dependencies.jsp-javax> <!-- TO UPGRADE -->
+		<versions.dependencies.jsp-mortbay>2.1.v20100127</versions.dependencies.jsp-mortbay> <!-- TO UPGRADE -->
 		<versions.dependencies.junit>4.10</versions.dependencies.junit>
 		<versions.dependencies.logback>1.0.0</versions.dependencies.logback>
 		<versions.dependencies.protobuf>2.4.1</versions.dependencies.protobuf>
 		<versions.dependencies.redis>2.0.0</versions.dependencies.redis>
 		<versions.dependencies.riak>1.0.3</versions.dependencies.riak>
-		<versions.dependencies.servlet>2.5</versions.dependencies.servlet> <!-- TO UPGRADE -->
+		<versions.dependencies.servlet-javax>2.5</versions.dependencies.servlet-javax> <!-- TO UPGRADE -->
+		<versions.dependencies.servlet-mortbay>3.0.20090124</versions.dependencies.servlet-mortbay>
 		<versions.dependencies.slf4j>1.6.4</versions.dependencies.slf4j>
 		<versions.dependencies.spy>2.8.0</versions.dependencies.spy>
-		<versions.dependencies.couchbase>1.0.1</versions.dependencies.couchbase>
 		
 		<versions.plugins.antrun>1.7</versions.plugins.antrun>
 		<versions.plugins.assembly>2.2.2</versions.plugins.assembly>

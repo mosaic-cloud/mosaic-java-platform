@@ -18,7 +18,17 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>platform-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>cloudlets</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-threading</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

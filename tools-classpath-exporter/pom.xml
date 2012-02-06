@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-exceptions</artifactId>
+			<artifactId>tools-threading</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -28,18 +28,18 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-threading</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-miscellaneous</artifactId>
+			<artifactId>tools-exceptions</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>${versions.dependencies.jetty}</version>
+			<version>${versions.dependencies.jetty-eclipse}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${versions.dependencies.servlet-mortbay}</version>
 		</dependency>
 	</dependencies>
 	
