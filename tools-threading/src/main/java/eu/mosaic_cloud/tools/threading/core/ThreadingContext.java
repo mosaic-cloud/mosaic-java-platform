@@ -56,14 +56,14 @@ public interface ThreadingContext
 	
 	public abstract void registerThread (final Thread thread);
 	
-	public static interface ManagedThread
+	public interface ManagedThread
 			extends
 				Joinable
 	{
 		public abstract ThreadingContext getContext ();
 	}
 	
-	public static interface ManagedThreadGroup
+	public interface ManagedThreadGroup
 	{
 		public abstract ThreadingContext getContext ();
 	}

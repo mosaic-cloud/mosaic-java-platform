@@ -69,6 +69,7 @@ public final class KvServer
 		channel.accept (KvSession.Server, this);
 	}
 	
+	@SuppressWarnings ("boxing")
 	@Override
 	public final CallbackReference received (final Session session, final Message message)
 	{
