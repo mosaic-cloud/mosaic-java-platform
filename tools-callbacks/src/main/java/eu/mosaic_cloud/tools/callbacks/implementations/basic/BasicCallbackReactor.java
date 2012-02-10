@@ -206,7 +206,7 @@ public final class BasicCallbackReactor
 		final _Target_ target;
 	}
 	
-	static interface ActionTarget
+	interface ActionTarget
 	{}
 	
 	static final class Actor<_Callbacks_ extends Callbacks>
@@ -1018,14 +1018,16 @@ public final class BasicCallbackReactor
 				this.reactor.transcript.traceDebugging ("enqueueing actor `%{object:identity}` on scheduler `%{object:identity}`...", actor, this);
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
 				this.actorsEnqueued.add (actor);
-				this.schedule (false);
+				this.schedule ();
 			}
 		}
 		
 		final void executeActions ()
 		{
-			Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Scheduled, ScheduleStatus.Running));
-			while (true) {
+			synchronized (this.monitor) {
+				Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Scheduled, ScheduleStatus.Running));
+			}
+			{
 				this.reactor.transcript.traceDebugging ("executing enqueued actors on scheduler `%{object:identity}`...", this);
 				while (true) {
 					final Actor<?> actor = this.actorsEnqueued.poll ();
@@ -1033,16 +1035,20 @@ public final class BasicCallbackReactor
 						break;
 					actor.executeActions ();
 				}
+			}
+			{
 				this.reactor.transcript.traceDebugging ("executed enqueued actors on scheduler `%{object:identity}.`", this);
 				if (this.destroyAction.get () != null)
 					this.executeDestroy ();
-				if (this.scheduleStatus.get () == ScheduleStatus.RunningReschedule) {
-					Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.RunningReschedule, ScheduleStatus.Running));
-					continue;
-				}
-				break;
 			}
-			Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Running, ScheduleStatus.Idle));
+			synchronized (this.monitor) {
+				if (this.scheduleStatus.get () == ScheduleStatus.RunningReschedule) {
+					Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.RunningReschedule, ScheduleStatus.Scheduled));
+					this.reactor.enqueueRunnable (new SchedulerExecuteAction (this));
+					this.reactor.transcript.traceDebugging ("scheduled scheduler `%{object:identity}`.", this);
+				} else
+					Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Running, ScheduleStatus.Idle));
+			}
 		}
 		
 		final void executeDestroy ()
@@ -1056,7 +1062,7 @@ public final class BasicCallbackReactor
 					for (final Actor<?> actor : this.actorsRegistered)
 						actor.triggerDestroy ();
 					this.reactor.transcript.traceDebugging ("defer destroying scheduler `%{object:identity}` due to registered actors...", this);
-					this.schedule (true);
+					this.schedule ();
 					return;
 				}
 				Preconditions.checkState (this.actorsRegistered.isEmpty ());
@@ -1078,7 +1084,7 @@ public final class BasicCallbackReactor
 			}
 		}
 		
-		final void schedule (final boolean reschedule)
+		final void schedule ()
 		{
 			synchronized (this.monitor) {
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
@@ -1091,8 +1097,6 @@ public final class BasicCallbackReactor
 					case Scheduled :
 						break;
 					case Running :
-						if (!reschedule)
-							break;
 						Preconditions.checkState (this.scheduleStatus.compareAndSet (ScheduleStatus.Running, ScheduleStatus.RunningReschedule));
 						break;
 					case RunningReschedule :
@@ -1118,7 +1122,7 @@ public final class BasicCallbackReactor
 				}
 				final SchedulerDestroyAction action = new SchedulerDestroyAction (this, this.destroyCompletion);
 				Preconditions.checkState (this.destroyAction.compareAndSet (null, action));
-				this.schedule (false);
+				this.schedule ();
 				return (action.completion.reference);
 			}
 		}
