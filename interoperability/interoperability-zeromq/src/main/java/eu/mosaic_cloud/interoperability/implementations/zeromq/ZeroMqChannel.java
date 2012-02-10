@@ -144,7 +144,7 @@ public final class ZeroMqChannel
 					throw (new IllegalStateException ());
 				}
 			for (final Coder coder : coders) {
-				this.transcript.traceError ("registering coder: `%s` -> %s...", coder.key, coder.coder);
+				this.transcript.traceDebugging ("registering coder: `%s` -> %s...", coder.key, coder.coder);
 				this.state.coders.put (coder.key, coder);
 			}
 		}
