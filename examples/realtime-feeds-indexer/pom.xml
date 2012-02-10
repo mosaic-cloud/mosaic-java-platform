@@ -1,9 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.mosaic_cloud</groupId>
+	<parent>
+		<artifactId>java-parent</artifactId>
+		<groupId>eu.mosaic_cloud</groupId>
+		<version>0.4-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
 	<artifactId>mosaic-examples-feeds-indexer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>mOSAIC cloudlet example - Feeds Indexer</name>
 	<description>An example of a cloudlet for Twitter  feeds indexing</description>
 	<repositories>
@@ -17,7 +21,6 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
 	<dependencies>
 		<dependency>
 			<groupId>rome</groupId>

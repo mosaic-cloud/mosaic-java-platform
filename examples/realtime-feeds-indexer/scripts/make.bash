@@ -9,6 +9,7 @@ _mvn_args+=(
 	package -DskipTests=true
 )
 
-cd "${_workbench}/umbrella"
+cd "${_workbench}/.parent"
 
+echo "[ii] executing build script..." >&2
 exec env "${_mvn_env[@]}" "${_mvn}" "${_mvn_args[@]}"

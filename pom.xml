@@ -24,6 +24,7 @@
                 <module>examples/simple-cloudlets</module>
                 <module>examples/simple-components</module>
                 <module>examples/interoperability</module>
+                <module>examples/realtime-feeds-indexer</module>
         </modules>
 	
 	<dependencies>

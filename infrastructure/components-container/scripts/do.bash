@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e -E -u -o pipefail || exit 1
+trap 'echo "[!!] unchecked failed command: ${BASH_COMMAND}" >&2 ; exit 1' ERR
 
 _self="${0}"
 _self_basename="$( basename -- "${_self}" )"
