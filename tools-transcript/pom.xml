@@ -33,7 +33,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
+			<artifactId>logback-classic</artifactId>
 			<version>${versions.dependencies.logback}</version>
 		</dependency>
 		<dependency>

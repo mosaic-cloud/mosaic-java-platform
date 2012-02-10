@@ -21,9 +21,10 @@
 package eu.mosaic_cloud.tools.transcript.core;
 
 
+import eu.mosaic_cloud.tools.transcript.implementations.logback.LogbackTranscriptBackend;
+
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
-import eu.mosaic_cloud.tools.transcript.implementations.slf4j.Slf4jTranscriptBackend;
 
 
 public final class Transcript
@@ -133,12 +134,12 @@ public final class Transcript
 	public static final Transcript create (final Class<?> owner)
 	{
 		Preconditions.checkNotNull (owner);
-		return (new Transcript (Slf4jTranscriptBackend.create (owner)));
+		return (new Transcript (LogbackTranscriptBackend.create (owner)));
 	}
 	
 	public static final Transcript create (final Object owner)
 	{
 		Preconditions.checkNotNull (owner);
-		return (new Transcript (Slf4jTranscriptBackend.create (owner)));
+		return (new Transcript (LogbackTranscriptBackend.create (owner)));
 	}
 }
