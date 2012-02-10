@@ -24,6 +24,10 @@ package eu.mosaic_cloud.components.implementations.basic.tests;
 import java.nio.channels.Pipe;
 import java.util.concurrent.TimeUnit;
 
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
+
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelMessage;
@@ -48,9 +52,11 @@ public final class BasicChannelTest
 	public final void test ()
 			throws Exception
 	{
+		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe = Pipe.open ();
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		Assert.assertTrue (threading.initialize (BasicChannelTest.defaultPollTimeout));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
@@ -60,7 +66,7 @@ public final class BasicChannelTest
 		Assert.assertTrue (channel.initialize (BasicChannelTest.defaultPollTimeout));
 		final ChannelController channelController = channel.getController ();
 		final ChannelCallbacks channelCallbacksProxy = reactor.createProxy (ChannelCallbacks.class);
-		Assert.assertTrue (channelController.assign (channelCallbacksProxy).await (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (channelController.bind (channelCallbacksProxy).await (BasicChannelTest.defaultPollTimeout));
 		final QueueingChannelCallbacks channelCallbacks = QueueingChannelCallbacks.create (channelController, exceptions);
 		final CallbackIsolate channelCallbacksIsolate = reactor.createIsolate ();
 		Assert.assertTrue (reactor.assignHandler (channelCallbacksProxy, channelCallbacks, channelCallbacksIsolate).await (BasicChannelTest.defaultPollTimeout));
@@ -77,7 +83,7 @@ public final class BasicChannelTest
 		Assert.assertTrue (channelCallbacksIsolate.destroy (BasicChannelTest.defaultPollTimeout));
 		Assert.assertTrue (reactor.destroy (BasicChannelTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (BasicChannelTest.defaultPollTimeout));
-		Assert.assertNull (exceptions.queue.poll ());
+		Assert.assertNull (exceptionsQueue.queue.poll ());
 	}
 	
 	public static final long defaultPollTimeout = 1000;

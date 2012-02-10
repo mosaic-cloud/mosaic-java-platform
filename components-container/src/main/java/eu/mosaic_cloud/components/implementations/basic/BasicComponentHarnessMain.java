@@ -43,6 +43,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.net.SocketAppender;
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -109,13 +110,12 @@ public final class BasicComponentHarnessMain
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		final BasicChannel channel = BasicChannel.create (input, output, coder, reactor, threading, exceptions);
 		final BasicComponent component = BasicComponent.create (reactor, exceptions);
-		component.bind (channel.getController ());
 		reactor.initialize ();
 		channel.initialize ();
 		component.initialize ();
 		final ComponentController componentController = component.getController ();
-		final ComponentCallbacks componentCallbacks = callbacksProvider.provide (ComponentCallbacks.Context.create (componentController, BasicComponentHarnessMain.class.getClassLoader (), reactor, threading, exceptions, new HashMap<String, Object> ()));
-		Preconditions.checkState (componentController.assign (componentCallbacks).await ());
+		final ComponentCallbacks componentCallbacks = callbacksProvider.provide (ComponentContext.create (componentController, BasicComponentHarnessMain.class.getClassLoader (), reactor, threading, exceptions, new HashMap<String, Object> ()));
+		componentController.bind (componentCallbacks, channel.getController ());
 		Preconditions.checkState (component.await ());
 		component.destroy ();
 		channel.destroy ();
@@ -366,12 +366,12 @@ public final class BasicComponentHarnessMain
 		}
 		
 		@Override
-		public final ComponentCallbacks provide (final ComponentCallbacks.Context context)
+		public final ComponentCallbacks provide (final ComponentContext context)
 		{
 			Preconditions.checkNotNull (context);
 			Method provide;
 			try {
-				provide = this.clasz.getMethod ("provide", ComponentCallbacks.Context.class);
+				provide = this.clasz.getMethod ("provide", ComponentContext.class);
 			} catch (final NoSuchMethodException exception) {
 				provide = null;
 			}

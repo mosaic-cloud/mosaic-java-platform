@@ -100,7 +100,7 @@ public final class BasicChannel
 		return (new BasicChannel (input, output, coder, reactor, threading, exceptions));
 	}
 	
-	static final long defaultPollTimeout = 1000;
+	static final long defaultPollTimeout = 100;
 	
 	private static final class Backend
 			extends AbstractService
@@ -163,7 +163,7 @@ public final class BasicChannel
 		}
 		
 		@Override
-		public final CallbackReference assign (final ChannelCallbacks delegate)
+		public final CallbackReference bind (final ChannelCallbacks delegate)
 		{
 			this.transcript.traceDebugging ("assigning callbacks...");
 			return (this.reactor.assignDelegate (this.callbacksProxy, delegate));

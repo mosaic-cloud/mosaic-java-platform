@@ -25,6 +25,7 @@ import java.nio.channels.Pipe;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Strings;
+import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
@@ -37,10 +38,13 @@ import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
 import eu.mosaic_cloud.components.tools.tests.RandomMessageGenerator;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,9 +56,11 @@ public final class BasicComponentTest
 	public final void test ()
 			throws Exception
 	{
+		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe = Pipe.open ();
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
 		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
 		Assert.assertTrue (threading.initialize (BasicComponentTest.defaultPollTimeout));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
@@ -64,10 +70,9 @@ public final class BasicComponentTest
 		final BasicComponent component = BasicComponent.create (reactor, exceptions);
 		Assert.assertTrue (channel.initialize (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (component.initialize (BasicComponentTest.defaultPollTimeout));
-		Assert.assertTrue (component.bind (channel.getController ()).await (BasicComponentTest.defaultPollTimeout));
 		final ComponentController componentController = component.getController ();
 		final ComponentCallbacks componentCallbacksProxy = reactor.createProxy (ComponentCallbacks.class);
-		Assert.assertTrue (componentController.assign (componentCallbacksProxy).await (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (componentController.bind (componentCallbacksProxy, channel.getController ()).await (BasicComponentTest.defaultPollTimeout));
 		final QueueingComponentCallbacks componentCallbacks = QueueingComponentCallbacks.create (componentController, exceptions);
 		final CallbackIsolate componentCallbacksIsolate = reactor.createIsolate ();
 		Assert.assertTrue (reactor.assignHandler (componentCallbacksProxy, componentCallbacks, componentCallbacksIsolate).await (BasicComponentTest.defaultPollTimeout));
@@ -75,7 +80,7 @@ public final class BasicComponentTest
 		for (int index = 0; index < BasicComponentTest.defaultTries; index++) {
 			final ComponentCallRequest outboundRequest = RandomMessageGenerator.defaultInstance.generateComponentCallRequest ();
 			Assert.assertTrue (componentController.call (peer, outboundRequest).await (BasicComponentTest.defaultPollTimeout));
-			final ComponentCallRequest inboundRequest = (ComponentCallRequest) componentCallbacks.queue.poll (BasicComponentTest.defaultPollTimeout * 10000, TimeUnit.MILLISECONDS);
+			final ComponentCallRequest inboundRequest = (ComponentCallRequest) componentCallbacks.queue.poll (BasicComponentTest.defaultPollTimeout, TimeUnit.MILLISECONDS);
 			Assert.assertNotNull (inboundRequest);
 			Assert.assertEquals (outboundRequest.operation, inboundRequest.operation);
 			Assert.assertEquals (outboundRequest.inputs, inboundRequest.inputs);
@@ -89,12 +94,13 @@ public final class BasicComponentTest
 			Assert.assertEquals (outboundRequest.data, inboundReply.data);
 		}
 		pipe.sink ().close ();
+		Assert.assertTrue (component.await (BasicComponentTest.defaultPollTimeout * 10));
 		Assert.assertTrue (component.destroy (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (channel.destroy (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (componentCallbacksIsolate.destroy (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (reactor.destroy (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (BasicComponentTest.defaultPollTimeout));
-		Assert.assertNull (exceptions.queue.poll ());
+		Assert.assertNull (exceptionsQueue.queue.poll ());
 	}
 	
 	public static final long defaultPollTimeout = 1000;

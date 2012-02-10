@@ -29,7 +29,7 @@ public interface ChannelController
 		extends
 			Callbacks
 {
-	public abstract CallbackReference assign (final ChannelCallbacks callbacks);
+	public abstract CallbackReference bind (final ChannelCallbacks callbacks);
 	
 	public abstract CallbackReference close (final ChannelFlow flow);
 	

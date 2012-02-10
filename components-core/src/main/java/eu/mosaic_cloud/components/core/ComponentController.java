@@ -29,7 +29,7 @@ public interface ComponentController
 		extends
 			Callbacks
 {
-	public abstract CallbackReference assign (final ComponentCallbacks callbacks);
+	public abstract CallbackReference bind (final ComponentCallbacks callbacks, final ChannelController channel);
 	
 	public abstract CallbackReference call (final ComponentIdentifier component, final ComponentCallRequest request);
 	
