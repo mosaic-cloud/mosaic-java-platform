@@ -32,13 +32,14 @@
 		</encoder>
 	</appender>
 	
-	<logger name="eu.mosaic_cloud" level="${logback.mosaicLevel:-info}" />
-	<logger name="eu.mosaic_cloud.drivers" level="${logback.mosaicDriversLevel:-info}" />
-	<logger name="eu.mosaic_cloud.connectors" level="${logback.mosaicConnectorsLevel:-info}" />
-	<logger name="eu.mosaic_cloud.cloudlets" level="${logback.mosaicCloudletsLevel:-info}" />
-	<logger name="eu.mosaic_cloud.platform" level="${logback.mosaicPlatformLevel:-info}" />
+	<logger name="eu.mosaic_cloud.cloudlets" level="${logback.levels.mosaic.cloudlets:-}" />
+	<logger name="eu.mosaic_cloud.platform" level="${logback.levels.mosaic.platform:-}" />
+	<logger name="eu.mosaic_cloud.connectors" level="${logback.levels.mosaic.connectors:-}" />
+	<logger name="eu.mosaic_cloud.drivers" level="${logback.levels.mosaic.drivers:-}" />
+	<logger name="eu.mosaic_cloud.tools" level="${logback.levels.mosaic.tools:-}" />
+	<logger name="eu.mosaic_cloud" level="${logback.levels.mosaic:-}" />
 	
-	<root level="${logback.rootLevel:-debug}">
+	<root level="${logback.levels.root:-info}">
 		<appender-ref ref="console" />
 	</root>
 	
