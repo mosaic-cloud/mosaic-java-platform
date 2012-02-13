@@ -34,10 +34,8 @@ public final class ExceptionTracer {
 	public ExceptionTracer() {
 		super();
 		Transcript transcript = Transcript.create(this);
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer
-				.create(NullExceptionTracer.defaultInstance);
 		this.transcriptTracer = TranscriptExceptionTracer.create(transcript,
-				exceptions);
+				NullExceptionTracer.defaultInstance);
 	}
 
 	public void trace(ExceptionResolution resolution, Throwable exception,

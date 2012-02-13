@@ -31,13 +31,12 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -49,16 +48,11 @@ public final class AbacusComponentCallbacks
 			ComponentCallbacks,
 			CallbackHandler
 {
-	public AbacusComponentCallbacks ()
-	{
-		this (AbortingExceptionTracer.defaultInstance);
-	}
-	
-	public AbacusComponentCallbacks (final ExceptionTracer exceptions)
+	public AbacusComponentCallbacks (final ComponentContext context)
 	{
 		super ();
 		this.transcript = Transcript.create (this);
-		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
 		this.component = null;
 		this.status = Status.Created;
 	}

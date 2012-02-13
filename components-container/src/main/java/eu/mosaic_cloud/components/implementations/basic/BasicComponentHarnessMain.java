@@ -24,6 +24,7 @@ package eu.mosaic_cloud.components.implementations.basic;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -36,7 +37,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.Pipe;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import ch.qos.logback.classic.Logger;
@@ -92,9 +92,6 @@ public final class BasicComponentHarnessMain
 		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (output), threading, exceptions);
 		try {
 			BasicComponentHarnessMain.main (componentProvider, inputPipe.source (), outputPipe.sink (), threading, exceptions);
-		} catch (final Error exception) {
-			exceptions.trace (ExceptionResolution.Deferred, exception);
-			throw (exception);
 		} finally {
 			inputPiper.join ();
 			outputPiper.join ();
@@ -115,13 +112,18 @@ public final class BasicComponentHarnessMain
 		channel.initialize ();
 		component.initialize ();
 		final ComponentController componentController = component.getController ();
-		final ComponentCallbacks componentCallbacks = callbacksProvider.provide (ComponentContext.create (componentController, BasicComponentHarnessMain.class.getClassLoader (), reactor, threading, exceptions, new HashMap<String, Object> ()));
-		componentController.bind (componentCallbacks, channel.getController ());
-		Preconditions.checkState (component.await ());
-		component.destroy ();
-		channel.destroy ();
-		Threading.sleep (BasicComponentHarnessMain.defaultPollTimeout);
-		reactor.destroy ();
+		try {
+			final ComponentCallbacks componentCallbacks = callbacksProvider.provide (ComponentContext.create (componentController, BasicComponentHarnessMain.class.getClassLoader (), reactor, threading, exceptions));
+			componentController.bind (componentCallbacks, channel.getController ());
+			Preconditions.checkState (component.await ());
+		} catch (final Throwable exception) {
+			exceptions.trace (ExceptionResolution.Ignored, exception);
+			throw (new Error (exception));
+		} finally {
+			component.destroy ();
+			channel.destroy ();
+			reactor.destroy ();
+		}
 	}
 	
 	public static final void main (final ComponentCallbacksProvider componentProvider, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
@@ -148,9 +150,6 @@ public final class BasicComponentHarnessMain
 		}
 		try {
 			BasicComponentHarnessMain.main (componentProvider, input, output, threading, exceptions);
-		} catch (final Error exception) {
-			exceptions.trace (ExceptionResolution.Deferred, exception);
-			throw (exception);
 		} finally {
 			try {
 				connection.close ();
@@ -167,8 +166,11 @@ public final class BasicComponentHarnessMain
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
 		threading.initialize ();
-		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
-		threading.destroy ();
+		try {
+			BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
+		} finally {
+			threading.destroy ();
+		}
 	}
 	
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ThreadingContext threading, final ExceptionTracer exceptions)
@@ -370,17 +372,24 @@ public final class BasicComponentHarnessMain
 		public final ComponentCallbacks provide (final ComponentContext context)
 		{
 			Preconditions.checkNotNull (context);
-			Method provide;
+			Method provideMethod;
 			try {
-				provide = this.clasz.getMethod ("provide", ComponentContext.class);
+				provideMethod = this.clasz.getMethod ("provide", ComponentContext.class);
 			} catch (final NoSuchMethodException exception) {
-				provide = null;
+				provideMethod = null;
 			}
+			Constructor<?> provideConstructor;
+			try {
+				provideConstructor = this.clasz.getConstructor (ComponentContext.class);
+			} catch (final NoSuchMethodException exception) {
+				provideConstructor = null;
+			}
+			Preconditions.checkArgument ((provideMethod != null) || (provideConstructor != null));
 			final ComponentCallbacks callbacks;
-			if (provide != null) {
+			if (provideMethod != null) {
 				final CallbackProxy callbacksProxy;
 				try {
-					callbacksProxy = (CallbackProxy) provide.invoke (null, context);
+					callbacksProxy = (CallbackProxy) provideMethod.invoke (null, context);
 				} catch (final Exception exception) {
 					context.exceptions.trace (ExceptionResolution.Deferred, exception);
 					throw (new IllegalArgumentException (String.format ("invalid component callbacks provider class `%s` (error encountered while invocking)", this.clasz.getName ()), exception));
@@ -391,11 +400,11 @@ public final class BasicComponentHarnessMain
 				Preconditions.checkArgument (ComponentCallbacks.class.isInstance (callbacksProxy), "invalid component callbacks proxy `%s` (not an instance of `ComponentCallbacks`)", callbacksProxy.getClass ().getName ());
 				Preconditions.checkArgument (CallbackProxy.class.isInstance (callbacksProxy), "invalid component callbacks proxy `%s` (not an instance of `CallbackProxy`)", callbacksProxy.getClass ().getName ());
 				callbacks = (ComponentCallbacks) callbacksProxy;
-			} else {
+			} else if (provideConstructor != null) {
 				final CallbackHandler callbacksHandler;
 				Threading.setDefaultContext (context.threading);
 				try {
-					callbacksHandler = (CallbackHandler) this.clasz.newInstance ();
+					callbacksHandler = (CallbackHandler) provideConstructor.newInstance (context);
 				} catch (final Exception exception) {
 					context.exceptions.trace (ExceptionResolution.Deferred, exception);
 					throw (new IllegalArgumentException (String.format ("invalid component callbacks handler class `%s` (error encountered while instantiating)", this.clasz.getName ()), exception));
@@ -408,7 +417,8 @@ public final class BasicComponentHarnessMain
 				final ComponentCallbacks callbacksProxy = context.reactor.createProxy (ComponentCallbacks.class);
 				Preconditions.checkState (context.reactor.assignHandler (callbacksProxy, callbacksHandler, callbacksIsolate).await ());
 				callbacks = callbacksProxy;
-			}
+			} else
+				throw (new AssertionError ());
 			Preconditions.checkNotNull (callbacks);
 			return (callbacks);
 		}

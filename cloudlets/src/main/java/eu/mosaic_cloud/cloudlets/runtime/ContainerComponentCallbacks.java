@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.components.core.ComponentContext;
+
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
@@ -110,9 +112,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	 * Creates a callback which is used by the mOSAIC platform to communicate
 	 * with the connectors.
 	 */
-	public ContainerComponentCallbacks() {
+	public ContainerComponentCallbacks(ComponentContext context) {
 		super();
-		this.threading = Threading.getDefaultContext();
+		this.threading = context.threading;
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ContainerComponentCallbacks.callbacks = this;
 		IConfiguration configuration = PropertyTypeConfiguration.create(

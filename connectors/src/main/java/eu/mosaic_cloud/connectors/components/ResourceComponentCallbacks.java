@@ -28,6 +28,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.connectors.ConfigProperties;
@@ -86,7 +87,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	 * Creates a callback which is used by the mOSAIC platform to communicate
 	 * with the connectors.
 	 */
-	public ResourceComponentCallbacks() {
+	public ResourceComponentCallbacks(ComponentContext context) {
 		super();
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>>();
 		ResourceComponentCallbacks.setComponentCallbacks(this);

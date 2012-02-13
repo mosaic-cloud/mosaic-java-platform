@@ -30,6 +30,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
@@ -43,7 +44,6 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
  * This callback class enables the Key Value store driver to be exposed as a
@@ -61,8 +61,8 @@ public final class KVDriverComponentCallbacks extends
 	/**
 	 * Creates a driver callback.
 	 */
-	public KVDriverComponentCallbacks() {
-		super(Threading.getDefaultContext());
+	public KVDriverComponentCallbacks(ComponentContext context) {
+		super(context);
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(KVDriverComponentCallbacks.class

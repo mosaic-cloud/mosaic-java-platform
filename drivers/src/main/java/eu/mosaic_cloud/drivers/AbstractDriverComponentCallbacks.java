@@ -23,6 +23,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
@@ -50,8 +51,8 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public abstract class AbstractDriverComponentCallbacks implements
 		ComponentCallbacks, CallbackHandler {
 
-	protected AbstractDriverComponentCallbacks(ThreadingContext threading) {
-		this.threading = threading;
+	protected AbstractDriverComponentCallbacks(ComponentContext context) {
+		this.threading = context.threading;
 		this.logger = MosaicLogger.createLogger(this);
 	}
 

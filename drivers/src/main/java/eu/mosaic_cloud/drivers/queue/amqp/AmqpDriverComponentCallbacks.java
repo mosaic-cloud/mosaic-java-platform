@@ -30,6 +30,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
@@ -59,8 +60,8 @@ public final class AmqpDriverComponentCallbacks extends
 	/**
 	 * Creates a driver callback.
 	 */
-	public AmqpDriverComponentCallbacks() {
-		super(Threading.getDefaultContext());
+	public AmqpDriverComponentCallbacks(ComponentContext context) {
+		super(context);
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(AmqpDriverComponentCallbacks.class

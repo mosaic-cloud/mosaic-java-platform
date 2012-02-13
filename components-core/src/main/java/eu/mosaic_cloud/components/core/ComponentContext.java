@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.components.core;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
@@ -55,6 +56,11 @@ public final class ComponentContext
 	public final ExceptionTracer exceptions;
 	public final CallbackReactor reactor;
 	public final ThreadingContext threading;
+	
+	public static final ComponentContext create (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		return (new ComponentContext (component, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
+	}
 	
 	public static final ComponentContext create (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> environment)
 	{

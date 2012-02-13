@@ -16,6 +16,10 @@ else
 	_tmp="/tmp/mosaic/components/${_identifier}"
 fi
 
+if test -n "${mosaic_component_debug:-}" ; then
+	_java_args+=( -Dlogback.levels.root=debug )
+fi
+
 _jar="${_java_jars:-${_workbench}/target}/${_package_jar_name}"
 
 _java_args+=(

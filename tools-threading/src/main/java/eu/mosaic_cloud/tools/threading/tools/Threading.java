@@ -350,6 +350,7 @@ public final class Threading
 		return (Thread.currentThread ().getThreadGroup ());
 	}
 	
+	@Deprecated
 	public static final ThreadingContext getDefaultContext ()
 	{
 		final ThreadingContext context = Threading.defaultContext.get ();

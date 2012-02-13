@@ -32,6 +32,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine;
@@ -39,8 +40,6 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
@@ -57,19 +56,14 @@ public final class JettyComponentCallbacks
 			ComponentCallbacks,
 			CallbackHandler
 {
-	public JettyComponentCallbacks ()
-	{
-		this (AbortingExceptionTracer.defaultInstance);
-	}
-	
-	public JettyComponentCallbacks (final ExceptionTracer exceptions)
+	public JettyComponentCallbacks (final ComponentContext context)
 	{
 		super ();
 		this.monitor = Monitor.create (this);
 		synchronized (this.monitor) {
-			this.threading = Threading.getDefaultContext ();
+			this.threading = context.threading;
 			this.transcript = Transcript.create (this);
-			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
+			this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
 			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
 			this.status = Status.WaitingRegistered;
 			JettyComponentContext.callbacks = this;
