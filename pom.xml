@@ -102,7 +102,7 @@
 				<version>${versions.plugins.license}</version>
 				<executions>
 					<execution>
-						<phase>verify1</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>download-licenses</goal>
 							<goal>update-project-license</goal>
