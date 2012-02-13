@@ -181,7 +181,7 @@ public class CloudletManager {
 
 	private <T> T createHandler(final Class<T> clasz) {
 		T instance = null;
-		boolean isCallback = implementsType(clasz, ICloudletCallback.class);
+		boolean isCallback = ICloudletCallback.class.isAssignableFrom (clasz);
 
 		if (!isCallback) {
 			logger.error(
@@ -198,26 +198,4 @@ public class CloudletManager {
 		}
 		return instance;
 	}
-
-	@SuppressWarnings("unchecked")
-	private <T> boolean implementsType(Class<T> clasz, Class<?> searchedType) {
-		Type genericTypes[] = clasz.getInterfaces();
-		for (int i = 0; i < genericTypes.length; i++) {
-			if (genericTypes[i] == searchedType) {
-				return true;
-			}
-		}
-		boolean found = false;
-		for (int i = 0; i < genericTypes.length; i++) {
-			found = implementsType((Class<T>) genericTypes[i], searchedType);
-			if (found) {
-				return true;
-			}
-		}
-		Class<? super T> superClass = clasz.getSuperclass();
-		found = implementsType(superClass, searchedType);
-
-		return found;
-	}
-
 }
