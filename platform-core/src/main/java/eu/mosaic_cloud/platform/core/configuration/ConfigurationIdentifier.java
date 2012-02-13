@@ -188,10 +188,7 @@ public final class ConfigurationIdentifier {
 		boolean isAbsolute = false; // NOPMD by georgiana on 9/26/11 8:34 PM
 		String identifier_;
 		String identifier;
-		// int slashIndex;
-		// String parentIdentifier;
 		ConfigurationIdentifier parameterIdentifier;
-		// ConfigurationIdentifier parentConfigurationIdentifier;
 
 		if (reference == null) {
 			if (specification.charAt(0) == '/') {
@@ -230,19 +227,6 @@ public final class ConfigurationIdentifier {
 				parameterIdentifier = ConfigurationIdentifier.IDENTIFIERS
 						.get(identifier);
 			} else {
-				// slashIndex = identifier.lastIndexOf("/");
-
-				// if (slashIndex >= 0)
-				// parentIdentifier = identifier.substring(0, slashIndex)
-				// .intern();
-				// else
-				// parentIdentifier = "";
-
-				// if (parentIdentifier.length() == 0)
-				// parentConfigurationIdentifier = ConfigurationIdentifier.root;
-				// else
-				// parentConfigurationIdentifier = ConfigurationIdentifier
-				// .resolve(null, parentIdentifier);
 				parameterIdentifier = new ConfigurationIdentifier(isAbsolute,
 						identifier);
 				ConfigurationIdentifier.IDENTIFIERS.put(

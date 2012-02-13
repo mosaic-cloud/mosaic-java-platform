@@ -114,7 +114,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 				}
 				this.connector = KeyValueConnectorFactory.createConnector(
 						connectorName, this.configuration, this.dataEncoder,
-						threading);// MemcachedStoreConnector.create(configuration);
+						threading);
 				this.status = ResourceStatus.READY;
 				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						KeyValueAccessor.this.cloudlet, true);

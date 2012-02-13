@@ -83,17 +83,7 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 			this.active = false;
 			this.executor = new CloudletExecutor(this.threading, loader);
 			this.controller = new CloudletController();
-
 			this.controllerCallback = callback;
-			// create the invocation handler for the callback class
-			// InvocationHandler handler = new
-			// CloudletInvocationHandler(callback);
-			// @SuppressWarnings("unchecked")
-			// ICloudletCallback<S> proxy = (ICloudletCallback<S>) Proxy
-			// .newProxyInstance(callback.getClass().getClassLoader(),
-			// new Class[] { callback.getClass() }, handler);
-			// this.callbackProxies.put(this.controllerCallback, callback
-			// .getClass().cast(proxy));
 		}
 	}
 
@@ -215,9 +205,6 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 			} catch (ExecutionException e) {
 				ExceptionTracer.traceIgnored(e);
 			}
-			// this.executor.shutdown();
-			// // TODO
-			// destroyed = true;
 			return true;
 		}
 	}

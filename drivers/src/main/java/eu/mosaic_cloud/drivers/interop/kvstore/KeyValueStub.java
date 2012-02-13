@@ -341,9 +341,6 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 		String passwd = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.4"), String.class, //$NON-NLS-1$
 				""); //$NON-NLS-1$
-		// String bucket = ConfigUtils.resolveParameter(config,
-		//				ConfigProperties.getString("KVStoreDriver.3"), String.class, //$NON-NLS-1$
-		// "");
 		DriverConnectionData cData;
 		if ("".equals(user) && "".equals(passwd)) {
 			cData = new DriverConnectionData(resourceHost, resourcePort, driver);

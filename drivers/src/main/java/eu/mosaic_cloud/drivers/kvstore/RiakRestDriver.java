@@ -92,9 +92,6 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
 						config,
 						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
 
-		// String bucket = ConfigUtils.resolveParameter(config,
-		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
-		// String.class, "");
 		MosaicLogger sLogger = MosaicLogger.createLogger(RiakRestDriver.class);
 		sLogger.trace(
 				"Created Riak REST driver for host " + host + ":" + port

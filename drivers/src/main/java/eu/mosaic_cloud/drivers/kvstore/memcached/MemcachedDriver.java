@@ -146,10 +146,6 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		// String bucket = ConfigUtils
-		// .resolveParameter(
-		// config,
-		//						ConfigProperties.getString("KVStoreDriver.3"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 		String user = ConfigUtils.resolveParameter(config,
 				ConfigProperties.getString("KVStoreDriver.5"), //$NON-NLS-1$
 				String.class, ""); //$NON-NLS-1$

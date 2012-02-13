@@ -223,7 +223,6 @@ public final class KVDriverComponentCallbacks extends
 			ComponentCallReference reference, boolean success) {
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reference) {
-			// this.pendingReference = null;
 			if (!success) {
 				Exception e = new Exception(
 						"failed registering to group; terminating!"); //$NON-NLS-1$

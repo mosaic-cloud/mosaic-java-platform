@@ -395,7 +395,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 		Channel channel = this.channels.get(clientId);
 		if (channel == null) {
 			channel = this.openChannel(clientId);
-			// this.channels.put(clientId, channel);
 		}
 		return channel;
 	}
@@ -632,7 +631,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 				while (!AmqpDriver.this.connected
 						&& (tries < this.maxReconnectionTries)) {
 					try {
-						// Thread.sleep(this.minReconnectionTime);
 						AmqpDriver.this.wait(this.minReconnectionTime);
 						AmqpDriver.this.connectResource();
 						tries++; // NOPMD by georgiana on 10/12/11 4:23 PM

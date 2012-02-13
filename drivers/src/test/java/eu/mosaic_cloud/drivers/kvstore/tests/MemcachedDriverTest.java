@@ -356,9 +356,6 @@ public class MemcachedDriverTest {
 		testGetBulk();
 		testAdd();
 		testReplace();
-		// FIXME
-		// testAppend();
-		// testPrepend();
 		testDelete();
 	}
 }

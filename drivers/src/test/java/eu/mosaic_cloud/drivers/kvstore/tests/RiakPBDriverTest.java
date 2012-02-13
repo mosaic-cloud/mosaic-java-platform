@@ -130,9 +130,6 @@ public class RiakPBDriverTest {
 	public void testList() {
 		String k1 = RiakPBDriverTest.keyPrefix + "_key_fantastic";
 		String k2 = RiakPBDriverTest.keyPrefix + "_key_famous";
-		// List<String> keys = new ArrayList<String>();
-		// keys.add(k1);
-		// keys.add(k2);
 		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
 				"list");
 		IResult<List<String>> r1 = this.wrapper.invokeListOperation(
@@ -141,7 +138,6 @@ public class RiakPBDriverTest {
 		try {
 			List<String> lresult = r1.getResult();
 			Assert.assertNotNull(lresult);
-			// Assert.assertEquals(keys.size(), lresult.size());
 			Assert.assertTrue(lresult.contains(k1));
 			Assert.assertTrue(lresult.contains(k2));
 		} catch (InterruptedException e) {
@@ -195,8 +191,4 @@ public class RiakPBDriverTest {
 		testList();
 		testDelete();
 	}
-
-	// public static void main(String[] args) {
-	// JUnitCore.main("eu.mosaic_cloud.drivers.kvstore.tests.RiakPBDriverTest");
-	// }
 }

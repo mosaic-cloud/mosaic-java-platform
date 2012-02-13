@@ -132,16 +132,10 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 			@Override
 			public void onSuccess(String result) {
 				synchronized (AmqpQueueConsumer.this.monitor) {
-					//					if (AmqpQueueConsumer.super.registered)
-					//						return;
 					AmqpQueueConsumer.this.logger.trace(
 							"AmqpQueueConsumer: received consume response message, consumer="
 									+ result);
 					AmqpQueueConsumer.this.consumer = result;
-					//					CallbackArguments<S> arguments = new OperationResultCallbackArguments<S, String>(
-					//							AmqpQueueConsumer.super.cloudlet, result);
-					//					AmqpQueueConsumer.this.callback.registerSucceeded(
-					//							AmqpQueueConsumer.this.cloudletcontext, arguments);
 					AmqpQueueConsumer.super.registered = true;
 				}
 			}
@@ -178,15 +172,6 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 				@Override
 				public void onSuccess(Boolean result) {
 					synchronized (AmqpQueueConsumer.this.monitor) {
-						// if (!AmqpQueueConsumer.super.registered)
-						// return;
-						// CallbackArguments<S> arguments = new
-						// OperationResultCallbackArguments<S, Boolean>(
-						// AmqpQueueConsumer.super.cloudlet, result);
-						// AmqpQueueConsumer.this.callback
-						// .unregisterSucceeded(
-						// AmqpQueueConsumer.this.cloudletcontext,
-						// arguments);
 						AmqpQueueConsumer.super.registered = false;
 					}
 				}
@@ -234,17 +219,9 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlers.add(cHandler);
-		// if (!this.autoAck) {
 		AmqpInboundMessage inMssg = message.getMessage();
 		super.getConnector().ack(inMssg.getDelivery(), false, handlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler));
-		// } else {
-		// CallbackArguments<S> arguments = new
-		// OperationResultCallbackArguments<S, Boolean>(
-		// AmqpQueueConsumer.super.cloudlet, true);
-		// callback.acknowledgeSucceeded(
-		// AmqpQueueConsumer.super.cloudletcontext, arguments);
-		// }
 	}
 
 	/**

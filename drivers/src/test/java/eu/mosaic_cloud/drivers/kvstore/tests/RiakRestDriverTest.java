@@ -131,9 +131,6 @@ public class RiakRestDriverTest {
 	public void testList() {
 		String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
 		String k2 = RiakRestDriverTest.keyPrefix + "_key_famous";
-		// List<String> keys = new ArrayList<String>();
-		// keys.add(k1);
-		// keys.add(k2);
 		IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
 				"list");
 		IResult<List<String>> r1 = this.wrapper.invokeListOperation(
@@ -142,7 +139,6 @@ public class RiakRestDriverTest {
 		try {
 			List<String> lresult = r1.getResult();
 			Assert.assertNotNull(lresult);
-			// Assert.assertEquals(keys.size(), lresult.size());
 			Assert.assertTrue(lresult.contains(k1));
 			Assert.assertTrue(lresult.contains(k2));
 		} catch (InterruptedException e) {

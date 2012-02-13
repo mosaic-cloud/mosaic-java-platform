@@ -94,9 +94,6 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
 				.resolveParameter(
 						config,
 						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		// String bucket = ConfigUtils.resolveParameter(config,
-		//				ConfigProperties.getString("KVStoreDriver.3"), //$NON-NLS-1$
-		// String.class, "");
 		MosaicLogger sLogger = MosaicLogger.createLogger(RiakPBDriver.class);
 		sLogger.trace("Created Riak PB driver for host " + host + ":" + port);
 		return new RiakPBDriver(threading, noThreads, host, port);

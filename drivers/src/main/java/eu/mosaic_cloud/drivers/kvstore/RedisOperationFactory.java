@@ -52,7 +52,6 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 		int iBucket = Integer.parseInt(bucket);
 		if (iBucket > -1) {
 			this.redisClient.select(iBucket);
-			// jedis.flushDB();
 		}
 		this.redisClient.connect();
 	}
@@ -200,7 +199,6 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 
 	@Override
 	public void destroy() {
-		// this.redisClient.bgsave(); //TODO
 		this.redisClient.disconnect();
 	}
 

@@ -63,8 +63,6 @@ public enum KeyValueMessage implements MessageSpecification {
 		this.identifier = Identifiers.generate(this);
 		this.type = type;
 		if (clasz != null) {
-			// this.coder = new DefaultJavaSerializationPayloadCoder(clasz,
-			// false);
 			this.coder = new DefaultPBPayloadCoder(clasz, false);
 		}
 	}

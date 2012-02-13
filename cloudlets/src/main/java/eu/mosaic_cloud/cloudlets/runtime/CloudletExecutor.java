@@ -369,13 +369,6 @@ public class CloudletExecutor {
 		if (request == null) {
 			throw new NullPointerException();
 		}
-
-		// if ((runState == RUNNING) && requestQueue.offer(request)) {
-		// if (runState != RUNNING)
-		// ensureQueuedRequestHandled(request);
-		// } else
-		// reject(request); // is shutdown
-
 		this.mainLock.lock();
 		try {
 			if ((this.runState == CloudletExecutor.RUNNING)

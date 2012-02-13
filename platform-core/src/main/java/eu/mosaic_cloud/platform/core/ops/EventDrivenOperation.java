@@ -97,7 +97,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 				IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
 						.newProxyInstance(
 								Threading.getCurrentThread()
-										.getContextClassLoader(),//handler.getClass().getClassLoader(),
+										.getContextClassLoader(),
 								new Class[] { IOperationCompletionHandler.class }, // NOPMD by georgiana on 10/12/11 5:01 PM
 								iHandler);
 				this.completionHandlers.add(proxy);
@@ -165,42 +165,4 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	public List<IOperationCompletionHandler<T>> getCompletionHandlers() {
 		return this.completionHandlers;
 	}
-
-	// private abstract class Task<V> implements Runnable {
-	// private final Callable<V> callable;
-	// private volatile Thread runner; // required when implementing cancel
-	//
-	// public Task(Callable<V> callable) {
-	// this.callable = callable;
-	// }
-	//
-	// void run() {
-	// runner = Thread.currentThread();
-	// V result;
-	// try {
-	// result = callable.call();
-	// } catch (Throwable ex) {
-	// ExceptionTracer.traceDeferred(ex);
-	// setException(ex);
-	// return;
-	// }
-	// finish(result);
-	// }
-	//
-	// private void setException(Throwable ex) {
-	// for (IOperationCompletionHandler handler :
-	// EventDrivenOperation.this.completionHandlers) {
-	// handler.onFailure(ex);
-	// }
-	//
-	// }
-	//
-	// private void finish(V result) {
-	// for (IOperationCompletionHandler handler :
-	// EventDrivenOperation.this.completionHandlers) {
-	// handler.onSuccess(result);
-	// }
-	// }
-	//
-	// }
 }

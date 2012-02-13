@@ -61,7 +61,7 @@ public class FeedParserTest {
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
 			}
-			bytes = builder.toString().getBytes();// toBytes(builder.toString());
+			bytes = builder.toString().getBytes();
 		} catch (Exception e) {
 			Assert.fail();
 		} finally {

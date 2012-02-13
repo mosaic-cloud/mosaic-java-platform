@@ -85,8 +85,6 @@ public class ResourceFinder {
 
 			configuration.addParameter(id1, channel.getChannelIdentifier());
 			configuration.addParameter(id2, channel.getChannelEndpoint());
-			// logger.debug(
-			// "ResourceFinder - config: " + configuration);
 			found = true;
 		}
 

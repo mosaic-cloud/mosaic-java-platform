@@ -172,16 +172,6 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 				}
 				this.connector = AmqpConnector.create(this.configuration,
 						threading);
-	
-				// IOperationCompletionHandler<Boolean> cHandler = new
-				// ConnectionOpenHandler(
-				// callback);
-				// List<IOperationCompletionHandler<Boolean>> handlers = new
-				// ArrayList<IOperationCompletionHandler<Boolean>>();
-				// handlers.add(cHandler);
-				// this.connector.openConnection(handlers,
-				// this.cloudlet.getResponseInvocationHandler(cHandler));
-	
 				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, true);
 				proxy.initializeSucceeded(AmqpQueueAccessor.this.cloudletContext,
@@ -204,14 +194,6 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 			IResourceAccessorCallback<C> proxy = this.cloudlet
 					.buildCallbackInvoker(callback,
 							IResourceAccessorCallback.class);
-			// IOperationCompletionHandler<Boolean> cHandler = new
-			// ConnectionCloseHandler(
-			// callback);
-			// List<IOperationCompletionHandler<Boolean>> handlers = new
-			// ArrayList<IOperationCompletionHandler<Boolean>>();
-			// handlers.add(cHandler);
-			// connector.closeConnection(handlers,
-			// this.cloudlet.getResponseInvocationHandler(cHandler));
 			try {
 				this.logger.trace(
 						"AmqpQueueAccessor is destroying the connector...");

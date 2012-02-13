@@ -175,8 +175,7 @@ public class MessageHandler {
 			if (in[startOfBody] == '\n') { // Reached an end of line
 				if ((startOfBody + 2) < end) {
 					if (in[startOfBody + 1] == '\r'
-							&& in[startOfBody + 2] == '\n') { // We have
-																// finished
+							&& in[startOfBody + 2] == '\n') {
 						startOfBody = startOfBody + 3;
 						break;
 					}
@@ -208,11 +207,6 @@ public class MessageHandler {
 		final String http_version = server_protocol.split("/")[1];
 		final int response_code = Integer.parseInt(http_response_fields[1]);
 		final String response_message = http_response_fields[2];
-
-		// if (response_code > 500) {
-		//	System.out.println("Made a booo");
-		// }
-
 
 		while (true) {
 			final String _line = header_reader.readLine();

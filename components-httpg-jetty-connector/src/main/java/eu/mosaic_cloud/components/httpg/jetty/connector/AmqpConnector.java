@@ -78,7 +78,6 @@ public class AmqpConnector extends AbstractConnector {
 	protected void accept(int acceptorID) throws IOException,
 			InterruptedException {
 		QueueMessage msg = null;
-		// Log.info("Waiting for messages");
 		QueueingConsumer.Delivery delivery;
 		try {
 			delivery = _consumer.nextDelivery();
@@ -210,7 +209,6 @@ public class AmqpConnector extends AbstractConnector {
 
 		@Override
 		public void close() throws IOException {
-			// Log.info("connector close() called!");
 			if (!_closed) {
 				try {
 					sendResponse();
@@ -239,7 +237,6 @@ public class AmqpConnector extends AbstractConnector {
 
 		@Override
 		public void run() {
-			// Log.warn("Running...");
 			try {
 				connectionOpened(getConnection());
 				_connections.add(this);

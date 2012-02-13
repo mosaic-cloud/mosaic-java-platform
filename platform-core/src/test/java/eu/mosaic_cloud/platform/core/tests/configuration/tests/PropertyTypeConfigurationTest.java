@@ -123,16 +123,6 @@ public class PropertyTypeConfigurationTest {
 		String svalue = PropertyTypeConfigurationTest.configuration
 				.getParameter(id, String.class).getValue("");
 		Assert.assertEquals("abac", svalue);
-
-		// id = ConfigurationIdentifier.resolveAbsolute("os/arch");
-		// String ovalue = configuration.getParameter(id,
-		// String.class).getValue(
-		// "");
-		// Assert.assertEquals("x86", ovalue);
-		//
-		// String osvalue = systemConfiguration.getParameter(id, String.class)
-		// .getValue("");
-		// Assert.assertEquals("x86", osvalue);
 	}
 
 	@Test

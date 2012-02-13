@@ -141,7 +141,6 @@ public final class AmqpDriverComponentCallbacks extends
 		Preconditions.checkState(this.component == component);
 		if ((this.pendingReference == reply.reference)
 				&& (this.status == Status.WaitingResourceResolved)) {
-			//					this.pendingReference = null;
 			String rabbitmqTransport;
 			String brokerIp;
 			Integer brokerPort;
@@ -235,7 +234,6 @@ public final class AmqpDriverComponentCallbacks extends
 			ComponentCallReference reference, boolean registerOk) {
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reference) {
-			//				this.pendingReference = null;
 			if (!registerOk) {
 				Exception e = new Exception(
 						"failed registering to group; terminating!"); //$NON-NLS-1$

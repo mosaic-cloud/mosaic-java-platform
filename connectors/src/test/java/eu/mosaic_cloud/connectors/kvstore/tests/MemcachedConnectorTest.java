@@ -383,8 +383,6 @@ public class MemcachedConnectorTest {
 			testGetBulk();
 			testAdd();
 			testReplace();
-			//			testAppend();
-			//			testPrepend();
 			testCas();
 			testList();
 			testDelete();
@@ -433,11 +431,6 @@ public class MemcachedConnectorTest {
 		IResult<String> r3 = connector.get(k1, handlers, null);
 		Preconditions.checkArgument("fantastic".equals(r3.getResult()));
 
-		// String k2 = keyPrefix + "_key_famous";
-		// List<IOperationCompletionHandler<Boolean>> handlers2 = getHandlers(
-		// "set 2");
-		// IResult<Boolean> r2 = connector.set(k2, 30, "famous", handlers2,
-		// null);
 		connector.destroy();
 		driverStub.destroy();
 		threading.destroy();

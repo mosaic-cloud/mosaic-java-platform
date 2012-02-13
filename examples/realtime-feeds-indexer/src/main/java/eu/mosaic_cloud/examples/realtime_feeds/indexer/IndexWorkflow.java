@@ -327,11 +327,6 @@ public class IndexWorkflow {
 		}
 	}
 
-	// public static void sendAcknowledge(Object extra) {
-	// getIndexer((UUID) extra).recvMessage.acknowledge();
-	// logger.trace("finished indexing...");
-	// }
-
 	private void handleError(Exception e) {
 		ExceptionTracer.traceDeferred(e);
 		Map<String, String> errorMssg = new HashMap<String, String>();
@@ -347,7 +342,6 @@ public class IndexWorkflow {
 			errorBuilder.append(entry.getKey() + ": " + entry.getValue());
 		}
 		logger.error(errorBuilder.toString());
-		// getIndexer((UUID) extra).recvMessage.acknowledge();
 	}
 
 }

@@ -174,20 +174,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 				component.callReturn(reply);
 				return null;
 			}
-			// else if (request.operation.equals(ConfigProperties
-			//						.getString("ContainerComponentCallbacks.4"))) { //$NON-NLS-1$
-			// logger.debug(
-			// "mOSAIC container - running test cloudlets");
-			// container = TestRunner.runHelloWorld();
-			// if (container != null)
-			// cloudletRunners.add(container);
-			//
-			// ComponentCallReply reply = ComponentCallReply.create(true,
-			// new Boolean(true), ByteBuffer.allocate(0),
-			// request.reference);
-			// component.reply(reply);
-			// return null;
-			// }
 			else {
 				throw new UnsupportedOperationException();
 			}
@@ -276,7 +262,6 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 
 	public void terminate() {
 		Preconditions.checkState(this.component != null);
-		// System.out.println("ContainerComponentCallbacks.terminate()");
 		this.component.terminate();
 	}
 
