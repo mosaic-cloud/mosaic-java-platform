@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.components.core;
 
 
-
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
@@ -43,8 +42,4 @@ public interface ComponentCallbacks
 	public abstract CallbackReference registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok);
 	
 	public abstract CallbackReference terminated (final ComponentController component);
-	
-	public interface Provider {
-		public abstract ComponentCallbacks provide (final ComponentContext context);
-	}
 }

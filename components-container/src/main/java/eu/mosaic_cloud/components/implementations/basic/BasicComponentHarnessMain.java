@@ -43,6 +43,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.net.SocketAppender;
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
+import eu.mosaic_cloud.components.core.ComponentCallbacksProvider;
 import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
@@ -72,7 +73,7 @@ public final class BasicComponentHarnessMain
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final ComponentCallbacks.Provider componentProvider, final InputStream input, final OutputStream output, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacksProvider componentProvider, final InputStream input, final OutputStream output, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		Preconditions.checkNotNull (componentProvider);
 		Preconditions.checkNotNull (input);
@@ -100,7 +101,7 @@ public final class BasicComponentHarnessMain
 		}
 	}
 	
-	public static final void main (final ComponentCallbacks.Provider callbacksProvider, final ReadableByteChannel input, final WritableByteChannel output, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacksProvider callbacksProvider, final ReadableByteChannel input, final WritableByteChannel output, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		Preconditions.checkNotNull (callbacksProvider);
 		Preconditions.checkNotNull (input);
@@ -123,7 +124,7 @@ public final class BasicComponentHarnessMain
 		reactor.destroy ();
 	}
 	
-	public static final void main (final ComponentCallbacks.Provider componentProvider, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacksProvider componentProvider, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		Preconditions.checkNotNull (componentProvider);
 		Preconditions.checkNotNull (address);
@@ -204,7 +205,7 @@ public final class BasicComponentHarnessMain
 			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while resolving)", componentArgument), exception));
 		}
 		Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (componentClass), "invalid component class `%s` (not an instance of `ComponentCallbacks`)", componentClass.getName ());
-		final ComponentCallbacks.Provider componentProvider = new Provider (componentClass);
+		final ComponentCallbacksProvider componentProvider = new Provider (componentClass);
 		if (loggerArgument != null) {
 			final Logger logger = (Logger) LoggerFactory.getLogger (BasicComponentHarnessMain.class);
 			final String[] loggerParts = loggerArgument.split (":");
@@ -356,7 +357,7 @@ public final class BasicComponentHarnessMain
 	private static final class Provider
 			extends Object
 			implements
-				ComponentCallbacks.Provider
+				ComponentCallbacksProvider
 	{
 		Provider (final Class<?> clasz)
 		{

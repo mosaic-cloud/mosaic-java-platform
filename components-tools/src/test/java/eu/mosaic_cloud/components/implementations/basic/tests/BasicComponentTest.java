@@ -25,7 +25,6 @@ import java.nio.channels.Pipe;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Strings;
-import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
@@ -38,7 +37,6 @@ import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
 import eu.mosaic_cloud.components.tools.tests.RandomMessageGenerator;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;

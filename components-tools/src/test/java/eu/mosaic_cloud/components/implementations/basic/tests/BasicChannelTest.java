@@ -24,10 +24,6 @@ package eu.mosaic_cloud.components.implementations.basic.tests;
 import java.nio.channels.Pipe;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
-
-import eu.mosaic_cloud.tools.transcript.core.Transcript;
-
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelMessage;
@@ -41,6 +37,8 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.Assert;
 import org.junit.Test;

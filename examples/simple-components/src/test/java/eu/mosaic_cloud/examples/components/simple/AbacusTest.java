@@ -26,10 +26,6 @@ import java.nio.channels.Pipe;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
-
-import eu.mosaic_cloud.tools.transcript.core.Transcript;
-
 import com.google.common.base.Strings;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -48,6 +44,8 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.Assert;
 import org.junit.Test;

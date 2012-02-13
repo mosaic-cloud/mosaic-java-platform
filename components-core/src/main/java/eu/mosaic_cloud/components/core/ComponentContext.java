@@ -17,7 +17,9 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.components.core;
+
 
 import java.util.Map;
 
@@ -25,6 +27,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
 
 public final class ComponentContext
 		extends Object

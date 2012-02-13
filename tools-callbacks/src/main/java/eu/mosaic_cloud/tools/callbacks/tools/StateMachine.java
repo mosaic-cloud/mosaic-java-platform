@@ -24,8 +24,6 @@ package eu.mosaic_cloud.tools.callbacks.tools;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.collect.Collections2;
-
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
@@ -53,16 +51,6 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		this.transcript.traceDebugging ("created machine `%{object}`.", this);
 	}
 	
-	protected final void defineState (final _State_ state)
-	{
-		synchronized (this.capsule.monitor) {
-			Preconditions.checkState (this.capsule.currentState.get () == null);
-			final StateDefinition definition = new StateDefinition (state);
-			Preconditions.checkArgument (this.capsule.stateDefinitions[definition.state.ordinal ()] == null);
-			this.capsule.stateDefinitions[definition.state.ordinal ()] = definition;
-		}
-	}
-	
 	public final void execute (final _Transition_ transition, final _State_ finalState, final Runnable operation)
 	{
 		new Transaction (transition).execute (finalState, operation);
@@ -73,8 +61,19 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		new Transaction (transition).execute (operation);
 	}
 	
-	public final void execute (final Runnable operation) {
-		new Accessor().execute (operation);
+	public final void execute (final Runnable operation)
+	{
+		new Accessor ().execute (operation);
+	}
+	
+	protected final void defineState (final _State_ state)
+	{
+		synchronized (this.capsule.monitor) {
+			Preconditions.checkState (this.capsule.currentState.get () == null);
+			final StateDefinition definition = new StateDefinition (state);
+			Preconditions.checkArgument (this.capsule.stateDefinitions[definition.state.ordinal ()] == null);
+			this.capsule.stateDefinitions[definition.state.ordinal ()] = definition;
+		}
 	}
 	
 	protected final void defineStates (final Class<_State_> states)
@@ -88,10 +87,10 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			}
 		}
 	}
-
+	
 	protected final void defineTransition (final _Transition_ transition, final _State_ initialState, final _State_ finalState)
 	{
-		this.defineTransition (transition, (_State_[]) new Enum<?> [] {initialState}, (_State_[]) new Enum<?> [] {finalState});
+		this.defineTransition (transition, (_State_[]) new Enum<?>[] {initialState}, (_State_[]) new Enum<?>[] {finalState});
 	}
 	
 	protected final void defineTransition (final _Transition_ transition, final _State_[] initialStates, final _State_[] finalStates)
@@ -102,6 +101,12 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			Preconditions.checkState (this.capsule.transitionDefinitions[definition.ordinal] == null);
 			this.capsule.transitionDefinitions[definition.ordinal] = definition;
 		}
+	}
+	
+	protected final boolean hasState (final _State_ state)
+	{
+		Preconditions.checkNotNull (state);
+		return (this.capsule.currentState.get () == state);
 	}
 	
 	protected final void initialize (final _State_ state)
@@ -116,12 +121,6 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			Preconditions.checkState (this.capsule.currentState.compareAndSet (null, state));
 			this.transcript.traceDebugging ("initialized machine `%{object}` with state `%s`.", this, state.name ());
 		}
-	}
-	
-	protected final boolean hasState (final _State_ state)
-	{
-		Preconditions.checkNotNull (state);
-		return (this.capsule.currentState.get () == state);
 	}
 	
 	protected final TranscriptExceptionTracer exceptions;
