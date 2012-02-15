@@ -33,9 +33,9 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -76,7 +76,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	}
 
 	@Override
-	public CallbackReference casted(ComponentController component,
+	public CallbackCompletion<Void> casted(ComponentController component,
 			ComponentCastRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
@@ -86,7 +86,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 
 	@Override
 
-	public CallbackReference failed(ComponentController component, Throwable exception) {
+	public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
 				&& (this.status != Status.Unregistered));
@@ -100,7 +100,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 	}
 
 	@Override
-	public CallbackReference terminated(ComponentController component) {
+	public CallbackCompletion<Void> terminated(ComponentController component) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
 				&& (this.status != Status.Unregistered));

@@ -33,7 +33,7 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 
 
 public final class QueueingExceptionTracer
-		extends InterceptingExceptionTracer
+		extends DelegatingExceptionTracer
 {
 	private QueueingExceptionTracer (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate)
 	{

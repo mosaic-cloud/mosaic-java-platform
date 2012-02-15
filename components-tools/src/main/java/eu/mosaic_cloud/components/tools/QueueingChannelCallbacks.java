@@ -30,9 +30,9 @@ import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -59,7 +59,7 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final CallbackReference closed (final ChannelController channel, final ChannelFlow flow)
+	public final CallbackCompletion<Void> closed (final ChannelController channel, final ChannelFlow flow)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		if (flow == ChannelFlow.Inbound)
@@ -68,7 +68,7 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final CallbackReference failed (final ChannelController channel, final Throwable exception)
+	public final CallbackCompletion<Void> failed (final ChannelController channel, final Throwable exception)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		this.exceptions.trace (ExceptionResolution.Ignored, exception);
@@ -82,14 +82,14 @@ public final class QueueingChannelCallbacks
 	}
 	
 	@Override
-	public final CallbackReference initialized (final ChannelController channel)
+	public final CallbackCompletion<Void> initialized (final ChannelController channel)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		return (null);
 	}
 	
 	@Override
-	public final CallbackReference received (final ChannelController channel, final ChannelMessage message)
+	public final CallbackCompletion<Void> received (final ChannelController channel, final ChannelMessage message)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		Preconditions.checkNotNull (message);
@@ -103,7 +103,7 @@ public final class QueueingChannelCallbacks
 	{}
 	
 	@Override
-	public final CallbackReference terminated (final ChannelController channel)
+	public final CallbackCompletion<Void> terminated (final ChannelController channel)
 	{
 		Preconditions.checkArgument (this.channel == channel);
 		return (null);

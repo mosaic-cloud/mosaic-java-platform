@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.tools.exceptions.tools;
 
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 
@@ -29,11 +28,9 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 public abstract class InterceptingExceptionTracer
 		extends BaseExceptionTracer
 {
-	protected InterceptingExceptionTracer (final ExceptionTracer delegate)
+	protected InterceptingExceptionTracer ()
 	{
 		super ();
-		Preconditions.checkNotNull (delegate);
-		this.delegate = delegate;
 	}
 	
 	@Override
@@ -45,7 +42,7 @@ public abstract class InterceptingExceptionTracer
 			// intentional
 		}
 		try {
-			final ExceptionTracer delegate = (this.delegate != null) ? this.delegate : ExceptionTracer.defaultInstance.get ();
+			final ExceptionTracer delegate = this.getDelegate ();
 			if (delegate != null)
 				delegate.trace (resolution, exception);
 		} catch (final Throwable exception1) {
@@ -62,7 +59,7 @@ public abstract class InterceptingExceptionTracer
 			// intentional
 		}
 		try {
-			final ExceptionTracer delegate = (this.delegate != null) ? this.delegate : ExceptionTracer.defaultInstance.get ();
+			final ExceptionTracer delegate = this.getDelegate ();
 			if (delegate != null)
 				delegate.trace (resolution, exception, message);
 		} catch (final Throwable exception1) {
@@ -79,7 +76,7 @@ public abstract class InterceptingExceptionTracer
 			// intentional
 		}
 		try {
-			final ExceptionTracer delegate = (this.delegate != null) ? this.delegate : ExceptionTracer.defaultInstance.get ();
+			final ExceptionTracer delegate = this.getDelegate ();
 			if (delegate != null)
 				delegate.trace (resolution, exception, format, tokens);
 		} catch (final Throwable exception1) {
@@ -87,11 +84,11 @@ public abstract class InterceptingExceptionTracer
 		}
 	}
 	
+	protected abstract ExceptionTracer getDelegate ();
+	
 	protected abstract void trace_ (final ExceptionResolution resolution, final Throwable exception);
 	
 	protected abstract void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message);
 	
 	protected abstract void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens);
-	
-	protected final ExceptionTracer delegate;
 }

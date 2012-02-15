@@ -43,7 +43,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * This callback class enables the Key Value store driver to be exposed as a
@@ -89,7 +89,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference called(ComponentController component,
+	public CallbackCompletion<Void> called(ComponentController component,
 			ComponentCallRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions
@@ -135,7 +135,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference callReturned(ComponentController component,
+	public CallbackCompletion<Void> callReturned(ComponentController component,
 			ComponentCallReply reply) {
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reply.reference) {
@@ -193,7 +193,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference initialized(ComponentController component) {
+	public CallbackCompletion<Void> initialized(ComponentController component) {
 		Preconditions.checkState(this.component == null);
 		Preconditions.checkState(this.status == Status.Created);
 		this.component = component;
@@ -219,7 +219,7 @@ public final class KVDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference registerReturned(ComponentController component,
+	public CallbackCompletion<Void> registerReturned(ComponentController component,
 			ComponentCallReference reference, boolean success) {
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reference) {

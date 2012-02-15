@@ -43,7 +43,6 @@ import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingConte
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -95,7 +94,7 @@ public final class BasicComponentTest
 		Assert.assertTrue (component.await (BasicComponentTest.defaultPollTimeout * 10));
 		Assert.assertTrue (component.destroy (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (channel.destroy (BasicComponentTest.defaultPollTimeout));
-		Assert.assertTrue (componentCallbacksIsolate.destroy (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (componentCallbacksIsolate.destroy ().await (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (reactor.destroy (BasicComponentTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (BasicComponentTest.defaultPollTimeout));
 		Assert.assertNull (exceptionsQueue.queue.poll ());

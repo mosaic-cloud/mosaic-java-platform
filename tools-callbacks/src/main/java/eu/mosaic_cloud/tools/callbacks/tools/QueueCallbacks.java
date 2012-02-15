@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.tools.callbacks.tools;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
@@ -29,5 +29,5 @@ public interface QueueCallbacks<_Element_ extends Object>
 		extends
 			Callbacks
 {
-	public abstract CallbackReference enqueue (final _Element_ value);
+	public abstract CallbackCompletion<Void> enqueue (final _Element_ value);
 }

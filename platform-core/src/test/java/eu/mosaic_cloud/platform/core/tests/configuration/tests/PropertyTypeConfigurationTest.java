@@ -25,7 +25,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

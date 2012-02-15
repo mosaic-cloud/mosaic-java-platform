@@ -36,7 +36,6 @@ import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponent;
-import eu.mosaic_cloud.components.implementations.basic.tests.BasicComponentTest;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
@@ -47,7 +46,6 @@ import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingConte
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -81,14 +79,14 @@ public class AbacusTest
 		final ComponentController clientComponentController = clientComponent.getController ();
 		final ComponentCallbacks serverComponentCallbacksProxy = reactor.createProxy (ComponentCallbacks.class);
 		final ComponentCallbacks clientComponentCallbacksProxy = reactor.createProxy (ComponentCallbacks.class);
-		Assert.assertTrue (serverComponentController.bind (serverComponentCallbacksProxy, serverChannel.getController ()).await (BasicComponentTest.defaultPollTimeout));
-		Assert.assertTrue (clientComponentController.bind (clientComponentCallbacksProxy, clientChannel.getController ()).await (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (serverComponentController.bind (serverComponentCallbacksProxy, serverChannel.getController ()).await (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (clientComponentController.bind (clientComponentCallbacksProxy, clientChannel.getController ()).await (AbacusTest.defaultPollTimeout));
 		final AbacusComponentCallbacks serverComponentCallbacks = new AbacusComponentCallbacks (ComponentContext.create (serverComponentController, this.getClass ().getClassLoader (), reactor, threading, exceptions));
 		final QueueingComponentCallbacks clientComponentCallbacks = QueueingComponentCallbacks.create (clientComponentController, exceptions);
 		final CallbackIsolate serverComponentCallbacksIsolate = reactor.createIsolate ();
 		final CallbackIsolate clientComponentCallbacksIsolate = reactor.createIsolate ();
-		Assert.assertTrue (reactor.assignHandler (serverComponentCallbacksProxy, serverComponentCallbacks, serverComponentCallbacksIsolate).await (BasicComponentTest.defaultPollTimeout));
-		Assert.assertTrue (reactor.assignHandler (clientComponentCallbacksProxy, clientComponentCallbacks, clientComponentCallbacksIsolate).await (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.assignHandler (serverComponentCallbacksProxy, serverComponentCallbacks, serverComponentCallbacksIsolate).await (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (reactor.assignHandler (clientComponentCallbacksProxy, clientComponentCallbacks, clientComponentCallbacksIsolate).await (AbacusTest.defaultPollTimeout));
 		final ComponentIdentifier peer = ComponentIdentifier.resolve (Strings.repeat ("00", 20));
 		for (int index = 0; index < AbacusTest.defaultTries; index++) {
 			final double operandA = (int) (Math.random () * 10);
@@ -110,8 +108,8 @@ public class AbacusTest
 		Assert.assertTrue (clientComponent.destroy (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (serverChannel.destroy (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (clientChannel.destroy (AbacusTest.defaultPollTimeout));
-		Assert.assertTrue (serverComponentCallbacksIsolate.destroy (BasicComponentTest.defaultPollTimeout));
-		Assert.assertTrue (clientComponentCallbacksIsolate.destroy (BasicComponentTest.defaultPollTimeout));
+		Assert.assertTrue (serverComponentCallbacksIsolate.destroy ().await (AbacusTest.defaultPollTimeout));
+		Assert.assertTrue (clientComponentCallbacksIsolate.destroy ().await (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (reactor.destroy (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (AbacusTest.defaultPollTimeout));
 		Assert.assertNull (exceptionsQueue.queue.poll ());

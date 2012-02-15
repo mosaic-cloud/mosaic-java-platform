@@ -30,7 +30,6 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
-
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerScheduler;

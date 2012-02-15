@@ -32,7 +32,7 @@ import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackReference created (final Session session)
+	public final synchronized CallbackCompletion<Void> created (final Session session)
 	{
 		Preconditions.checkState (this.session == null);
 		final OutcomeFuture<Boolean> future = (OutcomeFuture<Boolean>) this.futures.remove (Long.valueOf (0));
@@ -62,7 +62,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackReference destroyed (final Session session)
+	public final synchronized CallbackCompletion<Void> destroyed (final Session session)
 	{
 		Preconditions.checkState (this.session == session);
 		synchronized (this.futures) {
@@ -74,7 +74,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackReference failed (final Session session, final Throwable exception)
+	public final synchronized CallbackCompletion<Void> failed (final Session session, final Throwable exception)
 	{
 		Preconditions.checkState (this.session == session);
 		return (null);
@@ -111,7 +111,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackReference received (final Session session, final Message message)
+	public final synchronized CallbackCompletion<Void> received (final Session session, final Message message)
 	{
 		Preconditions.checkState (this.session == session);
 		switch ((KvMessage) message.specification) {

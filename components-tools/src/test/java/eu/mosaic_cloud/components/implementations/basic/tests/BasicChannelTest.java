@@ -39,7 +39,6 @@ import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingConte
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -78,7 +77,7 @@ public final class BasicChannelTest
 		}
 		pipe.sink ().close ();
 		Assert.assertTrue (channel.destroy (BasicChannelTest.defaultPollTimeout));
-		Assert.assertTrue (channelCallbacksIsolate.destroy (BasicChannelTest.defaultPollTimeout));
+		Assert.assertTrue (channelCallbacksIsolate.destroy ().await (BasicChannelTest.defaultPollTimeout));
 		Assert.assertTrue (reactor.destroy (BasicChannelTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (BasicChannelTest.defaultPollTimeout));
 		Assert.assertNull (exceptionsQueue.queue.poll ());

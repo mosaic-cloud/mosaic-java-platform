@@ -21,11 +21,8 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import java.util.concurrent.ExecutionException;
-
-
 public final class CallbackCanceled
-		extends ExecutionException
+		extends Throwable
 {
 	private static final long serialVersionUID = 1L;
 }

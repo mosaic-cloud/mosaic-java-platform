@@ -4,9 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.zeromq.ZMQ.Socket;
-
 import org.junit.Test;
+import org.zeromq.ZMQ.Socket;
 
 /**
  * Tests ZFrame class

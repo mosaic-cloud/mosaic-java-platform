@@ -31,7 +31,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Base class for connector proxys.
@@ -147,25 +147,25 @@ public class ConnectorProxy implements SessionCallbacks {
 	}
 
 	@Override
-	public CallbackReference created(Session session) {
+	public CallbackCompletion<Void> created(Session session) {
 		this.responseReactor.sessionCreated(session);
 		return null;
 	}
 
 	@Override
-	public CallbackReference destroyed(Session session) {
+	public CallbackCompletion<Void> destroyed(Session session) {
 		this.responseReactor.sessionDestroyed(session);
 		return null;
 	}
 
 	@Override
-	public CallbackReference failed(Session session, Throwable exception) {
+	public CallbackCompletion<Void> failed(Session session, Throwable exception) {
 		this.responseReactor.sessionFailed(session, exception);
 		return null;
 	}
 
 	@Override
-	public CallbackReference received(Session session, Message message) {
+	public CallbackCompletion<Void> received(Session session, Message message) {
 		try {
 			this.responseReactor.processResponse(message);
 		} catch (IOException e) {

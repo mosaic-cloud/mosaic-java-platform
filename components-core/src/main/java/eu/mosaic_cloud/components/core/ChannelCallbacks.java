@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.components.core;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
@@ -29,13 +29,13 @@ public interface ChannelCallbacks
 		extends
 			Callbacks
 {
-	public abstract CallbackReference closed (final ChannelController channel, final ChannelFlow flow);
+	public abstract CallbackCompletion<Void> closed (final ChannelController channel, final ChannelFlow flow);
 	
-	public abstract CallbackReference failed (final ChannelController channel, final Throwable exception);
+	public abstract CallbackCompletion<Void> failed (final ChannelController channel, final Throwable exception);
 	
-	public abstract CallbackReference initialized (final ChannelController channel);
+	public abstract CallbackCompletion<Void> initialized (final ChannelController channel);
 	
-	public abstract CallbackReference received (final ChannelController channel, final ChannelMessage message);
+	public abstract CallbackCompletion<Void> received (final ChannelController channel, final ChannelMessage message);
 	
-	public abstract CallbackReference terminated (final ChannelController channel);
+	public abstract CallbackCompletion<Void> terminated (final ChannelController channel);
 }

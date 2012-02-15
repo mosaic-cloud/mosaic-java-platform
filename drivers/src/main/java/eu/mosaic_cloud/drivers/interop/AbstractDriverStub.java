@@ -33,7 +33,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 
 /**
@@ -117,7 +117,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	}
 
 	@Override
-	public CallbackReference received(Session session, Message message) {
+	public CallbackCompletion<Void> received(Session session, Message message) {
 		try {
 			startOperation(message, session);
 		} catch (IOException e) {
@@ -129,7 +129,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	}
 
 	@Override
-	public CallbackReference created(Session session) {
+	public CallbackCompletion<Void> created(Session session) {
 		// TODO handle session created
 		if (!this.sessions.contains(session)) {
 			this.sessions.add(session);
@@ -138,7 +138,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	}
 
 	@Override
-	public CallbackReference destroyed(Session session) {
+	public CallbackCompletion<Void> destroyed(Session session) {
 		// handle session destroyed
 		this.logger.trace("Session destroyed.");
 		this.sessions.remove(session);
@@ -146,7 +146,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 	}
 
 	@Override
-	public CallbackReference failed(Session session, Throwable exception) {
+	public CallbackCompletion<Void> failed(Session session, Throwable exception) {
 		this.logger.error("Session failed");
 		return null;
 	}

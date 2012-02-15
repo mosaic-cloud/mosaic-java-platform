@@ -36,7 +36,6 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

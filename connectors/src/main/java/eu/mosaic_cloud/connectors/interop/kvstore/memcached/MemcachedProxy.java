@@ -240,7 +240,7 @@ public final class MemcachedProxy<T extends Object> extends KeyValueProxy<T> {
 				break;
 			}
 
-			// store token and completion handlers
+			// store token and future handlers
 			super.registerHandlers(identifier, handlers);
 
 			super.sendRequest(

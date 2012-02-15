@@ -28,15 +28,15 @@ public interface CallbackReactor
 		extends
 			Joinable
 {
-	public abstract <_Callbacks_ extends Callbacks> CallbackReference assignDelegate (final _Callbacks_ proxy, _Callbacks_ delegate);
+	public abstract <_Callbacks_ extends Callbacks> CallbackCompletion<Void> assignDelegate (final _Callbacks_ proxy, _Callbacks_ delegate);
 	
-	public abstract <_Callbacks_ extends Callbacks> CallbackReference assignHandler (final _Callbacks_ proxy, final CallbackHandler handler, final CallbackIsolate isolate);
+	public abstract <_Callbacks_ extends Callbacks> CallbackCompletion<Void> assignHandler (final _Callbacks_ proxy, final CallbackHandler handler, final CallbackIsolate isolate);
 	
 	public abstract CallbackIsolate createIsolate ();
 	
 	public abstract <_Callbacks_ extends Callbacks> _Callbacks_ createProxy (final Class<_Callbacks_> specification);
 	
-	public abstract CallbackReference destroyIsolate (final CallbackIsolate isolate);
+	public abstract CallbackCompletion<Void> destroyIsolate (final CallbackIsolate isolate);
 	
-	public abstract <_Callbacks_ extends Callbacks> CallbackReference destroyProxy (final _Callbacks_ proxy);
+	public abstract <_Callbacks_ extends Callbacks> CallbackCompletion<Void> destroyProxy (final _Callbacks_ proxy);
 }

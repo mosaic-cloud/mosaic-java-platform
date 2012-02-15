@@ -31,9 +31,14 @@ public final class FanoutExceptionTracer
 {
 	private FanoutExceptionTracer (final ExceptionTracer[] delegates)
 	{
-		super (NullExceptionTracer.defaultInstance);
 		Preconditions.checkNotNull (delegates);
 		this.delegates = delegates;
+	}
+	
+	@Override
+	protected final ExceptionTracer getDelegate ()
+	{
+		return (null);
 	}
 	
 	@Override

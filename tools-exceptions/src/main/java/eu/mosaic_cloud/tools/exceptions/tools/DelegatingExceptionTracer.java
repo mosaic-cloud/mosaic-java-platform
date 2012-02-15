@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-interoperability-core
+ * mosaic-tools-exceptions
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,22 +18,28 @@
  * #L%
  */
 
-package eu.mosaic_cloud.interoperability.core;
+package eu.mosaic_cloud.tools.exceptions.tools;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 
 
-public interface SessionCallbacks
-		extends
-			Callbacks
+public abstract class DelegatingExceptionTracer
+		extends InterceptingExceptionTracer
 {
-	public abstract CallbackCompletion<Void> created (final Session session);
+	protected DelegatingExceptionTracer (final ExceptionTracer delegate)
+	{
+		super ();
+		Preconditions.checkNotNull (delegate);
+		this.delegate = delegate;
+	}
 	
-	public abstract CallbackCompletion<Void> destroyed (final Session session);
+	@Override
+	protected final ExceptionTracer getDelegate ()
+	{
+		return (this.delegate);
+	}
 	
-	public abstract CallbackCompletion<Void> failed (final Session session, final Throwable exception);
-	
-	public abstract CallbackCompletion<Void> received (final Session session, final Message message);
+	protected final ExceptionTracer delegate;
 }

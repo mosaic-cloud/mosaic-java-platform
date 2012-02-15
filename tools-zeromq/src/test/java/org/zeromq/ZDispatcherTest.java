@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -195,6 +196,7 @@ public class ZDispatcherTest {
     }
 
     @Test
+    @Ignore
     public void dispatcherPerformanceTest() throws InterruptedException {
         final int nMessages = 1000000;
         final CountDownLatch latch = new CountDownLatch(nMessages);

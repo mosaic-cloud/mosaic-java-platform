@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.components.core.ComponentContext;
-
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
@@ -40,6 +38,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
+import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -48,15 +47,14 @@ import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 /**
  * This callback class enables the container to communicate with other platform
@@ -144,7 +142,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference called(ComponentController component,
+	public CallbackCompletion<Void> called(ComponentController component,
 			ComponentCallRequest request) {
 		List<CloudletManager> containers = null;
 		Preconditions.checkState(this.component == component);
@@ -246,7 +244,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference callReturned(ComponentController component,
+	public CallbackCompletion<Void> callReturned(ComponentController component,
 			ComponentCallReply reply) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status == Status.Ready);
@@ -266,7 +264,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference casted(ComponentController component,
+	public CallbackCompletion<Void> casted(ComponentController component,
 			ComponentCastRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
@@ -275,7 +273,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference failed(ComponentController component, Throwable exception) {
+	public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
 		logger.trace("ComponentController container failed " + exception.getMessage());
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status != Status.Terminated);
@@ -291,7 +289,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference initialized(ComponentController component) {
+	public CallbackCompletion<Void> initialized(ComponentController component) {
 		Preconditions.checkState(this.component == null);
 		Preconditions.checkState(this.status == Status.Created);
 		this.component = component;
@@ -306,7 +304,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference registerReturned(ComponentController component,
+	public CallbackCompletion<Void> registerReturned(ComponentController component,
 			ComponentCallReference reference, boolean ok) {
 		Preconditions.checkState(this.component == component);
 		OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
@@ -340,7 +338,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference terminated(ComponentController component) {
+	public CallbackCompletion<Void> terminated(ComponentController component) {
 		logger.info("Container component callback terminating.");
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status != Status.Terminated);

@@ -36,9 +36,9 @@ import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
@@ -87,7 +87,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference called (final ComponentController component, final ComponentCallRequest request)
+	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -97,7 +97,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference callReturned (final ComponentController component, final ComponentCallReply reply)
+	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -155,7 +155,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference casted (final ComponentController component, final ComponentCastRequest request)
+	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -165,7 +165,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference failed (final ComponentController component, final Throwable exception)
+	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -186,7 +186,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference initialized (final ComponentController component)
+	public final CallbackCompletion<Void> initialized (final ComponentController component)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == null);
@@ -211,7 +211,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
+	public final CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
@@ -238,7 +238,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference terminated (final ComponentController component)
+	public final CallbackCompletion<Void> terminated (final ComponentController component)
 	{
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);

@@ -24,7 +24,6 @@ package eu.mosaic_cloud.tools.callbacks.implementations.basic.tests;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.AccessorOperation;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.TransactionOperation;
-
 import org.junit.Test;
 
 

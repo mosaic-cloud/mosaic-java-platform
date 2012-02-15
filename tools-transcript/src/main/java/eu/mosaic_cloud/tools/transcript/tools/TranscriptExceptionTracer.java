@@ -24,12 +24,12 @@ package eu.mosaic_cloud.tools.transcript.tools;
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.InterceptingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.DelegatingExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.TranscriptBackend;
 
 
 public final class TranscriptExceptionTracer
-		extends InterceptingExceptionTracer
+		extends DelegatingExceptionTracer
 {
 	private TranscriptExceptionTracer (final TranscriptBackend transcript, final ExceptionTracer delegate)
 	{

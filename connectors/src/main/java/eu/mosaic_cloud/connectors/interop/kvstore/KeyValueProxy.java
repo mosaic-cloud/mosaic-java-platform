@@ -175,7 +175,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 		message = new Message(KeyValueMessage.DELETE_REQUEST,
 				requestBuilder.build());
 
-		// store token and completion handlers
+		// store token and future handlers
 		super.registerHandlers(identifier, handlers);
 
 		try {
@@ -210,7 +210,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 		Message message = new Message(KeyValueMessage.LIST_REQUEST,
 				requestBuilder.build());
 
-		// store token and completion handlers
+		// store token and future handlers
 		super.registerHandlers(identifier, handlers);
 		try {
 			super.sendRequest(
@@ -252,7 +252,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 			Message message = new Message(KeyValueMessage.SET_REQUEST,
 					requestBuilder.build());
 
-			// store token and completion handlers
+			// store token and future handlers
 			super.registerHandlers(identifier, handlers);
 
 			super.sendRequest(
@@ -287,7 +287,7 @@ public class KeyValueProxy<T extends Object> extends ConnectorProxy {
 		Message message = new Message(KeyValueMessage.GET_REQUEST,
 				requestBuilder.build());
 
-		// store token and completion handlers
+		// store token and future handlers
 		super.registerHandlers(identifier, handlers);
 
 		try {

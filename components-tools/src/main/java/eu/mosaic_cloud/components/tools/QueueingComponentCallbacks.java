@@ -33,9 +33,9 @@ import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentMessage;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -62,7 +62,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference called (final ComponentController component, final ComponentCallRequest request)
+	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (request);
@@ -72,7 +72,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference callReturned (final ComponentController component, final ComponentCallReply reply)
+	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply)
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (reply);
@@ -82,7 +82,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference casted (final ComponentController component, final ComponentCastRequest request)
+	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request)
 	{
 		Preconditions.checkArgument (this.component == component);
 		Preconditions.checkNotNull (request);
@@ -92,7 +92,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference failed (final ComponentController component, final Throwable exception)
+	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception)
 	{
 		Preconditions.checkArgument (this.component == component);
 		this.exceptions.trace (ExceptionResolution.Ignored, exception);
@@ -106,7 +106,7 @@ public final class QueueingComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackReference initialized (final ComponentController component)
+	public final CallbackCompletion<Void> initialized (final ComponentController component)
 	{
 		Preconditions.checkArgument (this.component == component);
 		return (null);
@@ -117,13 +117,13 @@ public final class QueueingComponentCallbacks
 	{}
 	
 	@Override
-	public final CallbackReference registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
+	public final CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
 	{
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final CallbackReference terminated (final ComponentController component)
+	public final CallbackCompletion<Void> terminated (final ComponentController component)
 	{
 		Preconditions.checkArgument (this.component == component);
 		return (null);

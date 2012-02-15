@@ -264,8 +264,6 @@ public final class BasicComponentHarnessMain
 		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument);
 	}
 	
-	private static final long defaultPollTimeout = 100;
-	
 	private static final class Piper
 			extends Object
 			implements

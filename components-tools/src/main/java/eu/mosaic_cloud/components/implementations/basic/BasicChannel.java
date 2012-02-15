@@ -22,7 +22,6 @@ package eu.mosaic_cloud.components.implementations.basic;
 
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -36,18 +35,19 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.google.common.base.Functions;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Futures;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageCoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor.Completion;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.IgnoredException;
@@ -141,7 +141,6 @@ public final class BasicChannel
 				}
 				{
 					this.reactor = reactor;
-					this.reactorReference = new WeakReference<CallbackReactor> (this.reactor);
 					this.controllerProxy = this.reactor.createProxy (ChannelController.class);
 					this.callbacksProxy = this.reactor.createProxy (ChannelCallbacks.class);
 				}
@@ -163,16 +162,15 @@ public final class BasicChannel
 		}
 		
 		@Override
-		public final CallbackReference bind (final ChannelCallbacks delegate)
+		public final CallbackCompletion<Void> bind (final ChannelCallbacks delegate)
 		{
 			this.transcript.traceDebugging ("assigning callbacks...");
 			return (this.reactor.assignDelegate (this.callbacksProxy, delegate));
 		}
 		
 		@Override
-		public final CallbackReference close (final ChannelFlow flow)
+		public final CallbackCompletion<Void> close (final ChannelFlow flow)
 		{
-			final Completion completion = new Completion (this.reactorReference);
 			try {
 				Preconditions.checkNotNull (flow);
 				synchronized (this.monitor) {
@@ -197,17 +195,15 @@ public final class BasicChannel
 							throw (new AssertionError ());
 					}
 				}
-				completion.triggerSuccess ();
+				return (CallbackCompletion.createOutcome ());
 			} catch (final Throwable exception) {
-				completion.triggerFailure (exception);
+				return (CallbackCompletion.createFailure (exception));
 			}
-			return (completion.reference);
 		}
 		
 		@Override
-		public final CallbackReference send (final ChannelMessage message)
+		public final CallbackCompletion<Void> send (final ChannelMessage message)
 		{
-			final Completion completion = new Completion (this.reactorReference);
 			try {
 				this.transcript.traceDebugging ("sending message...");
 				Preconditions.checkNotNull (message);
@@ -215,19 +211,18 @@ public final class BasicChannel
 					if (!Threading.offer (this.outboundMessages, message, this.pollTimeout))
 						throw (new BufferOverflowException ());
 				}
-				completion.triggerSuccess ();
+				return (CallbackCompletion.createOutcome ());
 			} catch (final Throwable exception) {
-				completion.triggerFailure (exception);
+				return (CallbackCompletion.createFailure (exception));
 			}
-			return (completion.reference);
 		}
 		
 		@Override
-		public final CallbackReference terminate ()
+		public final CallbackCompletion<Void> terminate ()
 		{
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("terminating...");
-				return (CallbackReference.create (this.reactorReference, this.stop ()));
+				return (CallbackCompletion.createDeferred (Futures.transform (this.stop (), Functions.constant ((Void) null))));
 			}
 		}
 		
@@ -293,7 +288,6 @@ public final class BasicChannel
 		final WritableByteChannel output;
 		final long pollTimeout;
 		final CallbackReactor reactor;
-		final WeakReference<CallbackReactor> reactorReference;
 		final Selector selector;
 		final ThreadingContext threading;
 		final Transcript transcript;

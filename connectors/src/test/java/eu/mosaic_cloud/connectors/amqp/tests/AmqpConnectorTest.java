@@ -38,7 +38,6 @@ import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

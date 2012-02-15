@@ -39,10 +39,10 @@ import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -104,9 +104,9 @@ public final class BasicComponent
 			extends
 				Callbacks
 	{
-		public abstract CallbackReference destroy ();
+		public abstract CallbackCompletion<Void> destroy ();
 		
-		public abstract CallbackReference initialize ();
+		public abstract CallbackCompletion<Void> initialize ();
 	}
 	
 	static enum Action
@@ -153,7 +153,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference bind (final ComponentCallbacks componentCallbacks, final ChannelController channelController)
+		public final CallbackCompletion<Void> bind (final ComponentCallbacks componentCallbacks, final ChannelController channelController)
 		{
 			this.execute (Transition.Bind, State.Binding, new Runnable () {
 				@Override
@@ -172,7 +172,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference call (final ComponentIdentifier identifier, final ComponentCallRequest request)
+		public final CallbackCompletion<Void> call (final ComponentIdentifier identifier, final ComponentCallRequest request)
 		{
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
@@ -197,7 +197,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference callReturn (final ComponentCallReply reply)
+		public final CallbackCompletion<Void> callReturn (final ComponentCallReply reply)
 		{
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
@@ -222,7 +222,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference cast (final ComponentIdentifier identifier, final ComponentCastRequest request)
+		public final CallbackCompletion<Void> cast (final ComponentIdentifier identifier, final ComponentCastRequest request)
 		{
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
@@ -243,7 +243,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference closed (final ChannelController channelController, final ChannelFlow flow)
+		public final CallbackCompletion<Void> closed (final ChannelController channelController, final ChannelFlow flow)
 		{
 			this.execute (new Runnable () {
 				@Override
@@ -257,7 +257,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference destroy ()
+		public final CallbackCompletion<Void> destroy ()
 		{
 			this.execute (new Runnable () {
 				@Override
@@ -277,7 +277,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference failed (final ChannelController channelController, final Throwable exception)
+		public final CallbackCompletion<Void> failed (final ChannelController channelController, final Throwable exception)
 		{
 			this.exceptions.traceIgnoredException (exception);
 			throw (new UnsupportedOperationException ());
@@ -291,7 +291,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference initialize ()
+		public final CallbackCompletion<Void> initialize ()
 		{
 			this.execute (Transition.Initialize, State.Initialized, new Runnable () {
 				@Override
@@ -312,7 +312,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference initialized (final ChannelController channelController)
+		public final CallbackCompletion<Void> initialized (final ChannelController channelController)
 		{
 			this.execute (Transition.Binding, State.Ready, new Runnable () {
 				@Override
@@ -326,7 +326,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference received (final ChannelController channelController, final ChannelMessage message)
+		public final CallbackCompletion<Void> received (final ChannelController channelController, final ChannelMessage message)
 		{
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
@@ -348,7 +348,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference register (final ComponentIdentifier identifier, final ComponentCallReference reference)
+		public final CallbackCompletion<Void> register (final ComponentIdentifier identifier, final ComponentCallReference reference)
 		{
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
@@ -396,7 +396,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference terminate ()
+		public final CallbackCompletion<Void> terminate ()
 		{
 			this.execute (Transition.Terminate, State.Terminating, new Runnable () {
 				@Override
@@ -410,7 +410,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackReference terminated (final ChannelController channelController)
+		public final CallbackCompletion<Void> terminated (final ChannelController channelController)
 		{
 			this.execute (Transition.Terminating, State.Terminated, new Runnable () {
 				@Override

@@ -274,7 +274,7 @@ public final class AmqpProxy extends ConnectorProxy {
 	private <V extends Object> void sendMessage(Message message,
 			CompletionToken token, List<IOperationCompletionHandler<V>> handlers) {
 		try {
-			// store token and completion handlers
+			// store token and future handlers
 			super.registerHandlers(token.getMessageId(), handlers);
 			super.sendRequest(getResponseReactor(AmqpConnectorReactor.class)
 					.getSession(), message);

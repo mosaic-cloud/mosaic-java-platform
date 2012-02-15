@@ -21,10 +21,207 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
+import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
+import eu.mosaic_cloud.tools.callbacks.tools.FutureCallbackCompletionBackend;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.Joinable;
 
 
-public interface CallbackCompletion
-		extends
-			ListenableFuture<Boolean>
-{}
+public final class CallbackCompletion<_Outcome_ extends Object>
+		extends Object
+		implements
+			Joinable
+{
+	private CallbackCompletion (final _Outcome_ outcome)
+	{
+		super ();
+		this.backend = null;
+		this.exception = null;
+		this.outcome = outcome;
+	}
+	
+	private CallbackCompletion (final CallbackCompletionBackend backend)
+	{
+		super ();
+		Preconditions.checkNotNull (backend);
+		this.backend = backend;
+		this.exception = null;
+		this.outcome = (_Outcome_) CallbackCompletion.unknownOutcome;
+	}
+	
+	private CallbackCompletion (final Throwable exception)
+	{
+		super ();
+		Preconditions.checkNotNull (exception);
+		this.backend = null;
+		this.exception = exception;
+		this.outcome = (_Outcome_) CallbackCompletion.exceptionOutcome;
+	}
+	
+	@Override
+	public final boolean await ()
+	{
+		return (this.await (-1));
+	}
+	
+	@Override
+	public final boolean await (final long timeout)
+	{
+		if (this.outcome != CallbackCompletion.unknownOutcome)
+			return (true);
+		assert (this.backend != null);
+		try {
+			return (this.backend.awaitCompletion (this, timeout));
+		} catch (final Throwable exception) {
+			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			return (false);
+		}
+	}
+	
+	public final Throwable getException ()
+	{
+		if (!this.isCompleted ())
+			throw (new IllegalStateException ());
+		if (this.outcome != CallbackCompletion.exceptionOutcome)
+			throw (new IllegalStateException ());
+		assert (this.exception != null);
+		return (this.exception);
+	}
+	
+	public final _Outcome_ getOutcome ()
+	{
+		if (!this.isCompleted ())
+			throw (new IllegalStateException ());
+		if (this.outcome == CallbackCompletion.exceptionOutcome)
+			throw (new IllegalStateException ());
+		assert (this.exception == null);
+		return (this.outcome);
+	}
+	
+	public final CallbackReactor getReactor ()
+	{
+		if (this.backend == null)
+			return (null);
+		try {
+			return (this.backend.getReactor ());
+		} catch (final Throwable exception) {
+			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			return (null);
+		}
+	}
+	
+	public final boolean isCompleted ()
+	{
+		if (this.outcome == CallbackCompletion.unknownOutcome)
+			try {
+				if (!this.backend.awaitCompletion (this, 0))
+					return (false);
+			} catch (final Throwable exception) {
+				ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+				return (false);
+			}
+		if (this.outcome == CallbackCompletion.exceptionOutcome)
+			return (true);
+		assert (this.backend != null);
+		try {
+			final Throwable exception = this.backend.getCompletionException (this);
+			if (exception == null)
+				this.outcome = (_Outcome_) this.backend.getCompletionOutcome (this);
+			else {
+				this.exception = exception;
+				this.outcome = (_Outcome_) CallbackCompletion.exceptionOutcome;
+			}
+			return (true);
+		} catch (final Throwable exception) {
+			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			return (false);
+		}
+	}
+	
+	public final void observe (final CallbackCompletionObserver observer)
+	{
+		Preconditions.checkNotNull (observer);
+		Preconditions.checkArgument (observer instanceof CallbackProxy);
+		try {
+			if (this.backend != null)
+				this.backend.observeCompletion (this, observer);
+			else
+				observer.completed (this);
+		} catch (final Throwable exception) {
+			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+		}
+	}
+	
+	final CallbackCompletionBackend backend;
+	private volatile Throwable exception;
+	private volatile _Outcome_ outcome;
+	
+	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createDeferred (final CallbackCompletionBackend backend)
+	{
+		return (new CallbackCompletion<_Outcome_> (backend));
+	}
+	
+	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createDeferred (final ListenableFuture<_Outcome_> future)
+	{
+		return (FutureCallbackCompletionBackend.createCompletion (future));
+	}
+	
+	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createFailure (final Throwable exception)
+	{
+		return (new CallbackCompletion<_Outcome_> (exception));
+	}
+	
+	public static final CallbackCompletion<Void> createOutcome ()
+	{
+		return (CallbackCompletion.createOutcome ((Void) null));
+	}
+	
+	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createOutcome (final _Outcome_ outcome)
+	{
+		return (new CallbackCompletion<_Outcome_> (outcome));
+	}
+	
+	public static final CallbackCompletion<Boolean> createOutcome (final boolean outcome)
+	{
+		return (CallbackCompletion.createOutcome (Boolean.valueOf (outcome)));
+	}
+	
+	public static final CallbackCompletion<Byte> createOutcome (final byte outcome)
+	{
+		return (CallbackCompletion.createOutcome (Byte.valueOf (outcome)));
+	}
+	
+	public static final CallbackCompletion<Character> createOutcome (final char outcome)
+	{
+		return (CallbackCompletion.createOutcome (Character.valueOf (outcome)));
+	}
+	
+	public static final CallbackCompletion<Double> createOutcome (final double outcome)
+	{
+		return (CallbackCompletion.createOutcome (Double.valueOf (outcome)));
+	}
+	
+	public static final CallbackCompletion<Float> createOutcome (final float outcome)
+	{
+		return (CallbackCompletion.createOutcome (Float.valueOf (outcome)));
+	}
+	
+	public static final CallbackCompletion<Integer> createOutcome (final int outcome)
+	{
+		return (CallbackCompletion.createOutcome (Integer.valueOf (outcome)));
+	}
+	
+	public static final CallbackCompletion<Long> createOutcome (final long outcome)
+	{
+		return (CallbackCompletion.createOutcome (Long.valueOf (outcome)));
+	}
+	
+	public static final CallbackCompletion<String> createOutcome (final String outcome)
+	{
+		return (CallbackCompletion.createOutcome (outcome));
+	}
+	
+	private static final Object exceptionOutcome = new Object ();
+	private static final Object unknownOutcome = new Object ();
+}

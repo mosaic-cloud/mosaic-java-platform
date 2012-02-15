@@ -37,9 +37,9 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
 import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
@@ -124,7 +124,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference called(ComponentController component,
+	public CallbackCompletion<Void> called(ComponentController component,
 			ComponentCallRequest request) {
 		ComponentCallReply reply = null;
 		boolean succeeded = false;
@@ -169,7 +169,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference callReturned(ComponentController component,
+	public CallbackCompletion<Void> callReturned(ComponentController component,
 			ComponentCallReply reply) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState(this.status == Status.Ready);
@@ -189,7 +189,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference casted(ComponentController component,
+	public CallbackCompletion<Void> casted(ComponentController component,
 			ComponentCastRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
@@ -198,7 +198,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference failed(ComponentController component, Throwable exception) {
+	public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
 				&& (this.status != Status.Unregistered));
@@ -209,7 +209,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference initialized(ComponentController component) {
+	public CallbackCompletion<Void> initialized(ComponentController component) {
 		Preconditions.checkState(this.component == null);
 		Preconditions.checkState(this.status == Status.Created);
 		this.component = component;
@@ -224,7 +224,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference registerReturned(ComponentController component,
+	public CallbackCompletion<Void> registerReturned(ComponentController component,
 			ComponentCallReference reference, boolean ok) {
 		Preconditions.checkState(this.component == component);
 		OutcomeTrigger<ComponentCallReply> pendingReply = this.pendingReferences
@@ -247,7 +247,7 @@ public final class ResourceComponentCallbacks implements ComponentCallbacks,
 	}
 
 	@Override
-	public CallbackReference terminated(ComponentController component) {
+	public CallbackCompletion<Void> terminated(ComponentController component) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
 				&& (this.status != Status.Unregistered));

@@ -13,9 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.zeromq.ZMQ.Socket;
-
 import org.junit.Test;
+import org.zeromq.ZMQ.Socket;
 
 
 public class ZMsgTest {

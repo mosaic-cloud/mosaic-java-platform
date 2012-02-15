@@ -27,7 +27,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import org.slf4j.Logger;
@@ -47,19 +47,19 @@ public final class KvServer
 	}
 	
 	@Override
-	public final CallbackReference created (final Session session)
+	public final CallbackCompletion<Void> created (final Session session)
 	{
 		return (null);
 	}
 	
 	@Override
-	public final CallbackReference destroyed (final Session session)
+	public final CallbackCompletion<Void> destroyed (final Session session)
 	{
 		return (null);
 	}
 	
 	@Override
-	public final CallbackReference failed (final Session session, final Throwable Exception)
+	public final CallbackCompletion<Void> failed (final Session session, final Throwable Exception)
 	{
 		return (null);
 	}
@@ -71,7 +71,7 @@ public final class KvServer
 	
 	@SuppressWarnings ("boxing")
 	@Override
-	public final CallbackReference received (final Session session, final Message message)
+	public final CallbackCompletion<Void> received (final Session session, final Message message)
 	{
 		switch ((KvMessage) message.specification) {
 			case Access : {

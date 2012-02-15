@@ -21,11 +21,9 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import java.lang.ref.Reference;
-
 import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public final class CallbackIsolate
@@ -33,55 +31,56 @@ public final class CallbackIsolate
 		implements
 			Joinable
 {
-	private CallbackIsolate (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
+	private CallbackIsolate (final CallbackIsolateBackend backend)
 	{
 		super ();
-		Preconditions.checkNotNull (reactor);
-		Preconditions.checkNotNull (completion);
-		this.reactorReference = reactor;
-		this.completion = completion;
+		Preconditions.checkNotNull (backend);
+		this.backend = backend;
 	}
 	
 	@Override
 	public final boolean await ()
 	{
-		return (Threading.awaitOrCatch (this.completion, null, null) == Boolean.TRUE);
+		return (this.await (-1));
 	}
 	
 	@Override
 	public final boolean await (final long timeout)
 	{
-		return (Threading.awaitOrCatch (this.completion, timeout, null, null) == Boolean.TRUE);
+		try {
+			return (this.backend.awaitIsolate (this, timeout));
+		} catch (final Throwable exception) {
+			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			return (false);
+		}
 	}
 	
-	public final CallbackReference destroy ()
+	public final CallbackCompletion<Void> destroy ()
 	{
-		return (this.getReactor ().destroyIsolate (this));
-	}
-	
-	public final boolean destroy (final long timeout)
-	{
-		this.destroy ();
-		return (this.await (timeout));
-	}
-	
-	public final CallbackCompletion getCompletion ()
-	{
-		return (this.completion);
+		try {
+			final CallbackCompletion<Void> completion = this.backend.destroyIsolate (this);
+			if (completion == null)
+				return (CallbackCompletion.createFailure (new IllegalStateException ()));
+			return (completion);
+		} catch (final Throwable exception) {
+			return (CallbackCompletion.createFailure (exception));
+		}
 	}
 	
 	public final CallbackReactor getReactor ()
 	{
-		final CallbackReactor reactor = this.reactorReference.get ();
-		Preconditions.checkState (reactor != null);
-		return (reactor);
+		try {
+			return (this.backend.getReactor ());
+		} catch (final Throwable exception) {
+			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			return (null);
+		}
 	}
 	
-	private final CallbackCompletion completion;
-	private final Reference<? extends CallbackReactor> reactorReference;
+	private final CallbackIsolateBackend backend;
 	
-	public static final CallbackIsolate create (final Reference<? extends CallbackReactor> reactor, final CallbackCompletion completion)
+	public static final CallbackIsolate create (final CallbackIsolateBackend backend)
 	{
-		return (new CallbackIsolate (reactor, completion));
+		return (new CallbackIsolate (backend));
 	}
 }

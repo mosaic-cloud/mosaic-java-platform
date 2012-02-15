@@ -44,7 +44,6 @@ import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

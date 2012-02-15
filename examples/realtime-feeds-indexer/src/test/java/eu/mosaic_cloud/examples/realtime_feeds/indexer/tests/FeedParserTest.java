@@ -29,7 +29,6 @@ import java.net.URL;
 import com.sun.syndication.io.FeedException;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.FeedParser;
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

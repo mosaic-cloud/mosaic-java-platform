@@ -43,8 +43,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackReference;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * This callback class enables the AMQP driver to be exposed as a component.
@@ -87,7 +86,7 @@ public final class AmqpDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference called(ComponentController component,
+	public CallbackCompletion<Void> called(ComponentController component,
 			ComponentCallRequest request) {
 		Preconditions.checkState(this.component == component);
 		Preconditions.checkState((this.status != Status.Terminated)
@@ -136,7 +135,7 @@ public final class AmqpDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference callReturned(ComponentController component,
+	public CallbackCompletion<Void> callReturned(ComponentController component,
 			ComponentCallReply reply) {
 		Preconditions.checkState(this.component == component);
 		if ((this.pendingReference == reply.reference)
@@ -213,7 +212,7 @@ public final class AmqpDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference initialized(ComponentController component) {
+	public CallbackCompletion<Void> initialized(ComponentController component) {
 		Preconditions.checkState(this.component == null);
 		Preconditions.checkState(this.status == Status.Created);
 		this.component = component;
@@ -230,7 +229,7 @@ public final class AmqpDriverComponentCallbacks extends
 	}
 
 	@Override
-	public CallbackReference registerReturned(ComponentController component,
+	public CallbackCompletion<Void> registerReturned(ComponentController component,
 			ComponentCallReference reference, boolean registerOk) {
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reference) {

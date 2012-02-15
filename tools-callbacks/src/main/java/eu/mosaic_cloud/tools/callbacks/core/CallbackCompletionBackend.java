@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-interoperability-core
+ * mosaic-tools-callbacks
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,22 +18,18 @@
  * #L%
  */
 
-package eu.mosaic_cloud.interoperability.core;
+package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-
-
-public interface SessionCallbacks
-		extends
-			Callbacks
+public interface CallbackCompletionBackend
 {
-	public abstract CallbackCompletion<Void> created (final Session session);
+	public abstract boolean awaitCompletion (final CallbackCompletion<?> completion, final long timeout);
 	
-	public abstract CallbackCompletion<Void> destroyed (final Session session);
+	public abstract Throwable getCompletionException (final CallbackCompletion<?> completion);
 	
-	public abstract CallbackCompletion<Void> failed (final Session session, final Throwable exception);
+	public abstract Object getCompletionOutcome (final CallbackCompletion<?> completion);
 	
-	public abstract CallbackCompletion<Void> received (final Session session, final Message message);
+	public abstract CallbackReactor getReactor ();
+	
+	public abstract void observeCompletion (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer);
 }
