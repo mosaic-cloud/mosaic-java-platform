@@ -23,13 +23,6 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>platform-core</artifactId>
-			<version>${project.version}</version>
-			<classifier>tests</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-interop</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -61,6 +54,11 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-threading</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-transcript</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
