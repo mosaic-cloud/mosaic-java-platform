@@ -22,9 +22,9 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
 import java.lang.reflect.Method;
 
 import eu.mosaic_cloud.cloudlets.resources.ConnectorNotFoundException;
-import eu.mosaic_cloud.connectors.kvstore.IKeyValueStore;
-import eu.mosaic_cloud.connectors.kvstore.KeyValueStoreConnector;
-import eu.mosaic_cloud.connectors.kvstore.memcached.MemcachedStoreConnector;
+import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
+import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
@@ -39,16 +39,16 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public class KeyValueConnectorFactory {
 
 	public enum ConnectorType {
-		KVSTORE(KeyValueStoreConnector.class), MEMCACHED(
-				MemcachedStoreConnector.class);
+		KVSTORE(GenericKvStoreConnector.class), MEMCACHED(
+				MemcacheKvStoreConnector.class);
 
-		private final Class<? extends IKeyValueStore> connectorClass;
+		private final Class<? extends IKvStoreConnector> connectorClass;
 
-		ConnectorType(Class<? extends IKeyValueStore> canonicalClassName) {
+		ConnectorType(Class<? extends IKvStoreConnector> canonicalClassName) {
 			this.connectorClass = canonicalClassName;
 		}
 
-		public Class<? extends IKeyValueStore> getConnectorClass() {
+		public Class<? extends IKvStoreConnector> getConnectorClass() {
 			return this.connectorClass;
 		}
 	}
@@ -68,12 +68,12 @@ public class KeyValueConnectorFactory {
 	 * @throws ConnectorNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
-	public static IKeyValueStore createConnector(String connectorName,
+	public static IKvStoreConnector createConnector(String connectorName,
 			IConfiguration config, DataEncoder<?> encoder,
 			ThreadingContext threadingContext)
 			throws ConnectorNotFoundException {
 		ConnectorType type = null;
-		IKeyValueStore connector = null;
+		IKvStoreConnector connector = null;
 
 		for (ConnectorType t : ConnectorType.values()) {
 			if (t.name().equalsIgnoreCase(connectorName)) {
@@ -87,7 +87,7 @@ public class KeyValueConnectorFactory {
 				Method createMethod = connectorClass.getMethod("create",
 						IConfiguration.class, DataEncoder.class,
 						ThreadingContext.class);
-				connector = (IKeyValueStore) createMethod.invoke(null, config,
+				connector = (IKvStoreConnector) createMethod.invoke(null, config,
 						encoder, threadingContext);
 			} catch (Exception e) {
 				ExceptionTracer.traceIgnored(e);

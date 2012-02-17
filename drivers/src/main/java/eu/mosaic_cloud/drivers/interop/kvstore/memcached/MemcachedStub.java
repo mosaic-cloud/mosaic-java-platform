@@ -188,7 +188,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 					token = setRequest.getToken();
 					key = setRequest.getKey();
 
-					this.logger.trace(mssgPrefix + " SET key: " + key);
+					this.logger.trace(mssgPrefix + " SET key: " + key + " - request id: " + token.getMessageId () + " client id: "
+							+ token.getClientId());
 
 					exp = setRequest.getExpTime();
 					data = setRequest.getValue().toByteArray();
@@ -205,8 +206,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 				KeyValuePayloads.GetRequest getRequest = (GetRequest) message.payload;
 				if (getRequest.getKeyCount() > 1) {
 					token = getRequest.getToken();
-					this.logger.trace(mssgPrefix + "GET_BULK  - request id: "
-							+ token.getMessageId());
+					this.logger.trace(mssgPrefix + "GET_BULK " + " - request id: " + token.getMessageId () + " client id: "
+							+ token.getClientId());
 
 					callback = new DriverOperationFinishedHandler(token,
 							session, MemcachedDriver.class,
@@ -236,7 +237,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 			key = addRequest.getKey();
 
 			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
-					+ key); // NOPMD by georgiana on 10/12/11 2:56 PM
+					+ key + " - request id: " + token.getMessageId () + " client id: "
+					+ token.getClientId()); // NOPMD by georgiana on 10/12/11 2:56 PM
 
 			exp = addRequest.getExpTime();
 			data = addRequest.getValue().toByteArray();
@@ -253,7 +255,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 			key = appendRequest.getKey();
 
 			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
-					+ key);
+					+ key + " - request id: " + token.getMessageId () + " client id: "
+					+ token.getClientId());
 
 			exp = appendRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
 												// 2:54 PM
@@ -271,7 +274,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 			key = prependRequest.getKey();
 
 			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
-					+ key);
+					+ key + " - request id: " + token.getMessageId () + " client id: "
+					+ token.getClientId());
 
 			exp = prependRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
 												// 2:55 PM
@@ -289,7 +293,8 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 			key = replaceRequest.getKey();
 
 			this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
-					+ key);
+					+ key + " - request id: " + token.getMessageId () + " client id: "
+					+ token.getClientId());
 
 			exp = replaceRequest.getExpTime();
 			data = replaceRequest.getValue().toByteArray();

@@ -1,0 +1,18 @@
+
+interop.channel.address = tcp://127.0.0.1:22795
+interop.driver.identifier = drivers.amqp.tests
+
+amqp.host = 127.0.0.1
+amqp.port = 21688
+amqp.driver_threads = 1
+
+consumer.amqp.queue = tests.queue
+consumer.amqp.consumer_id = tests.consumer
+consumer.amqp.auto_ack = false
+consumer.amqp.exclusive = false
+
+publisher.amqp.exchange = tests.exchange
+publisher.amqp.routing_key = tests.routing_key
+publisher.amqp.manadatory = false
+publisher.amqp.immediate = false
+publisher.amqp.durable = false

@@ -30,7 +30,7 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
 import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
-import eu.mosaic_cloud.connectors.kvstore.IKeyValueStore;
+import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -57,7 +57,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 	protected C cloudletContext;
 	protected DataEncoder<?> dataEncoder;
 	private ResourceStatus status;
-	private IKeyValueStore connector;
+	private IKvStoreConnector connector;
 	private IKeyValueAccessorCallback<C> callback;
 	private IKeyValueAccessorCallback<C> callbackProxy;
 	private Monitor monitor = Monitor.create (this);
@@ -165,7 +165,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 	 *            the class of the connector
 	 * @return the connector
 	 */
-	protected <T extends IKeyValueStore> T getConnector(Class<T> connectorClass) {
+	protected <T extends IKvStoreConnector> T getConnector(Class<T> connectorClass) {
 		return connectorClass.cast(this.connector);
 	}
 

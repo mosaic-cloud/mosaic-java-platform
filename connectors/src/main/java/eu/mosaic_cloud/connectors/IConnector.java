@@ -18,19 +18,28 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.queue;
+package eu.mosaic_cloud.connectors;
 
 
-import eu.mosaic_cloud.connectors.IConnector;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 /**
- * Interface for working with queueing systems.
+ * Generic interface that should be implemented by all resource connectors.
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface IQueueConnector
+public interface IConnector
 		extends
-			IConnector
-{}
+			Callbacks
+{
+	/**
+	 * Destroy the connection with the resource.
+	 * 
+	 * @throws Throwable
+	 *             if connector cannot be destroyed
+	 */
+	CallbackCompletion<Void> destroy ();
+}

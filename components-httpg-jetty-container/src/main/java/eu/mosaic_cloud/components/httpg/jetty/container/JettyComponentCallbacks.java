@@ -40,9 +40,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
+import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture.Trigger;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
-import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture.OutcomeTrigger;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -64,7 +64,7 @@ public final class JettyComponentCallbacks
 			this.threading = context.threading;
 			this.transcript = Transcript.create (this);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
-			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, OutcomeFuture.OutcomeTrigger<ComponentCallReply>> ();
+			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, DeferredFuture.Trigger<ComponentCallReply>> ();
 			this.status = Status.WaitingRegistered;
 			JettyComponentContext.callbacks = this;
 			JettyComponent.create ();
@@ -75,7 +75,7 @@ public final class JettyComponentCallbacks
 	{
 		Preconditions.checkNotNull (component);
 		Preconditions.checkNotNull (request);
-		final OutcomeFuture<ComponentCallReply> replyFuture = OutcomeFuture.create ();
+		final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture.create (ComponentCallReply.class);
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component != null);
 			Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
@@ -135,8 +135,8 @@ public final class JettyComponentCallbacks
 						throw (new IllegalStateException ());
 				}
 			else if (this.pendingCallReturnFutures.containsKey (reply.reference)) {
-				final OutcomeTrigger<ComponentCallReply> trigger = this.pendingCallReturnFutures.remove (reply.reference);
-				trigger.succeeded (reply);
+				final Trigger<ComponentCallReply> trigger = this.pendingCallReturnFutures.remove (reply.reference);
+				trigger.triggerSucceeded (reply);
 			} else
 				throw (new IllegalStateException ());
 		}
@@ -319,7 +319,7 @@ public final class JettyComponentCallbacks
 	private Server jettyServer;
 	private Thread jettyThread;
 	private final Monitor monitor;
-	private final IdentityHashMap<ComponentCallReference, OutcomeTrigger<ComponentCallReply>> pendingCallReturnFutures;
+	private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingCallReturnFutures;
 	private ComponentCallReference pendingReference;
 	private Status status;
 	private final ThreadingContext threading;

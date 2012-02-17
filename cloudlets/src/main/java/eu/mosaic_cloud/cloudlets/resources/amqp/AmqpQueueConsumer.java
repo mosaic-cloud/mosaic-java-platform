@@ -27,7 +27,7 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpConsumerCallback;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallbacks;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -52,7 +52,7 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 
 	private String consumer;
 	private boolean autoAck;
-	private IAmqpQueueConsumerCallback<C, D> callback;
+	private IAmqpQueueConsumerCallbacks<C, D> callback;
 
 	/**
 	 * Creates a new AMQP queue consumer.
@@ -91,19 +91,19 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 	@Override
 	public void initialize(IResourceAccessorCallback<C> callback, C context,
 			ThreadingContext threading) {
-		if (callback instanceof IAmqpQueueConsumerCallback) {
+		if (callback instanceof IAmqpQueueConsumerCallbacks) {
 			super.initialize(callback, context, threading);
-			this.callback = (IAmqpQueueConsumerCallback<C, D>) callback;
+			this.callback = (IAmqpQueueConsumerCallbacks<C, D>) callback;
 		} else {
 			IllegalArgumentException e = new IllegalArgumentException(
 					"The callback argument must be of type " //$NON-NLS-1$
-							+ IAmqpQueueConsumerCallback.class
+							+ IAmqpQueueConsumerCallbacks.class
 									.getCanonicalName());
 
 			@SuppressWarnings("unchecked")
-			IAmqpQueueConsumerCallback<C, D> proxy = this.cloudlet
+			IAmqpQueueConsumerCallbacks<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
-							IAmqpQueueConsumerCallback.class);
+							IAmqpQueueConsumerCallbacks.class);
 			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueConsumer.this.cloudlet, e);
 			proxy.initializeFailed(context, arguments);
@@ -151,7 +151,7 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 		List<IOperationCompletionHandler<String>> cHandlers = new ArrayList<IOperationCompletionHandler<String>>();
 		cHandlers.add(cHandler);
 
-		IAmqpConsumerCallback consumerCallback = new AmqpConsumerCallback();
+		IAmqpQueueConsumerCallbacks consumerCallback = new AmqpConsumerCallback();
 		getConnector().consume(
 				this.queue,
 				this.consumer,
@@ -161,7 +161,7 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 				cHandlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler),
 				this.cloudlet.buildCallbackInvoker(consumerCallback,
-						IAmqpConsumerCallback.class));
+						IAmqpQueueConsumerCallbacks.class));
 	}
 
 	@Override
@@ -232,7 +232,7 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 	 * @author Georgiana Macariu
 	 * 
 	 */
-	final class AmqpConsumerCallback implements IAmqpConsumerCallback {
+	final class AmqpConsumerCallback implements IAmqpQueueConsumerCallbacks {
 
 		@Override
 		public void handleCancelOk(String consumerTag) {

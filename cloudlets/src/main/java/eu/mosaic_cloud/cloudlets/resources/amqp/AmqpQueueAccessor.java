@@ -31,7 +31,7 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
 import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -170,7 +170,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 							"Cannot find a resource of type "
 									+ ResourceType.AMQP.toString());
 				}
-				this.connector = AmqpConnector.create(this.configuration,
+				this.connector = AmqpQueueConnector.create(this.configuration,
 						threading);
 				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, true);

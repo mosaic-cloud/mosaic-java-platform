@@ -1,0 +1,10 @@
+
+interop.channel.address = tcp://127.0.0.1:26761
+interop.driver.identifier = drivers.riak.tests
+
+kvstore.host = 127.0.0.1
+kvstore.port = 24637
+kvstore.bucket = tests
+
+kvstore.driver_name = riakrest
+kvstore.driver_threads = 1

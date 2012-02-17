@@ -23,7 +23,7 @@ package eu.mosaic_cloud.tools.callbacks.core;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
-import eu.mosaic_cloud.tools.callbacks.tools.FutureCallbackCompletionBackend;
+import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionFutureBackend;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
 
@@ -84,7 +84,7 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 		if (!this.isCompleted ())
 			throw (new IllegalStateException ());
 		if (this.outcome != CallbackCompletion.exceptionOutcome)
-			throw (new IllegalStateException ());
+			return (null);
 		assert (this.exception != null);
 		return (this.exception);
 	}
@@ -164,7 +164,7 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 	
 	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createDeferred (final ListenableFuture<_Outcome_> future)
 	{
-		return (FutureCallbackCompletionBackend.createCompletion (future));
+		return (CallbackCompletionFutureBackend.createCompletion (future));
 	}
 	
 	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createFailure (final Throwable exception)

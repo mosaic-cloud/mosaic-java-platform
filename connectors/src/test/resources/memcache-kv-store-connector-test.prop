@@ -1,0 +1,12 @@
+
+interop.channel.address = tcp://127.0.0.1:27781
+interop.driver.identifier = drivers.memcache.tests
+
+kvstore.host = 127.0.0.1
+kvstore.port = 8091
+kvstore.user = tests
+kvstore.passwd = tests
+kvstore.bucket = tests
+
+kvstore.driver_name = memcached
+kvstore.driver_threads = 1

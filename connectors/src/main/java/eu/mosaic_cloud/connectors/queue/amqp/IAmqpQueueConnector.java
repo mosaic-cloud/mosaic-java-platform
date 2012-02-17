@@ -17,16 +17,15 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import java.util.List;
 
 import eu.mosaic_cloud.connectors.queue.IQueueConnector;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
-import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for working with AMQP compatible queueing systems.
@@ -34,8 +33,67 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
  * @author Georgiana Macariu
  * 
  */
-public interface IAmqpQueueConnector extends IQueueConnector {
-
+public interface IAmqpQueueConnector
+		extends
+			IQueueConnector
+{
+	/**
+	 * Acknowledge one or several received messages.
+	 * 
+	 * @param delivery
+	 *            the tag received with the messages
+	 * @param multiple
+	 *            <code>true</code> to acknowledge all messages up to and
+	 *            including the supplied delivery tag; <code>false</code> to
+	 *            acknowledge just the supplied delivery tag.
+	 * @return <code>true</code> if messages were acknowledged successfully
+	 */
+	CallbackCompletion<Boolean> ack (final long delivery, final boolean multiple);
+	
+	/**
+	 * Bind a queue to an exchange, with no extra arguments.
+	 * 
+	 * @param exchange
+	 *            the name of the queue
+	 * @param queue
+	 *            the name of the exchange
+	 * @param routingKey
+	 *            the routing key to use for the binding
+	 * @return <code>true</code> if the queue bind succeeded
+	 */
+	CallbackCompletion<Boolean> bindQueue (final String exchange, final String queue, final String routingKey);
+	
+	/**
+	 * Cancels a consumer.
+	 * 
+	 * @param consumer
+	 *            a client- or server-generated consumer tag to establish
+	 *            context
+	 * @return <code>true</code> if consumer was canceled
+	 */
+	CallbackCompletion<Boolean> cancel (final String consumer);
+	
+	/**
+	 * Start a message consumer.
+	 * 
+	 * @param queue
+	 *            the name of the queue
+	 * @param consumer
+	 *            a client-generated consumer tag to establish context
+	 * @param exclusive
+	 *            <code>true</code> if this is an exclusive consumer
+	 * @param autoAck
+	 *            <code>true</code> if the server should consider messages
+	 *            acknowledged once delivered; false if the server should expect
+	 *            explicit acknowledgments
+	 * @param extra
+	 * @param consumerCallback
+	 *            the consumer callback (this will called when the queuing
+	 *            system will send Consume messages)
+	 * @return the client-generated consumer tag to establish context
+	 */
+	CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final Object extra, final IAmqpQueueConsumerCallbacks consumerCallback);
+	
 	/**
 	 * Declares an exchange and creates a channel for it.
 	 * 
@@ -52,20 +110,10 @@ public interface IAmqpQueueConnector extends IQueueConnector {
 	 * @param passive
 	 *            <code>true</code> if we declare an exchange passively; that
 	 *            is, check if the named exchange exists
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
 	 * @return <code>true</code> if the exchange declaration succeeded
 	 */
-	public abstract IResult<Boolean> declareExchange(final String name,
-			final AmqpExchangeType type, final boolean durable,
-			final boolean autoDelete, final boolean passive,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler);
-
+	CallbackCompletion<Boolean> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive);
+	
 	/**
 	 * Declare a queue.
 	 * 
@@ -83,109 +131,10 @@ public interface IAmqpQueueConnector extends IQueueConnector {
 	 * @param passive
 	 *            <code>true</code> if we declare a queue passively; i.e., check
 	 *            if it exists
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
 	 * @return <code>true</code> if the queue declaration succeeded
 	 */
-	public abstract IResult<Boolean> declareQueue(final String queue,
-			final boolean exclusive, final boolean durable,
-			final boolean autoDelete, final boolean passive,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler);
-
-	/**
-	 * Bind a queue to an exchange, with no extra arguments.
-	 * 
-	 * @param exchange
-	 *            the name of the queue
-	 * @param queue
-	 *            the name of the exchange
-	 * @param routingKey
-	 *            the routing key to use for the binding
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
-	 * @return <code>true</code> if the queue bind succeeded
-	 */
-	public abstract IResult<Boolean> bindQueue(final String exchange,
-			final String queue, final String routingKey,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler);
-
-	/**
-	 * Publishes a message.
-	 * 
-	 * @param message
-	 *            the message, message properties and destination data
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
-	 * @return <code>true</code> if message was published successfully
-	 */
-	public abstract IResult<Boolean> publish(final AmqpOutboundMessage message,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler);
-
-	/**
-	 * Start a message consumer.
-	 * 
-	 * @param queue
-	 *            the name of the queue
-	 * @param consumer
-	 *            a client-generated consumer tag to establish context
-	 * @param exclusive
-	 *            <code>true</code> if this is an exclusive consumer
-	 * @param autoAck
-	 *            <code>true</code> if the server should consider messages
-	 *            acknowledged once delivered; false if the server should expect
-	 *            explicit acknowledgments
-	 * @param extra
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
-	 * @param consumerCallback
-	 *            the consumer callback (this will called when the queuing
-	 *            system will send Consume messages)
-	 * @return the client-generated consumer tag to establish context
-	 */
-	public abstract IResult<String> consume(final String queue,
-			final String consumer, final boolean exclusive,
-			final boolean autoAck, final Object extra,
-			List<IOperationCompletionHandler<String>> handlers,
-			CompletionInvocationHandler<String> iHandler,
-			final IAmqpConsumerCallback consumerCallback);
-
-	/**
-	 * Cancels a consumer.
-	 * 
-	 * @param consumer
-	 *            a client- or server-generated consumer tag to establish
-	 *            context
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
-	 * @return <code>true</code> if consumer was canceled
-	 */
-	public abstract IResult<Boolean> cancel(final String consumer,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler);
-
+	CallbackCompletion<Boolean> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive);
+	
 	/**
 	 * Retrieve a message from a queue.
 	 * 
@@ -195,39 +144,16 @@ public interface IAmqpQueueConnector extends IQueueConnector {
 	 *            <code>true</code> if the server should consider messages
 	 *            acknowledged once delivered; <code>false</code> if the server
 	 *            should expect explicit acknowledgments
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
 	 * @return <code>true</code> if message was retrieved successfully
 	 */
-	public abstract IResult<Boolean> get(final String queue,
-			final boolean autoAck,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler);
-
+	CallbackCompletion<Boolean> get (final String queue, final boolean autoAck);
+	
 	/**
-	 * Acknowledge one or several received messages.
+	 * Publishes a message.
 	 * 
-	 * @param delivery
-	 *            the tag received with the messages
-	 * @param multiple
-	 *            <code>true</code> to acknowledge all messages up to and
-	 *            including the supplied delivery tag; <code>false</code> to
-	 *            acknowledge just the supplied delivery tag.
-	 * @param handlers
-	 *            handlers to be called when the operation finishes
-	 * @param iHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
-	 * @return <code>true</code> if messages were acknowledged successfully
+	 * @param message
+	 *            the message, message properties and destination data
+	 * @return <code>true</code> if message was published successfully
 	 */
-	public abstract IResult<Boolean> ack(final long delivery,
-			final boolean multiple,
-			List<IOperationCompletionHandler<Boolean>> handlers,
-			CompletionInvocationHandler<Boolean> iHandler);
-
+	CallbackCompletion<Boolean> publish (final AmqpOutboundMessage message);
 }

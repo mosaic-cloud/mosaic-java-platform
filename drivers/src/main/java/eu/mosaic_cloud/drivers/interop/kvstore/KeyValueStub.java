@@ -219,7 +219,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			data = setRequest.getValue().toByteArray();
 
 			this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
-					+ key);
+					+ key + " - request id: " + token.getMessageId () + " client id: "
+					+ token.getClientId());
 
 			// execute operation
 			DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
@@ -245,7 +246,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			key = getRequest.getKey(0);
 
 			this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
-					+ key);
+					+ key + " - request id: " + token.getMessageId () + " client id: "
+					+ token.getClientId());
 
 			IResult<byte[]> resultGet = driver.invokeGetOperation(
 					token.getClientId(), key, getCallback);
@@ -257,7 +259,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			key = delRequest.getKey();
 
 			this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
-					+ key);
+					+ key + " - request id: " + token.getMessageId () + " client id: "
+					+ token.getClientId());
 
 			DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler(
 					token, session, driver.getClass(), transmitterClass);
@@ -309,7 +312,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			AbstractKeyValueDriver driver, String messageType,
 			CompletionToken token,
 			Class<? extends KeyValueResponseTransmitter> transmitterClass) {
-		this.logger.error("Unexpected message type: " + messageType);
+		this.logger.error("Unexpected message type: " + messageType + " - request id: " + token.getMessageId () + " client id: "
+				+ token.getClientId());
 		// create callback
 		DriverOperationFinishedHandler failCallback = new DriverOperationFinishedHandler(
 				token, session, driver.getClass(), transmitterClass);

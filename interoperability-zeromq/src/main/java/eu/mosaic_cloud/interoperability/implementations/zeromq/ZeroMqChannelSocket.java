@@ -267,7 +267,7 @@ public final class ZeroMqChannelSocket
 	final Thread loop;
 	final LinkedBlockingQueue<ZeroMqChannelPacket> outboundPackets;
 	final String self;
-	boolean shouldStop;
+	volatile boolean shouldStop;
 	ZMQ.Socket socket;
 	final ThreadingContext threading;
 	final Transcript transcript;

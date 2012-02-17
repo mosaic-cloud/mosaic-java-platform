@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.connectors.kvstore.memcached.IMemcachedStore;
+import eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStore;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
@@ -83,7 +83,7 @@ public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlers.add(cHandler);
-		return super.getConnector(IMemcachedStore.class).set(key, exp, value,
+		return super.getConnector(IMemcacheKvStore.class).set(key, exp, value,
 				handlers, this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
@@ -113,7 +113,7 @@ public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlers.add(cHandler);
-		return super.getConnector(IMemcachedStore.class).add(key, exp, value,
+		return super.getConnector(IMemcacheKvStore.class).add(key, exp, value,
 				handlers, this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
@@ -143,7 +143,7 @@ public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlers.add(cHandler);
-		return super.getConnector(IMemcachedStore.class).append(key, value,
+		return super.getConnector(IMemcacheKvStore.class).append(key, value,
 				handlers, this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
@@ -173,7 +173,7 @@ public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlers.add(cHandler);
-		return super.getConnector(IMemcachedStore.class).prepend(key, value,
+		return super.getConnector(IMemcacheKvStore.class).prepend(key, value,
 				handlers, this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
@@ -203,7 +203,7 @@ public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlers.add(cHandler);
-		return super.getConnector(IMemcachedStore.class).cas(key, value,
+		return super.getConnector(IMemcacheKvStore.class).cas(key, value,
 				handlers, this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
@@ -233,7 +233,7 @@ public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
 		};
 		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 		handlers.add(cHandler);
-		return super.getConnector(IMemcachedStore.class).replace(key, exp,
+		return super.getConnector(IMemcacheKvStore.class).replace(key, exp,
 				value, handlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
@@ -264,7 +264,7 @@ public class MemcachedAccessor<C> extends KeyValueAccessor<C> implements
 		};
 		List<IOperationCompletionHandler<Map<String, Object>>> handlers = new ArrayList<IOperationCompletionHandler<Map<String, Object>>>();
 		handlers.add(cHandler);
-		return super.getConnector(IMemcachedStore.class).getBulk(keys,
+		return super.getConnector(IMemcacheKvStore.class).getBulk(keys,
 				handlers, this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 

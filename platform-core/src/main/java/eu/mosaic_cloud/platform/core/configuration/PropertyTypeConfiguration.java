@@ -75,7 +75,8 @@ public final class PropertyTypeConfiguration implements IConfiguration {
 			} catch (final IOException exception) {
 				ExceptionTracer.traceIgnored(exception);
 			}
-		}
+		} else
+			throw (new IllegalArgumentException ());
 		return configuration;
 	}
 

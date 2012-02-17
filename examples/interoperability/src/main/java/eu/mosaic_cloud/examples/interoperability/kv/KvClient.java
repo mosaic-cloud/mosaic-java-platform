@@ -33,7 +33,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.miscellaneous.OutcomeFuture;
+import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public final class KvClient
 	public KvClient ()
 	{
 		this.logger = LoggerFactory.getLogger (this.getClass ());
-		this.futures = Collections.synchronizedMap (new HashMap<Long, OutcomeFuture<?>> ());
+		this.futures = Collections.synchronizedMap (new HashMap<Long, DeferredFuture<?>> ());
 		this.session = null;
 		this.sequence = new AtomicLong (0);
 	}
@@ -54,9 +54,9 @@ public final class KvClient
 	public final synchronized CallbackCompletion<Void> created (final Session session)
 	{
 		Preconditions.checkState (this.session == null);
-		final OutcomeFuture<Boolean> future = (OutcomeFuture<Boolean>) this.futures.remove (Long.valueOf (0));
+		final DeferredFuture<Boolean> future = (DeferredFuture<Boolean>) this.futures.remove (Long.valueOf (0));
 		if (future != null)
-			future.trigger.succeeded (Boolean.TRUE);
+			future.trigger.triggerSucceeded (Boolean.TRUE);
 		this.session = session;
 		return (null);
 	}
@@ -66,7 +66,7 @@ public final class KvClient
 	{
 		Preconditions.checkState (this.session == session);
 		synchronized (this.futures) {
-			for (final OutcomeFuture<?> future : this.futures.values ())
+			for (final DeferredFuture<?> future : this.futures.values ())
 				future.cancel (true);
 			this.futures.clear ();
 		}
@@ -84,7 +84,7 @@ public final class KvClient
 	{
 		Preconditions.checkState (this.session != null);
 		final long sequence = this.sequence.incrementAndGet ();
-		final OutcomeFuture<String> future = OutcomeFuture.create ();
+		final DeferredFuture<String> future = DeferredFuture.create (String.class);
 		this.futures.put (Long.valueOf (sequence), future);
 		this.session.send (new Message (KvMessage.GetRequest, new KvPayloads.GetRequest (sequence, key)));
 		return (future);
@@ -94,7 +94,7 @@ public final class KvClient
 	{
 		Preconditions.checkState (this.session == null);
 		Preconditions.checkState (this.sequence.get () == 0);
-		final OutcomeFuture<Boolean> future = OutcomeFuture.create ();
+		final DeferredFuture<Boolean> future = DeferredFuture.create (Boolean.class);
 		this.futures.put (Long.valueOf (0), future);
 		channel.connect (serverIdentifier, KvSession.Client, new Message (KvMessage.Access, null), this);
 		return (future);
@@ -104,7 +104,7 @@ public final class KvClient
 	{
 		Preconditions.checkState (this.session != null);
 		final long sequence = this.sequence.incrementAndGet ();
-		final OutcomeFuture<Boolean> future = OutcomeFuture.create ();
+		final DeferredFuture<Boolean> future = DeferredFuture.create (Boolean.class);
 		this.futures.put (Long.valueOf (sequence), future);
 		this.session.send (new Message (KvMessage.PutRequest, new KvPayloads.PutRequest (sequence, key, value)));
 		return (future);
@@ -118,25 +118,25 @@ public final class KvClient
 			case GetReply : {
 				final KvPayloads.GetReply reply = (KvPayloads.GetReply) message.payload;
 				this.logger.info ("get replied: {}", reply.value);
-				final OutcomeFuture<String> future = (OutcomeFuture<String>) this.futures.remove (Long.valueOf (reply.sequence));
+				final DeferredFuture<String> future = (DeferredFuture<String>) this.futures.remove (Long.valueOf (reply.sequence));
 				if (future != null)
-					future.trigger.succeeded (reply.value);
+					future.trigger.triggerSucceeded (reply.value);
 			}
 				break;
 			case Ok : {
 				final KvPayloads.Ok reply = (KvPayloads.Ok) message.payload;
 				this.logger.info ("ok replied: {}");
-				final OutcomeFuture<Boolean> future = (OutcomeFuture<Boolean>) this.futures.remove (Long.valueOf (reply.sequence));
+				final DeferredFuture<Boolean> future = (DeferredFuture<Boolean>) this.futures.remove (Long.valueOf (reply.sequence));
 				if (future != null)
-					future.trigger.succeeded (Boolean.TRUE);
+					future.trigger.triggerSucceeded (Boolean.TRUE);
 			}
 				break;
 			case Error : {
 				final KvPayloads.Error reply = (KvPayloads.Error) message.payload;
 				this.logger.info ("error replied: {}");
-				final OutcomeFuture<Boolean> future = (OutcomeFuture<Boolean>) this.futures.remove (Long.valueOf (reply.sequence));
+				final DeferredFuture<Boolean> future = (DeferredFuture<Boolean>) this.futures.remove (Long.valueOf (reply.sequence));
 				if (future != null)
-					future.trigger.succeeded (Boolean.FALSE);
+					future.trigger.triggerSucceeded (Boolean.FALSE);
 			}
 				break;
 			default: {
@@ -148,7 +148,7 @@ public final class KvClient
 		return (null);
 	}
 	
-	private final Map<Long, OutcomeFuture<?>> futures;
+	private final Map<Long, DeferredFuture<?>> futures;
 	private final Logger logger;
 	private final AtomicLong sequence;
 	private Session session;
