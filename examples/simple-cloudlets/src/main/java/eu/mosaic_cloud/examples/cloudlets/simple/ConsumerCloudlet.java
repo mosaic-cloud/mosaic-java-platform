@@ -21,8 +21,8 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -52,8 +52,8 @@ public class ConsumerCloudlet {
 							.resolveAbsolute("queue"));
 			DataEncoder<String> encoder = new PojoDataEncoder<String>(
 					String.class);
-			context.consumer = new AmqpQueueConsumerConnector<ConsumerCloudlet.ConsumerCloudletContext, String>(
-					queueConfiguration, cloudlet, String.class, encoder);
+			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
+					.create(queueConfiguration, String.class, encoder);
 			return ICallback.SUCCESS;
 		}
 

@@ -21,11 +21,11 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -54,13 +54,12 @@ public class SimpleLoggingCloudlet {
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			context.consumer = new AmqpQueueConsumerConnector<SimpleLoggingCloudlet.LoggingCloudletContext, LoggingData>(
-					queueConfiguration, cloudlet, LoggingData.class,
-					new PojoDataEncoder<LoggingData>(LoggingData.class));
-			context.publisher = new AmqpQueuePublisherConnector<SimpleLoggingCloudlet.LoggingCloudletContext, AuthenticationToken>(
-					queueConfiguration, cloudlet, AuthenticationToken.class,
-					new PojoDataEncoder<AuthenticationToken>(
-							AuthenticationToken.class));
+			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
+					.create(queueConfiguration, LoggingData.class,
+							new PojoDataEncoder<LoggingData>(LoggingData.class));
+			context.publisher = cloudlet.getConnectorFactory(IAmqpQueuePublisherConnectorFactory.class)
+					.create(queueConfiguration, AuthenticationToken.class,
+							new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class));
 			return ICallback.SUCCESS;
 		}
 

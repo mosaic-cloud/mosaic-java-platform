@@ -21,6 +21,7 @@ package eu.mosaic_cloud.cloudlets.core;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -36,7 +37,7 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public interface ICloudletController<C> extends Callbacks {
+public interface ICloudletController<C> extends Callbacks, IConnectorsFactory {
 
 	IConfiguration getConfiguration();
 

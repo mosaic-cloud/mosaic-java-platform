@@ -21,10 +21,10 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -53,41 +53,39 @@ public class IndexerCloudlet {
 							.resolveAbsolute("metadata"));
 			DataEncoder<byte[]> nopEncoder = new NopDataEncoder();
 			DataEncoder<JSONObject> jsonEncoder = new JSONDataEncoder();
-			context.metadataStore = new KvStoreConnector<IndexerCloudletContext>(
-					metadataConfiguration, cloudlet, jsonEncoder);
+			context.metadataStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
+					.create(metadataConfiguration, JSONObject.class, jsonEncoder);
 			IConfiguration dataConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("data"));
-			context.dataStore = new KvStoreConnector<IndexerCloudletContext>(
-					dataConfiguration, cloudlet, nopEncoder);
+			context.dataStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
+					.create(dataConfiguration, byte[].class, nopEncoder);
 			IConfiguration timelinesConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("timelines"));
-			context.timelinesStore = new KvStoreConnector<IndexerCloudletContext>(
-					timelinesConfiguration, cloudlet, jsonEncoder);
+			context.timelinesStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
+					.create(timelinesConfiguration, JSONObject.class, jsonEncoder);
 			IConfiguration itemsConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("items"));
-			context.itemsStore = new KvStoreConnector<IndexerCloudletContext>(
-					itemsConfiguration, cloudlet, jsonEncoder);
+			context.itemsStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
+					.create(itemsConfiguration, JSONObject.class, jsonEncoder);
 			IConfiguration tasksConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("tasks"));
-			context.taskStore = new KvStoreConnector<IndexerCloudletContext>(
-					tasksConfiguration, cloudlet, jsonEncoder);
+			context.taskStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
+					.create(tasksConfiguration, JSONObject.class, jsonEncoder);
 
 			IConfiguration urgentQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("urgent.queue"));
-			context.urgentConsumer = new AmqpQueueConsumerConnector<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
-					urgentQueueConfiguration, cloudlet, JSONObject.class,
-					jsonEncoder);
+			context.urgentConsumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
+					.create(urgentQueueConfiguration, JSONObject.class, jsonEncoder);
 			IConfiguration batchQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("batch.queue"));
-			context.batchConsumer = new AmqpQueueConsumerConnector<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
-					batchQueueConfiguration, cloudlet, JSONObject.class,
-					jsonEncoder);
+			context.batchConsumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
+					.create(batchQueueConfiguration, JSONObject.class, jsonEncoder);
 			return ICallback.SUCCESS;
 		}
 
