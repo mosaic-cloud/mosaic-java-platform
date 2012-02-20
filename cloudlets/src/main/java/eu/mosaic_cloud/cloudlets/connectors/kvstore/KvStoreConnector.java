@@ -26,17 +26,17 @@ import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorException;
 import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorStatus;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentResourceFinder;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.Miscellaneous;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
@@ -83,7 +83,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void initialize(IConnectorCallback<C> callback, C context,
+	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {
 			this.status = ConnectorStatus.INITIALIZING;
@@ -129,7 +129,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 	}
 
 	@Override
-	public void destroy(IConnectorCallback<C> callback) {
+	public CallbackCompletion<Void> destroy(IConnectorCallback<C> callback) {
 		synchronized (this.monitor) {
 			this.status = ConnectorStatus.DESTROYING;
 			try {
@@ -199,7 +199,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 	}
 
 	@Override
-	public IResult<Boolean> set(final String key, final Object value,
+	public CallbackCompletion<Void> set(final String key, final Object value,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -227,7 +227,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 	}
 
 	@Override
-	public IResult<Object> get(final String key, final Object extra) {
+	public CallbackCompletion<Void> get(final String key, final Object extra) {
 		IOperationCompletionHandler<Object> cHandler = new IOperationCompletionHandler<Object>() {
 
 			@Override
@@ -254,7 +254,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 	}
 
 	@Override
-	public IResult<Boolean> delete(final String key, final Object extra) {
+	public CallbackCompletion<Void> delete(final String key, final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
@@ -281,7 +281,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 	}
 
 	@Override
-	public IResult<List<String>> list(final Object extra) {
+	public CallbackCompletion<Void> list(final Object extra) {
 		IOperationCompletionHandler<List<String>> cHandler = new IOperationCompletionHandler<List<String>>() {
 
 			@Override

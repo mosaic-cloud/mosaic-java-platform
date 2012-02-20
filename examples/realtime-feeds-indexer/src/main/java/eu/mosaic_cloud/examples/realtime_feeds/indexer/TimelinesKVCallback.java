@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class TimelinesKVCallback extends
 		DefaultKvStoreConnectorCallback<IndexerCloudletContext> {
@@ -35,21 +35,24 @@ public class TimelinesKVCallback extends
 	private static final String BUCKET_NAME = "feed-timelines";
 
 	@Override
-	public void destroySucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		context.timelinesStore = null;
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void setSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> setSucceeded(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		IndexWorkflow.updateFeedMetadata(arguments.getExtra());
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void setFailed(IndexerCloudletContext context,
+	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		handleError(arguments);
+		return ICallback.SUCCESS;
 	}
 
 	private void handleError(

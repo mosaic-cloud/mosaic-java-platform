@@ -20,34 +20,39 @@
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public final class UrgentConsumerCallback extends QueueConsumerCallback {
 
 	@Override
-	public void unregisterSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> unregisterSucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		this.logger.info(
 				"Urgent Index Message consumer unregistered successfully.");
 		ICloudletController<IndexerCloudletContext> cloudlet = arguments
 				.getCloudlet();
 		cloudlet.destroyResource(context.urgentConsumer, this);
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void initializeSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		// if resource initialized successfully then just register as a
 		// consumer
 		context.urgentConsumer.register();
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void destroySucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		this.logger.info(
 				"Urgent Index Message consumer was destroyed successfully.");
 		context.urgentConsumer = null;
+		return ICallback.SUCCESS;
 	}
 }

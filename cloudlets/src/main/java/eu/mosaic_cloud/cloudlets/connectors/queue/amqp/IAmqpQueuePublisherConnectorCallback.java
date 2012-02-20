@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 /**
  * Interface for AMQP queue publishers. This will be implemented by cloudlets
  * which need to send messages to an exchange.
@@ -44,7 +46,7 @@ public interface IAmqpQueuePublisherConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void publishSucceeded(C context,
+	CallbackCompletion<Void> publishSucceeded(C context,
 			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments);
 
 	/**
@@ -57,6 +59,6 @@ public interface IAmqpQueuePublisherConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void publishFailed(C context,
+	CallbackCompletion<Void> publishFailed(C context,
 			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments);
 }

@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 /**
  * Interface for registering and using for an AMQP resource as a publisher.
  * 
@@ -42,7 +44,7 @@ public interface IAmqpQueuePublisherConnector<C, D> extends IAmqpQueueConnector<
 	 *            the RFC-2046 MIME type for the Message content (such as
 	 *            "text/plain")
 	 */
-	void publish(D data, Object token, String contentType);
+	CallbackCompletion<Void> publish(D data, Object token, String contentType);
 
 	/**
 	 * Publishes a message to a queue.
@@ -55,5 +57,5 @@ public interface IAmqpQueuePublisherConnector<C, D> extends IAmqpQueueConnector<
 	 *            the RFC-2046 MIME type for the Message content (such as
 	 *            "text/plain")
 	 */
-	void publish(D data, Object token, String contentType, String correlation);
+	CallbackCompletion<Void> publish(D data, Object token, String contentType, String correlation);
 }

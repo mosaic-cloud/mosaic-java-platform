@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 /**
  * Interface for registering and using for an AMQP resource as a consumer.
  * 
@@ -37,5 +39,5 @@ public interface IAmqpQueueConsumerConnector<C, D> extends IAmqpQueueConnector<C
 	 * @param message
 	 *            the message to acknowledge
 	 */
-	public void acknowledge(AmqpQueueConsumeMessage<D> message);
+	CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<D> message);
 }

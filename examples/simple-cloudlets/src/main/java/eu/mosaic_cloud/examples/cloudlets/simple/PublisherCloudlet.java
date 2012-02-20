@@ -21,16 +21,15 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class PublisherCloudlet {
 
@@ -38,7 +37,7 @@ public class PublisherCloudlet {
 			DefaultCloudletCallback<PublisherCloudletContext> {
 
 		@Override
-		public void initialize(PublisherCloudletContext context,
+		public CallbackCompletion<Void> initialize(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet is being initialized.");
@@ -51,11 +50,11 @@ public class PublisherCloudlet {
 			context.publisher = new AmqpQueuePublisherConnector<PublisherCloudlet.PublisherCloudletContext, String>(
 					queueConfiguration, cloudlet, String.class,
 					new PojoDataEncoder<String>(String.class));
-
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void initializeSucceeded(PublisherCloudletContext context,
+		public CallbackCompletion<Void> initializeSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet initialized successfully.");
@@ -63,21 +62,23 @@ public class PublisherCloudlet {
 					.getCloudlet();
 			cloudlet.initializeResource(context.publisher,
 					new AmqpPublisherCallback(), context);
-
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroy(PublisherCloudletContext context,
+		public CallbackCompletion<Void> destroy(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet is being destroyed.");
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroySucceeded(PublisherCloudletContext context,
+		public CallbackCompletion<Void> destroySucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"Publisher cloudlet was destroyed successfully.");
+			return ICallback.SUCCESS;
 		}
 	}
 
@@ -86,15 +87,16 @@ public class PublisherCloudlet {
 			DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, AuthenticationToken> {
 
 		@Override
-		public void registerSucceeded(PublisherCloudletContext context,
+		public CallbackCompletion<Void> registerSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet publisher registered successfully.");
 			context.publisher.publish("TEST MESSAGE!", null, "text/plain");
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void unregisterSucceeded(PublisherCloudletContext context,
+		public CallbackCompletion<Void> unregisterSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet publisher unregistered successfully.");
@@ -102,30 +104,34 @@ public class PublisherCloudlet {
 			ICloudletController<PublisherCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.destroyResource(context.publisher, this);
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void initializeSucceeded(PublisherCloudletContext context,
+		public CallbackCompletion<Void> initializeSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
 			context.publisher.register();
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroySucceeded(PublisherCloudletContext context,
+		public CallbackCompletion<Void> destroySucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet publisher was destroyed successfully.");
 			context.publisher = null;
 			arguments.getCloudlet().destroy();
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void publishSucceeded(
+		public CallbackCompletion<Void> publishSucceeded(
 				PublisherCloudletContext context,
 				AmqpQueuePublishCallbackCompletionArguments<PublisherCloudletContext, AuthenticationToken> arguments) {
 			context.publisher.unregister();
+			return ICallback.SUCCESS;
 		}
 
 	}

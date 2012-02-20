@@ -19,20 +19,19 @@
  */
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
-
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
-
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import org.json.JSONObject;
 
 public class IndexerCloudlet {
@@ -41,7 +40,7 @@ public class IndexerCloudlet {
 			DefaultCloudletCallback<IndexerCloudletContext> {
 
 		@Override
-		public void initialize(IndexerCloudletContext context,
+		public CallbackCompletion<Void> initialize(IndexerCloudletContext context,
 				CallbackArguments<IndexerCloudletContext> arguments) {
 			this.logger.info(
 					"FeedIndexerCloudlet is being initialized.");
@@ -88,11 +87,11 @@ public class IndexerCloudlet {
 			context.batchConsumer = new AmqpQueueConsumerConnector<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
 					batchQueueConfiguration, cloudlet, JSONObject.class,
 					jsonEncoder);
-
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void initializeSucceeded(IndexerCloudletContext context,
+		public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
 				CallbackArguments<IndexerCloudletContext> arguments) {
 			this.logger.info(
 					"Feeds IndexerCloudlet initialized successfully.");
@@ -126,10 +125,12 @@ public class IndexerCloudlet {
 			context.batchConsumerCallback = new BatchConsumerCallback();
 			cloudlet.initializeResource(context.batchConsumer,
 					context.batchConsumerCallback, context);
+
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroy(IndexerCloudletContext context,
+		public CallbackCompletion<Void> destroy(IndexerCloudletContext context,
 				CallbackArguments<IndexerCloudletContext> arguments) {
 			this.logger.info(
 					"Feeds IndexerCloudlet is being destroyed.");
@@ -161,6 +162,7 @@ public class IndexerCloudlet {
 			if (context.batchConsumer != null) {
 				context.batchConsumer.unregister();
 			}
+			return ICallback.SUCCESS;
 		}
 	}
 

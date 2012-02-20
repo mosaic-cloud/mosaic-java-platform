@@ -19,7 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnector;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Interface for registering and using an AMQP resources as a consumer or a
@@ -30,16 +31,16 @@ import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
  * @param <C>
  *            the type of the cloudlet context
  */
-public interface IAmqpQueueConnector<C> extends IConnector<C> {
+public interface IAmqpQueueConnector<C> extends IQueueConnector<C> {
 
 	/**
 	 * Register the accessor with the queuing system.
 	 */
-	public void register();
+	CallbackCompletion<Void> register();
 
 	/**
 	 * Unregister the accessor with the queuing system.
 	 */
-	public void unregister();
+	CallbackCompletion<Void> unregister();
 
 }

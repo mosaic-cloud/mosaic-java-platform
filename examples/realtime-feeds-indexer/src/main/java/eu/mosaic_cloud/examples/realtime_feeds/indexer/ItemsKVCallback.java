@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class ItemsKVCallback extends
 		DefaultKvStoreConnectorCallback<IndexerCloudletContext> {
@@ -35,15 +35,17 @@ public class ItemsKVCallback extends
 	private static final String BUCKET_NAME = "feed-items";
 
 	@Override
-	public void destroySucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		context.itemsStore = null;
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void setFailed(IndexerCloudletContext context,
+	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		handleError(arguments);
+		return ICallback.SUCCESS;
 	}
 
 	private void handleError(

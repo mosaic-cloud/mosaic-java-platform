@@ -19,10 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 
-import java.util.List;
-
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
-import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Basic interface for cloudlets to access key-value storages.
@@ -45,7 +43,7 @@ public interface IKvStoreConnector<C> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> set(String key, Object value, Object extra);
+	CallbackCompletion<Void> set(String key, Object value, Object extra);
 
 	/**
 	 * Gets data associated with a single key.
@@ -56,7 +54,7 @@ public interface IKvStoreConnector<C> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Object> get(String key, Object extra);
+	CallbackCompletion<Void> get(String key, Object extra);
 
 	/**
 	 * Deletes the given key.
@@ -67,7 +65,7 @@ public interface IKvStoreConnector<C> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<Boolean> delete(String key, Object extra);
+	CallbackCompletion<Void> delete(String key, Object extra);
 
 	/**
 	 * Lists the keys in the bucket associated with the accessor.
@@ -76,5 +74,5 @@ public interface IKvStoreConnector<C> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	IResult<List<String>> list(Object extra);
+	CallbackCompletion<Void> list(Object extra);
 }

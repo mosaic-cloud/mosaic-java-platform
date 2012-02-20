@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -29,7 +31,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <C>
  *            the type of the cloudlet context
  */
-public interface IConnector<C> {
+public interface IConnector<C> extends Callbacks {
 
 	/**
 	 * Initialize the accessor.
@@ -39,7 +41,7 @@ public interface IConnector<C> {
 	 * @param context
 	 *            cloudlet context
 	 */
-	void initialize(IConnectorCallback<C> callback, C context,
+	CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			final ThreadingContext threading);
 
 	/**
@@ -48,7 +50,7 @@ public interface IConnector<C> {
 	 * @param callback
 	 *            handler for callbacks received from the resource
 	 */
-	void destroy(IConnectorCallback<C> callback);
+	CallbackCompletion<Void> destroy(IConnectorCallback<C> callback);
 
 	/**
 	 * Returns the current status of the accessor.

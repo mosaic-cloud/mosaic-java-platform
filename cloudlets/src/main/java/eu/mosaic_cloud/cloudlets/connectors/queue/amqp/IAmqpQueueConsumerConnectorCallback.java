@@ -20,6 +20,7 @@
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Interface for AMQP queue consumers. This will be implemented by cloudlets
@@ -43,7 +44,7 @@ public interface IAmqpQueueConsumerConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void acknowledgeSucceeded(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> acknowledgeSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Handles unsuccessful message acknowledge events.
@@ -53,7 +54,7 @@ public interface IAmqpQueueConsumerConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void acknowledgeFailed(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> acknowledgeFailed(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when this consumer receives a message. This will deliver the
@@ -64,5 +65,5 @@ public interface IAmqpQueueConsumerConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	void consume(C context, AmqpQueueConsumeCallbackArguments<C, D> arguments);
+	CallbackCompletion<Void> consume(C context, AmqpQueueConsumeCallbackArguments<C, D> arguments);
 }

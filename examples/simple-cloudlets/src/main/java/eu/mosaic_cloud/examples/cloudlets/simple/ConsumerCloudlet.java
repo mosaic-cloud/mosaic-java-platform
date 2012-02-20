@@ -22,17 +22,16 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class ConsumerCloudlet {
 
@@ -40,7 +39,7 @@ public class ConsumerCloudlet {
 			DefaultCloudletCallback<ConsumerCloudletContext> {
 
 		@Override
-		public void initialize(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> initialize(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"ConsumerCloudlet is being initialized.");
@@ -54,11 +53,11 @@ public class ConsumerCloudlet {
 					String.class);
 			context.consumer = new AmqpQueueConsumerConnector<ConsumerCloudlet.ConsumerCloudletContext, String>(
 					queueConfiguration, cloudlet, String.class, encoder);
-
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void initializeSucceeded(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> initializeSucceeded(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"ConsumerCloudlet initialized successfully.");
@@ -66,21 +65,23 @@ public class ConsumerCloudlet {
 					.getCloudlet();
 			cloudlet.initializeResource(context.consumer,
 					new AmqpConsumerCallback(), context);
-
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroy(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> destroy(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"ConsumerCloudlet is being destroyed.");
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroySucceeded(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> destroySucceeded(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"Consumer cloudlet was destroyed successfully.");
+			return ICallback.SUCCESS;
 		}
 
 	}
@@ -89,14 +90,15 @@ public class ConsumerCloudlet {
 			DefaultAmqpQueueConsumerConnectorCallback<ConsumerCloudletContext, String> {
 
 		@Override
-		public void registerSucceeded(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> registerSucceeded(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"ConsumerCloudlet consumer registered successfully.");
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void unregisterSucceeded(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> unregisterSucceeded(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"ConsumerCloudlet consumer unregistered successfully.");
@@ -104,34 +106,37 @@ public class ConsumerCloudlet {
 			ICloudletController<ConsumerCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.destroyResource(context.consumer, this);
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void initializeSucceeded(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> initializeSucceeded(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
 			context.consumer.register();
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroySucceeded(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> destroySucceeded(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"ConsumerCloudlet consumer was destroyed successfully.");
 			context.consumer = null;
 			arguments.getCloudlet().destroy();
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void acknowledgeSucceeded(ConsumerCloudletContext context,
+		public CallbackCompletion<Void> acknowledgeSucceeded(ConsumerCloudletContext context,
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			context.consumer.unregister();
-
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void consume(
+		public CallbackCompletion<Void> consume(
 				ConsumerCloudletContext context,
 				AmqpQueueConsumeCallbackArguments<ConsumerCloudletContext, String> arguments) {
 
@@ -141,6 +146,7 @@ public class ConsumerCloudlet {
 					"ConsumerCloudlet received logging message for user "
 							+ data);
 			message.acknowledge();
+			return ICallback.SUCCESS;
 		}
 
 	}

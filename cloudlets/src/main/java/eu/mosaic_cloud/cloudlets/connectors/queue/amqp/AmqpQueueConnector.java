@@ -26,8 +26,8 @@ import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorException;
 import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorStatus;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentResourceFinder;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
@@ -39,6 +39,7 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
@@ -152,7 +153,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 	}
 
 	@Override
-	public void initialize(IConnectorCallback<C> callback, C context,
+	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {
 			@SuppressWarnings("unchecked")
@@ -185,7 +186,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 	}
 
 	@Override
-	public void destroy(IConnectorCallback<C> callback) {
+	public CallbackCompletion<Void> destroy(IConnectorCallback<C> callback) {
 		synchronized (this.monitor) {
 			this.status = ConnectorStatus.DESTROYING;
 			@SuppressWarnings("unchecked")

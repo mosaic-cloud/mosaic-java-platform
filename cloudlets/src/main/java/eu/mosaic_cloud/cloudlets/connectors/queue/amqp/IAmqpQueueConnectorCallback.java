@@ -21,6 +21,7 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Basic interface for AMQP accessor callbacks.
@@ -41,7 +42,7 @@ public interface IAmqpQueueConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void registerSucceeded(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> registerSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when consumer or publisher failed to register.
@@ -51,7 +52,7 @@ public interface IAmqpQueueConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void registerFailed(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> registerFailed(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when consumer or publisher unregistered successfully.
@@ -61,7 +62,7 @@ public interface IAmqpQueueConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void unregisterSucceeded(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> unregisterSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when consumer or publisher failed to unregister.
@@ -71,5 +72,5 @@ public interface IAmqpQueueConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void unregisterFailed(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> unregisterFailed(C context, CallbackArguments<C> arguments);
 }

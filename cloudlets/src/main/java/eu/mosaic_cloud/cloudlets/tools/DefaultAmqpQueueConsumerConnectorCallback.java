@@ -17,11 +17,15 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.tools;
+
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Default AMQP consumer callback.
@@ -33,26 +37,26 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
  * @param <D>
  *            the type of consumed data
  */
-public class DefaultAmqpQueueConsumerConnectorCallback<C, D> extends
-		DefaultAmqpQueueConnectorCallback<C> implements
-		IAmqpQueueConsumerConnectorCallback<C, D> {
-
+public class DefaultAmqpQueueConsumerConnectorCallback<C, D>
+		extends DefaultAmqpQueueConnectorCallback<C>
+		implements
+			IAmqpQueueConsumerConnectorCallback<C, D>
+{
 	@Override
-	public void acknowledgeSucceeded(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Acknowledge Succeeded", true,
-				false);
+	public CallbackCompletion<Void> acknowledgeFailed (final C context, final CallbackArguments<C> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Acknowledge Failed", false, false);
 	}
-
+	
 	@Override
-	public void acknowledgeFailed(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Acknowledge Failed", false,
-				false);
+	public CallbackCompletion<Void> acknowledgeSucceeded (final C context, final CallbackArguments<C> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Acknowledge Succeeded", true, false);
 	}
-
+	
 	@Override
-	public void consume(C context,
-			AmqpQueueConsumeCallbackArguments<C, D> arguments) {
-		this.handleUnhandledCallback(arguments, "Consume", true, false);
+	public CallbackCompletion<Void> consume (final C context, final AmqpQueueConsumeCallbackArguments<C, D> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Consume", true, false);
 	}
-
 }

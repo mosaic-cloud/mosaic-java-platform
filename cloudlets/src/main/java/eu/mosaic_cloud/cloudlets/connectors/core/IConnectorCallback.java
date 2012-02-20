@@ -21,6 +21,7 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Basic interface for resource accessor callback classes.
@@ -40,7 +41,7 @@ public interface IConnectorCallback<C> extends ICallback<C> {
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void initializeSucceeded(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> initializeSucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when resource accessor initialization failed.
@@ -50,7 +51,7 @@ public interface IConnectorCallback<C> extends ICallback<C> {
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void initializeFailed(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> initializeFailed(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when resource accessor destruction succeeded.
@@ -60,7 +61,7 @@ public interface IConnectorCallback<C> extends ICallback<C> {
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void destroySucceeded(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> destroySucceeded(C context, CallbackArguments<C> arguments);
 
 	/**
 	 * Called when resource accessor destruction failed.
@@ -70,5 +71,5 @@ public interface IConnectorCallback<C> extends ICallback<C> {
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void destroyFailed(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> destroyFailed(C context, CallbackArguments<C> arguments);
 }

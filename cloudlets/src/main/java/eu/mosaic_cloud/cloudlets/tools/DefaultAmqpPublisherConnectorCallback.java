@@ -17,10 +17,14 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.tools;
+
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Default AMQP publisher callback.
@@ -32,23 +36,20 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
  * @param <D>
  *            the type of published data
  */
-public class DefaultAmqpPublisherConnectorCallback<C, D> extends
-		DefaultAmqpQueueConnectorCallback<C> implements
-		IAmqpQueuePublisherConnectorCallback<C, D> {
-
+public class DefaultAmqpPublisherConnectorCallback<C, D>
+		extends DefaultAmqpQueueConnectorCallback<C>
+		implements
+			IAmqpQueuePublisherConnectorCallback<C, D>
+{
 	@Override
-	public void publishSucceeded(C context,
-			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments) {
-		this.handleUnhandledCallback(arguments, "Publish Succeeded", true,
-				false);
-
+	public CallbackCompletion<Void> publishFailed (final C context, final AmqpQueuePublishCallbackCompletionArguments<C, D> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Publish Failed", false, false);
 	}
-
+	
 	@Override
-	public void publishFailed(C context,
-			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments) {
-		this.handleUnhandledCallback(arguments, "Publish Failed", false, false);
-
+	public CallbackCompletion<Void> publishSucceeded (final C context, final AmqpQueuePublishCallbackCompletionArguments<C, D> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Publish Succeeded", true, false);
 	}
-
 }

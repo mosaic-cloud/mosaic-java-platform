@@ -24,8 +24,8 @@ import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallback;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
@@ -34,6 +34,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -89,7 +90,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 	}
 
 	@Override
-	public void initialize(IConnectorCallback<C> callback, C context,
+	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		if (callback instanceof IAmqpQueueConsumerConnectorCallback) {
 			super.initialize(callback, context, threading);
@@ -118,7 +119,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 	 * eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnector#register()
 	 */
 	@Override
-	public void register() {
+	public CallbackCompletion<Void> register() {
 		synchronized (this.monitor) {
 			// declare queue and in case of success register as consumer
 			startRegister(this.callback);
@@ -165,7 +166,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 	}
 
 	@Override
-	public void unregister() {
+	public CallbackCompletion<Void> unregister() {
 		synchronized (this.monitor) {
 			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 	
@@ -198,7 +199,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 	 *            the message to acknowledge
 	 */
 	@Override
-	public void acknowledge(AmqpQueueConsumeMessage<D> message) {
+	public CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<D> message) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
@@ -235,7 +236,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 	final class AmqpConsumerCallback implements IAmqpQueueConsumerCallback {
 
 		@Override
-		public void handleCancelOk(String consumerTag) {
+		public CallbackCompletion<Void> handleCancelOk(String consumerTag) {
 			AmqpQueueConsumerConnector.this.logger.trace(
 					"AmqpQueueConsumerConnector: received CANCEL ok message.");
 			if (!AmqpQueueConsumerConnector.super.registered) {
@@ -249,7 +250,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 		}
 
 		@Override
-		public void handleConsumeOk(String consumerTag) {
+		public CallbackCompletion<Void> handleConsumeOk(String consumerTag) {
 			if (AmqpQueueConsumerConnector.super.registered) {
 				return;
 			}
@@ -264,7 +265,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 		}
 
 		@Override
-		public void handleDelivery(AmqpInboundMessage message) {
+		public CallbackCompletion<Void> handleDelivery(AmqpInboundMessage message) {
 			D data;
 			try {
 				data = AmqpQueueConsumerConnector.this.dataEncoder.decode(message
@@ -281,7 +282,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 		}
 
 		@Override
-		public void handleShutdownSignal(String consumerTag, String message) {
+		public CallbackCompletion<Void> handleShutdownSignal(String consumerTag, String message) {
 
 		}
 

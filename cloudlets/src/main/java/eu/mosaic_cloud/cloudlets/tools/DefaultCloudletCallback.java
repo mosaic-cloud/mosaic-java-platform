@@ -17,10 +17,14 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.tools;
+
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Default cloudlet callback. This extends the {@link DefaultCallback} and
@@ -31,35 +35,32 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public abstract class DefaultCloudletCallback<C> extends DefaultCallback<C>
-		implements ICloudletCallback<C> {
-
+public abstract class DefaultCloudletCallback<C>
+		extends DefaultCallback<C>
+		implements
+			ICloudletCallback<C>
+{
 	@Override
-	public void initializeSucceeded(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments,
-				"Cloudlet Initialize Succeeded", true, true);
-
+	public CallbackCompletion<Void> destroyFailed (final C context, final CallbackArguments<C> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Destroy Failed", false, false);
 	}
-
+	
 	@Override
-	public void initializeFailed(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Cloudlet Initialize Failed",
-				false, true);
-
+	public CallbackCompletion<Void> destroySucceeded (final C context, final CallbackArguments<C> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Destroy Succeeded", true, false);
 	}
-
+	
 	@Override
-	public void destroySucceeded(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Cloudlet Destroy Succeeded",
-				true, false);
-
+	public CallbackCompletion<Void> initializeFailed (final C context, final CallbackArguments<C> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Initialize Failed", false, true);
 	}
-
+	
 	@Override
-	public void destroyFailed(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Cloudlet Destroy Failed",
-				false, false);
-
+	public CallbackCompletion<Void> initializeSucceeded (final C context, final CallbackArguments<C> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Initialize Succeeded", true, true);
 	}
-
 }

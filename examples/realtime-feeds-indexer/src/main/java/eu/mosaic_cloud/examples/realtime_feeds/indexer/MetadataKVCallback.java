@@ -23,12 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,9 +38,10 @@ public final class MetadataKVCallback extends
 	private static final String BUCKET_NAME = "feed-metadata";
 
 	@Override
-	public void destroySucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		context.metadataStore = null;
+		return ICallback.SUCCESS;
 	}
 
 	private void createFeedMetaData(IndexerCloudletContext context, String key,
@@ -57,19 +58,21 @@ public final class MetadataKVCallback extends
 	}
 
 	@Override
-	public void setSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> setSucceeded(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		IndexWorkflow.onMetadataStored(arguments);
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void setFailed(IndexerCloudletContext context,
+	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		handleError(arguments);
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void getSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> getSucceeded(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		this.logger.trace(
@@ -82,12 +85,14 @@ public final class MetadataKVCallback extends
 			IndexWorkflow.findNewFeeds(arguments.getValue(),
 					arguments.getExtra());
 		}
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void getFailed(IndexerCloudletContext context,
+	public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		handleError(arguments);
+		return ICallback.SUCCESS;
 	}
 
 	private void handleError(

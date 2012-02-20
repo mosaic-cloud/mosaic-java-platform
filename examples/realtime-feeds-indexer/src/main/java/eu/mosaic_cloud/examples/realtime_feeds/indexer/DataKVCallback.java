@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class DataKVCallback extends
 		DefaultKvStoreConnectorCallback<IndexerCloudletContext> {
@@ -35,13 +35,14 @@ public class DataKVCallback extends
 	private static final String BUCKET_NAME = "feed-data";
 
 	@Override
-	public void destroySucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		context.dataStore = null;
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void getSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> getSucceeded(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		this.logger.trace(
@@ -49,10 +50,11 @@ public class DataKVCallback extends
 						+ ")");
 		IndexWorkflow.parseLatestFeed(arguments.getValue(),
 				arguments.getExtra());
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void getFailed(IndexerCloudletContext context,
+	public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
 			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		this.logger
@@ -64,5 +66,6 @@ public class DataKVCallback extends
 		errorMssg.put("bucket", DataKVCallback.BUCKET_NAME);
 		errorMssg.put("key", key);
 		IndexWorkflow.onIndexError(errorMssg, arguments.getExtra());
+		return ICallback.SUCCESS;
 	}
 }

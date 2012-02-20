@@ -21,31 +21,33 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import org.json.JSONObject;
 
 public class QueueConsumerCallback extends
 		DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject> {
 
 	@Override
-	public void registerSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> registerSucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		this.logger.info(
 				"Index Message consumer registered successfully.");
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void consume(
+	public CallbackCompletion<Void> consume(
 			IndexerCloudletContext context,
 			AmqpQueueConsumeCallbackArguments<IndexerCloudletContext, JSONObject> arguments) {
 		AmqpQueueConsumeMessage<JSONObject> message = arguments.getMessage();
 
 		IndexWorkflow.indexNewFeed(context, message);
 		message.acknowledge();
+		return ICallback.SUCCESS;
 	}
 
 }

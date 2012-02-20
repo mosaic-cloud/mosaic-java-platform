@@ -20,34 +20,39 @@
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public final class BatchConsumerCallback extends QueueConsumerCallback {
 
 	@Override
-	public void unregisterSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> unregisterSucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		this.logger.info(
 				"Batch Index Message consumer unregistered successfully.");
 		ICloudletController<IndexerCloudletContext> cloudlet = arguments
 				.getCloudlet();
 		cloudlet.destroyResource(context.batchConsumer, this);
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void initializeSucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		// if resource initialized successfully then just register as a
 		// consumer
 		context.batchConsumer.register();
+		return ICallback.SUCCESS;
 	}
 
 	@Override
-	public void destroySucceeded(IndexerCloudletContext context,
+	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		this.logger.info(
 				"Batch Index Message consumer was destroyed successfully.");
 		context.batchConsumer = null;
+		return ICallback.SUCCESS;
 	}
 }

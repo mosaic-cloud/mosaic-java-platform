@@ -24,13 +24,14 @@ import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -88,7 +89,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 	 * java.lang.Object)
 	 */
 	@Override
-	public void initialize(IConnectorCallback<C> callback, C context,
+	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {
 			if (callback instanceof IAmqpQueuePublisherConnectorCallback) {
@@ -112,7 +113,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 	}
 
 	@Override
-	public void register() {
+	public CallbackCompletion<Void> register() {
 		// declare queue and in case of success register as consumer
 		synchronized (this.monitor) {
 			startRegister(this.callback);
@@ -135,7 +136,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 	}
 
 	@Override
-	public void unregister() {
+	public CallbackCompletion<Void> unregister() {
 		synchronized (this.monitor) {
 			if (!AmqpQueuePublisherConnector.super.registered) {
 				return;
@@ -149,7 +150,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 	}
 
 	@Override
-	public void publish(D data, final Object token, String contentType) {
+	public CallbackCompletion<Void> publish(D data, final Object token, String contentType) {
 		try {
 			byte[] sData = this.dataEncoder.encode(data);
 			final AmqpOutboundMessage message = new AmqpOutboundMessage(
@@ -182,7 +183,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 	}
 
 	@Override
-	public void publish(D data, final Object token, String contentType,
+	public CallbackCompletion<Void> publish(D data, final Object token, String contentType,
 			String selector) {
 		try {
 			// FIXME this is a hack

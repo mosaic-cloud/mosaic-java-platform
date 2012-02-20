@@ -26,8 +26,8 @@ import java.util.Map;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Cloudlet-level accessor for memcached-based key value storages. Cloudlets
@@ -57,7 +57,7 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public IResult<Boolean> set(final String key, final Object value, int exp,
+	public CallbackCompletion<Void> set(final String key, final Object value, int exp,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -87,7 +87,7 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public IResult<Boolean> add(final String key, final Object value, int exp,
+	public CallbackCompletion<Void> add(final String key, final Object value, int exp,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -117,7 +117,7 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public IResult<Boolean> append(final String key, final Object value,
+	public CallbackCompletion<Void> append(final String key, final Object value,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -147,7 +147,7 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public IResult<Boolean> prepend(final String key, final Object value,
+	public CallbackCompletion<Void> prepend(final String key, final Object value,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -177,7 +177,7 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public IResult<Boolean> cas(final String key, final Object value,
+	public CallbackCompletion<Void> cas(final String key, final Object value,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -207,7 +207,7 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public IResult<Boolean> replace(final String key, final Object value,
+	public CallbackCompletion<Void> replace(final String key, final Object value,
 			int exp, final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
@@ -238,7 +238,7 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public IResult<Map<String, Object>> getBulk(final List<String> keys,
+	public CallbackCompletion<Void> getBulk(final List<String> keys,
 			final Object extra) {
 		IOperationCompletionHandler<Map<String, Object>> cHandler = new IOperationCompletionHandler<Map<String, Object>>() {
 

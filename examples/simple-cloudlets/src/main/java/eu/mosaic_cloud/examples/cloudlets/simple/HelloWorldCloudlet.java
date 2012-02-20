@@ -19,12 +19,12 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentLauncher;
-
-import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentLauncher;
+import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class HelloWorldCloudlet {
 
@@ -32,14 +32,15 @@ public class HelloWorldCloudlet {
 			DefaultCloudletCallback<HelloCloudletContext> {
 
 		@Override
-		public void initialize(HelloCloudletContext context,
+		public CallbackCompletion<Void> initialize(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet is initializing...");
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void initializeSucceeded(HelloCloudletContext context,
+		public CallbackCompletion<Void> initializeSucceeded(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet was initialized successfully.");
@@ -47,20 +48,23 @@ public class HelloWorldCloudlet {
 			ICloudletController<HelloCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			cloudlet.destroy();
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroy(HelloCloudletContext context,
+		public CallbackCompletion<Void> destroy(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet is being destroyed.");
+			return ICallback.SUCCESS;
 		}
 
 		@Override
-		public void destroySucceeded(HelloCloudletContext context,
+		public CallbackCompletion<Void> destroySucceeded(HelloCloudletContext context,
 				CallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet was destroyed successfully.");
+			return ICallback.SUCCESS;
 		}
 
 	}
