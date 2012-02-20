@@ -31,7 +31,7 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultCallback<C> implements ICallback {
+public class DefaultCallback<C> implements ICallback<C> {
 	protected MosaicLogger logger = MosaicLogger.createLogger(this);
 
 	/**

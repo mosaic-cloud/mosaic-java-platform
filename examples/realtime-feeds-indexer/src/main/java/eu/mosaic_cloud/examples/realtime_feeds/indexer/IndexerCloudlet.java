@@ -19,15 +19,17 @@
  */
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
+
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
+
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
-import eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueueConsumerCallback;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessor;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessorCallback;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
@@ -51,39 +53,39 @@ public class IndexerCloudlet {
 							.resolveAbsolute("metadata"));
 			DataEncoder<byte[]> nopEncoder = new NopDataEncoder();
 			DataEncoder<JSONObject> jsonEncoder = new JSONDataEncoder();
-			context.metadataStore = new KeyValueAccessor<IndexerCloudletContext>(
+			context.metadataStore = new KvStoreConnector<IndexerCloudletContext>(
 					metadataConfiguration, cloudlet, jsonEncoder);
 			IConfiguration dataConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("data"));
-			context.dataStore = new KeyValueAccessor<IndexerCloudletContext>(
+			context.dataStore = new KvStoreConnector<IndexerCloudletContext>(
 					dataConfiguration, cloudlet, nopEncoder);
 			IConfiguration timelinesConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("timelines"));
-			context.timelinesStore = new KeyValueAccessor<IndexerCloudletContext>(
+			context.timelinesStore = new KvStoreConnector<IndexerCloudletContext>(
 					timelinesConfiguration, cloudlet, jsonEncoder);
 			IConfiguration itemsConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("items"));
-			context.itemsStore = new KeyValueAccessor<IndexerCloudletContext>(
+			context.itemsStore = new KvStoreConnector<IndexerCloudletContext>(
 					itemsConfiguration, cloudlet, jsonEncoder);
 			IConfiguration tasksConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("tasks"));
-			context.taskStore = new KeyValueAccessor<IndexerCloudletContext>(
+			context.taskStore = new KvStoreConnector<IndexerCloudletContext>(
 					tasksConfiguration, cloudlet, jsonEncoder);
 
 			IConfiguration urgentQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("urgent.queue"));
-			context.urgentConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
+			context.urgentConsumer = new AmqpQueueConsumerConnector<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
 					urgentQueueConfiguration, cloudlet, JSONObject.class,
 					jsonEncoder);
 			IConfiguration batchQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("batch.queue"));
-			context.batchConsumer = new AmqpQueueConsumer<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
+			context.batchConsumer = new AmqpQueueConsumerConnector<IndexerCloudlet.IndexerCloudletContext, JSONObject>(
 					batchQueueConfiguration, cloudlet, JSONObject.class,
 					jsonEncoder);
 
@@ -164,20 +166,20 @@ public class IndexerCloudlet {
 
 	public static final class IndexerCloudletContext {
 
-		AmqpQueueConsumer<IndexerCloudletContext, JSONObject> urgentConsumer;
-		AmqpQueueConsumer<IndexerCloudletContext, JSONObject> batchConsumer;
-		IKeyValueAccessor<IndexerCloudletContext> metadataStore;
-		IKeyValueAccessor<IndexerCloudletContext> dataStore;
-		IKeyValueAccessor<IndexerCloudletContext> timelinesStore;
-		IKeyValueAccessor<IndexerCloudletContext> itemsStore;
-		IKeyValueAccessor<IndexerCloudletContext> taskStore;
-		IAmqpQueueConsumerCallback<IndexerCloudletContext, JSONObject> urgentConsumerCallback;
-		IAmqpQueueConsumerCallback<IndexerCloudletContext, JSONObject> batchConsumerCallback;
-		IKeyValueAccessorCallback<IndexerCloudletContext> metadataStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletContext> dataStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletContext> timelinesStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletContext> itemsStoreCallback;
-		IKeyValueAccessorCallback<IndexerCloudletContext> tasksStoreCallback;
+		AmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> urgentConsumer;
+		AmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> batchConsumer;
+		IKvStoreConnector<IndexerCloudletContext> metadataStore;
+		IKvStoreConnector<IndexerCloudletContext> dataStore;
+		IKvStoreConnector<IndexerCloudletContext> timelinesStore;
+		IKvStoreConnector<IndexerCloudletContext> itemsStore;
+		IKvStoreConnector<IndexerCloudletContext> taskStore;
+		IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject> urgentConsumerCallback;
+		IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject> batchConsumerCallback;
+		IKvStoreConnectorCallback<IndexerCloudletContext> metadataStoreCallback;
+		IKvStoreConnectorCallback<IndexerCloudletContext> dataStoreCallback;
+		IKvStoreConnectorCallback<IndexerCloudletContext> timelinesStoreCallback;
+		IKvStoreConnectorCallback<IndexerCloudletContext> itemsStoreCallback;
+		IKvStoreConnectorCallback<IndexerCloudletContext> tasksStoreCallback;
 	}
 
 }

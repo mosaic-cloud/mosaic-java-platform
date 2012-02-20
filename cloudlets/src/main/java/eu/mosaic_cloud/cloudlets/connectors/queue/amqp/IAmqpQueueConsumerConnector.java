@@ -17,14 +17,25 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.core;
+package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 /**
- * Marker interface for cloudlet callbacks.
+ * Interface for registering and using for an AMQP resource as a consumer.
  * 
  * @author Georgiana Macariu
  * 
+ * @param <C>
+ *            the type of the context of the cloudlet using this accessor
+ * @param <D>
+ *            the type of the consumed data
  */
-public interface ICallback<C> {
+public interface IAmqpQueueConsumerConnector<C, D> extends IAmqpQueueConnector<C> {
 
+	/**
+	 * Acknowledges a message.
+	 * 
+	 * @param message
+	 *            the message to acknowledge
+	 */
+	public void acknowledge(AmqpQueueConsumeMessage<D> message);
 }

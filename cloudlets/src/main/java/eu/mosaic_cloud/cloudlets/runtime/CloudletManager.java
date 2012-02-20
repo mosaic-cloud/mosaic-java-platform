@@ -119,7 +119,7 @@ public class CloudletManager {
 					.resolveParameter(
 							this.configuration,
 							ConfigProperties
-									.getString("CloudletDummyContainer.0"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+									.getString("CloudletComponentCallbacks.8"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 			if (cloudletClass.equals("")) {
 				throw new CloudletException("The configuration file " //$NON-NLS-1$
 						+ this.configuration.toString()
@@ -131,7 +131,7 @@ public class CloudletManager {
 					.resolveParameter(
 							this.configuration,
 							ConfigProperties
-									.getString("CloudletDummyContainer.1"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+									.getString("CloudletComponentCallbacks.8"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 			if (cloudletStateClass.equals("")) {
 				throw new CloudletException("The configuration file " //$NON-NLS-1$
 						+ this.configuration.toString()
@@ -143,7 +143,7 @@ public class CloudletManager {
 					.resolveParameter(
 							this.configuration,
 							ConfigProperties
-									.getString("CloudletDummyContainer.2"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+									.getString("CloudletComponentCallbacks.10"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
 
 			handlerClasz = this.classLoader.loadClass(cloudletClass);
 			stateClasz = this.classLoader.loadClass(cloudletStateClass);

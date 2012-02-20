@@ -47,7 +47,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public class MemcacheKvStoreConnector<T extends Object>
 		extends BaseKvStoreConnector<T, MemcacheKvStoreConnectorProxy<T>>
 		implements
-			IMemcacheKvStore<T>
+			IMemcacheKvStoreConnector<T>
 {
 	protected MemcacheKvStoreConnector (final MemcacheKvStoreConnectorProxy<T> proxy)
 	{

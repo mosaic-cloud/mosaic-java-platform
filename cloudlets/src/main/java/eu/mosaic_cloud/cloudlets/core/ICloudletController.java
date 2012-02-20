@@ -19,8 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.core;
 
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -35,7 +35,7 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public interface ICloudletController<C> extends ICallback {
+public interface ICloudletController<C> {
 
 	IConfiguration getConfiguration();
 
@@ -55,8 +55,8 @@ public interface ICloudletController<C> extends ICallback {
 	 * @param cloudletContext
 	 *            the cloudlet context
 	 */
-	void initializeResource(IResourceAccessor<C> accessor,
-			IResourceAccessorCallback<C> callbackHandler, C cloudletContext);
+	void initializeResource(IConnector<C> accessor,
+			IConnectorCallback<C> callbackHandler, C cloudletContext);
 
 	/**
 	 * Destroys the resource accessor for a given resource.
@@ -67,8 +67,8 @@ public interface ICloudletController<C> extends ICallback {
 	 *            the cloudlet callback handler which must handle callbacks to
 	 *            operations invoked on the accessor
 	 */
-	void destroyResource(IResourceAccessor<C> accessor,
-			IResourceAccessorCallback<C> callbackHandler);
+	void destroyResource(IConnector<C> accessor,
+			IConnectorCallback<C> callbackHandler);
 
 	/**
 	 * Destroys the cloudlet.

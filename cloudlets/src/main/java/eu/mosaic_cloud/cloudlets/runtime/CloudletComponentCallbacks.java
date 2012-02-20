@@ -29,10 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
-
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -123,22 +122,22 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks,
 				.resolve(ConfigUtils.resolveParameter(
 						configuration,
 						ConfigProperties
-								.getString("ContainerComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+								.getString("CloudletComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
 		this.kvGroup = ComponentIdentifier.resolve(ConfigUtils
 				.resolveParameter(configuration, ConfigProperties
-						.getString("ContainerComponentCallbacks.1"), //$NON-NLS-1$
+						.getString("CloudletComponentCallbacks.1"), //$NON-NLS-1$
 						String.class, "")); //$NON-NLS-1$
 		this.mcGroup = ComponentIdentifier
 				.resolve(ConfigUtils.resolveParameter(
 						configuration,
 						ConfigProperties
-								.getString("ContainerComponentCallbacks.2"), String.class, //$NON-NLS-1$
+								.getString("CloudletComponentCallbacks.2"), String.class, //$NON-NLS-1$
 						"")); //$NON-NLS-1$
 		this.selfGroup = ComponentIdentifier
 				.resolve(ConfigUtils.resolveParameter(
 						configuration,
 						ConfigProperties
-								.getString("ContainerComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+								.getString("CloudletComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
 		this.status = Status.Created;
 	}
 
@@ -151,7 +150,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks,
 				&& (this.status != Status.Unregistered));
 		if (this.status == Status.Ready) {
 			if (request.operation.equals(ConfigProperties
-					.getString("ContainerComponentCallbacks.4"))) {
+					.getString("CloudletComponentCallbacks.4"))) {
 				// TODO
 				List<?> operands = DefaultJsonMapper.defaultInstance
 						.decode(request.inputs, List.class);
@@ -190,7 +189,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks,
 			return null;
 		}
 		int noInstances = ConfigUtils.resolveParameter(configuration,
-				ConfigProperties.getString("CloudletDummyContainer.3"),
+				ConfigProperties.getString("CloudletComponentCallbacks.11"),
 				Integer.class, 1);
 		List<CloudletManager> containers = new ArrayList<CloudletManager>();
 		for (int i = 0; i < noInstances; i++) {
@@ -393,7 +392,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks,
 				.call(componentId,
 						ComponentCallRequest.create(
 								ConfigProperties
-										.getString("ContainerComponentCallbacks.7"), null, callReference)); //$NON-NLS-1$
+										.getString("CloudletComponentCallbacks.7"), null, callReference)); //$NON-NLS-1$
 
 		try {
 			reply = replyFuture.get();

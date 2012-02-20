@@ -17,14 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.core;
+package eu.mosaic_cloud.cloudlets.connectors.core;
 
 /**
- * Marker interface for cloudlet callbacks.
+ * Enum defining the life cycle of a resource accessor.
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface ICallback<C> {
-
+public enum ConnectorStatus {
+	CREATED, INITIALIZING, INITIALIZED, READY, DESTROYING, DESTROYED
 }

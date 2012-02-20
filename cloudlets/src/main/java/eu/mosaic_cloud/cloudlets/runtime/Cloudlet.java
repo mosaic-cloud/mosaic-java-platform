@@ -27,13 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -79,8 +78,7 @@ public class Cloudlet<C extends Object> {
 	 * @throws CloudletException
 	 */
 	public Cloudlet(C context, ICloudletCallback<C> callback,
-			ThreadingContext threading, ClassLoader loader)
-			throws CloudletException {
+			ThreadingContext threading, ClassLoader loader) {
 		synchronized (this.monitor) {
 			this.context = context;
 			this.threading = threading;
@@ -222,15 +220,15 @@ public class Cloudlet<C extends Object> {
 		return this.active;
 	}
 
-	private void destroyResource(IResourceAccessor<C> accessor,
-			IResourceAccessorCallback<C> callbackHandler) {
+	private void destroyResource(IConnector<C> accessor,
+			IConnectorCallback<C> callbackHandler) {
 		synchronized (this.monitor) {
 			accessor.destroy(callbackHandler);
 		}
 	}
 
-	private void initializeResource(IResourceAccessor<C> accessor,
-			IResourceAccessorCallback<C> callbackHandler, C cloudletContext) {
+	private void initializeResource(IConnector<C> accessor,
+			IConnectorCallback<C> callbackHandler, C cloudletContext) {
 		synchronized (this.monitor) {
 			accessor.initialize(callbackHandler, this.context, this.threading);
 		}
@@ -278,16 +276,16 @@ public class Cloudlet<C extends Object> {
 		}
 
 		@Override
-		public void initializeResource(IResourceAccessor<C> accessor,
-				IResourceAccessorCallback<C> callbackHandler, C cloudletContext) {
+		public void initializeResource(IConnector<C> accessor,
+				IConnectorCallback<C> callbackHandler, C cloudletContext) {
 			Cloudlet.this.initializeResource(accessor, callbackHandler,
 					cloudletContext);
 
 		}
 
 		@Override
-		public void destroyResource(IResourceAccessor<C> accessor,
-				IResourceAccessorCallback<C> callbackHandler) {
+		public void destroyResource(IConnector<C> accessor,
+				IConnectorCallback<C> callbackHandler) {
 			Cloudlet.this.destroyResource(accessor, callbackHandler);
 
 		}
@@ -331,7 +329,7 @@ public class Cloudlet<C extends Object> {
 
 		@Override
 		public Object invoke(Object proxy, final Method method,
-				final Object[] arguments) throws Throwable {
+				final Object[] arguments) {
 			Runnable task = new Runnable() {
 
 				@Override
@@ -385,7 +383,7 @@ public class Cloudlet<C extends Object> {
 
 		@Override
 		public Object invoke(Object proxy, final Method method,
-				final Object[] arguments) throws Throwable {
+				final Object[] arguments) {
 			Runnable task = new Runnable() {
 
 				@Override

@@ -19,18 +19,19 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpConsumerCallback;
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
@@ -51,10 +52,10 @@ public class PingCloudlet {
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			context.consumer = new AmqpQueueConsumer<PingCloudlet.PingCloudletContext, PongMessage>(
+			context.consumer = new AmqpQueueConsumerConnector<PingCloudlet.PingCloudletContext, PongMessage>(
 					queueConfiguration, cloudlet, PongMessage.class,
 					new JsonDataEncoder<PongMessage>(PongMessage.class));
-			context.publisher = new AmqpQueuePublisher<PingCloudlet.PingCloudletContext, PingMessage>(
+			context.publisher = new AmqpQueuePublisherConnector<PingCloudlet.PingCloudletContext, PingMessage>(
 					queueConfiguration, cloudlet, PingMessage.class,
 					new JsonDataEncoder<PingMessage>(PingMessage.class));
 
@@ -90,7 +91,7 @@ public class PingCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpConsumerCallback<PingCloudletContext, PongMessage> {
+			DefaultAmqpQueueConsumerConnectorCallback<PingCloudletContext, PongMessage> {
 
 		@Override
 		public void registerSucceeded(PingCloudletContext context,
@@ -155,7 +156,7 @@ public class PingCloudlet {
 	}
 
 	public static final class AmqpPublisherCallback extends
-			DefaultAmqpPublisherCallback<PingCloudletContext, PingMessage> {
+			DefaultAmqpPublisherConnectorCallback<PingCloudletContext, PingMessage> {
 
 		@Override
 		public void registerSucceeded(PingCloudletContext context,
@@ -207,7 +208,7 @@ public class PingCloudlet {
 
 	public static final class PingCloudletContext {
 
-		AmqpQueueConsumer<PingCloudletContext, PongMessage> consumer;
-		AmqpQueuePublisher<PingCloudletContext, PingMessage> publisher;
+		AmqpQueueConsumerConnector<PingCloudletContext, PongMessage> consumer;
+		AmqpQueuePublisherConnector<PingCloudletContext, PingMessage> publisher;
 	}
 }

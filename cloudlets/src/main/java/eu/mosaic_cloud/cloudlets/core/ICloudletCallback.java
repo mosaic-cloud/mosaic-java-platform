@@ -28,7 +28,7 @@ package eu.mosaic_cloud.cloudlets.core;
  * @param <C>
  *            The type of the object encoding the context of the cloudlet.
  */
-public interface ICloudletCallback<C> extends ICallback {
+public interface ICloudletCallback<C> extends ICallback<C> {
 
 	/**
 	 * Initializes the user cloudlet.

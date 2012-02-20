@@ -19,16 +19,17 @@
  */
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpConsumerCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import org.json.JSONObject;
 
 public class QueueConsumerCallback extends
-		DefaultAmqpConsumerCallback<IndexerCloudletContext, JSONObject> {
+		DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject> {
 
 	@Override
 	public void registerSucceeded(IndexerCloudletContext context,

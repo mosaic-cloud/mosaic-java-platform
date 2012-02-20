@@ -21,23 +21,25 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultKeyValueAccessorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpConsumerCallback;
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherCallback;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessor;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -61,16 +63,16 @@ public class LoggingCloudlet {
 			IConfiguration kvConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("kvstore"));
-			context.kvStore = new KeyValueAccessor<LoggingCloudletContext>(
+			context.kvStore = new KvStoreConnector<LoggingCloudletContext>(
 					kvConfiguration, cloudlet, new PojoDataEncoder<String>(
 							String.class));
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			context.consumer = new AmqpQueueConsumer<LoggingCloudlet.LoggingCloudletContext, LoggingData>(
+			context.consumer = new AmqpQueueConsumerConnector<LoggingCloudlet.LoggingCloudletContext, LoggingData>(
 					queueConfiguration, cloudlet, LoggingData.class,
 					new PojoDataEncoder<LoggingData>(LoggingData.class));
-			context.publisher = new AmqpQueuePublisher<LoggingCloudlet.LoggingCloudletContext, AuthenticationToken>(
+			context.publisher = new AmqpQueuePublisherConnector<LoggingCloudlet.LoggingCloudletContext, AuthenticationToken>(
 					queueConfiguration, cloudlet, AuthenticationToken.class,
 					new PojoDataEncoder<AuthenticationToken>(
 							AuthenticationToken.class));
@@ -110,7 +112,7 @@ public class LoggingCloudlet {
 	}
 
 	public static final class KeyValueCallback extends
-			DefaultKeyValueAccessorCallback<LoggingCloudletContext> {
+			DefaultKvStoreConnectorCallback<LoggingCloudletContext> {
 
 		private static int sets = 0;
 
@@ -159,7 +161,7 @@ public class LoggingCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpConsumerCallback<LoggingCloudletContext, LoggingData> {
+			DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData> {
 
 		@Override
 		public void registerSucceeded(LoggingCloudletContext context,
@@ -246,7 +248,7 @@ public class LoggingCloudlet {
 
 	public static final class AmqpPublisherCallback
 			extends
-			DefaultAmqpPublisherCallback<LoggingCloudletContext, AuthenticationToken> {
+			DefaultAmqpPublisherConnectorCallback<LoggingCloudletContext, AuthenticationToken> {
 
 		@Override
 		public void registerSucceeded(LoggingCloudletContext context,
@@ -298,9 +300,9 @@ public class LoggingCloudlet {
 
 	public static final class LoggingCloudletContext {
 
-		AmqpQueueConsumer<LoggingCloudletContext, LoggingData> consumer;
-		AmqpQueuePublisher<LoggingCloudletContext, AuthenticationToken> publisher;
-		IKeyValueAccessor<LoggingCloudletContext> kvStore;
+		AmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData> consumer;
+		AmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken> publisher;
+		IKvStoreConnector<LoggingCloudletContext> kvStore;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

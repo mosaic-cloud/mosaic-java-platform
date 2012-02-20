@@ -19,23 +19,25 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultKeyValueAccessorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpConsumerCallback;
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherCallback;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessor;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueAccessor;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -56,16 +58,16 @@ public class PongCloudlet {
 			IConfiguration kvConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("kvstore"));
-			context.kvStore = new KeyValueAccessor<PongCloudletContext>(
+			context.kvStore = new KvStoreConnector<PongCloudletContext>(
 					kvConfiguration, cloudlet,
 					new JsonDataEncoder<PingPongData>(PingPongData.class));
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			context.consumer = new AmqpQueueConsumer<PongCloudlet.PongCloudletContext, PingMessage>(
+			context.consumer = new AmqpQueueConsumerConnector<PongCloudlet.PongCloudletContext, PingMessage>(
 					queueConfiguration, cloudlet, PingMessage.class,
 					new JsonDataEncoder<PingMessage>(PingMessage.class));
-			context.publisher = new AmqpQueuePublisher<PongCloudlet.PongCloudletContext, PongMessage>(
+			context.publisher = new AmqpQueuePublisherConnector<PongCloudlet.PongCloudletContext, PongMessage>(
 					queueConfiguration, cloudlet, PongMessage.class,
 					new JsonDataEncoder<PongMessage>(PongMessage.class));
 
@@ -101,7 +103,7 @@ public class PongCloudlet {
 	}
 
 	public static final class KeyValueCallback extends
-			DefaultKeyValueAccessorCallback<PongCloudletContext> {
+			DefaultKvStoreConnectorCallback<PongCloudletContext> {
 
 		@Override
 		public void initializeSucceeded(PongCloudletContext context,
@@ -141,7 +143,7 @@ public class PongCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpConsumerCallback<PongCloudletContext, PingMessage> {
+			DefaultAmqpQueueConsumerConnectorCallback<PongCloudletContext, PingMessage> {
 
 		@Override
 		public void registerSucceeded(PongCloudletContext context,
@@ -206,7 +208,7 @@ public class PongCloudlet {
 	}
 
 	public static final class AmqpPublisherCallback extends
-			DefaultAmqpPublisherCallback<PongCloudletContext, PongMessage> {
+			DefaultAmqpPublisherConnectorCallback<PongCloudletContext, PongMessage> {
 
 		@Override
 		public void registerSucceeded(PongCloudletContext context,
@@ -256,8 +258,8 @@ public class PongCloudlet {
 
 	public static final class PongCloudletContext {
 
-		AmqpQueueConsumer<PongCloudletContext, PingMessage> consumer;
-		AmqpQueuePublisher<PongCloudletContext, PongMessage> publisher;
-		IKeyValueAccessor<PongCloudletContext> kvStore;
+		AmqpQueueConsumerConnector<PongCloudletContext, PingMessage> consumer;
+		AmqpQueuePublisherConnector<PongCloudletContext, PongMessage> publisher;
+		IKvStoreConnector<PongCloudletContext> kvStore;
 	}
 }

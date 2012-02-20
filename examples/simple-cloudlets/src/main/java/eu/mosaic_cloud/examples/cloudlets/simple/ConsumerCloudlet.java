@@ -19,15 +19,16 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpConsumerCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
@@ -51,7 +52,7 @@ public class ConsumerCloudlet {
 							.resolveAbsolute("queue"));
 			DataEncoder<String> encoder = new PojoDataEncoder<String>(
 					String.class);
-			context.consumer = new AmqpQueueConsumer<ConsumerCloudlet.ConsumerCloudletContext, String>(
+			context.consumer = new AmqpQueueConsumerConnector<ConsumerCloudlet.ConsumerCloudletContext, String>(
 					queueConfiguration, cloudlet, String.class, encoder);
 
 		}
@@ -85,7 +86,7 @@ public class ConsumerCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpConsumerCallback<ConsumerCloudletContext, String> {
+			DefaultAmqpQueueConsumerConnectorCallback<ConsumerCloudletContext, String> {
 
 		@Override
 		public void registerSucceeded(ConsumerCloudletContext context,
@@ -146,6 +147,6 @@ public class ConsumerCloudlet {
 
 	public static final class ConsumerCloudletContext {
 
-		AmqpQueueConsumer<ConsumerCloudletContext, String> consumer;
+		AmqpQueueConsumerConnector<ConsumerCloudletContext, String> consumer;
 	}
 }

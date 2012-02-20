@@ -19,18 +19,19 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpConsumerCallback;
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -51,11 +52,11 @@ public class UserCloudlet {
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			context.consumer = new AmqpQueueConsumer<UserCloudlet.UserCloudletContext, AuthenticationToken>(
+			context.consumer = new AmqpQueueConsumerConnector<UserCloudlet.UserCloudletContext, AuthenticationToken>(
 					queueConfiguration, cloudlet, AuthenticationToken.class,
 					new PojoDataEncoder<AuthenticationToken>(
 							AuthenticationToken.class));
-			context.publisher = new AmqpQueuePublisher<UserCloudlet.UserCloudletContext, LoggingData>(
+			context.publisher = new AmqpQueuePublisherConnector<UserCloudlet.UserCloudletContext, LoggingData>(
 					queueConfiguration, cloudlet, LoggingData.class,
 					new PojoDataEncoder<LoggingData>(LoggingData.class));
 
@@ -92,7 +93,7 @@ public class UserCloudlet {
 
 	public static final class AmqpConsumerCallback
 			extends
-			DefaultAmqpConsumerCallback<UserCloudletContext, AuthenticationToken> {
+			DefaultAmqpQueueConsumerConnectorCallback<UserCloudletContext, AuthenticationToken> {
 
 		@Override
 		public void registerSucceeded(UserCloudletContext context,
@@ -161,7 +162,7 @@ public class UserCloudlet {
 	}
 
 	public static final class AmqpPublisherCallback extends
-			DefaultAmqpPublisherCallback<UserCloudletContext, LoggingData> {
+			DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData> {
 
 		@Override
 		public void registerSucceeded(UserCloudletContext context,
@@ -219,8 +220,8 @@ public class UserCloudlet {
 
 	public static final class UserCloudletContext {
 
-		AmqpQueueConsumer<UserCloudletContext, AuthenticationToken> consumer;
-		AmqpQueuePublisher<UserCloudletContext, LoggingData> publisher;
+		AmqpQueueConsumerConnector<UserCloudletContext, AuthenticationToken> consumer;
+		AmqpQueuePublisherConnector<UserCloudletContext, LoggingData> publisher;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

@@ -19,14 +19,15 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
@@ -47,7 +48,7 @@ public class PublisherCloudlet {
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
-			context.publisher = new AmqpQueuePublisher<PublisherCloudlet.PublisherCloudletContext, String>(
+			context.publisher = new AmqpQueuePublisherConnector<PublisherCloudlet.PublisherCloudletContext, String>(
 					queueConfiguration, cloudlet, String.class,
 					new PojoDataEncoder<String>(String.class));
 
@@ -82,7 +83,7 @@ public class PublisherCloudlet {
 
 	public static final class AmqpPublisherCallback
 			extends
-			DefaultAmqpPublisherCallback<PublisherCloudletContext, AuthenticationToken> {
+			DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, AuthenticationToken> {
 
 		@Override
 		public void registerSucceeded(PublisherCloudletContext context,
@@ -131,6 +132,6 @@ public class PublisherCloudlet {
 
 	public static final class PublisherCloudletContext {
 
-		AmqpQueuePublisher<PublisherCloudletContext, String> publisher;
+		AmqpQueuePublisherConnector<PublisherCloudletContext, String> publisher;
 	}
 }
