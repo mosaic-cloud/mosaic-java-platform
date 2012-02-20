@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.resources.kvstore;
+package eu.mosaic_cloud.cloudlets.tools;
+
+import eu.mosaic_cloud.cloudlets.resources.kvstore.IMemcachedAccessorCallback;
+import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 
 /**
  * Default memcached key-value storage calback.

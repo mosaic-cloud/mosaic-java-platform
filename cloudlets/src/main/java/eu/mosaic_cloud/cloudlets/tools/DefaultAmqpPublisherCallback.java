@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.resources.amqp;
+package eu.mosaic_cloud.cloudlets.tools;
+
+import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueuePublisherCallback;
 
 /**
  * Default AMQP publisher callback.

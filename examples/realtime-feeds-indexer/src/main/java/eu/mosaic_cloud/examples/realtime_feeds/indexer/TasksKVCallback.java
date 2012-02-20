@@ -22,8 +22,9 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.mosaic_cloud.cloudlets.tools.DefaultKeyValueAccessorCallback;
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.resources.kvstore.DefaultKeyValueAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 

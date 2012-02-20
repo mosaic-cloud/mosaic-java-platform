@@ -17,46 +17,45 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.core;
+package eu.mosaic_cloud.cloudlets.tools;
+
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+
+import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 
 /**
- * Default cloudlet callback. This extends the {@link DefaultCallback} and
- * handles callbacks for operations defined in the {@link ICloudlet}.
+ * Default resource accessor callback.
  * 
  * @author Georgiana Macariu
  * 
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public abstract class DefaultCloudletCallback<C> extends DefaultCallback<C>
-		implements ICloudletCallback<C> {
+public class DefaultResourceAccessorCallback<C> extends DefaultCallback<C>
+		implements IResourceAccessorCallback<C> {
 
 	@Override
 	public void initializeSucceeded(C context, CallbackArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments,
-				"Cloudlet Initialize Succeeded", true, true);
-
+				"Resource Initialize Succeeded", true, true);
 	}
 
 	@Override
 	public void initializeFailed(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Cloudlet Initialize Failed",
+		this.handleUnhandledCallback(arguments, "Resource Initialize Failed",
 				false, true);
-
 	}
 
 	@Override
 	public void destroySucceeded(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Cloudlet Destroy Succeeded",
+		this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded",
 				true, false);
-
 	}
 
 	@Override
 	public void destroyFailed(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Cloudlet Destroy Failed",
+		this.handleUnhandledCallback(arguments, "Resource Destroy Failed",
 				false, false);
-
 	}
 
 }

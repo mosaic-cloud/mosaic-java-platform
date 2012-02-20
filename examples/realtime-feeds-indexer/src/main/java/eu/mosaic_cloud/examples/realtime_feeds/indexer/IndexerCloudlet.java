@@ -19,8 +19,9 @@
  */
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
+import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
 import eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueueConsumerCallback;

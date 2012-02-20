@@ -17,9 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.resources.kvstore;
+package eu.mosaic_cloud.cloudlets.tools;
 
-import eu.mosaic_cloud.cloudlets.resources.DefaultResourceAccessorCallback;
+import eu.mosaic_cloud.cloudlets.resources.kvstore.IKeyValueAccessorCallback;
+import eu.mosaic_cloud.cloudlets.resources.kvstore.KeyValueCallbackArguments;
 
 /**
  * Default key-value storage calback.

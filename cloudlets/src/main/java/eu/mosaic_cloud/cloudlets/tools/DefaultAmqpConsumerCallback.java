@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.resources.amqp;
+package eu.mosaic_cloud.cloudlets.tools;
+
+import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
+import eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueueConsumerCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 

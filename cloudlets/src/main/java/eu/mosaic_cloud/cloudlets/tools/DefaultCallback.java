@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.core;
+package eu.mosaic_cloud.cloudlets.tools;
+
+import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.ICallback;
 
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 

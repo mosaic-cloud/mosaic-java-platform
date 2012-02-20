@@ -19,16 +19,18 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpConsumerCallback;
+import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherCallback;
+
+import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueueConsumer;
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublishCallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.amqp.AmqpQueuePublisher;
-import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpConsumerCallback;
-import eu.mosaic_cloud.cloudlets.resources.amqp.DefaultAmqpPublisherCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

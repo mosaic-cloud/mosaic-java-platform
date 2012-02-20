@@ -52,7 +52,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <C>
  *            the context of the cloudlet
  */
-public class Cloudlet<C extends Object> implements ICloudlet {
+public class Cloudlet<C extends Object> {
 
 	private boolean active;
 	private CloudletExecutor executor;
@@ -87,7 +87,6 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		}
 	}
 
-	@Override
 	public boolean initialize(IConfiguration config) {
 		synchronized (this.monitor) {
 			boolean initialized = false;
@@ -148,7 +147,6 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		}
 	}
 
-	@Override
 	public boolean destroy() {
 		synchronized (this.monitor) {
 			this.active = false;
@@ -209,7 +207,6 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		}
 	}
 
-	@Override
 	public boolean isActive() {
 		return this.active;
 	}
@@ -267,11 +264,6 @@ public class Cloudlet<C extends Object> implements ICloudlet {
 		@Override
 		public final boolean isActive() {
 			return (Cloudlet.this.isActive());
-		}
-
-		@Override
-		public boolean initialize(IConfiguration config) {
-			throw (new IllegalStateException());
 		}
 
 		@Override

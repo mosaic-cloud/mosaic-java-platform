@@ -17,44 +17,45 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.resources;
+package eu.mosaic_cloud.cloudlets.tools;
+
+import eu.mosaic_cloud.cloudlets.resources.amqp.IAmqpQueueAccessorCallback;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.DefaultCallback;
 
 /**
- * Default resource accessor callback.
+ * Default AMQP resource accessor callback.
  * 
  * @author Georgiana Macariu
  * 
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultResourceAccessorCallback<C> extends DefaultCallback<C>
-		implements IResourceAccessorCallback<C> {
+public class DefaultAmqpAccessorCallback<C> extends
+		DefaultResourceAccessorCallback<C> implements
+		IAmqpQueueAccessorCallback<C> {
 
 	@Override
-	public void initializeSucceeded(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments,
-				"Resource Initialize Succeeded", true, true);
+	public void registerSucceeded(C context, CallbackArguments<C> arguments) {
+		this.handleUnhandledCallback(arguments, "Register Succeeded", true,
+				false);
 	}
 
 	@Override
-	public void initializeFailed(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Resource Initialize Failed",
-				false, true);
+	public void registerFailed(C context, CallbackArguments<C> arguments) {
+		this.handleUnhandledCallback(arguments, "Register Failed", false, true);
 	}
 
 	@Override
-	public void destroySucceeded(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded",
-				true, false);
+	public void unregisterSucceeded(C context, CallbackArguments<C> arguments) {
+		this.handleUnhandledCallback(arguments, "Unregister Succeeded", true,
+				false);
 	}
 
 	@Override
-	public void destroyFailed(C context, CallbackArguments<C> arguments) {
-		this.handleUnhandledCallback(arguments, "Resource Destroy Failed",
-				false, false);
+	public void unregisterFailed(C context, CallbackArguments<C> arguments) {
+		this.handleUnhandledCallback(arguments, "Unregister Failed", false,
+				true);
 	}
 
 }
