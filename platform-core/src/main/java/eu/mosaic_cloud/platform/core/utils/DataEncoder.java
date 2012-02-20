@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.utils;
 
 /**
@@ -31,22 +32,22 @@ package eu.mosaic_cloud.platform.core.utils;
  */
 public interface DataEncoder<T extends Object> {
 
-	/**
-	 * Encodes (serializes) an object as a stream of bytes.
-	 * 
-	 * @param data
-	 *            the data to serialize
-	 * @return the bytes
-	 */
-	byte[] encode(T data) throws Exception; // NOPMD by georgiana on 10/12/11 5:02 PM
+    /**
+     * Encodes (serializes) an object as a stream of bytes.
+     * 
+     * @param data
+     *            the data to serialize
+     * @return the bytes
+     */
+    byte[] encode(T data) throws EncodingException;
 
-	/**
-	 * Decodes (deserializes) the data.
-	 * 
-	 * @param dataBytes
-	 *            data bytes
-	 * @return the decoded object
-	 */
-	T decode(byte[] dataBytes) throws Exception; // NOPMD by georgiana on 10/12/11 5:02 PM
+    /**
+     * Decodes (deserializes) the data.
+     * 
+     * @param dataBytes
+     *            data bytes
+     * @return the decoded object
+     */
+    T decode(byte[] dataBytes) throws EncodingException;
 
 }

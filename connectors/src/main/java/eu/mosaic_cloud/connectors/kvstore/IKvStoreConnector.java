@@ -20,12 +20,10 @@
 
 package eu.mosaic_cloud.connectors.kvstore;
 
-
 import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
 
 /**
  * Interface for working with key-value stores.
@@ -34,43 +32,40 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <T>
  *            type of stored data
  */
-public interface IKvStoreConnector<T extends Object>
-		extends
-			IConnector
-{
-	/**
-	 * Deletes the given key.
-	 * 
-	 * @param key
-	 *            the key to delete
-	 * @return a result handle for the operation
-	 */
-	CallbackCompletion<Boolean> delete (String key);
-	
-	/**
-	 * Gets data associated with a single key.
-	 * 
-	 * @param key
-	 *            the key
-	 * @return a result handle for the operation
-	 */
-	CallbackCompletion<T> get (String key);
-	
-	/**
-	 * Lists the keys of the bucket used by the connector.
-	 * 
-	 * @return a result handle for the operation
-	 */
-	CallbackCompletion<List<String>> list ();
-	
-	/**
-	 * Stores the given data and associates it with the specified key.
-	 * 
-	 * @param key
-	 *            the key under which this data should be stored
-	 * @param data
-	 *            the data
-	 * @return a result handle for the operation
-	 */
-	CallbackCompletion<Boolean> set (String key, T data);
+public interface IKvStoreConnector<T extends Object> extends IConnector {
+    /**
+     * Deletes the given key.
+     * 
+     * @param key
+     *            the key to delete
+     * @return a result handle for the operation
+     */
+    CallbackCompletion<Boolean> delete(String key);
+
+    /**
+     * Gets data associated with a single key.
+     * 
+     * @param key
+     *            the key
+     * @return a result handle for the operation
+     */
+    CallbackCompletion<T> get(String key);
+
+    /**
+     * Lists the keys of the bucket used by the connector.
+     * 
+     * @return a result handle for the operation
+     */
+    CallbackCompletion<List<String>> list();
+
+    /**
+     * Stores the given data and associates it with the specified key.
+     * 
+     * @param key
+     *            the key under which this data should be stored
+     * @param data
+     *            the data
+     * @return a result handle for the operation
+     */
+    CallbackCompletion<Boolean> set(String key, T data);
 }

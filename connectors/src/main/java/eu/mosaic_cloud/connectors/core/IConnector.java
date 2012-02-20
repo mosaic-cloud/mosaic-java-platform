@@ -20,10 +20,8 @@
 
 package eu.mosaic_cloud.connectors.core;
 
-
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-
 
 /**
  * Generic interface that should be implemented by all resource connectors.
@@ -31,15 +29,12 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * @author Georgiana Macariu
  * 
  */
-public interface IConnector
-		extends
-			Callbacks
-{
-	/**
-	 * Destroy the connection with the resource.
-	 * 
-	 * @throws Throwable
-	 *             if connector cannot be destroyed
-	 */
-	CallbackCompletion<Void> destroy ();
+public interface IConnector extends Callbacks {
+    /**
+     * Destroy the connection with the resource.
+     * 
+     * @throws Throwable
+     *             if connector cannot be destroyed
+     */
+    CallbackCompletion<Void> destroy();
 }

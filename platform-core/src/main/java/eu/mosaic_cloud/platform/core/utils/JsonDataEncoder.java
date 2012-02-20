@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.utils;
 
 import java.io.IOException;
@@ -25,30 +26,33 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
 public class JsonDataEncoder<T extends Object> implements DataEncoder<T> {
 
-	private final Class<T> dataClass;;
+    private final Class<T> dataClass;;
 
-	public JsonDataEncoder(final Class<T> dataClass) {
-		this.dataClass = dataClass;
-	}
+    public JsonDataEncoder(final Class<T> dataClass) {
+        this.dataClass = dataClass;
+    }
 
-	@Override
-	public byte[] encode(final T data) throws Exception { // NOPMD by georgiana on 10/12/11 5:02 PM
-		return SerDesUtils.toJsonBytes(data);
-	}
+    @Override
+    public byte[] encode(final T data) throws EncodingException {
+        try {
+            return SerDesUtils.toJsonBytes(data);
+        } catch (IOException e) {
+            throw new EncodingException("JSON object cannot be serialized", e);
+        }
+    }
 
-	@Override
-	public T decode(byte[] dataBytes) {
-		T object = null;
-		try {
-			object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes,
-					this.dataClass));
-		} catch (IOException e) {
-			ExceptionTracer.traceIgnored(e);
-		} catch (ClassNotFoundException e) {
-			ExceptionTracer.traceIgnored(e);
-		}
+    @Override
+    public T decode(byte[] dataBytes) {
+        T object = null;
+        try {
+            object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes, this.dataClass));
+        } catch (IOException e) {
+            ExceptionTracer.traceIgnored(e);
+        } catch (ClassNotFoundException e) {
+            ExceptionTracer.traceIgnored(e);
+        }
 
-		return object;
-	}
+        return object;
+    }
 
 }
