@@ -28,7 +28,7 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 
 import com.sun.syndication.io.FeedException;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
@@ -285,12 +285,12 @@ public class IndexWorkflow {
 	}
 
 	public static void onMetadataStored(
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		getIndexer((UUID) arguments.getExtra()).handleMetadataStored(arguments);
 	}
 
 	private void handleMetadataStored(
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		if (this.indexDone) {
 			storeIndexOutcome();
 		} else {

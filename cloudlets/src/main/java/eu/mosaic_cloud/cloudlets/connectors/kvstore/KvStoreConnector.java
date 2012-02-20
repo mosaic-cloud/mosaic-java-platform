@@ -27,7 +27,7 @@ import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorStatus;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentResourceFinder;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -115,13 +115,13 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 						connectorName, this.configuration, this.dataEncoder,
 						threading);
 				this.status = ConnectorStatus.READY;
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						KvStoreConnector.this.cloudlet, true);
 				this.callbackProxy.initializeSucceeded(this.cloudletContext,
 						arguments);
 			} catch (Throwable e) {
 				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						this.cloudlet, e);
 				this.callbackProxy.initializeFailed(context, arguments);
 			}
@@ -135,13 +135,13 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 			try {
 				this.connector.destroy();
 				this.status = ConnectorStatus.DESTROYED;
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						KvStoreConnector.this.cloudlet, true);
 				this.callbackProxy.destroySucceeded(this.cloudletContext,
 						arguments);
 			} catch (Throwable e) {
 				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						this.cloudlet, e);
 				this.callbackProxy.destroyFailed(this.cloudletContext,
 						arguments);
@@ -205,7 +205,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, key, value, extra);
 				KvStoreConnector.this.callback.setSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -214,7 +214,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, key, error, extra);
 				KvStoreConnector.this.callback.setFailed(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -232,7 +232,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public void onSuccess(Object result) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, key, result, extra);
 				KvStoreConnector.this.callback.getSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -241,7 +241,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, key, error, extra);
 				KvStoreConnector.this.callback.getFailed(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -259,7 +259,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, key, null, extra);
 				KvStoreConnector.this.callback.deleteSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -268,7 +268,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, key, error, extra);
 				KvStoreConnector.this.callback.deleteFailed(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -286,7 +286,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public void onSuccess(List<String> result) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, result, null, extra);
 				KvStoreConnector.this.callback.deleteSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -295,7 +295,7 @@ public class KvStoreConnector<C> implements IKvStoreConnector<C> {
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KeyValueCallbackArguments<C> arguments = new KeyValueCallbackArguments<C>(
+				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
 						KvStoreConnector.this.cloudlet, "", error, extra); //$NON-NLS-1$
 				KvStoreConnector.this.callback.deleteFailed(
 						KvStoreConnector.this.cloudletContext, arguments);

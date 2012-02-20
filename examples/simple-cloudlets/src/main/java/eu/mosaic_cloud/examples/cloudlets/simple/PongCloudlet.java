@@ -22,12 +22,12 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 
@@ -123,7 +123,7 @@ public class PongCloudlet {
 
 		@Override
 		public void getSucceeded(PongCloudletContext context,
-				KeyValueCallbackArguments<PongCloudletContext> arguments) {
+				KvStoreCallbackCompletionArguments<PongCloudletContext> arguments) {
 			this.logger.info("Pong Cloudlet - key value fetch data succeeded");
 
 			// send reply to Ping Cloudlet
@@ -250,7 +250,7 @@ public class PongCloudlet {
 		@Override
 		public void publishSucceeded(
 				PongCloudletContext context,
-				AmqpQueuePublishCallbackArguments<PongCloudletContext, PongMessage> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<PongCloudletContext, PongMessage> arguments) {
 			context.publisher.unregister();
 		}
 

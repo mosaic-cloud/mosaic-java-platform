@@ -19,7 +19,7 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 
 /**
@@ -32,8 +32,8 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * @param <D>
  *            the type of the published data
  */
-public class AmqpQueuePublishCallbackArguments<C, D> extends
-		CallbackArguments<C> {
+public class AmqpQueuePublishCallbackCompletionArguments<C, D> extends
+		CallbackCompletionArguments<C> {
 
 	private AmqpQueuePublishMessage<D> message;
 
@@ -45,7 +45,7 @@ public class AmqpQueuePublishCallbackArguments<C, D> extends
 	 * @param message
 	 *            information about the publish request
 	 */
-	public AmqpQueuePublishCallbackArguments(ICloudletController<C> cloudlet,
+	public AmqpQueuePublishCallbackCompletionArguments(ICloudletController<C> cloudlet,
 			AmqpQueuePublishMessage<D> message) {
 		super(cloudlet);
 		this.message = message;

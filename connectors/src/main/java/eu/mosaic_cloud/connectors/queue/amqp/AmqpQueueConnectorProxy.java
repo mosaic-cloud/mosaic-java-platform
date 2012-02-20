@@ -63,7 +63,7 @@ public final class AmqpQueueConnectorProxy
 	private AmqpQueueConnectorProxy (final IConfiguration config, final Channel channel)
 	{
 		super (config, channel);
-		this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueConsumerCallbacks> ();
+		this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueConsumerCallback> ();
 	}
 	
 	public CallbackCompletion<Boolean> ack (final long delivery, final boolean multiple)
@@ -99,7 +99,7 @@ public final class AmqpQueueConnectorProxy
 		return this.sendRequest (message, token, Boolean.class);
 	}
 	
-	public CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final Object extra, final IAmqpQueueConsumerCallbacks consumerCallback)
+	public CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final Object extra, final IAmqpQueueConsumerCallback consumerCallback)
 	{
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.ConsumeRequest.Builder requestBuilder = AmqpPayloads.ConsumeRequest.newBuilder ();
@@ -224,7 +224,7 @@ public final class AmqpQueueConnectorProxy
 				// this.logger.debug ("QueueConnectorProxy - Received " + message.specification.toString () + " request [" + token.getMessageId () + "]...");
 				final String consumerId = cancelOkPayload.getConsumerTag ();
 				this.logger.debug ("QueueConnectorProxy - Received CANCEL_OK " + " for consumer " + consumerId);
-				final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.remove (consumerId);
+				final IAmqpQueueConsumerCallback callback = this.pendingConsumers.remove (consumerId);
 				callback.handleCancelOk (consumerId);
 				// !!!!
 				// this.pendingRequests.succeed (token.getMessageId (), Boolean.TRUE);
@@ -236,7 +236,7 @@ public final class AmqpQueueConnectorProxy
 				final AmqpPayloads.ServerCancelRequest scancelPayload = (ServerCancelRequest) message.payload;
 				final String consumerId = scancelPayload.getConsumerTag ();
 				this.logger.debug ("QueueConnectorProxy - Received SERVER_CANCEL " + " for consumer " + consumerId);
-				final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.remove (consumerId);
+				final IAmqpQueueConsumerCallback callback = this.pendingConsumers.remove (consumerId);
 				callback.handleCancelOk (consumerId);
 			}
 				break;
@@ -247,7 +247,7 @@ public final class AmqpQueueConnectorProxy
 				// this.logger.debug ("QueueConnectorProxy - Received " + message.specification.toString () + " request [" + token.getMessageId () + "]...");
 				final String consumerId = consumeOkPayload.getConsumerTag ();
 				this.logger.debug ("QueueConnectorProxy - Received CONSUME_OK " + " for consumer " + consumerId);
-				final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.get (consumerId);
+				final IAmqpQueueConsumerCallback callback = this.pendingConsumers.get (consumerId);
 				callback.handleConsumeOk (consumerId);
 				// !!!!
 				// this.pendingRequests.succeed (token.getMessageId (), Boolean.TRUE);
@@ -271,7 +271,7 @@ public final class AmqpQueueConnectorProxy
 					replyTo = delivery.getReplyTo ();
 				}
 				final AmqpInboundMessage mssg = new AmqpInboundMessage (consumerId, deliveryTag, exchange, routingKey, data, deliveryMode == 2, replyTo, null, delivery.getContentType (), correlationId, null);
-				final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.get (consumerId);
+				final IAmqpQueueConsumerCallback callback = this.pendingConsumers.get (consumerId);
 				callback.handleDelivery (mssg);
 			}
 				break;
@@ -280,7 +280,7 @@ public final class AmqpQueueConnectorProxy
 				final String consumerId = downPayload.getConsumerTag ();
 				this.logger.debug ("QueueConnectorProxy - Received SHUTDOWN " + " for consumer " + consumerId);
 				final String signalMssg = downPayload.getMessage ();
-				final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.remove (consumerId);
+				final IAmqpQueueConsumerCallback callback = this.pendingConsumers.remove (consumerId);
 				callback.handleShutdownSignal (consumerId, signalMssg);
 			}
 				break;
@@ -289,7 +289,7 @@ public final class AmqpQueueConnectorProxy
 		}
 	}
 	
-	private final ConcurrentHashMap<String, IAmqpQueueConsumerCallbacks> pendingConsumers;
+	private final ConcurrentHashMap<String, IAmqpQueueConsumerCallback> pendingConsumers;
 	
 	/**
 	 * Returns a proxy for AMQP queuing systems.

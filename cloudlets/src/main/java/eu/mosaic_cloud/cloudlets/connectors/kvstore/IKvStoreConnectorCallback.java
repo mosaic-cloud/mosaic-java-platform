@@ -42,7 +42,7 @@ public interface IKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void setSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void setSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the set operation completed unsuccessfully. The error can be
@@ -53,7 +53,7 @@ public interface IKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void setFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void setFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the get operation completed successfully. The result of the
@@ -64,7 +64,7 @@ public interface IKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void getSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the get operation completed unsuccessfully. The error can be
@@ -75,7 +75,7 @@ public interface IKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void getFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the delete operation completed successfully.
@@ -85,7 +85,7 @@ public interface IKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void deleteSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void deleteSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the delete operation completed unsuccessfully. The error can
@@ -96,5 +96,5 @@ public interface IKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void deleteFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void deleteFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 }

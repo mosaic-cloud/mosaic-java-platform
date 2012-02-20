@@ -22,7 +22,7 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 
@@ -58,19 +58,19 @@ public final class MetadataKVCallback extends
 
 	@Override
 	public void setSucceeded(IndexerCloudletContext context,
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		IndexWorkflow.onMetadataStored(arguments);
 	}
 
 	@Override
 	public void setFailed(IndexerCloudletContext context,
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		handleError(arguments);
 	}
 
 	@Override
 	public void getSucceeded(IndexerCloudletContext context,
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		this.logger.trace(
 				"succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + ","
@@ -86,12 +86,12 @@ public final class MetadataKVCallback extends
 
 	@Override
 	public void getFailed(IndexerCloudletContext context,
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		handleError(arguments);
 	}
 
 	private void handleError(
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		this.logger.warn(
 				"failed fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key

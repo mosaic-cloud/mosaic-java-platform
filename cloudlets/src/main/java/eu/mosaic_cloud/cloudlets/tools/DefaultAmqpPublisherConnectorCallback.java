@@ -19,7 +19,7 @@
  */
 package eu.mosaic_cloud.cloudlets.tools;
 
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorCallback;
 
 /**
@@ -38,7 +38,7 @@ public class DefaultAmqpPublisherConnectorCallback<C, D> extends
 
 	@Override
 	public void publishSucceeded(C context,
-			AmqpQueuePublishCallbackArguments<C, D> arguments) {
+			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments) {
 		this.handleUnhandledCallback(arguments, "Publish Succeeded", true,
 				false);
 
@@ -46,7 +46,7 @@ public class DefaultAmqpPublisherConnectorCallback<C, D> extends
 
 	@Override
 	public void publishFailed(C context,
-			AmqpQueuePublishCallbackArguments<C, D> arguments) {
+			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments) {
 		this.handleUnhandledCallback(arguments, "Publish Failed", false, false);
 
 	}

@@ -24,12 +24,12 @@ import java.util.concurrent.ExecutionException;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 
@@ -139,7 +139,7 @@ public class LoggingCloudlet {
 
 		@Override
 		public void setSucceeded(LoggingCloudletContext context,
-				KeyValueCallbackArguments<LoggingCloudletContext> arguments) {
+				KvStoreCallbackCompletionArguments<LoggingCloudletContext> arguments) {
 			KeyValueCallback.sets++;
 			this.logger.info(
 					"LoggingCloudlet - KeyValue succeeded set no. "
@@ -292,7 +292,7 @@ public class LoggingCloudlet {
 		@Override
 		public void publishSucceeded(
 				LoggingCloudletContext context,
-				AmqpQueuePublishCallbackArguments<LoggingCloudletContext, AuthenticationToken> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<LoggingCloudletContext, AuthenticationToken> arguments) {
 			context.publisher.unregister();
 		}
 

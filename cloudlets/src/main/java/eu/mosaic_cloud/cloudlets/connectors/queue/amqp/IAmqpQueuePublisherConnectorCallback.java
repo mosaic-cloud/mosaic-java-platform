@@ -45,7 +45,7 @@ public interface IAmqpQueuePublisherConnectorCallback<C, D> extends
 	 *            the arguments of the callback
 	 */
 	void publishSucceeded(C context,
-			AmqpQueuePublishCallbackArguments<C, D> arguments);
+			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments);
 
 	/**
 	 * Called when the publisher receives notification that the message
@@ -58,5 +58,5 @@ public interface IAmqpQueuePublisherConnectorCallback<C, D> extends
 	 *            the arguments of the callback
 	 */
 	void publishFailed(C context,
-			AmqpQueuePublishCallbackArguments<C, D> arguments);
+			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments);
 }

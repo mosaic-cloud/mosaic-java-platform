@@ -34,7 +34,7 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * @author Georgiana Macariu
  * 
  */
-public interface IAmqpQueueConsumerCallbacks
+public interface IAmqpQueueConsumerCallback
 		extends
 			Callbacks
 {

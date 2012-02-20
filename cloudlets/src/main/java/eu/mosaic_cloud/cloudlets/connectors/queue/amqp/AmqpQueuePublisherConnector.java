@@ -25,7 +25,7 @@ import java.util.List;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
@@ -103,7 +103,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 				IAmqpQueuePublisherConnectorCallback<C, D> proxy = this.cloudlet
 						.buildCallbackInvoker(this.callback,
 								IAmqpQueuePublisherConnectorCallback.class);
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						AmqpQueuePublisherConnector.this.cloudlet, e);
 				proxy.initializeFailed(context, arguments);
 				throw e;
@@ -173,7 +173,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 							IAmqpQueuePublisherConnectorCallback.class);
 			AmqpQueuePublishMessage<D> pMessage = new AmqpQueuePublishMessage<D>(
 					AmqpQueuePublisherConnector.this, null, token);
-			AmqpQueuePublishCallbackArguments<C, D> arguments = new AmqpQueuePublishCallbackArguments<C, D>(
+			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments = new AmqpQueuePublishCallbackCompletionArguments<C, D>(
 					AmqpQueuePublisherConnector.this.cloudlet, pMessage);
 			proxy.publishFailed(AmqpQueuePublisherConnector.this.cloudletContext,
 					arguments);
@@ -211,7 +211,7 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 							IAmqpQueuePublisherConnectorCallback.class);
 			AmqpQueuePublishMessage<D> pMessage = new AmqpQueuePublishMessage<D>(
 					AmqpQueuePublisherConnector.this, null, token);
-			AmqpQueuePublishCallbackArguments<C, D> arguments = new AmqpQueuePublishCallbackArguments<C, D>(
+			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments = new AmqpQueuePublishCallbackCompletionArguments<C, D>(
 					AmqpQueuePublisherConnector.this.cloudlet, pMessage);
 			proxy.publishFailed(AmqpQueuePublisherConnector.this.cloudletContext,
 					arguments);
@@ -222,13 +222,13 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 	final class PublishCompletionHandler implements
 			IOperationCompletionHandler<Boolean> {
 
-		private AmqpQueuePublishCallbackArguments<C, D> arguments;
+		private AmqpQueuePublishCallbackCompletionArguments<C, D> arguments;
 
 		public PublishCompletionHandler(AmqpOutboundMessage message,
 				Object token) {
 			AmqpQueuePublishMessage<D> pMessage = new AmqpQueuePublishMessage<D>(
 					AmqpQueuePublisherConnector.this, message, token);
-			this.arguments = new AmqpQueuePublishCallbackArguments<C, D>(
+			this.arguments = new AmqpQueuePublishCallbackCompletionArguments<C, D>(
 					AmqpQueuePublisherConnector.super.cloudlet, pMessage);
 		}
 

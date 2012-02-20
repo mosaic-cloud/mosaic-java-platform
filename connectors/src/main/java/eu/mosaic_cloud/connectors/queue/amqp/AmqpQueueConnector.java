@@ -69,7 +69,7 @@ public class AmqpQueueConnector
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final Object extra, final IAmqpQueueConsumerCallbacks consumerCallback)
+	public CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final Object extra, final IAmqpQueueConsumerCallback consumerCallback)
 	{
 		return this.proxy.consume (queue, consumer, exclusive, autoAck, extra, consumerCallback);
 	}

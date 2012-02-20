@@ -22,7 +22,7 @@ package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 
 /**
@@ -34,7 +34,7 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * @param <C>
  *            the context of the cloudlet
  */
-public class KeyValueCallbackArguments<C> extends CallbackArguments<C> {
+public class KvStoreCallbackCompletionArguments<C> extends CallbackCompletionArguments<C> {
 
 	private final List<String> keys;
 	private final Object value;
@@ -53,7 +53,7 @@ public class KeyValueCallbackArguments<C> extends CallbackArguments<C> {
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KeyValueCallbackArguments(ICloudletController<C> cloudlet,
+	public KvStoreCallbackCompletionArguments(ICloudletController<C> cloudlet,
 			String key, Object value, Object extra) {
 		super(cloudlet);
 		this.keys = new ArrayList<String>();
@@ -76,7 +76,7 @@ public class KeyValueCallbackArguments<C> extends CallbackArguments<C> {
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KeyValueCallbackArguments(ICloudletController<C> cloudlet,
+	public KvStoreCallbackCompletionArguments(ICloudletController<C> cloudlet,
 			List<String> keys, Object value, Object extra) {
 		super(cloudlet);
 		this.keys = keys;

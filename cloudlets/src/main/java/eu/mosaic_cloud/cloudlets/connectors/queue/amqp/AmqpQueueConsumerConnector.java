@@ -25,9 +25,9 @@ import java.util.List;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallbacks;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallback;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -104,7 +104,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 			IAmqpQueueConsumerConnectorCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueueConsumerConnectorCallback.class);
-			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 					AmqpQueueConsumerConnector.this.cloudlet, e);
 			proxy.initializeFailed(context, arguments);
 			throw e;
@@ -142,7 +142,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, String>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				callback.registerFailed(AmqpQueueConsumerConnector.super.cloudletContext,
 						arguments);
@@ -151,7 +151,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 		List<IOperationCompletionHandler<String>> cHandlers = new ArrayList<IOperationCompletionHandler<String>>();
 		cHandlers.add(cHandler);
 
-		IAmqpQueueConsumerCallbacks consumerCallback = new AmqpConsumerCallback();
+		IAmqpQueueConsumerCallback consumerCallback = new AmqpConsumerCallback();
 		getConnector().consume(
 				this.queue,
 				this.consumer,
@@ -161,7 +161,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 				cHandlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler),
 				this.cloudlet.buildCallbackInvoker(consumerCallback,
-						IAmqpQueueConsumerCallbacks.class));
+						IAmqpQueueConsumerCallback.class));
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 	
 				@Override
 				public <E extends Throwable> void onFailure(E error) {
-					CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+					CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 							AmqpQueueConsumerConnector.super.cloudlet, error);
 					AmqpQueueConsumerConnector.this.callback.unregisterFailed(
 							AmqpQueueConsumerConnector.super.cloudletContext, arguments);
@@ -203,7 +203,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 
 			@Override
 			public void onSuccess(Boolean result) {
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						AmqpQueueConsumerConnector.super.cloudlet, result);
 				AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded(
 						AmqpQueueConsumerConnector.super.cloudletContext, arguments);
@@ -211,7 +211,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				AmqpQueueConsumerConnector.this.callback.acknowledgeFailed(
 						AmqpQueueConsumerConnector.super.cloudletContext, arguments);
@@ -232,7 +232,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 	 * @author Georgiana Macariu
 	 * 
 	 */
-	final class AmqpConsumerCallback implements IAmqpQueueConsumerCallbacks {
+	final class AmqpConsumerCallback implements IAmqpQueueConsumerCallback {
 
 		@Override
 		public void handleCancelOk(String consumerTag) {

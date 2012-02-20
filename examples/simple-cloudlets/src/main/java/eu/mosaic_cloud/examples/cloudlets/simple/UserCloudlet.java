@@ -22,7 +22,7 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
@@ -212,7 +212,7 @@ public class UserCloudlet {
 		@Override
 		public void publishSucceeded(
 				UserCloudletContext context,
-				AmqpQueuePublishCallbackArguments<UserCloudletContext, LoggingData> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<UserCloudletContext, LoggingData> arguments) {
 			context.publisher.unregister();
 		}
 

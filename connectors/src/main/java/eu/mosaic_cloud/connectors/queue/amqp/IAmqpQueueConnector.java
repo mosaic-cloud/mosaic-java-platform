@@ -92,7 +92,7 @@ public interface IAmqpQueueConnector
 	 *            system will send Consume messages)
 	 * @return the client-generated consumer tag to establish context
 	 */
-	CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final Object extra, final IAmqpQueueConsumerCallbacks consumerCallback);
+	CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final Object extra, final IAmqpQueueConsumerCallback consumerCallback);
 	
 	/**
 	 * Declares an exchange and creates a channel for it.

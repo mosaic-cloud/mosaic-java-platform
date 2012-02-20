@@ -22,7 +22,7 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 
@@ -42,7 +42,7 @@ public class DataKVCallback extends
 
 	@Override
 	public void getSucceeded(IndexerCloudletContext context,
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		this.logger.trace(
 				"succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key
@@ -53,7 +53,7 @@ public class DataKVCallback extends
 
 	@Override
 	public void getFailed(IndexerCloudletContext context,
-			KeyValueCallbackArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 		String key = arguments.getKey();
 		this.logger
 				.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key

@@ -20,7 +20,7 @@
 package eu.mosaic_cloud.cloudlets.tools;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KeyValueCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 
 /**
  * Default key-value storage calback.
@@ -35,35 +35,35 @@ public class DefaultKvStoreConnectorCallback<C> extends
 		IKvStoreConnectorCallback<C> {
 
 	@Override
-	public void setSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
+	public void setSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
 
 	}
 
 	@Override
-	public void setFailed(C context, KeyValueCallbackArguments<C> arguments) {
+	public void setFailed(C context, KvStoreCallbackCompletionArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Set Failed", false, false);
 	}
 
 	@Override
-	public void getSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
+	public void getSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Get Succeeded", true, false);
 
 	}
 
 	@Override
-	public void getFailed(C context, KeyValueCallbackArguments<C> arguments) {
+	public void getFailed(C context, KvStoreCallbackCompletionArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Get Failed", false, false);
 	}
 
 	@Override
-	public void deleteSucceeded(C context, KeyValueCallbackArguments<C> arguments) {
+	public void deleteSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Delete Succeeded", true, false);
 
 	}
 
 	@Override
-	public void deleteFailed(C context, KeyValueCallbackArguments<C> arguments) {
+	public void deleteFailed(C context, KvStoreCallbackCompletionArguments<C> arguments) {
 		this.handleUnhandledCallback(arguments, "Delete Failed", false, false);
 	}
 

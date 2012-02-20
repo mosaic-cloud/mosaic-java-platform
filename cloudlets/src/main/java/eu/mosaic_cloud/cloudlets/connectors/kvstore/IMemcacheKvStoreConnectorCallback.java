@@ -40,7 +40,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void addSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void addSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the add operation completed unsuccessfully. The error can be
@@ -51,7 +51,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void addFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void addFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the append operation completed successfully.
@@ -61,7 +61,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void appendSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void appendSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the append operation completed unsuccessfully. The error can
@@ -72,7 +72,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void appendFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void appendFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the prepend operation completed successfully.
@@ -82,7 +82,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void prependSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void prependSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the prepend operation completed unsuccessfully. The error can
@@ -93,7 +93,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void prependFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void prependFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the replace operation completed successfully.
@@ -103,7 +103,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void replaceSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void replaceSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the replace operation completed unsuccessfully. The error can
@@ -114,7 +114,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void replaceFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void replaceFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the getBulk operation completed successfully. The result of
@@ -125,7 +125,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getBulkSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void getBulkSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the getBulk operation completed unsuccessfully. The error can
@@ -136,7 +136,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void getBulkFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void getBulkFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the cas operation completed successfully.
@@ -146,7 +146,7 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void casSucceeded(C context, KeyValueCallbackArguments<C> arguments);
+	void casSucceeded(C context, KvStoreCallbackCompletionArguments<C> arguments);
 
 	/**
 	 * Called when the cas operation completed unsuccessfully. The error can be
@@ -157,5 +157,5 @@ public interface IMemcacheKvStoreConnectorCallback<C> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	void casFailed(C context, KeyValueCallbackArguments<C> arguments);
+	void casFailed(C context, KvStoreCallbackCompletionArguments<C> arguments);
 }

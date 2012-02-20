@@ -19,7 +19,7 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
 
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -124,7 +124,7 @@ public class PublisherCloudlet {
 		@Override
 		public void publishSucceeded(
 				PublisherCloudletContext context,
-				AmqpQueuePublishCallbackArguments<PublisherCloudletContext, AuthenticationToken> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<PublisherCloudletContext, AuthenticationToken> arguments) {
 			context.publisher.unregister();
 		}
 

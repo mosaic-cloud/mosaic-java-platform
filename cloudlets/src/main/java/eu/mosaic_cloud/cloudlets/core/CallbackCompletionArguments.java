@@ -28,13 +28,10 @@ package eu.mosaic_cloud.cloudlets.core;
  * 
  * @param <C>
  *            the type of the context of the cloudlet
- * @param <T>
- *            the type of the result of the operation
  */
-public class OperationResultCallbackArguments<C, T> extends
+public class CallbackCompletionArguments<C> extends
 		CallbackArguments<C> {
 
-	private T result;
 	private Throwable error;
 
 	/**
@@ -45,10 +42,8 @@ public class OperationResultCallbackArguments<C, T> extends
 	 * @param result
 	 *            the result of the operation
 	 */
-	public OperationResultCallbackArguments(ICloudletController<C> cloudlet,
-			T result) {
+	public CallbackCompletionArguments(ICloudletController<C> cloudlet) {
 		super(cloudlet);
-		this.result = result;
 		this.error = null;
 	}
 
@@ -60,20 +55,10 @@ public class OperationResultCallbackArguments<C, T> extends
 	 * @param error
 	 *            the exception thrown by the operation
 	 */
-	public OperationResultCallbackArguments(ICloudletController<C> cloudlet,
+	public CallbackCompletionArguments(ICloudletController<C> cloudlet,
 			Throwable error) {
 		super(cloudlet);
-		this.result = null;
 		this.error = error;
-	}
-
-	/**
-	 * Returns the result of the operation.
-	 * 
-	 * @return the result of the operation
-	 */
-	public T getResult() {
-		return this.result;
 	}
 
 	/**
@@ -85,5 +70,4 @@ public class OperationResultCallbackArguments<C, T> extends
 	public Throwable getError() {
 		return this.error;
 	}
-
 }
