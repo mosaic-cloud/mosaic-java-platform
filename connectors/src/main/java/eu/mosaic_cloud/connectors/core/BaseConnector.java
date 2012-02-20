@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors;
+package eu.mosaic_cloud.connectors.core;
 
 
 import com.google.common.base.Preconditions;

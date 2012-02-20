@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.tests;
 
 
-import eu.mosaic_cloud.connectors.IConnector;
+import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;

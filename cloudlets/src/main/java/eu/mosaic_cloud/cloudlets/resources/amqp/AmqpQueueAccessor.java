@@ -22,7 +22,6 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.mosaic_cloud.cloudlets.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ContainerException;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -31,6 +30,7 @@ import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
 import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
+import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;

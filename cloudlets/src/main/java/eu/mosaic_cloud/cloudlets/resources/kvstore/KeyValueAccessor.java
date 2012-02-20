@@ -97,7 +97,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 			try {
 				String connectorName = ConfigUtils.resolveParameter(
 						this.configuration,
-						eu.mosaic_cloud.cloudlets.ConfigProperties
+						eu.mosaic_cloud.cloudlets.tools.ConfigProperties
 								.getString("KeyValueAccessor.0"), String.class, //$NON-NLS-1$
 						""); //$NON-NLS-1$
 				ResourceType type = ResourceType.KEY_VALUE;

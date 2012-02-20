@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.queue;
 
 
-import eu.mosaic_cloud.connectors.IConnector;
+import eu.mosaic_cloud.connectors.core.IConnector;
 
 
 /**

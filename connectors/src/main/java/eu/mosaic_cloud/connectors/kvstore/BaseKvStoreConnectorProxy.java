@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.protobuf.ByteString;
-import eu.mosaic_cloud.connectors.BaseConnectorProxy;
+import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;

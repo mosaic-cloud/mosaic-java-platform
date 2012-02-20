@@ -24,7 +24,7 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.protobuf.ByteString;
-import eu.mosaic_cloud.connectors.BaseConnectorProxy;
+import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;

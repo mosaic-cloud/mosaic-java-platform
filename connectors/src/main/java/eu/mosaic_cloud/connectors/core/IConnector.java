@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors;
+package eu.mosaic_cloud.connectors.core;
 
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;

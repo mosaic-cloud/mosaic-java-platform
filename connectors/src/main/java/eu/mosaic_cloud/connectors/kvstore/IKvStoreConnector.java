@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.kvstore;
 
 import java.util.List;
 
-import eu.mosaic_cloud.connectors.IConnector;
+import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

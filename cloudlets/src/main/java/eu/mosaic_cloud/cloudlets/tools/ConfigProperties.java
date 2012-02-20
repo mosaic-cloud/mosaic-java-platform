@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets;
+package eu.mosaic_cloud.cloudlets.tools;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
