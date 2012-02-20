@@ -23,12 +23,14 @@ package eu.mosaic_cloud.connectors.core;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
 
 public abstract class BaseConnector<_Proxy_ extends BaseConnectorProxy>
 		extends Object
 		implements
-			IConnector
+			IConnector,
+			CallbackProxy
 {
 	protected BaseConnector (final _Proxy_ proxy)
 	{
