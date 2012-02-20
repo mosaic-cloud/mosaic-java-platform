@@ -19,9 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.tools;
 
-import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 
 /**
  * Default resource accessor callback.

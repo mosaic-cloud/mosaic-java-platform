@@ -24,9 +24,8 @@ import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.core.CallbackReturnArguments;
-import eu.mosaic_cloud.cloudlets.resources.ResourceNotFoundException;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.cloudlets.resources.ResourceNotFoundException;
 import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
 import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;

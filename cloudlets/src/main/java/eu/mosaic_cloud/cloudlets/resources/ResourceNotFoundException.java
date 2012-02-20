@@ -17,16 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.core;
+package eu.mosaic_cloud.cloudlets.resources;
 
 /**
- * Defines a general exception a container operation can throw when it
- * encounters difficulty.
+ * Exception thrown when a specific connector class cannot be found.
  * 
  * @author Georgiana Macariu
  * 
  */
-public class ContainerException extends Exception {
+public class ResourceNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 3353582009957410019L;
 
@@ -35,7 +34,7 @@ public class ContainerException extends Exception {
 	 * not initialized, and may subsequently be initialized by a call to
 	 * {@link Throwable#initCause(Throwable)}.
 	 */
-	public ContainerException() {
+	public ResourceNotFoundException() {
 		super();
 	}
 
@@ -48,7 +47,7 @@ public class ContainerException extends Exception {
 	 *            the detail message. The detail message is saved for later
 	 *            retrieval by the {@link Throwable#getMessage()} method
 	 */
-	public ContainerException(String message) {
+	public ResourceNotFoundException(String message) {
 		super(message);
 	}
 
@@ -64,7 +63,7 @@ public class ContainerException extends Exception {
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public ContainerException(Throwable cause) {
+	public ResourceNotFoundException(Throwable cause) {
 		super(cause);
 	}
 
@@ -82,7 +81,7 @@ public class ContainerException extends Exception {
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public ContainerException(String message, Throwable cause) {
+	public ResourceNotFoundException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

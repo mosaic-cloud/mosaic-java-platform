@@ -21,7 +21,7 @@ package eu.mosaic_cloud.cloudlets.resources.kvstore;
 
 import java.lang.reflect.Method;
 
-import eu.mosaic_cloud.cloudlets.resources.ConnectorNotFoundException;
+import eu.mosaic_cloud.cloudlets.resources.ResourceNotFoundException;
 import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
@@ -65,13 +65,13 @@ public class KeyValueConnectorFactory {
 	 * @param threadingContext
 	 *            the context used for creating threads
 	 * @return the connector
-	 * @throws ConnectorNotFoundException
+	 * @throws ResourceNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
 	public static IKvStoreConnector createConnector(String connectorName,
 			IConfiguration config, DataEncoder<?> encoder,
 			ThreadingContext threadingContext)
-			throws ConnectorNotFoundException {
+			throws ResourceNotFoundException {
 		ConnectorType type = null;
 		IKvStoreConnector connector = null;
 
@@ -91,7 +91,7 @@ public class KeyValueConnectorFactory {
 						encoder, threadingContext);
 			} catch (Exception e) {
 				ExceptionTracer.traceIgnored(e);
-				ConnectorNotFoundException ex = new ConnectorNotFoundException(
+				ResourceNotFoundException ex = new ResourceNotFoundException(
 						e);
 				throw ex;
 			}

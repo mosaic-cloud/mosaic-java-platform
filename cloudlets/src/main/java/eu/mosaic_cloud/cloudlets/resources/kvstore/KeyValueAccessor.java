@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ContainerException;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
+import eu.mosaic_cloud.cloudlets.resources.ResourceNotFoundException;
 import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
 import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
@@ -109,7 +109,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 
 				if (!ResourceFinder.getResourceFinder().findResource(type,
 						this.configuration)) {
-					throw new ContainerException(
+					throw new ResourceNotFoundException(
 							"Cannot find a resource of type " + type.toString());
 				}
 				this.connector = KeyValueConnectorFactory.createConnector(
