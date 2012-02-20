@@ -93,7 +93,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain</mainClass>
+									<mainClass>eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

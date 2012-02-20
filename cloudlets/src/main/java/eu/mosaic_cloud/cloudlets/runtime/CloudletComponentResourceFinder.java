@@ -19,7 +19,7 @@
  */
 package eu.mosaic_cloud.cloudlets.runtime;
 
-import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -32,13 +32,13 @@ import eu.mosaic_cloud.platform.interop.idl.ChannelData;
  * @author Georgiana Macariu
  * 
  */
-public class ResourceFinder {
+public class CloudletComponentResourceFinder {
 
-	private static ResourceFinder finder;
+	private static CloudletComponentResourceFinder finder;
 	private static MosaicLogger logger = MosaicLogger
-			.createLogger(ResourceFinder.class);
+			.createLogger(CloudletComponentResourceFinder.class);
 
-	private ResourceFinder() {
+	private CloudletComponentResourceFinder() {
 
 	}
 
@@ -47,11 +47,11 @@ public class ResourceFinder {
 	 * 
 	 * @return the finder object
 	 */
-	public static ResourceFinder getResourceFinder() {
-		if (ResourceFinder.finder == null) {
-			ResourceFinder.finder = new ResourceFinder();
+	public static CloudletComponentResourceFinder getResourceFinder() {
+		if (CloudletComponentResourceFinder.finder == null) {
+			CloudletComponentResourceFinder.finder = new CloudletComponentResourceFinder();
 		}
-		return ResourceFinder.finder;
+		return CloudletComponentResourceFinder.finder;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ResourceFinder {
 		ChannelData channel = null;
 		boolean found = false;
 
-		channel = ContainerComponentCallbacks.callbacks.findDriver(type);
+		channel = CloudletComponentCallbacks.callbacks.findDriver(type);
 		logger.trace(
 				"ResourceFinder - found resource " + channel);
 		if (channel != null) {

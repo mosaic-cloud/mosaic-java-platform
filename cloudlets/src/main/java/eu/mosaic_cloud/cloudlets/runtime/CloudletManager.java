@@ -22,9 +22,7 @@ package eu.mosaic_cloud.cloudlets.runtime;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.mosaic_cloud.cloudlets.core.Cloudlet;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
-import eu.mosaic_cloud.cloudlets.core.ICloudlet;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -48,7 +46,7 @@ public class CloudletManager {
 	 * Pool containing all cloudlet instances of the cloudlet. Accessed only
 	 * when holding mainLock.
 	 */
-	private List<ICloudlet> cloudletPool;
+	private List<Cloudlet<?>> cloudletPool;
 
 	private ThreadingContext threading;
 	private ClassLoader classLoader;
@@ -75,7 +73,7 @@ public class CloudletManager {
 			this.threading = threading;
 			this.classLoader = classLoader;
 			this.configuration = configuration;
-			this.cloudletPool = new ArrayList<ICloudlet>();
+			this.cloudletPool = new ArrayList<Cloudlet<?>>();
 			// TODO
 		}
 	}
@@ -96,7 +94,7 @@ public class CloudletManager {
 	 */
 	public final void stop() {
 		synchronized (this.monitor) {
-			for (ICloudlet cloudlet : this.cloudletPool) {
+			for (Cloudlet<?> cloudlet : this.cloudletPool) {
 				if (cloudlet.isActive()) {
 					cloudlet.destroy();
 				}

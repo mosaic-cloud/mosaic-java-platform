@@ -20,7 +20,6 @@
 package eu.mosaic_cloud.cloudlets.tools;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICloudlet;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 
 /**

@@ -54,7 +54,7 @@ import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture.Trigger;
  * @author Georgiana Macariu
  * 
  */
-public final class ResourceComponentCallbacks
+public final class ConnectorComponentCallbacks
 		implements
 			ComponentCallbacks,
 			CallbackHandler
@@ -63,12 +63,12 @@ public final class ResourceComponentCallbacks
 	 * Creates a callback which is used by the mOSAIC platform to communicate
 	 * with the connectors.
 	 */
-	public ResourceComponentCallbacks (final ComponentContext context)
+	public ConnectorComponentCallbacks (final ComponentContext context)
 	{
 		super ();
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> ();
-		ResourceComponentCallbacks.setComponentCallbacks (this);
-		final IConfiguration configuration = PropertyTypeConfiguration.create (ResourceComponentCallbacks.class.getClassLoader (), "resource-conn.properties"); //$NON-NLS-1$
+		ConnectorComponentCallbacks.setComponentCallbacks (this);
+		final IConfiguration configuration = PropertyTypeConfiguration.create (ConnectorComponentCallbacks.class.getClassLoader (), "resource-conn.properties"); //$NON-NLS-1$
 		// set; // FIXME ?
 		this.amqpGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("ResourceComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
 		this.kvGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("ResourceComponentCallbacks.1"), //$NON-NLS-1$
@@ -88,7 +88,7 @@ public final class ResourceComponentCallbacks
 		Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
 		if (this.status == Status.Ready) {
 			if (request.operation.equals (ConfigProperties.getString ("ResourceComponentCallbacks.7"))) { //$NON-NLS-1$
-				ResourceComponentCallbacks.logger.debug ("Testing AMQP connector"); //$NON-NLS-1$
+				ConnectorComponentCallbacks.logger.debug ("Testing AMQP connector"); //$NON-NLS-1$
 				try {
 					// !!!!
 					// AmqpConnectorCompTest.test();
@@ -99,7 +99,7 @@ public final class ResourceComponentCallbacks
 				reply = ComponentCallReply.create (true, Boolean.valueOf (succeeded), ByteBuffer.allocate (0), request.reference);
 				component.callReturn (reply);
 			} else if (request.operation.equals (ConfigProperties.getString ("ResourceComponentCallbacks.8"))) {
-				ResourceComponentCallbacks.logger.debug ("Testing KV connector connector"); //$NON-NLS-1$
+				ConnectorComponentCallbacks.logger.debug ("Testing KV connector connector"); //$NON-NLS-1$
 				try {
 					// !!!!
 					// KeyValueConnectorCompTest.test();
@@ -167,7 +167,7 @@ public final class ResourceComponentCallbacks
 	 */
 	public DeferredFuture<ComponentCallReply> findDriver (final ResourceType type)
 	{
-		ResourceComponentCallbacks.logger.trace ("Finding " + type.toString () + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
+		ConnectorComponentCallbacks.logger.trace ("Finding " + type.toString () + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
 		Preconditions.checkState (this.status == Status.Ready);
 		final ComponentCallReference callReference = ComponentCallReference.create ();
 		final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture.create (ComponentCallReply.class);
@@ -201,7 +201,7 @@ public final class ResourceComponentCallbacks
 		final DeferredFuture<ComponentCallReply> result = DeferredFuture.create (ComponentCallReply.class);
 		this.pendingReferences.put (callReference, result.trigger);
 		this.status = Status.Unregistered;
-		ResourceComponentCallbacks.logger.trace ("Connector component callback initialized."); //$NON-NLS-1$
+		ConnectorComponentCallbacks.logger.trace ("Connector component callback initialized."); //$NON-NLS-1$
 		return null;
 	}
 	
@@ -221,7 +221,7 @@ public final class ResourceComponentCallbacks
 				this.component.terminate ();
 				throw (new IllegalStateException (e));
 			}
-			ResourceComponentCallbacks.logger.info ("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
+			ConnectorComponentCallbacks.logger.info ("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
 			this.status = Status.Ready;
 		} else {
 			throw (new IllegalStateException ());
@@ -242,7 +242,7 @@ public final class ResourceComponentCallbacks
 		Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
 		this.component = null;
 		this.status = Status.Terminated;
-		ResourceComponentCallbacks.logger.info ("Connector component callback terminated."); //$NON-NLS-1$
+		ConnectorComponentCallbacks.logger.info ("Connector component callback terminated."); //$NON-NLS-1$
 		return null;
 	}
 	
@@ -258,13 +258,13 @@ public final class ResourceComponentCallbacks
 	private final ComponentIdentifier selfGroup;
 	private Status status;
 	
-	private static void setComponentCallbacks (final ResourceComponentCallbacks callbacks)
+	private static void setComponentCallbacks (final ConnectorComponentCallbacks callbacks)
 	{
-		ResourceComponentCallbacks.callbacks = callbacks;
+		ConnectorComponentCallbacks.callbacks = callbacks;
 	}
 	
-	public static ResourceComponentCallbacks callbacks = null;
-	private static MosaicLogger logger = MosaicLogger.createLogger (ResourceComponentCallbacks.class);
+	public static ConnectorComponentCallbacks callbacks = null;
+	private static MosaicLogger logger = MosaicLogger.createLogger (ConnectorComponentCallbacks.class);
 	
 	/**
 	 * Supported resource types.

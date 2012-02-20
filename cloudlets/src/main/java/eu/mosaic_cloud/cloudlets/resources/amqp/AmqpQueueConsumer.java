@@ -52,7 +52,7 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 
 	private String consumer;
 	private boolean autoAck;
-	private IAmqpQueueConsumerCallbacks<C, D> callback;
+	private IAmqpQueueConsumerCallback<C, D> callback;
 
 	/**
 	 * Creates a new AMQP queue consumer.
@@ -91,19 +91,19 @@ public class AmqpQueueConsumer<C, D extends Object> extends
 	@Override
 	public void initialize(IResourceAccessorCallback<C> callback, C context,
 			ThreadingContext threading) {
-		if (callback instanceof IAmqpQueueConsumerCallbacks) {
+		if (callback instanceof IAmqpQueueConsumerCallback) {
 			super.initialize(callback, context, threading);
-			this.callback = (IAmqpQueueConsumerCallbacks<C, D>) callback;
+			this.callback = (IAmqpQueueConsumerCallback<C, D>) callback;
 		} else {
 			IllegalArgumentException e = new IllegalArgumentException(
 					"The callback argument must be of type " //$NON-NLS-1$
-							+ IAmqpQueueConsumerCallbacks.class
+							+ IAmqpQueueConsumerCallback.class
 									.getCanonicalName());
 
 			@SuppressWarnings("unchecked")
-			IAmqpQueueConsumerCallbacks<C, D> proxy = this.cloudlet
+			IAmqpQueueConsumerCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
-							IAmqpQueueConsumerCallbacks.class);
+							IAmqpQueueConsumerCallback.class);
 			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueConsumer.this.cloudlet, e);
 			proxy.initializeFailed(context, arguments);

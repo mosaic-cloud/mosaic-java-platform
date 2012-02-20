@@ -35,7 +35,7 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public interface ICloudletController<C> extends ICloudlet {
+public interface ICloudletController<C> extends ICallback {
 
 	IConfiguration getConfiguration();
 
@@ -70,4 +70,17 @@ public interface ICloudletController<C> extends ICloudlet {
 	void destroyResource(IResourceAccessor<C> accessor,
 			IResourceAccessorCallback<C> callbackHandler);
 
+	/**
+	 * Destroys the cloudlet.
+	 * 
+	 * @return <code>true</code> if cloudlet was successfully destroyed
+	 */
+	boolean destroy();
+
+	/**
+	 * Indicates if the cloudlet is alive and can receive messages or not.
+	 * 
+	 * @return <code>true</code> if cloudlet is alive
+	 */
+	boolean isActive();
 }

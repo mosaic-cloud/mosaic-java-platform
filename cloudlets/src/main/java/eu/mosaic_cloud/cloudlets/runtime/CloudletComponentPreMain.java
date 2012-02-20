@@ -17,12 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.container;
+package eu.mosaic_cloud.cloudlets.runtime;
 
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
-public class CloudletContainerPreMain {
+public class CloudletComponentPreMain {
 
 	public static class CloudletContainerParameters {
 
@@ -42,10 +42,10 @@ public class CloudletContainerPreMain {
 						|| (arguments.length == 3),
 						"invalid arguments: <cloudlet jar> <cloudlet descriptor> [<no_of_instances>]");
 
-		CloudletContainerPreMain.CloudletContainerParameters.classpath = arguments[0];
-		CloudletContainerPreMain.CloudletContainerParameters.configFile = arguments[1];
+		CloudletComponentPreMain.CloudletContainerParameters.classpath = arguments[0];
+		CloudletComponentPreMain.CloudletContainerParameters.configFile = arguments[1];
 		if (arguments.length == 3) {
-			CloudletContainerPreMain.CloudletContainerParameters.noInstances = Integer
+			CloudletComponentPreMain.CloudletContainerParameters.noInstances = Integer
 					.parseInt(arguments[2]);
 		}
 		BasicComponentHarnessPreMain

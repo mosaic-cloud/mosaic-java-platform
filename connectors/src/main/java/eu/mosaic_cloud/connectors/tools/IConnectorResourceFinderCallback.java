@@ -27,13 +27,13 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 /**
- * Interface for callbacks called by the {@link ResourceFinder} when a resource
+ * Interface for callbacks called by the {@link ConnectorComponentResourceFinder} when a resource
  * is found or not.
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface IFinderCallback
+public interface IConnectorResourceFinderCallback
 		extends
 			Callbacks
 {

@@ -28,8 +28,8 @@ import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.ResourceNotFoundException;
 import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
-import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
-import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentResourceFinder;
 import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -107,7 +107,7 @@ public class KeyValueAccessor<C> implements IKeyValueAccessor<C> {
 					type = ResourceType.MEMCACHED;
 				}
 
-				if (!ResourceFinder.getResourceFinder().findResource(type,
+				if (!CloudletComponentResourceFinder.getResourceFinder().findResource(type,
 						this.configuration)) {
 					throw new ResourceNotFoundException(
 							"Cannot find a resource of type " + type.toString());

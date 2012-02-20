@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.components.core.ComponentCallReply;
-import eu.mosaic_cloud.connectors.tools.ResourceComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.connectors.tools.ConnectorComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
@@ -40,9 +40,9 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
  * @author Georgiana Macariu
  * 
  */
-public class ResourceFinder
+public class ConnectorComponentResourceFinder
 {
-	private ResourceFinder ()
+	private ConnectorComponentResourceFinder ()
 	{}
 	
 	/**
@@ -56,10 +56,10 @@ public class ResourceFinder
 	 * @param callback
 	 *            the callback to be called when the resource is found
 	 */
-	public void findResource (final ResourceType type, final ThreadingContext threading, final IFinderCallback callback)
+	public void findResource (final ResourceType type, final ThreadingContext threading, final IConnectorResourceFinderCallback callback)
 	{
-		ResourceFinder.logger.trace ("ResourceFinder - find resource");
-		final DeferredFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks.findDriver (type);
+		ConnectorComponentResourceFinder.logger.trace ("ResourceFinder - find resource");
+		final DeferredFuture<ComponentCallReply> replyFuture = ConnectorComponentCallbacks.callbacks.findDriver (type);
 		final Worker worker = new Worker (replyFuture, callback);
 		Threading.createAndStartDaemonThread (threading, this, "callback", worker);
 	}
@@ -69,22 +69,22 @@ public class ResourceFinder
 	 * 
 	 * @return the finder object
 	 */
-	public static ResourceFinder getResourceFinder ()
+	public static ConnectorComponentResourceFinder getResourceFinder ()
 	{
-		if (ResourceFinder.finder == null) {
-			ResourceFinder.finder = new ResourceFinder ();
+		if (ConnectorComponentResourceFinder.finder == null) {
+			ConnectorComponentResourceFinder.finder = new ConnectorComponentResourceFinder ();
 		}
-		return ResourceFinder.finder;
+		return ConnectorComponentResourceFinder.finder;
 	}
 	
-	private static ResourceFinder finder;
-	private static MosaicLogger logger = MosaicLogger.createLogger (ResourceFinder.class);
+	private static ConnectorComponentResourceFinder finder;
+	private static MosaicLogger logger = MosaicLogger.createLogger (ConnectorComponentResourceFinder.class);
 	
 	class Worker
 			implements
 				Runnable
 	{
-		public Worker (final DeferredFuture<ComponentCallReply> future, final IFinderCallback callback)
+		public Worker (final DeferredFuture<ComponentCallReply> future, final IConnectorResourceFinderCallback callback)
 		{
 			this.future = future;
 			this.callback = callback;
@@ -100,7 +100,7 @@ public class ResourceFinder
 				if (reply.outputsOrError instanceof Map) {
 					@SuppressWarnings ("unchecked") final Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
 					channel = new ChannelData (outcome.get ("channelIdentifier"), outcome.get ("channelEndpoint"));
-					ResourceFinder.logger.debug ("Found driver on channel " + channel);
+					ConnectorComponentResourceFinder.logger.debug ("Found driver on channel " + channel);
 					this.callback.resourceFound (channel);
 				} else {
 					this.callback.resourceNotFound ();
@@ -117,7 +117,7 @@ public class ResourceFinder
 			}
 		}
 		
-		private final IFinderCallback callback;
+		private final IConnectorResourceFinderCallback callback;
 		private final DeferredFuture<ComponentCallReply> future;
 	}
 }

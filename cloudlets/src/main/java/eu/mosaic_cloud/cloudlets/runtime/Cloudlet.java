@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.core;
+package eu.mosaic_cloud.cloudlets.runtime;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -27,9 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletException;
+import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessor;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletExecutor;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -87,6 +91,13 @@ public class Cloudlet<C extends Object> {
 		}
 	}
 
+	/**
+	 * Initializes the cloudlet.
+	 * 
+	 * @param config
+	 *            configuration data of the cloudlet
+	 * @return <code>true</code> if cloudlet was successfully initialized
+	 */
 	public boolean initialize(IConfiguration config) {
 		synchronized (this.monitor) {
 			boolean initialized = false;

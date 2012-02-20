@@ -19,9 +19,10 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentLauncher;
+
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 
-import eu.mosaic_cloud.cloudlets.container.CloudletContainerLauncher;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 
@@ -68,6 +69,6 @@ public class HelloWorldCloudlet {
 	}
 
 	public static void main(String[] arguments) throws Throwable {
-		CloudletContainerLauncher.main("hello-cloudlet.prop", arguments);
+		CloudletComponentLauncher.main("hello-cloudlet.prop", arguments);
 	}
 }

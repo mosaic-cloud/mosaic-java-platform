@@ -22,13 +22,15 @@ package eu.mosaic_cloud.cloudlets.resources.amqp;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mosaic_cloud.cloudlets.core.OperationResultCallbackArguments;
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.resources.IResourceAccessorCallback;
 import eu.mosaic_cloud.cloudlets.resources.ResourceNotFoundException;
 import eu.mosaic_cloud.cloudlets.resources.ResourceStatus;
-import eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks.ResourceType;
-import eu.mosaic_cloud.cloudlets.runtime.ResourceFinder;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentResourceFinder;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector;
@@ -163,7 +165,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 			try {
 				this.status = ResourceStatus.INITIALIZING;
 				this.cloudletContext = context;
-				if (!ResourceFinder.getResourceFinder().findResource(
+				if (!CloudletComponentResourceFinder.getResourceFinder().findResource(
 						ResourceType.AMQP, this.configuration)) {
 					throw new ResourceNotFoundException(
 							"Cannot find a resource of type "
@@ -171,14 +173,14 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 				}
 				this.connector = AmqpQueueConnector.create(this.configuration,
 						threading);
-				CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, true);
 				proxy.initializeSucceeded(AmqpQueueAccessor.this.cloudletContext,
 						arguments);
 				this.status = ResourceStatus.INITIALIZED;
 			} catch (Throwable e) {
 				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.initializeFailed(context, arguments);
 			}
@@ -197,14 +199,14 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 				this.logger.trace(
 						"AmqpQueueAccessor is destroying the connector...");
 				this.connector.destroy();
-				CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, true);
 				proxy.destroySucceeded(this.cloudletContext, arguments);
 				this.logger.trace(
 						"AmqpQueueAccessor destroyed successfully.");
 			} catch (Throwable e) {
 				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 						AmqpQueueAccessor.this.cloudlet, e);
 				proxy.destroyFailed(this.cloudletContext, arguments);
 			}
@@ -236,7 +238,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				CallbackArguments<C> arguments = new CallbackReturnArguments<C, String>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, String>(
 						AmqpQueueAccessor.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueAccessor.this.cloudletContext,
 						arguments);
@@ -261,7 +263,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				CallbackArguments<C> arguments = new CallbackReturnArguments<C, String>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, String>(
 						AmqpQueueAccessor.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueAccessor.this.cloudletContext,
 						arguments);
@@ -286,7 +288,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				CallbackArguments<C> arguments = new CallbackReturnArguments<C, String>(
+				CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, String>(
 						AmqpQueueAccessor.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueAccessor.this.cloudletContext,
 						arguments);
@@ -326,7 +328,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 		@Override
 		public void onSuccess(Boolean result) {
-			CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueAccessor.this.cloudlet, result);
 			synchronized (AmqpQueueAccessor.this.monitor) {
 				this.callback.initializeSucceeded(
@@ -337,7 +339,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 		@Override
 		public <E extends Throwable> void onFailure(E error) {
-			CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueAccessor.this.cloudlet, error);
 			this.callback.initializeFailed(
 					AmqpQueueAccessor.this.cloudletContext, arguments);
@@ -363,7 +365,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 		@Override
 		public void onSuccess(Boolean result) {
-			CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueAccessor.this.cloudlet, result);
 			synchronized (AmqpQueueAccessor.this.monitor) {
 				this.callback.destroySucceeded(
@@ -374,7 +376,7 @@ public abstract class AmqpQueueAccessor<C, D extends Object> implements
 
 		@Override
 		public <E extends Throwable> void onFailure(E error) {
-			CallbackArguments<C> arguments = new CallbackReturnArguments<C, Boolean>(
+			CallbackArguments<C> arguments = new OperationResultCallbackArguments<C, Boolean>(
 					AmqpQueueAccessor.this.cloudlet, error);
 			this.callback.destroyFailed(AmqpQueueAccessor.this.cloudletContext,
 					arguments);

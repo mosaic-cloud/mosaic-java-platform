@@ -29,8 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
+
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.cloudlets.container.CloudletContainerPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
@@ -64,7 +65,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public final class ContainerComponentCallbacks implements ComponentCallbacks,
+public final class CloudletComponentCallbacks implements ComponentCallbacks,
 		CallbackHandler {
 
 	static enum Status {
@@ -92,9 +93,9 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 		}
 	}
 
-	public static ContainerComponentCallbacks callbacks = null;
+	public static CloudletComponentCallbacks callbacks = null;
 	private static MosaicLogger logger = MosaicLogger
-			.createLogger(ContainerComponentCallbacks.class);
+			.createLogger(CloudletComponentCallbacks.class);
 
 	private Status status;
 	private ComponentController component;
@@ -110,13 +111,13 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 	 * Creates a callback which is used by the mOSAIC platform to communicate
 	 * with the connectors.
 	 */
-	public ContainerComponentCallbacks(ComponentContext context) {
+	public CloudletComponentCallbacks(ComponentContext context) {
 		super();
 		this.threading = context.threading;
 		this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
-		ContainerComponentCallbacks.callbacks = this;
+		CloudletComponentCallbacks.callbacks = this;
 		IConfiguration configuration = PropertyTypeConfiguration.create(
-				ContainerComponentCallbacks.class.getClassLoader(),
+				CloudletComponentCallbacks.class.getClassLoader(),
 				"resource-container.properties"); //$NON-NLS-1$
 		this.amqpGroup = ComponentIdentifier
 				.resolve(ConfigUtils.resolveParameter(
@@ -236,7 +237,7 @@ public final class ContainerComponentCallbacks implements ComponentCallbacks,
 			}
 			classLoader = new URLClassLoader(
 					classLoaderUrls.toArray(new URL[0]),
-					ContainerComponentCallbacks.class.getClassLoader());
+					CloudletComponentCallbacks.class.getClassLoader());
 		} else {
 			classLoader = ClassLoader.getSystemClassLoader();
 		}
