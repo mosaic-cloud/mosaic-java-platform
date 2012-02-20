@@ -24,6 +24,8 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -231,8 +233,8 @@ public class UserCloudlet {
 
 	public static final class UserCloudletContext {
 
-		AmqpQueueConsumerConnector<UserCloudletContext, AuthenticationToken> consumer;
-		AmqpQueuePublisherConnector<UserCloudletContext, LoggingData> publisher;
+		IAmqpQueueConsumerConnector<UserCloudletContext, AuthenticationToken> consumer;
+		IAmqpQueuePublisherConnector<UserCloudletContext, LoggingData> publisher;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

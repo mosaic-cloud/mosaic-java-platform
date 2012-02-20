@@ -32,12 +32,12 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
  */
 public class AmqpQueueConsumeMessage<D extends Object> {
 
-	private final AmqpQueueConsumerConnector<? extends Object, D> consumer;
+	private final IAmqpQueueConsumerConnector<? extends Object, D> consumer;
 	private final AmqpInboundMessage message;
 	private final D data;
 
 	public AmqpQueueConsumeMessage(
-			AmqpQueueConsumerConnector<? extends Object, D> consumer,
+			IAmqpQueueConsumerConnector<? extends Object, D> consumer,
 			AmqpInboundMessage message, D data) {
 		super();
 		this.consumer = consumer;
@@ -70,7 +70,7 @@ public class AmqpQueueConsumeMessage<D extends Object> {
 	 * 
 	 * @return the consumer object
 	 */
-	public AmqpQueueConsumerConnector<? extends Object, D> getConsumer() {
+	public IAmqpQueueConsumerConnector<? extends Object, D> getConsumer() {
 		return this.consumer;
 	}
 

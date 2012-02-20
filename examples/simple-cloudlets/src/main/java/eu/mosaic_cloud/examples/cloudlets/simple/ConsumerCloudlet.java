@@ -22,6 +22,7 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -153,6 +154,6 @@ public class ConsumerCloudlet {
 
 	public static final class ConsumerCloudletContext {
 
-		AmqpQueueConsumerConnector<ConsumerCloudletContext, String> consumer;
+		IAmqpQueueConsumerConnector<ConsumerCloudletContext, String> consumer;
 	}
 }

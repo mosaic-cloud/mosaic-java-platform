@@ -27,6 +27,8 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -271,8 +273,8 @@ public class PongCloudlet {
 
 	public static final class PongCloudletContext {
 
-		AmqpQueueConsumerConnector<PongCloudletContext, PingMessage> consumer;
-		AmqpQueuePublisherConnector<PongCloudletContext, PongMessage> publisher;
+		IAmqpQueueConsumerConnector<PongCloudletContext, PingMessage> consumer;
+		IAmqpQueuePublisherConnector<PongCloudletContext, PongMessage> publisher;
 		IKvStoreConnector<PongCloudletContext> kvStore;
 	}
 }

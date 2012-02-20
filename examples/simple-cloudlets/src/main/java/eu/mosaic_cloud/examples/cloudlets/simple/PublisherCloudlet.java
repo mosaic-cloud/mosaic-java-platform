@@ -21,6 +21,7 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -138,6 +139,6 @@ public class PublisherCloudlet {
 
 	public static final class PublisherCloudletContext {
 
-		AmqpQueuePublisherConnector<PublisherCloudletContext, String> publisher;
+		IAmqpQueuePublisherConnector<PublisherCloudletContext, String> publisher;
 	}
 }

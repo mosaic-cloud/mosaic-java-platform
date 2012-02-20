@@ -23,6 +23,7 @@ import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
@@ -168,8 +169,8 @@ public class IndexerCloudlet {
 
 	public static final class IndexerCloudletContext {
 
-		AmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> urgentConsumer;
-		AmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> batchConsumer;
+		IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> urgentConsumer;
+		IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> batchConsumer;
 		IKvStoreConnector<IndexerCloudletContext> metadataStore;
 		IKvStoreConnector<IndexerCloudletContext> dataStore;
 		IKvStoreConnector<IndexerCloudletContext> timelinesStore;
