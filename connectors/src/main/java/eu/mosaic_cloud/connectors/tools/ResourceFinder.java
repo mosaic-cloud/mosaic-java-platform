@@ -17,7 +17,9 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.connectors.tools;
+
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -31,34 +33,18 @@ import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
+
 /**
  * Finder for resource drivers.
  * 
  * @author Georgiana Macariu
  * 
  */
-public class ResourceFinder {
-
-	private static ResourceFinder finder;
-	private static MosaicLogger logger = MosaicLogger
-			.createLogger(ResourceFinder.class);
-
-	private ResourceFinder() {
-
-	}
-
-	/**
-	 * Returns a finder object.
-	 * 
-	 * @return the finder object
-	 */
-	public static ResourceFinder getResourceFinder() {
-		if (ResourceFinder.finder == null) {
-			ResourceFinder.finder = new ResourceFinder();
-		}
-		return ResourceFinder.finder;
-	}
-
+public class ResourceFinder
+{
+	private ResourceFinder ()
+	{}
+	
 	/**
 	 * Starts an asynchronous driver lookup. When the result from the mOSAIC
 	 * platform arrives the provided callback will be invoked.
@@ -70,56 +56,68 @@ public class ResourceFinder {
 	 * @param callback
 	 *            the callback to be called when the resource is found
 	 */
-	public void findResource(ResourceType type, ThreadingContext threading,
-			IFinderCallback callback) {
-		logger.trace("ResourceFinder - find resource");
-		DeferredFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks
-				.findDriver(type);
-		Worker worker = new Worker(replyFuture, callback);
-		Threading.createAndStartDaemonThread(threading, this, "callback",
-				worker);
+	public void findResource (final ResourceType type, final ThreadingContext threading, final IFinderCallback callback)
+	{
+		ResourceFinder.logger.trace ("ResourceFinder - find resource");
+		final DeferredFuture<ComponentCallReply> replyFuture = ResourceComponentCallbacks.callbacks.findDriver (type);
+		final Worker worker = new Worker (replyFuture, callback);
+		Threading.createAndStartDaemonThread (threading, this, "callback", worker);
 	}
-
-	class Worker implements Runnable {
-
-		private DeferredFuture<ComponentCallReply> future;
-		private IFinderCallback callback;
-
-		public Worker(DeferredFuture<ComponentCallReply> future,
-				IFinderCallback callback) {
+	
+	/**
+	 * Returns a finder object.
+	 * 
+	 * @return the finder object
+	 */
+	public static ResourceFinder getResourceFinder ()
+	{
+		if (ResourceFinder.finder == null) {
+			ResourceFinder.finder = new ResourceFinder ();
+		}
+		return ResourceFinder.finder;
+	}
+	
+	private static ResourceFinder finder;
+	private static MosaicLogger logger = MosaicLogger.createLogger (ResourceFinder.class);
+	
+	class Worker
+			implements
+				Runnable
+	{
+		public Worker (final DeferredFuture<ComponentCallReply> future, final IFinderCallback callback)
+		{
 			this.future = future;
 			this.callback = callback;
 		}
-
+		
 		@Override
-		public void run() {
+		public void run ()
+		{
 			ComponentCallReply reply;
 			ChannelData channel = null;
 			try {
-				reply = this.future.get();
+				reply = this.future.get ();
 				if (reply.outputsOrError instanceof Map) {
-					@SuppressWarnings("unchecked")
-					Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
-					channel = new ChannelData(outcome.get("channelIdentifier"),
-							outcome.get("channelEndpoint"));
-					logger.debug(
-							"Found driver on channel " + channel);
-					this.callback.resourceFound(channel);
+					@SuppressWarnings ("unchecked") final Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
+					channel = new ChannelData (outcome.get ("channelIdentifier"), outcome.get ("channelEndpoint"));
+					ResourceFinder.logger.debug ("Found driver on channel " + channel);
+					this.callback.resourceFound (channel);
 				} else {
-					this.callback.resourceNotFound();
+					this.callback.resourceNotFound ();
 				}
-			} catch (InterruptedException e) {
-				ExceptionTracer.traceIgnored(e);
-				this.callback.resourceNotFound();
-			} catch (ExecutionException e) {
-				ExceptionTracer.traceIgnored(e);
-				this.callback.resourceNotFound();
-			} catch (Throwable e) {
-				ExceptionTracer.traceIgnored(e);
-				this.callback.resourceNotFound();
+			} catch (final InterruptedException e) {
+				ExceptionTracer.traceIgnored (e);
+				this.callback.resourceNotFound ();
+			} catch (final ExecutionException e) {
+				ExceptionTracer.traceIgnored (e);
+				this.callback.resourceNotFound ();
+			} catch (final Throwable e) {
+				ExceptionTracer.traceIgnored (e);
+				this.callback.resourceNotFound ();
 			}
 		}
-
+		
+		private final IFinderCallback callback;
+		private final DeferredFuture<ComponentCallReply> future;
 	}
-
 }
