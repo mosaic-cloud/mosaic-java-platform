@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.google.protobuf.ByteString;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
+import eu.mosaic_cloud.connectors.core.ResponseHandlerMap;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
@@ -49,6 +50,7 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 
 /**
  * Proxy for the driver for queuing systems implementing the AMQP protocol. This
@@ -57,10 +59,33 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @author Georgiana Macariu
  * 
  */
-public final class AmqpQueueConnectorProxy extends BaseConnectorProxy {
+public final class AmqpQueueConnectorProxy extends BaseConnectorProxy { // NOPMD by georgiana on 2/21/12 2:36 PM
+
+    private final ConcurrentHashMap<String, IAmqpQueueConsumerCallbacks> pendingConsumers;
+    private final ResponseHandlerMap consumerMessages;
+
+    /**
+     * Returns a proxy for AMQP queuing systems.
+     * 
+     * @param configuration
+     *            the configurations required to initialize the proxy
+     * @param driverIdentity
+     *            the identifier of the driver to which request will be sent
+     * @param channel
+     *            the channel on which to communicate with the driver
+     * @return the proxy
+     */
+    public static AmqpQueueConnectorProxy create(final IConfiguration configuration,
+            final String driverIdentity, final Channel channel) {
+        final AmqpQueueConnectorProxy proxy = new AmqpQueueConnectorProxy(configuration, channel);
+        proxy.connect(driverIdentity, AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
+        return proxy;
+    }
+
     private AmqpQueueConnectorProxy(final IConfiguration config, final Channel channel) {
         super(config, channel);
         this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueConsumerCallbacks>();
+        this.consumerMessages = new ResponseHandlerMap();
     }
 
     public CallbackCompletion<Boolean> ack(final long delivery, final boolean multiple) {
@@ -114,7 +139,13 @@ public final class AmqpQueueConnectorProxy extends BaseConnectorProxy {
             requestBuilder.setExtra(ByteString.copyFrom(extraBytes));
             this.pendingConsumers.put(consumer, consumerCallback);
             final Message mssg = new Message(AmqpMessage.CONSUME_REQUEST, requestBuilder.build());
-            result = this.sendRequest(mssg, token, Boolean.class); // NOPMD by georgiana on 2/20/12 5:54 PM
+            result = this.sendRequest(mssg, token, Boolean.class); // NOPMD by
+                                                                   // georgiana
+                                                                   // on 2/20/12
+                                                                   // 5:54 PM
+            final CallbackCompletionDeferredFuture<String> consumeFuture = CallbackCompletionDeferredFuture
+                    .create(String.class);
+            this.consumerMessages.register(consumer, consumeFuture);
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -191,7 +222,9 @@ public final class AmqpQueueConnectorProxy extends BaseConnectorProxy {
     }
 
     @Override
-    protected void processResponse(final Message message) {
+    protected void processResponse(final Message message) { // NOPMD by
+                                                            // georgiana on
+                                                            // 2/21/12 2:35 PM
         final AmqpMessage amqpMessage = (AmqpMessage) message.specification;
         switch (amqpMessage) {
         case OK: {
@@ -216,7 +249,11 @@ public final class AmqpQueueConnectorProxy extends BaseConnectorProxy {
             this.logger.debug("QueueConnectorProxy - Received " + message.specification.toString()
                     + " request [" + token.getMessageId() + "]...");
             this.pendingRequests.fail(token.getMessageId(),
-                    new Exception(errorPayload.getErrorMessage())); // NOPMD by georgiana on 2/20/12 5:53 PM
+                    new Exception(errorPayload.getErrorMessage())); // NOPMD by
+                                                                    // georgiana
+                                                                    // on
+                                                                    // 2/20/12
+                                                                    // 5:53 PM
         }
             break;
         case CONSUME_REPLY: {
@@ -228,51 +265,36 @@ public final class AmqpQueueConnectorProxy extends BaseConnectorProxy {
         }
             break;
         case CANCEL_OK: {
-            // FIXME
             final AmqpPayloads.CancelOkMessage cancelOkPayload = (CancelOkMessage) message.payload;
-            // !!!!
-            // final CompletionToken token = cancelOkPayload.getToken();
-            // this.logger.debug ("QueueConnectorProxy - Received " +
-            // message.specification.toString () + " request [" +
-            // token.getMessageId () + "]...");
             final String consumerId = cancelOkPayload.getConsumerTag();
             this.logger.debug("QueueConnectorProxy - Received CANCEL_OK " + " for consumer "
                     + consumerId);
             final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.remove(consumerId);
             callback.handleCancelOk(consumerId);
-            // !!!!
-            // this.pendingRequests.succeed (token.getMessageId (),
-            // Boolean.TRUE);
+            this.consumerMessages.succeed(consumerId, Boolean.TRUE);
+            this.consumerMessages.cancel(consumerId);
         }
             break;
         case SERVER_CANCEL: {
             // FIXME
-            // !!!!
-            // should not be sent
             final AmqpPayloads.ServerCancelRequest scancelPayload = (ServerCancelRequest) message.payload;
             final String consumerId = scancelPayload.getConsumerTag();
             this.logger.debug("QueueConnectorProxy - Received SERVER_CANCEL " + " for consumer "
                     + consumerId);
-            final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.remove(consumerId);
-            callback.handleCancelOk(consumerId);
+            // final IAmqpQueueConsumerCallbacks callback =
+            this.pendingConsumers.remove(consumerId);
+            // callback.handleCancelOk(consumerId);
+            this.consumerMessages.cancel(consumerId);
         }
             break;
         case CONSUME_OK: {
-            // FIXME
             final AmqpPayloads.ConsumeOkMessage consumeOkPayload = (ConsumeOkMessage) message.payload;
-            // !!!!
-            // final CompletionToken token = consumeOkPayload.getToken ();
-            // this.logger.debug ("QueueConnectorProxy - Received " +
-            // message.specification.toString () + " request [" +
-            // token.getMessageId () + "]...");
             final String consumerId = consumeOkPayload.getConsumerTag();
             this.logger.debug("QueueConnectorProxy - Received CONSUME_OK " + " for consumer "
                     + consumerId);
             final IAmqpQueueConsumerCallbacks callback = this.pendingConsumers.get(consumerId);
             callback.handleConsumeOk(consumerId);
-            // !!!!
-            // this.pendingRequests.succeed (token.getMessageId (),
-            // Boolean.TRUE);
+            this.consumerMessages.succeed(consumerId, Boolean.TRUE);
         }
             break;
         case DELIVERY: {
@@ -285,7 +307,8 @@ public final class AmqpQueueConnectorProxy extends BaseConnectorProxy {
             final String routingKey = delivery.getRoutingKey();
             final int deliveryMode = delivery.getDeliveryMode();
             final byte[] data = delivery.getData().toByteArray();
-            String correlationId = null; // NOPMD by georgiana on 2/20/12 5:55 PM
+            String correlationId = null; // NOPMD by georgiana on 2/20/12 5:55
+                                         // PM
             String replyTo = null; // NOPMD by georgiana on 2/20/12 5:55 PM
             if (delivery.hasCorrelationId()) {
                 correlationId = delivery.getCorrelationId();
@@ -315,23 +338,4 @@ public final class AmqpQueueConnectorProxy extends BaseConnectorProxy {
         }
     }
 
-    private final ConcurrentHashMap<String, IAmqpQueueConsumerCallbacks> pendingConsumers;
-
-    /**
-     * Returns a proxy for AMQP queuing systems.
-     * 
-     * @param configuration
-     *            the configurations required to initialize the proxy
-     * @param driverIdentity
-     *            the identifier of the driver to which request will be sent
-     * @param channel
-     *            the channel on which to communicate with the driver
-     * @return the proxy
-     */
-    public static AmqpQueueConnectorProxy create(final IConfiguration configuration,
-            final String driverIdentity, final Channel channel) {
-        final AmqpQueueConnectorProxy proxy = new AmqpQueueConnectorProxy(configuration, channel);
-        proxy.connect(driverIdentity, AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
-        return proxy;
-    }
 }

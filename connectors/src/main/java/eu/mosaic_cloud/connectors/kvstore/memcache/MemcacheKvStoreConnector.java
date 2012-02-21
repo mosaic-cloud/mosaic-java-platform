@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
+import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.connectors.tools.ConfigProperties;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

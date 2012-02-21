@@ -39,7 +39,11 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
  * 
  */
 public class ConnectorComponentResourceFinder {
+    private static ConnectorComponentResourceFinder finder;
+    final private MosaicLogger logger;
+
     private ConnectorComponentResourceFinder() {
+        this.logger = MosaicLogger.createLogger(this);
     }
 
     /**
@@ -55,7 +59,7 @@ public class ConnectorComponentResourceFinder {
      */
     public void findResource(final ResourceType type, final ThreadingContext threading,
             final IConnectorResourceFinderCallback callback) {
-        ConnectorComponentResourceFinder.logger.trace("ResourceFinder - find resource");
+        logger.trace("ResourceFinder - find resource");
         final DeferredFuture<ComponentCallReply> replyFuture = ConnectorComponentCallbacks.callbacks
                 .findDriver(type);
         final Worker worker = new Worker(replyFuture, callback);
@@ -74,11 +78,10 @@ public class ConnectorComponentResourceFinder {
         return ConnectorComponentResourceFinder.finder;
     }
 
-    private static ConnectorComponentResourceFinder finder;
-    private static MosaicLogger logger = MosaicLogger
-            .createLogger(ConnectorComponentResourceFinder.class);
+    private class Worker implements Runnable {
+        private final IConnectorResourceFinderCallback callback;
+        private final DeferredFuture<ComponentCallReply> future;
 
-    class Worker implements Runnable {
         public Worker(final DeferredFuture<ComponentCallReply> future,
                 final IConnectorResourceFinderCallback callback) {
             this.future = future;
@@ -88,7 +91,7 @@ public class ConnectorComponentResourceFinder {
         @Override
         public void run() {
             ComponentCallReply reply;
-            ChannelData channel = null;
+            ChannelData channel = null; // NOPMD by georgiana on 2/21/12 2:37 PM
             try {
                 reply = this.future.get();
                 if (reply.outputsOrError instanceof Map) {
@@ -96,7 +99,7 @@ public class ConnectorComponentResourceFinder {
                     final Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
                     channel = new ChannelData(outcome.get("channelIdentifier"),
                             outcome.get("channelEndpoint"));
-                    ConnectorComponentResourceFinder.logger.debug("Found driver on channel "
+                    ConnectorComponentResourceFinder.this.logger.debug("Found driver on channel "
                             + channel);
                     this.callback.resourceFound(channel);
                 } else {
@@ -108,13 +111,11 @@ public class ConnectorComponentResourceFinder {
             } catch (final ExecutionException e) {
                 ExceptionTracer.traceIgnored(e);
                 this.callback.resourceNotFound();
-            } catch (final Throwable e) {
+            } catch (final Exception e) {
                 ExceptionTracer.traceIgnored(e);
                 this.callback.resourceNotFound();
             }
         }
 
-        private final IConnectorResourceFinderCallback callback;
-        private final DeferredFuture<ComponentCallReply> future;
     }
 }

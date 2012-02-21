@@ -22,14 +22,12 @@ package eu.mosaic_cloud.connectors.tests;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 
-@Ignore
 public class RedisKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
     @Override

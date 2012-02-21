@@ -33,6 +33,7 @@ import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentContext;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -54,6 +55,14 @@ import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture.Trigger;
  * 
  */
 public final class ConnectorComponentCallbacks implements ComponentCallbacks, CallbackHandler {
+    private final ComponentIdentifier amqpGroup;
+    private ComponentController component;
+    private final ComponentIdentifier kvGroup;
+    private final ComponentIdentifier mcGroup;
+    private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
+    private final ComponentIdentifier selfGroup;
+    private Status status;
+
     /**
      * Creates a callback which is used by the mOSAIC platform to communicate
      * with the connectors.
@@ -64,7 +73,6 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         ConnectorComponentCallbacks.setComponentCallbacks(this);
         final IConfiguration configuration = PropertyTypeConfiguration.create(
                 ConnectorComponentCallbacks.class.getClassLoader(), "resource-conn.properties"); //$NON-NLS-1$
-        // set; // FIXME ?
         this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("ResourceComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
@@ -81,8 +89,8 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
     @Override
     public CallbackCompletion<Void> called(final ComponentController component,
             final ComponentCallRequest request) {
-        ComponentCallReply reply = null;
-        boolean succeeded = false;
+        ComponentCallReply reply = null; // NOPMD by georgiana on 2/21/12 2:49 PM
+        boolean succeeded = false; // NOPMD by georgiana on 2/21/12 2:49 PM
         Preconditions.checkState(this.component == component);
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
@@ -91,8 +99,6 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
                     .equals(ConfigProperties.getString("ResourceComponentCallbacks.7"))) { //$NON-NLS-1$
                 ConnectorComponentCallbacks.logger.debug("Testing AMQP connector"); //$NON-NLS-1$
                 try {
-                    // !!!!
-                    // AmqpConnectorCompTest.test();
                     succeeded = true;
                 } catch (final Throwable e) {
                     ExceptionTracer.traceIgnored(e);
@@ -104,8 +110,6 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
                     .getString("ResourceComponentCallbacks.8"))) {
                 ConnectorComponentCallbacks.logger.debug("Testing KV connector connector"); //$NON-NLS-1$
                 try {
-                    // !!!!
-                    // KeyValueConnectorCompTest.test();
                     succeeded = true;
                 } catch (final Throwable e) {
                     ExceptionTracer.traceIgnored(e);
@@ -132,7 +136,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
                     .remove(reply.reference);
             trigger.triggerSucceeded(reply);
         } else {
-            throw (new IllegalStateException());
+            throw new IllegalStateException();
         }
         return null;
     }
@@ -143,7 +147,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         Preconditions.checkState(this.component == component);
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
-        throw (new UnsupportedOperationException());
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -152,7 +156,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         Preconditions.checkState(this.component == component);
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
-        this.component = null;
+        this.component = null; // NOPMD by georgiana on 2/21/12 2:48 PM
         this.status = Status.Terminated;
         ExceptionTracer.traceIgnored(exception);
         return null;
@@ -178,7 +182,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         final ComponentCallReference callReference = ComponentCallReference.create();
         final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture
                 .create(ComponentCallReply.class);
-        ComponentIdentifier componentId = null;
+        ComponentIdentifier componentId = null; // NOPMD by georgiana on 2/21/12 2:47 PM
         switch (type) {
         case AMQP:
             componentId = this.amqpGroup;
@@ -214,7 +218,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
     }
 
     @Override
-    public void registeredCallbacks(final Callbacks trigger, final CallbackIsolate isolate) {
+    public void registeredCallbacks(final Callbacks trigger, final CallbackIsolate isolate) { // NOPMD by georgiana on 2/21/12 2:47 PM
     }
 
     @Override
@@ -227,13 +231,13 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
                 final Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
                 ExceptionTracer.traceDeferred(e);
                 this.component.terminate();
-                throw (new IllegalStateException(e));
+                throw new IllegalStateException(e);
             }
             ConnectorComponentCallbacks.logger
                     .info("Connector component callback registered to group " + this.selfGroup); //$NON-NLS-1$
             this.status = Status.Ready;
         } else {
-            throw (new IllegalStateException());
+            throw new IllegalStateException();
         }
         return null;
     }
@@ -248,23 +252,15 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         Preconditions.checkState(this.component == component);
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
-        this.component = null;
+        this.component = null; // NOPMD by georgiana on 2/21/12 2:46 PM
         this.status = Status.Terminated;
         ConnectorComponentCallbacks.logger.info("Connector component callback terminated."); //$NON-NLS-1$
         return null;
     }
 
-    @Override
+    @Override // NOPMD by georgiana on 2/21/12 2:45 PM
     public void unregisteredCallbacks(final Callbacks trigger) {
     }
-
-    private final ComponentIdentifier amqpGroup;
-    private ComponentController component;
-    private final ComponentIdentifier kvGroup;
-    private final ComponentIdentifier mcGroup;
-    private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
-    private final ComponentIdentifier selfGroup;
-    private Status status;
 
     private static void setComponentCallbacks(final ConnectorComponentCallbacks callbacks) {
         ConnectorComponentCallbacks.callbacks = callbacks;

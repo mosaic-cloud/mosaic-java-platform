@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.tools;
+package eu.mosaic_cloud.connectors.core;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

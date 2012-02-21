@@ -26,7 +26,6 @@ import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
@@ -35,7 +34,6 @@ import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
 
-@Ignore
 public class MemcacheKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String>> {
     @Override
