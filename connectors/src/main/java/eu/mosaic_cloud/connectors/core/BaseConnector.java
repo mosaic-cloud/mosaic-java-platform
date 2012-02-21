@@ -20,26 +20,36 @@
 
 package eu.mosaic_cloud.connectors.core;
 
+import java.util.UUID;
 
 import com.google.common.base.Preconditions;
+
+import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
+public abstract class BaseConnector<P extends BaseConnectorProxy> implements IConnector,
+        CallbackProxy {
+    protected final MosaicLogger logger;
+    protected final P proxy;
 
-public abstract class BaseConnector<_Proxy_ extends BaseConnectorProxy>
-		extends Object
-		implements
-			IConnector,
-			CallbackProxy
-{
-	protected BaseConnector (final _Proxy_ proxy)
-	{
-		super ();
-		Preconditions.checkNotNull (proxy);
-		this.proxy = proxy;
-		this.logger = MosaicLogger.createLogger (this);
-	}
-	
-	protected final MosaicLogger logger;
-	protected final _Proxy_ proxy;
+    protected BaseConnector(final P proxy) {
+        super();
+        Preconditions.checkNotNull(proxy);
+        this.proxy = proxy;
+        this.logger = MosaicLogger.createLogger(this);
+    }
+
+    public static Channel createChannel(final String driverEndpoint,
+            final ThreadingContext threading) {
+        final String connectorIdentity = UUID.randomUUID().toString();
+        final ZeroMqChannel channel = ZeroMqChannel.create(connectorIdentity, threading,
+                AbortingExceptionTracer.defaultInstance);
+        channel.connect(driverEndpoint);
+        return channel;
+    }
+
 }

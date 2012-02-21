@@ -32,8 +32,12 @@ public class PojoDataEncoder<T extends Object> implements DataEncoder<T> {
 	}
 
 	@Override
-	public byte[] encode(T data) throws Exception { // NOPMD by georgiana on 10/12/11 5:03 PM
-		return SerDesUtils.pojoToBytes(data);
+	public byte[] encode(T data) throws EncodingException {
+		try {
+            return SerDesUtils.pojoToBytes(data);
+        } catch (IOException e) {
+            throw new EncodingException("Java object cannot be serialized", e);
+        }
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
 																	// 10/12/11
 																	// 10:07 AM
 
-	private final static boolean USE_BUCKET = false;
+	private final static boolean USE_BUCKET = true;
 	private final List<?> hosts;
 	private final String username;
 	private final String password;

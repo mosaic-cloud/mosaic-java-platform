@@ -20,11 +20,10 @@
 
 package eu.mosaic_cloud.connectors.core;
 
-
 import java.util.UUID;
 
 import com.google.common.base.Preconditions;
-import eu.mosaic_cloud.connectors.tools.ResponseHandlerMap;
+
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
@@ -36,9 +35,6 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
-
 
 /**
  * Base class for connector proxys.
@@ -46,156 +42,139 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public abstract class BaseConnectorProxy
-		extends Object
-		implements
-			SessionCallbacks
-{
-	/**
-	 * Creates a proxy for a resource.
-	 * 
-	 * @param configuration
-	 *            the configurations required to initialize the proxy
-	 * @param channel
-	 *            the channel on which to communicate with the driver
-	 */
-	protected BaseConnectorProxy (final IConfiguration configuration, final Channel channel)
-	{
-		super ();
-		Preconditions.checkNotNull (configuration);
-		Preconditions.checkNotNull (channel);
-		this.configuration = configuration;
-		this.channel = channel;
-		this.identifier = UUID.randomUUID ().toString ();
-		this.pendingRequests = new ResponseHandlerMap ();
-		this.logger = MosaicLogger.createLogger (this);
-	}
-	
-	/**
-	 * Called after session was created.
-	 * 
-	 * @param session
-	 *            the session
-	 */
-	@Override
-	public CallbackCompletion<Void> created (final Session session)
-	{
-		Preconditions.checkState (this.session == null);
-		this.session = session;
-		return (CallbackCompletion.createOutcome ());
-	}
-	
-	/**
-	 * Destroys the proxy, freeing up any allocated resources.
-	 */
-	public CallbackCompletion<Void> destroy ()
-	{
-		((ZeroMqChannel) this.channel).terminate ();
-		return (CallbackCompletion.createOutcome ());
-	}
-	
-	/**
-	 * Called after session was destroyed
-	 * 
-	 * @param session
-	 *            the session
-	 */
-	@Override
-	public CallbackCompletion<Void> destroyed (final Session session)
-	{
-		Preconditions.checkState (this.session == session);
-		this.pendingRequests.cancelAll ();
-		return (CallbackCompletion.createOutcome ());
-	}
-	
-	/**
-	 * Called when some operation on session failed.
-	 * 
-	 * @param session
-	 *            the session
-	 * @param exception
-	 *            the exception
-	 */
-	@Override
-	public CallbackCompletion<Void> failed (final Session session, final Throwable exception)
-	{
-		Preconditions.checkState (this.session == session);
-		return (CallbackCompletion.createOutcome ());
-	}
-	
-	/**
-	 * Returns the configuration of the connector's proxy.
-	 * 
-	 * @return the configuration of the connector's proxy
-	 */
-	public IConfiguration getConfiguration ()
-	{
-		return this.configuration;
-	}
-	
-	@Override
-	public CallbackCompletion<Void> received (final Session session, final Message message)
-	{
-		this.logger.debug ("ConnectorProxy - Received " + message.specification.toString () + "...");
-		this.processResponse (message);
-		return (CallbackCompletion.createOutcome ());
-	}
-	
-	protected void connect (final String driverIdentifier, final SessionSpecification session, final Message initMessage)
-	{
-		this.channel.connect (driverIdentifier, session, initMessage, this);
-	}
-	
-	protected CompletionToken generateToken ()
-	{
-		final CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder ();
-		tokenBuilder.setMessageId (UUID.randomUUID ().toString ());
-		tokenBuilder.setClientId (this.identifier);
-		return tokenBuilder.build ();
-	}
-	
-	/**
-	 * Process a received response for a previous submitted request.
-	 * 
-	 * @param message
-	 *            the contents of the received message
-	 */
-	protected abstract void processResponse (Message message);
-	
-	/**
-	 * Sends a request to the driver.
-	 * 
-	 * @param session
-	 *            the session to which the request belongs
-	 * @param request
-	 *            the request
-	 */
-	protected void send (final Message request)
-	{
-		this.session.send (request);
-	}
-	
-	protected <_Outcome_ extends Object> CallbackCompletion<_Outcome_> sendRequest (final Message message, final CompletionToken token, final Class<_Outcome_> outcomeClass)
-	{
-		final CallbackCompletionDeferredFuture<_Outcome_> future = CallbackCompletionDeferredFuture.create (outcomeClass);
-		this.pendingRequests.register (token.getMessageId (), future);
-		this.logger.debug ("ConnectorProxy - Sending " + message.specification.toString () + " request [" + token.getMessageId () + "]...");
-		this.send (message);
-		return (future.completion);
-	}
-	
-	protected final IConfiguration configuration;
-	protected MosaicLogger logger;
-	protected final ResponseHandlerMap pendingRequests;
-	private final Channel channel;
-	private final String identifier;
-	private Session session;
-	
-	public static Channel createChannel (final String driverEndpoint, final ThreadingContext threading)
-	{
-		final String connectorIdentity = UUID.randomUUID ().toString ();
-		final ZeroMqChannel channel = ZeroMqChannel.create (connectorIdentity, threading, AbortingExceptionTracer.defaultInstance);
-		channel.connect (driverEndpoint);
-		return (channel);
-	}
+public abstract class BaseConnectorProxy implements SessionCallbacks {
+
+    protected final IConfiguration configuration;
+    protected MosaicLogger logger;
+    protected final ResponseHandlerMap pendingRequests;
+    private final Channel channel;
+    private final String identifier;
+    private Session session;
+
+    /**
+     * Creates a proxy for a resource.
+     * 
+     * @param configuration
+     *            the configurations required to initialize the proxy
+     * @param channel
+     *            the channel on which to communicate with the driver
+     */
+    protected BaseConnectorProxy(final IConfiguration configuration, final Channel channel) {
+        super();
+        Preconditions.checkNotNull(configuration);
+        Preconditions.checkNotNull(channel);
+        this.configuration = configuration;
+        this.channel = channel;
+        this.identifier = UUID.randomUUID().toString();
+        this.pendingRequests = new ResponseHandlerMap();
+        this.logger = MosaicLogger.createLogger(this);
+    }
+
+    /**
+     * Returns the configuration of the connector's proxy.
+     * 
+     * @return the configuration of the connector's proxy
+     */
+    public IConfiguration getConfiguration() {
+        return this.configuration;
+    }
+
+    /**
+     * Called after session was created.
+     * 
+     * @param session
+     *            the session
+     */
+    @Override
+    public CallbackCompletion<Void> created(final Session session) {
+        Preconditions.checkState(this.session == null);
+        this.session = session;
+        return CallbackCompletion.createOutcome();
+    }
+
+    /**
+     * Destroys the proxy, freeing up any allocated resources.
+     */
+    public CallbackCompletion<Void> destroy() {
+        ((ZeroMqChannel) this.channel).terminate();
+        return CallbackCompletion.createOutcome();
+    }
+
+    /**
+     * Called after session was destroyed
+     * 
+     * @param session
+     *            the session
+     */
+    @Override
+    public CallbackCompletion<Void> destroyed(final Session session) {
+        Preconditions.checkState(this.session == session);
+        this.pendingRequests.cancelAll();
+        return CallbackCompletion.createOutcome();
+    }
+
+    /**
+     * Called when some operation on session failed.
+     * 
+     * @param session
+     *            the session
+     * @param exception
+     *            the exception
+     */
+    @Override
+    public CallbackCompletion<Void> failed(final Session session, final Throwable exception) {
+        Preconditions.checkState(this.session == session);
+        return CallbackCompletion.createOutcome();
+    }
+
+    @Override
+    public CallbackCompletion<Void> received(final Session session, final Message message) {
+        this.logger.debug("ConnectorProxy - Received " + message.specification.toString() + "...");
+        this.processResponse(message);
+        return CallbackCompletion.createOutcome();
+    }
+
+    protected void connect(final String driverIdentifier, final SessionSpecification session,
+            final Message initMessage) {
+        this.channel.connect(driverIdentifier, session, initMessage, this);
+    }
+
+    protected CompletionToken generateToken() {
+        final CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+        tokenBuilder.setMessageId(UUID.randomUUID().toString());
+        tokenBuilder.setClientId(this.identifier);
+        return tokenBuilder.build();
+    }
+
+    /**
+     * Process a received response for a previous submitted request.
+     * 
+     * @param message
+     *            the contents of the received message
+     */
+    protected abstract void processResponse(Message message);
+
+    /**
+     * Sends a request to the driver.
+     * 
+     * @param session
+     *            the session to which the request belongs
+     * @param request
+     *            the request
+     */
+    protected void send(final Message request) {
+        this.session.send(request);
+    }
+
+    protected <O extends Object> CallbackCompletion<O> sendRequest(final Message message,
+            final CompletionToken token, final Class<O> outcomeClass) {
+        final CallbackCompletionDeferredFuture<O> future = CallbackCompletionDeferredFuture
+                .create(outcomeClass);
+        this.pendingRequests.register(token.getMessageId(), future);
+        this.logger.debug("ConnectorProxy - Sending " + message.specification.toString()
+                + " request [" + token.getMessageId() + "]...");
+        this.send(message);
+        return future.completion;
+    }
+
 }

@@ -20,35 +20,30 @@
 
 package eu.mosaic_cloud.connectors.tools;
 
-
 import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
-
 /**
- * Interface for callbacks called by the {@link ConnectorComponentResourceFinder} when a resource
- * is found or not.
+ * Interface for callbacks called by the
+ * {@link ConnectorComponentResourceFinder} when a resource is found or not.
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface IConnectorResourceFinderCallback
-		extends
-			Callbacks
-{
-	/**
-	 * Called when the resource driver is found
-	 * 
-	 * @param channel
-	 *            interoperability channel parameters (used for communicating
-	 *            with the driver)
-	 * @throws Throwable
-	 */
-	public abstract CallbackCompletion<Void> resourceFound (ChannelData channel);
-	
-	/**
-	 * Called when a resource driver cannot be found.
-	 */
-	public abstract CallbackCompletion<Void> resourceNotFound ();
+public interface IConnectorResourceFinderCallback extends Callbacks {
+    /**
+     * Called when the resource driver is found
+     * 
+     * @param channel
+     *            interoperability channel parameters (used for communicating
+     *            with the driver)
+     * @throws Throwable
+     */
+    public abstract CallbackCompletion<Void> resourceFound(ChannelData channel);
+
+    /**
+     * Called when a resource driver cannot be found.
+     */
+    public abstract CallbackCompletion<Void> resourceNotFound();
 }

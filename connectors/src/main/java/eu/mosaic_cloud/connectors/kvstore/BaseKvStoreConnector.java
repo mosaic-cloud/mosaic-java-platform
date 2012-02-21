@@ -20,51 +20,52 @@
 
 package eu.mosaic_cloud.connectors.kvstore;
 
-
 import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
+/**
+ * Basic key-value store connector. This connector implements only the
+ * operations common to most of the key-value store systems.
+ * 
+ * @author Georgiana Macariu
+ * 
+ * @param <D>
+ *            type of stored data
+ * @param <P>
+ *            type of connector proxy
+ */
+public abstract class BaseKvStoreConnector<D extends Object, P extends BaseKvStoreConnectorProxy<D>>
+        extends BaseConnector<P> implements IKvStoreConnector<D> {
+    
+    protected BaseKvStoreConnector(final P proxy) {
+        super(proxy);
+    }
 
-public abstract class BaseKvStoreConnector<_Value_ extends Object, _Proxy_ extends BaseKvStoreConnectorProxy<_Value_>>
-		extends BaseConnector<_Proxy_>
-		implements
-			IKvStoreConnector<_Value_>
-{
-	protected BaseKvStoreConnector (final _Proxy_ proxy)
-	{
-		super (proxy);
-	}
-	
-	@Override
-	public CallbackCompletion<Boolean> delete (final String key)
-	{
-		return this.proxy.delete (key);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
-		this.logger.trace ("GenericKeyValueStoreConnector destroyed.");
-		return this.proxy.destroy ();
-	}
-	
-	@Override
-	public CallbackCompletion<_Value_> get (final String key)
-	{
-		return this.proxy.get (key);
-	}
-	
-	@Override
-	public CallbackCompletion<List<String>> list ()
-	{
-		return this.proxy.list ();
-	}
-	
-	@Override
-	public CallbackCompletion<Boolean> set (final String key, final _Value_ data)
-	{
-		return this.proxy.set (key, data);
-	}
+    @Override
+    public CallbackCompletion<Boolean> delete(final String key) {
+        return this.proxy.delete(key);
+    }
+
+    @Override
+    public CallbackCompletion<Void> destroy() {
+        this.logger.trace("GenericKeyValueStoreConnector destroyed.");
+        return this.proxy.destroy();
+    }
+
+    @Override
+    public CallbackCompletion<D> get(final String key) {
+        return this.proxy.get(key);
+    }
+
+    @Override
+    public CallbackCompletion<List<String>> list() {
+        return this.proxy.list();
+    }
+
+    @Override
+    public CallbackCompletion<Boolean> set(final String key, final D data) {
+        return this.proxy.set(key, data);
+    }
 }
