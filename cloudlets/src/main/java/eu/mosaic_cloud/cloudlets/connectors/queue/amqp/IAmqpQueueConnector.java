@@ -42,5 +42,4 @@ public interface IAmqpQueueConnector<C> extends IQueueConnector<C> {
 	 * Unregister the accessor with the queuing system.
 	 */
 	CallbackCompletion<Void> unregister();
-
 }

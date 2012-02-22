@@ -20,6 +20,7 @@
 package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 
 import java.util.List;
+import java.util.Map;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -31,7 +32,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C, D, E> {
+public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C, D, E>, eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector<D> {
 
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -54,7 +55,7 @@ public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C,
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> set(String key, D value, int exp, E extra);
+	CallbackCompletion<Boolean> set(String key, D value, int exp, E extra);
 
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data
@@ -78,7 +79,7 @@ public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C,
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> add(String key, D value, int exp, E extra);
+	CallbackCompletion<Boolean> add(String key, D value, int exp, E extra);
 
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -91,7 +92,7 @@ public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C,
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> append(String key, D value, E extra);
+	CallbackCompletion<Boolean> append(String key, D value, E extra);
 
 	/**
 	 * Adds specified data to an existing key before existing data.
@@ -104,7 +105,7 @@ public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C,
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> prepend(String key, D value, E extra);
+	CallbackCompletion<Boolean> prepend(String key, D value, E extra);
 
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -118,7 +119,7 @@ public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C,
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> cas(String key, D value, E extra);
+	CallbackCompletion<Boolean> cas(String key, D value, E extra);
 
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -142,7 +143,7 @@ public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C,
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> replace(String key, D value, int exp, E extra);
+	CallbackCompletion<Boolean> replace(String key, D value, int exp, E extra);
 
 	/**
 	 * Gets data associated with several keys.
@@ -153,5 +154,5 @@ public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C,
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> getBulk(List<String> keys, E extra);
+	CallbackCompletion<Map<String, D>> getBulk(List<String> keys, E extra);
 }

@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 
+import java.util.List;
+
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -30,7 +32,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public interface IKvStoreConnector<C, D, E> extends IConnector<C> {
+public interface IKvStoreConnector<C, D, E> extends IConnector<C>, eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<D> {
 
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -43,7 +45,7 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> set(String key, D value, E extra);
+	CallbackCompletion<Boolean> set(String key, D value, E extra);
 
 	/**
 	 * Gets data associated with a single key.
@@ -54,7 +56,7 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> get(String key, E extra);
+	CallbackCompletion<D> get(String key, E extra);
 
 	/**
 	 * Deletes the given key.
@@ -65,7 +67,7 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> delete(String key, E extra);
+	CallbackCompletion<Boolean> delete(String key, E extra);
 
 	/**
 	 * Lists the keys in the bucket associated with the accessor.
@@ -74,5 +76,5 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> list(E extra);
+	CallbackCompletion<List<String>> list(E extra);
 }

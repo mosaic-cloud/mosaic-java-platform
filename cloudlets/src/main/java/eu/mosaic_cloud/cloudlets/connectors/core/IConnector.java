@@ -30,7 +30,7 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * @param <C>
  *            the type of the cloudlet context
  */
-public interface IConnector<C> extends Callbacks {
+public interface IConnector<C> extends eu.mosaic_cloud.connectors.core.IConnector {
 
 	/**
 	 * Destroys the accessor.
