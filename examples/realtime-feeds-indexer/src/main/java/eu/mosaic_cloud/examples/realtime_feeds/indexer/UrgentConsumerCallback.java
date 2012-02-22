@@ -34,7 +34,7 @@ public final class UrgentConsumerCallback extends QueueConsumerCallback {
 				"Urgent Index Message consumer unregistered successfully.");
 		ICloudletController<IndexerCloudletContext> cloudlet = arguments
 				.getCloudlet();
-		cloudlet.destroyResource(context.urgentConsumer, this);
+		context.urgentConsumer.destroy();
 		return ICallback.SUCCESS;
 	}
 

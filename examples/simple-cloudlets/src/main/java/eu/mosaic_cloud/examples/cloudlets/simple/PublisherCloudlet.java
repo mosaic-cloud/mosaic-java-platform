@@ -50,7 +50,8 @@ public class PublisherCloudlet {
 							.resolveAbsolute("queue"));
 			context.publisher = cloudlet.getConnectorFactory(IAmqpQueuePublisherConnectorFactory.class)
 					.create(queueConfiguration, String.class,
-							new PojoDataEncoder<String>(String.class));
+							new PojoDataEncoder<String>(String.class),
+							new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -59,10 +60,6 @@ public class PublisherCloudlet {
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet initialized successfully.");
-			ICloudletController<PublisherCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			cloudlet.initializeResource(context.publisher,
-					new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -85,7 +82,7 @@ public class PublisherCloudlet {
 
 	public static final class AmqpPublisherCallback
 			extends
-			DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, AuthenticationToken> {
+			DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, String> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(PublisherCloudletContext context,
@@ -104,7 +101,7 @@ public class PublisherCloudlet {
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<PublisherCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.publisher, this);
+			context.publisher.destroy();
 			return ICallback.SUCCESS;
 		}
 
@@ -130,7 +127,7 @@ public class PublisherCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				PublisherCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<PublisherCloudletContext, AuthenticationToken> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<PublisherCloudletContext, String> arguments) {
 			context.publisher.unregister();
 			return ICallback.SUCCESS;
 		}

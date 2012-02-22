@@ -34,7 +34,7 @@ public final class BatchConsumerCallback extends QueueConsumerCallback {
 				"Batch Index Message consumer unregistered successfully.");
 		ICloudletController<IndexerCloudletContext> cloudlet = arguments
 				.getCloudlet();
-		cloudlet.destroyResource(context.batchConsumer, this);
+		context.batchConsumer.destroy();
 		return ICallback.SUCCESS;
 	}
 

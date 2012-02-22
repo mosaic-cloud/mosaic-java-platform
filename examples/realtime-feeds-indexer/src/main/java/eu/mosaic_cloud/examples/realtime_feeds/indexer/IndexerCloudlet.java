@@ -53,39 +53,53 @@ public class IndexerCloudlet {
 							.resolveAbsolute("metadata"));
 			DataEncoder<byte[]> nopEncoder = new NopDataEncoder();
 			DataEncoder<JSONObject> jsonEncoder = new JSONDataEncoder();
+			context.metadataStoreCallback = new MetadataKVCallback();
 			context.metadataStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
-					.create(metadataConfiguration, JSONObject.class, jsonEncoder);
+					.create(metadataConfiguration, JSONObject.class, jsonEncoder,
+							context.metadataStoreCallback, context);
 			IConfiguration dataConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("data"));
+			context.dataStoreCallback = new DataKVCallback();
 			context.dataStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
-					.create(dataConfiguration, byte[].class, nopEncoder);
+					.create(dataConfiguration, byte[].class, nopEncoder,
+							context.dataStoreCallback, context);
 			IConfiguration timelinesConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("timelines"));
+			context.timelinesStoreCallback = new TimelinesKVCallback();
 			context.timelinesStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
-					.create(timelinesConfiguration, JSONObject.class, jsonEncoder);
+					.create(timelinesConfiguration, JSONObject.class, jsonEncoder,
+							context.itemsStoreCallback, context);
 			IConfiguration itemsConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("items"));
+			context.itemsStoreCallback = new ItemsKVCallback();
 			context.itemsStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
-					.create(itemsConfiguration, JSONObject.class, jsonEncoder);
+					.create(itemsConfiguration, JSONObject.class, jsonEncoder,
+							context.timelinesStoreCallback, context);
 			IConfiguration tasksConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("tasks"));
+			context.tasksStoreCallback = new TasksKVCallback();
 			context.taskStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
-					.create(tasksConfiguration, JSONObject.class, jsonEncoder);
+					.create(tasksConfiguration, JSONObject.class, jsonEncoder,
+							context.tasksStoreCallback, context);
 
 			IConfiguration urgentQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("urgent.queue"));
+			context.urgentConsumerCallback = new UrgentConsumerCallback();
 			context.urgentConsumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
-					.create(urgentQueueConfiguration, JSONObject.class, jsonEncoder);
+					.create(urgentQueueConfiguration, JSONObject.class, jsonEncoder,
+							context.urgentConsumerCallback, context);
 			IConfiguration batchQueueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("batch.queue"));
+			context.batchConsumerCallback = new BatchConsumerCallback();
 			context.batchConsumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
-					.create(batchQueueConfiguration, JSONObject.class, jsonEncoder);
+					.create(batchQueueConfiguration, JSONObject.class, jsonEncoder,
+							context.batchConsumerCallback, context);
 			return ICallback.SUCCESS;
 		}
 
@@ -94,37 +108,6 @@ public class IndexerCloudlet {
 				CallbackArguments<IndexerCloudletContext> arguments) {
 			this.logger.info(
 					"Feeds IndexerCloudlet initialized successfully.");
-			ICloudletController<IndexerCloudletContext> cloudlet = arguments
-					.getCloudlet();
-
-			context.metadataStoreCallback = new MetadataKVCallback();
-			cloudlet.initializeResource(context.metadataStore,
-					context.metadataStoreCallback, context);
-
-			context.dataStoreCallback = new DataKVCallback();
-			cloudlet.initializeResource(context.dataStore,
-					context.dataStoreCallback, context);
-
-			context.timelinesStoreCallback = new TimelinesKVCallback();
-			cloudlet.initializeResource(context.timelinesStore,
-					context.timelinesStoreCallback, context);
-
-			context.itemsStoreCallback = new ItemsKVCallback();
-			cloudlet.initializeResource(context.itemsStore,
-					context.itemsStoreCallback, context);
-
-			context.tasksStoreCallback = new TasksKVCallback();
-			cloudlet.initializeResource(context.taskStore,
-					context.tasksStoreCallback, context);
-
-			context.urgentConsumerCallback = new UrgentConsumerCallback();
-			cloudlet.initializeResource(context.urgentConsumer,
-					context.urgentConsumerCallback, context);
-
-			context.batchConsumerCallback = new BatchConsumerCallback();
-			cloudlet.initializeResource(context.batchConsumer,
-					context.batchConsumerCallback, context);
-
 			return ICallback.SUCCESS;
 		}
 
@@ -136,24 +119,19 @@ public class IndexerCloudlet {
 			ICloudletController<IndexerCloudletContext> cloudlet = arguments
 					.getCloudlet();
 			if (context.metadataStore != null) {
-				cloudlet.destroyResource(context.metadataStore,
-						context.metadataStoreCallback);
+				context.metadataStore.destroy();
 			}
 			if (context.dataStore != null) {
-				cloudlet.destroyResource(context.dataStore,
-						context.dataStoreCallback);
+				context.dataStore.destroy();
 			}
 			if (context.timelinesStore != null) {
-				cloudlet.destroyResource(context.timelinesStore,
-						context.timelinesStoreCallback);
+				context.timelinesStore.destroy();
 			}
 			if (context.itemsStore != null) {
-				cloudlet.destroyResource(context.itemsStore,
-						context.itemsStoreCallback);
+				context.itemsStore.destroy();
 			}
 			if (context.taskStore != null) {
-				cloudlet.destroyResource(context.taskStore,
-						context.tasksStoreCallback);
+				context.taskStore.destroy();
 			}
 			if (context.urgentConsumer != null) {
 				context.urgentConsumer.unregister();

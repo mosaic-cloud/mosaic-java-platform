@@ -82,7 +82,6 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {
@@ -129,7 +128,7 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	}
 
 	@Override
-	public CallbackCompletion<Void> destroy(IConnectorCallback<C> callback) {
+	public CallbackCompletion<Void> destroy() {
 		synchronized (this.monitor) {
 			this.status = ConnectorStatus.DESTROYING;
 			try {

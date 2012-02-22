@@ -220,20 +220,6 @@ public class Cloudlet<C extends Object> {
 		return this.active;
 	}
 
-	private void destroyResource(IConnector<C> accessor,
-			IConnectorCallback<C> callbackHandler) {
-		synchronized (this.monitor) {
-			accessor.destroy(callbackHandler);
-		}
-	}
-
-	private void initializeResource(IConnector<C> accessor,
-			IConnectorCallback<C> callbackHandler, C cloudletContext) {
-		synchronized (this.monitor) {
-			accessor.initialize(callbackHandler, this.context, this.threading);
-		}
-	}
-
 	private <T> CompletionInvocationHandler<T> getResponseHandler(
 			IOperationCompletionHandler<T> handler) {
 		CloudletResponseInvocationHandler<T> iHandler = new CloudletResponseInvocationHandler<T>(
@@ -273,21 +259,6 @@ public class Cloudlet<C extends Object> {
 		@Override
 		public final boolean isActive() {
 			return (Cloudlet.this.isActive());
-		}
-
-		@Override
-		public void initializeResource(IConnector<C> accessor,
-				IConnectorCallback<C> callbackHandler, C cloudletContext) {
-			Cloudlet.this.initializeResource(accessor, callbackHandler,
-					cloudletContext);
-
-		}
-
-		@Override
-		public void destroyResource(IConnector<C> accessor,
-				IConnectorCallback<C> callbackHandler) {
-			Cloudlet.this.destroyResource(accessor, callbackHandler);
-
 		}
 
 		@Override

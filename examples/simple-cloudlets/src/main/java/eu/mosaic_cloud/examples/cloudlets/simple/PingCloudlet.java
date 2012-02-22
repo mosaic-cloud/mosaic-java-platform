@@ -55,10 +55,12 @@ public class PingCloudlet {
 							.resolveAbsolute("queue"));
 			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
 					.create(queueConfiguration, PongMessage.class,
-							new JsonDataEncoder<PongMessage>(PongMessage.class));
+							new JsonDataEncoder<PongMessage>(PongMessage.class),
+							new AmqpConsumerCallback(), context);
 			context.publisher = cloudlet.getConnectorFactory(IAmqpQueuePublisherConnectorFactory.class)
 					.create(queueConfiguration, PingMessage.class,
-							new JsonDataEncoder<PingMessage>(PingMessage.class));
+							new JsonDataEncoder<PingMessage>(PingMessage.class),
+							new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -67,12 +69,6 @@ public class PingCloudlet {
 				CallbackArguments<PingCloudletContext> arguments) {
 			this.logger.info(
 					"Ping Cloudlet initialized successfully.");
-			ICloudletController<PingCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			cloudlet.initializeResource(context.consumer,
-					new AmqpConsumerCallback(), context);
-			cloudlet.initializeResource(context.publisher,
-					new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -112,7 +108,7 @@ public class PingCloudlet {
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.consumer, this);
+			context.consumer.destroy();
 			return ICallback.SUCCESS;
 		}
 
@@ -183,7 +179,7 @@ public class PingCloudlet {
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<PingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.publisher, this);
+			context.publisher.destroy();
 			return ICallback.SUCCESS;
 		}
 

@@ -152,7 +152,6 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 		}
 	}
 
-	@Override
 	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {
@@ -186,7 +185,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 	}
 
 	@Override
-	public CallbackCompletion<Void> destroy(IConnectorCallback<C> callback) {
+	public CallbackCompletion<Void> destroy() {
 		synchronized (this.monitor) {
 			this.status = ConnectorStatus.DESTROYING;
 			@SuppressWarnings("unchecked")
