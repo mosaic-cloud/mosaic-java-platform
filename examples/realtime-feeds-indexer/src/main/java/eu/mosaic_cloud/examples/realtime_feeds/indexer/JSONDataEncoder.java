@@ -31,7 +31,6 @@ import java.io.Writer;
 
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;

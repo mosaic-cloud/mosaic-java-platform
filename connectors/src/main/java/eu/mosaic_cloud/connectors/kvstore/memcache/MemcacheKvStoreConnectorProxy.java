@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;

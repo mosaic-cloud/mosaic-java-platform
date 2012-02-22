@@ -22,14 +22,13 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import org.json.JSONObject;
 
 public class TasksKVCallback extends
 		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, Void> {

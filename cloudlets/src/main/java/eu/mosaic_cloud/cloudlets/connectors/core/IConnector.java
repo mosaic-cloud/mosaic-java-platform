@@ -21,7 +21,6 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Interface for all resource accessors used by cloudlets.

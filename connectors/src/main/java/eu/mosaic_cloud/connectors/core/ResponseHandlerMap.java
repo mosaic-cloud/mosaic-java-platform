@@ -23,7 +23,6 @@ package eu.mosaic_cloud.connectors.core;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCanceled;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 

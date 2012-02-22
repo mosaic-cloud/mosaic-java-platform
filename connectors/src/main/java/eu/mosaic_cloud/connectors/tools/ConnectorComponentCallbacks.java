@@ -24,7 +24,6 @@ import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
