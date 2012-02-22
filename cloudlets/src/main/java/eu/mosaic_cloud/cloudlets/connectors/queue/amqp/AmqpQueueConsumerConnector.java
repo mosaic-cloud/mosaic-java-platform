@@ -100,8 +100,6 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 					"The callback argument must be of type " //$NON-NLS-1$
 							+ IAmqpQueueConsumerConnectorCallback.class
 									.getCanonicalName());
-
-			@SuppressWarnings("unchecked")
 			IAmqpQueueConsumerConnectorCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueueConsumerConnectorCallback.class);

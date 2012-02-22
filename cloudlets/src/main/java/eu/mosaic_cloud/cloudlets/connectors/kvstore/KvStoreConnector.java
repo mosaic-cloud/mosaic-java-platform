@@ -81,7 +81,6 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {

@@ -93,7 +93,6 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 			for (IOperationCompletionHandler<T> handler : cHandlers) {
 				CompletionInvocationHandler<T> iHandler = invocationHandler
 						.createHandler(handler);
-				@SuppressWarnings("unchecked")
 				IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
 						.newProxyInstance(
 								Threading.getCurrentThread()

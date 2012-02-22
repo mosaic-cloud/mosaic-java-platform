@@ -100,7 +100,6 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 						"The callback argument must be of type " //$NON-NLS-1$
 								+ IAmqpQueuePublisherConnectorCallback.class
 										.getCanonicalName());
-				@SuppressWarnings("unchecked")
 				IAmqpQueuePublisherConnectorCallback<C, D> proxy = this.cloudlet
 						.buildCallbackInvoker(this.callback,
 								IAmqpQueuePublisherConnectorCallback.class);
@@ -168,7 +167,6 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 					"AmqpQueuePublisherConnector - published message " + data);
 		} catch (Exception e) {
 			ExceptionTracer.traceDeferred(e);
-			@SuppressWarnings("unchecked")
 			IAmqpQueuePublisherConnectorCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueuePublisherConnectorCallback.class);
@@ -206,7 +204,6 @@ public class AmqpQueuePublisherConnector<C, D extends Object> extends
 					"AmqpQueuePublisherConnector - published message " + data);
 		} catch (Exception e) {
 			ExceptionTracer.traceDeferred(e);
-			@SuppressWarnings("unchecked")
 			IAmqpQueuePublisherConnectorCallback<C, D> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueuePublisherConnectorCallback.class);

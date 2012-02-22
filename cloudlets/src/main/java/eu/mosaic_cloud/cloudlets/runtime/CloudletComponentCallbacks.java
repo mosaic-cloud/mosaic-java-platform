@@ -397,7 +397,6 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks,
 		try {
 			reply = replyFuture.get();
 			if (reply.outputsOrError instanceof Map) {
-				@SuppressWarnings("unchecked")
 				Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
 				channel = new ChannelData(outcome.get("channelIdentifier"),
 						outcome.get("channelEndpoint"));

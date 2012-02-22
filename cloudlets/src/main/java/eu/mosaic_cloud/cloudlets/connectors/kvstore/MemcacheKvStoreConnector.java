@@ -61,7 +61,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -71,7 +70,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -91,7 +89,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -101,7 +98,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -121,7 +117,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -131,7 +126,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -151,7 +145,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -161,7 +154,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -181,7 +173,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -191,7 +182,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -211,7 +201,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			int exp, final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -221,7 +210,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -242,7 +230,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			final Object extra) {
 		IOperationCompletionHandler<Map<String, D>> cHandler = new IOperationCompletionHandler<Map<String, D>>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Map<String, D> result) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
@@ -252,7 +239,6 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
 				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(

@@ -155,7 +155,6 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {
-			@SuppressWarnings("unchecked")
 			IConnectorCallback<C> proxy = this.cloudlet
 					.buildCallbackInvoker(callback,
 							IConnectorCallback.class);
@@ -188,7 +187,6 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 	public CallbackCompletion<Void> destroy() {
 		synchronized (this.monitor) {
 			this.status = ConnectorStatus.DESTROYING;
-			@SuppressWarnings("unchecked")
 			IConnectorCallback<C> proxy = this.cloudlet
 					.buildCallbackInvoker(callback,
 							IConnectorCallback.class);

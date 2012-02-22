@@ -230,7 +230,6 @@ public class Cloudlet<C extends Object> {
 	private <T> T getCallbackProxy(Class<T> callbackType, T callback) {
 		CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T>(
 				callback);
-		@SuppressWarnings("unchecked")
 		T proxy = (T) Proxy.newProxyInstance(this.executor.getLoader(),
 				new Class[] { callbackType }, iHandler);
 		return proxy;
