@@ -22,6 +22,8 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
@@ -30,7 +32,7 @@ import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCl
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class ItemsKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext> {
+		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject> {
 
 	private static final String BUCKET_NAME = "feed-items";
 
@@ -43,13 +45,13 @@ public class ItemsKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	private void handleError(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		String key = arguments.getKey();
 		this.logger.warn(
 				"failed fetch (" + ItemsKVCallback.BUCKET_NAME + "," + key

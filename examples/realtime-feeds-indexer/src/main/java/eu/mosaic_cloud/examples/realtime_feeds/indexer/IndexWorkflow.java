@@ -115,7 +115,7 @@ public class IndexWorkflow {
 	 * @param fetchedData
 	 *            the fetched data
 	 */
-	public static void parseLatestFeed(Object fetchedData, Object extra) {
+	public static void parseLatestFeed(byte[] fetchedData, Object extra) {
 		getIndexer((UUID) extra).parseFeed(fetchedData);
 	}
 
@@ -125,7 +125,7 @@ public class IndexWorkflow {
 	 * @param fetchedData
 	 *            the fetched data
 	 */
-	private void parseFeed(Object fetchedData) {
+	private void parseFeed(byte[] fetchedData) {
 		try {
 			logger.trace(
 					"indexing " + this.indexMessage.getString("url")
@@ -152,11 +152,11 @@ public class IndexWorkflow {
 		this.context.metadataStore.get(feedKey, this.key);
 	}
 
-	public static void findNewFeeds(Object fetchedData, Object extra) {
+	public static void findNewFeeds(JSONObject fetchedData, Object extra) {
 		getIndexer((UUID) extra).doFeedDiff(fetchedData);
 	}
 
-	private void doFeedDiff(Object fetchedData) {
+	private void doFeedDiff(JSONObject fetchedData) {
 		logger.trace(
 				"indexing " + IndexWorkflow.INDEX_TASK_TYPE
 						+ " step 4 (diff-ing latest feed)...");
@@ -166,7 +166,7 @@ public class IndexWorkflow {
 		int currentSequence;
 
 		try {
-			this.previousFeedMetaData = (JSONObject) fetchedData;
+			this.previousFeedMetaData = fetchedData;
 			int previousSequence = this.previousFeedMetaData.getInt("sequence");
 			long minItemTimestamp = -1;
 			try {
@@ -283,12 +283,12 @@ public class IndexWorkflow {
 	}
 
 	public static void onMetadataStored(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		getIndexer((UUID) arguments.getExtra()).handleMetadataStored(arguments);
 	}
 
 	private void handleMetadataStored(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		if (this.indexDone) {
 			storeIndexOutcome();
 		} else {

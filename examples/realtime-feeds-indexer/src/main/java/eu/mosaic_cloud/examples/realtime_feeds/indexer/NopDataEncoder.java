@@ -27,12 +27,12 @@ public class NopDataEncoder implements DataEncoder<byte[]> {
 	}
 
 	@Override
-	public byte[] encode(byte[] data) throws Exception {
+	public byte[] encode(byte[] data) {
 		return data;
 	}
 
 	@Override
-	public byte[] decode(byte[] dataBytes) throws Exception {
+	public byte[] decode(byte[] dataBytes) {
 		return dataBytes;
 	}
 

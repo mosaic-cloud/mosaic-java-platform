@@ -30,7 +30,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public interface IKvStoreConnector<C> extends IConnector<C> {
+public interface IKvStoreConnector<C, D> extends IConnector<C> {
 
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -43,7 +43,7 @@ public interface IKvStoreConnector<C> extends IConnector<C> {
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> set(String key, Object value, Object extra);
+	CallbackCompletion<Void> set(String key, D value, Object extra);
 
 	/**
 	 * Gets data associated with a single key.
