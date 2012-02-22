@@ -21,7 +21,8 @@
 package eu.mosaic_cloud.cloudlets.tools;
 
 
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -41,25 +42,25 @@ public abstract class DefaultCloudletCallback<C>
 			ICloudletCallback<C>
 {
 	@Override
-	public CallbackCompletion<Void> destroyFailed (final C context, final CallbackArguments<C> arguments)
+	public CallbackCompletion<Void> destroyFailed (final C context, final CloudletCallbackCompletionArguments<C> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Cloudlet Destroy Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroySucceeded (final C context, final CallbackArguments<C> arguments)
+	public CallbackCompletion<Void> destroySucceeded (final C context, final CloudletCallbackCompletionArguments<C> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Cloudlet Destroy Succeeded", true, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initializeFailed (final C context, final CallbackArguments<C> arguments)
+	public CallbackCompletion<Void> initializeFailed (final C context, final CloudletCallbackCompletionArguments<C> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Cloudlet Initialize Failed", false, true);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initializeSucceeded (final C context, final CallbackArguments<C> arguments)
+	public CallbackCompletion<Void> initializeSucceeded (final C context, final CloudletCallbackCompletionArguments<C> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Cloudlet Initialize Succeeded", true, true);
 	}

@@ -28,6 +28,8 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnect
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
@@ -44,7 +46,7 @@ public class IndexerCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initialize(IndexerCloudletContext context,
-				CallbackArguments<IndexerCloudletContext> arguments) {
+				CloudletCallbackArguments<IndexerCloudletContext> arguments) {
 			this.logger.info(
 					"FeedIndexerCloudlet is being initialized.");
 			ICloudletController<IndexerCloudletContext> cloudlet = arguments
@@ -107,7 +109,7 @@ public class IndexerCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
-				CallbackArguments<IndexerCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<IndexerCloudletContext> arguments) {
 			this.logger.info(
 					"Feeds IndexerCloudlet initialized successfully.");
 			return ICallback.SUCCESS;
@@ -115,7 +117,7 @@ public class IndexerCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> destroy(IndexerCloudletContext context,
-				CallbackArguments<IndexerCloudletContext> arguments) {
+				CloudletCallbackArguments<IndexerCloudletContext> arguments) {
 			this.logger.info(
 					"Feeds IndexerCloudlet is being destroyed.");
 			ICloudletController<IndexerCloudletContext> cloudlet = arguments

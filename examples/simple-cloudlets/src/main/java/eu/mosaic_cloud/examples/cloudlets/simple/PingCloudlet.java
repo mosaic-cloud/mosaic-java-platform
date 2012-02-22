@@ -27,6 +27,8 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnect
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -44,7 +46,7 @@ public class PingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initialize(PingCloudletContext context,
-				CallbackArguments<PingCloudletContext> arguments) {
+				CloudletCallbackArguments<PingCloudletContext> arguments) {
 			this.logger
 					.info("Ping Cloudlet is being initialized.");
 			ICloudletController<PingCloudletContext> cloudlet = arguments
@@ -66,7 +68,7 @@ public class PingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PingCloudletContext context,
-				CallbackArguments<PingCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<PingCloudletContext> arguments) {
 			this.logger.info(
 					"Ping Cloudlet initialized successfully.");
 			return ICallback.SUCCESS;
@@ -74,14 +76,14 @@ public class PingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> destroy(PingCloudletContext context,
-				CallbackArguments<PingCloudletContext> arguments) {
+				CloudletCallbackArguments<PingCloudletContext> arguments) {
 			this.logger.info("Ping Cloudlet is being destroyed.");
 			return ICallback.SUCCESS;
 		}
 
 		@Override
 		public CallbackCompletion<Void> destroySucceeded(PingCloudletContext context,
-				CallbackArguments<PingCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<PingCloudletContext> arguments) {
 			this.logger.info(
 					"Ping Cloudlet was destroyed successfully.");
 			return ICallback.SUCCESS;
@@ -106,7 +108,7 @@ public class PingCloudlet {
 			this.logger.info(
 					"Ping Cloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
-			ICloudletController<PingCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.consumer.destroy();
 			return ICallback.SUCCESS;
@@ -177,7 +179,7 @@ public class PingCloudlet {
 			this.logger.info(
 					"Ping Cloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
-			ICloudletController<PingCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
 			return ICallback.SUCCESS;

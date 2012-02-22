@@ -19,7 +19,9 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentLauncher;
@@ -33,7 +35,7 @@ public class HelloWorldCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initialize(HelloCloudletContext context,
-				CallbackArguments<HelloCloudletContext> arguments) {
+				CloudletCallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet is initializing...");
 			return ICallback.SUCCESS;
@@ -41,7 +43,7 @@ public class HelloWorldCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(HelloCloudletContext context,
-				CallbackArguments<HelloCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet was initialized successfully.");
 			System.out.println("Hello world!");
@@ -53,7 +55,7 @@ public class HelloWorldCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> destroy(HelloCloudletContext context,
-				CallbackArguments<HelloCloudletContext> arguments) {
+				CloudletCallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet is being destroyed.");
 			return ICallback.SUCCESS;
@@ -61,7 +63,7 @@ public class HelloWorldCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> destroySucceeded(HelloCloudletContext context,
-				CallbackArguments<HelloCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
 			this.logger.info(
 					"HelloWorld cloudlet was destroyed successfully.");
 			return ICallback.SUCCESS;

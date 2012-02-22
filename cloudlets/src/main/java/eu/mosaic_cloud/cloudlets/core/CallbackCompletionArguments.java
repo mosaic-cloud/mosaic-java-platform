@@ -32,7 +32,7 @@ package eu.mosaic_cloud.cloudlets.core;
 public class CallbackCompletionArguments<C> extends
 		CallbackArguments<C> {
 
-	private Throwable error;
+	protected Throwable error;
 
 	/**
 	 * Creates the operation callback argument.
@@ -42,7 +42,7 @@ public class CallbackCompletionArguments<C> extends
 	 * @param result
 	 *            the result of the operation
 	 */
-	public CallbackCompletionArguments(ICloudletController<C> cloudlet) {
+	public CallbackCompletionArguments(ICloudletController<?> cloudlet) {
 		super(cloudlet);
 		this.error = null;
 	}
@@ -55,7 +55,7 @@ public class CallbackCompletionArguments<C> extends
 	 * @param error
 	 *            the exception thrown by the operation
 	 */
-	public CallbackCompletionArguments(ICloudletController<C> cloudlet,
+	public CallbackCompletionArguments(ICloudletController<?> cloudlet,
 			Throwable error) {
 		super(cloudlet);
 		this.error = error;

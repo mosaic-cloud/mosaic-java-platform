@@ -30,6 +30,8 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnect
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -49,7 +51,7 @@ public class PongCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initialize(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
+				CloudletCallbackArguments<PongCloudletContext> arguments) {
 			this.logger.info("Pong Cloudlet is being initialized.");
 			ICloudletController<PongCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -77,21 +79,21 @@ public class PongCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
 			this.logger.info("Pong Cloudlet initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 
 		@Override
 		public CallbackCompletion<Void> destroy(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
+				CloudletCallbackArguments<PongCloudletContext> arguments) {
 			this.logger.info("Pong Cloudlet is being destroyed.");
 			return ICallback.SUCCESS;
 		}
 
 		@Override
 		public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
 			this.logger.info("Pong Cloudlet was destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
@@ -158,7 +160,7 @@ public class PongCloudlet {
 			this.logger
 					.info("Pong Cloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
-			ICloudletController<PongCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.consumer.destroy();
 			return ICallback.SUCCESS;
@@ -229,7 +231,7 @@ public class PongCloudlet {
 			this.logger
 					.info("Pong Cloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
-			ICloudletController<PongCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
 			return ICallback.SUCCESS;

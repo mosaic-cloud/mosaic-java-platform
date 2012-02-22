@@ -21,6 +21,8 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
@@ -32,6 +34,7 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnect
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -53,7 +56,7 @@ public class LoggingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initialize(LoggingCloudletContext context,
-				CallbackArguments<LoggingCloudletContext> arguments) {
+				CloudletCallbackArguments<LoggingCloudletContext> arguments) {
 			this.logger.info(
 					"LoggingCloudlet is being initialized.");
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
@@ -82,7 +85,7 @@ public class LoggingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(LoggingCloudletContext context,
-				CallbackArguments<LoggingCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<LoggingCloudletContext> arguments) {
 			this.logger.info(
 					"LoggingCloudlet initialized successfully.");
 			return ICallback.SUCCESS;
@@ -90,7 +93,7 @@ public class LoggingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> destroy(LoggingCloudletContext context,
-				CallbackArguments<LoggingCloudletContext> arguments) {
+				CloudletCallbackArguments<LoggingCloudletContext> arguments) {
 			this.logger
 					.info("LoggingCloudlet is being destroyed.");
 			return ICallback.SUCCESS;
@@ -98,7 +101,7 @@ public class LoggingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> destroySucceeded(LoggingCloudletContext context,
-				CallbackArguments<LoggingCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<LoggingCloudletContext> arguments) {
 			this.logger.info(
 					"LoggingCloudlet was destroyed successfully.");
 			return ICallback.SUCCESS;
@@ -142,7 +145,7 @@ public class LoggingCloudlet {
 					"LoggingCloudlet - KeyValue succeeded set no. "
 							+ KeyValueCallback.sets);
 			if (KeyValueCallback.sets == 2) {
-				ICloudletController<LoggingCloudletContext> cloudlet = arguments
+				ICloudletController<?> cloudlet = arguments
 						.getCloudlet();
 				try {
 					context.kvStore.destroy();
@@ -176,7 +179,7 @@ public class LoggingCloudlet {
 			this.logger.info(
 					"LoggingCloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
-			ICloudletController<LoggingCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.consumer.destroy();
 			context.consumerRunning = false;
@@ -267,7 +270,7 @@ public class LoggingCloudlet {
 			this.logger.info(
 					"LoggingCloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
-			ICloudletController<LoggingCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
 			context.publisherRunning = false;

@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
@@ -27,6 +29,7 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnect
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -45,7 +48,7 @@ public class UserCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initialize(UserCloudletContext context,
-				CallbackArguments<UserCloudletContext> arguments) {
+				CloudletCallbackArguments<UserCloudletContext> arguments) {
 			this.logger.info("UserCloudlet is being initialized.");
 			ICloudletController<UserCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -66,7 +69,7 @@ public class UserCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
-				CallbackArguments<UserCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<UserCloudletContext> arguments) {
 			this.logger.info(
 					"UserCloudlet initialized successfully.");
 			return ICallback.SUCCESS;
@@ -74,14 +77,14 @@ public class UserCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> destroy(UserCloudletContext context,
-				CallbackArguments<UserCloudletContext> arguments) {
+				CloudletCallbackArguments<UserCloudletContext> arguments) {
 			this.logger.info("UserCloudlet is being destroyed.");
 			return ICallback.SUCCESS;
 		}
 
 		@Override
 		public CallbackCompletion<Void> destroySucceeded(UserCloudletContext context,
-				CallbackArguments<UserCloudletContext> arguments) {
+				CloudletCallbackCompletionArguments<UserCloudletContext> arguments) {
 			this.logger.info(
 					"UserCloudlet was destroyed successfully.");
 			return ICallback.SUCCESS;
@@ -188,7 +191,7 @@ public class UserCloudlet {
 			this.logger.info(
 					"UserCloudlet publisher unregistered successfully.");
 			// if unregistered as publisher is successful then destroy resource
-			ICloudletController<UserCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
 			context.publisherRunning = false;
