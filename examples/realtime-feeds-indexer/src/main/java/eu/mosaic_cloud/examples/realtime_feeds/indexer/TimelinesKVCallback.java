@@ -28,9 +28,10 @@ import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import org.json.JSONObject;
 
 public class TimelinesKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext> {
+		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject> {
 
 	private static final String BUCKET_NAME = "feed-timelines";
 
@@ -43,20 +44,20 @@ public class TimelinesKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> setSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		IndexWorkflow.updateFeedMetadata(arguments.getExtra());
 		return ICallback.SUCCESS;
 	}
 
 	@Override
 	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	private void handleError(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		String key = arguments.getKey();
 		this.logger.warn(
 				"failed fetch (" + TimelinesKVCallback.BUCKET_NAME + "," + key

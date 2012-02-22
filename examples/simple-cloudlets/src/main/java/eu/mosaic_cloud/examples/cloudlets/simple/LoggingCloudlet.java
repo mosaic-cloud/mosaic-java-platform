@@ -64,16 +64,19 @@ public class LoggingCloudlet {
 							.resolveAbsolute("kvstore"));
 			context.kvStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
 					.create(kvConfiguration, String.class,
-							new PojoDataEncoder<String>(String.class));
+							new PojoDataEncoder<String>(String.class),
+							new KeyValueCallback(), context);
 			IConfiguration queueConfiguration = configuration
 					.spliceConfiguration(ConfigurationIdentifier
 							.resolveAbsolute("queue"));
 			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
 					.create(queueConfiguration, LoggingData.class,
-							new PojoDataEncoder<LoggingData>(LoggingData.class));
+							new PojoDataEncoder<LoggingData>(LoggingData.class),
+							new AmqpConsumerCallback(), context);
 			context.publisher = cloudlet.getConnectorFactory(IAmqpQueuePublisherConnectorFactory.class)
 					.create (queueConfiguration, AuthenticationToken.class,
-							new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class));
+							new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class),
+							new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -82,14 +85,6 @@ public class LoggingCloudlet {
 				CallbackArguments<LoggingCloudletContext> arguments) {
 			this.logger.info(
 					"LoggingCloudlet initialized successfully.");
-			ICloudletController<LoggingCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			cloudlet.initializeResource(context.kvStore,
-					new KeyValueCallback(), context);
-			cloudlet.initializeResource(context.consumer,
-					new AmqpConsumerCallback(), context);
-			cloudlet.initializeResource(context.publisher,
-					new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -112,7 +107,7 @@ public class LoggingCloudlet {
 	}
 
 	public static final class KeyValueCallback extends
-			DefaultKvStoreConnectorCallback<LoggingCloudletContext> {
+			DefaultKvStoreConnectorCallback<LoggingCloudletContext, String> {
 
 		private static int sets = 0;
 
@@ -141,7 +136,7 @@ public class LoggingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> setSucceeded(LoggingCloudletContext context,
-				KvStoreCallbackCompletionArguments<LoggingCloudletContext> arguments) {
+				KvStoreCallbackCompletionArguments<LoggingCloudletContext, String> arguments) {
 			KeyValueCallback.sets++;
 			this.logger.info(
 					"LoggingCloudlet - KeyValue succeeded set no. "
@@ -150,7 +145,7 @@ public class LoggingCloudlet {
 				ICloudletController<LoggingCloudletContext> cloudlet = arguments
 						.getCloudlet();
 				try {
-					cloudlet.destroyResource(context.kvStore, this);
+					context.kvStore.destroy();
 				} catch (Exception e) {
 					ExceptionTracer.traceIgnored(e);
 					this.logger.error(
@@ -183,7 +178,7 @@ public class LoggingCloudlet {
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.consumer, this);
+			context.consumer.destroy();
 			context.consumerRunning = false;
 			return ICallback.SUCCESS;
 		}
@@ -226,8 +221,8 @@ public class LoggingCloudlet {
 			this.logger.info(
 					"LoggingCloudlet received logging message for user "
 							+ data.user);
-			IResult<Object> result = context.kvStore.get(data.user, null);
-			Object passOb;
+			IResult<String> result = context.kvStore.get(data.user, null);
+			String passOb;
 			String token = null;
 			try {
 				passOb = result.getResult();
@@ -274,7 +269,7 @@ public class LoggingCloudlet {
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.publisher, this);
+			context.publisher.destroy();
 			context.publisherRunning = false;
 			return ICallback.SUCCESS;
 		}
@@ -314,7 +309,7 @@ public class LoggingCloudlet {
 
 		IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData> consumer;
 		IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken> publisher;
-		IKvStoreConnector<LoggingCloudletContext> kvStore;
+		IKvStoreConnector<LoggingCloudletContext, String> kvStore;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

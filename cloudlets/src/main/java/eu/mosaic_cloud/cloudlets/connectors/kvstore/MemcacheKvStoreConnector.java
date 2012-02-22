@@ -38,8 +38,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet using the accessor
  */
-public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
-		IMemcacheKvStoreConnector<C> {
+public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> implements
+		IMemcacheKvStoreConnector<C, D> {
 
 	/**
 	 * Creates a new accessor.
@@ -57,14 +57,14 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public CallbackCompletion<Void> set(final String key, final Object value, int exp,
+	public CallbackCompletion<Void> set(final String key, final D value, int exp,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).setSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -74,8 +74,8 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, key, error, extra);
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).setFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}
@@ -87,14 +87,14 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public CallbackCompletion<Void> add(final String key, final Object value, int exp,
+	public CallbackCompletion<Void> add(final String key, final D value, int exp,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).addSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -104,8 +104,8 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, key, error, extra);
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).addFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}
@@ -117,14 +117,14 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public CallbackCompletion<Void> append(final String key, final Object value,
+	public CallbackCompletion<Void> append(final String key, final D value,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).appendSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -134,8 +134,8 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, key, error, extra);
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).appendFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}
@@ -147,14 +147,14 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public CallbackCompletion<Void> prepend(final String key, final Object value,
+	public CallbackCompletion<Void> prepend(final String key, final D value,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).prependSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -164,8 +164,8 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, key, error, extra);
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).prependFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}
@@ -177,14 +177,14 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public CallbackCompletion<Void> cas(final String key, final Object value,
+	public CallbackCompletion<Void> cas(final String key, final D value,
 			final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).casSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -194,8 +194,8 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, key, error, extra);
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).casFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}
@@ -207,14 +207,14 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	}
 
 	@Override
-	public CallbackCompletion<Void> replace(final String key, final Object value,
+	public CallbackCompletion<Void> replace(final String key, final D value,
 			int exp, final Object extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).replaceSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -224,8 +224,8 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, key, error, extra);
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).replaceFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}
@@ -240,13 +240,13 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 	@Override
 	public CallbackCompletion<Void> getBulk(final List<String> keys,
 			final Object extra) {
-		IOperationCompletionHandler<Map<String, Object>> cHandler = new IOperationCompletionHandler<Map<String, Object>>() {
+		IOperationCompletionHandler<Map<String, D>> cHandler = new IOperationCompletionHandler<Map<String, D>>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public void onSuccess(Map<String, Object> result) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, keys, result, extra);
+			public void onSuccess(Map<String, D> result) {
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, keys, (D) result, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).getBulkSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 
@@ -255,8 +255,8 @@ public class MemcacheKvStoreConnector<C> extends KvStoreConnector<C> implements
 			@SuppressWarnings("unchecked")
 			@Override
 			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C> arguments = new KvStoreCallbackCompletionArguments<C>(
-						MemcacheKvStoreConnector.this.cloudlet, keys, error, extra);
+				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+						MemcacheKvStoreConnector.this.cloudlet, keys, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).getBulkFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}

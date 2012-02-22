@@ -9,7 +9,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public interface IMemcacheKvStoreConnectorFactory
 		extends
-			IConnectorFactory<IMemcacheKvStoreConnector<?>>
+			IConnectorFactory<IMemcacheKvStoreConnector<?, ?>>
 {
-	<Context, Data> IMemcacheKvStoreConnector<Context> create (IConfiguration configuration, Class<Data> dataClass, DataEncoder<? super Data> dataEncoder);
+	<Context, Data> IMemcacheKvStoreConnector<Context, Data> create (IConfiguration configuration, Class<Data> dataClass, DataEncoder<? super Data> dataEncoder, IKvStoreConnectorCallback<Context, Data> callback, Context callbackContext);
 }

@@ -34,23 +34,9 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public interface IConnector<C> extends Callbacks {
 
 	/**
-	 * Initialize the accessor.
-	 * 
-	 * @param callback
-	 *            handler for callbacks received from the resource
-	 * @param context
-	 *            cloudlet context
-	 */
-	CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
-			final ThreadingContext threading);
-
-	/**
 	 * Destroys the accessor.
-	 * 
-	 * @param callback
-	 *            handler for callbacks received from the resource
 	 */
-	CallbackCompletion<Void> destroy(IConnectorCallback<C> callback);
+	CallbackCompletion<Void> destroy();
 
 	/**
 	 * Returns the current status of the accessor.

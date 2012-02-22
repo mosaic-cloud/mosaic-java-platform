@@ -33,7 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public final class MetadataKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext> {
+		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject> {
 
 	private static final String BUCKET_NAME = "feed-metadata";
 
@@ -59,26 +59,26 @@ public final class MetadataKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> setSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		IndexWorkflow.onMetadataStored(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	@Override
 	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	@Override
 	public CallbackCompletion<Void> getSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		String key = arguments.getKey();
 		this.logger.trace(
 				"succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + ","
 						+ key + ")");
-		Object value = arguments.getValue();
+		JSONObject value = arguments.getValue();
 		if (value == null) {
 			createFeedMetaData(context, key, arguments.getExtra());
 		} else {
@@ -90,13 +90,13 @@ public final class MetadataKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	private void handleError(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
 		String key = arguments.getKey();
 		this.logger.warn(
 				"failed fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key

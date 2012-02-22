@@ -30,7 +30,7 @@ import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCl
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class DataKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext> {
+		DefaultKvStoreConnectorCallback<IndexerCloudletContext, byte[]> {
 
 	private static final String BUCKET_NAME = "feed-data";
 
@@ -43,7 +43,7 @@ public class DataKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> getSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[]> arguments) {
 		String key = arguments.getKey();
 		this.logger.trace(
 				"succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key
@@ -55,7 +55,7 @@ public class DataKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[]> arguments) {
 		String key = arguments.getKey();
 		this.logger
 				.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key

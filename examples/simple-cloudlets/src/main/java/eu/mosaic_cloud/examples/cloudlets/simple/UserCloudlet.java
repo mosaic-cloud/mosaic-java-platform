@@ -55,10 +55,12 @@ public class UserCloudlet {
 							.resolveAbsolute("queue"));
 			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
 					.create(queueConfiguration, AuthenticationToken.class,
-							new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class));
+							new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class),
+							new AmqpConsumerCallback(), context);
 			context.publisher = cloudlet.getConnectorFactory(IAmqpQueuePublisherConnectorFactory.class)
 					.create(queueConfiguration, LoggingData.class,
-							new PojoDataEncoder<LoggingData>(LoggingData.class));
+							new PojoDataEncoder<LoggingData>(LoggingData.class),
+							new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -67,12 +69,6 @@ public class UserCloudlet {
 				CallbackArguments<UserCloudletContext> arguments) {
 			this.logger.info(
 					"UserCloudlet initialized successfully.");
-			ICloudletController<UserCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			cloudlet.initializeResource(context.consumer,
-					new AmqpConsumerCallback(), context);
-			cloudlet.initializeResource(context.publisher,
-					new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -114,7 +110,7 @@ public class UserCloudlet {
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<UserCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.consumer, this);
+			context.consumer.destroy();
 			context.consumerRunning = false;
 			return ICallback.SUCCESS;
 		}
@@ -194,7 +190,7 @@ public class UserCloudlet {
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<UserCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.publisher, this);
+			context.publisher.destroy();
 			context.publisherRunning = false;
 			return ICallback.SUCCESS;
 		}

@@ -47,32 +47,6 @@ public interface ICloudletController<C> extends Callbacks, IConnectorsFactory {
 	<T> T buildCallbackInvoker(T callback, Class<T> callbackType);
 
 	/**
-	 * Initializes the resource accessor for a given resource.
-	 * 
-	 * @param accessor
-	 *            the resource accessor
-	 * @param callbackHandler
-	 *            the cloudlet callback handler which must handle callbacks to
-	 *            operations invoked on the accessor
-	 * @param cloudletContext
-	 *            the cloudlet context
-	 */
-	void initializeResource(IConnector<C> accessor,
-			IConnectorCallback<C> callbackHandler, C cloudletContext);
-
-	/**
-	 * Destroys the resource accessor for a given resource.
-	 * 
-	 * @param accessor
-	 *            the resource accessor
-	 * @param callbackHandler
-	 *            the cloudlet callback handler which must handle callbacks to
-	 *            operations invoked on the accessor
-	 */
-	void destroyResource(IConnector<C> accessor,
-			IConnectorCallback<C> callbackHandler);
-
-	/**
 	 * Destroys the cloudlet.
 	 * 
 	 * @return <code>true</code> if cloudlet was successfully destroyed

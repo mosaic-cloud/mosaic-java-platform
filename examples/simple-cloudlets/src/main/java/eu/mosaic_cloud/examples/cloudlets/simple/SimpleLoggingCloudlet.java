@@ -56,10 +56,12 @@ public class SimpleLoggingCloudlet {
 							.resolveAbsolute("queue"));
 			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
 					.create(queueConfiguration, LoggingData.class,
-							new PojoDataEncoder<LoggingData>(LoggingData.class));
+							new PojoDataEncoder<LoggingData>(LoggingData.class),
+							new AmqpConsumerCallback(), context);
 			context.publisher = cloudlet.getConnectorFactory(IAmqpQueuePublisherConnectorFactory.class)
 					.create(queueConfiguration, AuthenticationToken.class,
-							new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class));
+							new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class),
+							new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -68,12 +70,6 @@ public class SimpleLoggingCloudlet {
 				CallbackArguments<LoggingCloudletContext> arguments) {
 			this.logger.info(
 					"LoggingCloudlet initialized successfully.");
-			ICloudletController<LoggingCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			cloudlet.initializeResource(context.consumer,
-					new AmqpConsumerCallback(), context);
-			cloudlet.initializeResource(context.publisher,
-					new AmqpPublisherCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -115,7 +111,7 @@ public class SimpleLoggingCloudlet {
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.consumer, this);
+			context.consumer.destroy();
 			context.consumerRunning = false;
 			return ICallback.SUCCESS;
 		}
@@ -192,7 +188,7 @@ public class SimpleLoggingCloudlet {
 			// if unregistered as publisher is successful then destroy resource
 			ICloudletController<LoggingCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.publisher, this);
+			context.publisher.destroy();
 			context.publisherRunning = false;
 			return ICallback.SUCCESS;
 		}

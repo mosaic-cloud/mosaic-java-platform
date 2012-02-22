@@ -53,7 +53,8 @@ public class ConsumerCloudlet {
 			DataEncoder<String> encoder = new PojoDataEncoder<String>(
 					String.class);
 			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
-					.create(queueConfiguration, String.class, encoder);
+					.create(queueConfiguration, String.class, encoder,
+							new AmqpConsumerCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -62,10 +63,6 @@ public class ConsumerCloudlet {
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			this.logger.info(
 					"ConsumerCloudlet initialized successfully.");
-			ICloudletController<ConsumerCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			cloudlet.initializeResource(context.consumer,
-					new AmqpConsumerCallback(), context);
 			return ICallback.SUCCESS;
 		}
 
@@ -106,7 +103,7 @@ public class ConsumerCloudlet {
 			// if unregistered as consumer is successful then destroy resource
 			ICloudletController<ConsumerCloudletContext> cloudlet = arguments
 					.getCloudlet();
-			cloudlet.destroyResource(context.consumer, this);
+			context.consumer.destroy();
 			return ICallback.SUCCESS;
 		}
 
