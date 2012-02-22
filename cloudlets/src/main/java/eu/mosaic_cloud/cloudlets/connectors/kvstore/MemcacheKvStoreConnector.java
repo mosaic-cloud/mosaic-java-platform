@@ -71,7 +71,7 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).setFailed(
@@ -99,7 +99,7 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).addFailed(
@@ -127,7 +127,7 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).appendFailed(
@@ -155,7 +155,7 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).prependFailed(
@@ -183,7 +183,7 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).casFailed(
@@ -211,7 +211,7 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).replaceFailed(
@@ -240,7 +240,7 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, keys, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).getBulkFailed(

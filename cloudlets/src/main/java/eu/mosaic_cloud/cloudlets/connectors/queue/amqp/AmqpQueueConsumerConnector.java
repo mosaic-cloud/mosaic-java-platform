@@ -140,7 +140,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				callback.registerFailed(AmqpQueueConsumerConnector.super.cloudletContext,
@@ -176,7 +176,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 				}
 	
 				@Override
-				public <T extends Throwable> void onFailure(T error) {
+				public void onFailure(Throwable error) {
 					CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 							AmqpQueueConsumerConnector.super.cloudlet, error);
 					AmqpQueueConsumerConnector.this.callback.unregisterFailed(
@@ -209,7 +209,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				AmqpQueueConsumerConnector.this.callback.acknowledgeFailed(

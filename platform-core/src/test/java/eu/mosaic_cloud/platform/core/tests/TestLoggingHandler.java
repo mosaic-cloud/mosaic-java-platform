@@ -41,7 +41,7 @@ public class TestLoggingHandler<T extends Object> implements
 	}
 
 	@Override
-	public <E extends Throwable> void onFailure(E error) {
+	public void onFailure(Throwable error) {
 		logger.error("Test " + this.testName + " finished with error: "
 				+ error.getMessage());
 	}

@@ -199,7 +199,7 @@ public class AmqpQueuePublisherConnector<C, D> extends
 		}
 
 		@Override
-		public <T extends Throwable> void onFailure(T error) {
+		public void onFailure(Throwable error) {
 			AmqpQueuePublisherConnector.this.callback.publishFailed(
 					AmqpQueuePublisherConnector.super.cloudletContext, this.arguments);
 		}

@@ -47,5 +47,5 @@ public interface IOperationCompletionHandler<T> {
 	 * @param error
 	 *            the error
 	 */
-	<E extends Throwable> void onFailure(E error);
+	void onFailure(Throwable error);
 }

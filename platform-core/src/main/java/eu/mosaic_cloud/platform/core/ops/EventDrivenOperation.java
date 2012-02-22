@@ -152,7 +152,7 @@ public class EventDrivenOperation<T> implements IOperation<T>,
 	}
 
 	@Override
-	public <E extends Throwable> void onFailure(E error) {
+	public void onFailure(Throwable error) {
 		if (!this.exception.compareAndSet(null, error)) {
 			ExceptionTracer.traceIgnored(new ResultSetException(
 					"Operation result cannot be set."));

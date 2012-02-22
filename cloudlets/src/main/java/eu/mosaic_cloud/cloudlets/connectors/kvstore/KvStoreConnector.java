@@ -211,7 +211,7 @@ public class KvStoreConnector<C, D, E> implements IKvStoreConnector<C, D, E> {
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, (D) error, extra);
 				KvStoreConnector.this.callback.setFailed(
@@ -238,7 +238,7 @@ public class KvStoreConnector<C, D, E> implements IKvStoreConnector<C, D, E> {
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, (D) error, extra);
 				KvStoreConnector.this.callback.getFailed(
@@ -265,7 +265,7 @@ public class KvStoreConnector<C, D, E> implements IKvStoreConnector<C, D, E> {
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, (D) error, extra);
 				KvStoreConnector.this.callback.deleteFailed(
@@ -292,7 +292,7 @@ public class KvStoreConnector<C, D, E> implements IKvStoreConnector<C, D, E> {
 			}
 
 			@Override
-			public <T extends Throwable> void onFailure(T error) {
+			public void onFailure(Throwable error) {
 				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, "", (D) error, extra); //$NON-NLS-1$
 				KvStoreConnector.this.callback.deleteFailed(
