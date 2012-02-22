@@ -115,8 +115,8 @@ public class IndexWorkflow {
 	 * @param fetchedData
 	 *            the fetched data
 	 */
-	public static void parseLatestFeed(byte[] fetchedData, Object extra) {
-		getIndexer((UUID) extra).parseFeed(fetchedData);
+	public static void parseLatestFeed(byte[] fetchedData, UUID extra) {
+		getIndexer(extra).parseFeed(fetchedData);
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class IndexWorkflow {
 
 				// store timeline
 				this.context.timelinesStore.set(newTimelineKey,
-						this.newTimeline, this.key);
+						this.newTimeline, null);
 			} else {
 				this.currentFeedMetaData = this.previousFeedMetaData;
 				storeIndexOutcome();
@@ -264,8 +264,8 @@ public class IndexWorkflow {
 		}
 	}
 
-	public static void updateFeedMetadata(Object extra) {
-		getIndexer((UUID) extra).handleMetadataUpdate();
+	public static void updateFeedMetadata(UUID extra) {
+		getIndexer(extra).handleMetadataUpdate();
 	}
 
 	private void handleMetadataUpdate() {
@@ -283,12 +283,12 @@ public class IndexWorkflow {
 	}
 
 	public static void onMetadataStored(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
-		getIndexer((UUID) arguments.getExtra()).handleMetadataStored(arguments);
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+		getIndexer(arguments.getExtra()).handleMetadataStored(arguments);
 	}
 
 	private void handleMetadataStored(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		if (this.indexDone) {
 			storeIndexOutcome();
 		} else {
@@ -321,7 +321,7 @@ public class IndexWorkflow {
 			this.newFeedTask.put("items", items);
 			Object error = null;
 			this.newFeedTask.put("error", error);
-			this.context.taskStore.set(feedTaskKey, this.newFeedTask, this.key);
+			this.context.tasksStore.set(feedTaskKey, this.newFeedTask, null);
 		} catch (JSONException e) {
 			ExceptionTracer.traceDeferred(e);
 		}
@@ -332,11 +332,10 @@ public class IndexWorkflow {
 		Map<String, String> errorMssg = new HashMap<String, String>();
 		errorMssg.put("reason", "unexpected parsing error");
 		errorMssg.put("message", e.getMessage());
-		onIndexError(errorMssg, this.key);
+		onIndexError(errorMssg);
 	}
 
-	public static void onIndexError(Map<String, String> errorMessages,
-			Object extra) {
+	public static void onIndexError(Map<String, String> errorMessages) {
 		StringBuilder errorBuilder = new StringBuilder();
 		for (Map.Entry<String, String> entry : errorMessages.entrySet()) {
 			errorBuilder.append(entry.getKey() + ": " + entry.getValue());

@@ -178,7 +178,7 @@ public class UserCloudlet {
 			String pass = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.password", String.class, "");
 			LoggingData data = new LoggingData(user, pass);
-			context.publisher.publish(data, null, "");
+			context.publisher.publish(data);
 			return ICallback.SUCCESS;
 		}
 

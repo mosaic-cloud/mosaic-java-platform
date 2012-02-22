@@ -20,7 +20,6 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
-
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;

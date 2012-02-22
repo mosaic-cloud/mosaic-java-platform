@@ -89,7 +89,7 @@ public class PublisherCloudlet {
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet publisher registered successfully.");
-			context.publisher.publish("TEST MESSAGE!", null, "text/plain");
+			context.publisher.publish("TEST MESSAGE!");
 			return ICallback.SUCCESS;
 		}
 

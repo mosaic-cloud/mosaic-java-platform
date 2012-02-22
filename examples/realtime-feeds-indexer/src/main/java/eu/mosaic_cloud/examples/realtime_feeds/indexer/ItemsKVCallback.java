@@ -32,7 +32,7 @@ import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCl
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class ItemsKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject> {
+		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
 	private static final String BUCKET_NAME = "feed-items";
 
@@ -45,13 +45,13 @@ public class ItemsKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	private void handleError(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
 		String key = arguments.getKey();
 		this.logger.warn(
 				"failed fetch (" + ItemsKVCallback.BUCKET_NAME + "," + key
@@ -61,7 +61,7 @@ public class ItemsKVCallback extends
 		errorMssg.put("message", arguments.getValue().toString());
 		errorMssg.put("bucket", ItemsKVCallback.BUCKET_NAME);
 		errorMssg.put("key", key);
-		IndexWorkflow.onIndexError(errorMssg, arguments.getExtra());
+		IndexWorkflow.onIndexError(errorMssg);
 	}
 
 }

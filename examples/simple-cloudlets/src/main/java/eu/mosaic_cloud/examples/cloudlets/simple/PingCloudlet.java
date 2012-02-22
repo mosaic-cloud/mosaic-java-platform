@@ -167,7 +167,7 @@ public class PingCloudlet {
 			this.logger.info(
 					"Ping Cloudlet publisher registered successfully.");
 			PingMessage data = new PingMessage("pingpong");
-			context.publisher.publish(data, null, "");
+			context.publisher.publish(data);
 			return ICallback.SUCCESS;
 		}
 

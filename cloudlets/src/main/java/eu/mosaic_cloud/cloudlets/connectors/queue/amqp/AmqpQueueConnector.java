@@ -53,7 +53,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <D>
  *            the type of messages processed by the accessor
  */
-public abstract class AmqpQueueConnector<C, D extends Object> implements
+public abstract class AmqpQueueConnector<C, D> implements
 		IAmqpQueueConnector<C> {
 
 	private IConfiguration configuration;
@@ -232,7 +232,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
+			public <T extends Throwable> void onFailure(T error) {
 				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
 						AmqpQueueConnector.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueConnector.this.cloudletContext,
@@ -257,7 +257,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
+			public <T extends Throwable> void onFailure(T error) {
 				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
 						AmqpQueueConnector.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueConnector.this.cloudletContext,
@@ -282,7 +282,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
+			public <T extends Throwable> void onFailure(T error) {
 				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
 						AmqpQueueConnector.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueConnector.this.cloudletContext,
@@ -333,7 +333,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 		}
 
 		@Override
-		public <E extends Throwable> void onFailure(E error) {
+		public <T extends Throwable> void onFailure(T error) {
 			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 					AmqpQueueConnector.this.cloudlet, error);
 			this.callback.initializeFailed(
@@ -370,7 +370,7 @@ public abstract class AmqpQueueConnector<C, D extends Object> implements
 		}
 
 		@Override
-		public <E extends Throwable> void onFailure(E error) {
+		public <T extends Throwable> void onFailure(T error) {
 			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 					AmqpQueueConnector.this.cloudlet, error);
 			this.callback.destroyFailed(AmqpQueueConnector.this.cloudletContext,

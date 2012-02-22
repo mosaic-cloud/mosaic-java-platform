@@ -158,7 +158,7 @@ public class SimpleLoggingCloudlet {
 			String token = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.token", String.class, "error");
 			AuthenticationToken aToken = new AuthenticationToken(token);
-			context.publisher.publish(aToken, null, "");
+			context.publisher.publish(aToken);
 
 			message.acknowledge();
 

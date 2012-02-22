@@ -99,7 +99,7 @@ public class PongCloudlet {
 	}
 
 	public static final class KeyValueCallback extends
-			DefaultKvStoreConnectorCallback<PongCloudletContext, PingPongData> {
+			DefaultKvStoreConnectorCallback<PongCloudletContext, PingPongData, Void> {
 
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
@@ -121,13 +121,13 @@ public class PongCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> getSucceeded(PongCloudletContext context,
-				KvStoreCallbackCompletionArguments<PongCloudletContext, PingPongData> arguments) {
+				KvStoreCallbackCompletionArguments<PongCloudletContext, PingPongData, Void> arguments) {
 			this.logger.info("Pong Cloudlet - key value fetch data succeeded");
 
 			// send reply to Ping Cloudlet
 			PongMessage pong = new PongMessage(arguments.getKey(),
 					arguments.getValue());
-			context.publisher.publish(pong, null, "");
+			context.publisher.publish(pong);
 
 			ICloudletController<PongCloudletContext> cloudlet = arguments
 					.getCloudlet();
@@ -270,6 +270,6 @@ public class PongCloudlet {
 
 		IAmqpQueueConsumerConnector<PongCloudletContext, PingMessage> consumer;
 		IAmqpQueuePublisherConnector<PongCloudletContext, PongMessage> publisher;
-		IKvStoreConnector<PongCloudletContext, PingPongData> kvStore;
+		IKvStoreConnector<PongCloudletContext, PingPongData, Void> kvStore;
 	}
 }

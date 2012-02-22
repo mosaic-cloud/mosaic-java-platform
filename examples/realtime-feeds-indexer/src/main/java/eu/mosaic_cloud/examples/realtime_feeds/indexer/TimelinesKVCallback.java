@@ -21,6 +21,7 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -31,7 +32,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import org.json.JSONObject;
 
 public class TimelinesKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject> {
+		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID> {
 
 	private static final String BUCKET_NAME = "feed-timelines";
 
@@ -44,20 +45,20 @@ public class TimelinesKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> setSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		IndexWorkflow.updateFeedMetadata(arguments.getExtra());
 		return ICallback.SUCCESS;
 	}
 
 	@Override
 	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	private void handleError(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		String key = arguments.getKey();
 		this.logger.warn(
 				"failed fetch (" + TimelinesKVCallback.BUCKET_NAME + "," + key
@@ -67,6 +68,6 @@ public class TimelinesKVCallback extends
 		errorMssg.put("message", arguments.getValue().toString());
 		errorMssg.put("bucket", TimelinesKVCallback.BUCKET_NAME);
 		errorMssg.put("key", key);
-		IndexWorkflow.onIndexError(errorMssg, arguments.getExtra());
+		IndexWorkflow.onIndexError(errorMssg);
 	}
 }

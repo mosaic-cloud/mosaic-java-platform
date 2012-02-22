@@ -34,79 +34,79 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultMemcacheKvStoreConnectorCallback<C, D>
-		extends DefaultKvStoreConnectorCallback<C, D>
+public class DefaultMemcacheKvStoreConnectorCallback<C, D, E>
+		extends DefaultKvStoreConnectorCallback<C, D, E>
 		implements
-			IMemcacheKvStoreConnectorCallback<C, D>
+			IMemcacheKvStoreConnectorCallback<C, D, E>
 {
 	@Override
-	public CallbackCompletion<Void> addFailed (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> addFailed (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Add Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> addSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> addSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Add Succeeded", true, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> appendFailed (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> appendFailed (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Append Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> appendSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> appendSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Append Succeeded", true, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> casFailed (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> casFailed (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Cas Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> casSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> casSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Cas Succeeded", true, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> getBulkFailed (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> getBulkFailed (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "GetBulk Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> getBulkSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> getBulkSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "GetBulk Succeeded", true, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> prependFailed (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> prependFailed (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Prepend Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> prependSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> prependSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Prepend Succeeded", true, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> replaceFailed (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> replaceFailed (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Replace Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> replaceSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> replaceSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Replace Succeeded", true, false);
 	}

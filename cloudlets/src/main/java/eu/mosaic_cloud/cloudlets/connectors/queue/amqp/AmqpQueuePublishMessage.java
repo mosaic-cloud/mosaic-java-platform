@@ -30,18 +30,16 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
  * @param <D>
  *            the type of the data in the consumed message
  */
-public class AmqpQueuePublishMessage<D extends Object> {
+public class AmqpQueuePublishMessage<D> {
 
 	private final AmqpQueuePublisherConnector<?, D> publisher;
 	private final AmqpOutboundMessage message;
-	private final Object token;
 
 	public AmqpQueuePublishMessage(AmqpQueuePublisherConnector<?, D> publisher,
-			AmqpOutboundMessage message, Object token) {
+			AmqpOutboundMessage message) {
 		super();
 		this.publisher = publisher;
 		this.message = message;
-		this.token = token;
 	}
 
 	/**
@@ -56,17 +54,4 @@ public class AmqpQueuePublishMessage<D extends Object> {
 	AmqpOutboundMessage getMessage() {
 		return this.message;
 	}
-
-	/**
-	 * Returns the additional information required for publishing the message.
-	 * This can be an identifier of the published message or anything the
-	 * publisher wants to add to the message. This part will not be acttually
-	 * published.
-	 * 
-	 * @return the additional information required for publishing the message
-	 */
-	public Object getToken() {
-		return this.token;
-	}
-
 }

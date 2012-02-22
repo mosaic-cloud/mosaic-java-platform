@@ -49,7 +49,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <C>
  *            the type of the context of the cloudlet using the accessor
  */
-public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
+public class KvStoreConnector<C, D, E> implements IKvStoreConnector<C, D, E> {
 
 	private IConfiguration configuration;
 	protected ICloudletController<C> cloudlet;
@@ -57,8 +57,8 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	protected DataEncoder<?> dataEncoder;
 	private ConnectorStatus status;
 	private eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<?> connector;
-	private IKvStoreConnectorCallback<C, D> callback;
-	private IKvStoreConnectorCallback<C, D> callbackProxy;
+	private IKvStoreConnectorCallback<C, D, E> callback;
+	private IKvStoreConnectorCallback<C, D, E> callbackProxy;
 	private Monitor monitor = Monitor.create (this);
 
 	/**
@@ -175,7 +175,7 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	 *            the class of the callback
 	 * @return the callback
 	 */
-	protected <T extends IKvStoreConnectorCallback<C, D>> T getCallback(
+	protected <T extends IKvStoreConnectorCallback<C, D, E>> T getCallback(
 			Class<T> callbackClass) {
 		return callbackClass.cast(this.callback);
 	}
@@ -191,19 +191,19 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	 *            the class of the callback
 	 * @return a dynamic proxy of the callback
 	 */
-	protected <T extends IKvStoreConnectorCallback<C, D>> T getCallbackProxy(
+	protected <T extends IKvStoreConnectorCallback<C, D, E>> T getCallbackProxy(
 			Class<T> callbackClass) {
 		return callbackClass.cast(this.callbackProxy);
 	}
 
 	@Override
 	public CallbackCompletion<Void> set(final String key, final D value,
-			final Object extra) {
+			final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, value, extra);
 				KvStoreConnector.this.callback.setSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -211,8 +211,8 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, (D) error, extra);
 				KvStoreConnector.this.callback.setFailed(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -225,12 +225,12 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	}
 
 	@Override
-	public CallbackCompletion<Void> get(final String key, final Object extra) {
+	public CallbackCompletion<Void> get(final String key, final E extra) {
 		IOperationCompletionHandler<D> cHandler = new IOperationCompletionHandler<D>() {
 
 			@Override
 			public void onSuccess(D result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, result, extra);
 				KvStoreConnector.this.callback.getSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -238,8 +238,8 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, (D) error, extra);
 				KvStoreConnector.this.callback.getFailed(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -252,12 +252,12 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	}
 
 	@Override
-	public CallbackCompletion<Void> delete(final String key, final Object extra) {
+	public CallbackCompletion<Void> delete(final String key, final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, null, extra);
 				KvStoreConnector.this.callback.deleteSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -265,8 +265,8 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, key, (D) error, extra);
 				KvStoreConnector.this.callback.deleteFailed(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -279,12 +279,12 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 	}
 
 	@Override
-	public CallbackCompletion<Void> list(final Object extra) {
+	public CallbackCompletion<Void> list(final E extra) {
 		IOperationCompletionHandler<List<String>> cHandler = new IOperationCompletionHandler<List<String>>() {
 
 			@Override
 			public void onSuccess(List<String> result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, result, null, extra);
 				KvStoreConnector.this.callback.deleteSucceeded(
 						KvStoreConnector.this.cloudletContext, arguments);
@@ -292,8 +292,8 @@ public class KvStoreConnector<C, D> implements IKvStoreConnector<C, D> {
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						KvStoreConnector.this.cloudlet, "", (D) error, extra); //$NON-NLS-1$
 				KvStoreConnector.this.callback.deleteFailed(
 						KvStoreConnector.this.cloudletContext, arguments);

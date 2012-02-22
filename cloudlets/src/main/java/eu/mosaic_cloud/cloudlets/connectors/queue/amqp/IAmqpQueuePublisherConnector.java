@@ -38,24 +38,6 @@ public interface IAmqpQueuePublisherConnector<C, D> extends IAmqpQueueConnector<
 	 * 
 	 * @param data
 	 *            the data to publish
-	 * @param token
-	 *            extra info specific to the published data
-	 * @param contentType
-	 *            the RFC-2046 MIME type for the Message content (such as
-	 *            "text/plain")
 	 */
-	CallbackCompletion<Void> publish(D data, Object token, String contentType);
-
-	/**
-	 * Publishes a message to a queue.
-	 * 
-	 * @param data
-	 *            the data to publish
-	 * @param token
-	 *            extra info specific to the published data
-	 * @param contentType
-	 *            the RFC-2046 MIME type for the Message content (such as
-	 *            "text/plain")
-	 */
-	CallbackCompletion<Void> publish(D data, Object token, String contentType, String correlation);
+	CallbackCompletion<Void> publish(D data);
 }

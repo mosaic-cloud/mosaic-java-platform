@@ -32,7 +32,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the cloudlet context
  */
-public interface IKvStoreConnectorCallback<C, D> extends
+public interface IKvStoreConnectorCallback<C, D, E> extends
 		IConnectorCallback<C> {
 
 	/**
@@ -43,7 +43,7 @@ public interface IKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> setSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> setSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the set operation completed unsuccessfully. The error can be
@@ -54,7 +54,7 @@ public interface IKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> setFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> setFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the get operation completed successfully. The result of the
@@ -65,7 +65,7 @@ public interface IKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> getSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> getSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the get operation completed unsuccessfully. The error can be
@@ -76,7 +76,7 @@ public interface IKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> getFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> getFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the delete operation completed successfully.
@@ -86,7 +86,7 @@ public interface IKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> deleteSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> deleteSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the delete operation completed unsuccessfully. The error can
@@ -97,5 +97,5 @@ public interface IKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> deleteFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> deleteFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 }

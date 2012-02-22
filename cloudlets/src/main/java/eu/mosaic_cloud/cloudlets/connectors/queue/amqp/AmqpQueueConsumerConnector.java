@@ -48,7 +48,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <D>
  *            the type of the messages consumed by the cloudlet
  */
-public class AmqpQueueConsumerConnector<C, D extends Object> extends
+public class AmqpQueueConsumerConnector<C, D, E> extends
 		AmqpQueueConnector<C, D> implements IAmqpQueueConsumerConnector<C, D> {
 
 	private String consumer;
@@ -140,7 +140,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
+			public <T extends Throwable> void onFailure(T error) {
 				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				callback.registerFailed(AmqpQueueConsumerConnector.super.cloudletContext,
@@ -176,7 +176,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 				}
 	
 				@Override
-				public <E extends Throwable> void onFailure(E error) {
+				public <T extends Throwable> void onFailure(T error) {
 					CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 							AmqpQueueConsumerConnector.super.cloudlet, error);
 					AmqpQueueConsumerConnector.this.callback.unregisterFailed(
@@ -209,7 +209,7 @@ public class AmqpQueueConsumerConnector<C, D extends Object> extends
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
+			public <T extends Throwable> void onFailure(T error) {
 				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				AmqpQueueConsumerConnector.this.callback.acknowledgeFailed(

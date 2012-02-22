@@ -107,7 +107,7 @@ public class LoggingCloudlet {
 	}
 
 	public static final class KeyValueCallback extends
-			DefaultKvStoreConnectorCallback<LoggingCloudletContext, String> {
+			DefaultKvStoreConnectorCallback<LoggingCloudletContext, String, Void> {
 
 		private static int sets = 0;
 
@@ -136,7 +136,7 @@ public class LoggingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> setSucceeded(LoggingCloudletContext context,
-				KvStoreCallbackCompletionArguments<LoggingCloudletContext, String> arguments) {
+				KvStoreCallbackCompletionArguments<LoggingCloudletContext, String, Void> arguments) {
 			KeyValueCallback.sets++;
 			this.logger.info(
 					"LoggingCloudlet - KeyValue succeeded set no. "
@@ -236,7 +236,7 @@ public class LoggingCloudlet {
 					}
 				}
 				AuthenticationToken aToken = new AuthenticationToken(token);
-				context.publisher.publish(aToken, null, "");
+				context.publisher.publish(aToken);
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
@@ -309,7 +309,7 @@ public class LoggingCloudlet {
 
 		IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData> consumer;
 		IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken> publisher;
-		IKvStoreConnector<LoggingCloudletContext, String> kvStore;
+		IKvStoreConnector<LoggingCloudletContext, String, Void> kvStore;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

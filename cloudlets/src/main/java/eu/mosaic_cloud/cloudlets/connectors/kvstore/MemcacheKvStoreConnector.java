@@ -38,8 +38,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet using the accessor
  */
-public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> implements
-		IMemcacheKvStoreConnector<C, D> {
+public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E> implements
+		IMemcacheKvStoreConnector<C, D, E> {
 
 	/**
 	 * Creates a new accessor.
@@ -58,12 +58,12 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 	@Override
 	public CallbackCompletion<Void> set(final String key, final D value, int exp,
-			final Object extra) {
+			final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).setSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -71,8 +71,8 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).setFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -86,12 +86,12 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 	@Override
 	public CallbackCompletion<Void> add(final String key, final D value, int exp,
-			final Object extra) {
+			final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).addSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -99,8 +99,8 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).addFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -114,12 +114,12 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 	@Override
 	public CallbackCompletion<Void> append(final String key, final D value,
-			final Object extra) {
+			final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).appendSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -127,8 +127,8 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).appendFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -142,12 +142,12 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 	@Override
 	public CallbackCompletion<Void> prepend(final String key, final D value,
-			final Object extra) {
+			final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).prependSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -155,8 +155,8 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).prependFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -170,12 +170,12 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 	@Override
 	public CallbackCompletion<Void> cas(final String key, final D value,
-			final Object extra) {
+			final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).casSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -183,8 +183,8 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).casFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -198,12 +198,12 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 	@Override
 	public CallbackCompletion<Void> replace(final String key, final D value,
-			int exp, final Object extra) {
+			int exp, final E extra) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, value, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).replaceSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -211,8 +211,8 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, key, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).replaceFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -227,12 +227,12 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 
 	@Override
 	public CallbackCompletion<Void> getBulk(final List<String> keys,
-			final Object extra) {
+			final E extra) {
 		IOperationCompletionHandler<Map<String, D>> cHandler = new IOperationCompletionHandler<Map<String, D>>() {
 
 			@Override
 			public void onSuccess(Map<String, D> result) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, keys, (D) result, extra);
 				getCallback(IMemcacheKvStoreConnectorCallback.class).getBulkSucceeded(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
@@ -240,14 +240,14 @@ public class MemcacheKvStoreConnector<C, D> extends KvStoreConnector<C, D> imple
 			}
 
 			@Override
-			public <E extends Throwable> void onFailure(E error) {
-				KvStoreCallbackCompletionArguments<C, D> arguments = new KvStoreCallbackCompletionArguments<C, D>(
+			public <T extends Throwable> void onFailure(T error) {
+				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
 						MemcacheKvStoreConnector.this.cloudlet, keys, (D) error, extra);
 				(getCallback(IMemcacheKvStoreConnectorCallback.class)).getBulkFailed(
 						MemcacheKvStoreConnector.this.cloudletContext, arguments);
 			}
 		};
-		List<IOperationCompletionHandler<Map<String, Object>>> handlers = new ArrayList<IOperationCompletionHandler<Map<String, Object>>>();
+		List<IOperationCompletionHandler<Map<String, D>>> handlers = new ArrayList<IOperationCompletionHandler<Map<String, D>>>();
 		handlers.add(cHandler);
 		return super.getConnector(eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector.class).getBulk(keys,
 				handlers, this.cloudlet.getResponseInvocationHandler(cHandler));

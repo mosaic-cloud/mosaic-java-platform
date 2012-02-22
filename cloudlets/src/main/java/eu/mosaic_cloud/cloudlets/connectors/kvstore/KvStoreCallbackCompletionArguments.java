@@ -34,11 +34,11 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * @param <C>
  *            the context of the cloudlet
  */
-public class KvStoreCallbackCompletionArguments<C, D> extends CallbackCompletionArguments<C> {
+public class KvStoreCallbackCompletionArguments<C, D, E> extends CallbackCompletionArguments<C> {
 
 	private final List<String> keys;
 	private final D value;
-	private final Object extra;
+	private final E extra;
 
 	/**
 	 * Creates a new argument.
@@ -54,7 +54,7 @@ public class KvStoreCallbackCompletionArguments<C, D> extends CallbackCompletion
 	 *            some application specific object
 	 */
 	public KvStoreCallbackCompletionArguments(ICloudletController<C> cloudlet,
-			String key, D value, Object extra) {
+			String key, D value, E extra) {
 		super(cloudlet);
 		this.keys = new ArrayList<String>();
 		this.keys.add(key);
@@ -77,7 +77,7 @@ public class KvStoreCallbackCompletionArguments<C, D> extends CallbackCompletion
 	 *            some application specific object
 	 */
 	public KvStoreCallbackCompletionArguments(ICloudletController<C> cloudlet,
-			List<String> keys, D value, Object extra) {
+			List<String> keys, D value, E extra) {
 		super(cloudlet);
 		this.keys = keys;
 		this.value = value;
@@ -118,7 +118,7 @@ public class KvStoreCallbackCompletionArguments<C, D> extends CallbackCompletion
 	 * @return ny application specific data used for the key-value store
 	 *         operation
 	 */
-	public Object getExtra() {
+	public E getExtra() {
 		return this.extra;
 	}
 

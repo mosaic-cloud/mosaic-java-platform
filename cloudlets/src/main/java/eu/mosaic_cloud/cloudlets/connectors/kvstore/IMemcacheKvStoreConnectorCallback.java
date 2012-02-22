@@ -31,8 +31,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the cloudlet context
  */
-public interface IMemcacheKvStoreConnectorCallback<C, D> extends
-		IKvStoreConnectorCallback<C, D> {
+public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
+		IKvStoreConnectorCallback<C, D, E> {
 
 	/**
 	 * Called when the add operation completed successfully.
@@ -42,7 +42,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> addSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> addSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the add operation completed unsuccessfully. The error can be
@@ -53,7 +53,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> addFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> addFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the append operation completed successfully.
@@ -63,7 +63,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> appendSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> appendSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the append operation completed unsuccessfully. The error can
@@ -74,7 +74,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> appendFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> appendFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the prepend operation completed successfully.
@@ -84,7 +84,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> prependSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> prependSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the prepend operation completed unsuccessfully. The error can
@@ -95,7 +95,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> prependFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> prependFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the replace operation completed successfully.
@@ -105,7 +105,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> replaceSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> replaceSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the replace operation completed unsuccessfully. The error can
@@ -116,7 +116,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> replaceFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> replaceFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the getBulk operation completed successfully. The result of
@@ -127,7 +127,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> getBulkSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> getBulkSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the getBulk operation completed unsuccessfully. The error can
@@ -138,7 +138,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> getBulkFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> getBulkFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the cas operation completed successfully.
@@ -148,7 +148,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> casSucceeded(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> casSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
 	/**
 	 * Called when the cas operation completed unsuccessfully. The error can be
@@ -159,5 +159,5 @@ public interface IMemcacheKvStoreConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> casFailed(C context, KvStoreCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> casFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
 }

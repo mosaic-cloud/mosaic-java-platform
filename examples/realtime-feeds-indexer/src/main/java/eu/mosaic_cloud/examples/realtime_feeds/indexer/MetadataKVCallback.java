@@ -21,6 +21,7 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -33,7 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public final class MetadataKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject> {
+		DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID> {
 
 	private static final String BUCKET_NAME = "feed-metadata";
 
@@ -45,7 +46,7 @@ public final class MetadataKVCallback extends
 	}
 
 	private void createFeedMetaData(IndexerCloudletContext context, String key,
-			Object extra) {
+			UUID extra) {
 		JSONObject feedMetaData = new JSONObject();
 		try {
 			feedMetaData.put("key", key);
@@ -59,21 +60,21 @@ public final class MetadataKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> setSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		IndexWorkflow.onMetadataStored(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	@Override
 	public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	@Override
 	public CallbackCompletion<Void> getSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		String key = arguments.getKey();
 		this.logger.trace(
 				"succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + ","
@@ -90,13 +91,13 @@ public final class MetadataKVCallback extends
 
 	@Override
 	public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		handleError(arguments);
 		return ICallback.SUCCESS;
 	}
 
 	private void handleError(
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject> arguments) {
+			KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
 		String key = arguments.getKey();
 		this.logger.warn(
 				"failed fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key
@@ -106,6 +107,6 @@ public final class MetadataKVCallback extends
 		errorMssg.put("message", arguments.getValue().toString());
 		errorMssg.put("bucket", MetadataKVCallback.BUCKET_NAME);
 		errorMssg.put("key", key);
-		IndexWorkflow.onIndexError(errorMssg, arguments.getExtra());
+		IndexWorkflow.onIndexError(errorMssg);
 	}
 }

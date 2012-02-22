@@ -110,7 +110,7 @@ public class Cloudlet<C extends Object> {
 				}
 	
 				@Override
-				public <E extends Throwable> void onFailure(E error) {
+				public <T extends Throwable> void onFailure(T error) {
 					Cloudlet.this.controllerCallback.initializeFailed(
 							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));
@@ -170,7 +170,7 @@ public class Cloudlet<C extends Object> {
 				}
 	
 				@Override
-				public <E extends Throwable> void onFailure(E error) {
+				public <T extends Throwable> void onFailure(T error) {
 					Cloudlet.this.controllerCallback.destroyFailed(
 							Cloudlet.this.context, new CallbackArguments<C>(
 									Cloudlet.this.controller));

@@ -31,7 +31,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D> {
+public interface IMemcacheKvStoreConnector<C, D, E> extends IKvStoreConnector<C, D, E> {
 
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -54,7 +54,7 @@ public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> set(String key, D value, int exp, Object extra);
+	CallbackCompletion<Void> set(String key, D value, int exp, E extra);
 
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data
@@ -78,7 +78,7 @@ public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> add(String key, D value, int exp, Object extra);
+	CallbackCompletion<Void> add(String key, D value, int exp, E extra);
 
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -91,7 +91,7 @@ public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> append(String key, D value, Object extra);
+	CallbackCompletion<Void> append(String key, D value, E extra);
 
 	/**
 	 * Adds specified data to an existing key before existing data.
@@ -104,7 +104,7 @@ public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> prepend(String key, D value, Object extra);
+	CallbackCompletion<Void> prepend(String key, D value, E extra);
 
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -118,7 +118,7 @@ public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> cas(String key, D value, Object extra);
+	CallbackCompletion<Void> cas(String key, D value, E extra);
 
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -142,7 +142,7 @@ public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> replace(String key, D value, int exp, Object extra);
+	CallbackCompletion<Void> replace(String key, D value, int exp, E extra);
 
 	/**
 	 * Gets data associated with several keys.
@@ -153,5 +153,5 @@ public interface IMemcacheKvStoreConnector<C, D> extends IKvStoreConnector<C, D>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> getBulk(List<String> keys, Object extra);
+	CallbackCompletion<Void> getBulk(List<String> keys, E extra);
 }
