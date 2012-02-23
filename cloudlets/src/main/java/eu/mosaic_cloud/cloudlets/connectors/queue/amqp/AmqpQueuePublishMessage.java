@@ -19,7 +19,7 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 
 /**
  * An object of this class embeds the essential information about a publish

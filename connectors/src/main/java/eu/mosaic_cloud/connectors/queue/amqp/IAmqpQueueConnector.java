@@ -20,9 +20,10 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
+
 import eu.mosaic_cloud.connectors.queue.IQueueConnector;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**

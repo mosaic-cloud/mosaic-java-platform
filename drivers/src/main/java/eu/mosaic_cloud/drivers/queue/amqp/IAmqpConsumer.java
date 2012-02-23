@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.drivers.queue.amqp;
 
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+
 /**
  * Interface for application callback objects to receive notifications and
  * messages from a queue by subscription. Methods of this interface are invoked

@@ -19,11 +19,12 @@
  */
 package eu.mosaic_cloud.drivers.interop.queue.amqp;
 
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 
 import com.google.protobuf.ByteString;
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;

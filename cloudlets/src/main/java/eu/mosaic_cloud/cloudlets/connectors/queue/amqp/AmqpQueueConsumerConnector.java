@@ -22,13 +22,15 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+
+
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallback;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;

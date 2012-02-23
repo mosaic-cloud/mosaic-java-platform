@@ -19,7 +19,7 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 
 /**
  * An object of this class embeds the essential information about a consume

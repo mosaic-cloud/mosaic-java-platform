@@ -22,6 +22,11 @@ package eu.mosaic_cloud.drivers.interop.queue.amqp; // NOPMD by georgiana on 10/
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
+
+
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 
@@ -33,10 +38,7 @@ import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.drivers.queue.amqp.IAmqpConsumer;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;

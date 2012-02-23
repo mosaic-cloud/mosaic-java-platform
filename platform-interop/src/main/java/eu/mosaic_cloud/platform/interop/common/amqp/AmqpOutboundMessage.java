@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.drivers.queue.amqp;
+package eu.mosaic_cloud.platform.interop.common.amqp;
 
 /**
  * This class defines an outbound message and all information required to

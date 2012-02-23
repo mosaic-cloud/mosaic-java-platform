@@ -22,6 +22,9 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+
+
 import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorException;
 import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorStatus;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
@@ -31,7 +34,6 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentResourceFinder;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
-import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

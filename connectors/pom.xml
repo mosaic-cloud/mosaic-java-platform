@@ -30,6 +30,7 @@
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>drivers</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.components</groupId>

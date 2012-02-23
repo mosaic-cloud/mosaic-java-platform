@@ -24,6 +24,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
+
+
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
