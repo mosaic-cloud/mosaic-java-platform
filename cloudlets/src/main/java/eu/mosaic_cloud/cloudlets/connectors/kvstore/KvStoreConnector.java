@@ -17,28 +17,18 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
-import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorException;
-import eu.mosaic_cloud.cloudlets.connectors.core.ConnectorStatus;
-import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentResourceFinder;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.Miscellaneous;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+
 
 /**
  * Base cloudlet-level accessor for key value storages. Cloudlets will use an
@@ -49,18 +39,11 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <C>
  *            the type of the context of the cloudlet using the accessor
  */
-public class KvStoreConnector<C, D, E> implements IKvStoreConnector<C, D, E> {
-
-	private IConfiguration configuration;
-	protected ICloudletController<C> cloudlet;
-	protected C cloudletContext;
-	protected DataEncoder<?> dataEncoder;
-	private ConnectorStatus status;
-	private eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<?> connector;
-	private IKvStoreConnectorCallback<C, D, E> callback;
-	private IKvStoreConnectorCallback<C, D, E> callbackProxy;
-	private Monitor monitor = Monitor.create (this);
-
+public class KvStoreConnector<CB extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<D>, CC extends IKvStoreConnectorCallback<C, D, E>, C, D, E>
+		extends BaseConnector<CB, CC, C>
+		implements
+			IKvStoreConnector<C, D, E>
+{
 	/**
 	 * Creates a new accessor.
 	 * 
@@ -71,238 +54,104 @@ public class KvStoreConnector<C, D, E> implements IKvStoreConnector<C, D, E> {
 	 * @param encoder
 	 *            encoder used for serializing data
 	 */
-	public KvStoreConnector(IConfiguration config,
-			ICloudletController<C> cloudlet, DataEncoder<?> encoder) {
-		synchronized (this.monitor) {
-			this.configuration = config;
-			this.cloudlet = cloudlet;
-			this.dataEncoder = encoder;
-			this.status = ConnectorStatus.CREATED;
-		}
+	public KvStoreConnector (final ICloudletController<?> cloudlet, final CB connector, final IConfiguration config, final CC callback, final C context)
+	{
+		super (cloudlet, connector, config, callback, context);
 	}
-
-	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
-			ThreadingContext threading) {
-		synchronized (this.monitor) {
-			this.status = ConnectorStatus.INITIALIZING;
-			this.cloudletContext = context;
-			this.callback = Miscellaneous.cast(IKvStoreConnectorCallback.class,
-					callback);
-
-			this.callbackProxy = this.cloudlet.buildCallbackInvoker(
-					this.callback, IKvStoreConnectorCallback.class);
-			try {
-				String connectorName = ConfigUtils.resolveParameter(
-						this.configuration,
-						eu.mosaic_cloud.cloudlets.tools.ConfigProperties
-								.getString("KvStoreConnector.0"), String.class, //$NON-NLS-1$
-						""); //$NON-NLS-1$
-				ResourceType type = ResourceType.KEY_VALUE;
-				if (connectorName
-						.equalsIgnoreCase(KeyValueConnectorFactory.ConnectorType.MEMCACHED
-								.toString())) {
-					type = ResourceType.MEMCACHED;
+	
+	@Override
+	public CallbackCompletion<Boolean> delete (final String key)
+	{
+		return (this.delete (key, null));
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> delete (final String key, final E extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.delete (key);
+		if (this.callback != null)
+			completion.observe (new CallbackCompletionObserver () {
+				@Override
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+				{
+					assert (completion_ == completion);
+					if (completion.getException () != null)
+						return KvStoreConnector.this.callback.deleteFailed (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (KvStoreConnector.this.cloudlet, key, (D) completion.getException (), extra));
+					return KvStoreConnector.this.callback.deleteSucceeded (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (KvStoreConnector.this.cloudlet, key, null, extra));
 				}
-
-				if (!CloudletComponentResourceFinder.getResourceFinder().findResource(type,
-						this.configuration)) {
-					throw new ConnectorException(
-							"Cannot find a resource of type " + type.toString());
+			});
+		return (completion);
+	}
+	
+	@Override
+	public CallbackCompletion<D> get (final String key)
+	{
+		return (this.get (key, null));
+	}
+	
+	@Override
+	public CallbackCompletion<D> get (final String key, final E extra)
+	{
+		final CallbackCompletion<D> completion = this.connector.get (key);
+		if (this.callback != null)
+			completion.observe (new CallbackCompletionObserver () {
+				@Override
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+				{
+					assert (completion_ == completion);
+					if (completion.getException () != null)
+						return KvStoreConnector.this.callback.getFailed (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (KvStoreConnector.this.cloudlet, key, (D) completion.getException (), extra));
+					return KvStoreConnector.this.callback.getSucceeded (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (KvStoreConnector.this.cloudlet, key, completion.getOutcome (), extra));
 				}
-				this.connector = KeyValueConnectorFactory.createConnector(
-						connectorName, this.configuration, this.dataEncoder,
-						threading);
-				this.status = ConnectorStatus.READY;
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
-						KvStoreConnector.this.cloudlet, true);
-				this.callbackProxy.initializeSucceeded(this.cloudletContext,
-						arguments);
-			} catch (Throwable e) {
-				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
-						this.cloudlet, e);
-				this.callbackProxy.initializeFailed(context, arguments);
-			}
-		}
+			});
+		return (completion);
 	}
-
+	
 	@Override
-	public CallbackCompletion<Void> destroy() {
-		synchronized (this.monitor) {
-			this.status = ConnectorStatus.DESTROYING;
-			try {
-				this.connector.destroy();
-				this.status = ConnectorStatus.DESTROYED;
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
-						KvStoreConnector.this.cloudlet, true);
-				this.callbackProxy.destroySucceeded(this.cloudletContext,
-						arguments);
-			} catch (Throwable e) {
-				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
-						this.cloudlet, e);
-				this.callbackProxy.destroyFailed(this.cloudletContext,
-						arguments);
-				ExceptionTracer.traceDeferred(e);
-			}
-		}
+	public CallbackCompletion<List<String>> list ()
+	{
+		return (this.list (null));
 	}
-
+	
 	@Override
-	public ConnectorStatus getStatus() {
-		return this.status;
+	public CallbackCompletion<List<String>> list (final E extra)
+	{
+		final CallbackCompletion<List<String>> completion = this.connector.list ();
+		if (this.callback != null)
+			completion.observe (new CallbackCompletionObserver () {
+				@Override
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+				{
+					assert (completion_ == completion);
+					if (completion.getException () != null)
+						return KvStoreConnector.this.callback.listFailed (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, List<String>, E> (KvStoreConnector.this.cloudlet, null, (List<String>) completion.getException (), extra));
+					return KvStoreConnector.this.callback.listSucceeded (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, List<String>, E> (KvStoreConnector.this.cloudlet, null, completion.getOutcome (), extra));
+				}
+			});
+		return (completion);
 	}
-
-	/**
-	 * Returns the key value storage connector used by this accessor.
-	 * 
-	 * @param <T>
-	 *            the type of the connector
-	 * @param connectorClass
-	 *            the class of the connector
-	 * @return the connector
-	 */
-	protected <T extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<?>> T getConnector(Class<T> connectorClass) {
-		return connectorClass.cast(this.connector);
-	}
-
-	/**
-	 * Returns the callback for this accessor.
-	 * 
-	 * @param <T>
-	 *            the type of the callback
-	 * @param callbackClass
-	 *            the class of the callback
-	 * @return the callback
-	 */
-	protected <T extends IKvStoreConnectorCallback<C, D, E>> T getCallback(
-			Class<T> callbackClass) {
-		return callbackClass.cast(this.callback);
-	}
-
-	/**
-	 * Returns a dynamic proxy of the callback which makes sure that the
-	 * callback will be executed within the thread allocated to the cloudlet
-	 * instance.
-	 * 
-	 * @param <T>
-	 *            the type of the callback
-	 * @param callbackClass
-	 *            the class of the callback
-	 * @return a dynamic proxy of the callback
-	 */
-	protected <T extends IKvStoreConnectorCallback<C, D, E>> T getCallbackProxy(
-			Class<T> callbackClass) {
-		return callbackClass.cast(this.callbackProxy);
-	}
-
+	
 	@Override
-	public CallbackCompletion<Void> set(final String key, final D value,
-			final E extra) {
-		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
-
-			@Override
-			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, key, value, extra);
-				KvStoreConnector.this.callback.setSucceeded(
-						KvStoreConnector.this.cloudletContext, arguments);
-
-			}
-
-			@Override
-			public void onFailure(Throwable error) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, key, (D) error, extra);
-				KvStoreConnector.this.callback.setFailed(
-						KvStoreConnector.this.cloudletContext, arguments);
-			}
-		};
-		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-		handlers.add(cHandler);
-		return this.connector.set(key, value, handlers,
-				this.cloudlet.getResponseInvocationHandler(cHandler));
+	public CallbackCompletion<Boolean> set (final String key, final D value)
+	{
+		return (this.set (key, value, null));
 	}
-
+	
 	@Override
-	public CallbackCompletion<Void> get(final String key, final E extra) {
-		IOperationCompletionHandler<D> cHandler = new IOperationCompletionHandler<D>() {
-
-			@Override
-			public void onSuccess(D result) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, key, result, extra);
-				KvStoreConnector.this.callback.getSucceeded(
-						KvStoreConnector.this.cloudletContext, arguments);
-
-			}
-
-			@Override
-			public void onFailure(Throwable error) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, key, (D) error, extra);
-				KvStoreConnector.this.callback.getFailed(
-						KvStoreConnector.this.cloudletContext, arguments);
-			}
-		};
-		List<IOperationCompletionHandler<D>> handlers = new ArrayList<IOperationCompletionHandler<D>>();
-		handlers.add(cHandler);
-		return this.connector.get(key, handlers,
-				this.cloudlet.getResponseInvocationHandler(cHandler));
+	public CallbackCompletion<Boolean> set (final String key, final D value, final E extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.set (key, value);
+		if (this.callback != null)
+			completion.observe (new CallbackCompletionObserver () {
+				@Override
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+				{
+					assert (completion_ == completion);
+					if (completion.getException () != null)
+						return KvStoreConnector.this.callback.setFailed (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (KvStoreConnector.this.cloudlet, key, (D) completion.getException (), extra));
+					return KvStoreConnector.this.callback.setSucceeded (KvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (KvStoreConnector.this.cloudlet, key, value, extra));
+				}
+			});
+		return (completion);
 	}
-
-	@Override
-	public CallbackCompletion<Void> delete(final String key, final E extra) {
-		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
-
-			@Override
-			public void onSuccess(Boolean result) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, key, null, extra);
-				KvStoreConnector.this.callback.deleteSucceeded(
-						KvStoreConnector.this.cloudletContext, arguments);
-
-			}
-
-			@Override
-			public void onFailure(Throwable error) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, key, (D) error, extra);
-				KvStoreConnector.this.callback.deleteFailed(
-						KvStoreConnector.this.cloudletContext, arguments);
-			}
-		};
-		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-		handlers.add(cHandler);
-		return this.connector.delete(key, handlers,
-				this.cloudlet.getResponseInvocationHandler(cHandler));
-	}
-
-	@Override
-	public CallbackCompletion<Void> list(final E extra) {
-		IOperationCompletionHandler<List<String>> cHandler = new IOperationCompletionHandler<List<String>>() {
-
-			@Override
-			public void onSuccess(List<String> result) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, result, null, extra);
-				KvStoreConnector.this.callback.deleteSucceeded(
-						KvStoreConnector.this.cloudletContext, arguments);
-
-			}
-
-			@Override
-			public void onFailure(Throwable error) {
-				KvStoreCallbackCompletionArguments<C, D, E> arguments = new KvStoreCallbackCompletionArguments<C, D, E>(
-						KvStoreConnector.this.cloudlet, "", (D) error, extra); //$NON-NLS-1$
-				KvStoreConnector.this.callback.deleteFailed(
-						KvStoreConnector.this.cloudletContext, arguments);
-			}
-		};
-		List<IOperationCompletionHandler<List<String>>> handlers = new ArrayList<IOperationCompletionHandler<List<String>>>();
-		handlers.add(cHandler);
-		return this.connector.list(handlers,
-				this.cloudlet.getResponseInvocationHandler(cHandler));
-	}
-
 }

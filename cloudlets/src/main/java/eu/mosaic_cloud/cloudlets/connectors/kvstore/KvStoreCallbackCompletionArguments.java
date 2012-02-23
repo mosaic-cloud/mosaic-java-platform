@@ -53,7 +53,7 @@ public class KvStoreCallbackCompletionArguments<C, D, E> extends CallbackComplet
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KvStoreCallbackCompletionArguments(ICloudletController<C> cloudlet,
+	public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet,
 			String key, D value, E extra) {
 		super(cloudlet);
 		this.keys = new ArrayList<String>();
