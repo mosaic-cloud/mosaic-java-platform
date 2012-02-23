@@ -19,6 +19,8 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 
+import java.util.List;
+
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -98,4 +100,26 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 *            callback arguments
 	 */
 	CallbackCompletion<Void> deleteFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
+	
+	/**
+	 * Called when the list operation completed successfully. The result of the
+	 * get operation can be retrieved from the <i>arguments</i> parameter.
+	 * 
+	 * @param context
+	 *            cloudlet context
+	 * @param arguments
+	 *            callback arguments
+	 */
+	CallbackCompletion<Void> listSucceeded(C context, KvStoreCallbackCompletionArguments<C, List<String>, E> arguments);
+
+	/**
+	 * Called when the list operation completed unsuccessfully. The error can be
+	 * retrieved from the <i>arguments</i> parameter.
+	 * 
+	 * @param context
+	 *            cloudlet context
+	 * @param arguments
+	 *            callback arguments
+	 */
+	CallbackCompletion<Void> listFailed(C context, KvStoreCallbackCompletionArguments<C, List<String>, E> arguments);
 }

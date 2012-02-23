@@ -42,5 +42,6 @@ public interface IConnector<C> extends eu.mosaic_cloud.connectors.core.IConnecto
 	 * 
 	 * @return the current status of the accessor
 	 */
-	ConnectorStatus getStatus();
+	// !!!!
+	// ConnectorStatus getStatus();
 }

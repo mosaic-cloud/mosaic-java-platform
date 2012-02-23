@@ -20,6 +20,8 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
+import java.util.List;
+
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -70,6 +72,18 @@ public class DefaultKvStoreConnectorCallback<C, D, E>
 	
 	@Override
 	public CallbackCompletion<Void> setSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, D, E> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Set Succeeded", true, false);
+	}
+
+	@Override
+	public CallbackCompletion<Void> listFailed (final C context, final KvStoreCallbackCompletionArguments<C, List<String>, E> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Set Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> listSucceeded (final C context, final KvStoreCallbackCompletionArguments<C, List<String>, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Set Succeeded", true, false);
 	}
