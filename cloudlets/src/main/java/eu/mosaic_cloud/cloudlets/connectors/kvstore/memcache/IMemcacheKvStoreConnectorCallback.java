@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.connectors.kvstore;
+package eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache;
+
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 

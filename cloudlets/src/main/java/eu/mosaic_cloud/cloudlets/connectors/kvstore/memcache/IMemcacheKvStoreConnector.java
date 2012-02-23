@@ -17,10 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.cloudlets.connectors.kvstore;
+package eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache;
 
 import java.util.List;
 import java.util.Map;
+
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 

@@ -18,8 +18,11 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.connectors.kvstore;
+package eu.mosaic_cloud.cloudlets.connectors.kvstore.generic;
 
+
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.BaseKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

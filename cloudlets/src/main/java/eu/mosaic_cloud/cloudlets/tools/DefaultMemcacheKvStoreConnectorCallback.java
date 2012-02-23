@@ -21,7 +21,8 @@
 package eu.mosaic_cloud.cloudlets.tools;
 
 
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.IMemcacheKvStoreConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.IMemcacheKvStoreConnectorCallback;
+
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
