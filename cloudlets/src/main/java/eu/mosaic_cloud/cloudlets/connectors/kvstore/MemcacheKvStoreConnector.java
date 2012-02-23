@@ -38,8 +38,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet using the accessor
  */
-public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E> implements
-		IMemcacheKvStoreConnector<C, D, E> {
+public class MemcacheKvStoreConnector<C, D, E>
+	extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<D>, IMemcacheKvStoreConnectorCallback<C, D, E>, C, D, E>
+{
 
 	/**
 	 * Creates a new accessor.
@@ -48,12 +49,9 @@ public class MemcacheKvStoreConnector<C, D, E> extends KvStoreConnector<C, D, E>
 	 *            configuration data required by the accessor
 	 * @param cloudlet
 	 *            the cloudlet controller of the cloudlet using the accessor
-	 * @param encoder
-	 *            encoder used for serializing data
 	 */
-	public MemcacheKvStoreConnector(IConfiguration config,
-			ICloudletController<C> cloudlet, DataEncoder<?> encoder) {
-		super(config, cloudlet, encoder);
+	public MemcacheKvStoreConnector(final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<D> connector, final IConfiguration config, final IMemcacheKvStoreConnectorCallback<C, D, E> callback, final C context) {
+		super(cloudlet, connector, config, callback, context);
 	}
 
 	@Override
