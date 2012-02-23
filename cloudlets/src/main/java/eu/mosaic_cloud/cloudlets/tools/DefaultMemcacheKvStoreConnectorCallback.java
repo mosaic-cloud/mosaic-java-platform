@@ -20,6 +20,8 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
+import java.util.Map;
+
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.IMemcacheKvStoreConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -73,13 +75,13 @@ public class DefaultMemcacheKvStoreConnectorCallback<C, D, E> extends
 
     @Override
     public CallbackCompletion<Void> getBulkFailed(final C context,
-            final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
+            final KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments) {
         return this.handleUnhandledCallback(arguments, "GetBulk Failed", false, false);
     }
 
     @Override
     public CallbackCompletion<Void> getBulkSucceeded(final C context,
-            final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
+            final KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments) {
         return this.handleUnhandledCallback(arguments, "GetBulk Succeeded", true, false);
     }
 
