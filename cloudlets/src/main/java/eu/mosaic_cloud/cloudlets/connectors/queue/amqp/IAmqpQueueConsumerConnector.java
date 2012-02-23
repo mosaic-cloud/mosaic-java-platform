@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -33,11 +34,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public interface IAmqpQueueConsumerConnector<Context, Message> extends IAmqpQueueConnector<Context> {
 
-	/**
-	 * Acknowledges a message.
-	 * 
-	 * @param message
-	 *            the message to acknowledge
-	 */
-	CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<Message> message);
+    /**
+     * Acknowledges a message.
+     * 
+     * @param message
+     *            the message to acknowledge
+     */
+    CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<Message> message);
 }

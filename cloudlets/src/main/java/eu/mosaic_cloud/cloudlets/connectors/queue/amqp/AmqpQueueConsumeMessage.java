@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
@@ -32,46 +33,45 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
  */
 public class AmqpQueueConsumeMessage<Message> {
 
-	private final IAmqpQueueConsumerConnector<? extends Object, Message> consumer;
-	private final AmqpInboundMessage message;
-	private final Message data;
+    private final IAmqpQueueConsumerConnector<? extends Object, Message> consumer;
+    private final AmqpInboundMessage message;
+    private final Message data;
 
-	public AmqpQueueConsumeMessage(
-			IAmqpQueueConsumerConnector<? extends Object, Message> consumer,
-			AmqpInboundMessage message, Message data) {
-		super();
-		this.consumer = consumer;
-		this.message = message;
-		this.data = data;
-	}
+    public AmqpQueueConsumeMessage(IAmqpQueueConsumerConnector<? extends Object, Message> consumer,
+            AmqpInboundMessage message, Message data) {
+        super();
+        this.consumer = consumer;
+        this.message = message;
+        this.data = data;
+    }
 
-	/**
-	 * Acknowledges the message.
-	 */
-	public void acknowledge() {
-		this.consumer.acknowledge(this);
-	}
+    /**
+     * Acknowledges the message.
+     */
+    public void acknowledge() {
+        this.consumer.acknowledge(this);
+    }
 
-	/**
-	 * Returns the data in the consumed message.
-	 * 
-	 * @return the data in the consumed message
-	 */
-	public Message getData() {
-		return this.data;
-	}
+    /**
+     * Returns the data in the consumed message.
+     * 
+     * @return the data in the consumed message
+     */
+    public Message getData() {
+        return this.data;
+    }
 
-	AmqpInboundMessage getMessage() {
-		return this.message;
-	}
+    AmqpInboundMessage getMessage() {
+        return this.message;
+    }
 
-	/**
-	 * Returns the consumer object.
-	 * 
-	 * @return the consumer object
-	 */
-	public IAmqpQueueConsumerConnector<? extends Object, Message> getConsumer() {
-		return this.consumer;
-	}
+    /**
+     * Returns the consumer object.
+     * 
+     * @return the consumer object
+     */
+    public IAmqpQueueConsumerConnector<? extends Object, Message> getConsumer() {
+        return this.consumer;
+    }
 
 }

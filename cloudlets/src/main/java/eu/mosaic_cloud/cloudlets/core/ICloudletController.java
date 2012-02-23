@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.core;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
@@ -37,24 +38,24 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  */
 public interface ICloudletController<Context> extends Callbacks, IConnectorsFactory {
 
-	IConfiguration getConfiguration();
+    IConfiguration getConfiguration();
 
-	<T> CompletionInvocationHandler<T> getResponseInvocationHandler(
-			IOperationCompletionHandler<T> handler);
+    <T> CompletionInvocationHandler<T> getResponseInvocationHandler(
+            IOperationCompletionHandler<T> handler);
 
-	<T> T buildCallbackInvoker(T callback, Class<T> callbackType);
+    <T> T buildCallbackInvoker(T callback, Class<T> callbackType);
 
-	/**
-	 * Destroys the cloudlet.
-	 * 
-	 * @return <code>true</code> if cloudlet was successfully destroyed
-	 */
-	boolean destroy();
+    /**
+     * Destroys the cloudlet.
+     * 
+     * @return <code>true</code> if cloudlet was successfully destroyed
+     */
+    boolean destroy();
 
-	/**
-	 * Indicates if the cloudlet is alive and can receive messages or not.
-	 * 
-	 * @return <code>true</code> if cloudlet is alive
-	 */
-	boolean isActive();
+    /**
+     * Indicates if the cloudlet is alive and can receive messages or not.
+     * 
+     * @return <code>true</code> if cloudlet is alive
+     */
+    boolean isActive();
 }

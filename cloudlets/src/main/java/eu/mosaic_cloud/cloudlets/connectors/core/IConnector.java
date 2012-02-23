@@ -17,10 +17,9 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 /**
  * Interface for all resource accessors used by cloudlets.
@@ -31,11 +30,11 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  *            the type of the cloudlet context
  */
 public interface IConnector<C> extends eu.mosaic_cloud.connectors.core.IConnector {
-	/**
-	 * Returns the current status of the accessor.
-	 * 
-	 * @return the current status of the accessor
-	 */
-	// !!!!
-	// ConnectorStatus getStatus();
+    /**
+     * Returns the current status of the accessor.
+     * 
+     * @return the current status of the accessor
+     */
+    // !!!!
+    // ConnectorStatus getStatus();
 }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnector;
@@ -33,13 +34,13 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public interface IAmqpQueueConnector<Context> extends IQueueConnector<Context> {
 
-	/**
-	 * Register the accessor with the queuing system.
-	 */
-	CallbackCompletion<Void> register();
+    /**
+     * Register the accessor with the queuing system.
+     */
+    CallbackCompletion<Void> register();
 
-	/**
-	 * Unregister the accessor with the queuing system.
-	 */
-	CallbackCompletion<Void> unregister();
+    /**
+     * Unregister the accessor with the queuing system.
+     */
+    CallbackCompletion<Void> unregister();
 }

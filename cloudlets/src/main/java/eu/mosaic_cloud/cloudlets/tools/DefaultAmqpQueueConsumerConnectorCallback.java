@@ -20,12 +20,10 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
-
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
 
 /**
  * Default AMQP consumer callback.
@@ -37,26 +35,23 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <D>
  *            the type of consumed data
  */
-public class DefaultAmqpQueueConsumerConnectorCallback<C, D>
-		extends DefaultAmqpQueueConnectorCallback<C>
-		implements
-			IAmqpQueueConsumerConnectorCallback<C, D>
-{
-	@Override
-	public CallbackCompletion<Void> acknowledgeFailed (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Acknowledge Failed", false, false);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> acknowledgeSucceeded (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Acknowledge Succeeded", true, false);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> consume (final C context, final AmqpQueueConsumeCallbackArguments<C, D> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Consume", true, false);
-	}
+public class DefaultAmqpQueueConsumerConnectorCallback<C, D> extends
+        DefaultAmqpQueueConnectorCallback<C> implements IAmqpQueueConsumerConnectorCallback<C, D> {
+    @Override
+    public CallbackCompletion<Void> acknowledgeFailed(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Acknowledge Failed", false, false);
+    }
+
+    @Override
+    public CallbackCompletion<Void> acknowledgeSucceeded(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Acknowledge Succeeded", true, false);
+    }
+
+    @Override
+    public CallbackCompletion<Void> consume(final C context,
+            final AmqpQueueConsumeCallbackArguments<C, D> arguments) {
+        return this.handleUnhandledCallback(arguments, "Consume", true, false);
+    }
 }

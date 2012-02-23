@@ -22,10 +22,11 @@ package eu.mosaic_cloud.connectors.tests;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import org.junit.Assert;
 import org.junit.Test;
+
+import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 
 public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConnector<String, ?>>
         extends BaseConnectorTest<Connector, BaseKvStoreConnectorTest.Context> {

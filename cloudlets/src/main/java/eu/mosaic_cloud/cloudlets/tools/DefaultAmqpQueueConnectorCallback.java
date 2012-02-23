@@ -20,11 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
-
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
 
 /**
  * Default AMQP resource accessor callback.
@@ -34,32 +32,29 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultAmqpQueueConnectorCallback<C>
-		extends DefaultQueueConnectorCallback<C>
-		implements
-			IAmqpQueueConnectorCallback<C>
-{
-	@Override
-	public CallbackCompletion<Void> registerFailed (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Register Failed", false, true);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> registerSucceeded (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Register Succeeded", true, false);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> unregisterFailed (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Unregister Failed", false, true);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> unregisterSucceeded (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Unregister Succeeded", true, false);
-	}
+public class DefaultAmqpQueueConnectorCallback<C> extends DefaultQueueConnectorCallback<C>
+        implements IAmqpQueueConnectorCallback<C> {
+    @Override
+    public CallbackCompletion<Void> registerFailed(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Register Failed", false, true);
+    }
+
+    @Override
+    public CallbackCompletion<Void> registerSucceeded(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Register Succeeded", true, false);
+    }
+
+    @Override
+    public CallbackCompletion<Void> unregisterFailed(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Unregister Failed", false, true);
+    }
+
+    @Override
+    public CallbackCompletion<Void> unregisterSucceeded(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Unregister Succeeded", true, false);
+    }
 }

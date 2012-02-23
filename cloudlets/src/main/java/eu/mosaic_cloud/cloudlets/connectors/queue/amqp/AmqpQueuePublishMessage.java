@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
@@ -32,26 +33,26 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
  */
 public class AmqpQueuePublishMessage<Context> {
 
-	private final AmqpQueuePublisherConnector<?, Context> publisher;
-	private final AmqpOutboundMessage message;
+    private final AmqpQueuePublisherConnector<?, Context> publisher;
+    private final AmqpOutboundMessage message;
 
-	public AmqpQueuePublishMessage(AmqpQueuePublisherConnector<?, Context> publisher,
-			AmqpOutboundMessage message) {
-		super();
-		this.publisher = publisher;
-		this.message = message;
-	}
+    public AmqpQueuePublishMessage(AmqpQueuePublisherConnector<?, Context> publisher,
+            AmqpOutboundMessage message) {
+        super();
+        this.publisher = publisher;
+        this.message = message;
+    }
 
-	/**
-	 * Returns the publisher object.
-	 * 
-	 * @return the publisher object
-	 */
-	public AmqpQueuePublisherConnector<?, Context> getPublisher() {
-		return this.publisher;
-	}
+    /**
+     * Returns the publisher object.
+     * 
+     * @return the publisher object
+     */
+    public AmqpQueuePublisherConnector<?, Context> getPublisher() {
+        return this.publisher;
+    }
 
-	AmqpOutboundMessage getMessage() {
-		return this.message;
-	}
+    AmqpOutboundMessage getMessage() {
+        return this.message;
+    }
 }

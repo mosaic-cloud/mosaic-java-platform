@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackCompletionArguments;
@@ -33,31 +34,31 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  *            the type of the published data
  */
 public class AmqpQueuePublishCallbackCompletionArguments<Context, Message> extends
-		CallbackCompletionArguments<Context> {
+        CallbackCompletionArguments<Context> {
 
-	private AmqpQueuePublishMessage<Message> message;
+    private AmqpQueuePublishMessage<Message> message;
 
-	/**
-	 * Creates a new callback argument.
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet
-	 * @param message
-	 *            information about the publish request
-	 */
-	public AmqpQueuePublishCallbackCompletionArguments(ICloudletController<Context> cloudlet,
-			AmqpQueuePublishMessage<Message> message) {
-		super(cloudlet);
-		this.message = message;
-	}
+    /**
+     * Creates a new callback argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param message
+     *            information about the publish request
+     */
+    public AmqpQueuePublishCallbackCompletionArguments(ICloudletController<Context> cloudlet,
+            AmqpQueuePublishMessage<Message> message) {
+        super(cloudlet);
+        this.message = message;
+    }
 
-	/**
-	 * Returns information about the publish request.
-	 * 
-	 * @return information about the publish request
-	 */
-	public AmqpQueuePublishMessage<Message> getMessage() {
-		return this.message;
-	}
+    /**
+     * Returns information about the publish request.
+     * 
+     * @return information about the publish request
+     */
+    public AmqpQueuePublishMessage<Message> getMessage() {
+        return this.message;
+    }
 
 }

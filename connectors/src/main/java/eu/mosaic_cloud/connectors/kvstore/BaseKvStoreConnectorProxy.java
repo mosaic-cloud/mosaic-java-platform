@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;
@@ -163,7 +164,13 @@ public class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorPr
             T value = null; // NOPMD by georgiana on 2/20/12 5:02 PM
             if (!resultEntries.isEmpty()) {
                 try {
-                    value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD by georgiana on 2/20/12 5:02 PM
+                    value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD
+                                                                                                // by
+                                                                                                // georgiana
+                                                                                                // on
+                                                                                                // 2/20/12
+                                                                                                // 5:02
+                                                                                                // PM
                 } catch (final EncodingException exception) {
                     this.pendingRequests.fail(token.getMessageId(), exception);
                     return;
@@ -200,7 +207,12 @@ public class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorPr
             requestBuilder.setExpTime(exp);
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(KeyValueMessage.SET_REQUEST, requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD by georgiana on 2/20/12 5:02 PM
+            result = this.sendRequest(message, token, Boolean.class); // NOPMD
+                                                                      // by
+                                                                      // georgiana
+                                                                      // on
+                                                                      // 2/20/12
+                                                                      // 5:02 PM
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }

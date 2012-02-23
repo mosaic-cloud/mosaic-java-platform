@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.core;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -32,69 +33,74 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public interface ICloudletCallback<Context> extends ICallback<Context> {
 
-	/**
-	 * Initializes the user cloudlet.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
-	 */
-	CallbackCompletion<Void> initialize(Context context, CloudletCallbackArguments<Context> arguments);
+    /**
+     * Initializes the user cloudlet.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            here, this argument just gives access to the cloudlet
+     *            controller
+     */
+    CallbackCompletion<Void> initialize(Context context,
+            CloudletCallbackArguments<Context> arguments);
 
-	/**
-	 * Operation called after the cloudlet is successfully initialized.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
-	 */
-	CallbackCompletion<Void> initializeSucceeded(Context context, CloudletCallbackCompletionArguments<Context> arguments);
+    /**
+     * Operation called after the cloudlet is successfully initialized.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            here, this argument just gives access to the cloudlet
+     *            controller
+     */
+    CallbackCompletion<Void> initializeSucceeded(Context context,
+            CloudletCallbackCompletionArguments<Context> arguments);
 
-	/**
-	 * Operation called after the cloudlet is unsuccessfully initialized.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
-	 */
-	CallbackCompletion<Void> initializeFailed(Context context, CloudletCallbackCompletionArguments<Context> arguments);
+    /**
+     * Operation called after the cloudlet is unsuccessfully initialized.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            here, this argument just gives access to the cloudlet
+     *            controller
+     */
+    CallbackCompletion<Void> initializeFailed(Context context,
+            CloudletCallbackCompletionArguments<Context> arguments);
 
-	/**
-	 * Destrozs the user cloudlet.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
-	 */
-	CallbackCompletion<Void> destroy(Context context, CloudletCallbackArguments<Context> arguments);
+    /**
+     * Destrozs the user cloudlet.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            here, this argument just gives access to the cloudlet
+     *            controller
+     */
+    CallbackCompletion<Void> destroy(Context context, CloudletCallbackArguments<Context> arguments);
 
-	/**
-	 * Operation called after the cloudlet is successfully destroyed.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
-	 */
-	CallbackCompletion<Void> destroySucceeded(Context context, CloudletCallbackCompletionArguments<Context> arguments);
+    /**
+     * Operation called after the cloudlet is successfully destroyed.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            here, this argument just gives access to the cloudlet
+     *            controller
+     */
+    CallbackCompletion<Void> destroySucceeded(Context context,
+            CloudletCallbackCompletionArguments<Context> arguments);
 
-	/**
-	 * Operation called after the cloudlet is unsuccessfully destroyed.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
-	 */
-	CallbackCompletion<Void> destroyFailed(Context context, CloudletCallbackCompletionArguments<Context> arguments);
+    /**
+     * Operation called after the cloudlet is unsuccessfully destroyed.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            here, this argument just gives access to the cloudlet
+     *            controller
+     */
+    CallbackCompletion<Void> destroyFailed(Context context,
+            CloudletCallbackCompletionArguments<Context> arguments);
 }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -33,32 +34,32 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of published data
  */
 public interface IAmqpQueuePublisherConnectorCallback<Context, Message> extends
-		IAmqpQueueConnectorCallback<Context> {
+        IAmqpQueueConnectorCallback<Context> {
 
-	/**
-	 * Called when the publisher receives confirmation that the message
-	 * publishing finished successfully.
-	 * 
-	 * @param <D>
-	 *            the type of the published message
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> publishSucceeded(Context context,
-			AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments);
+    /**
+     * Called when the publisher receives confirmation that the message
+     * publishing finished successfully.
+     * 
+     * @param <D>
+     *            the type of the published message
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            the arguments of the callback
+     */
+    CallbackCompletion<Void> publishSucceeded(Context context,
+            AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments);
 
-	/**
-	 * Called when the publisher receives notification that the message
-	 * publishing could not be finished with success.
-	 * 
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> publishFailed(Context context,
-			AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments);
+    /**
+     * Called when the publisher receives notification that the message
+     * publishing could not be finished with success.
+     * 
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            the arguments of the callback
+     */
+    CallbackCompletion<Void> publishFailed(Context context,
+            AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments);
 }

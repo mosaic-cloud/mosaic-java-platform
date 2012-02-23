@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.core;
 
 /**
@@ -32,44 +33,42 @@ package eu.mosaic_cloud.cloudlets.core;
  *            the type of the result of the operation
  */
 public class GenericCallbackCompletionArguments<Context, Result> extends
-		CallbackCompletionArguments<Context> {
+        CallbackCompletionArguments<Context> {
 
-	private Result result;
+    private Result result;
 
-	/**
-	 * Creates the operation callback argument.
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet controller
-	 * @param result
-	 *            the result of the operation
-	 */
-	public GenericCallbackCompletionArguments(ICloudletController<Context> cloudlet,
-			Result result) {
-		super(cloudlet);
-		this.result = result;
-	}
+    /**
+     * Creates the operation callback argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet controller
+     * @param result
+     *            the result of the operation
+     */
+    public GenericCallbackCompletionArguments(ICloudletController<Context> cloudlet, Result result) {
+        super(cloudlet);
+        this.result = result;
+    }
 
-	/**
-	 * Creates the operation callback argument.
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet controller
-	 * @param error
-	 *            the exception thrown by the operation
-	 */
-	public GenericCallbackCompletionArguments(ICloudletController<Context> cloudlet,
-			Throwable error) {
-		super(cloudlet, error);
-		this.result = null;
-	}
+    /**
+     * Creates the operation callback argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet controller
+     * @param error
+     *            the exception thrown by the operation
+     */
+    public GenericCallbackCompletionArguments(ICloudletController<Context> cloudlet, Throwable error) {
+        super(cloudlet, error);
+        this.result = null;
+    }
 
-	/**
-	 * Returns the result of the operation.
-	 * 
-	 * @return the result of the operation
-	 */
-	public Result getResult() {
-		return this.result;
-	}
+    /**
+     * Returns the result of the operation.
+     * 
+     * @return the result of the operation
+     */
+    public Result getResult() {
+        return this.result;
+    }
 }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -33,43 +34,44 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public interface IConnectorCallback<Context> extends ICallback<Context> {
 
-	/**
-	 * Called when resource accessor initialization succeeded.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> initializeSucceeded(Context context, CallbackArguments<Context> arguments);
+    /**
+     * Called when resource accessor initialization succeeded.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> initializeSucceeded(Context context,
+            CallbackArguments<Context> arguments);
 
-	/**
-	 * Called when resource accessor initialization failed.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> initializeFailed(Context context, CallbackArguments<Context> arguments);
+    /**
+     * Called when resource accessor initialization failed.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> initializeFailed(Context context, CallbackArguments<Context> arguments);
 
-	/**
-	 * Called when resource accessor destruction succeeded.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> destroySucceeded(Context context, CallbackArguments<Context> arguments);
+    /**
+     * Called when resource accessor destruction succeeded.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> destroySucceeded(Context context, CallbackArguments<Context> arguments);
 
-	/**
-	 * Called when resource accessor destruction failed.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> destroyFailed(Context context, CallbackArguments<Context> arguments);
+    /**
+     * Called when resource accessor destruction failed.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> destroyFailed(Context context, CallbackArguments<Context> arguments);
 }

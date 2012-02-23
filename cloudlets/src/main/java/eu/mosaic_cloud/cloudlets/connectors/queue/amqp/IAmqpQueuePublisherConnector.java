@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -31,13 +32,14 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of the published data
  */
-public interface IAmqpQueuePublisherConnector<Context, Message> extends IAmqpQueueConnector<Context> {
+public interface IAmqpQueuePublisherConnector<Context, Message> extends
+        IAmqpQueueConnector<Context> {
 
-	/**
-	 * Publishes a message to a queue.
-	 * 
-	 * @param data
-	 *            the data to publish
-	 */
-	CallbackCompletion<Void> publish(Message data);
+    /**
+     * Publishes a message to a queue.
+     * 
+     * @param data
+     *            the data to publish
+     */
+    CallbackCompletion<Void> publish(Message data);
 }

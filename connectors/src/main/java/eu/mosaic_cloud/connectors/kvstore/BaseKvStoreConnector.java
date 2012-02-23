@@ -38,7 +38,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public abstract class BaseKvStoreConnector<D extends Object, P extends BaseKvStoreConnectorProxy<D>>
         extends BaseConnector<P> implements IKvStoreConnector<D> {
-    
+
     protected BaseKvStoreConnector(final P proxy) {
         super(proxy);
     }

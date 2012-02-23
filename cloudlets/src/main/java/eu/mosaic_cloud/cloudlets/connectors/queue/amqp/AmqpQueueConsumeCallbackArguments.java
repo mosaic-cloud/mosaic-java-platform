@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -32,32 +33,31 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * @param <Message>
  *            the type of the consumed data
  */
-public class AmqpQueueConsumeCallbackArguments<Context, Message> extends
-		CallbackArguments<Context> {
+public class AmqpQueueConsumeCallbackArguments<Context, Message> extends CallbackArguments<Context> {
 
-	private AmqpQueueConsumeMessage<Message> message;
+    private AmqpQueueConsumeMessage<Message> message;
 
-	/**
-	 * Creates a new callback argument.
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet
-	 * @param message
-	 *            information about the consume request
-	 */
-	public AmqpQueueConsumeCallbackArguments(ICloudletController<Context> cloudlet,
-			AmqpQueueConsumeMessage<Message> message) {
-		super(cloudlet);
-		this.message = message;
-	}
+    /**
+     * Creates a new callback argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param message
+     *            information about the consume request
+     */
+    public AmqpQueueConsumeCallbackArguments(ICloudletController<Context> cloudlet,
+            AmqpQueueConsumeMessage<Message> message) {
+        super(cloudlet);
+        this.message = message;
+    }
 
-	/**
-	 * Returns information about the consume request.
-	 * 
-	 * @return information about the consume request
-	 */
-	public AmqpQueueConsumeMessage<Message> getMessage() {
-		return this.message;
-	}
+    /**
+     * Returns information about the consume request.
+     * 
+     * @return information about the consume request
+     */
+    public AmqpQueueConsumeMessage<Message> getMessage() {
+        return this.message;
+    }
 
 }

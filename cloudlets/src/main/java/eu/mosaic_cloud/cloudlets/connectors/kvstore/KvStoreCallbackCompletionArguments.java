@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 
 import java.util.Arrays;
@@ -34,91 +35,92 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * @param <Context>
  *            the context of the cloudlet
  */
-public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends CallbackCompletionArguments<Context> {
+public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
+        CallbackCompletionArguments<Context> {
 
-	private final List<String> keys;
-	private final Value value;
-	private final Extra extra;
+    private final List<String> keys;
+    private final Value value;
+    private final Extra extra;
 
-	/**
-	 * Creates a new argument.
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet
-	 * @param key
-	 *            the key used in the operation
-	 * @param value
-	 *            the value associated with the key (if this callback is used
-	 *            for failed operations this value should contain the error)
-	 * @param extra
-	 *            some application specific object
-	 */
-	public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet,
-			String key, Value value, Extra extra) {
-		super(cloudlet);
-		this.keys = Arrays.asList (key);
-		this.value = value;
-		this.extra = extra;
-	}
+    /**
+     * Creates a new argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param key
+     *            the key used in the operation
+     * @param value
+     *            the value associated with the key (if this callback is used
+     *            for failed operations this value should contain the error)
+     * @param extra
+     *            some application specific object
+     */
+    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet, String key,
+            Value value, Extra extra) {
+        super(cloudlet);
+        this.keys = Arrays.asList(key);
+        this.value = value;
+        this.extra = extra;
+    }
 
-	/**
-	 * Creates a new argument for the callbacks of operations using more than
-	 * one key.
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet
-	 * @param keys
-	 *            the keys used in the operation
-	 * @param value
-	 *            the value associated with the key (if this callback is used
-	 *            for failed operations this value should contain the error)
-	 * @param extra
-	 *            some application specific object
-	 */
-	public KvStoreCallbackCompletionArguments(ICloudletController<Context> cloudlet,
-			List<String> keys, Value value, Extra extra) {
-		super(cloudlet);
-		this.keys = keys;
-		this.value = value;
-		this.extra = extra;
-	}
+    /**
+     * Creates a new argument for the callbacks of operations using more than
+     * one key.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param keys
+     *            the keys used in the operation
+     * @param value
+     *            the value associated with the key (if this callback is used
+     *            for failed operations this value should contain the error)
+     * @param extra
+     *            some application specific object
+     */
+    public KvStoreCallbackCompletionArguments(ICloudletController<Context> cloudlet,
+            List<String> keys, Value value, Extra extra) {
+        super(cloudlet);
+        this.keys = keys;
+        this.value = value;
+        this.extra = extra;
+    }
 
-	/**
-	 * Returns the value field of the argument.
-	 * 
-	 * @return the value field of the argument
-	 */
-	public Value getValue() {
-		return this.value;
-	}
+    /**
+     * Returns the value field of the argument.
+     * 
+     * @return the value field of the argument
+     */
+    public Value getValue() {
+        return this.value;
+    }
 
-	/**
-	 * Returns the key used in single-key operations.
-	 * 
-	 * @return the key used in single-key operations
-	 */
-	public String getKey() {
-		return this.keys.get(0);
-	}
+    /**
+     * Returns the key used in single-key operations.
+     * 
+     * @return the key used in single-key operations
+     */
+    public String getKey() {
+        return this.keys.get(0);
+    }
 
-	/**
-	 * Returns the keys used in multiple-key operations.
-	 * 
-	 * @return the key used in multiple-key operations
-	 */
-	public List<String> getKeys() {
-		return this.keys;
-	}
+    /**
+     * Returns the keys used in multiple-key operations.
+     * 
+     * @return the key used in multiple-key operations
+     */
+    public List<String> getKeys() {
+        return this.keys;
+    }
 
-	/**
-	 * Returns any application specific data used for the key-value store
-	 * operation.
-	 * 
-	 * @return ny application specific data used for the key-value store
-	 *         operation
-	 */
-	public Extra getExtra() {
-		return this.extra;
-	}
+    /**
+     * Returns any application specific data used for the key-value store
+     * operation.
+     * 
+     * @return ny application specific data used for the key-value store
+     *         operation
+     */
+    public Extra getExtra() {
+        return this.extra;
+    }
 
 }

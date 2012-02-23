@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import java.util.ArrayList;
@@ -49,241 +50,237 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  *            the type of the messages consumed by the cloudlet
  */
 public class AmqpQueueConsumerConnector<Context, Message, Extra> extends
-		AmqpQueueConnector<Context, Message> implements IAmqpQueueConsumerConnector<Context, Message> {
+        AmqpQueueConnector<Context, Message> implements
+        IAmqpQueueConsumerConnector<Context, Message> {
 
-	private String consumer;
-	private boolean autoAck;
-	private IAmqpQueueConsumerConnectorCallback<Context, Message> callback;
+    private String consumer;
+    private boolean autoAck;
+    private IAmqpQueueConsumerConnectorCallback<Context, Message> callback;
 
-	/**
-	 * Creates a new AMQP queue consumer.
-	 * 
-	 * @param config
-	 *            configuration data required by the accessor:
-	 *            <ul>
-	 *            <li>amqp.consumer.queue - name of the queue from which to
-	 *            consume messages</li>
-	 *            <li>amqp.consumer.consumer_id - an if of this consumer</li>
-	 *            <li>amqp.consumer.auto_ack - true if the server should
-	 *            consider messages acknowledged once delivered; false if the
-	 *            server should expect explicit acknowledgements</li>
-	 *            <li>amqp.consumer.exclusive - true if this is an exclusive
-	 *            consumer</li>
-	 *            </ul>
-	 * @param cloudlet
-	 *            the cloudlet controller of the cloudlet using the accessor
-	 * @param dataClass
-	 *            the type of the consumed messages
-	 * @param encoder
-	 *            encoder used for serializing data
-	 */
-	public AmqpQueueConsumerConnector(IConfiguration config,
-			ICloudletController<Context> cloudlet, Class<Message> dataClass,
-			DataEncoder<Message> encoder) {
-		super(config, cloudlet, dataClass, true, encoder);
-		synchronized (this.monitor) {
-			String specification = ConfigProperties
-					.getString("AmqpQueueConnector.4") + "." + ConfigProperties.getString("AmqpQueueConnector.10"); //$NON-NLS-1$
-			this.autoAck = ConfigUtils.resolveParameter(config, specification,
-					Boolean.class, false);
-		}
-	}
+    /**
+     * Creates a new AMQP queue consumer.
+     * 
+     * @param config
+     *            configuration data required by the accessor:
+     *            <ul>
+     *            <li>amqp.consumer.queue - name of the queue from which to
+     *            consume messages</li>
+     *            <li>amqp.consumer.consumer_id - an if of this consumer</li>
+     *            <li>amqp.consumer.auto_ack - true if the server should
+     *            consider messages acknowledged once delivered; false if the
+     *            server should expect explicit acknowledgements</li>
+     *            <li>amqp.consumer.exclusive - true if this is an exclusive
+     *            consumer</li>
+     *            </ul>
+     * @param cloudlet
+     *            the cloudlet controller of the cloudlet using the accessor
+     * @param dataClass
+     *            the type of the consumed messages
+     * @param encoder
+     *            encoder used for serializing data
+     */
+    public AmqpQueueConsumerConnector(IConfiguration config, ICloudletController<Context> cloudlet,
+            Class<Message> dataClass, DataEncoder<Message> encoder) {
+        super(config, cloudlet, dataClass, true, encoder);
+        synchronized (this.monitor) {
+            String specification = ConfigProperties.getString("AmqpQueueConnector.4") + "." + ConfigProperties.getString("AmqpQueueConnector.10"); //$NON-NLS-1$
+            this.autoAck = ConfigUtils
+                    .resolveParameter(config, specification, Boolean.class, false);
+        }
+    }
 
-	@Override
-	public CallbackCompletion<Void> initialize(IConnectorCallback<Context> callback, Context context,
-			ThreadingContext threading) {
-		if (callback instanceof IAmqpQueueConsumerConnectorCallback) {
-			super.initialize(callback, context, threading);
-			this.callback = (IAmqpQueueConsumerConnectorCallback<Context, Message>) callback;
-		} else {
-			IllegalArgumentException e = new IllegalArgumentException(
-					"The callback argument must be of type " //$NON-NLS-1$
-							+ IAmqpQueueConsumerConnectorCallback.class
-									.getCanonicalName());
-			IAmqpQueueConsumerConnectorCallback<Context, Message> proxy = this.cloudlet
-					.buildCallbackInvoker(this.callback,
-							IAmqpQueueConsumerConnectorCallback.class);
-			CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
-					AmqpQueueConsumerConnector.this.cloudlet, e);
-			proxy.initializeFailed(context, arguments);
-			throw e;
-		}
-	}
+    @Override
+    public CallbackCompletion<Void> initialize(IConnectorCallback<Context> callback,
+            Context context, ThreadingContext threading) {
+        if (callback instanceof IAmqpQueueConsumerConnectorCallback) {
+            super.initialize(callback, context, threading);
+            this.callback = (IAmqpQueueConsumerConnectorCallback<Context, Message>) callback;
+        } else {
+            IllegalArgumentException e = new IllegalArgumentException(
+                    "The callback argument must be of type " //$NON-NLS-1$
+                            + IAmqpQueueConsumerConnectorCallback.class.getCanonicalName());
+            IAmqpQueueConsumerConnectorCallback<Context, Message> proxy = this.cloudlet
+                    .buildCallbackInvoker(this.callback, IAmqpQueueConsumerConnectorCallback.class);
+            CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
+                    AmqpQueueConsumerConnector.this.cloudlet, e);
+            proxy.initializeFailed(context, arguments);
+            throw e;
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnector#register()
-	 */
-	@Override
-	public CallbackCompletion<Void> register() {
-		synchronized (this.monitor) {
-			// declare queue and in case of success register as consumer
-			startRegister(this.callback);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnector#register
+     * ()
+     */
+    @Override
+    public CallbackCompletion<Void> register() {
+        synchronized (this.monitor) {
+            // declare queue and in case of success register as consumer
+            startRegister(this.callback);
+        }
+    }
 
-	@Override
-	protected void finishRegister(final IAmqpQueueConnectorCallback<Context> callback) {
-		IOperationCompletionHandler<String> cHandler = new IOperationCompletionHandler<String>() {
+    @Override
+    protected void finishRegister(final IAmqpQueueConnectorCallback<Context> callback) {
+        IOperationCompletionHandler<String> cHandler = new IOperationCompletionHandler<String>() {
 
-			@Override
-			public void onSuccess(String result) {
-				synchronized (AmqpQueueConsumerConnector.this.monitor) {
-					AmqpQueueConsumerConnector.this.logger.trace(
-							"AmqpQueueConsumerConnector: received consume response message, consumer="
-									+ result);
-					AmqpQueueConsumerConnector.this.consumer = result;
-					AmqpQueueConsumerConnector.super.registered = true;
-				}
-			}
+            @Override
+            public void onSuccess(String result) {
+                synchronized (AmqpQueueConsumerConnector.this.monitor) {
+                    AmqpQueueConsumerConnector.this.logger
+                            .trace("AmqpQueueConsumerConnector: received consume response message, consumer="
+                                    + result);
+                    AmqpQueueConsumerConnector.this.consumer = result;
+                    AmqpQueueConsumerConnector.super.registered = true;
+                }
+            }
 
-			@Override
-			public void onFailure(Throwable error) {
-				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, String>(
-						AmqpQueueConsumerConnector.super.cloudlet, error);
-				callback.registerFailed(AmqpQueueConsumerConnector.super.cloudletContext,
-						arguments);
-			}
-		};
-		List<IOperationCompletionHandler<String>> cHandlers = new ArrayList<IOperationCompletionHandler<String>>();
-		cHandlers.add(cHandler);
+            @Override
+            public void onFailure(Throwable error) {
+                CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, String>(
+                        AmqpQueueConsumerConnector.super.cloudlet, error);
+                callback.registerFailed(AmqpQueueConsumerConnector.super.cloudletContext, arguments);
+            }
+        };
+        List<IOperationCompletionHandler<String>> cHandlers = new ArrayList<IOperationCompletionHandler<String>>();
+        cHandlers.add(cHandler);
 
-		IAmqpQueueConsumerCallback consumerCallback = new AmqpConsumerCallback();
-		getConnector().consume(
-				this.queue,
-				this.consumer,
-				super.exclusive,
-				this.autoAck,
-				null,
-				cHandlers,
-				this.cloudlet.getResponseInvocationHandler(cHandler),
-				this.cloudlet.buildCallbackInvoker(consumerCallback,
-						IAmqpQueueConsumerCallback.class));
-	}
+        IAmqpQueueConsumerCallback consumerCallback = new AmqpConsumerCallback();
+        getConnector().consume(
+                this.queue,
+                this.consumer,
+                super.exclusive,
+                this.autoAck,
+                null,
+                cHandlers,
+                this.cloudlet.getResponseInvocationHandler(cHandler),
+                this.cloudlet.buildCallbackInvoker(consumerCallback,
+                        IAmqpQueueConsumerCallback.class));
+    }
 
-	@Override
-	public CallbackCompletion<Void> unregister() {
-		synchronized (this.monitor) {
-			IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
-	
-				@Override
-				public void onSuccess(Boolean result) {
-					synchronized (AmqpQueueConsumerConnector.this.monitor) {
-						AmqpQueueConsumerConnector.super.registered = false;
-					}
-				}
-	
-				@Override
-				public void onFailure(Throwable error) {
-					CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
-							AmqpQueueConsumerConnector.super.cloudlet, error);
-					AmqpQueueConsumerConnector.this.callback.unregisterFailed(
-							AmqpQueueConsumerConnector.super.cloudletContext, arguments);
-				}
-			};
-			List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-			cHandlers.add(cHandler);
-			super.getConnector().cancel(this.consumer, cHandlers,
-					this.cloudlet.getResponseInvocationHandler(cHandler));
-		}
-	}
+    @Override
+    public CallbackCompletion<Void> unregister() {
+        synchronized (this.monitor) {
+            IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-	/**
-	 * Acknowledges a message.
-	 * 
-	 * @param message
-	 *            the message to acknowledge
-	 */
-	@Override
-	public CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<Message> message) {
-		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    synchronized (AmqpQueueConsumerConnector.this.monitor) {
+                        AmqpQueueConsumerConnector.super.registered = false;
+                    }
+                }
 
-			@Override
-			public void onSuccess(Boolean result) {
-				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
-						AmqpQueueConsumerConnector.super.cloudlet, result);
-				AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded(
-						AmqpQueueConsumerConnector.super.cloudletContext, arguments);
-			}
+                @Override
+                public void onFailure(Throwable error) {
+                    CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
+                            AmqpQueueConsumerConnector.super.cloudlet, error);
+                    AmqpQueueConsumerConnector.this.callback.unregisterFailed(
+                            AmqpQueueConsumerConnector.super.cloudletContext, arguments);
+                }
+            };
+            List<IOperationCompletionHandler<Boolean>> cHandlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+            cHandlers.add(cHandler);
+            super.getConnector().cancel(this.consumer, cHandlers,
+                    this.cloudlet.getResponseInvocationHandler(cHandler));
+        }
+    }
 
-			@Override
-			public void onFailure(Throwable error) {
-				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
-						AmqpQueueConsumerConnector.super.cloudlet, error);
-				AmqpQueueConsumerConnector.this.callback.acknowledgeFailed(
-						AmqpQueueConsumerConnector.super.cloudletContext, arguments);
-			}
-		};
-		List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
-		handlers.add(cHandler);
-		AmqpInboundMessage inMssg = message.getMessage();
-		super.getConnector().ack(inMssg.getDelivery(), false, handlers,
-				this.cloudlet.getResponseInvocationHandler(cHandler));
-	}
+    /**
+     * Acknowledges a message.
+     * 
+     * @param message
+     *            the message to acknowledge
+     */
+    @Override
+    public CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<Message> message) {
+        IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
-	/**
-	 * Handler to be called when the queue consumer receives a message. Methods
-	 * defined in this interface are called by the connector when one of the
-	 * consume messages is received from the driver.
-	 * 
-	 * @author Georgiana Macariu
-	 * 
-	 */
-	final class AmqpConsumerCallback implements IAmqpQueueConsumerCallback {
+            @Override
+            public void onSuccess(Boolean result) {
+                CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
+                        AmqpQueueConsumerConnector.super.cloudlet, result);
+                AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded(
+                        AmqpQueueConsumerConnector.super.cloudletContext, arguments);
+            }
 
-		@Override
-		public CallbackCompletion<Void> handleCancelOk(String consumerTag) {
-			AmqpQueueConsumerConnector.this.logger.trace(
-					"AmqpQueueConsumerConnector: received CANCEL ok message.");
-			if (!AmqpQueueConsumerConnector.super.registered) {
-				return;
-			}
-			CallbackArguments<Context> arguments = new CallbackArguments<Context>(
-					AmqpQueueConsumerConnector.this.cloudlet);
-			AmqpQueueConsumerConnector.this.callback.unregisterSucceeded(
-					AmqpQueueConsumerConnector.this.cloudletContext, arguments);
-			AmqpQueueConsumerConnector.super.registered = false;
-		}
+            @Override
+            public void onFailure(Throwable error) {
+                CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
+                        AmqpQueueConsumerConnector.super.cloudlet, error);
+                AmqpQueueConsumerConnector.this.callback.acknowledgeFailed(
+                        AmqpQueueConsumerConnector.super.cloudletContext, arguments);
+            }
+        };
+        List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
+        handlers.add(cHandler);
+        AmqpInboundMessage inMssg = message.getMessage();
+        super.getConnector().ack(inMssg.getDelivery(), false, handlers,
+                this.cloudlet.getResponseInvocationHandler(cHandler));
+    }
 
-		@Override
-		public CallbackCompletion<Void> handleConsumeOk(String consumerTag) {
-			if (AmqpQueueConsumerConnector.super.registered) {
-				return;
-			}
-			AmqpQueueConsumerConnector.this.logger.trace(
-					"AmqpQueueConsumerConnector: received CONSUME ok message.");
-			AmqpQueueConsumerConnector.this.consumer = consumerTag;
-			CallbackArguments<Context> arguments = new CallbackArguments<Context>(
-					AmqpQueueConsumerConnector.this.cloudlet);
-			AmqpQueueConsumerConnector.this.callback.registerSucceeded(
-					AmqpQueueConsumerConnector.this.cloudletContext, arguments);
-			AmqpQueueConsumerConnector.super.registered = true;
-		}
+    /**
+     * Handler to be called when the queue consumer receives a message. Methods
+     * defined in this interface are called by the connector when one of the
+     * consume messages is received from the driver.
+     * 
+     * @author Georgiana Macariu
+     * 
+     */
+    final class AmqpConsumerCallback implements IAmqpQueueConsumerCallback {
 
-		@Override
-		public CallbackCompletion<Void> handleDelivery(AmqpInboundMessage message) {
-			Message data;
-			try {
-				data = AmqpQueueConsumerConnector.this.dataEncoder.decode(message
-						.getData());
-				AmqpQueueConsumeMessage<Message> mssg = new AmqpQueueConsumeMessage<Message>(
-						AmqpQueueConsumerConnector.this, message, data);
-				AmqpQueueConsumeCallbackArguments<Context, Message> arguments = new AmqpQueueConsumeCallbackArguments<Context, Message>(
-						AmqpQueueConsumerConnector.this.cloudlet, mssg);
-				AmqpQueueConsumerConnector.this.callback.consume(
-						AmqpQueueConsumerConnector.this.cloudletContext, arguments);
-			} catch (Exception e) {
-				ExceptionTracer.traceIgnored(e);
-			}
-		}
+        @Override
+        public CallbackCompletion<Void> handleCancelOk(String consumerTag) {
+            AmqpQueueConsumerConnector.this.logger
+                    .trace("AmqpQueueConsumerConnector: received CANCEL ok message.");
+            if (!AmqpQueueConsumerConnector.super.registered) {
+                return;
+            }
+            CallbackArguments<Context> arguments = new CallbackArguments<Context>(
+                    AmqpQueueConsumerConnector.this.cloudlet);
+            AmqpQueueConsumerConnector.this.callback.unregisterSucceeded(
+                    AmqpQueueConsumerConnector.this.cloudletContext, arguments);
+            AmqpQueueConsumerConnector.super.registered = false;
+        }
 
-		@Override
-		public CallbackCompletion<Void> handleShutdownSignal(String consumerTag, String message) {
+        @Override
+        public CallbackCompletion<Void> handleConsumeOk(String consumerTag) {
+            if (AmqpQueueConsumerConnector.super.registered) {
+                return;
+            }
+            AmqpQueueConsumerConnector.this.logger
+                    .trace("AmqpQueueConsumerConnector: received CONSUME ok message.");
+            AmqpQueueConsumerConnector.this.consumer = consumerTag;
+            CallbackArguments<Context> arguments = new CallbackArguments<Context>(
+                    AmqpQueueConsumerConnector.this.cloudlet);
+            AmqpQueueConsumerConnector.this.callback.registerSucceeded(
+                    AmqpQueueConsumerConnector.this.cloudletContext, arguments);
+            AmqpQueueConsumerConnector.super.registered = true;
+        }
 
-		}
+        @Override
+        public CallbackCompletion<Void> handleDelivery(AmqpInboundMessage message) {
+            Message data;
+            try {
+                data = AmqpQueueConsumerConnector.this.dataEncoder.decode(message.getData());
+                AmqpQueueConsumeMessage<Message> mssg = new AmqpQueueConsumeMessage<Message>(
+                        AmqpQueueConsumerConnector.this, message, data);
+                AmqpQueueConsumeCallbackArguments<Context, Message> arguments = new AmqpQueueConsumeCallbackArguments<Context, Message>(
+                        AmqpQueueConsumerConnector.this.cloudlet, mssg);
+                AmqpQueueConsumerConnector.this.callback.consume(
+                        AmqpQueueConsumerConnector.this.cloudletContext, arguments);
+            } catch (Exception e) {
+                ExceptionTracer.traceIgnored(e);
+            }
+        }
 
-	}
+        @Override
+        public CallbackCompletion<Void> handleShutdownSignal(String consumerTag, String message) {
+
+        }
+
+    }
 
 }

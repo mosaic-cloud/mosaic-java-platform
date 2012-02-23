@@ -38,7 +38,10 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  *            type of stored data
  */
 public class GenericKvStoreConnector<T extends Object> extends
-        BaseKvStoreConnector<T, GenericKvStoreConnectorProxy<T>> { // NOPMD by georgiana on 2/20/12 5:04 PM
+        BaseKvStoreConnector<T, GenericKvStoreConnectorProxy<T>> { // NOPMD by
+                                                                   // georgiana
+                                                                   // on 2/20/12
+                                                                   // 5:04 PM
     protected GenericKvStoreConnector(final GenericKvStoreConnectorProxy<T> proxy) {
         super(proxy);
     }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -34,36 +35,38 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  */
 public interface IAmqpQueueConsumerConnectorCallback<Context, Message> extends
-		IAmqpQueueConnectorCallback<Context> {
+        IAmqpQueueConnectorCallback<Context> {
 
-	/**
-	 * Handles successful message acknowledge events.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> acknowledgeSucceeded(Context context, CallbackArguments<Context> arguments);
+    /**
+     * Handles successful message acknowledge events.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            the arguments of the callback
+     */
+    CallbackCompletion<Void> acknowledgeSucceeded(Context context,
+            CallbackArguments<Context> arguments);
 
-	/**
-	 * Handles unsuccessful message acknowledge events.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> acknowledgeFailed(Context context, CallbackArguments<Context> arguments);
+    /**
+     * Handles unsuccessful message acknowledge events.
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            the arguments of the callback
+     */
+    CallbackCompletion<Void> acknowledgeFailed(Context context, CallbackArguments<Context> arguments);
 
-	/**
-	 * Called when this consumer receives a message. This will deliver the
-	 * message
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> consume(Context context, AmqpQueueConsumeCallbackArguments<Context, Message> arguments);
+    /**
+     * Called when this consumer receives a message. This will deliver the
+     * message
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            the arguments of the callback
+     */
+    CallbackCompletion<Void> consume(Context context,
+            AmqpQueueConsumeCallbackArguments<Context, Message> arguments);
 }
