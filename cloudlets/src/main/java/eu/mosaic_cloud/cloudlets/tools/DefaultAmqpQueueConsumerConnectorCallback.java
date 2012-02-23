@@ -37,10 +37,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <D>
  *            the type of consumed data
  */
-public class DefaultAmqpQueueConsumerConnectorCallback<C, D>
+public class DefaultAmqpQueueConsumerConnectorCallback<C, D, E>
 		extends DefaultAmqpQueueConnectorCallback<C>
 		implements
-			IAmqpQueueConsumerConnectorCallback<C, D>
+			IAmqpQueueConsumerConnectorCallback<C, D, E>
 {
 	@Override
 	public CallbackCompletion<Void> acknowledgeFailed (final C context, final CallbackArguments<C> arguments)
@@ -55,7 +55,7 @@ public class DefaultAmqpQueueConsumerConnectorCallback<C, D>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> consume (final C context, final AmqpQueueConsumeCallbackArguments<C, D> arguments)
+	public CallbackCompletion<Void> consume (final C context, final AmqpQueueConsumeCallbackArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Consume", true, false);
 	}

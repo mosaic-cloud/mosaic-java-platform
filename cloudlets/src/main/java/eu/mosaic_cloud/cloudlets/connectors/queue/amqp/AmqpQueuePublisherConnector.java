@@ -45,10 +45,10 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <Message>
  *            the type of the messages published by the cloudlet
  */
-public class AmqpQueuePublisherConnector<Context, Message> extends
-		AmqpQueueConnector<Context, Message> implements IAmqpQueuePublisherConnector<Context, Message> {
+public class AmqpQueuePublisherConnector<Context, Message, Extra> extends
+		AmqpQueueConnector<Context, Message, Extra> implements IAmqpQueuePublisherConnector<Context, Message, Extra> {
 
-	private IAmqpQueuePublisherConnectorCallback<Context, Message> callback;
+	private IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> callback;
 
 	/**
 	 * Creates a new AMQP publisher.
@@ -94,13 +94,13 @@ public class AmqpQueuePublisherConnector<Context, Message> extends
 		synchronized (this.monitor) {
 			if (callback instanceof IAmqpQueuePublisherConnectorCallback) {
 				super.initialize(callback, context, threading);
-				this.callback = (IAmqpQueuePublisherConnectorCallback<Context, Message>) callback;
+				this.callback = (IAmqpQueuePublisherConnectorCallback<Context, Message, Extra>) callback;
 			} else {
 				IllegalArgumentException e = new IllegalArgumentException(
 						"The callback argument must be of type " //$NON-NLS-1$
 								+ IAmqpQueuePublisherConnectorCallback.class
 										.getCanonicalName());
-				IAmqpQueuePublisherConnectorCallback<Context, Message> proxy = this.cloudlet
+				IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> proxy = this.cloudlet
 						.buildCallbackInvoker(this.callback,
 								IAmqpQueuePublisherConnectorCallback.class);
 				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
@@ -149,7 +149,7 @@ public class AmqpQueuePublisherConnector<Context, Message> extends
 	}
 
 	@Override
-	public CallbackCompletion<Void> publish(Message data) {
+	public CallbackCompletion<Void> publish(Message data, Extra extra) {
 		try {
 			byte[] sData = this.dataEncoder.encode(data);
 			final AmqpOutboundMessage message = new AmqpOutboundMessage(
@@ -157,7 +157,7 @@ public class AmqpQueuePublisherConnector<Context, Message> extends
 					null);
 
 			IOperationCompletionHandler<Boolean> cHandler = new PublishCompletionHandler(
-					message);
+					message, data, extra);
 			List<IOperationCompletionHandler<Boolean>> handlers = new ArrayList<IOperationCompletionHandler<Boolean>>();
 			handlers.add(cHandler);
 
@@ -167,13 +167,13 @@ public class AmqpQueuePublisherConnector<Context, Message> extends
 					"AmqpQueuePublisherConnector - published message " + data);
 		} catch (Exception e) {
 			ExceptionTracer.traceDeferred(e);
-			IAmqpQueuePublisherConnectorCallback<Context, Message> proxy = this.cloudlet
+			IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueuePublisherConnectorCallback.class);
 			AmqpQueuePublishMessage<Message> pMessage = new AmqpQueuePublishMessage<Message>(
-					AmqpQueuePublisherConnector.this, null);
-			AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments = new AmqpQueuePublishCallbackCompletionArguments<Context, Message>(
-					AmqpQueuePublisherConnector.this.cloudlet, pMessage);
+					AmqpQueuePublisherConnector.this, null, data);
+			AmqpQueuePublishCallbackCompletionArguments<Context, Message, Extra> arguments = new AmqpQueuePublishCallbackCompletionArguments<Context, Message, Extra>(
+					AmqpQueuePublisherConnector.this.cloudlet, pMessage, extra);
 			proxy.publishFailed(AmqpQueuePublisherConnector.this.cloudletContext,
 					arguments);
 		}
@@ -183,13 +183,13 @@ public class AmqpQueuePublisherConnector<Context, Message> extends
 	final class PublishCompletionHandler implements
 			IOperationCompletionHandler<Boolean> {
 
-		private AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments;
+		private AmqpQueuePublishCallbackCompletionArguments<Context, Message, Extra> arguments;
 
-		public PublishCompletionHandler(AmqpOutboundMessage message) {
+		public PublishCompletionHandler(AmqpOutboundMessage message, Message data, Extra extra) {
 			AmqpQueuePublishMessage<Message> pMessage = new AmqpQueuePublishMessage<Message>(
-					AmqpQueuePublisherConnector.this, message);
-			this.arguments = new AmqpQueuePublishCallbackCompletionArguments<Context, Message>(
-					AmqpQueuePublisherConnector.super.cloudlet, pMessage);
+					AmqpQueuePublisherConnector.this, message, data);
+			this.arguments = new AmqpQueuePublishCallbackCompletionArguments<Context, Message, Extra>(
+					AmqpQueuePublisherConnector.super.cloudlet, pMessage, extra);
 		}
 
 		@Override

@@ -149,15 +149,15 @@ public class IndexerCloudlet {
 
 	public static final class IndexerCloudletContext {
 
-		IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> urgentConsumer;
-		IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject> batchConsumer;
+		IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject, Void> urgentConsumer;
+		IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject, Void> batchConsumer;
 		IKvStoreConnector<IndexerCloudletContext, JSONObject, UUID> metadataStore;
 		IKvStoreConnector<IndexerCloudletContext, byte[], UUID> dataStore;
 		IKvStoreConnector<IndexerCloudletContext, JSONObject, Void> timelinesStore;
 		IKvStoreConnector<IndexerCloudletContext, JSONObject, UUID> itemsStore;
 		IKvStoreConnector<IndexerCloudletContext, JSONObject, Void> tasksStore;
-		IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject> urgentConsumerCallback;
-		IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject> batchConsumerCallback;
+		IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> urgentConsumerCallback;
+		IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> batchConsumerCallback;
 		IKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID> metadataStoreCallback;
 		IKvStoreConnectorCallback<IndexerCloudletContext, byte[], UUID> dataStoreCallback;
 		IKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID> timelinesStoreCallback;

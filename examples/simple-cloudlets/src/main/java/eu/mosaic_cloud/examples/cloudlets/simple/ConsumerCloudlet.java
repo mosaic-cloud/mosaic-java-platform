@@ -88,7 +88,7 @@ public class ConsumerCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpQueueConsumerConnectorCallback<ConsumerCloudletContext, String> {
+			DefaultAmqpQueueConsumerConnectorCallback<ConsumerCloudletContext, String, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(ConsumerCloudletContext context,
@@ -139,7 +139,7 @@ public class ConsumerCloudlet {
 		@Override
 		public CallbackCompletion<Void> consume(
 				ConsumerCloudletContext context,
-				AmqpQueueConsumeCallbackArguments<ConsumerCloudletContext, String> arguments) {
+				AmqpQueueConsumeCallbackArguments<ConsumerCloudletContext, String, Void> arguments) {
 
 			AmqpQueueConsumeMessage<String> message = arguments.getMessage();
 			String data = message.getData();
@@ -154,6 +154,6 @@ public class ConsumerCloudlet {
 
 	public static final class ConsumerCloudletContext {
 
-		IAmqpQueueConsumerConnector<ConsumerCloudletContext, String> consumer;
+		IAmqpQueueConsumerConnector<ConsumerCloudletContext, String, Void> consumer;
 	}
 }

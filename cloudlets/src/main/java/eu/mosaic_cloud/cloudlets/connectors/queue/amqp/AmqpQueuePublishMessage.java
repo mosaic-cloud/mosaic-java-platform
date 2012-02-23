@@ -30,16 +30,32 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpOutboundMessage;
  * @param <Context>
  *            the type of the data in the consumed message
  */
-public class AmqpQueuePublishMessage<Context> {
+public class AmqpQueuePublishMessage<Message> {
 
-	private final AmqpQueuePublisherConnector<?, Context> publisher;
+	private final AmqpQueuePublisherConnector<?, Message, ?> publisher;
 	private final AmqpOutboundMessage message;
+	private final Message data;
 
-	public AmqpQueuePublishMessage(AmqpQueuePublisherConnector<?, Context> publisher,
-			AmqpOutboundMessage message) {
+	public AmqpQueuePublishMessage(
+			AmqpQueuePublisherConnector<?, Message, ?> publisher,
+			AmqpOutboundMessage message, Message data) {
 		super();
 		this.publisher = publisher;
 		this.message = message;
+		this.data = data;
+	}
+
+	/**
+	 * Returns the data in the consumed message.
+	 * 
+	 * @return the data in the consumed message
+	 */
+	public Message getData() {
+		return this.data;
+	}
+
+	AmqpOutboundMessage getMessage() {
+		return this.message;
 	}
 
 	/**
@@ -47,11 +63,7 @@ public class AmqpQueuePublishMessage<Context> {
 	 * 
 	 * @return the publisher object
 	 */
-	public AmqpQueuePublisherConnector<?, Context> getPublisher() {
+	public AmqpQueuePublisherConnector<?, Message, ?> getPublisher() {
 		return this.publisher;
-	}
-
-	AmqpOutboundMessage getMessage() {
-		return this.message;
 	}
 }

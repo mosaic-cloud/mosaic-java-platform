@@ -92,7 +92,7 @@ public class PingCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpQueueConsumerConnectorCallback<PingCloudletContext, PongMessage> {
+			DefaultAmqpQueueConsumerConnectorCallback<PingCloudletContext, PongMessage, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(PingCloudletContext context,
@@ -145,7 +145,7 @@ public class PingCloudlet {
 		@Override
 		public CallbackCompletion<Void> consume(
 				PingCloudletContext context,
-				AmqpQueueConsumeCallbackArguments<PingCloudletContext, PongMessage> arguments) {
+				AmqpQueueConsumeCallbackArguments<PingCloudletContext, PongMessage, Void> arguments) {
 			AmqpQueueConsumeMessage<PongMessage> message = arguments
 					.getMessage();
 			PongMessage data = message.getData();
@@ -161,7 +161,7 @@ public class PingCloudlet {
 	}
 
 	public static final class AmqpPublisherCallback extends
-			DefaultAmqpPublisherConnectorCallback<PingCloudletContext, PingMessage> {
+			DefaultAmqpPublisherConnectorCallback<PingCloudletContext, PingMessage, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(PingCloudletContext context,
@@ -169,7 +169,7 @@ public class PingCloudlet {
 			this.logger.info(
 					"Ping Cloudlet publisher registered successfully.");
 			PingMessage data = new PingMessage("pingpong");
-			context.publisher.publish(data);
+			context.publisher.publish(data, null);
 			return ICallback.SUCCESS;
 		}
 
@@ -209,7 +209,7 @@ public class PingCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				PingCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<PingCloudletContext, PingMessage> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<PingCloudletContext, PingMessage, Void> arguments) {
 			context.publisher.unregister();
 			return ICallback.SUCCESS;
 		}
@@ -217,7 +217,7 @@ public class PingCloudlet {
 
 	public static final class PingCloudletContext {
 
-		IAmqpQueueConsumerConnector<PingCloudletContext, PongMessage> consumer;
-		IAmqpQueuePublisherConnector<PingCloudletContext, PingMessage> publisher;
+		IAmqpQueueConsumerConnector<PingCloudletContext, PongMessage, Void> consumer;
+		IAmqpQueuePublisherConnector<PingCloudletContext, PingMessage, Void> publisher;
 	}
 }

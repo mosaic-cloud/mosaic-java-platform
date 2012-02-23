@@ -162,7 +162,7 @@ public class LoggingCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData> {
+			DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(LoggingCloudletContext context,
@@ -217,7 +217,7 @@ public class LoggingCloudlet {
 		@Override
 		public CallbackCompletion<Void> consume(
 				LoggingCloudletContext context,
-				AmqpQueueConsumeCallbackArguments<LoggingCloudletContext, LoggingData> arguments) {
+				AmqpQueueConsumeCallbackArguments<LoggingCloudletContext, LoggingData, Void> arguments) {
 			AmqpQueueConsumeMessage<LoggingData> message = arguments
 					.getMessage();
 			LoggingData data = message.getData();
@@ -239,7 +239,7 @@ public class LoggingCloudlet {
 				}
 			}
 			AuthenticationToken aToken = new AuthenticationToken(token);
-			context.publisher.publish(aToken);
+			context.publisher.publish(aToken, null);
 			message.acknowledge();
 			return ICallback.SUCCESS;
 		}
@@ -248,7 +248,7 @@ public class LoggingCloudlet {
 
 	public static final class AmqpPublisherCallback
 			extends
-			DefaultAmqpPublisherConnectorCallback<LoggingCloudletContext, AuthenticationToken> {
+			DefaultAmqpPublisherConnectorCallback<LoggingCloudletContext, AuthenticationToken, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(LoggingCloudletContext context,
@@ -296,7 +296,7 @@ public class LoggingCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				LoggingCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<LoggingCloudletContext, AuthenticationToken> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<LoggingCloudletContext, AuthenticationToken, Void> arguments) {
 			context.publisher.unregister();
 			return ICallback.SUCCESS;
 		}
@@ -305,8 +305,8 @@ public class LoggingCloudlet {
 
 	public static final class LoggingCloudletContext {
 
-		IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData> consumer;
-		IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken> publisher;
+		IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData, Void> consumer;
+		IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken, Void> publisher;
 		IKvStoreConnector<LoggingCloudletContext, String, Void> kvStore;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;

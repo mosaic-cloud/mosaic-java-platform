@@ -32,7 +32,7 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * @param <Message>
  *            the type of the consumed data
  */
-public class AmqpQueueConsumeCallbackArguments<Context, Message> extends
+public class AmqpQueueConsumeCallbackArguments<Context, Message, Extra> extends
 		CallbackArguments<Context> {
 
 	private AmqpQueueConsumeMessage<Message> message;

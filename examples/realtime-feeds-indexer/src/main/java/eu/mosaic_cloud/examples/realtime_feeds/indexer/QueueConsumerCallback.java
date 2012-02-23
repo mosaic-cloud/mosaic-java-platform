@@ -29,7 +29,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import org.json.JSONObject;
 
 public class QueueConsumerCallback extends
-		DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject> {
+		DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
 	@Override
 	public CallbackCompletion<Void> registerSucceeded(IndexerCloudletContext context,
@@ -42,7 +42,7 @@ public class QueueConsumerCallback extends
 	@Override
 	public CallbackCompletion<Void> consume(
 			IndexerCloudletContext context,
-			AmqpQueueConsumeCallbackArguments<IndexerCloudletContext, JSONObject> arguments) {
+			AmqpQueueConsumeCallbackArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
 		AmqpQueueConsumeMessage<JSONObject> message = arguments.getMessage();
 
 		IndexWorkflow.indexNewFeed(context, message);

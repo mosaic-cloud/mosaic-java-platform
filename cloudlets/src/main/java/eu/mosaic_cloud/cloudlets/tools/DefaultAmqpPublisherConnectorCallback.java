@@ -35,19 +35,19 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <D>
  *            the type of published data
  */
-public class DefaultAmqpPublisherConnectorCallback<C, D>
+public class DefaultAmqpPublisherConnectorCallback<C, D, E>
 		extends DefaultAmqpQueueConnectorCallback<C>
 		implements
-			IAmqpQueuePublisherConnectorCallback<C, D>
+			IAmqpQueuePublisherConnectorCallback<C, D, E>
 {
 	@Override
-	public CallbackCompletion<Void> publishFailed (final C context, final AmqpQueuePublishCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> publishFailed (final C context, final AmqpQueuePublishCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Publish Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> publishSucceeded (final C context, final AmqpQueuePublishCallbackCompletionArguments<C, D> arguments)
+	public CallbackCompletion<Void> publishSucceeded (final C context, final AmqpQueuePublishCallbackCompletionArguments<C, D, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Publish Succeeded", true, false);
 	}

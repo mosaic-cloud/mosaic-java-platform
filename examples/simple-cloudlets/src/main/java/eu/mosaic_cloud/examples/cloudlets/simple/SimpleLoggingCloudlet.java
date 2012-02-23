@@ -95,7 +95,7 @@ public class SimpleLoggingCloudlet {
 	}
 
 	public static final class AmqpConsumerCallback extends
-			DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData> {
+			DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(LoggingCloudletContext context,
@@ -150,7 +150,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public CallbackCompletion<Void> consume(
 				LoggingCloudletContext context,
-				AmqpQueueConsumeCallbackArguments<LoggingCloudletContext, LoggingData> arguments) {
+				AmqpQueueConsumeCallbackArguments<LoggingCloudletContext, LoggingData, Void> arguments) {
 			AmqpQueueConsumeMessage<LoggingData> message = arguments
 					.getMessage();
 			LoggingData data = message.getData();
@@ -161,7 +161,7 @@ public class SimpleLoggingCloudlet {
 			String token = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.token", String.class, "error");
 			AuthenticationToken aToken = new AuthenticationToken(token);
-			context.publisher.publish(aToken);
+			context.publisher.publish(aToken, null);
 
 			message.acknowledge();
 
@@ -172,7 +172,7 @@ public class SimpleLoggingCloudlet {
 
 	public static final class AmqpPublisherCallback
 			extends
-			DefaultAmqpPublisherConnectorCallback<LoggingCloudletContext, AuthenticationToken> {
+			DefaultAmqpPublisherConnectorCallback<LoggingCloudletContext, AuthenticationToken, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(LoggingCloudletContext context,
@@ -220,7 +220,7 @@ public class SimpleLoggingCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				LoggingCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<LoggingCloudletContext, AuthenticationToken> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<LoggingCloudletContext, AuthenticationToken, Void> arguments) {
 			context.publisher.unregister();
 			return ICallback.SUCCESS;
 		}
@@ -229,8 +229,8 @@ public class SimpleLoggingCloudlet {
 
 	public static final class LoggingCloudletContext {
 
-		IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData> consumer;
-		IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken> publisher;
+		IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData, Void> consumer;
+		IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken, Void> publisher;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

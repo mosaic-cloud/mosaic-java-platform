@@ -31,7 +31,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of the published data
  */
-public interface IAmqpQueuePublisherConnector<Context, Message> extends IAmqpQueueConnector<Context> {
+public interface IAmqpQueuePublisherConnector<Context, Message, Extra> extends IAmqpQueueConnector<Context> {
 
 	/**
 	 * Publishes a message to a queue.
@@ -39,5 +39,5 @@ public interface IAmqpQueuePublisherConnector<Context, Message> extends IAmqpQue
 	 * @param data
 	 *            the data to publish
 	 */
-	CallbackCompletion<Void> publish(Message data);
+	CallbackCompletion<Void> publish(Message data, Extra extra);
 }

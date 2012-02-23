@@ -94,7 +94,7 @@ public class UserCloudlet {
 
 	public static final class AmqpConsumerCallback
 			extends
-			DefaultAmqpQueueConsumerConnectorCallback<UserCloudletContext, AuthenticationToken> {
+			DefaultAmqpQueueConsumerConnectorCallback<UserCloudletContext, AuthenticationToken, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(UserCloudletContext context,
@@ -149,7 +149,7 @@ public class UserCloudlet {
 		@Override
 		public CallbackCompletion<Void> consume(
 				UserCloudletContext context,
-				AmqpQueueConsumeCallbackArguments<UserCloudletContext, AuthenticationToken> arguments) {
+				AmqpQueueConsumeCallbackArguments<UserCloudletContext, AuthenticationToken, Void> arguments) {
 			AmqpQueueConsumeMessage<AuthenticationToken> message = arguments
 					.getMessage();
 			AuthenticationToken data = message.getData();
@@ -168,7 +168,7 @@ public class UserCloudlet {
 	}
 
 	public static final class AmqpPublisherCallback extends
-			DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData> {
+			DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(UserCloudletContext context,
@@ -181,7 +181,7 @@ public class UserCloudlet {
 			String pass = ConfigUtils.resolveParameter(arguments.getCloudlet()
 					.getConfiguration(), "test.password", String.class, "");
 			LoggingData data = new LoggingData(user, pass);
-			context.publisher.publish(data);
+			context.publisher.publish(data, null);
 			return ICallback.SUCCESS;
 		}
 
@@ -222,7 +222,7 @@ public class UserCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				UserCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<UserCloudletContext, LoggingData> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<UserCloudletContext, LoggingData, Void> arguments) {
 			context.publisher.unregister();
 			return ICallback.SUCCESS;
 		}
@@ -231,8 +231,8 @@ public class UserCloudlet {
 
 	public static final class UserCloudletContext {
 
-		IAmqpQueueConsumerConnector<UserCloudletContext, AuthenticationToken> consumer;
-		IAmqpQueuePublisherConnector<UserCloudletContext, LoggingData> publisher;
+		IAmqpQueueConsumerConnector<UserCloudletContext, AuthenticationToken, Void> consumer;
+		IAmqpQueuePublisherConnector<UserCloudletContext, LoggingData, Void> publisher;
 		boolean publisherRunning = false;
 		boolean consumerRunning = false;
 	}

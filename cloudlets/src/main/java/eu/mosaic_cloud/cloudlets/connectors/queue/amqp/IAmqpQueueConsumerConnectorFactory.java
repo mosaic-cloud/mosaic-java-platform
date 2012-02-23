@@ -8,7 +8,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public interface IAmqpQueueConsumerConnectorFactory
 		extends
-			IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?>>
+			IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?, ?>>
 {
-	<Context, Message> IAmqpQueueConsumerConnector<Context, Message> create (IConfiguration configuration, Class<Message> messageClass, DataEncoder<? super Message> dataEncoder, IAmqpQueueConsumerConnectorCallback<Context, Message> callback, Context callbackContext);
+	<Context, Message, Extra> IAmqpQueueConsumerConnector<Context, Message, Extra> create (IConfiguration configuration, Class<Message> messageClass, DataEncoder<? super Message> messageEncoder, IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> callback, Context callbackContext);
 }

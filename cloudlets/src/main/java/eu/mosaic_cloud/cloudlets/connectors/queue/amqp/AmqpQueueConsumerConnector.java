@@ -49,11 +49,11 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  *            the type of the messages consumed by the cloudlet
  */
 public class AmqpQueueConsumerConnector<Context, Message, Extra> extends
-		AmqpQueueConnector<Context, Message> implements IAmqpQueueConsumerConnector<Context, Message> {
+		AmqpQueueConnector<Context, Message, Extra> implements IAmqpQueueConsumerConnector<Context, Message, Extra> {
 
 	private String consumer;
 	private boolean autoAck;
-	private IAmqpQueueConsumerConnectorCallback<Context, Message> callback;
+	private IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> callback;
 
 	/**
 	 * Creates a new AMQP queue consumer.
@@ -94,13 +94,13 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra> extends
 			ThreadingContext threading) {
 		if (callback instanceof IAmqpQueueConsumerConnectorCallback) {
 			super.initialize(callback, context, threading);
-			this.callback = (IAmqpQueueConsumerConnectorCallback<Context, Message>) callback;
+			this.callback = (IAmqpQueueConsumerConnectorCallback<Context, Message, Extra>) callback;
 		} else {
 			IllegalArgumentException e = new IllegalArgumentException(
 					"The callback argument must be of type " //$NON-NLS-1$
 							+ IAmqpQueueConsumerConnectorCallback.class
 									.getCanonicalName());
-			IAmqpQueueConsumerConnectorCallback<Context, Message> proxy = this.cloudlet
+			IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueueConsumerConnectorCallback.class);
 			CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
@@ -270,7 +270,7 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra> extends
 						.getData());
 				AmqpQueueConsumeMessage<Message> mssg = new AmqpQueueConsumeMessage<Message>(
 						AmqpQueueConsumerConnector.this, message, data);
-				AmqpQueueConsumeCallbackArguments<Context, Message> arguments = new AmqpQueueConsumeCallbackArguments<Context, Message>(
+				AmqpQueueConsumeCallbackArguments<Context, Message, Extra> arguments = new AmqpQueueConsumeCallbackArguments<Context, Message, Extra>(
 						AmqpQueueConsumerConnector.this.cloudlet, mssg);
 				AmqpQueueConsumerConnector.this.callback.consume(
 						AmqpQueueConsumerConnector.this.cloudletContext, arguments);

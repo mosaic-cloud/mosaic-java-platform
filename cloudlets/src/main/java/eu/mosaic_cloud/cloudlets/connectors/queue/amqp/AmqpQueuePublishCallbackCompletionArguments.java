@@ -32,10 +32,11 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * @param <Message>
  *            the type of the published data
  */
-public class AmqpQueuePublishCallbackCompletionArguments<Context, Message> extends
+public class AmqpQueuePublishCallbackCompletionArguments<Context, Message, Extra> extends
 		CallbackCompletionArguments<Context> {
 
 	private AmqpQueuePublishMessage<Message> message;
+	private Extra extra;
 
 	/**
 	 * Creates a new callback argument.
@@ -46,9 +47,10 @@ public class AmqpQueuePublishCallbackCompletionArguments<Context, Message> exten
 	 *            information about the publish request
 	 */
 	public AmqpQueuePublishCallbackCompletionArguments(ICloudletController<Context> cloudlet,
-			AmqpQueuePublishMessage<Message> message) {
+			AmqpQueuePublishMessage<Message> message, Extra extra) {
 		super(cloudlet);
 		this.message = message;
+		this.extra = extra;
 	}
 
 	/**
@@ -60,4 +62,7 @@ public class AmqpQueuePublishCallbackCompletionArguments<Context, Message> exten
 		return this.message;
 	}
 
+	public Extra getExtra() {
+		return this.extra;
+	}
 }

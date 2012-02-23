@@ -85,14 +85,14 @@ public class PublisherCloudlet {
 
 	public static final class AmqpPublisherCallback
 			extends
-			DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, String> {
+			DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, String, Void> {
 
 		@Override
 		public CallbackCompletion<Void> registerSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet publisher registered successfully.");
-			context.publisher.publish("TEST MESSAGE!");
+			context.publisher.publish("TEST MESSAGE!", null);
 			return ICallback.SUCCESS;
 		}
 
@@ -130,7 +130,7 @@ public class PublisherCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				PublisherCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<PublisherCloudletContext, String> arguments) {
+				AmqpQueuePublishCallbackCompletionArguments<PublisherCloudletContext, String, Void> arguments) {
 			context.publisher.unregister();
 			return ICallback.SUCCESS;
 		}
@@ -139,6 +139,6 @@ public class PublisherCloudlet {
 
 	public static final class PublisherCloudletContext {
 
-		IAmqpQueuePublisherConnector<PublisherCloudletContext, String> publisher;
+		IAmqpQueuePublisherConnector<PublisherCloudletContext, String, Void> publisher;
 	}
 }

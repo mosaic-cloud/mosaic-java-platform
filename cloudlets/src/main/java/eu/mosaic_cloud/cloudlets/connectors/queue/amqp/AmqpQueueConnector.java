@@ -53,7 +53,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <Message>
  *            the type of messages processed by the accessor
  */
-public abstract class AmqpQueueConnector<Context, Message> implements
+public abstract class AmqpQueueConnector<Context, Message, Extra> implements
 		IAmqpQueueConnector<Context> {
 
 	private IConfiguration configuration;
