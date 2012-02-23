@@ -116,13 +116,13 @@ public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.con
                                 .listFailed(
                                         BaseKvStoreConnector.this.context,
                                         new KvStoreCallbackCompletionArguments<Context, List<String>, Extra>(
-                                                BaseKvStoreConnector.this.cloudlet, null,
+                                                BaseKvStoreConnector.this.cloudlet, (String)null,
                                                 (List<String>) completion.getException(), extra));
                     }
                     return BaseKvStoreConnector.this.callback.listSucceeded(
                             BaseKvStoreConnector.this.context,
                             new KvStoreCallbackCompletionArguments<Context, List<String>, Extra>(
-                                    BaseKvStoreConnector.this.cloudlet, null, completion
+                                    BaseKvStoreConnector.this.cloudlet, (String)null, completion
                                             .getOutcome(), extra));
                 }
             });

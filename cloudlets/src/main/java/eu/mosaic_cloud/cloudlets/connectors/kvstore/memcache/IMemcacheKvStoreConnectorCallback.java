@@ -20,6 +20,8 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache;
 
+import java.util.Map;
+
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -139,7 +141,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      *            callback arguments
      */
     CallbackCompletion<Void> getBulkSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
 
     /**
      * Called when the getBulk operation completed unsuccessfully. The error can
@@ -151,7 +153,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      *            callback arguments
      */
     CallbackCompletion<Void> getBulkFailed(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
 
     /**
      * Called when the cas operation completed successfully.

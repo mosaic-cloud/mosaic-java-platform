@@ -32,6 +32,14 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
 public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors.core.IConnector, Callback extends IConnectorCallback<Context>, Context extends Object>
         implements IConnector<Context>, CallbackProxy {
+    protected final Callback callback;
+    protected final ICloudletController<?> cloudlet;
+    protected final IConfiguration configuration;
+    protected final Connector connector;
+    protected final Context context;
+    protected final MosaicLogger logger;
+    private final CallbackCompletion<Void> initializeConnectorCompletion;
+    
     protected BaseConnector(final ICloudletController<?> cloudlet, final Connector connector,
             final IConfiguration configuration, final Callback callback, final Context context) {
         super();
@@ -95,11 +103,5 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
         return (completion);
     }
 
-    protected final Callback callback;
-    protected final ICloudletController<?> cloudlet;
-    protected final IConfiguration configuration;
-    protected final Connector connector;
-    protected final Context context;
-    protected final MosaicLogger logger;
-    private final CallbackCompletion<Void> initializeConnectorCompletion;
+    
 }
