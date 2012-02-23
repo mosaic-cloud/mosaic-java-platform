@@ -77,7 +77,7 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(ICloudletController<Context> cloudlet,
+    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet,
             List<String> keys, Value value, Extra extra) {
         super(cloudlet);
         this.keys = keys;
