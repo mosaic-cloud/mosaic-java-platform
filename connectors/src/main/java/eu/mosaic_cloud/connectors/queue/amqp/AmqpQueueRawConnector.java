@@ -39,9 +39,9 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public class AmqpQueueConnector extends BaseConnector<AmqpQueueConnectorProxy> implements
-        IAmqpQueueConnector {
-    protected AmqpQueueConnector(final AmqpQueueConnectorProxy proxy) {
+public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorProxy> implements
+        IAmqpQueueRawConnector {
+    protected AmqpQueueRawConnector(final AmqpQueueRawConnectorProxy proxy) {
         super(proxy);
     }
 
@@ -108,7 +108,7 @@ public class AmqpQueueConnector extends BaseConnector<AmqpQueueConnectorProxy> i
      * @return the connector
      * @throws Throwable
      */
-    public static AmqpQueueConnector create(final IConfiguration configuration,
+    public static AmqpQueueRawConnector create(final IConfiguration configuration,
             final ThreadingContext threading) {
         final String driverIdentity = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("AllConnector.1"), String.class, "");
@@ -116,8 +116,8 @@ public class AmqpQueueConnector extends BaseConnector<AmqpQueueConnectorProxy> i
                 ConfigProperties.getString("AllConnector.0"), String.class, "");
         final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
         channel.register(AmqpSession.CONNECTOR);
-        final AmqpQueueConnectorProxy proxy = AmqpQueueConnectorProxy.create(configuration,
+        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(configuration,
                 driverIdentity, channel);
-        return new AmqpQueueConnector(proxy);
+        return new AmqpQueueRawConnector(proxy);
     }
 }

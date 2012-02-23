@@ -58,12 +58,12 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 
 /**
  * Proxy for the driver for queuing systems implementing the AMQP protocol. This
- * is used by the {@link AmqpQueueConnector} to communicate with a AMQP driver.
+ * is used by the {@link AmqpQueueRawConnector} to communicate with a AMQP driver.
  * 
  * @author Georgiana Macariu
  * 
  */
-public final class AmqpQueueConnectorProxy extends BaseConnectorProxy { // NOPMD
+public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NOPMD
                                                                         // by
                                                                         // georgiana
                                                                         // on
@@ -85,14 +85,14 @@ public final class AmqpQueueConnectorProxy extends BaseConnectorProxy { // NOPMD
      *            the channel on which to communicate with the driver
      * @return the proxy
      */
-    public static AmqpQueueConnectorProxy create(final IConfiguration configuration,
+    public static AmqpQueueRawConnectorProxy create(final IConfiguration configuration,
             final String driverIdentity, final Channel channel) {
-        final AmqpQueueConnectorProxy proxy = new AmqpQueueConnectorProxy(configuration, channel);
+        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(configuration, channel);
         proxy.connect(driverIdentity, AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
         return proxy;
     }
 
-    private AmqpQueueConnectorProxy(final IConfiguration config, final Channel channel) {
+    private AmqpQueueRawConnectorProxy(final IConfiguration config, final Channel channel) {
         super(config, channel);
         this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueConsumerCallback>();
         this.consumerMessages = new ResponseHandlerMap();

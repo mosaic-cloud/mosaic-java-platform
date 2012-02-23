@@ -29,17 +29,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
 import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 
 public class AmqpQueueConnectorTest extends
-        BaseConnectorTest<AmqpQueueConnector, BaseConnectorTest.Context<AmqpStub>> {
+        BaseConnectorTest<AmqpQueueRawConnector, BaseConnectorTest.Context<AmqpStub>> {
     @Override
     @Before
     public void setUp() {
         this.context = AmqpQueueConnectorTest.context_;
-        this.connector = AmqpQueueConnector.create(this.context.configuration,
+        this.connector = AmqpQueueRawConnector.create(this.context.configuration,
                 this.context.threading);
     }
 

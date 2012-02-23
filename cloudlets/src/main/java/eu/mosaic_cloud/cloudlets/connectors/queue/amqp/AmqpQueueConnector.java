@@ -169,7 +169,7 @@ public abstract class AmqpQueueConnector<Context, Message, Extra> implements
 							"Cannot find a resource of type "
 									+ ResourceType.AMQP.toString());
 				}
-				this.connector = eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnector.create(this.configuration,
+				this.connector = eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector.create(this.configuration,
 						threading);
 				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConnector.this.cloudlet, true);
@@ -194,13 +194,13 @@ public abstract class AmqpQueueConnector<Context, Message, Extra> implements
 							IConnectorCallback.class);
 			try {
 				this.logger.trace(
-						"AmqpQueueConnector is destroying the connector...");
+						"AmqpQueueRawConnector is destroying the connector...");
 				this.connector.destroy();
 				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConnector.this.cloudlet, true);
 				proxy.destroySucceeded(this.cloudletContext, arguments);
 				this.logger.trace(
-						"AmqpQueueConnector destroyed successfully.");
+						"AmqpQueueRawConnector destroyed successfully.");
 			} catch (Throwable e) {
 				ExceptionTracer.traceDeferred(e);
 				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
