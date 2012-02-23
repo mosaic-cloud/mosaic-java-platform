@@ -31,12 +31,6 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  *            the type of the cloudlet context
  */
 public interface IConnector<C> extends eu.mosaic_cloud.connectors.core.IConnector {
-
-	/**
-	 * Destroys the accessor.
-	 */
-	CallbackCompletion<Void> destroy();
-
 	/**
 	 * Returns the current status of the accessor.
 	 * 
