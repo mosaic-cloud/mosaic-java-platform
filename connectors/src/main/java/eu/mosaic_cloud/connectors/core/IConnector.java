@@ -30,6 +30,15 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * 
  */
 public interface IConnector extends Callbacks {
+    
+	/**
+     * Initialize the connection with the resource.
+     * 
+     * @throws Throwable
+     *             if connector cannot be destroyed
+     */
+    CallbackCompletion<Void> initialize();
+    
     /**
      * Destroy the connection with the resource.
      * 
