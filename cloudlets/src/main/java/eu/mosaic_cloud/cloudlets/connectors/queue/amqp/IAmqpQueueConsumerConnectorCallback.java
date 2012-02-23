@@ -17,10 +17,13 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for AMQP queue consumers. This will be implemented by cloudlets
@@ -33,19 +36,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of consumed data
  * 
  */
-public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> extends
-		IAmqpQueueConnectorCallback<Context> {
-
-	/**
-	 * Handles successful message acknowledge events.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> acknowledgeSucceeded(Context context, CallbackArguments<Context> arguments);
-
+public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra>
+		extends
+			IAmqpQueueConnectorCallback<Context>
+{
 	/**
 	 * Handles unsuccessful message acknowledge events.
 	 * 
@@ -54,8 +48,18 @@ public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> ex
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> acknowledgeFailed(Context context, CallbackArguments<Context> arguments);
-
+	CallbackCompletion<Void> acknowledgeFailed (Context context, GenericCallbackCompletionArguments<Context, Extra> arguments);
+	
+	/**
+	 * Handles successful message acknowledge events.
+	 * 
+	 * @param context
+	 *            the context of the cloudlet
+	 * @param arguments
+	 *            the arguments of the callback
+	 */
+	CallbackCompletion<Void> acknowledgeSucceeded (Context context, GenericCallbackCompletionArguments<Context, Extra> arguments);
+	
 	/**
 	 * Called when this consumer receives a message. This will deliver the
 	 * message
@@ -65,5 +69,5 @@ public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> ex
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> consume(Context context, AmqpQueueConsumeCallbackArguments<Context, Message, Extra> arguments);
+	CallbackCompletion<Void> consume (Context context, AmqpQueueConsumeCallbackArguments<Context, Message, Extra> arguments);
 }

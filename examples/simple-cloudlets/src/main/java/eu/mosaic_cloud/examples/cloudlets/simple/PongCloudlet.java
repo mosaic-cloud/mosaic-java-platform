@@ -23,8 +23,6 @@ import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
@@ -32,6 +30,7 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -171,7 +170,6 @@ public class PongCloudlet {
 				CallbackArguments<PongCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
-			context.consumer.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -188,8 +186,8 @@ public class PongCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> acknowledgeSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			context.consumer.unregister();
+				GenericCallbackCompletionArguments<PongCloudletContext, Void> arguments) {
+			context.consumer.destroy();
 			return ICallback.SUCCESS;
 		}
 
@@ -197,18 +195,18 @@ public class PongCloudlet {
 		public CallbackCompletion<Void> consume(
 				PongCloudletContext context,
 				AmqpQueueConsumeCallbackArguments<PongCloudletContext, PingMessage, Void> arguments) {
-			AmqpQueueConsumeMessage<PingMessage> message = arguments
-					.getMessage();
 
 			// retrieve message data
-			PingMessage data = message.getData();
+			PingMessage data = arguments
+					.getMessage();
+
 			this.logger.info("Pong Cloudlet received fetch request for key "
 					+ data.getKey());
 
 			// get value from key value store
 			context.kvStore.get(data.getKey(), null);
 
-			message.acknowledge();
+			context.consumer.acknowledge(arguments.getDelivery());
 			return ICallback.SUCCESS;
 		}
 
@@ -242,7 +240,6 @@ public class PongCloudlet {
 				CallbackArguments<PongCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
-			context.publisher.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -261,8 +258,8 @@ public class PongCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				PongCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<PongCloudletContext, PongMessage, Void> arguments) {
-			context.publisher.unregister();
+				GenericCallbackCompletionArguments<PongCloudletContext, Void> arguments) {
+			context.publisher.destroy();
 			return ICallback.SUCCESS;
 		}
 

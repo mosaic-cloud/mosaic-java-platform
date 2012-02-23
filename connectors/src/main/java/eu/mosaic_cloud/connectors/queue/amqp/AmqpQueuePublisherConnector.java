@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-connectors
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -22,26 +22,21 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-/**
- * Interface for handlers (callbacks) to be called when a queue consumer
- * receives a message. Methods defined in this interface are called by the
- * connector when one of the consume messages is received from the driver.
- * 
- * @author Georgiana Macariu
- * 
- */
-public interface IAmqpQueueConsumerCallback<Message>
-		extends
-			Callbacks
+public class AmqpQueuePublisherConnector<Message>
+		extends AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<Message>>
+		implements
+			IAmqpQueuePublisherConnector<Message>
 {
-	/**
-	 * Handles a delivered message.
-	 * 
-	 * @param message
-	 *            the message and all its properties
-	 */
-	CallbackCompletion<Void> consume (IAmqpQueueDeliveryToken delivery, Message message);
+	protected AmqpQueuePublisherConnector (final AmqpQueuePublisherConnectorProxy<Message> proxy)
+	{
+		super (proxy);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> publish (final Message message)
+	{
+		return this.proxy.publish (message);
+	}
 }

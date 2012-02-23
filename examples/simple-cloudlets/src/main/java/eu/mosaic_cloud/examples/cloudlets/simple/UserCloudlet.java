@@ -19,17 +19,16 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -123,7 +122,6 @@ public class UserCloudlet {
 				CallbackArguments<UserCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
-			context.consumer.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -141,8 +139,8 @@ public class UserCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> acknowledgeSucceeded(UserCloudletContext context,
-				CallbackArguments<UserCloudletContext> arguments) {
-			context.consumer.unregister();
+				GenericCallbackCompletionArguments<UserCloudletContext, Void> arguments) {
+			context.consumer.destroy();
 			return ICallback.SUCCESS;
 		}
 
@@ -150,9 +148,8 @@ public class UserCloudlet {
 		public CallbackCompletion<Void> consume(
 				UserCloudletContext context,
 				AmqpQueueConsumeCallbackArguments<UserCloudletContext, AuthenticationToken, Void> arguments) {
-			AmqpQueueConsumeMessage<AuthenticationToken> message = arguments
+			AuthenticationToken data = arguments
 					.getMessage();
-			AuthenticationToken data = message.getData();
 			String token = data.getToken();
 			if (token != null) {
 				this.logger.info(
@@ -161,7 +158,7 @@ public class UserCloudlet {
 				this.logger.error(
 						"UserCloudlet did not receive authentication token.");
 			}
-			message.acknowledge();
+			context.consumer.acknowledge(arguments.getDelivery());
 			return ICallback.SUCCESS;
 		}
 
@@ -203,7 +200,6 @@ public class UserCloudlet {
 				CallbackArguments<UserCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
-			context.publisher.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -222,8 +218,8 @@ public class UserCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				UserCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<UserCloudletContext, LoggingData, Void> arguments) {
-			context.publisher.unregister();
+				GenericCallbackCompletionArguments<UserCloudletContext, Void> arguments) {
+			context.publisher.destroy();
 			return ICallback.SUCCESS;
 		}
 

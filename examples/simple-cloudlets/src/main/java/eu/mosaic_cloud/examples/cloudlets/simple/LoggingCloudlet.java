@@ -19,22 +19,18 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import java.util.concurrent.ExecutionException;
-
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -45,7 +41,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -191,7 +186,6 @@ public class LoggingCloudlet {
 				CallbackArguments<LoggingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
-			context.consumer.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -209,8 +203,8 @@ public class LoggingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> acknowledgeSucceeded(LoggingCloudletContext context,
-				CallbackArguments<LoggingCloudletContext> arguments) {
-			context.consumer.unregister();
+				GenericCallbackCompletionArguments<LoggingCloudletContext, Void> arguments) {
+			context.consumer.destroy();
 			return ICallback.SUCCESS;
 		}
 
@@ -218,9 +212,8 @@ public class LoggingCloudlet {
 		public CallbackCompletion<Void> consume(
 				LoggingCloudletContext context,
 				AmqpQueueConsumeCallbackArguments<LoggingCloudletContext, LoggingData, Void> arguments) {
-			AmqpQueueConsumeMessage<LoggingData> message = arguments
+			LoggingData data = arguments
 					.getMessage();
-			LoggingData data = message.getData();
 			this.logger.info(
 					"LoggingCloudlet received logging message for user "
 							+ data.user);
@@ -240,7 +233,7 @@ public class LoggingCloudlet {
 			}
 			AuthenticationToken aToken = new AuthenticationToken(token);
 			context.publisher.publish(aToken, null);
-			message.acknowledge();
+			context.consumer.acknowledge(arguments.getDelivery());
 			return ICallback.SUCCESS;
 		}
 
@@ -277,7 +270,6 @@ public class LoggingCloudlet {
 				CallbackArguments<LoggingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
-			context.publisher.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -296,8 +288,8 @@ public class LoggingCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				LoggingCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<LoggingCloudletContext, AuthenticationToken, Void> arguments) {
-			context.publisher.unregister();
+				GenericCallbackCompletionArguments<LoggingCloudletContext, Void> arguments) {
+			context.publisher.destroy();
 			return ICallback.SUCCESS;
 		}
 

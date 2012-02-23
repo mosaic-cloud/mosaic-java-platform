@@ -23,7 +23,7 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -43,13 +43,13 @@ public class DefaultAmqpQueueConsumerConnectorCallback<C, D, E>
 			IAmqpQueueConsumerConnectorCallback<C, D, E>
 {
 	@Override
-	public CallbackCompletion<Void> acknowledgeFailed (final C context, final CallbackArguments<C> arguments)
+	public CallbackCompletion<Void> acknowledgeFailed (final C context, final GenericCallbackCompletionArguments<C, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Acknowledge Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledgeSucceeded (final C context, final CallbackArguments<C> arguments)
+	public CallbackCompletion<Void> acknowledgeSucceeded (final C context, final GenericCallbackCompletionArguments<C, E> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Acknowledge Succeeded", true, false);
 	}

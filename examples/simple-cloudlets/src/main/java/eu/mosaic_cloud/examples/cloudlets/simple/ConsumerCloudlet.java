@@ -19,14 +19,13 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
@@ -115,7 +114,6 @@ public class ConsumerCloudlet {
 				CallbackArguments<ConsumerCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
-			context.consumer.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -131,8 +129,8 @@ public class ConsumerCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> acknowledgeSucceeded(ConsumerCloudletContext context,
-				CallbackArguments<ConsumerCloudletContext> arguments) {
-			context.consumer.unregister();
+				GenericCallbackCompletionArguments<ConsumerCloudletContext, Void> arguments) {
+			context.consumer.destroy();
 			return ICallback.SUCCESS;
 		}
 
@@ -141,12 +139,11 @@ public class ConsumerCloudlet {
 				ConsumerCloudletContext context,
 				AmqpQueueConsumeCallbackArguments<ConsumerCloudletContext, String, Void> arguments) {
 
-			AmqpQueueConsumeMessage<String> message = arguments.getMessage();
-			String data = message.getData();
+			String data = arguments.getMessage();
 			this.logger.info(
 					"ConsumerCloudlet received logging message for user "
 							+ data);
-			message.acknowledge();
+			context.consumer.acknowledge(arguments.getDelivery());
 			return ICallback.SUCCESS;
 		}
 

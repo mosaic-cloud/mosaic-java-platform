@@ -64,7 +64,7 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
     @Override
     public CallbackCompletion<Boolean> consume(final String queue, final String consumer,
             final boolean exclusive, final boolean autoAck,
-            final IAmqpQueueConsumerCallback consumerCallback) {
+            final IAmqpQueueRawConsumerCallback consumerCallback) {
         return this.proxy.consume(queue, consumer, exclusive, autoAck, consumerCallback);
     }
 

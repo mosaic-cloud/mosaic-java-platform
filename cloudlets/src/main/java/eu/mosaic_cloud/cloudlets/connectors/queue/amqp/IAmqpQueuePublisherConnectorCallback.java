@@ -17,9 +17,13 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for AMQP queue publishers. This will be implemented by cloudlets
@@ -32,9 +36,22 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of published data
  */
-public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> extends
-		IAmqpQueueConnectorCallback<Context> {
-
+public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra>
+		extends
+			IAmqpQueueConnectorCallback<Context>
+{
+	/**
+	 * Called when the publisher receives notification that the message
+	 * publishing could not be finished with success.
+	 * 
+	 * 
+	 * @param context
+	 *            the context of the cloudlet
+	 * @param arguments
+	 *            the arguments of the callback
+	 */
+	CallbackCompletion<Void> publishFailed (Context context, GenericCallbackCompletionArguments<Context, Extra> arguments);
+	
 	/**
 	 * Called when the publisher receives confirmation that the message
 	 * publishing finished successfully.
@@ -46,19 +63,5 @@ public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> e
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> publishSucceeded(Context context,
-			AmqpQueuePublishCallbackCompletionArguments<Context, Message, Extra> arguments);
-
-	/**
-	 * Called when the publisher receives notification that the message
-	 * publishing could not be finished with success.
-	 * 
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> publishFailed(Context context,
-			AmqpQueuePublishCallbackCompletionArguments<Context, Message, Extra> arguments);
+	CallbackCompletion<Void> publishSucceeded (Context context, GenericCallbackCompletionArguments<Context, Extra> arguments);
 }

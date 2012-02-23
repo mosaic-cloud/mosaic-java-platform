@@ -20,8 +20,6 @@
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
@@ -29,6 +27,7 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -119,7 +118,6 @@ public class PingCloudlet {
 				CallbackArguments<PingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// consumer
-			context.consumer.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -137,8 +135,8 @@ public class PingCloudlet {
 
 		@Override
 		public CallbackCompletion<Void> acknowledgeSucceeded(PingCloudletContext context,
-				CallbackArguments<PingCloudletContext> arguments) {
-			context.consumer.unregister();
+				GenericCallbackCompletionArguments<PingCloudletContext, Void> arguments) {
+			context.consumer.destroy();
 			return ICallback.SUCCESS;
 		}
 
@@ -146,15 +144,14 @@ public class PingCloudlet {
 		public CallbackCompletion<Void> consume(
 				PingCloudletContext context,
 				AmqpQueueConsumeCallbackArguments<PingCloudletContext, PongMessage, Void> arguments) {
-			AmqpQueueConsumeMessage<PongMessage> message = arguments
+			PongMessage data = arguments
 					.getMessage();
-			PongMessage data = message.getData();
 			String key = data.getKey();
 			PingPongData value = data.getValue();
 			this.logger.info(
 					"Ping Cloudlet received key-value pair: (" + key + ", "
 							+ value + ")");
-			message.acknowledge();
+			context.consumer.acknowledge(arguments.getDelivery());
 			return ICallback.SUCCESS;
 		}
 
@@ -190,7 +187,6 @@ public class PingCloudlet {
 				CallbackArguments<PingCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
-			context.publisher.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -209,8 +205,8 @@ public class PingCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				PingCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<PingCloudletContext, PingMessage, Void> arguments) {
-			context.publisher.unregister();
+				GenericCallbackCompletionArguments<PingCloudletContext, Void> arguments) {
+			context.publisher.destroy();
 			return ICallback.SUCCESS;
 		}
 	}

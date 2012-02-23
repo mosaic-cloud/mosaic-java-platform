@@ -20,7 +20,6 @@
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
@@ -43,10 +42,13 @@ public class QueueConsumerCallback extends
 	public CallbackCompletion<Void> consume(
 			IndexerCloudletContext context,
 			AmqpQueueConsumeCallbackArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
-		AmqpQueueConsumeMessage<JSONObject> message = arguments.getMessage();
+		JSONObject message = arguments.getMessage();
 
 		IndexWorkflow.indexNewFeed(context, message);
-		message.acknowledge();
+		if (this == context.batchConsumer)
+			context.batchConsumer.acknowledge(arguments.getDelivery());
+		else if (this == context.urgentConsumer)
+			context.urgentConsumer.acknowledge(arguments.getDelivery());
 		return ICallback.SUCCESS;
 	}
 

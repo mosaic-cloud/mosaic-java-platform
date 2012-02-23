@@ -138,10 +138,10 @@ public class IndexerCloudlet {
 				context.tasksStore.destroy();
 			}
 			if (context.urgentConsumer != null) {
-				context.urgentConsumer.unregister();
+				context.urgentConsumer.destroy();
 			}
 			if (context.batchConsumer != null) {
-				context.batchConsumer.unregister();
+				context.batchConsumer.destroy();
 			}
 			return ICallback.SUCCESS;
 		}

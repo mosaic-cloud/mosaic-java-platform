@@ -19,13 +19,12 @@
  */
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublishCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -113,7 +112,6 @@ public class PublisherCloudlet {
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			// if resource initialized successfully then just register as a
 			// publisher
-			context.publisher.register();
 			return ICallback.SUCCESS;
 		}
 
@@ -130,8 +128,8 @@ public class PublisherCloudlet {
 		@Override
 		public CallbackCompletion<Void> publishSucceeded(
 				PublisherCloudletContext context,
-				AmqpQueuePublishCallbackCompletionArguments<PublisherCloudletContext, String, Void> arguments) {
-			context.publisher.unregister();
+				GenericCallbackCompletionArguments<PublisherCloudletContext, Void> arguments) {
+			context.publisher.destroy();
 			return ICallback.SUCCESS;
 		}
 

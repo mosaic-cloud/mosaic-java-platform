@@ -28,7 +28,6 @@ import java.util.UUID;
 
 import com.sun.syndication.io.FeedException;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeMessage;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -43,7 +42,6 @@ public class IndexWorkflow {
 	private static MosaicLogger logger = MosaicLogger
 			.createLogger(IndexWorkflow.class);
 
-	private AmqpQueueConsumeMessage<JSONObject> recvMessage = null;
 	private UUID key;
 	private JSONObject indexMessage;
 	private IndexerCloudletContext context;
@@ -57,20 +55,19 @@ public class IndexWorkflow {
 	private JSONObject newTimeline;
 
 	private IndexWorkflow(IndexerCloudletContext context,
-			AmqpQueueConsumeMessage<JSONObject> recvMessage) {
+			JSONObject recvMessage) {
 		super();
 		this.parser = new FeedParser();
 		this.currentFeedMetaData = new JSONObject();
 		this.newFeedTask = new JSONObject();
 		this.newFeedItems = new JSONArray();
 		this.context = context;
-		this.recvMessage = recvMessage;
-		this.indexMessage = recvMessage.getData();
+		this.indexMessage = recvMessage;
 	}
 
 	private static final IndexWorkflow createIndexer(
 			IndexerCloudletContext context,
-			AmqpQueueConsumeMessage<JSONObject> recvMessage) {
+			JSONObject recvMessage) {
 		IndexWorkflow aIndexer = new IndexWorkflow(context, recvMessage);
 		aIndexer.key = UUID.randomUUID();
 		IndexWorkflow.indexers.put(aIndexer.key, aIndexer);
@@ -82,7 +79,7 @@ public class IndexWorkflow {
 	}
 
 	public static void indexNewFeed(IndexerCloudletContext context,
-			AmqpQueueConsumeMessage<JSONObject> recvMessage) {
+			JSONObject recvMessage) {
 
 		IndexWorkflow aIndexer = IndexWorkflow.createIndexer(context,
 				recvMessage);

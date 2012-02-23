@@ -43,7 +43,6 @@ public final class BatchConsumerCallback extends QueueConsumerCallback {
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		// if resource initialized successfully then just register as a
 		// consumer
-		context.batchConsumer.register();
 		return ICallback.SUCCESS;
 	}
 

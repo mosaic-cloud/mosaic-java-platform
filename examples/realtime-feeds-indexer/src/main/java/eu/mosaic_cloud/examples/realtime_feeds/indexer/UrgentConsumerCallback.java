@@ -43,7 +43,6 @@ public final class UrgentConsumerCallback extends QueueConsumerCallback {
 			CallbackArguments<IndexerCloudletContext> arguments) {
 		// if resource initialized successfully then just register as a
 		// consumer
-		context.urgentConsumer.register();
 		return ICallback.SUCCESS;
 	}
 

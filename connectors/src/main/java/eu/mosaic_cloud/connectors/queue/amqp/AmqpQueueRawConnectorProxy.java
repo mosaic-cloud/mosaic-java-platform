@@ -71,7 +71,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
                                                                         // 2:36
                                                                         // PM
 
-    private final ConcurrentHashMap<String, IAmqpQueueConsumerCallback> pendingConsumers;
+    private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
     private final ResponseHandlerMap consumerMessages;
 
     /**
@@ -94,7 +94,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
 
     private AmqpQueueRawConnectorProxy(final IConfiguration config, final Channel channel) {
         super(config, channel);
-        this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueConsumerCallback>();
+        this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
         this.consumerMessages = new ResponseHandlerMap();
     }
 
@@ -133,7 +133,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
 
     public CallbackCompletion<Boolean> consume(final String queue, final String consumer,
             final boolean exclusive, final boolean autoAck,
-            final IAmqpQueueConsumerCallback consumerCallback) {
+            final IAmqpQueueRawConsumerCallback consumerCallback) {
         CallbackCompletion<Boolean> result;
         final CompletionToken token = this.generateToken();
         final AmqpPayloads.ConsumeRequest.Builder requestBuilder = AmqpPayloads.ConsumeRequest
@@ -271,7 +271,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
             final String consumerId = cancelOkPayload.getConsumerTag();
             this.logger.debug("QueueConnectorProxy - Received CANCEL_OK " + " for consumer "
                     + consumerId);
-            final IAmqpQueueConsumerCallback callback = this.pendingConsumers.remove(consumerId);
+            final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.remove(consumerId);
             callback.handleCancelOk(consumerId);
             this.consumerMessages.succeed(consumerId, Boolean.TRUE);
             this.consumerMessages.cancel(consumerId);
@@ -283,7 +283,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
             final String consumerId = scancelPayload.getConsumerTag();
             this.logger.debug("QueueConnectorProxy - Received SERVER_CANCEL " + " for consumer "
                     + consumerId);
-            // final IAmqpQueueConsumerCallback callback =
+            // final IAmqpQueueRawConsumerCallback callback =
             this.pendingConsumers.remove(consumerId);
             // callback.handleCancelOk(consumerId);
             this.consumerMessages.cancel(consumerId);
@@ -294,7 +294,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
             final String consumerId = consumeOkPayload.getConsumerTag();
             this.logger.debug("QueueConnectorProxy - Received CONSUME_OK " + " for consumer "
                     + consumerId);
-            final IAmqpQueueConsumerCallback callback = this.pendingConsumers.get(consumerId);
+            final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.get(consumerId);
             callback.handleConsumeOk(consumerId);
             this.consumerMessages.succeed(consumerId, Boolean.TRUE);
         }
@@ -321,7 +321,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
             final AmqpInboundMessage mssg = new AmqpInboundMessage(consumerId, deliveryTag,
                     exchange, routingKey, data, deliveryMode == 2, replyTo, null,
                     delivery.getContentType(), correlationId, null);
-            final IAmqpQueueConsumerCallback callback = this.pendingConsumers.get(consumerId);
+            final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.get(consumerId);
             callback.handleDelivery(mssg);
         }
             break;
@@ -331,7 +331,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
             this.logger.debug("QueueConnectorProxy - Received SHUTDOWN " + " for consumer "
                     + consumerId);
             final String signalMssg = downPayload.getMessage();
-            final IAmqpQueueConsumerCallback callback = this.pendingConsumers.remove(consumerId);
+            final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.remove(consumerId);
             callback.handleShutdownSignal(consumerId, signalMssg);
         }
             break;
