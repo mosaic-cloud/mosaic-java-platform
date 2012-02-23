@@ -23,6 +23,7 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.core.ResponseHandlerMap;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpExchangeType;
@@ -58,7 +59,13 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
  * @author Georgiana Macariu
  * 
  */
-public final class AmqpQueueConnectorProxy extends BaseConnectorProxy { // NOPMD by georgiana on 2/21/12 2:36 PM
+public final class AmqpQueueConnectorProxy extends BaseConnectorProxy { // NOPMD
+                                                                        // by
+                                                                        // georgiana
+                                                                        // on
+                                                                        // 2/21/12
+                                                                        // 2:36
+                                                                        // PM
 
     private final ConcurrentHashMap<String, IAmqpQueueConsumerCallback> pendingConsumers;
     private final ResponseHandlerMap consumerMessages;

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
 /**
@@ -26,5 +27,5 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
  * 
  */
 public enum ConnectorStatus {
-	CREATED, INITIALIZING, INITIALIZED, READY, DESTROYING, DESTROYED
+    CREATED, INITIALIZING, INITIALIZED, READY, DESTROYING, DESTROYED
 }

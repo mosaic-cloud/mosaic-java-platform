@@ -20,13 +20,10 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.kvstore.generic;
 
-
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
-
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-
 
 /**
  * Generic cloudlet-level accessor for key value storages. Cloudlets will use an
@@ -38,10 +35,13 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
  *            the type of the context of the cloudlet using the accessor
  */
 public class GenericKvStoreConnector<Context, Value, Extra>
-		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>, IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra>
-{
-	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> connector, final IConfiguration config, final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context context)
-	{
-		super (cloudlet, connector, config, callback, context);
-	}
+        extends
+        BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>, IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra> {
+    public GenericKvStoreConnector(
+            final ICloudletController<?> cloudlet,
+            final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> connector,
+            final IConfiguration config,
+            final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context context) {
+        super(cloudlet, connector, config, callback, context);
+    }
 }

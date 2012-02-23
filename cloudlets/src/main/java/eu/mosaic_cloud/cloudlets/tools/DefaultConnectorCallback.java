@@ -20,11 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
-
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
 
 /**
  * Default resource accessor callback.
@@ -34,32 +32,29 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultConnectorCallback<C>
-		extends DefaultCallback<C>
-		implements
-			IConnectorCallback<C>
-{
-	@Override
-	public CallbackCompletion<Void> destroyFailed (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Resource Destroy Failed", false, false);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> destroySucceeded (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Resource Destroy Succeeded", true, false);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> initializeFailed (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Resource Initialize Failed", false, true);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> initializeSucceeded (final C context, final CallbackArguments<C> arguments)
-	{
-		return this.handleUnhandledCallback (arguments, "Resource Initialize Succeeded", true, true);
-	}
+public class DefaultConnectorCallback<C> extends DefaultCallback<C> implements
+        IConnectorCallback<C> {
+    @Override
+    public CallbackCompletion<Void> destroyFailed(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Resource Destroy Failed", false, false);
+    }
+
+    @Override
+    public CallbackCompletion<Void> destroySucceeded(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded", true, false);
+    }
+
+    @Override
+    public CallbackCompletion<Void> initializeFailed(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Resource Initialize Failed", false, true);
+    }
+
+    @Override
+    public CallbackCompletion<Void> initializeSucceeded(final C context,
+            final CallbackArguments<C> arguments) {
+        return this.handleUnhandledCallback(arguments, "Resource Initialize Succeeded", true, true);
+    }
 }

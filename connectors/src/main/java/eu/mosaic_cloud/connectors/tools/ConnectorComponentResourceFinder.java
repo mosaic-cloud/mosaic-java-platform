@@ -59,7 +59,7 @@ public class ConnectorComponentResourceFinder {
      */
     public void findResource(final ResourceType type, final ThreadingContext threading,
             final IConnectorResourceFinderCallback callback) {
-        logger.trace("ResourceFinder - find resource");
+        this.logger.trace("ResourceFinder - find resource");
         final DeferredFuture<ComponentCallReply> replyFuture = ConnectorComponentCallbacks.callbacks
                 .findDriver(type);
         final Worker worker = new Worker(replyFuture, callback);

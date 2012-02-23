@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;
@@ -73,7 +74,12 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
             requestBuilder.setExpTime(exp);
             final Message message = new Message(MemcachedMessage.ADD_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD by georgiana on 2/20/12 5:47 PM
+            result = this.sendRequest(message, token, Boolean.class); // NOPMD
+                                                                      // by
+                                                                      // georgiana
+                                                                      // on
+                                                                      // 2/20/12
+                                                                      // 5:47 PM
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -93,7 +99,12 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.APPEND_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD by georgiana on 2/20/12 5:47 PM
+            result = this.sendRequest(message, token, Boolean.class); // NOPMD
+                                                                      // by
+                                                                      // georgiana
+                                                                      // on
+                                                                      // 2/20/12
+                                                                      // 5:47 PM
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -114,7 +125,12 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.CAS_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD by georgiana on 2/20/12 5:47 PM
+            result = this.sendRequest(message, token, Boolean.class); // NOPMD
+                                                                      // by
+                                                                      // georgiana
+                                                                      // on
+                                                                      // 2/20/12
+                                                                      // 5:47 PM
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -139,7 +155,12 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.PREPEND_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD by georgiana on 2/20/12 5:47 PM
+            result = this.sendRequest(message, token, Boolean.class); // NOPMD
+                                                                      // by
+                                                                      // georgiana
+                                                                      // on
+                                                                      // 2/20/12
+                                                                      // 5:47 PM
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -160,7 +181,12 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.REPLACE_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD by georgiana on 2/20/12 5:47 PM
+            result = this.sendRequest(message, token, Boolean.class); // NOPMD
+                                                                      // by
+                                                                      // georgiana
+                                                                      // on
+                                                                      // 2/20/12
+                                                                      // 5:47 PM
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -172,7 +198,7 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
     @Override
     protected void processResponse(final Message message) {
         final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
-        if(kvMessage==KeyValueMessage.GET_REPLY) {
+        if (kvMessage == KeyValueMessage.GET_REPLY) {
             final KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
             final CompletionToken token = getPayload.getToken();
             this.logger.debug("KvStoreConnectorProxy - Received "
@@ -183,7 +209,8 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
                 final Map<String, Object> values = new HashMap<String, Object>();
                 for (final KVEntry entry : resultEntries) {
                     try {
-                        final T value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray());
+                        final T value = this.encoder.decode(resultEntries.get(0).getValue()
+                                .toByteArray());
                         values.put(entry.getKey(), value);
                     } catch (final EncodingException exception) {
                         this.pendingRequests.fail(token.getMessageId(), exception);
@@ -193,8 +220,7 @@ public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStore
                 this.pendingRequests.succeed(token.getMessageId(), values);
             }
             super.processResponse(message);
-        }
-        else{
+        } else {
             super.processResponse(message);
         }
     }

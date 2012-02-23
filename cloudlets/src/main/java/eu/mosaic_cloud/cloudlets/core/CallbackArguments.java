@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.cloudlets.core;
 
 /**
@@ -30,25 +31,25 @@ package eu.mosaic_cloud.cloudlets.core;
  */
 public class CallbackArguments<Context> {
 
-	protected ICloudletController<?> cloudlet;
+    protected ICloudletController<?> cloudlet;
 
-	/**
-	 * Creates a new argument
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet controller
-	 */
-	public CallbackArguments(ICloudletController<?> cloudlet) {
-		super();
-		this.cloudlet = cloudlet;
-	}
+    /**
+     * Creates a new argument
+     * 
+     * @param cloudlet
+     *            the cloudlet controller
+     */
+    public CallbackArguments(ICloudletController<?> cloudlet) {
+        super();
+        this.cloudlet = cloudlet;
+    }
 
-	/**
-	 * Returns the cloudlet controller.
-	 * 
-	 * @return the cloudlet controller
-	 */
-	public ICloudletController<?> getCloudlet() {
-		return this.cloudlet;
-	}
+    /**
+     * Returns the cloudlet controller.
+     * 
+     * @return the cloudlet controller
+     */
+    public ICloudletController<?> getCloudlet() {
+        return this.cloudlet;
+    }
 }

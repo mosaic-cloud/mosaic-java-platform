@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -88,7 +89,8 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
     @Override
     public CallbackCompletion<Void> called(final ComponentController component,
             final ComponentCallRequest request) {
-        ComponentCallReply reply = null; // NOPMD by georgiana on 2/21/12 2:49 PM
+        ComponentCallReply reply = null; // NOPMD by georgiana on 2/21/12 2:49
+                                         // PM
         boolean succeeded = false; // NOPMD by georgiana on 2/21/12 2:49 PM
         Preconditions.checkState(this.component == component);
         Preconditions.checkState((this.status != Status.Terminated)
@@ -181,7 +183,8 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         final ComponentCallReference callReference = ComponentCallReference.create();
         final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture
                 .create(ComponentCallReply.class);
-        ComponentIdentifier componentId = null; // NOPMD by georgiana on 2/21/12 2:47 PM
+        ComponentIdentifier componentId = null; // NOPMD by georgiana on 2/21/12
+                                                // 2:47 PM
         switch (type) {
         case AMQP:
             componentId = this.amqpGroup;
@@ -217,7 +220,13 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
     }
 
     @Override
-    public void registeredCallbacks(final Callbacks trigger, final CallbackIsolate isolate) { // NOPMD by georgiana on 2/21/12 2:47 PM
+    public void registeredCallbacks(final Callbacks trigger, final CallbackIsolate isolate) { // NOPMD
+                                                                                              // by
+                                                                                              // georgiana
+                                                                                              // on
+                                                                                              // 2/21/12
+                                                                                              // 2:47
+                                                                                              // PM
     }
 
     @Override
@@ -257,7 +266,8 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         return null;
     }
 
-    @Override // NOPMD by georgiana on 2/21/12 2:45 PM
+    @Override
+    // NOPMD by georgiana on 2/21/12 2:45 PM
     public void unregisteredCallbacks(final Callbacks trigger) {
     }
 

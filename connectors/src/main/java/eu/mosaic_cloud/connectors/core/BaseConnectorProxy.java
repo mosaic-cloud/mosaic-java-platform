@@ -23,6 +23,7 @@ package eu.mosaic_cloud.connectors.core;
 import java.util.UUID;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
