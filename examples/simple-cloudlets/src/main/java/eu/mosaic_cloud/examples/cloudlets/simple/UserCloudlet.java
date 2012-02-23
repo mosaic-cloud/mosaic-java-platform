@@ -111,7 +111,7 @@ public class UserCloudlet {
 			this.logger.info(
 					"UserCloudlet consumer unregistered successfully.");
 			// if unregistered as consumer is successful then destroy resource
-			ICloudletController<UserCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.consumer.destroy();
 			context.consumerRunning = false;

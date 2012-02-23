@@ -131,7 +131,7 @@ public class PongCloudlet {
 					arguments.getValue());
 			context.publisher.publish(pong);
 
-			ICloudletController<PongCloudletContext> cloudlet = arguments
+			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			try {
 				context.kvStore.destroy();

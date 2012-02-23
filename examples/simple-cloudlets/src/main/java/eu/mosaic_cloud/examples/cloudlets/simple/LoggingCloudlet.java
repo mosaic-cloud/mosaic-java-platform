@@ -224,27 +224,22 @@ public class LoggingCloudlet {
 			this.logger.info(
 					"LoggingCloudlet received logging message for user "
 							+ data.user);
-			IResult<String> result = context.kvStore.get(data.user, null);
+			CallbackCompletion<String> result = context.kvStore.get(data.user, null);
 			String passOb;
 			String token = null;
-			try {
-				passOb = result.getResult();
-				if (passOb instanceof String) {
-					String pass = (String) passOb;
-					if (pass.equals(data.password)) {
-						token = ConfigUtils.resolveParameter(arguments
-								.getCloudlet().getConfiguration(),
-								"test.token", String.class, "token");
-						context.kvStore.set(data.user, token, null);
-					}
+			result.await();
+			passOb = result.getOutcome();
+			if (passOb instanceof String) {
+				String pass = (String) passOb;
+				if (pass.equals(data.password)) {
+					token = ConfigUtils.resolveParameter(arguments
+							.getCloudlet().getConfiguration(),
+							"test.token", String.class, "token");
+					context.kvStore.set(data.user, token, null);
 				}
-				AuthenticationToken aToken = new AuthenticationToken(token);
-				context.publisher.publish(aToken);
-			} catch (InterruptedException e) {
-				ExceptionTracer.traceIgnored(e);
-			} catch (ExecutionException e) {
-				ExceptionTracer.traceIgnored(e);
 			}
+			AuthenticationToken aToken = new AuthenticationToken(token);
+			context.publisher.publish(aToken);
 			message.acknowledge();
 			return ICallback.SUCCESS;
 		}
