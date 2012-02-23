@@ -34,13 +34,13 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the context of the cloudlet using the accessor
  */
-public class GenericKvStoreConnector<C, D, E>
-		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<D>, IKvStoreConnectorCallback<C, D, E>, C, D, E>
+public class GenericKvStoreConnector<Context, Value, Extra>
+		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>, IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra>
 {
-	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<D> connector, final IConfiguration config, final IKvStoreConnectorCallback<C, D, E> callback, final C context)
+	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> connector, final IConfiguration config, final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context context)
 	{
 		super (cloudlet, connector, config, callback, context);
 	}

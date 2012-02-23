@@ -19,7 +19,7 @@
  */
 package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackCompletionArguments;
@@ -31,14 +31,14 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the context of the cloudlet
  */
-public class KvStoreCallbackCompletionArguments<C, D, E> extends CallbackCompletionArguments<C> {
+public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends CallbackCompletionArguments<Context> {
 
 	private final List<String> keys;
-	private final D value;
-	private final E extra;
+	private final Value value;
+	private final Extra extra;
 
 	/**
 	 * Creates a new argument.
@@ -54,10 +54,9 @@ public class KvStoreCallbackCompletionArguments<C, D, E> extends CallbackComplet
 	 *            some application specific object
 	 */
 	public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet,
-			String key, D value, E extra) {
+			String key, Value value, Extra extra) {
 		super(cloudlet);
-		this.keys = new ArrayList<String>();
-		this.keys.add(key);
+		this.keys = Arrays.asList (key);
 		this.value = value;
 		this.extra = extra;
 	}
@@ -76,8 +75,8 @@ public class KvStoreCallbackCompletionArguments<C, D, E> extends CallbackComplet
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KvStoreCallbackCompletionArguments(ICloudletController<C> cloudlet,
-			List<String> keys, D value, E extra) {
+	public KvStoreCallbackCompletionArguments(ICloudletController<Context> cloudlet,
+			List<String> keys, Value value, Extra extra) {
 		super(cloudlet);
 		this.keys = keys;
 		this.value = value;
@@ -89,7 +88,7 @@ public class KvStoreCallbackCompletionArguments<C, D, E> extends CallbackComplet
 	 * 
 	 * @return the value field of the argument
 	 */
-	public D getValue() {
+	public Value getValue() {
 		return this.value;
 	}
 
@@ -118,7 +117,7 @@ public class KvStoreCallbackCompletionArguments<C, D, E> extends CallbackComplet
 	 * @return ny application specific data used for the key-value store
 	 *         operation
 	 */
-	public E getExtra() {
+	public Extra getExtra() {
 		return this.extra;
 	}
 

@@ -30,12 +30,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
-public abstract class BaseKvStoreConnector<CB extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<D>, CC extends IKvStoreConnectorCallback<C, D, E>, C, D, E>
-		extends BaseConnector<CB, CC, C>
+public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<Value>, Callback extends IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra>
+		extends BaseConnector<Connector, Callback, Context>
 		implements
-			IKvStoreConnector<C, D, E>
+			IKvStoreConnector<Context, Value, Extra>
 {
-	protected BaseKvStoreConnector (final ICloudletController<?> cloudlet, final CB connector, final IConfiguration config, final CC callback, final C context)
+	protected BaseKvStoreConnector (final ICloudletController<?> cloudlet, final Connector connector, final IConfiguration config, final Callback callback, final Context context)
 	{
 		super (cloudlet, connector, config, callback, context);
 	}
@@ -47,7 +47,7 @@ public abstract class BaseKvStoreConnector<CB extends eu.mosaic_cloud.connectors
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> delete (final String key, final E extra)
+	public CallbackCompletion<Boolean> delete (final String key, final Extra extra)
 	{
 		final CallbackCompletion<Boolean> completion = this.connector.delete (key);
 		if (this.callback != null)
@@ -57,23 +57,23 @@ public abstract class BaseKvStoreConnector<CB extends eu.mosaic_cloud.connectors
 				{
 					assert (completion_ == completion);
 					if (completion.getException () != null)
-						return BaseKvStoreConnector.this.callback.deleteFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (BaseKvStoreConnector.this.cloudlet, key, (D) completion.getException (), extra));
-					return BaseKvStoreConnector.this.callback.deleteSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (BaseKvStoreConnector.this.cloudlet, key, null, extra));
+						return BaseKvStoreConnector.this.callback.deleteFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, Value, Extra> (BaseKvStoreConnector.this.cloudlet, key, (Value) completion.getException (), extra));
+					return BaseKvStoreConnector.this.callback.deleteSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, Value, Extra> (BaseKvStoreConnector.this.cloudlet, key, null, extra));
 				}
 			});
 		return (completion);
 	}
 	
 	@Override
-	public CallbackCompletion<D> get (final String key)
+	public CallbackCompletion<Value> get (final String key)
 	{
 		return (this.get (key, null));
 	}
 	
 	@Override
-	public CallbackCompletion<D> get (final String key, final E extra)
+	public CallbackCompletion<Value> get (final String key, final Extra extra)
 	{
-		final CallbackCompletion<D> completion = this.connector.get (key);
+		final CallbackCompletion<Value> completion = this.connector.get (key);
 		if (this.callback != null)
 			completion.observe (new CallbackCompletionObserver () {
 				@Override
@@ -81,8 +81,8 @@ public abstract class BaseKvStoreConnector<CB extends eu.mosaic_cloud.connectors
 				{
 					assert (completion_ == completion);
 					if (completion.getException () != null)
-						return BaseKvStoreConnector.this.callback.getFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (BaseKvStoreConnector.this.cloudlet, key, (D) completion.getException (), extra));
-					return BaseKvStoreConnector.this.callback.getSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (BaseKvStoreConnector.this.cloudlet, key, completion.getOutcome (), extra));
+						return BaseKvStoreConnector.this.callback.getFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, Value, Extra> (BaseKvStoreConnector.this.cloudlet, key, (Value) completion.getException (), extra));
+					return BaseKvStoreConnector.this.callback.getSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, Value, Extra> (BaseKvStoreConnector.this.cloudlet, key, completion.getOutcome (), extra));
 				}
 			});
 		return (completion);
@@ -95,7 +95,7 @@ public abstract class BaseKvStoreConnector<CB extends eu.mosaic_cloud.connectors
 	}
 	
 	@Override
-	public CallbackCompletion<List<String>> list (final E extra)
+	public CallbackCompletion<List<String>> list (final Extra extra)
 	{
 		final CallbackCompletion<List<String>> completion = this.connector.list ();
 		if (this.callback != null)
@@ -105,21 +105,21 @@ public abstract class BaseKvStoreConnector<CB extends eu.mosaic_cloud.connectors
 				{
 					assert (completion_ == completion);
 					if (completion.getException () != null)
-						return BaseKvStoreConnector.this.callback.listFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, List<String>, E> (BaseKvStoreConnector.this.cloudlet, null, (List<String>) completion.getException (), extra));
-					return BaseKvStoreConnector.this.callback.listSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, List<String>, E> (BaseKvStoreConnector.this.cloudlet, null, completion.getOutcome (), extra));
+						return BaseKvStoreConnector.this.callback.listFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, List<String>, Extra> (BaseKvStoreConnector.this.cloudlet, null, (List<String>) completion.getException (), extra));
+					return BaseKvStoreConnector.this.callback.listSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, List<String>, Extra> (BaseKvStoreConnector.this.cloudlet, null, completion.getOutcome (), extra));
 				}
 			});
 		return (completion);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final D value)
+	public CallbackCompletion<Boolean> set (final String key, final Value value)
 	{
 		return (this.set (key, value, null));
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final D value, final E extra)
+	public CallbackCompletion<Boolean> set (final String key, final Value value, final Extra extra)
 	{
 		final CallbackCompletion<Boolean> completion = this.connector.set (key, value);
 		if (this.callback != null)
@@ -129,8 +129,8 @@ public abstract class BaseKvStoreConnector<CB extends eu.mosaic_cloud.connectors
 				{
 					assert (completion_ == completion);
 					if (completion.getException () != null)
-						return BaseKvStoreConnector.this.callback.setFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (BaseKvStoreConnector.this.cloudlet, key, (D) completion.getException (), extra));
-					return BaseKvStoreConnector.this.callback.setSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<C, D, E> (BaseKvStoreConnector.this.cloudlet, key, value, extra));
+						return BaseKvStoreConnector.this.callback.setFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, Value, Extra> (BaseKvStoreConnector.this.cloudlet, key, (Value) completion.getException (), extra));
+					return BaseKvStoreConnector.this.callback.setSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<Context, Value, Extra> (BaseKvStoreConnector.this.cloudlet, key, value, extra));
 				}
 			});
 		return (completion);

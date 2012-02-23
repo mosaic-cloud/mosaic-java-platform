@@ -29,10 +29,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the context of the cloudlet
  */
-public interface IKvStoreConnector<C, D, E> extends IConnector<C>, eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<D> {
+public interface IKvStoreConnector<Context, Value, Extra> extends IConnector<Context>, eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<Value> {
 
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -45,7 +45,7 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C>, eu.mosaic_clo
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> set(String key, D value, E extra);
+	CallbackCompletion<Boolean> set(String key, Value value, Extra extra);
 
 	/**
 	 * Gets data associated with a single key.
@@ -56,7 +56,7 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C>, eu.mosaic_clo
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<D> get(String key, E extra);
+	CallbackCompletion<Value> get(String key, Extra extra);
 
 	/**
 	 * Deletes the given key.
@@ -67,7 +67,7 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C>, eu.mosaic_clo
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> delete(String key, E extra);
+	CallbackCompletion<Boolean> delete(String key, Extra extra);
 
 	/**
 	 * Lists the keys in the bucket associated with the accessor.
@@ -76,5 +76,5 @@ public interface IKvStoreConnector<C, D, E> extends IConnector<C>, eu.mosaic_clo
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<List<String>> list(E extra);
+	CallbackCompletion<List<String>> list(Extra extra);
 }

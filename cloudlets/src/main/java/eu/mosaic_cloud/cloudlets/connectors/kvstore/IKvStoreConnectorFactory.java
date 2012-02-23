@@ -11,5 +11,5 @@ public interface IKvStoreConnectorFactory
 		extends
 			IConnectorFactory<IKvStoreConnector<?, ?, ?>>
 {
-	<Context, Data, Extra> IKvStoreConnector<Context, Data, Extra> create (IConfiguration configuration, Class<Data> dataClass, DataEncoder<? super Data> dataEncoder, IKvStoreConnectorCallback<Context, Data, Extra> callback, Context callbackContext);
+	<Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create (IConfiguration configuration, Class<Value> dataClass, DataEncoder<? super Value> dataEncoder, IKvStoreConnectorCallback<Context, Value, Extra> callback, Context callbackContext);
 }

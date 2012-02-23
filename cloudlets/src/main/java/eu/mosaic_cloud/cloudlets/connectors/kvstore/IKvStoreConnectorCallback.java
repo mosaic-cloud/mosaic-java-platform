@@ -31,11 +31,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the cloudlet context
  */
-public interface IKvStoreConnectorCallback<C, D, E> extends
-		IConnectorCallback<C> {
+public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
+		IConnectorCallback<Context> {
 
 	/**
 	 * Called when the set operation completed successfully.
@@ -45,7 +45,7 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> setSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
+	CallbackCompletion<Void> setSucceeded(Context context, KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
 	/**
 	 * Called when the set operation completed unsuccessfully. The error can be
@@ -56,7 +56,7 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> setFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
+	CallbackCompletion<Void> setFailed(Context context, KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
 	/**
 	 * Called when the get operation completed successfully. The result of the
@@ -67,7 +67,7 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> getSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
+	CallbackCompletion<Void> getSucceeded(Context context, KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
 	/**
 	 * Called when the get operation completed unsuccessfully. The error can be
@@ -78,7 +78,7 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> getFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
+	CallbackCompletion<Void> getFailed(Context context, KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
 	/**
 	 * Called when the delete operation completed successfully.
@@ -88,7 +88,7 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> deleteSucceeded(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
+	CallbackCompletion<Void> deleteSucceeded(Context context, KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
 	/**
 	 * Called when the delete operation completed unsuccessfully. The error can
@@ -99,7 +99,7 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> deleteFailed(C context, KvStoreCallbackCompletionArguments<C, D, E> arguments);
+	CallbackCompletion<Void> deleteFailed(Context context, KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 	
 	/**
 	 * Called when the list operation completed successfully. The result of the
@@ -110,7 +110,7 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> listSucceeded(C context, KvStoreCallbackCompletionArguments<C, List<String>, E> arguments);
+	CallbackCompletion<Void> listSucceeded(Context context, KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
 
 	/**
 	 * Called when the list operation completed unsuccessfully. The error can be
@@ -121,5 +121,5 @@ public interface IKvStoreConnectorCallback<C, D, E> extends
 	 * @param arguments
 	 *            callback arguments
 	 */
-	CallbackCompletion<Void> listFailed(C context, KvStoreCallbackCompletionArguments<C, List<String>, E> arguments);
+	CallbackCompletion<Void> listFailed(Context context, KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
 }
