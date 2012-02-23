@@ -26,6 +26,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
@@ -53,8 +56,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**

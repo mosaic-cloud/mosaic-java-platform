@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.platform.interop.idl;
+package eu.mosaic_cloud.platform.interop.tools;
 
 /**
  * Data class holding interoperability channel parameters.

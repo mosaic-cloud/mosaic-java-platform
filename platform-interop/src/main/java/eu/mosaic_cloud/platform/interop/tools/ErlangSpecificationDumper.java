@@ -17,33 +17,21 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.platform.interop.kvstore;
 
-import eu.mosaic_cloud.interoperability.core.RoleSpecification;
-import eu.mosaic_cloud.interoperability.tools.Identifiers;
+package eu.mosaic_cloud.platform.interop.tools;
 
-/**
- * Enum of the possible role of the participants in an Key-Value session.
- * 
- * @author Georgiana Macariu
- * 
- */
-public enum KeyValueRole implements RoleSpecification {
-	CONNECTOR(), DRIVER();
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 
-	public final String identifier;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
-	private KeyValueRole() {
-		this.identifier = Identifiers.generate(this);
-	}
 
-	@Override
-	public String getIdentifier() {
-		return this.identifier;
-	}
 
-	@Override
-	public String getQualifiedName() {
-		return (Identifiers.generateName(this));
+public class ErlangSpecificationDumper {
+
+	public static final void main(final String[] arguments) {
+		eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(
+				arguments, AmqpSession.values());
+		eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(
+				arguments, KeyValueSession.values());
 	}
 }

@@ -17,23 +17,23 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.platform.interop.amqp;
+package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 /**
- * Enum of the possible role of the participants in an AMQP session.
+ * Enum of the possible role of the participants in an Key-Value session.
  * 
  * @author Georgiana Macariu
  * 
  */
-public enum AmqpRole implements RoleSpecification {
+public enum KeyValueRole implements RoleSpecification {
 	CONNECTOR(), DRIVER();
 
 	public final String identifier;
 
-	private AmqpRole() {
+	private KeyValueRole() {
 		this.identifier = Identifiers.generate(this);
 	}
 

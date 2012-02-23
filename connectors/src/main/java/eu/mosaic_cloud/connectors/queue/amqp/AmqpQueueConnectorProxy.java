@@ -22,6 +22,10 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+
+
 import com.google.protobuf.ByteString;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
@@ -34,8 +38,6 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-import eu.mosaic_cloud.platform.interop.amqp.AmqpMessage;
-import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error;

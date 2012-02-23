@@ -23,6 +23,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedMessage;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
+
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
@@ -49,10 +54,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequ
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.interop.kvstore.MemcachedMessage;
-import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**

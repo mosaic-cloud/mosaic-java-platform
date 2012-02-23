@@ -17,43 +17,50 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.platform.interop.kvstore;
+package eu.mosaic_cloud.platform.interop.specs.kvstore;
+
+import eu.mosaic_cloud.platform.interop.tools.DefaultPBPayloadCoder;
 
 import com.google.protobuf.GeneratedMessage;
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
-import eu.mosaic_cloud.platform.interop.idl.DefaultPBPayloadCoder;
-import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
+import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
 
 /**
- * Enum containing all possible MEMCACHED connector-driver messages.
+ * Enum containing all possible AMQP connector-driver messages.
  * 
  * @author Georgiana Macariu
  * 
  */
-public enum MemcachedMessage implements MessageSpecification {
-
-	APPEND_REQUEST(MessageType.Exchange, MemcachedPayloads.AppendRequest.class), PREPEND_REQUEST(
-			MessageType.Exchange, MemcachedPayloads.PrependRequest.class), ADD_REQUEST(
-			MessageType.Exchange, MemcachedPayloads.AddRequest.class), REPLACE_REQUEST(
-			MessageType.Exchange, MemcachedPayloads.ReplaceRequest.class), CAS_REQUEST(
-			MessageType.Exchange, MemcachedPayloads.CasRequest.class);
+public enum KeyValueMessage implements MessageSpecification {
+	ABORTED(MessageType.Termination, IdlCommon.AbortRequest.class), ACCESS(
+			MessageType.Initiation, KeyValuePayloads.InitRequest.class), ERROR(
+			MessageType.Exchange, IdlCommon.Error.class), OK(
+			MessageType.Exchange, IdlCommon.Ok.class), NOK(
+			MessageType.Exchange, IdlCommon.NotOk.class), GET_REQUEST(
+			MessageType.Exchange, KeyValuePayloads.GetRequest.class), GET_REPLY(
+			MessageType.Exchange, KeyValuePayloads.GetReply.class), SET_REQUEST(
+			MessageType.Exchange, KeyValuePayloads.SetRequest.class), DELETE_REQUEST(
+			MessageType.Exchange, KeyValuePayloads.DeleteRequest.class), LIST_REQUEST(
+			MessageType.Exchange, KeyValuePayloads.ListRequest.class), LIST_REPLY(
+			MessageType.Exchange, KeyValuePayloads.ListReply.class);
 
 	public PayloadCoder coder = null;
 	public final String identifier;
 	public final MessageType type;
 
 	/**
-	 * Creates a new Memcached message.
+	 * Creates a new Key-Value message.
 	 * 
 	 * @param type
 	 *            the type of the message (initiation, exchange or termination)
 	 * @param clasz
 	 *            the class containing the payload of the message
 	 */
-	MemcachedMessage(MessageType type, Class<? extends GeneratedMessage> clasz) {
+	KeyValueMessage(MessageType type, Class<? extends GeneratedMessage> clasz) {
 		this.identifier = Identifiers.generate(this);
 		this.type = type;
 		if (clasz != null) {

@@ -24,6 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedMessage;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
+
 import com.google.protobuf.ByteString;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
@@ -39,9 +43,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
-import eu.mosaic_cloud.platform.interop.kvstore.MemcachedMessage;
-import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.platform.interop.kvstore;
+package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -29,25 +29,29 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 /**
- * Defines the Key-Value session: the messages that can be exchanged and the
- * roles of the participants.
+ * Defines the Memcached session: the messages that can be exchanged and the
+ * roles of the participants. The messages exchanged here can be either of type
+ * {@linkplain KeyValueMessage} or {@linkplain MemcachedMessage}.
  * 
  * @author Georgiana Macariu
  * 
  */
-public enum KeyValueSession implements SessionSpecification {
+public enum MemcachedSession implements SessionSpecification {
 
-	CONNECTOR(KeyValueRole.CONNECTOR, KeyValueRole.DRIVER), DRIVER(
-			KeyValueRole.DRIVER, KeyValueRole.CONNECTOR);
+	CONNECTOR(MemcachedRole.CONNECTOR, MemcachedRole.DRIVER), DRIVER(
+			MemcachedRole.DRIVER, MemcachedRole.CONNECTOR);
 
-	public final KeyValueRole selfRole;
-	public final KeyValueRole peerRole;
-	public final List<KeyValueMessage> messages;
+	public final MemcachedRole selfRole;
+	public final MemcachedRole peerRole;
+	public final List<MessageSpecification> messages;
 
-	private KeyValueSession(KeyValueRole selfRole, KeyValueRole peerRole) {
+	private MemcachedSession(MemcachedRole selfRole, MemcachedRole peerRole) {
 		this.selfRole = selfRole;
 		this.peerRole = peerRole;
-		List<KeyValueMessage> messages = new LinkedList<KeyValueMessage>();
+		List<MessageSpecification> messages = new LinkedList<MessageSpecification>();
+		for (MemcachedMessage message : MemcachedMessage.values()) {
+			messages.add(message);
+		}
 		for (KeyValueMessage message : KeyValueMessage.values()) {
 			messages.add(message);
 		}

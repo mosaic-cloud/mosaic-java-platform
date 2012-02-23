@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.platform.interop.tools.ChannelData;
+
 import com.google.common.base.Preconditions;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
@@ -48,7 +50,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.interop.idl.ChannelData;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;

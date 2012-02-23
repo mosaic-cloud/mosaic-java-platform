@@ -17,18 +17,33 @@
  * limitations under the License.
  * #L%
  */
+package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
-package eu.mosaic_cloud.platform.interop.idl;
+import eu.mosaic_cloud.interoperability.core.RoleSpecification;
+import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
-import eu.mosaic_cloud.platform.interop.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
+/**
+ * Enum of the possible role of the participants in an Memcached session.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
+public enum MemcachedRole implements RoleSpecification {
+	CONNECTOR(), DRIVER();
 
-public class ErlangSpecificationDumper {
+	public final String identifier;
 
-	public static final void main(final String[] arguments) {
-		eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(
-				arguments, AmqpSession.values());
-		eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(
-				arguments, KeyValueSession.values());
+	private MemcachedRole() {
+		this.identifier = Identifiers.generate(this);
+	}
+
+	@Override
+	public String getIdentifier() {
+		return this.identifier;
+	}
+
+	@Override
+	public String getQualifiedName() {
+		return (Identifiers.generateName(this));
 	}
 }

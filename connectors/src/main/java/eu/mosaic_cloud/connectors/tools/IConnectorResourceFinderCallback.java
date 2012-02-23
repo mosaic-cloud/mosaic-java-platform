@@ -20,7 +20,8 @@
 
 package eu.mosaic_cloud.connectors.tools;
 
-import eu.mosaic_cloud.platform.interop.idl.ChannelData;
+import eu.mosaic_cloud.platform.interop.tools.ChannelData;
+
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 

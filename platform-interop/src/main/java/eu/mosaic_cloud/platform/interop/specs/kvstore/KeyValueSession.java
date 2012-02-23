@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package eu.mosaic_cloud.platform.interop.amqp;
+package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -29,26 +29,26 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 /**
- * Defines the AMQP session: the messages that can be exchanged and the roles of
- * the participants.
+ * Defines the Key-Value session: the messages that can be exchanged and the
+ * roles of the participants.
  * 
  * @author Georgiana Macariu
  * 
  */
-public enum AmqpSession implements SessionSpecification {
+public enum KeyValueSession implements SessionSpecification {
 
-	CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(AmqpRole.DRIVER,
-			AmqpRole.CONNECTOR);
+	CONNECTOR(KeyValueRole.CONNECTOR, KeyValueRole.DRIVER), DRIVER(
+			KeyValueRole.DRIVER, KeyValueRole.CONNECTOR);
 
-	public final AmqpRole selfRole;
-	public final AmqpRole peerRole;
-	public final List<AmqpMessage> messages;
+	public final KeyValueRole selfRole;
+	public final KeyValueRole peerRole;
+	public final List<KeyValueMessage> messages;
 
-	private AmqpSession(AmqpRole selfRole, AmqpRole peerRole) {
+	private KeyValueSession(KeyValueRole selfRole, KeyValueRole peerRole) {
 		this.selfRole = selfRole;
 		this.peerRole = peerRole;
-		List<AmqpMessage> messages = new LinkedList<AmqpMessage>();
-		for (AmqpMessage message : AmqpMessage.values()) {
+		List<KeyValueMessage> messages = new LinkedList<KeyValueMessage>();
+		for (KeyValueMessage message : KeyValueMessage.values()) {
 			messages.add(message);
 		}
 		this.messages = Collections.unmodifiableList(messages);

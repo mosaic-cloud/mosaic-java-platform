@@ -20,14 +20,15 @@
 
 package eu.mosaic_cloud.connectors.kvstore.generic;
 
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueMessage;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used

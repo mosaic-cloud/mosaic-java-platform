@@ -23,6 +23,9 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.Arrays;
 import java.util.Map;
 
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -31,8 +34,6 @@ import org.junit.Test;
 import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-import eu.mosaic_cloud.platform.interop.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.interop.kvstore.MemcachedSession;
 
 public class MemcacheKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String>> {
