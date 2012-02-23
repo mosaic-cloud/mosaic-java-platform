@@ -26,12 +26,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the context of the cloudlet using this accessor
- * @param <D>
+ * @param <Message>
  *            the type of the consumed data
  */
-public interface IAmqpQueueConsumerConnector<C, D> extends IAmqpQueueConnector<C> {
+public interface IAmqpQueueConsumerConnector<Context, Message> extends IAmqpQueueConnector<Context> {
 
 	/**
 	 * Acknowledges a message.
@@ -39,5 +39,5 @@ public interface IAmqpQueueConsumerConnector<C, D> extends IAmqpQueueConnector<C
 	 * @param message
 	 *            the message to acknowledge
 	 */
-	CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<D> message);
+	CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<Message> message);
 }

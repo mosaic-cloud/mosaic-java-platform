@@ -28,7 +28,7 @@ package eu.mosaic_cloud.cloudlets.core;
  * @param <C>
  *            the type of the context of the cloudlet
  */
-public class CallbackArguments<CC> {
+public class CallbackArguments<Context> {
 
 	protected ICloudletController<?> cloudlet;
 

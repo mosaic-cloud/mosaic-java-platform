@@ -26,11 +26,11 @@ package eu.mosaic_cloud.cloudlets.core;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the context of the cloudlet
  */
-public class CallbackCompletionArguments<C> extends
-		CallbackArguments<C> {
+public class CallbackCompletionArguments<Context> extends
+		CallbackArguments<Context> {
 
 	protected Throwable error;
 

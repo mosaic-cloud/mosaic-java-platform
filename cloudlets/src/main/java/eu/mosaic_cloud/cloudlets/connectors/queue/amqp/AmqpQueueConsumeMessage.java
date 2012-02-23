@@ -27,18 +27,18 @@ import eu.mosaic_cloud.drivers.queue.amqp.AmqpInboundMessage;
  * 
  * @author Georgiana Macariu
  * 
- * @param <D>
+ * @param <Message>
  *            the type of the data in the consumed message
  */
-public class AmqpQueueConsumeMessage<D extends Object> {
+public class AmqpQueueConsumeMessage<Message> {
 
-	private final IAmqpQueueConsumerConnector<? extends Object, D> consumer;
+	private final IAmqpQueueConsumerConnector<? extends Object, Message> consumer;
 	private final AmqpInboundMessage message;
-	private final D data;
+	private final Message data;
 
 	public AmqpQueueConsumeMessage(
-			IAmqpQueueConsumerConnector<? extends Object, D> consumer,
-			AmqpInboundMessage message, D data) {
+			IAmqpQueueConsumerConnector<? extends Object, Message> consumer,
+			AmqpInboundMessage message, Message data) {
 		super();
 		this.consumer = consumer;
 		this.message = message;
@@ -57,7 +57,7 @@ public class AmqpQueueConsumeMessage<D extends Object> {
 	 * 
 	 * @return the data in the consumed message
 	 */
-	public D getData() {
+	public Message getData() {
 		return this.data;
 	}
 
@@ -70,7 +70,7 @@ public class AmqpQueueConsumeMessage<D extends Object> {
 	 * 
 	 * @return the consumer object
 	 */
-	public IAmqpQueueConsumerConnector<? extends Object, D> getConsumer() {
+	public IAmqpQueueConsumerConnector<? extends Object, Message> getConsumer() {
 		return this.consumer;
 	}
 

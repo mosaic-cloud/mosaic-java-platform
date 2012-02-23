@@ -28,10 +28,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the cloudlet context
  */
-public interface IAmqpQueueConnector<C> extends IQueueConnector<C> {
+public interface IAmqpQueueConnector<Context> extends IQueueConnector<Context> {
 
 	/**
 	 * Register the accessor with the queuing system.

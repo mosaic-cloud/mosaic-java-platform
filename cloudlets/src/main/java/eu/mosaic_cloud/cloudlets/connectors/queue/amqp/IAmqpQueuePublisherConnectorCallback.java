@@ -27,13 +27,13 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the cloudlet context
- * @param <D>
+ * @param <Message>
  *            the type of published data
  */
-public interface IAmqpQueuePublisherConnectorCallback<C, D> extends
-		IAmqpQueueConnectorCallback<C> {
+public interface IAmqpQueuePublisherConnectorCallback<Context, Message> extends
+		IAmqpQueueConnectorCallback<Context> {
 
 	/**
 	 * Called when the publisher receives confirmation that the message
@@ -46,8 +46,8 @@ public interface IAmqpQueuePublisherConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> publishSucceeded(C context,
-			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> publishSucceeded(Context context,
+			AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments);
 
 	/**
 	 * Called when the publisher receives notification that the message
@@ -59,6 +59,6 @@ public interface IAmqpQueuePublisherConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> publishFailed(C context,
-			AmqpQueuePublishCallbackCompletionArguments<C, D> arguments);
+	CallbackCompletion<Void> publishFailed(Context context,
+			AmqpQueuePublishCallbackCompletionArguments<Context, Message> arguments);
 }

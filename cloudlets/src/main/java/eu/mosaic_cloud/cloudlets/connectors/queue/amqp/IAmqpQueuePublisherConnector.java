@@ -26,12 +26,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the context of the cloudlet using this accessor
- * @param <D>
+ * @param <Message>
  *            the type of the published data
  */
-public interface IAmqpQueuePublisherConnector<C, D> extends IAmqpQueueConnector<C> {
+public interface IAmqpQueuePublisherConnector<Context, Message> extends IAmqpQueueConnector<Context> {
 
 	/**
 	 * Publishes a message to a queue.
@@ -39,5 +39,5 @@ public interface IAmqpQueuePublisherConnector<C, D> extends IAmqpQueueConnector<
 	 * @param data
 	 *            the data to publish
 	 */
-	CallbackCompletion<Void> publish(D data);
+	CallbackCompletion<Void> publish(Message data);
 }

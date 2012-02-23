@@ -27,14 +27,14 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * which need to receive messages from a queue.
  * 
  * @author Georgiana Macariu
- * @param <C>
+ * @param <Context>
  *            the type of the cloudlet context
- * @param <D>
+ * @param <Message>
  *            the type of consumed data
  * 
  */
-public interface IAmqpQueueConsumerConnectorCallback<C, D> extends
-		IAmqpQueueConnectorCallback<C> {
+public interface IAmqpQueueConsumerConnectorCallback<Context, Message> extends
+		IAmqpQueueConnectorCallback<Context> {
 
 	/**
 	 * Handles successful message acknowledge events.
@@ -44,7 +44,7 @@ public interface IAmqpQueueConsumerConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> acknowledgeSucceeded(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> acknowledgeSucceeded(Context context, CallbackArguments<Context> arguments);
 
 	/**
 	 * Handles unsuccessful message acknowledge events.
@@ -54,7 +54,7 @@ public interface IAmqpQueueConsumerConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> acknowledgeFailed(C context, CallbackArguments<C> arguments);
+	CallbackCompletion<Void> acknowledgeFailed(Context context, CallbackArguments<Context> arguments);
 
 	/**
 	 * Called when this consumer receives a message. This will deliver the
@@ -65,5 +65,5 @@ public interface IAmqpQueueConsumerConnectorCallback<C, D> extends
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> consume(C context, AmqpQueueConsumeCallbackArguments<C, D> arguments);
+	CallbackCompletion<Void> consume(Context context, AmqpQueueConsumeCallbackArguments<Context, Message> arguments);
 }

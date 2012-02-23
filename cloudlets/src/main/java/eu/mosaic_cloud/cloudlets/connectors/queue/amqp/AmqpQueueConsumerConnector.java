@@ -43,17 +43,17 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the cloudlet context object
- * @param <D>
+ * @param <Message>
  *            the type of the messages consumed by the cloudlet
  */
-public class AmqpQueueConsumerConnector<C, D, E> extends
-		AmqpQueueConnector<C, D> implements IAmqpQueueConsumerConnector<C, D> {
+public class AmqpQueueConsumerConnector<Context, Message, Extra> extends
+		AmqpQueueConnector<Context, Message> implements IAmqpQueueConsumerConnector<Context, Message> {
 
 	private String consumer;
 	private boolean autoAck;
-	private IAmqpQueueConsumerConnectorCallback<C, D> callback;
+	private IAmqpQueueConsumerConnectorCallback<Context, Message> callback;
 
 	/**
 	 * Creates a new AMQP queue consumer.
@@ -78,8 +78,8 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 	 *            encoder used for serializing data
 	 */
 	public AmqpQueueConsumerConnector(IConfiguration config,
-			ICloudletController<C> cloudlet, Class<D> dataClass,
-			DataEncoder<D> encoder) {
+			ICloudletController<Context> cloudlet, Class<Message> dataClass,
+			DataEncoder<Message> encoder) {
 		super(config, cloudlet, dataClass, true, encoder);
 		synchronized (this.monitor) {
 			String specification = ConfigProperties
@@ -90,20 +90,20 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 	}
 
 	@Override
-	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
+	public CallbackCompletion<Void> initialize(IConnectorCallback<Context> callback, Context context,
 			ThreadingContext threading) {
 		if (callback instanceof IAmqpQueueConsumerConnectorCallback) {
 			super.initialize(callback, context, threading);
-			this.callback = (IAmqpQueueConsumerConnectorCallback<C, D>) callback;
+			this.callback = (IAmqpQueueConsumerConnectorCallback<Context, Message>) callback;
 		} else {
 			IllegalArgumentException e = new IllegalArgumentException(
 					"The callback argument must be of type " //$NON-NLS-1$
 							+ IAmqpQueueConsumerConnectorCallback.class
 									.getCanonicalName());
-			IAmqpQueueConsumerConnectorCallback<C, D> proxy = this.cloudlet
+			IAmqpQueueConsumerConnectorCallback<Context, Message> proxy = this.cloudlet
 					.buildCallbackInvoker(this.callback,
 							IAmqpQueueConsumerConnectorCallback.class);
-			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+			CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 					AmqpQueueConsumerConnector.this.cloudlet, e);
 			proxy.initializeFailed(context, arguments);
 			throw e;
@@ -125,7 +125,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 	}
 
 	@Override
-	protected void finishRegister(final IAmqpQueueConnectorCallback<C> callback) {
+	protected void finishRegister(final IAmqpQueueConnectorCallback<Context> callback) {
 		IOperationCompletionHandler<String> cHandler = new IOperationCompletionHandler<String>() {
 
 			@Override
@@ -141,7 +141,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 
 			@Override
 			public void onFailure(Throwable error) {
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, String>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				callback.registerFailed(AmqpQueueConsumerConnector.super.cloudletContext,
 						arguments);
@@ -177,7 +177,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 	
 				@Override
 				public void onFailure(Throwable error) {
-					CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+					CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 							AmqpQueueConsumerConnector.super.cloudlet, error);
 					AmqpQueueConsumerConnector.this.callback.unregisterFailed(
 							AmqpQueueConsumerConnector.super.cloudletContext, arguments);
@@ -197,12 +197,12 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 	 *            the message to acknowledge
 	 */
 	@Override
-	public CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<D> message) {
+	public CallbackCompletion<Void> acknowledge(AmqpQueueConsumeMessage<Message> message) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
 			public void onSuccess(Boolean result) {
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConsumerConnector.super.cloudlet, result);
 				AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded(
 						AmqpQueueConsumerConnector.super.cloudletContext, arguments);
@@ -210,7 +210,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 
 			@Override
 			public void onFailure(Throwable error) {
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConsumerConnector.super.cloudlet, error);
 				AmqpQueueConsumerConnector.this.callback.acknowledgeFailed(
 						AmqpQueueConsumerConnector.super.cloudletContext, arguments);
@@ -240,7 +240,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 			if (!AmqpQueueConsumerConnector.super.registered) {
 				return;
 			}
-			CallbackArguments<C> arguments = new CallbackArguments<C>(
+			CallbackArguments<Context> arguments = new CallbackArguments<Context>(
 					AmqpQueueConsumerConnector.this.cloudlet);
 			AmqpQueueConsumerConnector.this.callback.unregisterSucceeded(
 					AmqpQueueConsumerConnector.this.cloudletContext, arguments);
@@ -255,7 +255,7 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 			AmqpQueueConsumerConnector.this.logger.trace(
 					"AmqpQueueConsumerConnector: received CONSUME ok message.");
 			AmqpQueueConsumerConnector.this.consumer = consumerTag;
-			CallbackArguments<C> arguments = new CallbackArguments<C>(
+			CallbackArguments<Context> arguments = new CallbackArguments<Context>(
 					AmqpQueueConsumerConnector.this.cloudlet);
 			AmqpQueueConsumerConnector.this.callback.registerSucceeded(
 					AmqpQueueConsumerConnector.this.cloudletContext, arguments);
@@ -264,13 +264,13 @@ public class AmqpQueueConsumerConnector<C, D, E> extends
 
 		@Override
 		public CallbackCompletion<Void> handleDelivery(AmqpInboundMessage message) {
-			D data;
+			Message data;
 			try {
 				data = AmqpQueueConsumerConnector.this.dataEncoder.decode(message
 						.getData());
-				AmqpQueueConsumeMessage<D> mssg = new AmqpQueueConsumeMessage<D>(
+				AmqpQueueConsumeMessage<Message> mssg = new AmqpQueueConsumeMessage<Message>(
 						AmqpQueueConsumerConnector.this, message, data);
-				AmqpQueueConsumeCallbackArguments<C, D> arguments = new AmqpQueueConsumeCallbackArguments<C, D>(
+				AmqpQueueConsumeCallbackArguments<Context, Message> arguments = new AmqpQueueConsumeCallbackArguments<Context, Message>(
 						AmqpQueueConsumerConnector.this.cloudlet, mssg);
 				AmqpQueueConsumerConnector.this.callback.consume(
 						AmqpQueueConsumerConnector.this.cloudletContext, arguments);

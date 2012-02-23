@@ -48,21 +48,21 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the context of the cloudlet using the accessor
- * @param <D>
+ * @param <Message>
  *            the type of messages processed by the accessor
  */
-public abstract class AmqpQueueConnector<C, D> implements
-		IAmqpQueueConnector<C> {
+public abstract class AmqpQueueConnector<Context, Message> implements
+		IAmqpQueueConnector<Context> {
 
 	private IConfiguration configuration;
-	protected ICloudletController<C> cloudlet;
-	protected C cloudletContext;
+	protected ICloudletController<Context> cloudlet;
+	protected Context cloudletContext;
 	private ConnectorStatus status;
 	private eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector connector;
-	protected Class<D> dataClass;
-	protected DataEncoder<D> dataEncoder;
+	protected Class<Message> dataClass;
+	protected DataEncoder<Message> dataEncoder;
 
 	protected String exchange;
 	protected String routingKey;
@@ -91,8 +91,8 @@ public abstract class AmqpQueueConnector<C, D> implements
 	 *            encoder used for serializing data
 	 */
 	public AmqpQueueConnector(IConfiguration config,
-			ICloudletController<C> cloudlet, Class<D> dataClass,
-			boolean consumer, DataEncoder<D> encoder) {
+			ICloudletController<Context> cloudlet, Class<Message> dataClass,
+			boolean consumer, DataEncoder<Message> encoder) {
 		synchronized (this.monitor) {
 			this.configuration = config;
 			this.logger=MosaicLogger.createLogger(this);
@@ -152,10 +152,10 @@ public abstract class AmqpQueueConnector<C, D> implements
 		}
 	}
 
-	public CallbackCompletion<Void> initialize(IConnectorCallback<C> callback, C context,
+	public CallbackCompletion<Void> initialize(IConnectorCallback<Context> callback, Context context,
 			ThreadingContext threading) {
 		synchronized (this.monitor) {
-			IConnectorCallback<C> proxy = this.cloudlet
+			IConnectorCallback<Context> proxy = this.cloudlet
 					.buildCallbackInvoker(callback,
 							IConnectorCallback.class);
 			try {
@@ -169,14 +169,14 @@ public abstract class AmqpQueueConnector<C, D> implements
 				}
 				this.connector = eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnector.create(this.configuration,
 						threading);
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConnector.this.cloudlet, true);
 				proxy.initializeSucceeded(AmqpQueueConnector.this.cloudletContext,
 						arguments);
 				this.status = ConnectorStatus.INITIALIZED;
 			} catch (Throwable e) {
 				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConnector.this.cloudlet, e);
 				proxy.initializeFailed(context, arguments);
 			}
@@ -187,21 +187,21 @@ public abstract class AmqpQueueConnector<C, D> implements
 	public CallbackCompletion<Void> destroy() {
 		synchronized (this.monitor) {
 			this.status = ConnectorStatus.DESTROYING;
-			IConnectorCallback<C> proxy = this.cloudlet
+			IConnectorCallback<Context> proxy = this.cloudlet
 					.buildCallbackInvoker(callback,
 							IConnectorCallback.class);
 			try {
 				this.logger.trace(
 						"AmqpQueueConnector is destroying the connector...");
 				this.connector.destroy();
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConnector.this.cloudlet, true);
 				proxy.destroySucceeded(this.cloudletContext, arguments);
 				this.logger.trace(
 						"AmqpQueueConnector destroyed successfully.");
 			} catch (Throwable e) {
 				ExceptionTracer.traceDeferred(e);
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 						AmqpQueueConnector.this.cloudlet, e);
 				proxy.destroyFailed(this.cloudletContext, arguments);
 			}
@@ -223,7 +223,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 		return this.status;
 	}
 
-	protected void declareExchange(final IAmqpQueueConnectorCallback<C> callback) {
+	protected void declareExchange(final IAmqpQueueConnectorCallback<Context> callback) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
@@ -233,7 +233,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 
 			@Override
 			public void onFailure(Throwable error) {
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, String>(
 						AmqpQueueConnector.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueConnector.this.cloudletContext,
 						arguments);
@@ -248,7 +248,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 
 	}
 
-	private void declareQueue(final IAmqpQueueConnectorCallback<C> callback) {
+	private void declareQueue(final IAmqpQueueConnectorCallback<Context> callback) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
@@ -258,7 +258,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 
 			@Override
 			public void onFailure(Throwable error) {
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, String>(
 						AmqpQueueConnector.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueConnector.this.cloudletContext,
 						arguments);
@@ -273,7 +273,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 
 	}
 
-	private void bindQueue(final IAmqpQueueConnectorCallback<C> callback) {
+	private void bindQueue(final IAmqpQueueConnectorCallback<Context> callback) {
 		IOperationCompletionHandler<Boolean> cHandler = new IOperationCompletionHandler<Boolean>() {
 
 			@Override
@@ -283,7 +283,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 
 			@Override
 			public void onFailure(Throwable error) {
-				CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, String>(
+				CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, String>(
 						AmqpQueueConnector.this.cloudlet, error);
 				callback.registerFailed(AmqpQueueConnector.this.cloudletContext,
 						arguments);
@@ -298,12 +298,12 @@ public abstract class AmqpQueueConnector<C, D> implements
 						this.cloudlet.getResponseInvocationHandler(cHandler));
 	}
 
-	protected void startRegister(IAmqpQueueConnectorCallback<C> callback) {
+	protected void startRegister(IAmqpQueueConnectorCallback<Context> callback) {
 		declareExchange(callback);
 	}
 
 	protected abstract void finishRegister(
-			IAmqpQueueConnectorCallback<C> callback);
+			IAmqpQueueConnectorCallback<Context> callback);
 
 	/**
 	 * A callback handler for the open connection request.
@@ -314,16 +314,16 @@ public abstract class AmqpQueueConnector<C, D> implements
 	final class ConnectionOpenHandler implements
 			IOperationCompletionHandler<Boolean> {
 
-		IConnectorCallback<C> callback;
+		IConnectorCallback<Context> callback;
 
-		public ConnectionOpenHandler(IConnectorCallback<C> callback) {
+		public ConnectionOpenHandler(IConnectorCallback<Context> callback) {
 			super();
 			this.callback = callback;
 		}
 
 		@Override
 		public void onSuccess(Boolean result) {
-			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+			CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 					AmqpQueueConnector.this.cloudlet, result);
 			synchronized (AmqpQueueConnector.this.monitor) {
 				this.callback.initializeSucceeded(
@@ -334,7 +334,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 
 		@Override
 		public void onFailure(Throwable error) {
-			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+			CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 					AmqpQueueConnector.this.cloudlet, error);
 			this.callback.initializeFailed(
 					AmqpQueueConnector.this.cloudletContext, arguments);
@@ -351,16 +351,16 @@ public abstract class AmqpQueueConnector<C, D> implements
 	final class ConnectionCloseHandler implements
 			IOperationCompletionHandler<Boolean> {
 
-		IConnectorCallback<C> callback;
+		IConnectorCallback<Context> callback;
 
-		public ConnectionCloseHandler(IConnectorCallback<C> callback) {
+		public ConnectionCloseHandler(IConnectorCallback<Context> callback) {
 			super();
 			this.callback = callback;
 		}
 
 		@Override
 		public void onSuccess(Boolean result) {
-			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+			CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 					AmqpQueueConnector.this.cloudlet, result);
 			synchronized (AmqpQueueConnector.this.monitor) {
 				this.callback.destroySucceeded(
@@ -371,7 +371,7 @@ public abstract class AmqpQueueConnector<C, D> implements
 
 		@Override
 		public void onFailure(Throwable error) {
-			CallbackArguments<C> arguments = new GenericCallbackCompletionArguments<C, Boolean>(
+			CallbackArguments<Context> arguments = new GenericCallbackCompletionArguments<Context, Boolean>(
 					AmqpQueueConnector.this.cloudlet, error);
 			this.callback.destroyFailed(AmqpQueueConnector.this.cloudletContext,
 					arguments);

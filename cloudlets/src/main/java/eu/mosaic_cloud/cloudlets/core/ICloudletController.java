@@ -32,10 +32,10 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the type of the context of the cloudlet
  */
-public interface ICloudletController<C> extends Callbacks, IConnectorsFactory {
+public interface ICloudletController<Context> extends Callbacks, IConnectorsFactory {
 
 	IConfiguration getConfiguration();
 

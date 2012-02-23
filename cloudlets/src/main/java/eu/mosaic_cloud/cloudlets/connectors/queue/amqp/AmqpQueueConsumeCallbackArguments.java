@@ -27,15 +27,15 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the context of the cloudlet
- * @param <D>
+ * @param <Message>
  *            the type of the consumed data
  */
-public class AmqpQueueConsumeCallbackArguments<C, D> extends
-		CallbackArguments<C> {
+public class AmqpQueueConsumeCallbackArguments<Context, Message> extends
+		CallbackArguments<Context> {
 
-	private AmqpQueueConsumeMessage<D> message;
+	private AmqpQueueConsumeMessage<Message> message;
 
 	/**
 	 * Creates a new callback argument.
@@ -45,8 +45,8 @@ public class AmqpQueueConsumeCallbackArguments<C, D> extends
 	 * @param message
 	 *            information about the consume request
 	 */
-	public AmqpQueueConsumeCallbackArguments(ICloudletController<C> cloudlet,
-			AmqpQueueConsumeMessage<D> message) {
+	public AmqpQueueConsumeCallbackArguments(ICloudletController<Context> cloudlet,
+			AmqpQueueConsumeMessage<Message> message) {
 		super(cloudlet);
 		this.message = message;
 	}
@@ -56,7 +56,7 @@ public class AmqpQueueConsumeCallbackArguments<C, D> extends
 	 * 
 	 * @return information about the consume request
 	 */
-	public AmqpQueueConsumeMessage<D> getMessage() {
+	public AmqpQueueConsumeMessage<Message> getMessage() {
 		return this.message;
 	}
 

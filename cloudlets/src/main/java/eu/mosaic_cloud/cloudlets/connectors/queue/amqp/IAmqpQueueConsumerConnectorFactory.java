@@ -10,5 +10,5 @@ public interface IAmqpQueueConsumerConnectorFactory
 		extends
 			IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?>>
 {
-	<Context, Data> IAmqpQueueConsumerConnector<Context, Data> create (IConfiguration configuration, Class<Data> dataClass, DataEncoder<? super Data> dataEncoder, IAmqpQueueConsumerConnectorCallback<Context, Data> callback, Context callbackContext);
+	<Context, Message> IAmqpQueueConsumerConnector<Context, Message> create (IConfiguration configuration, Class<Message> messageClass, DataEncoder<? super Message> dataEncoder, IAmqpQueueConsumerConnectorCallback<Context, Message> callback, Context callbackContext);
 }
