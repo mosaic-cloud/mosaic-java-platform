@@ -132,34 +132,26 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy { // NO
     }
 
     public CallbackCompletion<Boolean> consume(final String queue, final String consumer,
-            final boolean exclusive, final boolean autoAck, final Object extra,
+            final boolean exclusive, final boolean autoAck,
             final IAmqpQueueConsumerCallback consumerCallback) {
         CallbackCompletion<Boolean> result;
-
-        try {
-            final byte[] extraBytes = new PojoDataEncoder<Object>(Object.class).encode(extra);
-            final CompletionToken token = this.generateToken();
-            final AmqpPayloads.ConsumeRequest.Builder requestBuilder = AmqpPayloads.ConsumeRequest
-                    .newBuilder();
-            requestBuilder.setToken(token);
-            requestBuilder.setQueue(queue);
-            requestBuilder.setConsumer(consumer);
-            requestBuilder.setExclusive(exclusive);
-            requestBuilder.setAutoAck(autoAck);
-            requestBuilder.setExtra(ByteString.copyFrom(extraBytes));
-            this.pendingConsumers.put(consumer, consumerCallback);
-            final Message mssg = new Message(AmqpMessage.CONSUME_REQUEST, requestBuilder.build());
-            result = this.sendRequest(mssg, token, Boolean.class); // NOPMD by
-                                                                   // georgiana
-                                                                   // on 2/20/12
-                                                                   // 5:54 PM
-            final CallbackCompletionDeferredFuture<String> consumeFuture = CallbackCompletionDeferredFuture
-                    .create(String.class);
-            this.consumerMessages.register(consumer, consumeFuture);
-        } catch (final EncodingException exception) {
-            result = CallbackCompletion.createFailure(exception);
-        }
-
+        final CompletionToken token = this.generateToken();
+        final AmqpPayloads.ConsumeRequest.Builder requestBuilder = AmqpPayloads.ConsumeRequest
+                .newBuilder();
+        requestBuilder.setToken(token);
+        requestBuilder.setQueue(queue);
+        requestBuilder.setConsumer(consumer);
+        requestBuilder.setExclusive(exclusive);
+        requestBuilder.setAutoAck(autoAck);
+        this.pendingConsumers.put(consumer, consumerCallback);
+        final Message mssg = new Message(AmqpMessage.CONSUME_REQUEST, requestBuilder.build());
+        result = this.sendRequest(mssg, token, Boolean.class); // NOPMD by
+                                                               // georgiana
+                                                               // on 2/20/12
+                                                               // 5:54 PM
+        final CallbackCompletionDeferredFuture<String> consumeFuture = CallbackCompletionDeferredFuture
+                .create(String.class);
+        this.consumerMessages.register(consumer, consumeFuture);
         return result;
     }
 

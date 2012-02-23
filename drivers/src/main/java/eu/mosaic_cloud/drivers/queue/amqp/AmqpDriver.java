@@ -318,13 +318,13 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 	 * @return the client-generated consumer tag to establish context
 	 */
 	public IResult<String> basicConsume(String queue, String consumer,
-			boolean exclusive, boolean autoAck, Object extra,
+			boolean exclusive, boolean autoAck,
 			IAmqpConsumer consumeCallback,
 			IOperationCompletionHandler<String> complHandler) {
 		@SuppressWarnings("unchecked")
 		GenericOperation<String> operation = (GenericOperation<String>) this.opFactory
 				.getOperation(AmqpOperations.CONSUME, queue, consumer,
-						exclusive, autoAck, extra, consumeCallback);
+						exclusive, autoAck, consumeCallback);
 
 		return startOperation(operation, complHandler);
 	}
@@ -447,11 +447,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 	final class ConsumerCallback implements Consumer { // NOPMD by georgiana on
 														// 10/12/11 4:24 PM
 
-		private final Object extra;
-
-		ConsumerCallback(Object extra) {
+		ConsumerCallback() {
 			super();
-			this.extra = extra;
 		}
 
 		@Override

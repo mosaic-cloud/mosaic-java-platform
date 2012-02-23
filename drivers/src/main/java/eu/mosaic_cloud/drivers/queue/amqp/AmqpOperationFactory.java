@@ -246,8 +246,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 				String consumer = (String) parameters[1];
 				boolean exclusive = (Boolean) parameters[2];
 				boolean autoAck = (Boolean) parameters[3];
-				Object extra = parameters[4];
-				IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[5];
+				IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[4];
 				String consumerTag;
 				Channel channel = AmqpOperationFactory.this.amqpDriver
 						.getChannel(consumer);
@@ -263,8 +262,7 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 									true,
 									exclusive,
 									null,
-									AmqpOperationFactory.this.amqpDriver.new ConsumerCallback(
-											extra));
+									AmqpOperationFactory.this.amqpDriver.new ConsumerCallback());
 					if (!consumer.equals(consumerTag)) {
 						MosaicLogger sLogger = MosaicLogger
 								.createLogger(AmqpOperationFactory.class);

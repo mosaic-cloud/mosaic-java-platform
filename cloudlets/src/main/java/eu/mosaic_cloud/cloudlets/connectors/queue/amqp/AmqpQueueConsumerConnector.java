@@ -158,7 +158,6 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra> extends
 				this.consumer,
 				super.exclusive,
 				this.autoAck,
-				null,
 				cHandlers,
 				this.cloudlet.getResponseInvocationHandler(cHandler),
 				this.cloudlet.buildCallbackInvoker(consumerCallback,

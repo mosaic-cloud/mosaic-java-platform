@@ -268,8 +268,6 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			consumer = cop.getConsumer();
 			exclusive = cop.getExclusive();
 			autoAck = cop.getAutoAck();
-			dataBytes = cop.getExtra().toByteArray();
-			Object extra = SerDesUtils.toObject(dataBytes);
 
 			this.logger.trace(
 					"AmqpStub - Received request for CONSUME"); //$NON-NLS-1$
@@ -280,7 +278,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 
 			IAmqpConsumer consumeCallback = new ConsumerHandler(session);
 			resultString = driver.basicConsume(queue, consumer, exclusive,
-					autoAck, extra, consumeCallback, consHandler);
+					autoAck, consumeCallback, consHandler);
 			consHandler.setDetails(AmqpOperations.CONSUME, resultString);
 			break;
 		case GET_REQUEST:

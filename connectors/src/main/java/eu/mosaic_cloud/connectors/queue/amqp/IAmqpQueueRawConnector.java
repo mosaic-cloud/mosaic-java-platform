@@ -63,7 +63,7 @@ public interface IAmqpQueueRawConnector extends IAmqpQueueConnector
      * @return the client-generated consumer tag to establish context
      */
     CallbackCompletion<Boolean> consume(final String queue, final String consumer,
-            final boolean exclusive, final boolean autoAck, final Object extra,
+            final boolean exclusive, final boolean autoAck,
             final IAmqpQueueConsumerCallback consumerCallback);
 
     /**
