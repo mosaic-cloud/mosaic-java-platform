@@ -30,12 +30,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-public class AmqpQueueConnectorTest extends
+public class AmqpQueueRawConnectorTest extends
         BaseConnectorTest<AmqpQueueRawConnector, BaseConnectorTest.Context<AmqpStub>> {
     @Override
     @Before
     public void setUp() {
-        this.context = AmqpQueueConnectorTest.context_;
+        this.context = AmqpQueueRawConnectorTest.context_;
         this.connector = AmqpQueueRawConnector.create(this.context.configuration,
                 this.context.threading);
     }
@@ -76,17 +76,17 @@ public class AmqpQueueConnectorTest extends
     @BeforeClass
     public static void setUpBeforeClass() {
         final Context<AmqpStub> context = new Context<AmqpStub>();
-        BaseConnectorTest.setupUpContext(AmqpQueueConnectorTest.class, context,
-                "amqp-queue-connector-test.prop");
+        BaseConnectorTest.setupUpContext(AmqpQueueRawConnectorTest.class, context,
+                "amqp-queue-raw-connector-test.prop");
         context.driverChannel.register(AmqpSession.DRIVER);
         context.driverStub = AmqpStub.create(context.configuration, context.driverChannel,
                 context.threading);
-        AmqpQueueConnectorTest.context_ = context;
+        AmqpQueueRawConnectorTest.context_ = context;
     }
 
     @AfterClass
     public static void tearDownAfterClass() {
-        BaseConnectorTest.tearDownContext(AmqpQueueConnectorTest.context_);
+        BaseConnectorTest.tearDownContext(AmqpQueueRawConnectorTest.context_);
     }
 
     private static Context<AmqpStub> context_;
