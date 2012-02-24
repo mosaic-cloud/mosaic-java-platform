@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,6 +44,7 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
+
 /**
  * This class handles the internals of cloudlet execution. An object of this
  * class will be created by the container for each user cloudlet. The link
@@ -54,304 +56,302 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @param <C>
  *            the context of the cloudlet
  */
-public class Cloudlet<C extends Object> {
-
-    /**
-     * An implementation of the cloudlet controller. Basically, all operation in
-     * the controller's interface are redirected to operations of the cloudlet
-     * object.
-     * 
-     * @author Georgiana Macariu
-     * 
-     */
-    final class CloudletController implements ICloudletController<C> {
-
-        @Override
-        public <T> T buildCallbackInvoker(T callback, Class<T> callbackType) {
-            return Cloudlet.this.getCallbackProxy(callbackType, callback);
-        }
-
-        @Override
-        public final boolean destroy() {
-            return (Cloudlet.this.destroy());
-        }
-
-        @Override
-        public final IConfiguration getConfiguration() {
-            return (Cloudlet.this.configuration);
-        }
-
-        @Override
-        public <T> CompletionInvocationHandler<T> getResponseInvocationHandler(
-                IOperationCompletionHandler<T> handler) {
-            return Cloudlet.this.getResponseHandler(handler);
-        }
-
-        @Override
-        public final boolean isActive() {
-            return (Cloudlet.this.isActive());
-        }
-    }
-
-    /**
-     * This handler will serialize the execution of requests received by a
-     * cloudlet instance.
-     * 
-     * @author Georgiana Macariu
-     * 
-     * @param <T>
-     *            type to invoke
-     */
-    final class CloudletInvocationHandler<T> implements InvocationHandler {
-
-        private final T callback;
-
-        /**
-         * Creates the handler
-         * 
-         * @param callback
-         *            the callback to execute
-         */
-        public CloudletInvocationHandler(T callback) {
-            super();
-            this.callback = callback;
-        }
-
-        @Override
-        public Object invoke(Object proxy, final Method method, final Object[] arguments) {
-            final Runnable task = new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        method.invoke(CloudletInvocationHandler.this.callback, arguments);
-                    } catch (final IllegalArgumentException e) {
-                        ExceptionTracer.traceIgnored(e);
-                    } catch (final IllegalAccessException e) {
-                        ExceptionTracer.traceIgnored(e);
-                    } catch (final InvocationTargetException e) {
-                        ExceptionTracer.traceIgnored(e);
-                    }
-                }
-            };
-            Cloudlet.this.executor.handleRequest(task);
-            return null;
-        }
-    }
-
-    /**
-     * This handler will serialize the execution of response handlers received
-     * by a cloudlet instance.
-     * 
-     * @author Georgiana Macariu
-     * 
-     */
-    final class CloudletResponseInvocationHandler<T> extends CompletionInvocationHandler<T> {
-
-        /**
-         * Creates the handler.
-         * 
-         * @param handler
-         *            the response handler to execute
-         */
-        private CloudletResponseInvocationHandler(IOperationCompletionHandler<T> handler) {
-            super(handler);
-        }
-
-        @Override
-        public CompletionInvocationHandler<T> createHandler(IOperationCompletionHandler<T> handler) {
-            return new CloudletResponseInvocationHandler<T>(handler);
-        }
-
-        @Override
-        public Object invoke(Object proxy, final Method method, final Object[] arguments) {
-            final Runnable task = new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        method.invoke(CloudletResponseInvocationHandler.this.handler, arguments);
-                    } catch (final IllegalArgumentException e) {
-                        ExceptionTracer.traceIgnored(e);
-                    } catch (final IllegalAccessException e) {
-                        ExceptionTracer.traceIgnored(e);
-                    } catch (final InvocationTargetException e) {
-                        ExceptionTracer.traceIgnored(e);
-                    }
-                }
-            };
-            Cloudlet.this.executor.handleResponse(task);
-            return null;
-        }
-    }
-
-    private boolean active;
-
-    private CloudletExecutor executor;
-
-    private CloudletController controller;
-
-    private IConfiguration configuration;
-
-    private ICloudletCallback<C> controllerCallback;
-
-    private C context;
-
-    private ThreadingContext threading;
-
-    private static MosaicLogger logger = MosaicLogger.createLogger(Cloudlet.class);
-
-    private final Monitor monitor = Monitor.create(this);
-
-    /**
-     * Creates a new cloudlet instance.
-     * 
-     * @param config
-     *            configuration data required for configuring and initializing
-     *            the cloudlet instance
-     * @param loader
-     *            the class loader used for loading cloudlet classes
-     * @throws CloudletException
-     */
-    public Cloudlet(C context, ICloudletCallback<C> callback, ThreadingContext threading,
-            ClassLoader loader) {
-        synchronized (this.monitor) {
-            this.context = context;
-            this.threading = threading;
-            this.active = false;
-            this.executor = new CloudletExecutor(this.threading, loader);
-            this.controller = new CloudletController();
-            this.controllerCallback = callback;
-        }
-    }
-
-    public boolean destroy() {
-        synchronized (this.monitor) {
-            this.active = false;
-            final IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object>() {
-
-                @Override
-                public void onFailure(Throwable error) {
-                    Cloudlet.this.controllerCallback.destroyFailed(Cloudlet.this.context,
-                            new CallbackArguments<C>(Cloudlet.this.controller));
-                    Cloudlet.this.executor.shutdown();
-                }
-
-                @Override
-                public void onSuccess(Object result) {
-                    Cloudlet.this.controllerCallback.destroySucceeded(Cloudlet.this.context,
-                            new CallbackArguments<C>(Cloudlet.this.controller));
-                    Cloudlet.this.executor.shutdown();
-                }
-            };
-            final List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>>();
-            final CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object>(
-                    complHandler);
-            handlers.add(complHandler);
-            final EventDrivenOperation<Object> destroyOperation = new EventDrivenOperation<Object>(
-                    handlers, iHandler);
-            destroyOperation.setOperation(new Runnable() {
-
-                @Override
-                public void run() {
-                    Cloudlet.this.controllerCallback.destroy(Cloudlet.this.context,
-                            new CallbackArguments<C>(Cloudlet.this.controller));
-                    final List<IOperationCompletionHandler<Object>> handlers = destroyOperation
-                            .getCompletionHandlers();
-                    for (final IOperationCompletionHandler<Object> handler : handlers) {
-                        handler.onSuccess(null);
-                    }
-                }
-            });
-            final IResult<Object> result = new EventDrivenResult<Object>(destroyOperation);
-            this.executor.handleRequest(destroyOperation.getOperation());
-            try {
-                Cloudlet.logger.trace("Cloudlet.destroy() - Waiting for destroy.");
-                result.getResult();
-                Cloudlet.logger.trace("Cloudlet.destroy() - Cloudlet destroyed.");
-            } catch (final InterruptedException e) {
-                ExceptionTracer.traceIgnored(e);
-            } catch (final ExecutionException e) {
-                ExceptionTracer.traceIgnored(e);
-            }
-            return true;
-        }
-    }
-
-    private <T> T getCallbackProxy(Class<T> callbackType, T callback) {
-        final CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T>(callback);
-        final T proxy = (T) Proxy.newProxyInstance(this.executor.getLoader(), new Class[] {
-            callbackType }, iHandler);
-        return proxy;
-    }
-
-    private <T> CompletionInvocationHandler<T> getResponseHandler(
-            IOperationCompletionHandler<T> handler) {
-        final CloudletResponseInvocationHandler<T> iHandler = new CloudletResponseInvocationHandler<T>(
-                handler);
-        return iHandler;
-    }
-
-    /**
-     * Initializes the cloudlet.
-     * 
-     * @param config
-     *            configuration data of the cloudlet
-     * @return <code>true</code> if cloudlet was successfully initialized
-     */
-    public boolean initialize(IConfiguration config) {
-        synchronized (this.monitor) {
-            boolean initialized = false;
-            this.configuration = config;
-            final IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object>() {
-
-                @Override
-                public void onFailure(Throwable error) {
-                    Cloudlet.this.controllerCallback.initializeFailed(Cloudlet.this.context,
-                            new CallbackArguments<C>(Cloudlet.this.controller));
-                }
-
-                @Override
-                public void onSuccess(Object result) {
-                    Cloudlet.this.controllerCallback.initializeSucceeded(Cloudlet.this.context,
-                            new CallbackArguments<C>(Cloudlet.this.controller));
-                }
-            };
-            final List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>>();
-            final CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object>(
-                    complHandler);
-            handlers.add(complHandler);
-            final EventDrivenOperation<Object> initOperation = new EventDrivenOperation<Object>(
-                    handlers, iHandler);
-            initOperation.setOperation(new Runnable() {
-
-                @Override
-                public void run() {
-                    Cloudlet.this.controllerCallback.initialize(Cloudlet.this.context,
-                            new CallbackArguments<C>(Cloudlet.this.controller));
-                    final List<IOperationCompletionHandler<Object>> handlers = initOperation
-                            .getCompletionHandlers();
-                    for (final IOperationCompletionHandler<Object> handler : handlers) {
-                        handler.onSuccess(null);
-                    }
-                }
-            });
-            final IResult<Object> result = new EventDrivenResult<Object>(initOperation);
-            this.executor.handleRequest(initOperation.getOperation());
-            try {
-                result.getResult();
-                initialized = true;
-                this.active = true;
-            } catch (final InterruptedException e) {
-                ExceptionTracer.traceIgnored(e);
-            } catch (final ExecutionException e) {
-                ExceptionTracer.traceIgnored(e);
-            }
-            return initialized;
-        }
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
+public class Cloudlet<C extends Object>
+{
+	/**
+	 * Creates a new cloudlet instance.
+	 * 
+	 * @param config
+	 *            configuration data required for configuring and initializing
+	 *            the cloudlet instance
+	 * @param loader
+	 *            the class loader used for loading cloudlet classes
+	 * @throws CloudletException
+	 */
+	public Cloudlet (final C context, final ICloudletCallback<C> callback, final ThreadingContext threading, final ClassLoader loader)
+	{
+		synchronized (this.monitor) {
+			this.context = context;
+			this.threading = threading;
+			this.active = false;
+			this.executor = new CloudletExecutor (this.threading, loader);
+			this.controller = new CloudletController ();
+			this.controllerCallback = callback;
+		}
+	}
+	
+	public boolean destroy ()
+	{
+		synchronized (this.monitor) {
+			this.active = false;
+			final IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object> () {
+				@Override
+				public void onFailure (final Throwable error)
+				{
+					Cloudlet.this.controllerCallback.destroyFailed (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.executor.shutdown ();
+				}
+				
+				@Override
+				public void onSuccess (final Object result)
+				{
+					Cloudlet.this.controllerCallback.destroySucceeded (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.executor.shutdown ();
+				}
+			};
+			final List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>> ();
+			final CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object> (complHandler);
+			handlers.add (complHandler);
+			final EventDrivenOperation<Object> destroyOperation = new EventDrivenOperation<Object> (handlers, iHandler);
+			destroyOperation.setOperation (new Runnable () {
+				@Override
+				public void run ()
+				{
+					Cloudlet.this.controllerCallback.destroy (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					final List<IOperationCompletionHandler<Object>> handlers = destroyOperation.getCompletionHandlers ();
+					for (final IOperationCompletionHandler<Object> handler : handlers) {
+						handler.onSuccess (null);
+					}
+				}
+			});
+			final IResult<Object> result = new EventDrivenResult<Object> (destroyOperation);
+			this.executor.handleRequest (destroyOperation.getOperation ());
+			try {
+				Cloudlet.logger.trace ("Cloudlet.destroy() - Waiting for destroy.");
+				result.getResult ();
+				Cloudlet.logger.trace ("Cloudlet.destroy() - Cloudlet destroyed.");
+			} catch (final InterruptedException e) {
+				ExceptionTracer.traceIgnored (e);
+			} catch (final ExecutionException e) {
+				ExceptionTracer.traceIgnored (e);
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * Initializes the cloudlet.
+	 * 
+	 * @param config
+	 *            configuration data of the cloudlet
+	 * @return <code>true</code> if cloudlet was successfully initialized
+	 */
+	public boolean initialize (final IConfiguration config)
+	{
+		synchronized (this.monitor) {
+			boolean initialized = false;
+			this.configuration = config;
+			final IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object> () {
+				@Override
+				public void onFailure (final Throwable error)
+				{
+					Cloudlet.this.controllerCallback.initializeFailed (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+				}
+				
+				@Override
+				public void onSuccess (final Object result)
+				{
+					Cloudlet.this.controllerCallback.initializeSucceeded (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+				}
+			};
+			final List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>> ();
+			final CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object> (complHandler);
+			handlers.add (complHandler);
+			final EventDrivenOperation<Object> initOperation = new EventDrivenOperation<Object> (handlers, iHandler);
+			initOperation.setOperation (new Runnable () {
+				@Override
+				public void run ()
+				{
+					Cloudlet.this.controllerCallback.initialize (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					final List<IOperationCompletionHandler<Object>> handlers = initOperation.getCompletionHandlers ();
+					for (final IOperationCompletionHandler<Object> handler : handlers) {
+						handler.onSuccess (null);
+					}
+				}
+			});
+			final IResult<Object> result = new EventDrivenResult<Object> (initOperation);
+			this.executor.handleRequest (initOperation.getOperation ());
+			try {
+				result.getResult ();
+				initialized = true;
+				this.active = true;
+			} catch (final InterruptedException e) {
+				ExceptionTracer.traceIgnored (e);
+			} catch (final ExecutionException e) {
+				ExceptionTracer.traceIgnored (e);
+			}
+			return initialized;
+		}
+	}
+	
+	public boolean isActive ()
+	{
+		return this.active;
+	}
+	
+	private <T> T getCallbackProxy (final Class<T> callbackType, final T callback)
+	{
+		final CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T> (callback);
+		final T proxy = (T) Proxy.newProxyInstance (this.executor.getLoader (), new Class[] {callbackType}, iHandler);
+		return proxy;
+	}
+	
+	private <T> CompletionInvocationHandler<T> getResponseHandler (final IOperationCompletionHandler<T> handler)
+	{
+		final CloudletResponseInvocationHandler<T> iHandler = new CloudletResponseInvocationHandler<T> (handler);
+		return iHandler;
+	}
+	
+	private boolean active;
+	private IConfiguration configuration;
+	private C context;
+	private CloudletController controller;
+	private ICloudletCallback<C> controllerCallback;
+	private CloudletExecutor executor;
+	private final Monitor monitor = Monitor.create (this);
+	private ThreadingContext threading;
+	private static MosaicLogger logger = MosaicLogger.createLogger (Cloudlet.class);
+	
+	/**
+	 * An implementation of the cloudlet controller. Basically, all operation in
+	 * the controller's interface are redirected to operations of the cloudlet
+	 * object.
+	 * 
+	 * @author Georgiana Macariu
+	 * 
+	 */
+	final class CloudletController
+			implements
+				ICloudletController<C>
+	{
+		@Override
+		public <T> T buildCallbackInvoker (final T callback, final Class<T> callbackType)
+		{
+			return Cloudlet.this.getCallbackProxy (callbackType, callback);
+		}
+		
+		@Override
+		public final boolean destroy ()
+		{
+			return (Cloudlet.this.destroy ());
+		}
+		
+		@Override
+		public final IConfiguration getConfiguration ()
+		{
+			return (Cloudlet.this.configuration);
+		}
+		
+		@Override
+		public <T> CompletionInvocationHandler<T> getResponseInvocationHandler (final IOperationCompletionHandler<T> handler)
+		{
+			return Cloudlet.this.getResponseHandler (handler);
+		}
+		
+		@Override
+		public final boolean isActive ()
+		{
+			return (Cloudlet.this.isActive ());
+		}
+	}
+	
+	/**
+	 * This handler will serialize the execution of requests received by a
+	 * cloudlet instance.
+	 * 
+	 * @author Georgiana Macariu
+	 * 
+	 * @param <T>
+	 *            type to invoke
+	 */
+	final class CloudletInvocationHandler<T>
+			implements
+				InvocationHandler
+	{
+		/**
+		 * Creates the handler
+		 * 
+		 * @param callback
+		 *            the callback to execute
+		 */
+		public CloudletInvocationHandler (final T callback)
+		{
+			super ();
+			this.callback = callback;
+		}
+		
+		@Override
+		public Object invoke (final Object proxy, final Method method, final Object[] arguments)
+		{
+			final Runnable task = new Runnable () {
+				@Override
+				public void run ()
+				{
+					try {
+						method.invoke (CloudletInvocationHandler.this.callback, arguments);
+					} catch (final IllegalArgumentException e) {
+						ExceptionTracer.traceIgnored (e);
+					} catch (final IllegalAccessException e) {
+						ExceptionTracer.traceIgnored (e);
+					} catch (final InvocationTargetException e) {
+						ExceptionTracer.traceIgnored (e);
+					}
+				}
+			};
+			Cloudlet.this.executor.handleRequest (task);
+			return null;
+		}
+		
+		private final T callback;
+	}
+	
+	/**
+	 * This handler will serialize the execution of response handlers received
+	 * by a cloudlet instance.
+	 * 
+	 * @author Georgiana Macariu
+	 * 
+	 */
+	final class CloudletResponseInvocationHandler<T>
+			extends CompletionInvocationHandler<T>
+	{
+		/**
+		 * Creates the handler.
+		 * 
+		 * @param handler
+		 *            the response handler to execute
+		 */
+		private CloudletResponseInvocationHandler (final IOperationCompletionHandler<T> handler)
+		{
+			super (handler);
+		}
+		
+		@Override
+		public CompletionInvocationHandler<T> createHandler (final IOperationCompletionHandler<T> handler)
+		{
+			return new CloudletResponseInvocationHandler<T> (handler);
+		}
+		
+		@Override
+		public Object invoke (final Object proxy, final Method method, final Object[] arguments)
+		{
+			final Runnable task = new Runnable () {
+				@Override
+				public void run ()
+				{
+					try {
+						method.invoke (CloudletResponseInvocationHandler.this.handler, arguments);
+					} catch (final IllegalArgumentException e) {
+						ExceptionTracer.traceIgnored (e);
+					} catch (final IllegalAccessException e) {
+						ExceptionTracer.traceIgnored (e);
+					} catch (final InvocationTargetException e) {
+						ExceptionTracer.traceIgnored (e);
+					}
+				}
+			};
+			Cloudlet.this.executor.handleResponse (task);
+			return null;
+		}
+	}
 }
