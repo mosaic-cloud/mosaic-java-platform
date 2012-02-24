@@ -88,28 +88,24 @@ public class AmqpQueueConsumerConnectorProxy<Message>
 	
 	public CallbackCompletion<Void> acknowledge (final IAmqpQueueDeliveryToken delivery)
 	{
-		this.raw.ack (((DeliveryToken) delivery).token, false);
-		// !!!!
-		return null;
+		return this.raw.ack (((DeliveryToken) delivery).token, false);
 	}
 	
 	@Override
 	public CallbackCompletion<Void> destroy ()
 	{
-		this.raw.cancel (this.identity);
-		this.raw.destroy ();
 		// !!!!
-		return null;
+		this.raw.cancel (this.identity);
+		return this.raw.destroy ();
 	}
 	
 	public CallbackCompletion<Void> initialize ()
 	{
+		// !!!!
 		this.raw.declareExchange (this.exchange, this.exchangeType, this.exchangeDurable, this.exchangeAutoDelete, this.definePassive);
 		this.raw.declareQueue (this.queue, this.queueExclusive, this.queueDurable, this.queueAutoDelete, this.definePassive);
 		this.raw.bindQueue (this.exchange, this.queue, this.bindingRoutingKey);
-		this.raw.consume (this.queue, this.identity, this.queueExclusive, this.consumerAutoAck, this.callback);
-		// !!!!
-		return null;
+		return this.raw.consume (this.queue, this.identity, this.queueExclusive, this.consumerAutoAck, this.callback);
 	}
 	
 	protected final String bindingRoutingKey;

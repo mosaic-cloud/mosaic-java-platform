@@ -74,7 +74,7 @@ public final class AmqpQueueRawConnectorProxy
 		this.consumerMessages = new ResponseHandlerMap ();
 	}
 	
-	public CallbackCompletion<Boolean> ack (final long delivery, final boolean multiple)
+	public CallbackCompletion<Void> ack (final long delivery, final boolean multiple)
 	{
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.Ack.Builder requestBuilder = AmqpPayloads.Ack.newBuilder ();
@@ -82,10 +82,10 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setDelivery (delivery);
 		requestBuilder.setMultiple (multiple);
 		final Message message = new Message (AmqpMessage.ACK, requestBuilder.build ());
-		return this.sendRequest (message, token, Boolean.class);
+		return this.sendRequest (message, token, Void.class);
 	}
 	
-	public CallbackCompletion<Boolean> bindQueue (final String exchange, final String queue, final String routingKey)
+	public CallbackCompletion<Void> bindQueue (final String exchange, final String queue, final String routingKey)
 	{
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.BindQueueRequest.Builder requestBuilder = AmqpPayloads.BindQueueRequest.newBuilder ();
@@ -94,22 +94,21 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setQueue (queue);
 		requestBuilder.setRoutingKey (routingKey);
 		final Message message = new Message (AmqpMessage.BIND_QUEUE_REQUEST, requestBuilder.build ());
-		return this.sendRequest (message, token, Boolean.class);
+		return this.sendRequest (message, token, Void.class);
 	}
 	
-	public CallbackCompletion<Boolean> cancel (final String consumer)
+	public CallbackCompletion<Void> cancel (final String consumer)
 	{
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.CancelRequest.Builder requestBuilder = AmqpPayloads.CancelRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setConsumer (consumer);
 		final Message message = new Message (AmqpMessage.CANCEL_REQUEST, requestBuilder.build ());
-		return this.sendRequest (message, token, Boolean.class);
+		return this.sendRequest (message, token, Void.class);
 	}
 	
-	public CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback)
+	public CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback)
 	{
-		CallbackCompletion<Boolean> result;
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.ConsumeRequest.Builder requestBuilder = AmqpPayloads.ConsumeRequest.newBuilder ();
 		requestBuilder.setToken (token);
@@ -119,16 +118,16 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setAutoAck (autoAck);
 		this.pendingConsumers.put (consumer, consumerCallback);
 		final Message mssg = new Message (AmqpMessage.CONSUME_REQUEST, requestBuilder.build ());
-		result = this.sendRequest (mssg, token, Boolean.class); // NOPMD by
-																// georgiana
-																// on 2/20/12
-																// 5:54 PM
+		final CallbackCompletion<Void> result = this.sendRequest (mssg, token, Void.class); // NOPMD by
+																							// georgiana
+																							// on 2/20/12
+																							// 5:54 PM
 		final CallbackCompletionDeferredFuture<String> consumeFuture = CallbackCompletionDeferredFuture.create (String.class);
 		this.consumerMessages.register (consumer, consumeFuture);
 		return result;
 	}
 	
-	public CallbackCompletion<Boolean> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive)
+	public CallbackCompletion<Void> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive)
 	{
 		final ExchangeType eType = AmqpPayloads.DeclareExchangeRequest.ExchangeType.valueOf (type.toString ().toUpperCase ());
 		final CompletionToken token = this.generateToken ();
@@ -140,10 +139,10 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setAutoDelete (autoDelete);
 		requestBuilder.setPassive (passive);
 		final Message message = new Message (AmqpMessage.DECL_EXCHANGE_REQUEST, requestBuilder.build ());
-		return this.sendRequest (message, token, Boolean.class);
+		return this.sendRequest (message, token, Void.class);
 	}
 	
-	public CallbackCompletion<Boolean> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive)
+	public CallbackCompletion<Void> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive)
 	{
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.DeclareQueueRequest.Builder requestBuilder = AmqpPayloads.DeclareQueueRequest.newBuilder ();
@@ -154,10 +153,10 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setAutoDelete (autoDelete);
 		requestBuilder.setPassive (passive);
 		final Message message = new Message (AmqpMessage.DECL_QUEUE_REQUEST, requestBuilder.build ());
-		return this.sendRequest (message, token, Boolean.class);
+		return this.sendRequest (message, token, Void.class);
 	}
 	
-	public CallbackCompletion<Boolean> get (final String queue, final boolean autoAck)
+	public CallbackCompletion<Void> get (final String queue, final boolean autoAck)
 	{
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.GetRequest.Builder requestBuilder = AmqpPayloads.GetRequest.newBuilder ();
@@ -165,10 +164,10 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setQueue (queue);
 		requestBuilder.setAutoAck (autoAck);
 		final Message message = new Message (AmqpMessage.GET_REQUEST, requestBuilder.build ());
-		return this.sendRequest (message, token, Boolean.class);
+		return this.sendRequest (message, token, Void.class);
 	}
 	
-	public CallbackCompletion<Boolean> publish (final AmqpOutboundMessage message)
+	public CallbackCompletion<Void> publish (final AmqpOutboundMessage message)
 	{
 		final CompletionToken token = this.generateToken ();
 		final AmqpPayloads.PublishRequest.Builder requestBuilder = AmqpPayloads.PublishRequest.newBuilder ();
@@ -189,7 +188,7 @@ public final class AmqpQueueRawConnectorProxy
 			requestBuilder.setReplyTo (message.getCallback ());
 		}
 		final Message mssg = new Message (AmqpMessage.PUBLISH_REQUEST, requestBuilder.build ());
-		return this.sendRequest (mssg, token, Boolean.class);
+		return this.sendRequest (mssg, token, Void.class);
 	}
 	
 	@Override
@@ -203,14 +202,15 @@ public final class AmqpQueueRawConnectorProxy
 				final IdlCommon.Ok okPayload = (Ok) message.payload;
 				final CompletionToken token = okPayload.getToken ();
 				this.logger.debug ("QueueConnectorProxy - Received " + message.specification.toString () + " request [" + token.getMessageId () + "]...");
-				this.pendingRequests.succeed (token.getMessageId (), Boolean.TRUE);
+				this.pendingRequests.succeed (token.getMessageId (), null);
 			}
 				break;
 			case NOK : {
 				final IdlCommon.NotOk nokPayload = (NotOk) message.payload;
 				final CompletionToken token = nokPayload.getToken ();
 				this.logger.debug ("QueueConnectorProxy - Received " + message.specification.toString () + " request [" + token.getMessageId () + "]...");
-				this.pendingRequests.succeed (token.getMessageId (), Boolean.FALSE);
+				// FIXME
+				this.pendingRequests.fail (token.getMessageId (), new Exception ("operation failed"));
 			}
 				break;
 			case ERROR : {
@@ -228,7 +228,7 @@ public final class AmqpQueueRawConnectorProxy
 				final AmqpPayloads.ConsumeReply consumePayload = (ConsumeReply) message.payload;
 				final CompletionToken token = consumePayload.getToken ();
 				this.logger.debug ("QueueConnectorProxy - Received " + message.specification.toString () + " request [" + token.getMessageId () + "]...");
-				this.pendingRequests.succeed (token.getMessageId (), Boolean.TRUE);
+				this.pendingRequests.succeed (token.getMessageId (), null);
 			}
 				break;
 			case CANCEL_OK : {
@@ -237,7 +237,7 @@ public final class AmqpQueueRawConnectorProxy
 				this.logger.debug ("QueueConnectorProxy - Received CANCEL_OK " + " for consumer " + consumerId);
 				final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.remove (consumerId);
 				callback.handleCancelOk (consumerId);
-				this.consumerMessages.succeed (consumerId, Boolean.TRUE);
+				this.consumerMessages.succeed (consumerId, null);
 				this.consumerMessages.cancel (consumerId);
 			}
 				break;
@@ -246,7 +246,6 @@ public final class AmqpQueueRawConnectorProxy
 				final AmqpPayloads.ServerCancelRequest scancelPayload = (ServerCancelRequest) message.payload;
 				final String consumerId = scancelPayload.getConsumerTag ();
 				this.logger.debug ("QueueConnectorProxy - Received SERVER_CANCEL " + " for consumer " + consumerId);
-				// final IAmqpQueueRawConsumerCallback callback =
 				this.pendingConsumers.remove (consumerId);
 				// callback.handleCancelOk(consumerId);
 				this.consumerMessages.cancel (consumerId);
@@ -258,7 +257,7 @@ public final class AmqpQueueRawConnectorProxy
 				this.logger.debug ("QueueConnectorProxy - Received CONSUME_OK " + " for consumer " + consumerId);
 				final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.get (consumerId);
 				callback.handleConsumeOk (consumerId);
-				this.consumerMessages.succeed (consumerId, Boolean.TRUE);
+				this.consumerMessages.succeed (consumerId, null);
 			}
 				break;
 			case DELIVERY : {

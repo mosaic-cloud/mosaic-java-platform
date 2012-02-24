@@ -55,21 +55,21 @@ public class AmqpQueueRawConnectorTest extends
                 "publisher.amqp.routing_key", String.class, "");
         final String queue = ConfigUtils.resolveParameter(this.context.configuration,
                 "consumer.amqp.queue", String.class, "");
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.bindQueue(exchange, queue,
+        Assert.assertTrue(this.awaitSuccess(this.connector.bindQueue(exchange, queue,
                 routingKey)));
     }
 
     protected void testDeclareExchange() {
         final String exchange = ConfigUtils.resolveParameter(this.context.configuration,
                 "publisher.amqp.exchange", String.class, "");
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.declareExchange(exchange,
+        Assert.assertTrue(this.awaitSuccess(this.connector.declareExchange(exchange,
                 AmqpExchangeType.DIRECT, false, false, false)));
     }
 
     protected void testDeclareQueue() {
         final String queue = ConfigUtils.resolveParameter(this.context.configuration,
                 "consumer.amqp.queue", String.class, "");
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.declareQueue(queue, true, false,
+        Assert.assertTrue(this.awaitSuccess(this.connector.declareQueue(queue, true, false,
                 true, false)));
     }
 

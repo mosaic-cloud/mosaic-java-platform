@@ -62,6 +62,13 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
         return this.getBooleanOutcome(completion);
     }
 
+    protected boolean awaitSuccess(final CallbackCompletion<?> completion) {
+        this.await(completion);
+        Assert.assertTrue(completion.isCompleted());
+        Assert.assertEquals(null, completion.getException());
+        return true;
+    }
+
     protected <O> O awaitOutcome(final CallbackCompletion<O> completion) {
         this.await(completion);
         return this.getOutcome(completion);
@@ -70,7 +77,7 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
     protected boolean getBooleanOutcome(final CallbackCompletion<Boolean> completion) {
         final Boolean value = this.getOutcome(completion);
         Assert.assertNotNull(value);
-        return (value.booleanValue());
+        return value.booleanValue();
     }
 
     protected <O> O getOutcome(final CallbackCompletion<O> completion) {

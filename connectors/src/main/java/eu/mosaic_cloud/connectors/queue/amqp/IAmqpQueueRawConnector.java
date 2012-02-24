@@ -23,7 +23,7 @@ public interface IAmqpQueueRawConnector
 	 *            acknowledge just the supplied delivery tag.
 	 * @return <code>true</code> if messages were acknowledged successfully
 	 */
-	CallbackCompletion<Boolean> ack (final long delivery, final boolean multiple);
+	CallbackCompletion<Void> ack (final long delivery, final boolean multiple);
 	
 	/**
 	 * Bind a queue to an exchange, with no extra arguments.
@@ -36,7 +36,7 @@ public interface IAmqpQueueRawConnector
 	 *            the routing key to use for the binding
 	 * @return <code>true</code> if the queue bind succeeded
 	 */
-	CallbackCompletion<Boolean> bindQueue (final String exchange, final String queue, final String routingKey);
+	CallbackCompletion<Void> bindQueue (final String exchange, final String queue, final String routingKey);
 	
 	/**
 	 * Cancels a consumer.
@@ -46,7 +46,7 @@ public interface IAmqpQueueRawConnector
 	 *            context
 	 * @return <code>true</code> if consumer was canceled
 	 */
-	CallbackCompletion<Boolean> cancel (final String consumer);
+	CallbackCompletion<Void> cancel (final String consumer);
 	
 	/**
 	 * Start a message consumer.
@@ -67,7 +67,7 @@ public interface IAmqpQueueRawConnector
 	 *            system will send Consume messages)
 	 * @return the client-generated consumer tag to establish context
 	 */
-	CallbackCompletion<Boolean> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback);
+	CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback);
 	
 	/**
 	 * Declares an exchange and creates a channel for it.
@@ -87,7 +87,7 @@ public interface IAmqpQueueRawConnector
 	 *            is, check if the named exchange exists
 	 * @return <code>true</code> if the exchange declaration succeeded
 	 */
-	CallbackCompletion<Boolean> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive);
+	CallbackCompletion<Void> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive);
 	
 	/**
 	 * Declare a queue.
@@ -108,7 +108,7 @@ public interface IAmqpQueueRawConnector
 	 *            if it exists
 	 * @return <code>true</code> if the queue declaration succeeded
 	 */
-	CallbackCompletion<Boolean> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive);
+	CallbackCompletion<Void> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive);
 	
 	/**
 	 * Retrieve a message from a queue.
@@ -121,7 +121,7 @@ public interface IAmqpQueueRawConnector
 	 *            should expect explicit acknowledgments
 	 * @return <code>true</code> if message was retrieved successfully
 	 */
-	CallbackCompletion<Boolean> get (final String queue, final boolean autoAck);
+	CallbackCompletion<Void> get (final String queue, final boolean autoAck);
 	
 	/**
 	 * Publishes a message.
@@ -130,5 +130,5 @@ public interface IAmqpQueueRawConnector
 	 *            the message, message properties and destination data
 	 * @return <code>true</code> if message was published successfully
 	 */
-	CallbackCompletion<Boolean> publish (final AmqpOutboundMessage message);
+	CallbackCompletion<Void> publish (final AmqpOutboundMessage message);
 }

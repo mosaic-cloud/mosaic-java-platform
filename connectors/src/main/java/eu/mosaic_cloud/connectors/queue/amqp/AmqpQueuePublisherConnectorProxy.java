@@ -70,7 +70,7 @@ public class AmqpQueuePublisherConnectorProxy<Message>
 	 * @param encoder
 	 *            encoder used for serializing data
 	 */
-	public AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy raw, final IConfiguration config, final Class<Message> dataClass, final DataEncoder<Message> encoder, final IAmqpQueueConsumerCallback<Message> callback)
+	public AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy raw, final IConfiguration config, final Class<Message> dataClass, final DataEncoder<Message> encoder)
 	{
 		super (raw, config, dataClass, encoder);
 		this.identity = UUID.randomUUID ().toString ();
@@ -85,16 +85,13 @@ public class AmqpQueuePublisherConnectorProxy<Message>
 	@Override
 	public CallbackCompletion<Void> destroy ()
 	{
-		this.raw.destroy ();
-		// !!!!
-		return null;
+		return this.raw.destroy ();
 	}
 	
 	public CallbackCompletion<Void> initialize ()
 	{
-		this.raw.declareExchange (this.exchange, this.exchangeType, this.exchangeDurable, this.exchangeAutoDelete, this.definePassive);
 		// !!!!
-		return null;
+		return this.raw.declareExchange (this.exchange, this.exchangeType, this.exchangeDurable, this.exchangeAutoDelete, this.definePassive);
 	}
 	
 	public CallbackCompletion<Void> publish (final Message message)
@@ -107,9 +104,7 @@ public class AmqpQueuePublisherConnectorProxy<Message>
 			return (CallbackCompletion.createFailure (exception));
 		}
 		final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data, false, false, false, null);
-		this.raw.publish (outbound);
-		// !!!!
-		return null;
+		return this.raw.publish (outbound);
 	}
 	
 	protected final boolean definePassive;
