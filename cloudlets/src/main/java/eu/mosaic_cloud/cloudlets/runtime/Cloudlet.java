@@ -126,7 +126,6 @@ public class Cloudlet<C extends Object> {
 
                 @Override
                 public void run() {
-                    // call the user defined init
                     Cloudlet.this.controllerCallback.initialize(Cloudlet.this.context,
                             new CallbackArguments<C>(Cloudlet.this.controller));
                     List<IOperationCompletionHandler<Object>> handlers = initOperation
@@ -182,7 +181,6 @@ public class Cloudlet<C extends Object> {
 
                 @Override
                 public void run() {
-                    // call the user defined init
                     Cloudlet.this.controllerCallback.destroy(Cloudlet.this.context,
                             new CallbackArguments<C>(Cloudlet.this.controller));
                     List<IOperationCompletionHandler<Object>> handlers = destroyOperation

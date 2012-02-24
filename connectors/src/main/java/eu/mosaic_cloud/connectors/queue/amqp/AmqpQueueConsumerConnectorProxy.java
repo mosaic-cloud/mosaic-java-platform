@@ -94,14 +94,14 @@ public class AmqpQueueConsumerConnectorProxy<Message>
 	@Override
 	public CallbackCompletion<Void> destroy ()
 	{
-		// !!!!
+		// FIXME
 		this.raw.cancel (this.identity);
 		return this.raw.destroy ();
 	}
 	
 	public CallbackCompletion<Void> initialize ()
 	{
-		// !!!!
+		// FIXME
 		this.raw.declareExchange (this.exchange, this.exchangeType, this.exchangeDurable, this.exchangeAutoDelete, this.definePassive);
 		this.raw.declareQueue (this.queue, this.queueExclusive, this.queueDurable, this.queueAutoDelete, this.definePassive);
 		this.raw.bindQueue (this.exchange, this.queue, this.bindingRoutingKey);

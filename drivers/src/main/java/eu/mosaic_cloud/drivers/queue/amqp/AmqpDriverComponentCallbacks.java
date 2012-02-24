@@ -244,7 +244,7 @@ public final class AmqpDriverComponentCallbacks extends
 					.info("AMQP driver callback registered to group " + this.selfGroup); //$NON-NLS-1$
 			this.status = Status.Registered;
 
-			// create stub and interop channel
+			// NOTE: create stub and interop channel
 			String channelId = ConfigProperties
 					.getString("AmqpDriverComponentCallbacks.4");
 			String channelEndpoint = ConfigProperties

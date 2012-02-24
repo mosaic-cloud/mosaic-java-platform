@@ -130,7 +130,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 
 	@Override
 	public CallbackCompletion<Void> created(Session session) {
-		// TODO handle session created
+		// FIXME: handle session created
 		if (!this.sessions.contains(session)) {
 			this.sessions.add(session);
 		}
@@ -139,7 +139,7 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
 
 	@Override
 	public CallbackCompletion<Void> destroyed(Session session) {
-		// handle session destroyed
+		// NOTE: handle session destroyed
 		this.logger.trace("Session destroyed.");
 		this.sessions.remove(session);
 		return null;

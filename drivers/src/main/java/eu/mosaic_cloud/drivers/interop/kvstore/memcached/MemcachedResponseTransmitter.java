@@ -57,7 +57,7 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
 						+ " request " + token.getMessageId() + " client id "
 						+ token.getClientId());
 		if (isError) {
-			// create error message
+			// NOTE: create error message
 			Builder errorPayload = IdlCommon.Error.newBuilder();
 			errorPayload.setToken(token);
 			errorPayload.setErrorMessage(result.toString());
@@ -110,7 +110,7 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
 			}
 		}
 
-		// send response
+		// NOTE: send response
 		publishResponse(session, message);
 
 	}

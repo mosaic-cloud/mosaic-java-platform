@@ -175,7 +175,7 @@ public class CloudletExecutor {
         this.requestQueue = new LinkedBlockingQueue<Runnable>();
         this.responseQueue = new LinkedBlockingQueue<Runnable>();
 
-        // FIXME get threads from workers from a thread pool
+        // FIXME: get threads from workers from a thread pool
         this.worker = new Worker();
         this.worker.thread = Threading.createAndStartThread(threading,
                 ThreadConfiguration.create(this, "worker", true).setClassLoader(loader),
@@ -239,7 +239,7 @@ public class CloudletExecutor {
 
         this.mainLock.lock();
         try {
-            if (security != null) { // Check if caller can modify our threads
+            if (security != null) { // NOTE: Check if caller can modify our threads
                 security.checkAccess(this.worker.thread);
                 security.checkAccess(this.backupWorker.thread);
             }
@@ -254,12 +254,12 @@ public class CloudletExecutor {
                 if (!this.worker.isActive()) {
                     this.backupWorker.interruptIfIdle();
                 }
-            } catch (SecurityException se) { // Try to back out
+            } catch (SecurityException se) { // NOTE: Try to back out
                 this.runState = state;
                 throw se;
             }
 
-            tryTerminate(); // Terminate now if queues empty
+            tryTerminate(); // NOTE: Terminate now if queues empty
             CloudletExecutor.logger.trace("CloudletExecutor shuted down.");
         } finally {
             this.mainLock.unlock();
@@ -267,7 +267,7 @@ public class CloudletExecutor {
     }
 
     public void shutdownNow() {
-        // TODO
+        // FIXME
     }
 
     /**
@@ -343,8 +343,8 @@ public class CloudletExecutor {
         } finally {
             this.mainLock.unlock();
         }
+        // FIXME
         return canExit;
-        // TODO
     }
 
     /**
@@ -373,7 +373,7 @@ public class CloudletExecutor {
                 CloudletExecutor.logger
                         .info("CloudletExecutor rejects requests execution. Cloudlet state is "
                                 + this.runState);
-                reject(request); // is shutdown
+                reject(request); // NOTE: is shutdown
             }
         } finally {
             this.mainLock.unlock();
@@ -498,7 +498,7 @@ public class CloudletExecutor {
                     return null;
                 }
             } catch (InterruptedException ie) {
-                // On interruption, re-check runState
+                // NOTE: On interruption, re-check runState
                 ExceptionTracer.traceIgnored(ie);
             } finally {
                 this.mainLock.unlock();
@@ -528,12 +528,12 @@ public class CloudletExecutor {
                 }
                 Runnable r;
                 this.mainLock.lock();
-                // wait until the main worker blocks
+                // NOTE: wait until the main worker blocks
                 while (!this.worker.isBlocked()) {
                     this.mainWorkerBlocked.await();
                 }
 
-                if (state >= CloudletExecutor.SHUTDOWN) { // Help drain queues
+                if (state >= CloudletExecutor.SHUTDOWN) { // NOTE: Help drain queues
                     if (this.worker.isBlocked() && !this.responseQueue.isEmpty()) {
                         r = this.responseQueue.poll();
                     } else {
@@ -549,7 +549,7 @@ public class CloudletExecutor {
                 return r;
 
             } catch (InterruptedException ie) {
-                // On interruption, re-check runState
+                // NOTE: On interruption, re-check runState
                 ExceptionTracer.traceIgnored(ie);
             } finally {
                 this.mainLock.unlock();

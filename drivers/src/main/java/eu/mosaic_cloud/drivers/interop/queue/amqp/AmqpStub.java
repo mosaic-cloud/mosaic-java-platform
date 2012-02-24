@@ -174,7 +174,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			this.logger.trace(
 					"AmqpStub - Received request for DECLARE EXCHANGE ");//$NON-NLS-1$
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler exchHandler = new DriverOperationFinishedHandler(
 					token, session);
 
@@ -195,7 +195,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			this.logger.trace(
 					"AmqpStub - Received request for DECLARE QUEUE");//$NON-NLS-1$
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler queueHandler = new DriverOperationFinishedHandler(
 					token, session);
 
@@ -213,7 +213,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			this.logger.trace(
 					"AmqpStub - Received request for BIND QUEUE");//$NON-NLS-1$
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler bindHandler = new DriverOperationFinishedHandler(
 					token, session);
 
@@ -248,7 +248,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			this.logger.trace(
 					"AmqpStub - Received request for PUBLISH"); //$NON-NLS-1$
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
 					token, session);
 
@@ -267,7 +267,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			this.logger.trace(
 					"AmqpStub - Received request for CONSUME"); //$NON-NLS-1$
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler consHandler = new DriverOperationFinishedHandler(
 					token, session);
 
@@ -285,7 +285,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			this.logger.trace(
 					"AmqpStub - Received request for GET"); //$NON-NLS-1$
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler getHandler = new DriverOperationFinishedHandler(
 					token, session);
 
@@ -301,7 +301,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 			this.logger.trace(
 					"AmqpStub - Received request for CANCEL"); //$NON-NLS-1$
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler cancelHandler = new DriverOperationFinishedHandler(
 					token, session);
 			resultBool = driver.basicCancel(consumer, cancelHandler);
@@ -315,7 +315,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 
 			this.logger.trace("AmqpStub - Received  ACK "); //$NON-NLS-1$ 
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler ackHandler = new DriverOperationFinishedHandler(
 					token, session);
 			resultBool = driver.basicAck(token.getClientId(), delivery,
@@ -422,7 +422,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 				ExceptionTracer.traceIgnored(e);
 			}
 			this.driver.removePendingOperation(this.result);
-			// result is error
+			// NOTE: result is error
 			this.transmitter.sendResponse(this.session, this.complToken,
 					this.operation, error.getMessage(), true);
 		}

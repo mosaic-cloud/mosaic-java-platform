@@ -45,11 +45,11 @@ public class FeedParser {
 
 	public Timeline parseFeed(byte[] xmlEntry) throws IOException,
 			FeedException {
-		// Load the feed, regardless of RSS or Atom type
+		// NOTE: Load the feed, regardless of RSS or Atom type
 		XmlReader reader = new XmlReader(new ByteArrayInputStream(xmlEntry));
 		SyndFeed feed = this.input.build(reader);
 
-		// check feed type, only ATOM is accepted
+		// NOTE: check feed type, only ATOM is accepted
 		Feed atomFeed = null;
 		if (feed.getFeedType().toLowerCase().startsWith("atom")) {
 			atomFeed = (Feed) feed.originalWireFeed();

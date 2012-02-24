@@ -142,7 +142,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         if (this.status == Status.Ready) {
             if (request.operation
                     .equals(ConfigProperties.getString("CloudletComponent.4"))) {
-                // TODO
+                // FIXME
                 List<?> operands = DefaultJsonMapper.defaultInstance.decode(request.inputs,
                         List.class);
                 ClassLoader loader = getCloudletClassLoader(operands.get(0).toString());
@@ -259,7 +259,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         Preconditions.checkState(this.component == component);
         Preconditions.checkState(this.status != Status.Terminated);
         Preconditions.checkState(this.status != Status.Unregistered);
-        // also stop and destroy connector & cloudlets
+        // FIXME: also stop and destroy connector & cloudlets
         for (CloudletManager container : this.cloudletRunners) {
             container.stop();
         }
@@ -321,7 +321,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         Preconditions.checkState(this.component == component);
         Preconditions.checkState(this.status != Status.Terminated);
         Preconditions.checkState(this.status != Status.Unregistered);
-        // also stop and destroy connector & cloudlets
+        // FIXME: also stop and destroy connector & cloudlets
         for (CloudletManager container : this.cloudletRunners) {
             container.stop();
         }

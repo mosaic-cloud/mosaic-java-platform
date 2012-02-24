@@ -89,7 +89,7 @@ public final class AbortingExceptionTracer
 		try {
 			exception.printStackTrace (finalTranscript);
 		} catch (final Throwable exception1) {
-			// intentional
+			// NOTE: intentional
 		}
 	}
 	
@@ -161,7 +161,7 @@ public final class AbortingExceptionTracer
 				try {
 					Thread.sleep (AbortingExceptionTracer.defaultExitTimeoutResolution);
 				} catch (final InterruptedException exception1) {
-					// intentional
+					// NOTE: intentional
 				}
 			try {
 				Runtime.getRuntime ().halt (AbortingExceptionTracer.defaultExitCode);

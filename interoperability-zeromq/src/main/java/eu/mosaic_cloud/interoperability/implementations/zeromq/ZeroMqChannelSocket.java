@@ -118,7 +118,7 @@ public final class ZeroMqChannelSocket
 			else
 				outboundPollIndex = -1;
 			errorPollIndex = poller.register (this.socket, ZMQ.Poller.POLLERR);
-			// !!!!
+			// FIXME
 			if (poller.poll (5 * 1000) > 0) {
 				if (((errorPollIndex >= 0) && poller.pollerr (errorPollIndex)) || ((this.socket.getEvents () & ZMQ.Poller.POLLERR) != 0))
 					this.failed ();

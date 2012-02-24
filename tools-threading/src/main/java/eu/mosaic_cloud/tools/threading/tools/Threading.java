@@ -451,7 +451,7 @@ public final class Threading
 	
 	public static final boolean join (final Iterable<? extends Thread> threads, final long timeout)
 	{
-		// Mirrors the code from `java.lang.Thread.join(long)`.
+		// NOTE: Mirrors the code from `java.lang.Thread.join(long)`.
 		Preconditions.checkNotNull (threads);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -677,7 +677,7 @@ public final class Threading
 				thread.start ();
 				count++;
 			} catch (final IllegalThreadStateException exception) {
-				// intentional
+				// NOTE: intentional
 			}
 		}
 		return (count);
@@ -744,7 +744,7 @@ public final class Threading
 				try {
 					object.wait ();
 				} catch (final InterruptedException exception) {
-					// intentional
+					// NOTE: intentional
 				}
 			}
 		}

@@ -108,7 +108,7 @@ public class UserCloudlet {
 				CallbackArguments<UserCloudletContext> arguments) {
 			this.logger.info(
 					"UserCloudlet consumer unregistered successfully.");
-			// if unregistered as consumer is successful then destroy resource
+			// NOTE: if unregistered as consumer is successful then destroy resource
 			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.consumer.destroy();
@@ -119,8 +119,7 @@ public class UserCloudlet {
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
 				CallbackArguments<UserCloudletContext> arguments) {
-			// if resource initialized successfully then just register as a
-			// consumer
+			// NOTE: if resource initialized successfully then just register as a consumer
 			return ICallback.SUCCESS;
 		}
 
@@ -186,7 +185,7 @@ public class UserCloudlet {
 				CallbackArguments<UserCloudletContext> arguments) {
 			this.logger.info(
 					"UserCloudlet publisher unregistered successfully.");
-			// if unregistered as publisher is successful then destroy resource
+			// NOTE: if unregistered as publisher is successful then destroy resource
 			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
@@ -197,8 +196,7 @@ public class UserCloudlet {
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
 				CallbackArguments<UserCloudletContext> arguments) {
-			// if resource initialized successfully then just register as a
-			// publisher
+			// NOTE: if resource initialized successfully then just register as a publisher
 			return ICallback.SUCCESS;
 		}
 

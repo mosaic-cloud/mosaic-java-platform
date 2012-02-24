@@ -213,7 +213,7 @@ public class AmqpConnector extends AbstractConnector {
 				try {
 					sendResponse();
 				} catch (JSONException e) {
-					// TODO Handle this...
+					// FIXME: Handle this...
 					Log.warn(e);
 				}
 			}

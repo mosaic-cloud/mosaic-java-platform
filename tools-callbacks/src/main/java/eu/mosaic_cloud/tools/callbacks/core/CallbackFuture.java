@@ -70,7 +70,7 @@ public final class CallbackFuture<_Outcome_ extends Object>
 			try {
 				return (this.get (Long.MAX_VALUE, TimeUnit.DAYS));
 			} catch (final TimeoutException exception) {
-				// intentional
+				// NOTE: intentional
 			}
 	}
 	

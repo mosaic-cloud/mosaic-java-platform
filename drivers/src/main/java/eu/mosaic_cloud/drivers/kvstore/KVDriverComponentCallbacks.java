@@ -140,7 +140,7 @@ public final class KVDriverComponentCallbacks extends
 		Preconditions.checkState(this.component == component);
 		if (this.pendingReference == reply.reference) {
 			if (this.status == Status.WaitingResourceResolved) {
-				// this.pendingReference = null;
+				// FIXME: this.pendingReference = null;
 				String ipAddress;
 				Integer port;
 				try {
@@ -234,7 +234,7 @@ public final class KVDriverComponentCallbacks extends
 					.info("Key Value Store driver callback registered to group " + this.selfGroup); //$NON-NLS-1$
 			this.status = Status.Registered;
 
-			// create stub and interop channel
+			// NOTE: create stub and interop channel
 			ZeroMqChannel driverChannel = createDriverChannel(
 					ConfigProperties
 							.getString("KVDriverComponentCallbacks.4"),

@@ -376,20 +376,20 @@ public final class BasicComponent
 			Preconditions.checkNotNull (proxy);
 			Preconditions.checkNotNull (isolate);
 			if (proxy == this.componentInternalsProxy) {
-				// intentional
+				// NOTE: intentional
 			} else if (proxy == this.componentControllerProxy) {
-				// intentional
+				// NOTE: intentional
 			} else if (proxy == this.componentCallbacksProxy) {
-				// intentional
+				// NOTE: intentional
 			} else if (proxy == this.channelCallbacksProxy) {
-				// intentional
+				// NOTE: intentional
 			} else if (proxy == this.channelControllerProxy) {
-				// intentional
+				// NOTE: intentional
 			} else {
 				throw (new IllegalArgumentException ());
 			}
 			if (isolate == this.isolate) {
-				// intentional
+				// NOTE: intentional
 			} else {
 				throw (new IllegalArgumentException ());
 			}

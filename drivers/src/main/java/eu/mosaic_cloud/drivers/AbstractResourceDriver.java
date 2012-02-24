@@ -64,7 +64,7 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 		IResult<?> pResult;
 		this.destroyed = true;
 		this.executor.shutdown();
-		// cancel all pending operations
+		// NOTE: cancel all pending operations
 		Iterator<IResult<?>> iter = this.pendingResults.iterator();
 		while (iter.hasNext()) {
 			pResult = iter.next();

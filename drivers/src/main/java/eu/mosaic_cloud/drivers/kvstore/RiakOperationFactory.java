@@ -254,6 +254,6 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
 
 	@Override
 	public void destroy() {
-		// nothing to do here
+		// NOTE: nothing to do here
 	}
 }

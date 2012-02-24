@@ -119,7 +119,7 @@ public class GenericOperation<T> implements IOperation<T> {
 			try {
 				result = this.operation.get();
 			} catch (ExecutionException e) {
-				// TODO customize exception
+				// FIXME: customize exception
 				Throwable e1 = e.getCause();
 				if (e1 instanceof UnsupportedOperationException) {
 					ExceptionTracer.traceHandled(e);
@@ -157,7 +157,7 @@ public class GenericOperation<T> implements IOperation<T> {
 			try {
 				result = this.operation.get(timeout, unit);
 			} catch (ExecutionException e) {
-				// TODO customize exception
+				// FIXME: customize exception
 				Throwable e1 = e.getCause();
 				if (e1 instanceof UnsupportedOperationException) {
 					ExceptionTracer.traceHandled(e);
@@ -222,7 +222,7 @@ public class GenericOperation<T> implements IOperation<T> {
 			} catch (InterruptedException e) {
 				ExceptionTracer.traceIgnored(e);
 			} catch (ExecutionException e) {
-				// TODO customize exception
+				// FIXME: customize exception
 				Throwable e1 = e.getCause();
 				if (e1 instanceof UnsupportedOperationException) {
 					ExceptionTracer.traceHandled(e);

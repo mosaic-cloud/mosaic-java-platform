@@ -41,8 +41,7 @@ public final class BatchConsumerCallback extends QueueConsumerCallback {
 	@Override
 	public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
 			CallbackArguments<IndexerCloudletContext> arguments) {
-		// if resource initialized successfully then just register as a
-		// consumer
+		// NOTE: if resource initialized successfully then just register as a consumer
 		return ICallback.SUCCESS;
 	}
 

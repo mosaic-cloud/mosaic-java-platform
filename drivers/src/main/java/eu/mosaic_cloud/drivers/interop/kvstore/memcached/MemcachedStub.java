@@ -179,7 +179,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 																		// 2:54
 																		// PM
 		if (message.specification instanceof KeyValueMessage) {
-			// handle set with exp
+			// NOTE: handle set with exp
 			boolean handle = false; // NOPMD by georgiana on 10/12/11 2:54 PM
 			KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
 			if (kvMessage == KeyValueMessage.SET_REQUEST) {

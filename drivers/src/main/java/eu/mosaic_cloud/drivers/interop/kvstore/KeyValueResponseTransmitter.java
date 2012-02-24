@@ -79,7 +79,7 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 						+ token.getClientId());
 
 		if (isError) {
-			// create error message
+			// NOTE: create error message
 			Error.Builder errorPayload = IdlCommon.Error.newBuilder();
 			errorPayload.setToken(token);
 			errorPayload.setErrorMessage(result.toString());
@@ -88,7 +88,7 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
 			message = buildKeyValueResponse(operation, token, result);
 		}
 
-		// send response
+		// NOTE: send response
 		publishResponse(session, message);
 	}
 

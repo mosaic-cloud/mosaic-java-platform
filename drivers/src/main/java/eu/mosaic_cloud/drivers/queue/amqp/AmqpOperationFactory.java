@@ -393,6 +393,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 
 	@Override
 	public void destroy() {
-		// nothing to do here
+		// NOTE: nothing to do here
 	}
 }

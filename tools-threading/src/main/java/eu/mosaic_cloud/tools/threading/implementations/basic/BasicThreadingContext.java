@@ -60,11 +60,11 @@ public final class BasicThreadingContext
 		this.sealed = new AtomicBoolean (false);
 	}
 	
-	// !!!!
 	/*
 	 * Returned executors should extend `ThreadPoolExecutor` (or the like) and override certain methods for logging
 	 * and error handling.
 	 */
+	// FIXME
 	@Override
 	public final boolean await ()
 	{
@@ -449,7 +449,7 @@ public final class BasicThreadingContext
 			super (group, BasicThreadingContext.buildThreadGroupName (configuration));
 			Preconditions.checkNotNull (group);
 			this.configuration = configuration;
-			// !!!!
+			// FIXME
 			// super.setDaemon (this.configuration.daemon);
 			super.setDaemon (false);
 			if (configuration.priority != -1)

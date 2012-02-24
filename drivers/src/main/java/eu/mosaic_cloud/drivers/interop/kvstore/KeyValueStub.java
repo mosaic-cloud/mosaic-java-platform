@@ -222,7 +222,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 					+ key + " - request id: " + token.getMessageId () + " client id: "
 					+ token.getClientId());
 
-			// execute operation
+			// NOTE: execute operation
 			DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
 					token, session, driver.getClass(), transmitterClass);
 			IResult<Boolean> resultSet = driver.invokeSetOperation(
@@ -236,7 +236,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 					token, session, driver.getClass(), transmitterClass);
 
 			if (getRequest.getKeyCount() != 1) {
-				// error - the simple driver can handle only single-key get
+				// NOTE: error - the simple driver can handle only single-key get
 				this.logger
 						.error("Basic driver can handle only single-key GET.");
 				driver.handleUnsupportedOperationError(kvMessage.toString(),
@@ -314,7 +314,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			Class<? extends KeyValueResponseTransmitter> transmitterClass) {
 		this.logger.error("Unexpected message type: " + messageType + " - request id: " + token.getMessageId () + " client id: "
 				+ token.getClientId());
-		// create callback
+		// NOTE: create callback
 		DriverOperationFinishedHandler failCallback = new DriverOperationFinishedHandler(
 				token, session, driver.getClass(), transmitterClass);
 		driver.handleUnsupportedOperationError(messageType, failCallback);
@@ -422,7 +422,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 			}
 
 			this.driver.removePendingOperation(this.result);
-			// result is error
+			// NOTE: result is error
 			this.transmitter.sendResponse(this.session, this.complToken,
 					this.operation, error.getMessage(), true);
 		}

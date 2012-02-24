@@ -48,7 +48,7 @@ public final class FanoutExceptionTracer
 			try {
 				delegate.trace (resolution, exception);
 			} catch (final Throwable exception1) {
-				// intentional
+				// NOTE: intentional
 			}
 	}
 	
@@ -59,7 +59,7 @@ public final class FanoutExceptionTracer
 			try {
 				delegate.trace (resolution, exception, message);
 			} catch (final Throwable exception1) {
-				// intentional
+				// NOTE: intentional
 			}
 	}
 	
@@ -70,7 +70,7 @@ public final class FanoutExceptionTracer
 			try {
 				delegate.trace (resolution, exception, format, tokens);
 			} catch (final Throwable exception1) {
-				// intentional
+				// NOTE: intentional
 			}
 	}
 	

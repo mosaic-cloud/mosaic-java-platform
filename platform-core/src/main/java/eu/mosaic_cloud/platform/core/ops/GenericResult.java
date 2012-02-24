@@ -85,14 +85,14 @@ public class GenericResult<T> implements IResult<T> {
 	public final boolean cancel() {
 		boolean done;
 
-		// first test if it was not already cancelled
+		// NOTE: first test if it was not already cancelled
 		done = this.operation.isCancelled();
 
 		if (!done) {
-			// try to cancel the operation
+			// NOTE: try to cancel the operation
 			done = this.operation.cancel();
 
-			// cancellation may have failed if the operation was
+			// NOTE: cancellation may have failed if the operation was
 			// already finished
 			if (!done) {
 				done = this.operation.isDone();

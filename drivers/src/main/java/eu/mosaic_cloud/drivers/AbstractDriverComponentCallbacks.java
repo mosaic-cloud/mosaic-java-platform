@@ -128,7 +128,7 @@ public abstract class AbstractDriverComponentCallbacks implements
 
 	protected ZeroMqChannel createDriverChannel(String channelIdentifierProp,
 			String channelEndpointProp, SessionSpecification role) {
-		// create stub and interop channel
+		// NOTE: create stub and interop channel
 		Preconditions.checkNotNull(this.driverConfiguration);
 		ZeroMqChannel driverChannel = ZeroMqChannel.create(ConfigUtils
 				.resolveParameter(this.driverConfiguration,

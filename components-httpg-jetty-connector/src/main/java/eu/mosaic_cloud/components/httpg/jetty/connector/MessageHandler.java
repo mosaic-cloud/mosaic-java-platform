@@ -122,7 +122,7 @@ public class MessageHandler {
 		if (body_method.equalsIgnoreCase("empty")) {
 			
 		} else if (body_method.equalsIgnoreCase("following")) {
-			final int bodyLength = dis.readInt(); // Body Length
+			final int bodyLength = dis.readInt(); // NOTE: Body Length
 			if (bodyLength > (message_body.length - metadataLength)) {
 				throw new MessageFormatException(
 						"Expected body length but found garbage");
@@ -172,7 +172,7 @@ public class MessageHandler {
 		int end = in.length - 1;
 
 		while (startOfBody < end) {
-			if (in[startOfBody] == '\n') { // Reached an end of line
+			if (in[startOfBody] == '\n') { // NOTE: Reached an end of line
 				if ((startOfBody + 2) < end) {
 					if (in[startOfBody + 1] == '\r'
 							&& in[startOfBody + 2] == '\n') {
@@ -214,7 +214,7 @@ public class MessageHandler {
 				break;
 			}
 
-			if (_line.length() == 0) { // Reached the end of headers
+			if (_line.length() == 0) { // NOTE: Reached the end of headers
 				break;
 			}
 

@@ -106,7 +106,7 @@ public class PingCloudlet {
 				CallbackArguments<PingCloudletContext> arguments) {
 			this.logger.info(
 					"Ping Cloudlet consumer unregistered successfully.");
-			// if unregistered as consumer is successful then destroy resource
+			// NOTE: if unregistered as consumer is successful then destroy resource
 			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.consumer.destroy();
@@ -116,8 +116,7 @@ public class PingCloudlet {
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			// if resource initialized successfully then just register as a
-			// consumer
+			// NOTE: if resource initialized successfully then just register as a consumer
 			return ICallback.SUCCESS;
 		}
 
@@ -175,7 +174,7 @@ public class PingCloudlet {
 				CallbackArguments<PingCloudletContext> arguments) {
 			this.logger.info(
 					"Ping Cloudlet publisher unregistered successfully.");
-			// if unregistered as publisher is successful then destroy resource
+			// NOTE: if unregistered as publisher is successful then destroy resource
 			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
@@ -185,8 +184,7 @@ public class PingCloudlet {
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PingCloudletContext context,
 				CallbackArguments<PingCloudletContext> arguments) {
-			// if resource initialized successfully then just register as a
-			// publisher
+			// NOTE: if resource initialized successfully then just register as a publisher
 			return ICallback.SUCCESS;
 		}
 

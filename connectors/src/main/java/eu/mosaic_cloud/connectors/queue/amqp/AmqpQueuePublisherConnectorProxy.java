@@ -90,7 +90,7 @@ public class AmqpQueuePublisherConnectorProxy<Message>
 	
 	public CallbackCompletion<Void> initialize ()
 	{
-		// !!!!
+		// FIXME
 		return this.raw.declareExchange (this.exchange, this.exchangeType, this.exchangeDurable, this.exchangeAutoDelete, this.definePassive);
 	}
 	

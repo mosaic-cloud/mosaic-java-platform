@@ -125,7 +125,7 @@ public class PongCloudlet {
 				KvStoreCallbackCompletionArguments<PongCloudletContext, PingPongData, Void> arguments) {
 			this.logger.info("Pong Cloudlet - key value fetch data succeeded");
 
-			// send reply to Ping Cloudlet
+			// NOTE: send reply to Ping Cloudlet
 			PongMessage pong = new PongMessage(arguments.getKey(),
 					arguments.getValue());
 			context.publisher.publish(pong, null);
@@ -158,7 +158,7 @@ public class PongCloudlet {
 				CallbackArguments<PongCloudletContext> arguments) {
 			this.logger
 					.info("Pong Cloudlet consumer unregistered successfully.");
-			// if unregistered as consumer is successful then destroy resource
+			// NOTE: if unregistered as consumer is successful then destroy resource
 			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.consumer.destroy();
@@ -168,8 +168,7 @@ public class PongCloudlet {
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			// if resource initialized successfully then just register as a
-			// consumer
+			// NOTE: if resource initialized successfully then just register as a consumer
 			return ICallback.SUCCESS;
 		}
 
@@ -196,14 +195,14 @@ public class PongCloudlet {
 				PongCloudletContext context,
 				AmqpQueueConsumeCallbackArguments<PongCloudletContext, PingMessage, Void> arguments) {
 
-			// retrieve message data
+			// NOTE: retrieve message data
 			PingMessage data = arguments
 					.getMessage();
 
 			this.logger.info("Pong Cloudlet received fetch request for key "
 					+ data.getKey());
 
-			// get value from key value store
+			// NOTE: get value from key value store
 			context.kvStore.get(data.getKey(), null);
 
 			context.consumer.acknowledge(arguments.getDelivery());
@@ -228,7 +227,7 @@ public class PongCloudlet {
 				CallbackArguments<PongCloudletContext> arguments) {
 			this.logger
 					.info("Pong Cloudlet publisher unregistered successfully.");
-			// if unregistered as publisher is successful then destroy resource
+			// NOTE: if unregistered as publisher is successful then destroy resource
 			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
@@ -238,8 +237,7 @@ public class PongCloudlet {
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
 				CallbackArguments<PongCloudletContext> arguments) {
-			// if resource initialized successfully then just register as a
-			// publisher
+			// NOTE: if resource initialized successfully then just register as a publisher
 			return ICallback.SUCCESS;
 		}
 

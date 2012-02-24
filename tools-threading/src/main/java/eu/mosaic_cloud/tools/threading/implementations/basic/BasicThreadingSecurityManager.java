@@ -47,7 +47,7 @@ public final class BasicThreadingSecurityManager
 		Preconditions.checkNotNull (thread);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
-			// !!!!
+			// FIXME
 			if (!context.isManaged (thread))
 				throw (new SecurityException ());
 		}
@@ -60,7 +60,7 @@ public final class BasicThreadingSecurityManager
 		Preconditions.checkNotNull (group);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
-			// !!!!
+			// FIXME
 			if (!context.isManaged (group))
 				throw (new SecurityException ());
 		}
@@ -71,7 +71,7 @@ public final class BasicThreadingSecurityManager
 	public final void checkPermission (final Permission permission)
 	{
 		this.checkPermission_ (permission);
-		// !!!!
+		// FIXME
 		// super.checkPermission (permission);
 	}
 	
@@ -79,7 +79,7 @@ public final class BasicThreadingSecurityManager
 	public final void checkPermission (final Permission permission, final Object context)
 	{
 		this.checkPermission_ (permission);
-		// !!!!
+		// FIXME
 		super.checkPermission (permission, context);
 	}
 	
@@ -118,7 +118,7 @@ public final class BasicThreadingSecurityManager
 			checkWrite |= true;
 		checkRead |= checkWrite;
 		if (checkRead || checkWrite) {
-			// !!!!
+			// FIXME
 		}
 	}
 	

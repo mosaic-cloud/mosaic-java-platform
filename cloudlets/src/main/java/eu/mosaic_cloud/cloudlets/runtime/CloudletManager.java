@@ -74,7 +74,7 @@ public class CloudletManager {
             this.classLoader = classLoader;
             this.configuration = configuration;
             this.cloudletPool = new ArrayList<Cloudlet<?>>();
-            // TODO
+            // FIXME
         }
     }
 

@@ -100,7 +100,7 @@ public class PublisherCloudlet {
 				CallbackArguments<PublisherCloudletContext> arguments) {
 			this.logger.info(
 					"PublisherCloudlet publisher unregistered successfully.");
-			// if unregistered as publisher is successful then destroy resource
+			// NOTE: if unregistered as publisher is successful then destroy resource
 			ICloudletController<?> cloudlet = arguments
 					.getCloudlet();
 			context.publisher.destroy();
@@ -110,8 +110,7 @@ public class PublisherCloudlet {
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded(PublisherCloudletContext context,
 				CallbackArguments<PublisherCloudletContext> arguments) {
-			// if resource initialized successfully then just register as a
-			// publisher
+			// NOTE: if resource initialized successfully then just register as a publisher
 			return ICallback.SUCCESS;
 		}
 

@@ -213,7 +213,7 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
 
 	@Override
 	public void destroy() {
-		// nothing to do here
+		// NOTE: nothing to do here
 	}
 
 }

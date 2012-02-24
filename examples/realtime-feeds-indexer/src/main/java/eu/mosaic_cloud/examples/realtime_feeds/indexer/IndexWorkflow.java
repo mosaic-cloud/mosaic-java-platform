@@ -187,7 +187,7 @@ public class IndexWorkflow {
 			}
 
 			if (currentItems.size() > 0) {
-				// setup meta-data
+				// NOTE: setup meta-data
 				currentKey = this.previousFeedMetaData.getString("key");
 				currentURL = this.indexMessage.getString("url");
 				currentFeed = currentKey;
@@ -201,7 +201,7 @@ public class IndexWorkflow {
 				this.currentFeedMetaData.put("timestamp", currentTimestamp);
 				this.currentFeedMetaData.put("sequence", currentSequence);
 
-				// setup new timeline
+				// NOTE: setup new timeline
 				this.newTimeline = new JSONObject();
 				String newTimelineKey = StoreUtils.generateFeedTimelineKey(
 						currentURL, currentSequence);
@@ -211,7 +211,7 @@ public class IndexWorkflow {
 				this.newTimeline.put("id", currentFeedId);
 				this.newTimeline.put("timestamp", currentTimestamp);
 
-				// generate keys for new items
+				// NOTE: generate keys for new items
 				JSONArray items = new JSONArray();
 				for (Timeline.Entry item : currentItems) {
 					String itemKey = StoreUtils.generateFeedItemKey(currentURL,
@@ -219,7 +219,7 @@ public class IndexWorkflow {
 					items.put(itemKey);
 					item.setKey(itemKey);
 
-					// store item
+					// NOTE: store item
 					JSONObject json = item.convertToJson();
 					json.put("feed", currentFeed);
 					this.newFeedItems.put(json);
@@ -247,7 +247,7 @@ public class IndexWorkflow {
 					}
 				}
 
-				// store timeline
+				// NOTE: store timeline
 				this.context.timelinesStore.set(newTimelineKey,
 						this.newTimeline, null);
 			} else {

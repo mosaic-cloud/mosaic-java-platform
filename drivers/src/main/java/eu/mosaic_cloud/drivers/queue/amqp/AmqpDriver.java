@@ -106,7 +106,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 		int noThreads = ConfigUtils.resolveParameter(configuration,
 				ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
 		AmqpDriver driver = new AmqpDriver(configuration, threading, noThreads);
-		// open connection - moved to the stub
+		// NOTE: open connection - moved to the stub
 		driver.connectResource();
 		if (!driver.connected) {
 			driver = null; // NOPMD by georgiana on 10/12/11 3:38 PM
@@ -162,7 +162,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 	@Override
 	public synchronized void destroy() {
 		super.destroy();
-		// close any existing connection
+		// NOTE: close any existing connection
 		if (this.connected) {
 			try {
 				for (Map.Entry<String, Channel> channel : AmqpDriver.this.channels
@@ -523,7 +523,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 
 		@Override
 		public void handleRecoverOk(String consumerTag) {
-			// nothing to do here
+			// NOTE: nothing to do here
 		}
 
 		@Override
@@ -589,7 +589,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 					properties.getMessageId());
 			AmqpDriver.this.logger
 					.trace("AmqpDriver - Received RETURN callback for " + message.getDelivery()); //$NON-NLS-1$
-			// TODO
+			// FIXME
 		}
 	}
 

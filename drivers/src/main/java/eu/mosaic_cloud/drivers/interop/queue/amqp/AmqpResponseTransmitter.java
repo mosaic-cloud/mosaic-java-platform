@@ -68,7 +68,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		Message message = null; // NOPMD by georgiana on 10/12/11 3:34 PM
 
 		if (isError) {
-			// create error message
+			// NOTE: create error message
 			Error.Builder errorPayload = IdlCommon.Error.newBuilder();
 			errorPayload.setToken(token);
 			errorPayload.setErrorMessage(result.toString());
@@ -106,7 +106,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 			}
 		}
 
-		// send response
+		// NOTE: send response
 		publishResponse(session, message);
 		this.logger.trace(
 				"AmqpResponseTransmitter: sent response for " + operation
@@ -129,7 +129,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		Message message = new Message(AmqpMessage.CANCEL_OK,
 				cancelPayload.build());
 
-		// send response
+		// NOTE: send response
 		publishResponse(session, message);
 		this.logger.trace(
 				"AmqpResponseTransmitter - Sent CANCEL ok message");
@@ -205,7 +205,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		Message mssg = new Message(AmqpMessage.DELIVERY,
 				deliveryPayload.build());
 
-		// send response
+		// NOTE: send response
 		publishResponse(session, mssg);
 		this.logger.trace(
 				"AmqpResponseTransmitter - Delivered message");
@@ -229,7 +229,7 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
 		downPayload.setMessage(errorMessage);
 		Message message = new Message(AmqpMessage.SHUTDOWN, downPayload.build());
 
-		// send response
+		// NOTE: send response
 		publishResponse(session, message);
 		this.logger.trace(
 				"AmqpResponseTransmitter - Sent Shutdown message");
