@@ -29,7 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
@@ -53,10 +55,10 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <Context>
  *            the context of the cloudlet
  */
-public class Cloudlet<C extends Object>
+public class Cloudlet<Context extends Object>
 {
 	/**
 	 * Creates a new cloudlet instance.
@@ -68,15 +70,19 @@ public class Cloudlet<C extends Object>
 	 *            the class loader used for loading cloudlet classes
 	 * @throws CloudletException
 	 */
-	public Cloudlet (final C context, final ICloudletCallback<C> callback, final ThreadingContext threading, final ClassLoader loader)
+	public Cloudlet (final Context context, final ICloudletCallback<Context> callback, final IConfiguration configuration, final ThreadingContext threading, final ClassLoader classLoader)
 	{
+		super ();
+		this.monitor = Monitor.create (this);
 		synchronized (this.monitor) {
-			this.context = context;
+			this.cloudletContext = context;
+			this.cloudletCallback = callback;
+			this.configuration = configuration;
 			this.threading = threading;
+			this.classLoader = classLoader;
+			this.cloudletController = new CloudletController ();
+			this.executor = new CloudletExecutor (this.threading, this.classLoader);
 			this.active = false;
-			this.executor = new CloudletExecutor (this.threading, loader);
-			this.controller = new CloudletController ();
-			this.controllerCallback = callback;
 		}
 	}
 	
@@ -88,14 +94,14 @@ public class Cloudlet<C extends Object>
 				@Override
 				public void onFailure (final Throwable error)
 				{
-					Cloudlet.this.controllerCallback.destroyFailed (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.cloudletCallback.destroyFailed (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
 					Cloudlet.this.executor.shutdown ();
 				}
 				
 				@Override
 				public void onSuccess (final Object result)
 				{
-					Cloudlet.this.controllerCallback.destroySucceeded (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.cloudletCallback.destroySucceeded (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
 					Cloudlet.this.executor.shutdown ();
 				}
 			};
@@ -107,7 +113,7 @@ public class Cloudlet<C extends Object>
 				@Override
 				public void run ()
 				{
-					Cloudlet.this.controllerCallback.destroy (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.cloudletCallback.destroy (Cloudlet.this.cloudletContext, new CloudletCallbackArguments<Context> (Cloudlet.this.cloudletController));
 					final List<IOperationCompletionHandler<Object>> handlers = destroyOperation.getCompletionHandlers ();
 					for (final IOperationCompletionHandler<Object> handler : handlers) {
 						handler.onSuccess (null);
@@ -131,27 +137,23 @@ public class Cloudlet<C extends Object>
 	
 	/**
 	 * Initializes the cloudlet.
-	 * 
-	 * @param config
-	 *            configuration data of the cloudlet
 	 * @return <code>true</code> if cloudlet was successfully initialized
 	 */
-	public boolean initialize (final IConfiguration config)
+	public boolean initialize ()
 	{
 		synchronized (this.monitor) {
 			boolean initialized = false;
-			this.configuration = config;
 			final IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object> () {
 				@Override
 				public void onFailure (final Throwable error)
 				{
-					Cloudlet.this.controllerCallback.initializeFailed (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.cloudletCallback.initializeFailed (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
 				}
 				
 				@Override
 				public void onSuccess (final Object result)
 				{
-					Cloudlet.this.controllerCallback.initializeSucceeded (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.cloudletCallback.initializeSucceeded (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
 				}
 			};
 			final List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>> ();
@@ -162,7 +164,7 @@ public class Cloudlet<C extends Object>
 				@Override
 				public void run ()
 				{
-					Cloudlet.this.controllerCallback.initialize (Cloudlet.this.context, new CallbackArguments<C> (Cloudlet.this.controller));
+					Cloudlet.this.cloudletCallback.initialize (Cloudlet.this.cloudletContext, new CloudletCallbackArguments<Context> (Cloudlet.this.cloudletController));
 					final List<IOperationCompletionHandler<Object>> handlers = initOperation.getCompletionHandlers ();
 					for (final IOperationCompletionHandler<Object> handler : handlers) {
 						handler.onSuccess (null);
@@ -189,28 +191,29 @@ public class Cloudlet<C extends Object>
 		return this.active;
 	}
 	
-	private <T> T getCallbackProxy (final Class<T> callbackType, final T callback)
+	<T> T getCallbackProxy (final Class<T> callbackType, final T callback)
 	{
 		final CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T> (callback);
 		final T proxy = (T) Proxy.newProxyInstance (this.executor.getLoader (), new Class[] {callbackType}, iHandler);
 		return proxy;
 	}
 	
-	private <T> CompletionInvocationHandler<T> getResponseHandler (final IOperationCompletionHandler<T> handler)
+	<T> CompletionInvocationHandler<T> getResponseHandler (final IOperationCompletionHandler<T> handler)
 	{
-		final CloudletResponseInvocationHandler<T> iHandler = new CloudletResponseInvocationHandler<T> (handler);
-		return iHandler;
+		final CloudletResponseInvocationHandler<T> handler = new CloudletResponseInvocationHandler<T> (handler);
+		return handler;
 	}
 	
-	private boolean active;
-	private IConfiguration configuration;
-	private C context;
-	private CloudletController controller;
-	private ICloudletCallback<C> controllerCallback;
-	private CloudletExecutor executor;
-	private final Monitor monitor = Monitor.create (this);
-	private ThreadingContext threading;
-	private static MosaicLogger logger = MosaicLogger.createLogger (Cloudlet.class);
+	volatile boolean active;
+	final ClassLoader classLoader;
+	final ICloudletCallback<Context> cloudletCallback;
+	final Context cloudletContext;
+	final CloudletController cloudletController;
+	final IConfiguration configuration;
+	final CloudletExecutor executor;
+	final Monitor monitor;
+	final ThreadingContext threading;
+	static final MosaicLogger logger = MosaicLogger.createLogger (Cloudlet.class);
 	
 	/**
 	 * An implementation of the cloudlet controller. Basically, all operation in
@@ -220,9 +223,9 @@ public class Cloudlet<C extends Object>
 	 * @author Georgiana Macariu
 	 * 
 	 */
-	final class CloudletController
+	class CloudletController
 			implements
-				ICloudletController<C>
+				ICloudletController<Context>
 	{
 		@Override
 		public <T> T buildCallbackInvoker (final T callback, final Class<T> callbackType)
@@ -231,15 +234,22 @@ public class Cloudlet<C extends Object>
 		}
 		
 		@Override
-		public final boolean destroy ()
+		public boolean destroy ()
 		{
 			return (Cloudlet.this.destroy ());
 		}
 		
 		@Override
-		public final IConfiguration getConfiguration ()
+		public IConfiguration getConfiguration ()
 		{
 			return (Cloudlet.this.configuration);
+		}
+		
+		@Override
+		public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory)
+		{
+			// FIXME
+			throw (new UnsupportedOperationException ());
 		}
 		
 		@Override
@@ -249,7 +259,7 @@ public class Cloudlet<C extends Object>
 		}
 		
 		@Override
-		public final boolean isActive ()
+		public boolean isActive ()
 		{
 			return (Cloudlet.this.isActive ());
 		}
@@ -264,7 +274,7 @@ public class Cloudlet<C extends Object>
 	 * @param <T>
 	 *            type to invoke
 	 */
-	final class CloudletInvocationHandler<T>
+	class CloudletInvocationHandler<T>
 			implements
 				InvocationHandler
 	{
@@ -302,7 +312,7 @@ public class Cloudlet<C extends Object>
 			return null;
 		}
 		
-		private final T callback;
+		final T callback;
 	}
 	
 	/**
@@ -312,7 +322,7 @@ public class Cloudlet<C extends Object>
 	 * @author Georgiana Macariu
 	 * 
 	 */
-	final class CloudletResponseInvocationHandler<T>
+	class CloudletResponseInvocationHandler<T>
 			extends CompletionInvocationHandler<T>
 	{
 		/**
@@ -321,7 +331,7 @@ public class Cloudlet<C extends Object>
 		 * @param handler
 		 *            the response handler to execute
 		 */
-		private CloudletResponseInvocationHandler (final IOperationCompletionHandler<T> handler)
+		CloudletResponseInvocationHandler (final IOperationCompletionHandler<T> handler)
 		{
 			super (handler);
 		}
