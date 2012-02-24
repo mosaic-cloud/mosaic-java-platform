@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public class AmqpQueueConnector<P extends AmqpQueueConnectorProxy>
+public class AmqpQueueConnector<P extends AmqpQueueConnectorProxy<?>>
 		implements
 			IAmqpQueueConnector
 {
