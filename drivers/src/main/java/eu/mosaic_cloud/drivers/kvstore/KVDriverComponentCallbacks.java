@@ -66,7 +66,7 @@ public final class KVDriverComponentCallbacks extends
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(KVDriverComponentCallbacks.class
-							.getResourceAsStream("driver-component.prop"));
+							.getResourceAsStream("driver-component.properties"));
 			setDriverConfiguration(configuration);
 			this.resourceGroup = ComponentIdentifier.resolve(ConfigUtils
 					.resolveParameter(getDriverConfiguration(),

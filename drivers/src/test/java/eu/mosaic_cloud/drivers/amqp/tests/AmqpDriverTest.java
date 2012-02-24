@@ -51,7 +51,7 @@ public class AmqpDriverTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		AmqpDriverTest.configuration = PropertyTypeConfiguration.create(
-				AmqpDriverTest.class.getClassLoader(), "amqp-test.prop");
+				AmqpDriverTest.class.getClassLoader(), "amqp-test.properties");
 
 	}
 

@@ -64,7 +64,7 @@ public class RedisDriverTest {
 				exceptions.catcher);
 		this.threadingContext.initialize();
 		this.wrapper = RedisDriver.create(PropertyTypeConfiguration.create(
-				RedisDriverTest.class.getClassLoader(), "redis-test.prop"),
+				RedisDriverTest.class.getClassLoader(), "redis-test.properties"),
 				this.threadingContext);
 		this.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
 	}

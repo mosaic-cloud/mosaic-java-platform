@@ -39,10 +39,10 @@ public class PropertyTypeConfigurationTest {
 	public static void setUpBeforeClass() throws Exception {
 		PropertyTypeConfigurationTest.configuration = PropertyTypeConfiguration
 				.create(PropertyTypeConfigurationTest.class.getClassLoader(),
-						"configuration-test.prop");
+						"configuration-test.properties");
 		PropertyTypeConfigurationTest.fileConfiguration = PropertyTypeConfiguration
 				.create(new FileInputStream(
-						"src/test/resources/configuration-test.prop"));
+						"src/test/resources/configuration-test.properties"));
 		PropertyTypeConfigurationTest.systemConfiguration = PropertyTypeConfiguration
 				.create(null);
 	}

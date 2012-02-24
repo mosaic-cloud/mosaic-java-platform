@@ -71,7 +71,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         ConnectorComponentCallbacks.setComponentCallbacks(this);
         final IConfiguration configuration = PropertyTypeConfiguration.create(
-                ConnectorComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/connectors/connector-component.prop"); //$NON-NLS-1$
+                ConnectorComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/connectors/connector-component.properties"); //$NON-NLS-1$
         this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("ConnectorComponent.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,

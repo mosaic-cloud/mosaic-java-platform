@@ -64,7 +64,7 @@ public class MemcachedDriverTest {
 		this.threadingContext.initialize();
 		this.wrapper = MemcachedDriver.create(PropertyTypeConfiguration.create(
 				MemcachedDriverTest.class.getClassLoader(),
-				"memcached-test.prop"), this.threadingContext);
+				"memcached-test.properties"), this.threadingContext);
 		this.wrapper.registerClient(MemcachedDriverTest.keyPrefix, "test");
 	}
 

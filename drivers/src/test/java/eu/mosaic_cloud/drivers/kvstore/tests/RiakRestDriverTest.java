@@ -64,7 +64,7 @@ public class RiakRestDriverTest {
 		this.wrapper = RiakRestDriver.create(
 				PropertyTypeConfiguration.create(
 						RiakRestDriverTest.class.getClassLoader(),
-						"riakrest-test.prop"), this.threadingContext);
+						"riakrest-test.properties"), this.threadingContext);
 		this.wrapper.registerClient(RiakRestDriverTest.keyPrefix, "test");
 	}
 

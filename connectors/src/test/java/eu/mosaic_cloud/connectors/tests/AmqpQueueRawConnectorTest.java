@@ -77,7 +77,7 @@ public class AmqpQueueRawConnectorTest extends
     public static void setUpBeforeClass() {
         final Context<AmqpStub> context = new Context<AmqpStub>();
         BaseConnectorTest.setupUpContext(AmqpQueueRawConnectorTest.class, context,
-                "amqp-queue-raw-connector-test.prop");
+                "amqp-queue-raw-connector-test.properties");
         context.driverChannel.register(AmqpSession.DRIVER);
         context.driverStub = AmqpStub.create(context.configuration, context.driverChannel,
                 context.threading);

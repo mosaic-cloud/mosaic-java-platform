@@ -32,7 +32,7 @@ public class TestRunner {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "hello-cloudlet.prop");
+				TestRunner.class.getClassLoader(), "hello-cloudlet.properties");
 		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
@@ -41,7 +41,7 @@ public class TestRunner {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "consumer-cloudlet.prop");
+				TestRunner.class.getClassLoader(), "consumer-cloudlet.properties");
 		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
@@ -50,7 +50,7 @@ public class TestRunner {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "publisher-cloudlet.prop");
+				TestRunner.class.getClassLoader(), "publisher-cloudlet.properties");
 		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
@@ -59,7 +59,7 @@ public class TestRunner {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "logging-cloudlet.prop");
+				TestRunner.class.getClassLoader(), "logging-cloudlet.properties");
 		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}
@@ -68,7 +68,7 @@ public class TestRunner {
 		IConfiguration configuration;
 
 		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "user-cloudlet.prop");
+				TestRunner.class.getClassLoader(), "user-cloudlet.properties");
 		final CloudletManager container = startCloudlet(configuration);
 		return container;
 	}

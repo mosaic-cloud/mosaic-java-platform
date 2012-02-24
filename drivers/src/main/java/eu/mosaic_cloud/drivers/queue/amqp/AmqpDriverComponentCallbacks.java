@@ -64,7 +64,7 @@ public final class AmqpDriverComponentCallbacks extends
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(AmqpDriverComponentCallbacks.class
-							.getResourceAsStream("driver-component.prop"));
+							.getResourceAsStream("driver-component.properties"));
 			setDriverConfiguration(configuration);
 			this.resourceGroup = ComponentIdentifier
 					.resolve(ConfigUtils.resolveParameter(

@@ -14,7 +14,7 @@ curl -s -X POST -H 'Content-Type: application/json' --data-binary @- "http://${i
 {
         "hello" : {
                 "type" : "#mosaic-components:java-cloudlet-container",
-                "configuration" : ["http://194.102.62.79:27665/mosaic-examples.jar","hello-cloudlet.prop"],
+                "configuration" : ["http://194.102.62.79:27665/mosaic-examples.jar","hello-cloudlet.properties"],
                 "count" : 1,
                 "order" : 1,
                 "delay" : 0

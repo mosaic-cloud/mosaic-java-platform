@@ -14,14 +14,14 @@ curl -s -X POST -H 'Content-Type: application/json' --data-binary @- "http://${i
 {
         "publisher" : {
                "type" : "#mosaic-components:java-cloudlet-container",
-               "configuration" : ["http://194.102.62.79:27665/mosaic-examples.jar","ping-cloudlet.prop"],
+               "configuration" : ["http://194.102.62.79:27665/mosaic-examples.jar","ping-cloudlet.properties"],
                "count" : 1,
                "order" : 1,
                "delay" : 1000
         },
         "consumer" : {
                "type" : "#mosaic-components:java-cloudlet-container",
-               "configuration" : ["http://194.102.62.79:27665/mosaic-examples.jar","pong-cloudlet.prop"],
+               "configuration" : ["http://194.102.62.79:27665/mosaic-examples.jar","pong-cloudlet.properties"],
                "count" : 1,
                "order" : 1,
                "delay" : 1000

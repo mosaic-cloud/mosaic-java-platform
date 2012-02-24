@@ -40,7 +40,7 @@ public class RiakKvStoreConnectorTest extends
     public static void setUpBeforeClass() {
         final Context context = new Context();
         BaseConnectorTest.setupUpContext(RiakKvStoreConnectorTest.class, context,
-                "riak-kv-store-connector-test.prop");
+                "riak-kv-store-connector-test.properties");
         context.driverChannel.register(KeyValueSession.DRIVER);
         context.driverStub = KeyValueStub.create(context.configuration, context.threading,
                 context.driverChannel);

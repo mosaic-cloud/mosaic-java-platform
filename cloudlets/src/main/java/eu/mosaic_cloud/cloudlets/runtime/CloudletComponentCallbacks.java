@@ -118,7 +118,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         CloudletComponentCallbacks.callbacks = this;
         IConfiguration configuration = PropertyTypeConfiguration.create(
-                CloudletComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/cloudlets/cloudlet-component.prop"); //$NON-NLS-1$
+                CloudletComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/cloudlets/cloudlet-component.properties"); //$NON-NLS-1$
         this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("CloudletComponent.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,

@@ -74,6 +74,6 @@ public class HelloWorldCloudlet {
 	}
 
 	public static void main(String[] arguments) throws Throwable {
-		CloudletComponentLauncher.main("hello-cloudlet.prop", arguments);
+		CloudletComponentLauncher.main("hello-cloudlet.properties", arguments);
 	}
 }

@@ -115,7 +115,7 @@ public class MemcacheKvStoreConnectorTest extends
     public static void setUpBeforeClass() {
         final Context context = new Context();
         BaseConnectorTest.setupUpContext(MemcacheKvStoreConnectorTest.class, context,
-                "memcache-kv-store-connector-test.prop");
+                "memcache-kv-store-connector-test.properties");
         context.driverChannel.register(KeyValueSession.DRIVER);
         context.driverChannel.register(MemcachedSession.DRIVER);
         context.driverStub = MemcachedStub.create(context.configuration, context.driverChannel,

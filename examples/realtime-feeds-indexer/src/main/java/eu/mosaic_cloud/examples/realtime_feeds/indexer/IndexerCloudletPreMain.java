@@ -33,7 +33,7 @@ public class IndexerCloudletPreMain {
 		Preconditions.checkArgument(arguments != null);
 		Preconditions.checkArgument(arguments.length == 0, "invalid arguments");
 		CloudletContainerParameters.classpath = null;
-		CloudletContainerParameters.configFile = "indexer-cloudlet.prop";
+		CloudletContainerParameters.configFile = "indexer-cloudlet.properties";
 		BasicComponentHarnessPreMain
 				.main(new String[] { "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks" });
 	}
