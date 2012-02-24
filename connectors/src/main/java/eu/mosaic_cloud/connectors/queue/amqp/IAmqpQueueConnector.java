@@ -20,11 +20,9 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 
 import eu.mosaic_cloud.connectors.queue.IQueueConnector;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for working with AMQP compatible queueing systems.
@@ -32,5 +30,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @author Georgiana Macariu
  * 
  */
-public interface IAmqpQueueConnector extends IQueueConnector {
-}
+public interface IAmqpQueueConnector
+		extends
+			IQueueConnector
+{}
