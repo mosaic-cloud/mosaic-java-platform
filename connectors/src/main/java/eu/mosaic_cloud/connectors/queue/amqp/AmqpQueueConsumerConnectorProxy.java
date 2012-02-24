@@ -43,8 +43,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of the messages consumed by the cloudlet
  */
-public class AmqpQueueConsumerConnectorProxy<Message>
+public final class AmqpQueueConsumerConnectorProxy<Message>
 		extends AmqpQueueConnectorProxy<Message>
+		implements
+			IAmqpQueueConsumerConnector<Message>
 {
 	/**
 	 * Creates a new AMQP queue consumer.
@@ -86,6 +88,7 @@ public class AmqpQueueConsumerConnectorProxy<Message>
 		this.callback = new AmqpConsumerCallback (callback);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> acknowledge (final IAmqpQueueDeliveryToken delivery)
 	{
 		return this.raw.ack (((DeliveryToken) delivery).token, false);
@@ -99,6 +102,7 @@ public class AmqpQueueConsumerConnectorProxy<Message>
 		return this.raw.destroy ();
 	}
 	
+	@Override
 	public CallbackCompletion<Void> initialize ()
 	{
 		// FIXME
@@ -110,13 +114,13 @@ public class AmqpQueueConsumerConnectorProxy<Message>
 	
 	protected final String bindingRoutingKey;
 	protected final AmqpConsumerCallback callback;
-	protected final String identity;
 	protected final boolean consumerAutoAck;
 	protected final boolean definePassive;
 	protected final String exchange;
 	protected final boolean exchangeAutoDelete;
 	protected final boolean exchangeDurable;
 	protected final AmqpExchangeType exchangeType;
+	protected final String identity;
 	protected final String queue;
 	protected final boolean queueAutoDelete;
 	protected final boolean queueDurable;

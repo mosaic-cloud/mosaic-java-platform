@@ -60,6 +60,7 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
  */
 public final class AmqpQueueRawConnectorProxy
 		extends BaseConnectorProxy
+		implements IAmqpQueueRawConnector
 { // NOPMD
 	// by
 	// georgiana

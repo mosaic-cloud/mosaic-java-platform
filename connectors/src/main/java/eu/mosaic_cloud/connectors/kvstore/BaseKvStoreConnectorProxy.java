@@ -58,7 +58,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of stored data
  * 
  */
-public class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorProxy {
+public class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorProxy implements IKvStoreConnector<T> {
     protected DataEncoder<T> encoder;
 
     protected BaseKvStoreConnectorProxy(final IConfiguration configuration, final Channel channel,

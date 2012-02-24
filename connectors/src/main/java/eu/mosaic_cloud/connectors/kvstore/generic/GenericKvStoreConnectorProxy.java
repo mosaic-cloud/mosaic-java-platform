@@ -39,7 +39,7 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
  *            type of stored data
  * 
  */
-public class GenericKvStoreConnectorProxy<T extends Object> extends BaseKvStoreConnectorProxy<T> { // NOPMD
+public final class GenericKvStoreConnectorProxy<T extends Object> extends BaseKvStoreConnectorProxy<T> { // NOPMD
                                                                                                    // by
                                                                                                    // georgiana
                                                                                                    // on

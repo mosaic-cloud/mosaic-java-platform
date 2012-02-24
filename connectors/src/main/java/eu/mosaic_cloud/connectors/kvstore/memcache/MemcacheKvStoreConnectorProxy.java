@@ -53,7 +53,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of stored data
  * 
  */
-public class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStoreConnectorProxy<T> {
+public final class MemcacheKvStoreConnectorProxy<T extends Object> extends BaseKvStoreConnectorProxy<T>
+        implements IMemcacheKvStoreConnector<T>
+{
     protected MemcacheKvStoreConnectorProxy(final IConfiguration configuration,
             final Channel channel, final DataEncoder<T> encoder) {
         super(configuration, channel, encoder);

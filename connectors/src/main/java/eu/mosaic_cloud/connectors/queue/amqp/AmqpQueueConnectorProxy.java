@@ -10,6 +10,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public abstract class AmqpQueueConnectorProxy<Message>
 		extends Object
+		implements IAmqpQueueConnector
 {
 	protected AmqpQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final IConfiguration config, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder)
 	{

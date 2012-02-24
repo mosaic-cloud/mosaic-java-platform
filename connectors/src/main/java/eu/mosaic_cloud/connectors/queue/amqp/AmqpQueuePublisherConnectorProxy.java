@@ -43,8 +43,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of the messages published by the cloudlet
  */
-public class AmqpQueuePublisherConnectorProxy<Message>
+public final class AmqpQueuePublisherConnectorProxy<Message>
 		extends AmqpQueueConnectorProxy<Message>
+		implements
+			IAmqpQueuePublisherConnector<Message>
 {
 	/**
 	 * Creates a new AMQP publisher.
@@ -88,12 +90,14 @@ public class AmqpQueuePublisherConnectorProxy<Message>
 		return this.raw.destroy ();
 	}
 	
+	@Override
 	public CallbackCompletion<Void> initialize ()
 	{
 		// FIXME
 		return this.raw.declareExchange (this.exchange, this.exchangeType, this.exchangeDurable, this.exchangeAutoDelete, this.definePassive);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> publish (final Message message)
 	{
 		final byte[] data;

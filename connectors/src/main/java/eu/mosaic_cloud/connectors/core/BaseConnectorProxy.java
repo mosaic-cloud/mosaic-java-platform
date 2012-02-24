@@ -41,7 +41,7 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
  * @author Georgiana Macariu
  * 
  */
-public abstract class BaseConnectorProxy implements SessionCallbacks {
+public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector {
 
     protected final IConfiguration configuration;
     protected MosaicLogger logger;
@@ -67,6 +67,11 @@ public abstract class BaseConnectorProxy implements SessionCallbacks {
         this.identifier = UUID.randomUUID().toString();
         this.pendingRequests = new ResponseHandlerMap();
         this.logger = MosaicLogger.createLogger(this);
+    }
+
+    @Override
+    public CallbackCompletion<Void> initialize() {
+    	return (CallbackCompletion.createOutcome());
     }
 
     /**
