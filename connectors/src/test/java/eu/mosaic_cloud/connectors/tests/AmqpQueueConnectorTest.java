@@ -20,18 +20,15 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
+import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
-
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
-import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 
 public class AmqpQueueConnectorTest extends
         BaseConnectorTest<AmqpQueueRawConnector, BaseConnectorTest.Context<AmqpStub>> {

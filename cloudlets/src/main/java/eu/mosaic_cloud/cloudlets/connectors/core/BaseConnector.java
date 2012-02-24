@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

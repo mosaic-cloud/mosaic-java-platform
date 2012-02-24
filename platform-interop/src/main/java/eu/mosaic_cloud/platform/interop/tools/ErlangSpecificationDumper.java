@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.platform.interop.tools;
 
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
 

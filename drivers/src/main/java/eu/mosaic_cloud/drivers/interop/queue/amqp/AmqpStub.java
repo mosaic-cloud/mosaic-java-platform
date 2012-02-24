@@ -22,15 +22,6 @@ package eu.mosaic_cloud.drivers.interop.queue.amqp; // NOPMD by georgiana on 10/
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
-import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
-
-
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-
-
 import com.google.common.base.Preconditions;
 import com.rabbitmq.client.ConnectionFactory;
 import eu.mosaic_cloud.drivers.IResourceDriver;
@@ -49,7 +40,9 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack;
@@ -61,6 +54,8 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeReq
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**

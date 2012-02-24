@@ -20,13 +20,12 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
-import eu.mosaic_cloud.platform.interop.tools.ChannelData;
-
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.interop.tools.ChannelData;
 
 /**
  * Finder for resource drivers.

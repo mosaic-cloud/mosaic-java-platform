@@ -23,12 +23,11 @@ package eu.mosaic_cloud.connectors.tools;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.interop.tools.ChannelData;
-
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.connectors.tools.ConnectorComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.interop.tools.ChannelData;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;

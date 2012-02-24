@@ -20,14 +20,12 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
-import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 public class RiakKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
