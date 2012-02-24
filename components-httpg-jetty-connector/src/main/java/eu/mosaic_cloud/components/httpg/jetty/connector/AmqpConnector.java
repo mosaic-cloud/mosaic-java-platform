@@ -24,14 +24,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.QueueingConsumer;
-import com.rabbitmq.client.ShutdownListener;
-import com.rabbitmq.client.ShutdownSignalException;
 import eu.mosaic_cloud.components.httpg.jetty.connector.MessageHandler.MessageFormatException;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
+
 import org.eclipse.jetty.io.ByteArrayEndPoint;
 import org.eclipse.jetty.io.ConnectedEndPoint;
 import org.eclipse.jetty.io.EndPoint;
@@ -40,6 +35,13 @@ import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.util.log.Log;
 import org.json.JSONException;
+
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownListener;
+import com.rabbitmq.client.ShutdownSignalException;
 
 
 public class AmqpConnector extends AbstractConnector {

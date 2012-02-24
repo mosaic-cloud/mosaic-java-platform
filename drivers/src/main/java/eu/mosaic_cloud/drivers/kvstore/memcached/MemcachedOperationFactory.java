@@ -30,18 +30,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import net.spy.memcached.CASResponse;
-import net.spy.memcached.MemcachedClient;
-
-import com.couchbase.client.CouchbaseClient;
-import com.couchbase.client.CouchbaseConnectionFactory;
-
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+
+import com.couchbase.client.CouchbaseClient;
+import com.couchbase.client.CouchbaseConnectionFactory;
+
+import net.spy.memcached.CASResponse;
+import net.spy.memcached.MemcachedClient;
 
 /**
  * Factory class which builds the asynchronous calls for the operations defined

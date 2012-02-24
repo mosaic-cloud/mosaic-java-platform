@@ -29,8 +29,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
+
+import com.google.common.base.Preconditions;
 
 
 public final class DefaultJavaSerializationPayloadCoder

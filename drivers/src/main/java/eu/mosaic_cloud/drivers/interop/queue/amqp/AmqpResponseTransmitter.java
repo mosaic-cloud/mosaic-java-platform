@@ -20,8 +20,6 @@
 
 package eu.mosaic_cloud.drivers.interop.queue.amqp;
 
-import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpOperations;
 import eu.mosaic_cloud.interoperability.core.Message;
@@ -40,6 +38,8 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
+
+import com.google.protobuf.ByteString;
 
 /**
  * Serializes responses for AMQP operation requests and sends them to the

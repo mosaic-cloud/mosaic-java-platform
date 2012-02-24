@@ -23,10 +23,11 @@ package eu.mosaic_cloud.tools.exceptions.core;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.InterceptingExceptionTracer;
+
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Atomics;
 
 
 public interface ExceptionTracer

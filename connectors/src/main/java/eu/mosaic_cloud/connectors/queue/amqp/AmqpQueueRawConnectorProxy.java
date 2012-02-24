@@ -22,8 +22,6 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.core.ResponseHandlerMap;
 import eu.mosaic_cloud.interoperability.core.Channel;
@@ -49,6 +47,8 @@ import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+
+import com.google.protobuf.ByteString;
 
 /**
  * Proxy for the driver for queuing systems implementing the AMQP protocol. This

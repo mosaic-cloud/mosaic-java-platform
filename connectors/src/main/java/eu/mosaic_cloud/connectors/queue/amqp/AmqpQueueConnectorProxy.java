@@ -1,11 +1,11 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
+import com.google.common.base.Preconditions;
 
 public abstract class AmqpQueueConnectorProxy<Message> extends Object implements
         IAmqpQueueConnector {

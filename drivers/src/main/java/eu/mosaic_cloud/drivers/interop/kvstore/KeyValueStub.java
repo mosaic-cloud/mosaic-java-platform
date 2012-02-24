@@ -27,8 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
@@ -58,6 +56,8 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Stub for the driver for key-value distributed storage systems. This is used

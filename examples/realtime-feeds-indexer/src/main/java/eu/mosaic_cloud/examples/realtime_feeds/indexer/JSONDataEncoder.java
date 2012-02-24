@@ -29,12 +29,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.EncodingException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
 
 public class JSONDataEncoder implements DataEncoder<JSONObject> {
 

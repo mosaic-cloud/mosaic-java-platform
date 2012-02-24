@@ -24,8 +24,6 @@ package eu.mosaic_cloud.examples.components.simple;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -40,6 +38,9 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
 
 public final class AbacusComponentCallbacks

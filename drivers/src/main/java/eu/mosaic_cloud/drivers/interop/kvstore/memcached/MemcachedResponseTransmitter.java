@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.interoperability.core.Message;
@@ -39,6 +37,8 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
+
+import com.google.protobuf.ByteString;
 
 /**
  * Serializes responses for memcached operation requests and sends them to the

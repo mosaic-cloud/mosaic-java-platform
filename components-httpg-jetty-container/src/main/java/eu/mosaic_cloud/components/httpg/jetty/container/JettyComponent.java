@@ -24,13 +24,14 @@ package eu.mosaic_cloud.components.httpg.jetty.container;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Atomics;
 
 
 public final class JettyComponent

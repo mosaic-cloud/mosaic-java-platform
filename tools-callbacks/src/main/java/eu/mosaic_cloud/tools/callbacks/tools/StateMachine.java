@@ -24,14 +24,15 @@ package eu.mosaic_cloud.tools.callbacks.tools;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
+
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Atomics;
 
 
 public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _Transition_ extends Enum<_Transition_> & StateMachine.Transition>

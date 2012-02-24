@@ -20,9 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Launches a cloudlet.

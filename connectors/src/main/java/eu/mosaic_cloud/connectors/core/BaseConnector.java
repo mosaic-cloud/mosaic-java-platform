@@ -22,8 +22,6 @@ package eu.mosaic_cloud.connectors.core;
 
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -31,6 +29,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
 
 public abstract class BaseConnector<P extends BaseConnectorProxy> implements IConnector,
         CallbackProxy {

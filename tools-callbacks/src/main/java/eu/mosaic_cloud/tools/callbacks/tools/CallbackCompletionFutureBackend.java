@@ -24,14 +24,15 @@ package eu.mosaic_cloud.tools.callbacks.tools;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionBackend;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
+
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 
 
 public final class CallbackCompletionFutureBackend

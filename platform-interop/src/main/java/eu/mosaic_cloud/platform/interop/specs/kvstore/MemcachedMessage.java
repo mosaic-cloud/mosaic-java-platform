@@ -20,14 +20,14 @@
 
 package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
-import com.google.protobuf.GeneratedMessage;
-
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 import eu.mosaic_cloud.platform.interop.tools.DefaultPBPayloadCoder;
+
+import com.google.protobuf.GeneratedMessage;
 
 /**
  * Enum containing all possible MEMCACHED connector-driver messages.

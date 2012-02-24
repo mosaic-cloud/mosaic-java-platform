@@ -35,11 +35,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.google.common.base.Functions;
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.AbstractExecutionThreadService;
-import com.google.common.util.concurrent.AbstractService;
-import com.google.common.util.concurrent.Futures;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelFlow;
@@ -57,6 +52,12 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
+
+import com.google.common.base.Functions;
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Futures;
 
 
 public final class BasicChannel

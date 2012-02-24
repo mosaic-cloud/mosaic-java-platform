@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueResponseTransmitter;
@@ -56,6 +54,8 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Stub for the driver for key-value distributed storage systems implementing

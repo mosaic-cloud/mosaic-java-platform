@@ -29,8 +29,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.threading.core.ThreadController;
+
+import com.google.common.base.Preconditions;
 
 
 public final class ThreadBundle<_Thread_ extends Thread>

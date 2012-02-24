@@ -23,10 +23,12 @@ package eu.mosaic_cloud.tools.threading.implementations.basic;
 
 import java.security.Permission;
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
+
+import com.google.common.base.Preconditions;
+
 import sun.security.util.SecurityConstants;
 
 

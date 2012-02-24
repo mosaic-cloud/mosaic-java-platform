@@ -21,9 +21,10 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
+
+import com.google.common.base.Preconditions;
 
 
 public final class CallbackIsolate

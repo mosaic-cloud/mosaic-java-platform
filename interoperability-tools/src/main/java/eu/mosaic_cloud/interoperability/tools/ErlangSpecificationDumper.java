@@ -21,11 +21,12 @@
 package eu.mosaic_cloud.interoperability.tools;
 
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterables;
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 
 
 public final class ErlangSpecificationDumper

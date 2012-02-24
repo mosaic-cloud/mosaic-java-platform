@@ -20,8 +20,6 @@
 
 package eu.mosaic_cloud.drivers;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
@@ -41,6 +39,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
 
 /**
  * This callback class enables a resource driver to be exposed as a component.

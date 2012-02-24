@@ -39,9 +39,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.LinkedList;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.net.SocketAppender;
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCallbacksProvider;
 import eu.mosaic_cloud.components.core.ComponentContext;
@@ -61,7 +58,13 @@ import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecur
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
+
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Preconditions;
+
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.net.SocketAppender;
 
 
 public final class BasicComponentHarnessMain

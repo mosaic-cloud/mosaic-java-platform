@@ -21,13 +21,16 @@
 package eu.mosaic_cloud.tools.transcript.implementations.logback;
 
 
-import ch.qos.logback.classic.Logger;
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.miscellaneous.ExtendedFormatter;
 import eu.mosaic_cloud.tools.transcript.core.TranscriptBackend;
 import eu.mosaic_cloud.tools.transcript.core.TranscriptTraceType;
+
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Preconditions;
+
+import ch.qos.logback.classic.Logger;
 
 
 public final class LogbackTranscriptBackend

@@ -21,11 +21,12 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.ListenableFuture;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionFutureBackend;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
+
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.ListenableFuture;
 
 
 public final class CallbackCompletion<_Outcome_ extends Object>

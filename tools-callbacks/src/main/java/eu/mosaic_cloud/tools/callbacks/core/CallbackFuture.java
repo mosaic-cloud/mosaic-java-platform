@@ -25,8 +25,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
+
+import com.google.common.base.Preconditions;
 
 
 public final class CallbackFuture<_Outcome_ extends Object>

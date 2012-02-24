@@ -22,8 +22,6 @@ package eu.mosaic_cloud.connectors.core;
 
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
@@ -35,6 +33,8 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Base class for connector proxys.

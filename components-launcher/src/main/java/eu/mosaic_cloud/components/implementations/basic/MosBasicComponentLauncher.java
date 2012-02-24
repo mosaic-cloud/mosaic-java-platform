@@ -32,13 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.net.SimpleSocketServer;
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.io.ByteStreams;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.tools.classpath_exporter.ClasspathExporter;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
@@ -50,7 +43,17 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
+
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
+import com.google.common.io.ByteStreams;
+
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.net.SimpleSocketServer;
 
 
 public final class MosBasicComponentLauncher

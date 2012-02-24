@@ -25,10 +25,10 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
+import eu.mosaic_cloud.interoperability.core.PayloadCoder;
+
 import com.google.common.base.Preconditions;
 import com.google.protobuf.GeneratedMessage;
-
-import eu.mosaic_cloud.interoperability.core.PayloadCoder;
 
 /**
  * Encodes an object (request for operation or response to operation) using the

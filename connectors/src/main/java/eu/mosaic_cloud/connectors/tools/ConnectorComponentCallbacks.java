@@ -23,8 +23,6 @@ package eu.mosaic_cloud.connectors.tools;
 import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -45,6 +43,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture.Trigger;
+
+import com.google.common.base.Preconditions;
 
 /**
  * This callback class enables the connectors to find resource drivers and

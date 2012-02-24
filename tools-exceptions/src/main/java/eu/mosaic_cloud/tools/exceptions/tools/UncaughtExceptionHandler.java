@@ -21,9 +21,10 @@
 package eu.mosaic_cloud.tools.exceptions.tools;
 
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+
+import com.google.common.base.Preconditions;
 
 
 public final class UncaughtExceptionHandler

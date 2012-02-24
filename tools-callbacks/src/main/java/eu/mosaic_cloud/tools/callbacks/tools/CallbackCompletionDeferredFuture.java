@@ -21,10 +21,11 @@
 package eu.mosaic_cloud.tools.callbacks.tools;
 
 
-import com.google.common.util.concurrent.ForwardingFuture;
-import com.google.common.util.concurrent.ListenableFuture;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
+
+import com.google.common.util.concurrent.ForwardingFuture;
+import com.google.common.util.concurrent.ListenableFuture;
 
 
 public final class CallbackCompletionDeferredFuture<_Outcome_ extends Object>

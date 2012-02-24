@@ -24,7 +24,6 @@ package eu.mosaic_cloud.components.implementations.basic.tests;
 import java.nio.channels.Pipe;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Strings;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
@@ -43,8 +42,11 @@ import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingConte
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.common.base.Strings;
 
 
 public final class BasicComponentTest

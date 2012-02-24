@@ -21,9 +21,10 @@ package eu.mosaic_cloud.components.httpg.jetty.connector;
 
 import java.io.Serializable;
 
+import org.json.JSONObject;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
-import org.json.JSONObject;
 
 public class QueueMessage implements Serializable {
 	/**

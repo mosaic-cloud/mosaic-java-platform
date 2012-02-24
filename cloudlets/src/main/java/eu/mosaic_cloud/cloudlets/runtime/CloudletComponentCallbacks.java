@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
@@ -57,6 +55,8 @@ import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture.Trigger;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
 
 /**
  * This callback class enables the container to communicate with other platform

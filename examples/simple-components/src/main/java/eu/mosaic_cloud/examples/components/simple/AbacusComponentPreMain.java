@@ -21,9 +21,10 @@
 package eu.mosaic_cloud.examples.components.simple;
 
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
+
+import com.google.common.base.Preconditions;
 
 
 public final class AbacusComponentPreMain

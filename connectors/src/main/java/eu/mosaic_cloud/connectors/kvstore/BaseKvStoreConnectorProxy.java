@@ -23,8 +23,6 @@ package eu.mosaic_cloud.connectors.kvstore;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.protobuf.ByteString;
-
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;
@@ -48,6 +46,8 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
+import com.google.protobuf.ByteString;
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used

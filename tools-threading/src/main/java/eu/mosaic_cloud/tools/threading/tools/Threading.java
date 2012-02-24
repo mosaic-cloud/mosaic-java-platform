@@ -40,13 +40,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.Atomics;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ManagedThread;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext.ManagedThreadGroup;
+
+import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Atomics;
 
 
 public final class Threading

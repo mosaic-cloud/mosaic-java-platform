@@ -24,17 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import com.basho.riak.client.IRiakClient;
-import com.basho.riak.client.IRiakObject;
-import com.basho.riak.client.RiakException;
-import com.basho.riak.client.RiakFactory;
-import com.basho.riak.client.bucket.Bucket;
-
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+
+import com.basho.riak.client.IRiakClient;
+import com.basho.riak.client.IRiakObject;
+import com.basho.riak.client.RiakException;
+import com.basho.riak.client.RiakFactory;
+import com.basho.riak.client.bucket.Bucket;
 
 /**
  * Factory class which builds the asynchronous calls for the operations defined

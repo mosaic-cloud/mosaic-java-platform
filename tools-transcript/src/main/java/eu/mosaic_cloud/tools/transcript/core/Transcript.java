@@ -21,9 +21,10 @@
 package eu.mosaic_cloud.tools.transcript.core;
 
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.transcript.implementations.logback.LogbackTranscriptBackend;
+
+import com.google.common.base.Preconditions;
 
 
 public final class Transcript

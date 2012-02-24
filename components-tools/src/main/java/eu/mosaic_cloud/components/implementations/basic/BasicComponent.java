@@ -25,8 +25,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashBiMap;
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
 import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelFlow;
@@ -47,6 +45,9 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashBiMap;
 
 
 public final class BasicComponent

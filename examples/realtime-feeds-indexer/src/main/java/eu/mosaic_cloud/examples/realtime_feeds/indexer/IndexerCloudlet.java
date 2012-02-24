@@ -22,8 +22,6 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import java.util.UUID;
 
-import org.json.JSONObject;
-
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
@@ -39,6 +37,8 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
+import org.json.JSONObject;
 
 public class IndexerCloudlet {
 

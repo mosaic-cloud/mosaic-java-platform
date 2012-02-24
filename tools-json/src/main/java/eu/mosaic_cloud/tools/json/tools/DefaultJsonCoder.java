@@ -24,8 +24,10 @@ package eu.mosaic_cloud.tools.json.tools;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.json.core.JsonCoder;
+
+import com.google.common.base.Preconditions;
+
 import net.minidev.json.JSONStyle;
 import net.minidev.json.JSONValue;
 import net.minidev.json.parser.JSONParser;

@@ -23,9 +23,6 @@ package eu.mosaic_cloud.drivers.interop.queue.amqp; // NOPMD by georgiana on 10/
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import com.google.common.base.Preconditions;
-import com.rabbitmq.client.ConnectionFactory;
-
 import eu.mosaic_cloud.drivers.IResourceDriver;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
@@ -59,6 +56,9 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
+import com.rabbitmq.client.ConnectionFactory;
 
 /**
  * Stub for the driver for queuing systems implementing the AMQP protocol. This

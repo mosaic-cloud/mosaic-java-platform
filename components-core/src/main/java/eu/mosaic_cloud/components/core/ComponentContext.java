@@ -24,10 +24,11 @@ package eu.mosaic_cloud.components.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
 
 
 public final class ComponentContext

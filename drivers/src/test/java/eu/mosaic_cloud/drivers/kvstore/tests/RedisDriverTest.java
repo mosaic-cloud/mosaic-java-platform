@@ -26,13 +26,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
-
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RedisDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -45,6 +38,13 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
 
 public class RedisDriverTest {
 

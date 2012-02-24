@@ -29,11 +29,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.util.concurrent.Atomics;
-
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.exceptions.ResultSetException;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
+
+import com.google.common.util.concurrent.Atomics;
 
 /**
  * Implementation of an asynchronous operation using only an event driven
