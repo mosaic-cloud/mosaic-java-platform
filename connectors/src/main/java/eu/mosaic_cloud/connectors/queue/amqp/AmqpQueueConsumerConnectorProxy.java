@@ -26,6 +26,7 @@ import java.util.UUID;
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
@@ -130,7 +131,8 @@ public final class AmqpQueueConsumerConnectorProxy<Message>
 	public static <Message> AmqpQueueConsumerConnectorProxy<Message> create (final IConfiguration configuration, final String driverIdentity, final Channel channel, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final IAmqpQueueConsumerCallback<Message> callback)
 	{
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration, driverIdentity, channel);
-		final AmqpQueueConsumerConnectorProxy<Message> proxy = new AmqpQueueConsumerConnectorProxy<Message> (rawProxy, configuration, messageClass, messageEncoder, callback);
+		final IConfiguration subConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveRelative ("publisher"));
+		final AmqpQueueConsumerConnectorProxy<Message> proxy = new AmqpQueueConsumerConnectorProxy<Message> (rawProxy, subConfiguration, messageClass, messageEncoder, callback);
 		return proxy;
 	}
 	
