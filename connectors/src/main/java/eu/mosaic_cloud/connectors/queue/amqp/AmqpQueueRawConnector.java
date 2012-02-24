@@ -117,8 +117,8 @@ public class AmqpQueueRawConnector
 	 */
 	public static AmqpQueueRawConnector create (final IConfiguration configuration, final ThreadingContext threading)
 	{
-		final String driverIdentity = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AllConnector.1"), String.class, "");
-		final String driverEndpoint = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AllConnector.0"), String.class, "");
+		final String driverIdentity = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("GenericConnector.1"), String.class, "");
+		final String driverEndpoint = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("GenericConnector.0"), String.class, "");
 		final Channel channel = BaseConnector.createChannel (driverEndpoint, threading);
 		channel.register (AmqpSession.CONNECTOR);
 		final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create (configuration, driverIdentity, channel);

@@ -30,10 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.platform.interop.tools.ChannelData;
-
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
@@ -50,6 +47,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.platform.interop.tools.ChannelData;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
@@ -120,17 +118,17 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         CloudletComponentCallbacks.callbacks = this;
         IConfiguration configuration = PropertyTypeConfiguration.create(
-                CloudletComponentCallbacks.class.getClassLoader(), "resource-container.properties"); //$NON-NLS-1$
+                CloudletComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/cloudlets/cloudlet-component.prop"); //$NON-NLS-1$
         this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+                ConfigProperties.getString("CloudletComponent.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponentCallbacks.1"), //$NON-NLS-1$
+                ConfigProperties.getString("CloudletComponent.1"), //$NON-NLS-1$
                 String.class, "")); //$NON-NLS-1$
         this.mcGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponentCallbacks.2"), String.class, //$NON-NLS-1$
+                ConfigProperties.getString("CloudletComponent.2"), String.class, //$NON-NLS-1$
                 "")); //$NON-NLS-1$
         this.selfGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+                ConfigProperties.getString("CloudletComponent.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.status = Status.Created;
     }
 
@@ -143,7 +141,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
                 && (this.status != Status.Unregistered));
         if (this.status == Status.Ready) {
             if (request.operation
-                    .equals(ConfigProperties.getString("CloudletComponentCallbacks.4"))) {
+                    .equals(ConfigProperties.getString("CloudletComponent.4"))) {
                 // TODO
                 List<?> operands = DefaultJsonMapper.defaultInstance.decode(request.inputs,
                         List.class);
@@ -176,7 +174,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
             return null;
         }
         int noInstances = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponentCallbacks.11"), Integer.class, 1);
+                ConfigProperties.getString("CloudletComponent.11"), Integer.class, 1);
         List<CloudletManager> containers = new ArrayList<CloudletManager>();
         for (int i = 0; i < noInstances; i++) {
             final CloudletManager container = new CloudletManager(this.threading, loader,
@@ -370,7 +368,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
 
         this.pendingReferences.put(callReference, replyFuture.trigger);
         this.component.call(componentId, ComponentCallRequest.create(
-                ConfigProperties.getString("CloudletComponentCallbacks.7"), null, callReference)); //$NON-NLS-1$
+                ConfigProperties.getString("CloudletComponent.7"), null, callReference)); //$NON-NLS-1$
 
         try {
             reply = replyFuture.get();

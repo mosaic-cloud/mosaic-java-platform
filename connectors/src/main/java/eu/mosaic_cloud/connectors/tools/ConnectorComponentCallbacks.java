@@ -24,7 +24,6 @@ import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
 import com.google.common.base.Preconditions;
-
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -67,22 +66,22 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
      * Creates a callback which is used by the mOSAIC platform to communicate
      * with the connectors.
      */
-    public ConnectorComponentCallbacks(final ComponentContext context) {
+    public ConnectorComponentCallbacks(@SuppressWarnings ("unused") final ComponentContext context) {
         super();
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         ConnectorComponentCallbacks.setComponentCallbacks(this);
         final IConfiguration configuration = PropertyTypeConfiguration.create(
-                ConnectorComponentCallbacks.class.getClassLoader(), "resource-conn.properties"); //$NON-NLS-1$
+                ConnectorComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/connectors/connector-component.prop"); //$NON-NLS-1$
         this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("ResourceComponentCallbacks.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+                ConfigProperties.getString("ConnectorComponent.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("ResourceComponentCallbacks.1"), //$NON-NLS-1$
+                ConfigProperties.getString("ConnectorComponent.1"), //$NON-NLS-1$
                 String.class, "")); //$NON-NLS-1$
         this.mcGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("ResourceComponentCallbacks.2"), String.class, //$NON-NLS-1$
+                ConfigProperties.getString("ConnectorComponent.2"), String.class, //$NON-NLS-1$
                 "")); //$NON-NLS-1$
         this.selfGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("ResourceComponentCallbacks.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
+                ConfigProperties.getString("ConnectorComponent.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.status = Status.Created;
     }
 
@@ -97,7 +96,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
                 && (this.status != Status.Unregistered));
         if (this.status == Status.Ready) {
             if (request.operation
-                    .equals(ConfigProperties.getString("ResourceComponentCallbacks.7"))) { //$NON-NLS-1$
+                    .equals(ConfigProperties.getString("ConnectorComponent.7"))) { //$NON-NLS-1$
                 ConnectorComponentCallbacks.logger.debug("Testing AMQP connector"); //$NON-NLS-1$
                 try {
                     succeeded = true;
@@ -108,7 +107,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
                         ByteBuffer.allocate(0), request.reference);
                 component.callReturn(reply);
             } else if (request.operation.equals(ConfigProperties
-                    .getString("ResourceComponentCallbacks.8"))) {
+                    .getString("ConnectorComponent.8"))) {
                 ConnectorComponentCallbacks.logger.debug("Testing KV connector connector"); //$NON-NLS-1$
                 try {
                     succeeded = true;
@@ -199,7 +198,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
             break;
         }
         this.component.call(componentId, ComponentCallRequest.create(
-                ConfigProperties.getString("ResourceComponentCallbacks.4"), null, callReference)); //$NON-NLS-1$
+                ConfigProperties.getString("ConnectorComponent.4"), null, callReference)); //$NON-NLS-1$
         this.pendingReferences.put(callReference, replyFuture.trigger);
         return replyFuture;
     }

@@ -26,9 +26,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-
-
 import com.google.common.base.Preconditions;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -45,6 +42,7 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
@@ -66,7 +64,7 @@ public final class AmqpDriverComponentCallbacks extends
 		try {
 			IConfiguration configuration = PropertyTypeConfiguration
 					.create(AmqpDriverComponentCallbacks.class
-							.getResourceAsStream("amqp.properties"));
+							.getResourceAsStream("driver-component.prop"));
 			setDriverConfiguration(configuration);
 			this.resourceGroup = ComponentIdentifier
 					.resolve(ConfigUtils.resolveParameter(

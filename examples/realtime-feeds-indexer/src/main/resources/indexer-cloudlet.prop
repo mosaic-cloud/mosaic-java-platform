@@ -1,3 +1,4 @@
+
 cloudlet.main_class=eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet$LifeCycleHandler
 cloudlet.context_class=eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet$IndexerCloudletContext
 cloudlet.resource_file=indexer-cloudlet.prop
@@ -22,22 +23,12 @@ batch.queue.consumer.amqp.passive=false
 batch.queue.consumer.amqp.exclusive=false
 batch.queue.consumer.amqp.auto_ack=false
 
-metadata.kvstore.connector_name=KVSTORE
 metadata.kvstore.bucket=feed-metadata
 
-timelines.kvstore.connector_name=KVSTORE
 timelines.kvstore.bucket=feed-timelines
 
-items.kvstore.connector_name=KVSTORE
 items.kvstore.bucket=feed-items
 
-data.kvstore.connector_name=KVSTORE
 data.kvstore.bucket=feed-data
 
-tasks.kvstore.connector_name=KVSTORE
 tasks.kvstore.bucket=feed-tasks
-
-
-
-
-

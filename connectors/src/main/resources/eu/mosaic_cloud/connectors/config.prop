@@ -1,6 +1,6 @@
 ###
 # #%L
-# mosaic-cloudlets
+# mosaic-connectors
 # %%
 # Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
 # %%
@@ -18,21 +18,13 @@
 # #L%
 ###
 
-CloudletComponentCallbacks.0=amqp.driver.group.identifier
-CloudletComponentCallbacks.1=kvstore.driver.group.identifier
-CloudletComponentCallbacks.2=memcached.driver.group.identifier
-CloudletComponentCallbacks.3=self.group.identifier
-CloudletComponentCallbacks.4=mosaic-container:deploy-cloudlet
-CloudletComponentCallbacks.5=interop.channel.address
-CloudletComponentCallbacks.6=interop.driver.identifier
-CloudletComponentCallbacks.7=mosaic-component:get.channel.data
+GenericConnector.0=interop.channel.address
+GenericConnector.1=interop.driver.identifier
 
-CloudletComponentCallbacks.8=cloudlet.main_class
-CloudletComponentCallbacks.9=cloudlet.context_class
-CloudletComponentCallbacks.10=cloudlet.resource_file
-CloudletComponentCallbacks.11=cloudlet.no_instances
+GenericKvStoreConnector.0=kvstore.connector_threads
+GenericKvStoreConnector.1=kvstore.bucket
 
-KvStoreConnector.0=kvstore.connector_name
+AmqpConnector.0=amqp.connector_threads
 
 AmqpQueueConnector.0=amqp.exchange
 AmqpQueueConnector.1=amqp.routing_key
@@ -45,3 +37,13 @@ AmqpQueueConnector.7=amqp.auto_delete
 AmqpQueueConnector.8=amqp.passive
 AmqpQueueConnector.9=amqp.durable
 AmqpQueueConnector.10=amqp.auto_ack
+
+ConnectorComponent.0=amqp.driver.group.identifier
+ConnectorComponent.1=kvstore.driver.group.identifier
+ConnectorComponent.2=memcached.driver.group.identifier
+ConnectorComponent.3=self.group.identifier
+ConnectorComponent.4=mosaic-component:get.channel.data
+ConnectorComponent.5=interop.channel.address
+ConnectorComponent.6=interop.driver.identifier
+ConnectorComponent.7=mosaic-component:test.amqp
+ConnectorComponent.8=mosaic-component:test.kv
