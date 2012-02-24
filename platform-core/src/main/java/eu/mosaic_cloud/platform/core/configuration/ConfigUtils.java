@@ -58,9 +58,16 @@ public final class ConfigUtils {
 			retValue = defaultValue;
 
 		} else {
-			retValue = configuration.getParameter(
-					ConfigurationIdentifier.resolveRelative(identifier),
-					valueClass).getValue(defaultValue);
+			if (valueClass.isEnum()) {
+				String retName = configuration.getParameter(
+						ConfigurationIdentifier.resolveRelative(identifier),
+						String.class).getValue(((Enum<?>) defaultValue).name());
+				retValue = (T) Enum.valueOf((Class) valueClass, retName.toUpperCase());
+			} else {
+				retValue = configuration.getParameter(
+						ConfigurationIdentifier.resolveRelative(identifier),
+						valueClass).getValue(defaultValue);
+			}
 		}
 		return retValue;
 	}
