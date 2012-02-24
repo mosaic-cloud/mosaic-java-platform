@@ -20,18 +20,38 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
-import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
+import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+
 public class AmqpQueueRawConnectorTest extends
         BaseConnectorTest<AmqpQueueRawConnector, BaseConnectorTest.Context<AmqpStub>> {
+
+    private static Context<AmqpStub> context_;
+
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        final Context<AmqpStub> context = new Context<AmqpStub>();
+        BaseConnectorTest.setupUpContext(AmqpQueueRawConnectorTest.class, context,
+                "amqp-queue-raw-connector-test.properties");
+        context.driverChannel.register(AmqpSession.DRIVER);
+        context.driverStub = AmqpStub.create(context.configuration, context.driverChannel,
+                context.threading);
+        AmqpQueueRawConnectorTest.context_ = context;
+    }
+
+    @AfterClass
+    public static void tearDownAfterClass() {
+        BaseConnectorTest.tearDownContext(AmqpQueueRawConnectorTest.context_);
+    }
+
     @Override
     @Before
     public void setUp() {
@@ -55,8 +75,7 @@ public class AmqpQueueRawConnectorTest extends
                 "publisher.amqp.routing_key", String.class, "");
         final String queue = ConfigUtils.resolveParameter(this.context.configuration,
                 "consumer.amqp.queue", String.class, "");
-        Assert.assertTrue(this.awaitSuccess(this.connector.bindQueue(exchange, queue,
-                routingKey)));
+        Assert.assertTrue(this.awaitSuccess(this.connector.bindQueue(exchange, queue, routingKey)));
     }
 
     protected void testDeclareExchange() {
@@ -69,25 +88,7 @@ public class AmqpQueueRawConnectorTest extends
     protected void testDeclareQueue() {
         final String queue = ConfigUtils.resolveParameter(this.context.configuration,
                 "consumer.amqp.queue", String.class, "");
-        Assert.assertTrue(this.awaitSuccess(this.connector.declareQueue(queue, true, false,
-                true, false)));
+        Assert.assertTrue(this.awaitSuccess(this.connector.declareQueue(queue, true, false, true,
+                false)));
     }
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        final Context<AmqpStub> context = new Context<AmqpStub>();
-        BaseConnectorTest.setupUpContext(AmqpQueueRawConnectorTest.class, context,
-                "amqp-queue-raw-connector-test.properties");
-        context.driverChannel.register(AmqpSession.DRIVER);
-        context.driverStub = AmqpStub.create(context.configuration, context.driverChannel,
-                context.threading);
-        AmqpQueueRawConnectorTest.context_ = context;
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        BaseConnectorTest.tearDownContext(AmqpQueueRawConnectorTest.context_);
-    }
-
-    private static Context<AmqpStub> context_;
 }

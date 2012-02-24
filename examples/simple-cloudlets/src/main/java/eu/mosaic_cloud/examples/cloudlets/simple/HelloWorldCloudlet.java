@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
@@ -29,51 +30,45 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class HelloWorldCloudlet {
 
-	public static final class LifeCycleHandler extends
-			DefaultCloudletCallback<HelloCloudletContext> {
+    public static final class HelloCloudletContext {
+    }
 
-		@Override
-		public CallbackCompletion<Void> initialize(HelloCloudletContext context,
-				CloudletCallbackArguments<HelloCloudletContext> arguments) {
-			this.logger.info(
-					"HelloWorld cloudlet is initializing...");
-			return ICallback.SUCCESS;
-		}
+    public static final class LifeCycleHandler extends
+            DefaultCloudletCallback<HelloCloudletContext> {
 
-		@Override
-		public CallbackCompletion<Void> initializeSucceeded(HelloCloudletContext context,
-				CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
-			this.logger.info(
-					"HelloWorld cloudlet was initialized successfully.");
-			System.out.println("Hello world!");
-			ICloudletController<HelloCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			cloudlet.destroy();
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> destroy(HelloCloudletContext context,
+                CloudletCallbackArguments<HelloCloudletContext> arguments) {
+            this.logger.info("HelloWorld cloudlet is being destroyed.");
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> destroy(HelloCloudletContext context,
-				CloudletCallbackArguments<HelloCloudletContext> arguments) {
-			this.logger.info(
-					"HelloWorld cloudlet is being destroyed.");
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> destroySucceeded(HelloCloudletContext context,
+                CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
+            this.logger.info("HelloWorld cloudlet was destroyed successfully.");
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> destroySucceeded(HelloCloudletContext context,
-				CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
-			this.logger.info(
-					"HelloWorld cloudlet was destroyed successfully.");
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> initialize(HelloCloudletContext context,
+                CloudletCallbackArguments<HelloCloudletContext> arguments) {
+            this.logger.info("HelloWorld cloudlet is initializing...");
+            return ICallback.SUCCESS;
+        }
 
-	}
+        @Override
+        public CallbackCompletion<Void> initializeSucceeded(HelloCloudletContext context,
+                CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
+            this.logger.info("HelloWorld cloudlet was initialized successfully.");
+            System.out.println("Hello world!");
+            final ICloudletController<HelloCloudletContext> cloudlet = arguments.getCloudlet();
+            cloudlet.destroy();
+            return ICallback.SUCCESS;
+        }
+    }
 
-	public static final class HelloCloudletContext {
-	}
-
-	public static void main(String[] arguments) throws Throwable {
-		CloudletComponentLauncher.main("hello-cloudlet.properties", arguments);
-	}
+    public static void main(String[] arguments) throws Throwable {
+        CloudletComponentLauncher.main("hello-cloudlet.properties", arguments);
+    }
 }

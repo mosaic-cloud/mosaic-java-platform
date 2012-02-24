@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.ops;
 
 import java.util.concurrent.ExecutionException;
@@ -44,31 +45,31 @@ import java.util.concurrent.TimeoutException;
  */
 public class EventDrivenResult<T> implements IResult<T> {
 
-	private final EventDrivenOperation<T> operation;
+    private final EventDrivenOperation<T> operation;
 
-	public EventDrivenResult(final EventDrivenOperation<T> operation) {
-		super();
-		this.operation = operation;
-	}
+    public EventDrivenResult(final EventDrivenOperation<T> operation) {
+        super();
+        this.operation = operation;
+    }
 
-	@Override
-	public boolean isDone() {
-		return this.operation.isDone();
-	}
+    @Override
+    public boolean cancel() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public boolean cancel() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public T getResult() throws InterruptedException, ExecutionException {
+        return this.operation.get();
+    }
 
-	@Override
-	public T getResult() throws InterruptedException, ExecutionException {
-		return this.operation.get();
-	}
+    @Override
+    public T getResult(long timeout, TimeUnit unit) throws InterruptedException,
+            ExecutionException, TimeoutException {
+        return this.operation.get(timeout, unit);
+    }
 
-	@Override
-	public T getResult(long timeout, TimeUnit unit)
-			throws InterruptedException, ExecutionException, TimeoutException {
-		return this.operation.get(timeout, unit);
-	}
+    @Override
+    public boolean isDone() {
+        return this.operation.isDone();
+    }
 }

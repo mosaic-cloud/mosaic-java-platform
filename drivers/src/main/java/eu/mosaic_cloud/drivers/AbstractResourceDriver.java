@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers;
 
 import java.util.ArrayList;
@@ -39,105 +40,104 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 public abstract class AbstractResourceDriver implements IResourceDriver {
 
-	private final List<IResult<?>> pendingResults;
-	private final ExecutorService executor;
-	private boolean destroyed = false;
-	protected MosaicLogger logger;
+    private final List<IResult<?>> pendingResults;
 
-	/**
-	 * Constructs a driver.
-	 * 
-	 * @param noThreads
-	 *            number of threads to be used for serving requests
-	 */
-	protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
-		this.pendingResults = new ArrayList<IResult<?>>();
-		this.executor = threading
-				.createFixedThreadPool(
-						ThreadConfiguration.create(this, "operations", true),
-						noThreads);
-		this.logger = MosaicLogger.createLogger(this);
-	}
+    private final ExecutorService executor;
 
-	@Override
-	public synchronized void destroy() {
-		IResult<?> pResult;
-		this.destroyed = true;
-		this.executor.shutdown();
-		// NOTE: cancel all pending operations
-		Iterator<IResult<?>> iter = this.pendingResults.iterator();
-		while (iter.hasNext()) {
-			pResult = iter.next();
-			pResult.cancel();
-			iter.remove();
-		}
-	}
+    private boolean destroyed = false;
 
-	/**
-	 * Submit a new asynchronous operation for execution. This operation should
-	 * be called for operations which return something. For the other operations
-	 * see {@link AbstractResourceDriver#executeOperation(Runnable)}.
-	 * 
-	 * @param <T>
-	 *            the operation's return type
-	 * @param operation
-	 *            the operation
-	 */
-	protected <T extends Object> void submitOperation(FutureTask<T> operation) {
-		this.executor.submit(operation);
-	}
+    protected MosaicLogger logger;
 
-	/**
-	 * Submit a new asynchronous operation for execution. This operation should
-	 * be called for operations which do not return anything. For the other
-	 * operations see {@link AbstractResourceDriver#submitOperation(FutureTask)}
-	 * .
-	 * 
-	 * @param operation
-	 *            the operation
-	 */
-	protected void executeOperation(Runnable operation) {
-		this.executor.execute(operation);
-	}
+    /**
+     * Constructs a driver.
+     * 
+     * @param noThreads
+     *            number of threads to be used for serving requests
+     */
+    protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
+        this.pendingResults = new ArrayList<IResult<?>>();
+        this.executor = threading.createFixedThreadPool(
+                ThreadConfiguration.create(this, "operations", true), noThreads);
+        this.logger = MosaicLogger.createLogger(this);
+    }
 
-	public int countPendingOperations() {
-		return this.pendingResults.size();
-	}
+    public void addPendingOperation(IResult<?> pendingOp) {
+        this.pendingResults.add(pendingOp);
+    }
 
-	public void removePendingOperation(IResult<?> pendingOp) {
-		this.pendingResults.remove(pendingOp);
-	}
+    public int countPendingOperations() {
+        return this.pendingResults.size();
+    }
 
-	public void addPendingOperation(IResult<?> pendingOp) {
-		this.pendingResults.add(pendingOp);
-	}
+    @Override
+    public synchronized void destroy() {
+        IResult<?> pResult;
+        this.destroyed = true;
+        this.executor.shutdown();
+        // NOTE: cancel all pending operations
+        final Iterator<IResult<?>> iter = this.pendingResults.iterator();
+        while (iter.hasNext()) {
+            pResult = iter.next();
+            pResult.cancel();
+            iter.remove();
+        }
+    }
 
-	/**
-	 * Handles unsupported operation errors. The base implementation sends an
-	 * error operation to the caller.
-	 * 
-	 * @param opName
-	 *            the name of the operation
-	 * @param handler
-	 *            the handler used for sending the error
-	 */
-	public void handleUnsupportedOperationError(final String opName,
-			final IOperationCompletionHandler<?> handler) {
-		Runnable task = new Runnable() {
+    /**
+     * Submit a new asynchronous operation for execution. This operation should
+     * be called for operations which do not return anything. For the other
+     * operations see {@link AbstractResourceDriver#submitOperation(FutureTask)}
+     * .
+     * 
+     * @param operation
+     *            the operation
+     */
+    protected void executeOperation(Runnable operation) {
+        this.executor.execute(operation);
+    }
 
-			@Override
-			public void run() {
-				Exception error = new UnsupportedOperationException(
-						"Operation " + opName
-								+ " is not supported by this driver.");
-				handler.onFailure(error);
-			}
-		};
-		executeOperation(task);
-	}
+    /**
+     * Handles unsupported operation errors. The base implementation sends an
+     * error operation to the caller.
+     * 
+     * @param opName
+     *            the name of the operation
+     * @param handler
+     *            the handler used for sending the error
+     */
+    public void handleUnsupportedOperationError(final String opName,
+            final IOperationCompletionHandler<?> handler) {
+        final Runnable task = new Runnable() {
 
-	protected synchronized boolean isDestroyed() {
-			return this.destroyed;
-	}
+            @Override
+            public void run() {
+                final Exception error = new UnsupportedOperationException("Operation " + opName
+                        + " is not supported by this driver.");
+                handler.onFailure(error);
+            }
+        };
+        executeOperation(task);
+    }
 
+    protected synchronized boolean isDestroyed() {
+        return this.destroyed;
+    }
+
+    public void removePendingOperation(IResult<?> pendingOp) {
+        this.pendingResults.remove(pendingOp);
+    }
+
+    /**
+     * Submit a new asynchronous operation for execution. This operation should
+     * be called for operations which return something. For the other operations
+     * see {@link AbstractResourceDriver#executeOperation(Runnable)}.
+     * 
+     * @param <T>
+     *            the operation's return type
+     * @param operation
+     *            the operation
+     */
+    protected <T extends Object> void submitOperation(FutureTask<T> operation) {
+        this.executor.submit(operation);
+    }
 }

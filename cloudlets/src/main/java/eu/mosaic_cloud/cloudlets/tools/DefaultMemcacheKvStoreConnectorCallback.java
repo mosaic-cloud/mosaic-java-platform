@@ -37,6 +37,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class DefaultMemcacheKvStoreConnectorCallback<C, D, E> extends
         DefaultKvStoreConnectorCallback<C, D, E> implements
         IMemcacheKvStoreConnectorCallback<C, D, E> {
+
     @Override
     public CallbackCompletion<Void> addFailed(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.log;
 
 import org.slf4j.Logger;
@@ -30,112 +31,111 @@ import org.slf4j.LoggerFactory;
  */
 public final class MosaicLogger {
 
-	private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
+    private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
 
-	private MosaicLogger(Class<?> owner) {
-		this.logger = LoggerFactory.getLogger(owner);
-	}
+    private MosaicLogger(Class<?> owner) {
+        this.logger = LoggerFactory.getLogger(owner);
+    }
 
-	/**
-	 * Returns a mOSAIC logger.
-	 * 
-	 * @param owner
-	 *            logged object
-	 * 
-	 * @return the logger
-	 */
-	public static MosaicLogger createLogger(Object owner) { // NOPMD by
-															// georgiana
-		// on 9/27/11 7:15
-		// PM
-		return new MosaicLogger(owner.getClass());
-	}
+    /**
+     * Returns a mOSAIC logger.
+     * 
+     * @param owner
+     *            logged object
+     * 
+     * @return the logger
+     */
+    public static MosaicLogger createLogger(Class<?> owner) { // NOPMD by
+                                                              // georgiana
+        // on 9/27/11 7:15
+        // PM
+        return new MosaicLogger(owner);
+    }
 
-	/**
-	 * Returns a mOSAIC logger.
-	 * 
-	 * @param owner
-	 *            logged object
-	 * 
-	 * @return the logger
-	 */
-	public static MosaicLogger createLogger(Class<?> owner) { // NOPMD by
-																// georgiana
-		// on 9/27/11 7:15
-		// PM
-		return new MosaicLogger(owner);
-	}
+    /**
+     * Returns a mOSAIC logger.
+     * 
+     * @param owner
+     *            logged object
+     * 
+     * @return the logger
+     */
+    public static MosaicLogger createLogger(Object owner) { // NOPMD by
+                                                            // georgiana
+        // on 9/27/11 7:15
+        // PM
+        return new MosaicLogger(owner.getClass());
+    }
 
-	/**
-	 * Logs a trace message.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public void trace(final String message) {
-		if (this.logger.isTraceEnabled()) {
-			this.logger.trace(message);
-		}
-	}
+    /**
+     * Logs a debug message.
+     * 
+     * @param message
+     *            the message
+     */
+    public void debug(final String message) {
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug(message);
+        }
+    }
 
-	/**
-	 * Logs a debug message.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public void debug(final String message) {
-		if (this.logger.isDebugEnabled()) {
-			this.logger.debug(message);
-		}
-	}
+    /**
+     * Logs an error message.
+     * 
+     * @param message
+     *            the message
+     */
+    public void error(final String message) {
+        if (this.logger.isErrorEnabled()) {
+            this.logger.error(message);
+        }
+    }
 
-	/**
-	 * Logs a info message.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public void info(final String message) {
-		if (this.logger.isInfoEnabled()) {
-			this.logger.info(message);
-		}
-	}
+    /**
+     * Logs a info message.
+     * 
+     * @param message
+     *            the message
+     */
+    public void info(final String message) {
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info(message);
+        }
+    }
 
-	/**
-	 * Logs a warning message.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public void warn(final String message) {
-		if (this.logger.isWarnEnabled()) {
-			this.logger.warn(message);
-		}
-	}
+    /**
+     * Logs a trace message.
+     * 
+     * @param message
+     *            the message
+     */
+    public void trace(final String message) {
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(message);
+        }
+    }
 
-	/**
-	 * Logs an error message.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public void error(final String message) {
-		if (this.logger.isErrorEnabled()) {
-			this.logger.error(message);
-		}
-	}
+    public void trace(String message, Throwable exception) {
+        if (this.logger.isTraceEnabled()) {
+            this.logger.trace(message);
+        }
+    }
 
-	public void trace(String message, Throwable exception) {
-		if (this.logger.isTraceEnabled()) {
-			this.logger.trace(message);
-		}
-	}
+    /**
+     * Logs a warning message.
+     * 
+     * @param message
+     *            the message
+     */
+    public void warn(final String message) {
+        if (this.logger.isWarnEnabled()) {
+            this.logger.warn(message);
+        }
+    }
 
-	public void warn(String message, Throwable exception) {
-		if (this.logger.isWarnEnabled()) {
-			this.logger.warn(message);
-		}
-
-	}
+    public void warn(String message, Throwable exception) {
+        if (this.logger.isWarnEnabled()) {
+            this.logger.warn(message);
+        }
+    }
 }

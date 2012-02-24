@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.ops;
 
 import java.lang.reflect.Proxy;
@@ -29,6 +30,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.util.concurrent.Atomics;
+
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.exceptions.ResultSetException;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -45,123 +47,125 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
  * @param <T>
  *            The type of the actual result of the operation.
  */
-public class EventDrivenOperation<T> implements IOperation<T>,
-		IOperationCompletionHandler<T> {
+public class EventDrivenOperation<T> implements IOperation<T>, IOperationCompletionHandler<T> {
 
-	private CountDownLatch doneSignal;
-	private AtomicReference<T> result;
-	private AtomicReference<Throwable> exception;
-	private List<IOperationCompletionHandler<T>> completionHandlers;
-	private Runnable operation = null;
+    private CountDownLatch doneSignal;
 
-	/**
-	 * Creates a new operation.
-	 * 
-	 * @param complHandlers
-	 *            handlers to be called when the operation completes
-	 */
-	public EventDrivenOperation(
-			final List<IOperationCompletionHandler<T>> complHandlers) {
-		super();
-		this.doneSignal = new CountDownLatch(1);
-		this.result = Atomics.newReference(null);
-		this.exception = Atomics.newReference(null);
-		this.completionHandlers = new ArrayList<IOperationCompletionHandler<T>>();
-		this.completionHandlers.add(this);
-		this.completionHandlers.addAll(complHandlers);
-	}
+    private AtomicReference<T> result;
 
-	/**
-	 * Creates a new operation.
-	 * 
-	 * @param complHandlers
-	 *            handlers to be called when the operation completes
-	 * @param invocationHandler
-	 *            an invocation handler which shall be used to invoke the
-	 *            completion handlers. This can be used for controlling how the
-	 *            completion handlers are executed
-	 */
-	public EventDrivenOperation(
-			final List<IOperationCompletionHandler<T>> complHandlers,
-			final CompletionInvocationHandler<T> invocationHandler) {
-		this(complHandlers);
+    private AtomicReference<Throwable> exception;
 
-		if (invocationHandler != null) {
-			List<IOperationCompletionHandler<T>> cHandlers = new ArrayList<IOperationCompletionHandler<T>>(
-					this.completionHandlers);
-			this.completionHandlers.clear();
-			for (IOperationCompletionHandler<T> handler : cHandlers) {
-				CompletionInvocationHandler<T> iHandler = invocationHandler
-						.createHandler(handler);
-				IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
-						.newProxyInstance(
-								Threading.getCurrentThread()
-										.getContextClassLoader(),
-								new Class[] { IOperationCompletionHandler.class }, // NOPMD by georgiana on 10/12/11 5:01 PM
-								iHandler);
-				this.completionHandlers.add(proxy);
-			}
-		}
-	}
+    private List<IOperationCompletionHandler<T>> completionHandlers;
 
-	@Override
-	public boolean cancel() {
-		throw new UnsupportedOperationException();
-	}
+    private Runnable operation = null;
 
-	@Override
-	public boolean isCancelled() {
-		return false;
-	}
+    /**
+     * Creates a new operation.
+     * 
+     * @param complHandlers
+     *            handlers to be called when the operation completes
+     */
+    public EventDrivenOperation(final List<IOperationCompletionHandler<T>> complHandlers) {
+        super();
+        this.doneSignal = new CountDownLatch(1);
+        this.result = Atomics.newReference(null);
+        this.exception = Atomics.newReference(null);
+        this.completionHandlers = new ArrayList<IOperationCompletionHandler<T>>();
+        this.completionHandlers.add(this);
+        this.completionHandlers.addAll(complHandlers);
+    }
 
-	@Override
-	public boolean isDone() {
-		return (this.result.get() == null);
-	}
+    /**
+     * Creates a new operation.
+     * 
+     * @param complHandlers
+     *            handlers to be called when the operation completes
+     * @param invocationHandler
+     *            an invocation handler which shall be used to invoke the
+     *            completion handlers. This can be used for controlling how the
+     *            completion handlers are executed
+     */
+    public EventDrivenOperation(final List<IOperationCompletionHandler<T>> complHandlers,
+            final CompletionInvocationHandler<T> invocationHandler) {
+        this(complHandlers);
+        if (invocationHandler != null) {
+            final List<IOperationCompletionHandler<T>> cHandlers = new ArrayList<IOperationCompletionHandler<T>>(
+                    this.completionHandlers);
+            this.completionHandlers.clear();
+            for (final IOperationCompletionHandler<T> handler : cHandlers) {
+                final CompletionInvocationHandler<T> iHandler = invocationHandler
+                        .createHandler(handler);
+                final IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
+                        .newProxyInstance(Threading.getCurrentThread().getContextClassLoader(),
+                                new Class[] {
+                                    IOperationCompletionHandler.class }, // NOPMD
+                                                                         // by
+                                                                         // georgiana
+                                                                         // on
+                                                                         // 10/12/11
+                                                                         // 5:01
+                                                                         // PM
+                                iHandler);
+                this.completionHandlers.add(proxy);
+            }
+        }
+    }
 
-	@Override
-	public T get() throws InterruptedException, ExecutionException {
-		this.doneSignal.await();
-		return this.result.get();
-	}
+    @Override
+    public boolean cancel() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public T get(long timeout, TimeUnit unit) throws InterruptedException,
-			ExecutionException, TimeoutException {
-		this.doneSignal.await(timeout, unit);
-		return this.result.get();
-	}
+    @Override
+    public T get() throws InterruptedException, ExecutionException {
+        this.doneSignal.await();
+        return this.result.get();
+    }
 
-	public Runnable getOperation() {
-		return this.operation;
-	}
+    @Override
+    public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
+            TimeoutException {
+        this.doneSignal.await(timeout, unit);
+        return this.result.get();
+    }
 
-	public void setOperation(Runnable operation) {
-		if (this.operation == null) {
-			this.operation = operation;
-		}
-	}
+    public List<IOperationCompletionHandler<T>> getCompletionHandlers() {
+        return this.completionHandlers;
+    }
 
-	@Override
-	public void onSuccess(T response) {
-		if (!this.result.compareAndSet(null, response)) {
-			ExceptionTracer.traceIgnored(new ResultSetException(
-					"Operation result cannot be set."));
-		}
-		this.doneSignal.countDown();
-	}
+    public Runnable getOperation() {
+        return this.operation;
+    }
 
-	@Override
-	public void onFailure(Throwable error) {
-		if (!this.exception.compareAndSet(null, error)) {
-			ExceptionTracer.traceIgnored(new ResultSetException(
-					"Operation result cannot be set."));
-		}
-		this.doneSignal.countDown();
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
 
-	}
+    @Override
+    public boolean isDone() {
+        return (this.result.get() == null);
+    }
 
-	public List<IOperationCompletionHandler<T>> getCompletionHandlers() {
-		return this.completionHandlers;
-	}
+    @Override
+    public void onFailure(Throwable error) {
+        if (!this.exception.compareAndSet(null, error)) {
+            ExceptionTracer.traceIgnored(new ResultSetException("Operation result cannot be set."));
+        }
+        this.doneSignal.countDown();
+    }
+
+    @Override
+    public void onSuccess(T response) {
+        if (!this.result.compareAndSet(null, response)) {
+            ExceptionTracer.traceIgnored(new ResultSetException("Operation result cannot be set."));
+        }
+        this.doneSignal.countDown();
+    }
+
+    public void setOperation(Runnable operation) {
+        if (this.operation == null) {
+            this.operation = operation;
+        }
+    }
 }

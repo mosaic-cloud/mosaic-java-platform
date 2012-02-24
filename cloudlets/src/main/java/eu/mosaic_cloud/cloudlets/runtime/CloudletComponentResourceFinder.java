@@ -36,11 +36,11 @@ import eu.mosaic_cloud.platform.interop.tools.ChannelData;
 public class CloudletComponentResourceFinder {
 
     private static CloudletComponentResourceFinder finder;
+
     private static MosaicLogger logger = MosaicLogger
             .createLogger(CloudletComponentResourceFinder.class);
 
     private CloudletComponentResourceFinder() {
-
     }
 
     /**
@@ -67,24 +67,19 @@ public class CloudletComponentResourceFinder {
     public boolean findResource(ResourceType type, IConfiguration configuration) {
         ChannelData channel = null;
         boolean found = false;
-
         channel = CloudletComponentCallbacks.callbacks.findDriver(type);
         CloudletComponentResourceFinder.logger.trace("ResourceFinder - found resource " + channel);
         if (channel != null) {
-            String prefix = (configuration.getRootIdentifier().getIdentifier() + ".").substring(1)
-                    .replace('/', '.');
-
-            ConfigurationIdentifier id1 = ConfigurationIdentifier.resolveRelative(prefix
+            final String prefix = (configuration.getRootIdentifier().getIdentifier() + ".")
+                    .substring(1).replace('/', '.');
+            final ConfigurationIdentifier id1 = ConfigurationIdentifier.resolveRelative(prefix
                     + ConfigProperties.getString("ContainerComponentCallbacks.6"));
-            ConfigurationIdentifier id2 = ConfigurationIdentifier.resolveRelative(prefix
+            final ConfigurationIdentifier id2 = ConfigurationIdentifier.resolveRelative(prefix
                     + ConfigProperties.getString("ContainerComponentCallbacks.5"));
-
             configuration.addParameter(id1, channel.getChannelIdentifier());
             configuration.addParameter(id2, channel.getChannelEndpoint());
             found = true;
         }
-
         return found;
     }
-
 }

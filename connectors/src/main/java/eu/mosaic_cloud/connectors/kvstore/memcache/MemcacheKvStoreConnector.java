@@ -45,8 +45,39 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public class MemcacheKvStoreConnector<T extends Object> extends
         BaseKvStoreConnector<T, MemcacheKvStoreConnectorProxy<T>> implements
         IMemcacheKvStoreConnector<T> {
+
     protected MemcacheKvStoreConnector(final MemcacheKvStoreConnectorProxy<T> proxy) {
         super(proxy);
+    }
+
+    /**
+     * Creates the connector.
+     * 
+     * @param config
+     *            the configuration parameters required by the connector. This
+     *            should also include configuration settings for the
+     *            corresponding driver.
+     * @param encoder
+     *            encoder used for serializing and deserializing data stored in
+     *            the key-value store
+     * @return the connector
+     * @throws Throwable
+     */
+    public static <T extends Object> MemcacheKvStoreConnector<T> create(
+            final IConfiguration config, final DataEncoder<T> encoder,
+            final ThreadingContext threading) {
+        final String bucket = ConfigUtils.resolveParameter(config,
+                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
+        final String driverIdentity = ConfigUtils.resolveParameter(config,
+                ConfigProperties.getString("GenericConnector.1"), String.class, "");
+        final String driverEndpoint = ConfigUtils.resolveParameter(config,
+                ConfigProperties.getString("GenericConnector.0"), String.class, "");
+        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
+        channel.register(KeyValueSession.CONNECTOR);
+        channel.register(MemcachedSession.CONNECTOR);
+        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(bucket,
+                config, driverIdentity, channel, encoder);
+        return new MemcacheKvStoreConnector<T>(proxy);
     }
 
     @Override
@@ -87,35 +118,5 @@ public class MemcacheKvStoreConnector<T extends Object> extends
     @Override
     public CallbackCompletion<Boolean> set(final String key, final int exp, final T data) {
         return this.proxy.set(key, exp, data);
-    }
-
-    /**
-     * Creates the connector.
-     * 
-     * @param config
-     *            the configuration parameters required by the connector. This
-     *            should also include configuration settings for the
-     *            corresponding driver.
-     * @param encoder
-     *            encoder used for serializing and deserializing data stored in
-     *            the key-value store
-     * @return the connector
-     * @throws Throwable
-     */
-    public static <T extends Object> MemcacheKvStoreConnector<T> create(
-            final IConfiguration config, final DataEncoder<T> encoder,
-            final ThreadingContext threading) {
-        final String bucket = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
-        final String driverIdentity = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
-        channel.register(KeyValueSession.CONNECTOR);
-        channel.register(MemcachedSession.CONNECTOR);
-        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(bucket,
-                config, driverIdentity, channel, encoder);
-        return new MemcacheKvStoreConnector<T>(proxy);
     }
 }

@@ -20,9 +20,7 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-
 import eu.mosaic_cloud.connectors.queue.IQueueConnector;
-
 
 /**
  * Interface for working with AMQP compatible queueing systems.
@@ -30,7 +28,5 @@ import eu.mosaic_cloud.connectors.queue.IQueueConnector;
  * @author Georgiana Macariu
  * 
  */
-public interface IAmqpQueueConnector
-		extends
-			IQueueConnector
-{}
+public interface IAmqpQueueConnector extends IQueueConnector {
+}

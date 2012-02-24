@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.interop.common.amqp;
 
 /**
@@ -29,146 +30,155 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
 @SuppressWarnings("PMD")
 public class AmqpInboundMessage implements IAmqpMessage {
 
-	private final String callback;
-	private final String consumer;
-	private final String contentEncoding;
-	private final String contentType;
-	private final String correlation;
-	private final byte[] data;
-	private final long delivery;
-	private final boolean durable;
-	private final String exchange;
-	private final String identifier;
-	private final String routingKey;
+    private final String callback;
 
-	/**
-	 * Constructs a inbound message.
-	 * 
-	 * @param consumer
-	 *            a client-generated consumer tag to establish context
-	 * @param delivery
-	 *            delivery mode
-	 * @param exchange
-	 *            the exchange to publish the message to
-	 * @param routingKey
-	 *            the routing key
-	 * @param data
-	 *            the message body
-	 * @param durable
-	 *            <code>true</code> if delivery mode should be 2
-	 * @param contentType
-	 *            the type of the content
-	 */
-	public AmqpInboundMessage(String consumer, long delivery, String exchange,
-			String routingKey, byte[] data, boolean durable, String contentType) {
-		super();
-		this.consumer = consumer;
-		this.delivery = delivery;
-		this.exchange = exchange;
-		this.routingKey = routingKey;
-		this.identifier = null;
-		this.correlation = null;
-		this.callback = null;
-		this.contentType = contentType;
-		this.contentEncoding = null;
-		this.data = data;
-		this.durable = durable;
-	}
+    private final String consumer;
 
-	/**
-	 * Constructs a inbound message.
-	 * 
-	 * @param consumer
-	 *            a client-generated consumer tag to establish context
-	 * @param delivery
-	 *            delivery mode
-	 * @param exchange
-	 *            the exchange to publish the message to
-	 * @param routingKey
-	 *            the routing key
-	 * @param data
-	 *            the message body
-	 * @param durable
-	 *            <code>true</code> if delivery mode should be 2
-	 * @param callback
-	 *            the address of the Node to send replies to
-	 * @param contentEncoding
-	 * @param contentType
-	 *            the RFC-2046 MIME type for the Message content (such as
-	 *            "text/plain")
-	 * @param correlation
-	 *            this is a client-specific id that may be used to mark or
-	 *            identify Messages between clients. The server ignores this
-	 *            field.
-	 * @param identifier
-	 *            message-id is an optional property which uniquely identifies a
-	 *            Message within the Message system. The Message publisher is
-	 *            usually responsible for setting the message-id in such a way
-	 *            that it is assured to be globally unique. The server MAY
-	 *            discard a Message as a duplicate if the value of the
-	 *            message-id matches that of a previously received Message sent
-	 *            to the same Node.
-	 * 
-	 */
-	public AmqpInboundMessage(String consumer, long delivery, String exchange,
-			String routingKey, byte[] data, boolean durable, String callback,
-			String contentEncoding, String contentType, String correlation,
-			String identifier) {
-		super();
-		this.consumer = consumer;
-		this.delivery = delivery;
-		this.exchange = exchange;
-		this.routingKey = routingKey;
-		this.identifier = identifier;
-		this.correlation = correlation;
-		this.callback = callback;
-		this.contentType = contentType;
-		this.contentEncoding = contentEncoding;
-		this.data = data;
-		this.durable = durable;
-	}
+    private final String contentEncoding;
 
-	public String getCallback() {
-		return this.callback;
-	}
+    private final String contentType;
 
-	public String getConsumer() {
-		return this.consumer;
-	}
+    private final String correlation;
 
-	public String getContentEncoding() {
-		return this.contentEncoding;
-	}
+    private final byte[] data;
 
-	public String getContentType() {
-		return this.contentType;
-	}
+    private final long delivery;
 
-	public String getCorrelation() {
-		return this.correlation;
-	}
+    private final boolean durable;
 
-	public byte[] getData() {
-		return this.data;
-	}
+    private final String exchange;
 
-	public long getDelivery() {
-		return this.delivery;
-	}
+    private final String identifier;
 
-	public boolean isDurable() {
-		return this.durable;
-	}
+    private final String routingKey;
 
-	public String getExchange() {
-		return this.exchange;
-	}
+    /**
+     * Constructs a inbound message.
+     * 
+     * @param consumer
+     *            a client-generated consumer tag to establish context
+     * @param delivery
+     *            delivery mode
+     * @param exchange
+     *            the exchange to publish the message to
+     * @param routingKey
+     *            the routing key
+     * @param data
+     *            the message body
+     * @param durable
+     *            <code>true</code> if delivery mode should be 2
+     * @param contentType
+     *            the type of the content
+     */
+    public AmqpInboundMessage(String consumer, long delivery, String exchange, String routingKey,
+            byte[] data, boolean durable, String contentType) {
+        super();
+        this.consumer = consumer;
+        this.delivery = delivery;
+        this.exchange = exchange;
+        this.routingKey = routingKey;
+        this.identifier = null;
+        this.correlation = null;
+        this.callback = null;
+        this.contentType = contentType;
+        this.contentEncoding = null;
+        this.data = data;
+        this.durable = durable;
+    }
 
-	public String getIdentifier() {
-		return this.identifier;
-	}
+    /**
+     * Constructs a inbound message.
+     * 
+     * @param consumer
+     *            a client-generated consumer tag to establish context
+     * @param delivery
+     *            delivery mode
+     * @param exchange
+     *            the exchange to publish the message to
+     * @param routingKey
+     *            the routing key
+     * @param data
+     *            the message body
+     * @param durable
+     *            <code>true</code> if delivery mode should be 2
+     * @param callback
+     *            the address of the Node to send replies to
+     * @param contentEncoding
+     * @param contentType
+     *            the RFC-2046 MIME type for the Message content (such as
+     *            "text/plain")
+     * @param correlation
+     *            this is a client-specific id that may be used to mark or
+     *            identify Messages between clients. The server ignores this
+     *            field.
+     * @param identifier
+     *            message-id is an optional property which uniquely identifies a
+     *            Message within the Message system. The Message publisher is
+     *            usually responsible for setting the message-id in such a way
+     *            that it is assured to be globally unique. The server MAY
+     *            discard a Message as a duplicate if the value of the
+     *            message-id matches that of a previously received Message sent
+     *            to the same Node.
+     * 
+     */
+    public AmqpInboundMessage(String consumer, long delivery, String exchange, String routingKey,
+            byte[] data, boolean durable, String callback, String contentEncoding,
+            String contentType, String correlation, String identifier) {
+        super();
+        this.consumer = consumer;
+        this.delivery = delivery;
+        this.exchange = exchange;
+        this.routingKey = routingKey;
+        this.identifier = identifier;
+        this.correlation = correlation;
+        this.callback = callback;
+        this.contentType = contentType;
+        this.contentEncoding = contentEncoding;
+        this.data = data;
+        this.durable = durable;
+    }
 
-	public String getRoutingKey() {
-		return this.routingKey;
-	}
+    public String getCallback() {
+        return this.callback;
+    }
+
+    public String getConsumer() {
+        return this.consumer;
+    }
+
+    public String getContentEncoding() {
+        return this.contentEncoding;
+    }
+
+    public String getContentType() {
+        return this.contentType;
+    }
+
+    public String getCorrelation() {
+        return this.correlation;
+    }
+
+    public byte[] getData() {
+        return this.data;
+    }
+
+    public long getDelivery() {
+        return this.delivery;
+    }
+
+    public String getExchange() {
+        return this.exchange;
+    }
+
+    public String getIdentifier() {
+        return this.identifier;
+    }
+
+    public String getRoutingKey() {
+        return this.routingKey;
+    }
+
+    public boolean isDurable() {
+        return this.durable;
+    }
 }

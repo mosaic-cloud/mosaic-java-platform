@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.ops;
 
 /**
@@ -26,5 +27,4 @@ package eu.mosaic_cloud.platform.core.ops;
  * 
  */
 public interface IOperationType {
-
 }

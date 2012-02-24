@@ -23,14 +23,12 @@ package eu.mosaic_cloud.platform.interop.tools;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
-
-
 public class ErlangSpecificationDumper {
 
-	public static final void main(final String[] arguments) {
-		eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(
-				arguments, AmqpSession.values());
-		eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(
-				arguments, KeyValueSession.values());
-	}
+    public static final void main(final String[] arguments) {
+        eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(arguments,
+                AmqpSession.values());
+        eu.mosaic_cloud.interoperability.tools.ErlangSpecificationDumper.main(arguments,
+                KeyValueSession.values());
+    }
 }

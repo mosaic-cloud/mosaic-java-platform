@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.interop;
 
 import java.io.IOException;
@@ -44,151 +45,154 @@ import eu.mosaic_cloud.tools.miscellaneous.Monitor;
  */
 public abstract class AbstractDriverStub implements SessionCallbacks {
 
-	protected IConfiguration configuration;
-	protected MosaicLogger logger;
-	private final ResponseTransmitter transmitter;
-	private final IResourceDriver driver;
-	private final List<Session> sessions;
-	private final ZeroMqChannel commChannel;
+    protected IConfiguration configuration;
 
-	protected static final Object MONITOR = Monitor.create (AbstractDriverStub.class);
-	private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer>();
+    protected MosaicLogger logger;
 
-	/**
-	 * Builds a driver stub.
-	 * 
-	 * @param config
-	 *            configuration data for the driver and its stub
-	 * @param transmitter
-	 *            the transmitter which will serialize and send responses back
-	 *            to the connector
-	 * @param driver
-	 *            the driver which will handle requests received by the stub
-	 * @param commChannel
-	 *            the channel for communicating with connectors
-	 */
-	protected AbstractDriverStub(IConfiguration config,
-			ResponseTransmitter transmitter, IResourceDriver driver,
-			ZeroMqChannel commChannel) {
-		super();
-		this.configuration = config;
-		this.logger = MosaicLogger.createLogger(this);
-		this.sessions = new ArrayList<Session>();
-		this.commChannel = commChannel;
+    private final ResponseTransmitter transmitter;
 
-		this.transmitter = transmitter;
-		this.driver = driver;
-	}
+    private final IResourceDriver driver;
 
-	/**
-	 * Destroys this stub.
-	 * 
-	 */
-	public synchronized void destroy() {
-		this.driver.destroy();
-		this.transmitter.destroy();
-		this.commChannel.terminate(500);
-		this.logger.trace("DriverStub destroyed.");
-	}
+    private final List<Session> sessions;
 
-	protected static void incDriverReference(AbstractDriverStub stub) {
-		synchronized (AbstractDriverStub.MONITOR) {
-			Integer ref = AbstractDriverStub.references.get(stub);
-			if (ref == null) {
-				ref = 0; // NOPMD by georgiana on 10/12/11 3:14 PM
-			}
-			ref++;
-			AbstractDriverStub.references.put(stub, ref);
-		}
-	}
+    private final ZeroMqChannel commChannel;
 
-	protected static int decDriverReference(AbstractDriverStub stub) {
-		synchronized (AbstractDriverStub.MONITOR) {
-			Integer ref = AbstractDriverStub.references.get(stub);
-			if (ref == null) {
-				ref = 0; // NOPMD by georgiana on 10/12/11 3:15 PM
-			}
-			ref--;
-			if (ref == 0) {
-				AbstractDriverStub.references.remove(stub);
-			}
-			return ref;
-		}
-	}
+    protected static final Object MONITOR = Monitor.create(AbstractDriverStub.class);
 
-	@Override
-	public CallbackCompletion<Void> received(Session session, Message message) {
-		try {
-			startOperation(message, session);
-		} catch (IOException e) {
-			ExceptionTracer.traceIgnored(e);
-		} catch (ClassNotFoundException e) {
-			ExceptionTracer.traceIgnored(e);
-		}
-		return null;
-	}
+    private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer>();
 
-	@Override
-	public CallbackCompletion<Void> created(Session session) {
-		// FIXME: handle session created
-		if (!this.sessions.contains(session)) {
-			this.sessions.add(session);
-		}
-		return null;
-	}
+    /**
+     * Builds a driver stub.
+     * 
+     * @param config
+     *            configuration data for the driver and its stub
+     * @param transmitter
+     *            the transmitter which will serialize and send responses back
+     *            to the connector
+     * @param driver
+     *            the driver which will handle requests received by the stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    protected AbstractDriverStub(IConfiguration config, ResponseTransmitter transmitter,
+            IResourceDriver driver, ZeroMqChannel commChannel) {
+        super();
+        this.configuration = config;
+        this.logger = MosaicLogger.createLogger(this);
+        this.sessions = new ArrayList<Session>();
+        this.commChannel = commChannel;
+        this.transmitter = transmitter;
+        this.driver = driver;
+    }
 
-	@Override
-	public CallbackCompletion<Void> destroyed(Session session) {
-		// NOTE: handle session destroyed
-		this.logger.trace("Session destroyed.");
-		this.sessions.remove(session);
-		return null;
-	}
+    protected static int decDriverReference(AbstractDriverStub stub) {
+        synchronized (AbstractDriverStub.MONITOR) {
+            Integer ref = AbstractDriverStub.references.get(stub);
+            if (ref == null) {
+                ref = 0; // NOPMD by georgiana on 10/12/11 3:15 PM
+            }
+            ref--;
+            if (ref == 0) {
+                AbstractDriverStub.references.remove(stub);
+            }
+            return ref;
+        }
+    }
 
-	@Override
-	public CallbackCompletion<Void> failed(Session session, Throwable exception) {
-		this.logger.error("Session failed");
-		return null;
-	}
+    protected static void incDriverReference(AbstractDriverStub stub) {
+        synchronized (AbstractDriverStub.MONITOR) {
+            Integer ref = AbstractDriverStub.references.get(stub);
+            if (ref == null) {
+                ref = 0; // NOPMD by georgiana on 10/12/11 3:14 PM
+            }
+            ref++;
+            AbstractDriverStub.references.put(stub, ref);
+        }
+    }
 
-	/**
-	 * Returns the response transmitter used by the stub.
-	 * 
-	 * @param <T>
-	 *            the type of the transmitter
-	 * @param transClass
-	 *            the class object of the transmitter
-	 * @return the transmitter
-	 */
-	protected <T extends ResponseTransmitter> T getResponseTransmitter(
-			Class<T> transClass) {
-		return transClass.cast(this.transmitter);
-	}
+    @Override
+    public CallbackCompletion<Void> created(Session session) {
+        // FIXME: handle session created
+        if (!this.sessions.contains(session)) {
+            this.sessions.add(session);
+        }
+        return null;
+    }
 
-	/**
-	 * Returns the driver used by the stub.
-	 * 
-	 * @param <T>
-	 *            the type of the driver
-	 * @param driverClass
-	 *            the class object of the driver
-	 * @return the driver
-	 */
-	public <T extends IResourceDriver> T getDriver(Class<T> driverClass) {
-		return driverClass.cast(this.driver);
-	}
+    /**
+     * Destroys this stub.
+     * 
+     */
+    public synchronized void destroy() {
+        this.driver.destroy();
+        this.transmitter.destroy();
+        this.commChannel.terminate(500);
+        this.logger.trace("DriverStub destroyed.");
+    }
 
-	/**
-	 * Deserializes a message received by the stub and starts the operation
-	 * requested in the message.
-	 * 
-	 * @param message
-	 *            the received message
-	 * @param session
-	 *            the session
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	protected abstract void startOperation(Message message, Session session)
-			throws IOException, ClassNotFoundException;
+    @Override
+    public CallbackCompletion<Void> destroyed(Session session) {
+        // NOTE: handle session destroyed
+        this.logger.trace("Session destroyed.");
+        this.sessions.remove(session);
+        return null;
+    }
+
+    @Override
+    public CallbackCompletion<Void> failed(Session session, Throwable exception) {
+        this.logger.error("Session failed");
+        return null;
+    }
+
+    /**
+     * Returns the driver used by the stub.
+     * 
+     * @param <T>
+     *            the type of the driver
+     * @param driverClass
+     *            the class object of the driver
+     * @return the driver
+     */
+    public <T extends IResourceDriver> T getDriver(Class<T> driverClass) {
+        return driverClass.cast(this.driver);
+    }
+
+    /**
+     * Returns the response transmitter used by the stub.
+     * 
+     * @param <T>
+     *            the type of the transmitter
+     * @param transClass
+     *            the class object of the transmitter
+     * @return the transmitter
+     */
+    protected <T extends ResponseTransmitter> T getResponseTransmitter(Class<T> transClass) {
+        return transClass.cast(this.transmitter);
+    }
+
+    @Override
+    public CallbackCompletion<Void> received(Session session, Message message) {
+        try {
+            startOperation(message, session);
+        } catch (final IOException e) {
+            ExceptionTracer.traceIgnored(e);
+        } catch (final ClassNotFoundException e) {
+            ExceptionTracer.traceIgnored(e);
+        }
+        return null;
+    }
+
+    /**
+     * Deserializes a message received by the stub and starts the operation
+     * requested in the message.
+     * 
+     * @param message
+     *            the received message
+     * @param session
+     *            the session
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    protected abstract void startOperation(Message message, Session session) throws IOException,
+            ClassNotFoundException;
 }

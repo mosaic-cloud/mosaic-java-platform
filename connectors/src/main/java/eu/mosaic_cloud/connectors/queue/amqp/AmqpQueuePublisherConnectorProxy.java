@@ -20,7 +20,6 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
@@ -35,7 +34,6 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-
 /**
  * This class provides access for cloudlets to an AMQP-based queueing system as
  * a message publisher.
@@ -45,87 +43,109 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of the messages published by the cloudlet
  */
-public final class AmqpQueuePublisherConnectorProxy<Message>
-		extends AmqpQueueConnectorProxy<Message>
-		implements
-			IAmqpQueuePublisherConnector<Message>
-{
-	/**
-	 * Creates a new AMQP publisher.
-	 * 
-	 * @param configuration
-	 *            configuration data required by the accessor:
-	 *            <ul>
-	 *            <li>amqp.publisher.exchange - the exchange to publish the
-	 *            messages to</li>
-	 *            <li>amqp.publisher.routing_key - the routing key of the
-	 *            messages</li>
-	 *            <li>amqp.publisher.manadatory - true if we are requesting a
-	 *            mandatory publish</li>
-	 *            <li>amqp.publisher.immediate - true if we are requesting an
-	 *            immediate publish</li>
-	 *            <li>amqp.publisher.durable - true if messages must not be lost
-	 *            even if server shutdowns unexpectedly</li>
-	 *            </ul>
-	 * @param cloudlet
-	 *            the cloudlet controller of the cloudlet using the accessor
-	 * @param messageClass
-	 *            the type of the published messages
-	 * @param messageEncoder
-	 *            encoder used for serializing data
-	 */
-	protected AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder)
-	{
-		super (rawProxy, configuration, messageClass, messageEncoder);
-		this.identity = UUID.randomUUID ().toString ();
-		this.exchange = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
-		this.exchangeType = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
-		this.exchangeDurable = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue (); //$NON-NLS-1$ 
-		this.exchangeAutoDelete = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue (); //$NON-NLS-1$
-		this.publishRoutingKey = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
-		this.definePassive = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue (); //$NON-NLS-1$ 
-	}
-	
-	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
-		return this.raw.destroy ();
-	}
-	
-	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
-		// FIXME
-		return this.raw.declareExchange (this.exchange, this.exchangeType, this.exchangeDurable, this.exchangeAutoDelete, this.definePassive);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> publish (final Message message)
-	{
-		final byte[] data;
-		try {
-			data = this.messageEncoder.encode (message);
-		} catch (final EncodingException exception) {
-			ExceptionTracer.traceDeferred (exception);
-			return (CallbackCompletion.createFailure (exception));
-		}
-		final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data, false, false, false, null);
-		return this.raw.publish (outbound);
-	}
-	
-	protected final boolean definePassive;
-	protected final String exchange;
-	protected final boolean exchangeAutoDelete;
-	protected final boolean exchangeDurable;
-	protected final AmqpExchangeType exchangeType;
-	protected final String identity;
-	protected final String publishRoutingKey;
-	
-	public static <Message> AmqpQueuePublisherConnectorProxy<Message> create (final IConfiguration configuration, final String driverIdentity, final Channel channel, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder)
-	{
-		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration, driverIdentity, channel);
-		final IConfiguration subConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveRelative ("publisher"));
-		final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message> (rawProxy, subConfiguration, messageClass, messageEncoder);
-		return proxy;
-	}
+public final class AmqpQueuePublisherConnectorProxy<Message> extends
+        AmqpQueueConnectorProxy<Message> implements IAmqpQueuePublisherConnector<Message> {
+
+    protected final boolean definePassive;
+
+    protected final String exchange;
+
+    protected final boolean exchangeAutoDelete;
+
+    protected final boolean exchangeDurable;
+
+    protected final AmqpExchangeType exchangeType;
+
+    protected final String identity;
+
+    protected final String publishRoutingKey;
+
+    /**
+     * Creates a new AMQP publisher.
+     * 
+     * @param configuration
+     *            configuration data required by the accessor:
+     *            <ul>
+     *            <li>amqp.publisher.exchange - the exchange to publish the
+     *            messages to</li>
+     *            <li>amqp.publisher.routing_key - the routing key of the
+     *            messages</li>
+     *            <li>amqp.publisher.manadatory - true if we are requesting a
+     *            mandatory publish</li>
+     *            <li>amqp.publisher.immediate - true if we are requesting an
+     *            immediate publish</li>
+     *            <li>amqp.publisher.durable - true if messages must not be lost
+     *            even if server shutdowns unexpectedly</li>
+     *            </ul>
+     * @param cloudlet
+     *            the cloudlet controller of the cloudlet using the accessor
+     * @param messageClass
+     *            the type of the published messages
+     * @param messageEncoder
+     *            encoder used for serializing data
+     */
+    protected AmqpQueuePublisherConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
+            final IConfiguration configuration, final Class<Message> messageClass,
+            final DataEncoder<Message> messageEncoder) {
+        super(rawProxy, configuration, messageClass, messageEncoder);
+        this.identity = UUID.randomUUID().toString();
+        this.exchange = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
+        this.exchangeType = ConfigUtils
+                .resolveParameter(
+                        configuration,
+                        ConfigProperties.getString("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
+        this.exchangeDurable = ConfigUtils
+                .resolveParameter(
+                        configuration,
+                        ConfigProperties.getString("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
+        this.exchangeAutoDelete = ConfigUtils
+                .resolveParameter(
+                        configuration,
+                        ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
+        this.publishRoutingKey = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
+        this.definePassive = ConfigUtils
+                .resolveParameter(
+                        configuration,
+                        ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
+    }
+
+    public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
+            final IConfiguration configuration, final String driverIdentity, final Channel channel,
+            final Class<Message> messageClass, final DataEncoder<Message> messageEncoder) {
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
+                configuration, driverIdentity, channel);
+        final IConfiguration subConfiguration = configuration
+                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+        final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
+                rawProxy, subConfiguration, messageClass, messageEncoder);
+        return proxy;
+    }
+
+    @Override
+    public CallbackCompletion<Void> destroy() {
+        return this.raw.destroy();
+    }
+
+    @Override
+    public CallbackCompletion<Void> initialize() {
+        // FIXME
+        return this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
+                this.exchangeAutoDelete, this.definePassive);
+    }
+
+    @Override
+    public CallbackCompletion<Void> publish(final Message message) {
+        final byte[] data;
+        try {
+            data = this.messageEncoder.encode(message);
+        } catch (final EncodingException exception) {
+            ExceptionTracer.traceDeferred(exception);
+            return (CallbackCompletion.createFailure(exception));
+        }
+        final AmqpOutboundMessage outbound = new AmqpOutboundMessage(this.exchange,
+                this.publishRoutingKey, data, false, false, false, null);
+        return this.raw.publish(outbound);
+    }
 }

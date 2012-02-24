@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers;
 
 import java.util.MissingResourceException;
@@ -26,22 +27,22 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
 public final class ConfigProperties {
 
-	private static final String BUNDLE_NAME = "eu.mosaic_cloud.drivers.config"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "eu.mosaic_cloud.drivers.config"; //$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(ConfigProperties.BUNDLE_NAME);
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+            .getBundle(ConfigProperties.BUNDLE_NAME);
 
-	private ConfigProperties() {
-	}
+    private ConfigProperties() {
+    }
 
-	public static String getString(String key) {
-		String retString;
-		try {
-			retString = ConfigProperties.RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			ExceptionTracer.traceIgnored(e);
-			retString = '!' + key + '!';
-		}
-		return retString;
-	}
+    public static String getString(String key) {
+        String retString;
+        try {
+            retString = ConfigProperties.RESOURCE_BUNDLE.getString(key);
+        } catch (final MissingResourceException e) {
+            ExceptionTracer.traceIgnored(e);
+            retString = '!' + key + '!';
+        }
+        return retString;
+    }
 }

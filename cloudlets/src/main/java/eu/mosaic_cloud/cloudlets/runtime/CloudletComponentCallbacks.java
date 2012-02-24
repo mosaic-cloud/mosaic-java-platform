@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
@@ -67,10 +68,6 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 public final class CloudletComponentCallbacks implements ComponentCallbacks, CallbackHandler {
 
-    static enum Status {
-        Created, Terminated, Unregistered, Ready;
-    }
-
     /**
      * Supported resource types.
      * 
@@ -83,30 +80,43 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         KEY_VALUE("kvstore"),
         MEMCACHED("kvstore");
 
-        public String getConfigPrefix() {
-            return this.configPrefix;
-        }
-
         private final String configPrefix;
 
         ResourceType(String configPrefix) {
             this.configPrefix = configPrefix;
         }
+
+        public String getConfigPrefix() {
+            return this.configPrefix;
+        }
+    }
+
+    static enum Status {
+        Created, Terminated, Unregistered, Ready;
     }
 
     public static CloudletComponentCallbacks callbacks = null;
+
     private static MosaicLogger logger = MosaicLogger
             .createLogger(CloudletComponentCallbacks.class);
 
     private Status status;
+
     private ComponentController component;
-    private ThreadingContext threading;
-    private IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
-    private ComponentIdentifier amqpGroup;
-    private ComponentIdentifier kvGroup;
-    private ComponentIdentifier mcGroup;
-    private ComponentIdentifier selfGroup;
-    private List<CloudletManager> cloudletRunners = new ArrayList<CloudletManager>();
+
+    private final ThreadingContext threading;
+
+    private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
+
+    private final ComponentIdentifier amqpGroup;
+
+    private final ComponentIdentifier kvGroup;
+
+    private final ComponentIdentifier mcGroup;
+
+    private final ComponentIdentifier selfGroup;
+
+    private final List<CloudletManager> cloudletRunners = new ArrayList<CloudletManager>();
 
     /**
      * Creates a callback which is used by the mOSAIC platform to communicate
@@ -117,8 +127,9 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         this.threading = context.threading;
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         CloudletComponentCallbacks.callbacks = this;
-        IConfiguration configuration = PropertyTypeConfiguration.create(
-                CloudletComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/cloudlets/cloudlet-component.properties"); //$NON-NLS-1$
+        final IConfiguration configuration = PropertyTypeConfiguration.create(
+                CloudletComponentCallbacks.class.getClassLoader(),
+                "eu/mosaic_cloud/cloudlets/cloudlet-component.properties"); //$NON-NLS-1$
         this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("CloudletComponent.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
@@ -140,12 +151,11 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
         if (this.status == Status.Ready) {
-            if (request.operation
-                    .equals(ConfigProperties.getString("CloudletComponent.4"))) {
+            if (request.operation.equals(ConfigProperties.getString("CloudletComponent.4"))) {
                 // FIXME
-                List<?> operands = DefaultJsonMapper.defaultInstance.decode(request.inputs,
+                final List<?> operands = DefaultJsonMapper.defaultInstance.decode(request.inputs,
                         List.class);
-                ClassLoader loader = getCloudletClassLoader(operands.get(0).toString());
+                final ClassLoader loader = getCloudletClassLoader(operands.get(0).toString());
                 for (int i = 1; i < operands.size(); i++) {
                     CloudletComponentCallbacks.logger.debug("Loading cloudlet in JAR "
                             + operands.get(0) + " with configuration " + operands.get(i));
@@ -154,8 +164,8 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
                         this.cloudletRunners.addAll(containers);
                     }
                 }
-                ComponentCallReply reply = ComponentCallReply.create(true, Boolean.valueOf(true),
-                        ByteBuffer.allocate(0), request.reference);
+                final ComponentCallReply reply = ComponentCallReply.create(true,
+                        Boolean.valueOf(true), ByteBuffer.allocate(0), request.reference);
                 component.callReturn(reply);
                 return null;
             } else {
@@ -165,31 +175,100 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         throw new UnsupportedOperationException();
     }
 
-    private List<CloudletManager> startCloudlet(ClassLoader loader, String configurationFile) {
-        final IConfiguration configuration = PropertyTypeConfiguration.create(loader,
-                configurationFile);
-        if (configuration == null) {
-            CloudletComponentCallbacks.logger.error("Cloudlet configuration file "
-                    + configurationFile + " is missing.");
-            return null;
+    @Override
+    public CallbackCompletion<Void> callReturned(ComponentController component,
+            ComponentCallReply reply) {
+        Preconditions.checkState(this.component == component);
+        Preconditions.checkState(this.status == Status.Ready);
+        if (this.pendingReferences.containsKey(reply.reference)) {
+            final Trigger<ComponentCallReply> trigger = this.pendingReferences
+                    .remove(reply.reference);
+            trigger.triggerSucceeded(reply);
+        } else {
+            throw (new IllegalStateException());
         }
-        int noInstances = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponent.11"), Integer.class, 1);
-        List<CloudletManager> containers = new ArrayList<CloudletManager>();
-        for (int i = 0; i < noInstances; i++) {
-            final CloudletManager container = new CloudletManager(this.threading, loader,
-                    configuration);
+        return null;
+    }
 
-            try {
-                container.start();
-                containers.add(container);
-                CloudletComponentCallbacks.logger.trace("Starting cloudlet with config file "
-                        + configurationFile);
-            } catch (CloudletException e) {
-                ExceptionTracer.traceIgnored(e);
-            }
+    @Override
+    public CallbackCompletion<Void> casted(ComponentController component,
+            ComponentCastRequest request) {
+        Preconditions.checkState(this.component == component);
+        Preconditions.checkState((this.status != Status.Terminated)
+                && (this.status != Status.Unregistered));
+        throw (new UnsupportedOperationException());
+    }
+
+    @Override
+    public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
+        CloudletComponentCallbacks.logger.trace("ComponentController container failed "
+                + exception.getMessage());
+        Preconditions.checkState(this.component == component);
+        Preconditions.checkState(this.status != Status.Terminated);
+        Preconditions.checkState(this.status != Status.Unregistered);
+        // FIXME: also stop and destroy connector & cloudlets
+        for (final CloudletManager container : this.cloudletRunners) {
+            container.stop();
         }
-        return containers;
+        this.component = null;
+        this.status = Status.Terminated;
+        ExceptionTracer.traceHandled(exception);
+        return null;
+    }
+
+    @Override
+    public void failedCallbacks(Callbacks trigger, Throwable exception) {
+    }
+
+    /**
+     * Sends a request to the platform in order to find a driver for a resource
+     * of the specified type. Returns a future object which can be used for
+     * waiting for the reply and retrieving the response.
+     * 
+     * @param type
+     *            the type of the resource for which a driver is requested
+     * @return a future object which can be used for waiting for the reply and
+     *         retrieving the response
+     */
+    public ChannelData findDriver(ResourceType type) {
+        CloudletComponentCallbacks.logger.trace("Finding " + type.toString() + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
+        Preconditions.checkState(this.status == Status.Ready);
+        final ComponentCallReference callReference = ComponentCallReference.create();
+        final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture
+                .create(ComponentCallReply.class);
+        ComponentIdentifier componentId = null;
+        ComponentCallReply reply;
+        ChannelData channel = null;
+        switch (type) {
+        case AMQP:
+            componentId = this.amqpGroup;
+            break;
+        case KEY_VALUE:
+            componentId = this.kvGroup;
+            break;
+        case MEMCACHED:
+            componentId = this.mcGroup;
+            break;
+        default:
+            break;
+        }
+        this.pendingReferences.put(callReference, replyFuture.trigger);
+        this.component.call(componentId, ComponentCallRequest.create(
+                ConfigProperties.getString("CloudletComponent.7"), null, callReference)); //$NON-NLS-1$
+        try {
+            reply = replyFuture.get();
+            if (reply.outputsOrError instanceof Map) {
+                final Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
+                channel = new ChannelData(outcome.get("channelIdentifier"),
+                        outcome.get("channelEndpoint"));
+                CloudletComponentCallbacks.logger.debug("Found driver on channel " + channel);
+            }
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+        }
+        return channel;
     }
 
     private ClassLoader getCloudletClassLoader(String classpathArgument) {
@@ -225,72 +304,32 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
     }
 
     @Override
-    public CallbackCompletion<Void> callReturned(ComponentController component,
-            ComponentCallReply reply) {
-        Preconditions.checkState(this.component == component);
-        Preconditions.checkState(this.status == Status.Ready);
-        if (this.pendingReferences.containsKey(reply.reference)) {
-            Trigger<ComponentCallReply> trigger = this.pendingReferences.remove(reply.reference);
-            trigger.triggerSucceeded(reply);
-        } else {
-            throw (new IllegalStateException());
-        }
-        return null;
-    }
-
-    public void terminate() {
-        Preconditions.checkState(this.component != null);
-        this.component.terminate();
-    }
-
-    @Override
-    public CallbackCompletion<Void> casted(ComponentController component,
-            ComponentCastRequest request) {
-        Preconditions.checkState(this.component == component);
-        Preconditions.checkState((this.status != Status.Terminated)
-                && (this.status != Status.Unregistered));
-        throw (new UnsupportedOperationException());
-    }
-
-    @Override
-    public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
-        CloudletComponentCallbacks.logger.trace("ComponentController container failed "
-                + exception.getMessage());
-        Preconditions.checkState(this.component == component);
-        Preconditions.checkState(this.status != Status.Terminated);
-        Preconditions.checkState(this.status != Status.Unregistered);
-        // FIXME: also stop and destroy connector & cloudlets
-        for (CloudletManager container : this.cloudletRunners) {
-            container.stop();
-        }
-        this.component = null;
-        this.status = Status.Terminated;
-        ExceptionTracer.traceHandled(exception);
-        return null;
-    }
-
-    @Override
     public CallbackCompletion<Void> initialized(ComponentController component) {
         Preconditions.checkState(this.component == null);
         Preconditions.checkState(this.status == Status.Created);
         this.component = component;
         this.status = Status.Unregistered;
-        ComponentCallReference callReference = ComponentCallReference.create();
+        final ComponentCallReference callReference = ComponentCallReference.create();
         this.component.register(this.selfGroup, callReference);
-        DeferredFuture<ComponentCallReply> result = DeferredFuture.create(ComponentCallReply.class);
+        final DeferredFuture<ComponentCallReply> result = DeferredFuture
+                .create(ComponentCallReply.class);
         this.pendingReferences.put(callReference, result.trigger);
         CloudletComponentCallbacks.logger.trace("Container component callback initialized."); //$NON-NLS-1$
         return null;
     }
 
     @Override
+    public void registeredCallbacks(Callbacks trigger, CallbackIsolate isolate) {
+    }
+
+    @Override
     public CallbackCompletion<Void> registerReturned(ComponentController component,
             ComponentCallReference reference, boolean ok) {
         Preconditions.checkState(this.component == component);
-        Trigger<ComponentCallReply> pendingReply = this.pendingReferences.remove(reference);
+        final Trigger<ComponentCallReply> pendingReply = this.pendingReferences.remove(reference);
         if (pendingReply != null) {
             if (!ok) {
-                Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+                final Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
                 ExceptionTracer.traceDeferred(e);
                 this.component.terminate();
                 throw (new IllegalStateException(e));
@@ -298,10 +337,9 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
             this.status = Status.Ready;
             CloudletComponentCallbacks.logger
                     .info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
-
             if (CloudletContainerParameters.configFile != null) {
-                ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
-                List<CloudletManager> containers = startCloudlet(loader,
+                final ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
+                final List<CloudletManager> containers = startCloudlet(loader,
                         CloudletContainerParameters.configFile);
                 if (containers != null) {
                     this.cloudletRunners.addAll(containers);
@@ -315,6 +353,37 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         return null;
     }
 
+    private List<CloudletManager> startCloudlet(ClassLoader loader, String configurationFile) {
+        final IConfiguration configuration = PropertyTypeConfiguration.create(loader,
+                configurationFile);
+        if (configuration == null) {
+            CloudletComponentCallbacks.logger.error("Cloudlet configuration file "
+                    + configurationFile + " is missing.");
+            return null;
+        }
+        final int noInstances = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("CloudletComponent.11"), Integer.class, 1);
+        final List<CloudletManager> containers = new ArrayList<CloudletManager>();
+        for (int i = 0; i < noInstances; i++) {
+            final CloudletManager container = new CloudletManager(this.threading, loader,
+                    configuration);
+            try {
+                container.start();
+                containers.add(container);
+                CloudletComponentCallbacks.logger.trace("Starting cloudlet with config file "
+                        + configurationFile);
+            } catch (final CloudletException e) {
+                ExceptionTracer.traceIgnored(e);
+            }
+        }
+        return containers;
+    }
+
+    public void terminate() {
+        Preconditions.checkState(this.component != null);
+        this.component.terminate();
+    }
+
     @Override
     public CallbackCompletion<Void> terminated(ComponentController component) {
         CloudletComponentCallbacks.logger.info("Container component callback terminating.");
@@ -322,7 +391,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         Preconditions.checkState(this.status != Status.Terminated);
         Preconditions.checkState(this.status != Status.Unregistered);
         // FIXME: also stop and destroy connector & cloudlets
-        for (CloudletManager container : this.cloudletRunners) {
+        for (final CloudletManager container : this.cloudletRunners) {
             container.stop();
         }
         this.component = null;
@@ -331,71 +400,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         return null;
     }
 
-    /**
-     * Sends a request to the platform in order to find a driver for a resource
-     * of the specified type. Returns a future object which can be used for
-     * waiting for the reply and retrieving the response.
-     * 
-     * @param type
-     *            the type of the resource for which a driver is requested
-     * @return a future object which can be used for waiting for the reply and
-     *         retrieving the response
-     */
-    public ChannelData findDriver(ResourceType type) {
-        CloudletComponentCallbacks.logger.trace("Finding " + type.toString() + " driver"); //$NON-NLS-1$ //$NON-NLS-2$
-        Preconditions.checkState(this.status == Status.Ready);
-
-        ComponentCallReference callReference = ComponentCallReference.create();
-        DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture
-                .create(ComponentCallReply.class);
-        ComponentIdentifier componentId = null;
-        ComponentCallReply reply;
-        ChannelData channel = null;
-
-        switch (type) {
-        case AMQP:
-            componentId = this.amqpGroup;
-            break;
-        case KEY_VALUE:
-            componentId = this.kvGroup;
-            break;
-        case MEMCACHED:
-            componentId = this.mcGroup;
-            break;
-        default:
-            break;
-        }
-
-        this.pendingReferences.put(callReference, replyFuture.trigger);
-        this.component.call(componentId, ComponentCallRequest.create(
-                ConfigProperties.getString("CloudletComponent.7"), null, callReference)); //$NON-NLS-1$
-
-        try {
-            reply = replyFuture.get();
-            if (reply.outputsOrError instanceof Map) {
-                Map<String, String> outcome = (Map<String, String>) reply.outputsOrError;
-                channel = new ChannelData(outcome.get("channelIdentifier"),
-                        outcome.get("channelEndpoint"));
-                CloudletComponentCallbacks.logger.debug("Found driver on channel " + channel);
-            }
-        } catch (InterruptedException e) {
-            ExceptionTracer.traceIgnored(e);
-        } catch (ExecutionException e) {
-            ExceptionTracer.traceIgnored(e);
-        }
-
-        return channel;
-    }
-
-    @Override
-    public void registeredCallbacks(Callbacks trigger, CallbackIsolate isolate) {
-    }
-
     @Override
     public void unregisteredCallbacks(Callbacks trigger) {
-    }
-
-    @Override
-    public void failedCallbacks(Callbacks trigger, Throwable exception) {
     }
 }

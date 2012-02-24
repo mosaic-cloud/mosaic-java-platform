@@ -33,6 +33,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of stored data
  */
 public interface IKvStoreConnector<T extends Object> extends IConnector {
+
     /**
      * Deletes the given key.
      * 

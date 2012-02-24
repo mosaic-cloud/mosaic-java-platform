@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.kvstore;
 
 import java.io.IOException;
@@ -37,91 +38,80 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Carmine Di Biase
  * 
  */
-
 public final class RiakPBDriver extends AbstractKeyValueDriver {
 
-	private final String riakHost;
-	private final int riakPort;
+    private final String riakHost;
 
-	/**
-	 * Creates a new Riak driver.
-	 * 
-	 * @param noThreads
-	 *            number of threads to be used for serving requests
-	 * @param riakHost
-	 *            the hostname of the Riak server
-	 * @param riakPort
-	 *            the port for the Riak server
-	 */
-	private RiakPBDriver(ThreadingContext threading, int noThreads,
-			String riakHost, int riakPort) {
-		super(threading, noThreads);
-		this.riakHost = riakHost;
-		this.riakPort = riakPort;
-	}
+    private final int riakPort;
 
-	/**
-	 * Returns a Riak driver.
-	 * 
-	 * @param config
-	 *            the configuration parameters required by the driver:
-	 *            <ol>
-	 *            <il>for each server to which the driver should connect there
-	 *            should be two parameters: <i>host_&lt;server_number&gt;</i>
-	 *            and <i>port_&lt;server_number&gt;</i> indicating the hostnames
-	 *            and the ports where the servers are installed </il>
-	 *            <il><i>memcached.driver_threads</i> specifies the maximum
-	 *            number of threads that shall be created by the driver for
-	 *            serving requests </il>
-	 *            </ol>
-	 * @return the driver
-	 * @throws IOException
-	 * @throws ConnectionException
-	 */
-	public static RiakPBDriver create(IConfiguration config,
-			ThreadingContext threading) throws IOException, ConnectionException {
-		int port, noThreads;
+    /**
+     * Creates a new Riak driver.
+     * 
+     * @param noThreads
+     *            number of threads to be used for serving requests
+     * @param riakHost
+     *            the hostname of the Riak server
+     * @param riakPort
+     *            the port for the Riak server
+     */
+    private RiakPBDriver(ThreadingContext threading, int noThreads, String riakHost, int riakPort) {
+        super(threading, noThreads);
+        this.riakHost = riakHost;
+        this.riakPort = riakPort;
+    }
 
-		String host = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("KVStoreDriver.0"), //$NON-NLS-1$
-				String.class, ""); //$NON-NLS-1$
+    /**
+     * Returns a Riak driver.
+     * 
+     * @param config
+     *            the configuration parameters required by the driver:
+     *            <ol>
+     *            <il>for each server to which the driver should connect there
+     *            should be two parameters: <i>host_&lt;server_number&gt;</i>
+     *            and <i>port_&lt;server_number&gt;</i> indicating the hostnames
+     *            and the ports where the servers are installed </il>
+     *            <il><i>memcached.driver_threads</i> specifies the maximum
+     *            number of threads that shall be created by the driver for
+     *            serving requests </il>
+     *            </ol>
+     * @return the driver
+     * @throws IOException
+     * @throws ConnectionException
+     */
+    public static RiakPBDriver create(IConfiguration config, ThreadingContext threading)
+            throws IOException, ConnectionException {
+        int port, noThreads;
+        final String host = ConfigUtils.resolveParameter(config,
+                ConfigProperties.getString("KVStoreDriver.0"), //$NON-NLS-1$
+                String.class, ""); //$NON-NLS-1$
+        port = ConfigUtils.resolveParameter(config, ConfigProperties.getString("KVStoreDriver.1"), //$NON-NLS-1$
+                Integer.class, 0);
+        noThreads = ConfigUtils.resolveParameter(config,
+                ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
+        final MosaicLogger sLogger = MosaicLogger.createLogger(RiakPBDriver.class);
+        sLogger.trace("Created Riak PB driver for host " + host + ":" + port);
+        return new RiakPBDriver(threading, noThreads, host, port);
+    }
 
-		port = ConfigUtils.resolveParameter(config,
-				ConfigProperties.getString("KVStoreDriver.1"), //$NON-NLS-1$
-				Integer.class, 0);
+    @Override
+    protected IOperationFactory createOperationFactory(Object... params) {
+        final String bucket = params[0].toString();
+        IOperationFactory opFactory;
+        opFactory = RiakPBOperationFactory.getFactory(this.riakHost, this.riakPort, bucket);
+        return opFactory;
+    }
 
-		noThreads = ConfigUtils
-				.resolveParameter(
-						config,
-						ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		MosaicLogger sLogger = MosaicLogger.createLogger(RiakPBDriver.class);
-		sLogger.trace("Created Riak PB driver for host " + host + ":" + port);
-		return new RiakPBDriver(threading, noThreads, host, port);
-	}
-
-	/**
-	 * Destroys the driver. After this call no other method should be invoked on
-	 * the driver object.
-	 */
-	@Override
-	public synchronized void destroy() {
-		super.destroy();
-		this.logger.trace("RiakDriver destroyed."); //$NON-NLS-1$
-	}
-
-	@Override
-	protected IOperationFactory createOperationFactory(Object... params) {
-		String bucket = params[0].toString();
-		IOperationFactory opFactory;
-		opFactory = RiakPBOperationFactory.getFactory(this.riakHost,
-				this.riakPort, bucket);
-		return opFactory;
-
-	}
-
-	/*
-	 * Here is eventually possible add more particular operation for your key
-	 * value store engine
-	 */
-
+    /**
+     * Destroys the driver. After this call no other method should be invoked on
+     * the driver object.
+     */
+    @Override
+    public synchronized void destroy() {
+        super.destroy();
+        this.logger.trace("RiakDriver destroyed."); //$NON-NLS-1$
+    }
+    /*
+     * Here is eventually possible add more particular operation for your key
+     * value store engine
+     */
 }

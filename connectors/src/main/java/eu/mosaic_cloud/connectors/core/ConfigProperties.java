@@ -26,6 +26,12 @@ import java.util.ResourceBundle;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
 public final class ConfigProperties {
+
+    private static final String BUNDLE_NAME = "eu.mosaic_cloud.connectors.config"; //$NON-NLS-1$
+
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+            .getBundle(ConfigProperties.BUNDLE_NAME);
+
     private ConfigProperties() {
     }
 
@@ -41,8 +47,4 @@ public final class ConfigProperties {
             return '!' + key + '!';
         }
     }
-
-    private static final String BUNDLE_NAME = "eu.mosaic_cloud.connectors.config"; //$NON-NLS-1$
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-            .getBundle(ConfigProperties.BUNDLE_NAME);
 }

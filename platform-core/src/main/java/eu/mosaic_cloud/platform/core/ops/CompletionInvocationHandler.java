@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.ops;
 
 import java.lang.reflect.InvocationHandler;
@@ -31,23 +32,26 @@ import java.lang.reflect.InvocationHandler;
  * @param <T>
  *            the type of the response of an asynchronous event-driven operation
  */
-public abstract class CompletionInvocationHandler<T> implements // NOPMD by georgiana on 10/12/11 5:00 PM
-		InvocationHandler {
+public abstract class CompletionInvocationHandler<T> implements // NOPMD by
+                                                                // georgiana on
+                                                                // 10/12/11 5:00
+                                                                // PM
+        InvocationHandler {
 
-	protected final IOperationCompletionHandler<T> handler;
+    protected final IOperationCompletionHandler<T> handler;
 
-	protected CompletionInvocationHandler(IOperationCompletionHandler<T> handler) {
-		super();
-		this.handler = handler;
-	}
+    protected CompletionInvocationHandler(IOperationCompletionHandler<T> handler) {
+        super();
+        this.handler = handler;
+    }
 
-	/**
-	 * Creates an invocation handler.
-	 * 
-	 * @param handler
-	 *            the operation completion handler
-	 * @return the invocation handler
-	 */
-	public abstract CompletionInvocationHandler<T> createHandler(
-			IOperationCompletionHandler<T> handler);
+    /**
+     * Creates an invocation handler.
+     * 
+     * @param handler
+     *            the operation completion handler
+     * @return the invocation handler
+     */
+    public abstract CompletionInvocationHandler<T> createHandler(
+            IOperationCompletionHandler<T> handler);
 }

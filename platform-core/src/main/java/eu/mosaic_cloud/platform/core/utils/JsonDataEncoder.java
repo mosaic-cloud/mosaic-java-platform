@@ -33,26 +33,24 @@ public class JsonDataEncoder<T extends Object> implements DataEncoder<T> {
     }
 
     @Override
-    public byte[] encode(final T data) throws EncodingException {
-        try {
-            return SerDesUtils.toJsonBytes(data);
-        } catch (IOException e) {
-            throw new EncodingException("JSON object cannot be serialized", e);
-        }
-    }
-
-    @Override
     public T decode(byte[] dataBytes) {
         T object = null;
         try {
             object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes, this.dataClass));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             ExceptionTracer.traceIgnored(e);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             ExceptionTracer.traceIgnored(e);
         }
-
         return object;
     }
 
+    @Override
+    public byte[] encode(final T data) throws EncodingException {
+        try {
+            return SerDesUtils.toJsonBytes(data);
+        } catch (final IOException e) {
+            throw new EncodingException("JSON object cannot be serialized", e);
+        }
+    }
 }

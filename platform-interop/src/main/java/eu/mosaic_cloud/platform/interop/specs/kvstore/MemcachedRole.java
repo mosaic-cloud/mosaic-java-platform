@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
@@ -29,21 +30,21 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * 
  */
 public enum MemcachedRole implements RoleSpecification {
-	CONNECTOR(), DRIVER();
+    CONNECTOR(), DRIVER();
 
-	public final String identifier;
+    public final String identifier;
 
-	private MemcachedRole() {
-		this.identifier = Identifiers.generate(this);
-	}
+    private MemcachedRole() {
+        this.identifier = Identifiers.generate(this);
+    }
 
-	@Override
-	public String getIdentifier() {
-		return this.identifier;
-	}
+    @Override
+    public String getIdentifier() {
+        return this.identifier;
+    }
 
-	@Override
-	public String getQualifiedName() {
-		return (Identifiers.generateName(this));
-	}
+    @Override
+    public String getQualifiedName() {
+        return (Identifiers.generateName(this));
+    }
 }

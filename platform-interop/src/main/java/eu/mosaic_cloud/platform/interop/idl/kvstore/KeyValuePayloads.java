@@ -24,5369 +24,5228 @@ package eu.mosaic_cloud.platform.interop.idl.kvstore;
 
 public final class KeyValuePayloads {
 
-	private KeyValuePayloads() {
-	}
-
-	public static void registerAllExtensions(
-			com.google.protobuf.ExtensionRegistry registry) {
-	}
-
-	public interface InitRequestOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		boolean hasToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
-
-		// required string bucket = 2;
-		boolean hasBucket();
-
-		String getBucket();
-	}
-
-	public static final class InitRequest extends
-			com.google.protobuf.GeneratedMessage implements
-			InitRequestOrBuilder {
-
-		// Use InitRequest.newBuilder() to construct.
-		private InitRequest(Builder builder) {
-			super(builder);
-		}
-
-		private InitRequest(boolean noInit) {
-		}
-
-		private static final InitRequest defaultInstance;
-
-		public static InitRequest getDefaultInstance() {
-			return InitRequest.defaultInstance;
-		}
-
-		@Override
-		public InitRequest getDefaultInstanceForType() {
-			return InitRequest.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		public static final int TOKEN_FIELD_NUMBER = 1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-		@Override
-		public boolean hasToken() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-			return this.token_;
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-			return this.token_;
-		}
-
-		// required string bucket = 2;
-		public static final int BUCKET_FIELD_NUMBER = 2;
-		private java.lang.Object bucket_;
-
-		@Override
-		public boolean hasBucket() {
-			return ((this.bitField0_ & 0x00000002) == 0x00000002);
-		}
-
-		@Override
-		public String getBucket() {
-			java.lang.Object ref = this.bucket_;
-			if (ref instanceof String) {
-				return (String) ref;
-			} else {
-				com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-				String s = bs.toStringUtf8();
-				if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-					this.bucket_ = s;
-				}
-				return s;
-			}
-		}
-
-		private com.google.protobuf.ByteString getBucketBytes() {
-			java.lang.Object ref = this.bucket_;
-			if (ref instanceof String) {
-				com.google.protobuf.ByteString b = com.google.protobuf.ByteString
-						.copyFromUtf8((String) ref);
-				this.bucket_ = b;
-				return b;
-			} else {
-				return (com.google.protobuf.ByteString) ref;
-			}
-		}
-
-		private void initFields() {
-			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			this.bucket_ = "";
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasToken()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!hasBucket()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!getToken().isInitialized()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeMessage(1, this.token_);
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				output.writeBytes(2, getBucketBytes());
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(1, this.token_);
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize(
-						2, getBucketBytes());
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequestOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-					getTokenFieldBuilder();
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				this.bucket_ = "";
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				if (this.tokenBuilder_ == null) {
-					result.token_ = this.token_;
-				} else {
-					result.token_ = this.tokenBuilder_.build();
-				}
-				if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-					to_bitField0_ |= 0x00000002;
-				}
-				result.bucket_ = this.bucket_;
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasToken()) {
-					mergeToken(other.getToken());
-				}
-				if (other.hasBucket()) {
-					setBucket(other.getBucket());
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasToken()) {
-
-					return false;
-				}
-				if (!hasBucket()) {
-
-					return false;
-				}
-				if (!getToken().isInitialized()) {
-
-					return false;
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder();
-						if (hasToken()) {
-							subBuilder.mergeFrom(getToken());
-						}
-						input.readMessage(subBuilder, extensionRegistry);
-						setToken(subBuilder.buildPartial());
-						break;
-					}
-					case 18: {
-						this.bitField0_ |= 0x00000002;
-						this.bucket_ = input.readBytes();
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
-			@Override
-			public boolean hasToken() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-				if (this.tokenBuilder_ == null) {
-					return this.token_;
-				} else {
-					return this.tokenBuilder_.getMessage();
-				}
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					this.token_ = value;
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = builderForValue.build();
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(builderForValue.build());
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder mergeToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000001) == 0x00000001)
-							&& (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-									.getDefaultInstance())) {
-						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder(this.token_).mergeFrom(value)
-								.buildPartial();
-					} else {
-						this.token_ = value;
-					}
-					onChanged();
-				} else {
-					this.tokenBuilder_.mergeFrom(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder clearToken() {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-					onChanged();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
-				this.bitField0_ |= 0x00000001;
-				onChanged();
-				return getTokenFieldBuilder().getBuilder();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-				if (this.tokenBuilder_ != null) {
-					return this.tokenBuilder_.getMessageOrBuilder();
-				} else {
-					return this.token_;
-				}
-			}
-
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
-				if (this.tokenBuilder_ == null) {
-					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
-							this.token_, getParentForChildren(), isClean());
-					this.token_ = null;
-				}
-				return this.tokenBuilder_;
-			}
-
-			// required string bucket = 2;
-			private java.lang.Object bucket_ = "";
-
-			@Override
-			public boolean hasBucket() {
-				return ((this.bitField0_ & 0x00000002) == 0x00000002);
-			}
-
-			@Override
-			public String getBucket() {
-				java.lang.Object ref = this.bucket_;
-				if (!(ref instanceof String)) {
-					String s = ((com.google.protobuf.ByteString) ref)
-							.toStringUtf8();
-					this.bucket_ = s;
-					return s;
-				} else {
-					return (String) ref;
-				}
-			}
-
-			public Builder setBucket(String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				this.bitField0_ |= 0x00000002;
-				this.bucket_ = value;
-				onChanged();
-				return this;
-			}
-
-			public Builder clearBucket() {
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.bucket_ = getDefaultInstance().getBucket();
-				onChanged();
-				return this;
-			}
-
-			void setBucket(com.google.protobuf.ByteString value) {
-				this.bitField0_ |= 0x00000002;
-				this.bucket_ = value;
-				onChanged();
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.InitRequest)
-		}
-
-		static {
-			defaultInstance = new InitRequest(true);
-			InitRequest.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.InitRequest)
-	}
-
-	public interface KVEntryOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required string key = 1;
-		boolean hasKey();
-
-		String getKey();
-
-		// required bytes value = 2;
-		boolean hasValue();
-
-		com.google.protobuf.ByteString getValue();
-	}
-
-	public static final class KVEntry extends
-			com.google.protobuf.GeneratedMessage implements KVEntryOrBuilder {
-
-		// Use KVEntry.newBuilder() to construct.
-		private KVEntry(Builder builder) {
-			super(builder);
-		}
-
-		private KVEntry(boolean noInit) {
-		}
-
-		private static final KVEntry defaultInstance;
-
-		public static KVEntry getDefaultInstance() {
-			return KVEntry.defaultInstance;
-		}
-
-		@Override
-		public KVEntry getDefaultInstanceForType() {
-			return KVEntry.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required string key = 1;
-		public static final int KEY_FIELD_NUMBER = 1;
-		private java.lang.Object key_;
-
-		@Override
-		public boolean hasKey() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public String getKey() {
-			java.lang.Object ref = this.key_;
-			if (ref instanceof String) {
-				return (String) ref;
-			} else {
-				com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-				String s = bs.toStringUtf8();
-				if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-					this.key_ = s;
-				}
-				return s;
-			}
-		}
-
-		private com.google.protobuf.ByteString getKeyBytes() {
-			java.lang.Object ref = this.key_;
-			if (ref instanceof String) {
-				com.google.protobuf.ByteString b = com.google.protobuf.ByteString
-						.copyFromUtf8((String) ref);
-				this.key_ = b;
-				return b;
-			} else {
-				return (com.google.protobuf.ByteString) ref;
-			}
-		}
-
-		// required bytes value = 2;
-		public static final int VALUE_FIELD_NUMBER = 2;
-		private com.google.protobuf.ByteString value_;
-
-		@Override
-		public boolean hasValue() {
-			return ((this.bitField0_ & 0x00000002) == 0x00000002);
-		}
-
-		@Override
-		public com.google.protobuf.ByteString getValue() {
-			return this.value_;
-		}
-
-		private void initFields() {
-			this.key_ = "";
-			this.value_ = com.google.protobuf.ByteString.EMPTY;
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasKey()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!hasValue()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeBytes(1, getKeyBytes());
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				output.writeBytes(2, this.value_);
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize(
-						1, getKeyBytes());
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize(
-						2, this.value_);
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				this.key_ = "";
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				this.value_ = com.google.protobuf.ByteString.EMPTY;
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				result.key_ = this.key_;
-				if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-					to_bitField0_ |= 0x00000002;
-				}
-				result.value_ = this.value_;
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasKey()) {
-					setKey(other.getKey());
-				}
-				if (other.hasValue()) {
-					setValue(other.getValue());
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasKey()) {
-
-					return false;
-				}
-				if (!hasValue()) {
-
-					return false;
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						this.bitField0_ |= 0x00000001;
-						this.key_ = input.readBytes();
-						break;
-					}
-					case 18: {
-						this.bitField0_ |= 0x00000002;
-						this.value_ = input.readBytes();
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required string key = 1;
-			private java.lang.Object key_ = "";
-
-			@Override
-			public boolean hasKey() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public String getKey() {
-				java.lang.Object ref = this.key_;
-				if (!(ref instanceof String)) {
-					String s = ((com.google.protobuf.ByteString) ref)
-							.toStringUtf8();
-					this.key_ = s;
-					return s;
-				} else {
-					return (String) ref;
-				}
-			}
-
-			public Builder setKey(String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				this.bitField0_ |= 0x00000001;
-				this.key_ = value;
-				onChanged();
-				return this;
-			}
-
-			public Builder clearKey() {
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				this.key_ = getDefaultInstance().getKey();
-				onChanged();
-				return this;
-			}
-
-			void setKey(com.google.protobuf.ByteString value) {
-				this.bitField0_ |= 0x00000001;
-				this.key_ = value;
-				onChanged();
-			}
-
-			// required bytes value = 2;
-			private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
-
-			@Override
-			public boolean hasValue() {
-				return ((this.bitField0_ & 0x00000002) == 0x00000002);
-			}
-
-			@Override
-			public com.google.protobuf.ByteString getValue() {
-				return this.value_;
-			}
-
-			public Builder setValue(com.google.protobuf.ByteString value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				this.bitField0_ |= 0x00000002;
-				this.value_ = value;
-				onChanged();
-				return this;
-			}
-
-			public Builder clearValue() {
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.value_ = getDefaultInstance().getValue();
-				onChanged();
-				return this;
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.KVEntry)
-		}
-
-		static {
-			defaultInstance = new KVEntry(true);
-			KVEntry.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.KVEntry)
-	}
-
-	public interface SetRequestOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		boolean hasToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
-
-		// required string key = 2;
-		boolean hasKey();
-
-		String getKey();
-
-		// optional int32 exp_time = 3 [default = 0];
-		boolean hasExpTime();
-
-		int getExpTime();
-
-		// required bytes value = 4;
-		boolean hasValue();
-
-		com.google.protobuf.ByteString getValue();
-	}
-
-	public static final class SetRequest extends
-			com.google.protobuf.GeneratedMessage implements SetRequestOrBuilder {
-
-		// Use SetRequest.newBuilder() to construct.
-		private SetRequest(Builder builder) {
-			super(builder);
-		}
-
-		private SetRequest(boolean noInit) {
-		}
-
-		private static final SetRequest defaultInstance;
-
-		public static SetRequest getDefaultInstance() {
-			return SetRequest.defaultInstance;
-		}
-
-		@Override
-		public SetRequest getDefaultInstanceForType() {
-			return SetRequest.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		public static final int TOKEN_FIELD_NUMBER = 1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-		@Override
-		public boolean hasToken() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-			return this.token_;
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-			return this.token_;
-		}
-
-		// required string key = 2;
-		public static final int KEY_FIELD_NUMBER = 2;
-		private java.lang.Object key_;
-
-		@Override
-		public boolean hasKey() {
-			return ((this.bitField0_ & 0x00000002) == 0x00000002);
-		}
-
-		@Override
-		public String getKey() {
-			java.lang.Object ref = this.key_;
-			if (ref instanceof String) {
-				return (String) ref;
-			} else {
-				com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-				String s = bs.toStringUtf8();
-				if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-					this.key_ = s;
-				}
-				return s;
-			}
-		}
-
-		private com.google.protobuf.ByteString getKeyBytes() {
-			java.lang.Object ref = this.key_;
-			if (ref instanceof String) {
-				com.google.protobuf.ByteString b = com.google.protobuf.ByteString
-						.copyFromUtf8((String) ref);
-				this.key_ = b;
-				return b;
-			} else {
-				return (com.google.protobuf.ByteString) ref;
-			}
-		}
-
-		// optional int32 exp_time = 3 [default = 0];
-		public static final int EXP_TIME_FIELD_NUMBER = 3;
-		private int expTime_;
-
-		@Override
-		public boolean hasExpTime() {
-			return ((this.bitField0_ & 0x00000004) == 0x00000004);
-		}
-
-		@Override
-		public int getExpTime() {
-			return this.expTime_;
-		}
-
-		// required bytes value = 4;
-		public static final int VALUE_FIELD_NUMBER = 4;
-		private com.google.protobuf.ByteString value_;
-
-		@Override
-		public boolean hasValue() {
-			return ((this.bitField0_ & 0x00000008) == 0x00000008);
-		}
-
-		@Override
-		public com.google.protobuf.ByteString getValue() {
-			return this.value_;
-		}
-
-		private void initFields() {
-			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			this.key_ = "";
-			this.expTime_ = 0;
-			this.value_ = com.google.protobuf.ByteString.EMPTY;
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasToken()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!hasKey()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!hasValue()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!getToken().isInitialized()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeMessage(1, this.token_);
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				output.writeBytes(2, getKeyBytes());
-			}
-			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				output.writeInt32(3, this.expTime_);
-			}
-			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				output.writeBytes(4, this.value_);
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(1, this.token_);
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize(
-						2, getKeyBytes());
-			}
-			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				size += com.google.protobuf.CodedOutputStream.computeInt32Size(
-						3, this.expTime_);
-			}
-			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize(
-						4, this.value_);
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequestOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-					getTokenFieldBuilder();
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				this.key_ = "";
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.expTime_ = 0;
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
-				this.value_ = com.google.protobuf.ByteString.EMPTY;
-				this.bitField0_ = (this.bitField0_ & ~0x00000008);
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				if (this.tokenBuilder_ == null) {
-					result.token_ = this.token_;
-				} else {
-					result.token_ = this.tokenBuilder_.build();
-				}
-				if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-					to_bitField0_ |= 0x00000002;
-				}
-				result.key_ = this.key_;
-				if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-					to_bitField0_ |= 0x00000004;
-				}
-				result.expTime_ = this.expTime_;
-				if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-					to_bitField0_ |= 0x00000008;
-				}
-				result.value_ = this.value_;
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasToken()) {
-					mergeToken(other.getToken());
-				}
-				if (other.hasKey()) {
-					setKey(other.getKey());
-				}
-				if (other.hasExpTime()) {
-					setExpTime(other.getExpTime());
-				}
-				if (other.hasValue()) {
-					setValue(other.getValue());
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasToken()) {
-
-					return false;
-				}
-				if (!hasKey()) {
-
-					return false;
-				}
-				if (!hasValue()) {
-
-					return false;
-				}
-				if (!getToken().isInitialized()) {
-
-					return false;
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder();
-						if (hasToken()) {
-							subBuilder.mergeFrom(getToken());
-						}
-						input.readMessage(subBuilder, extensionRegistry);
-						setToken(subBuilder.buildPartial());
-						break;
-					}
-					case 18: {
-						this.bitField0_ |= 0x00000002;
-						this.key_ = input.readBytes();
-						break;
-					}
-					case 24: {
-						this.bitField0_ |= 0x00000004;
-						this.expTime_ = input.readInt32();
-						break;
-					}
-					case 34: {
-						this.bitField0_ |= 0x00000008;
-						this.value_ = input.readBytes();
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
-			@Override
-			public boolean hasToken() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-				if (this.tokenBuilder_ == null) {
-					return this.token_;
-				} else {
-					return this.tokenBuilder_.getMessage();
-				}
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					this.token_ = value;
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = builderForValue.build();
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(builderForValue.build());
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder mergeToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000001) == 0x00000001)
-							&& (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-									.getDefaultInstance())) {
-						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder(this.token_).mergeFrom(value)
-								.buildPartial();
-					} else {
-						this.token_ = value;
-					}
-					onChanged();
-				} else {
-					this.tokenBuilder_.mergeFrom(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder clearToken() {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-					onChanged();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
-				this.bitField0_ |= 0x00000001;
-				onChanged();
-				return getTokenFieldBuilder().getBuilder();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-				if (this.tokenBuilder_ != null) {
-					return this.tokenBuilder_.getMessageOrBuilder();
-				} else {
-					return this.token_;
-				}
-			}
-
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
-				if (this.tokenBuilder_ == null) {
-					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
-							this.token_, getParentForChildren(), isClean());
-					this.token_ = null;
-				}
-				return this.tokenBuilder_;
-			}
-
-			// required string key = 2;
-			private java.lang.Object key_ = "";
-
-			@Override
-			public boolean hasKey() {
-				return ((this.bitField0_ & 0x00000002) == 0x00000002);
-			}
-
-			@Override
-			public String getKey() {
-				java.lang.Object ref = this.key_;
-				if (!(ref instanceof String)) {
-					String s = ((com.google.protobuf.ByteString) ref)
-							.toStringUtf8();
-					this.key_ = s;
-					return s;
-				} else {
-					return (String) ref;
-				}
-			}
-
-			public Builder setKey(String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				this.bitField0_ |= 0x00000002;
-				this.key_ = value;
-				onChanged();
-				return this;
-			}
-
-			public Builder clearKey() {
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.key_ = getDefaultInstance().getKey();
-				onChanged();
-				return this;
-			}
-
-			void setKey(com.google.protobuf.ByteString value) {
-				this.bitField0_ |= 0x00000002;
-				this.key_ = value;
-				onChanged();
-			}
-
-			// optional int32 exp_time = 3 [default = 0];
-			private int expTime_;
-
-			@Override
-			public boolean hasExpTime() {
-				return ((this.bitField0_ & 0x00000004) == 0x00000004);
-			}
-
-			@Override
-			public int getExpTime() {
-				return this.expTime_;
-			}
-
-			public Builder setExpTime(int value) {
-				this.bitField0_ |= 0x00000004;
-				this.expTime_ = value;
-				onChanged();
-				return this;
-			}
-
-			public Builder clearExpTime() {
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
-				this.expTime_ = 0;
-				onChanged();
-				return this;
-			}
-
-			// required bytes value = 4;
-			private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
-
-			@Override
-			public boolean hasValue() {
-				return ((this.bitField0_ & 0x00000008) == 0x00000008);
-			}
-
-			@Override
-			public com.google.protobuf.ByteString getValue() {
-				return this.value_;
-			}
-
-			public Builder setValue(com.google.protobuf.ByteString value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				this.bitField0_ |= 0x00000008;
-				this.value_ = value;
-				onChanged();
-				return this;
-			}
-
-			public Builder clearValue() {
-				this.bitField0_ = (this.bitField0_ & ~0x00000008);
-				this.value_ = getDefaultInstance().getValue();
-				onChanged();
-				return this;
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.SetRequest)
-		}
-
-		static {
-			defaultInstance = new SetRequest(true);
-			SetRequest.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.SetRequest)
-	}
-
-	public interface GetRequestOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		boolean hasToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
-
-		// repeated string key = 2;
-		java.util.List<String> getKeyList();
-
-		int getKeyCount();
-
-		String getKey(int index);
-	}
-
-	public static final class GetRequest extends
-			com.google.protobuf.GeneratedMessage implements GetRequestOrBuilder {
-
-		// Use GetRequest.newBuilder() to construct.
-		private GetRequest(Builder builder) {
-			super(builder);
-		}
-
-		private GetRequest(boolean noInit) {
-		}
-
-		private static final GetRequest defaultInstance;
-
-		public static GetRequest getDefaultInstance() {
-			return GetRequest.defaultInstance;
-		}
-
-		@Override
-		public GetRequest getDefaultInstanceForType() {
-			return GetRequest.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		public static final int TOKEN_FIELD_NUMBER = 1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-		@Override
-		public boolean hasToken() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-			return this.token_;
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-			return this.token_;
-		}
-
-		// repeated string key = 2;
-		public static final int KEY_FIELD_NUMBER = 2;
-		private com.google.protobuf.LazyStringList key_;
-
-		@Override
-		public java.util.List<String> getKeyList() {
-			return this.key_;
-		}
-
-		@Override
-		public int getKeyCount() {
-			return this.key_.size();
-		}
-
-		@Override
-		public String getKey(int index) {
-			return this.key_.get(index);
-		}
-
-		private void initFields() {
-			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			this.key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasToken()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!getToken().isInitialized()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeMessage(1, this.token_);
-			}
-			for (int i = 0; i < this.key_.size(); i++) {
-				output.writeBytes(2, this.key_.getByteString(i));
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(1, this.token_);
-			}
-			{
-				int dataSize = 0;
-				for (int i = 0; i < this.key_.size(); i++) {
-					dataSize += com.google.protobuf.CodedOutputStream
-							.computeBytesSizeNoTag(this.key_.getByteString(i));
-				}
-				size += dataSize;
-				size += 1 * getKeyList().size();
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequestOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-					getTokenFieldBuilder();
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				this.key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				if (this.tokenBuilder_ == null) {
-					result.token_ = this.token_;
-				} else {
-					result.token_ = this.tokenBuilder_.build();
-				}
-				if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-					this.key_ = new com.google.protobuf.UnmodifiableLazyStringList(
-							this.key_);
-					this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				}
-				result.key_ = this.key_;
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasToken()) {
-					mergeToken(other.getToken());
-				}
-				if (!other.key_.isEmpty()) {
-					if (this.key_.isEmpty()) {
-						this.key_ = other.key_;
-						this.bitField0_ = (this.bitField0_ & ~0x00000002);
-					} else {
-						ensureKeyIsMutable();
-						this.key_.addAll(other.key_);
-					}
-					onChanged();
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasToken()) {
-
-					return false;
-				}
-				if (!getToken().isInitialized()) {
-
-					return false;
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder();
-						if (hasToken()) {
-							subBuilder.mergeFrom(getToken());
-						}
-						input.readMessage(subBuilder, extensionRegistry);
-						setToken(subBuilder.buildPartial());
-						break;
-					}
-					case 18: {
-						ensureKeyIsMutable();
-						this.key_.add(input.readBytes());
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
-			@Override
-			public boolean hasToken() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-				if (this.tokenBuilder_ == null) {
-					return this.token_;
-				} else {
-					return this.tokenBuilder_.getMessage();
-				}
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					this.token_ = value;
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = builderForValue.build();
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(builderForValue.build());
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder mergeToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000001) == 0x00000001)
-							&& (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-									.getDefaultInstance())) {
-						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder(this.token_).mergeFrom(value)
-								.buildPartial();
-					} else {
-						this.token_ = value;
-					}
-					onChanged();
-				} else {
-					this.tokenBuilder_.mergeFrom(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder clearToken() {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-					onChanged();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
-				this.bitField0_ |= 0x00000001;
-				onChanged();
-				return getTokenFieldBuilder().getBuilder();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-				if (this.tokenBuilder_ != null) {
-					return this.tokenBuilder_.getMessageOrBuilder();
-				} else {
-					return this.token_;
-				}
-			}
-
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
-				if (this.tokenBuilder_ == null) {
-					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
-							this.token_, getParentForChildren(), isClean());
-					this.token_ = null;
-				}
-				return this.tokenBuilder_;
-			}
-
-			// repeated string key = 2;
-			private com.google.protobuf.LazyStringList key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-
-			private void ensureKeyIsMutable() {
-				if (!((this.bitField0_ & 0x00000002) == 0x00000002)) {
-					this.key_ = new com.google.protobuf.LazyStringArrayList(
-							this.key_);
-					this.bitField0_ |= 0x00000002;
-				}
-			}
-
-			@Override
-			public java.util.List<String> getKeyList() {
-				return java.util.Collections.unmodifiableList(this.key_);
-			}
-
-			@Override
-			public int getKeyCount() {
-				return this.key_.size();
-			}
-
-			@Override
-			public String getKey(int index) {
-				return this.key_.get(index);
-			}
-
-			public Builder setKey(int index, String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				ensureKeyIsMutable();
-				this.key_.set(index, value);
-				onChanged();
-				return this;
-			}
-
-			public Builder addKey(String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				ensureKeyIsMutable();
-				this.key_.add(value);
-				onChanged();
-				return this;
-			}
-
-			public Builder addAllKey(java.lang.Iterable<String> values) {
-				ensureKeyIsMutable();
-				super.addAll(values, this.key_);
-				onChanged();
-				return this;
-			}
-
-			public Builder clearKey() {
-				this.key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				onChanged();
-				return this;
-			}
-
-			void addKey(com.google.protobuf.ByteString value) {
-				ensureKeyIsMutable();
-				this.key_.add(value);
-				onChanged();
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.GetRequest)
-		}
-
-		static {
-			defaultInstance = new GetRequest(true);
-			GetRequest.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.GetRequest)
-	}
-
-	public interface GetReplyOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		boolean hasToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
-
-		// repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
-		java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> getResultsList();
-
-		eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getResults(
-				int index);
-
-		int getResultsCount();
-
-		java.util.List<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsOrBuilderList();
-
-		eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder getResultsOrBuilder(
-				int index);
-	}
-
-	public static final class GetReply extends
-			com.google.protobuf.GeneratedMessage implements GetReplyOrBuilder {
-
-		// Use GetReply.newBuilder() to construct.
-		private GetReply(Builder builder) {
-			super(builder);
-		}
-
-		private GetReply(boolean noInit) {
-		}
-
-		private static final GetReply defaultInstance;
-
-		public static GetReply getDefaultInstance() {
-			return GetReply.defaultInstance;
-		}
-
-		@Override
-		public GetReply getDefaultInstanceForType() {
-			return GetReply.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		public static final int TOKEN_FIELD_NUMBER = 1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-		@Override
-		public boolean hasToken() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-			return this.token_;
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-			return this.token_;
-		}
-
-		// repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
-		public static final int RESULTS_FIELD_NUMBER = 2;
-		private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_;
-
-		@Override
-		public java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> getResultsList() {
-			return this.results_;
-		}
-
-		@Override
-		public java.util.List<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsOrBuilderList() {
-			return this.results_;
-		}
-
-		@Override
-		public int getResultsCount() {
-			return this.results_.size();
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getResults(
-				int index) {
-			return this.results_.get(index);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder getResultsOrBuilder(
-				int index) {
-			return this.results_.get(index);
-		}
-
-		private void initFields() {
-			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			this.results_ = java.util.Collections.emptyList();
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasToken()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!getToken().isInitialized()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			for (int i = 0; i < getResultsCount(); i++) {
-				if (!getResults(i).isInitialized()) {
-					this.memoizedIsInitialized = 0;
-					return false;
-				}
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeMessage(1, this.token_);
-			}
-			for (int i = 0; i < this.results_.size(); i++) {
-				output.writeMessage(2, this.results_.get(i));
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(1, this.token_);
-			}
-			for (int i = 0; i < this.results_.size(); i++) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(2, this.results_.get(i));
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReplyOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-					getTokenFieldBuilder();
-					getResultsFieldBuilder();
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				if (this.resultsBuilder_ == null) {
-					this.results_ = java.util.Collections.emptyList();
-					this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				} else {
-					this.resultsBuilder_.clear();
-				}
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				if (this.tokenBuilder_ == null) {
-					result.token_ = this.token_;
-				} else {
-					result.token_ = this.tokenBuilder_.build();
-				}
-				if (this.resultsBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-						this.results_ = java.util.Collections
-								.unmodifiableList(this.results_);
-						this.bitField0_ = (this.bitField0_ & ~0x00000002);
-					}
-					result.results_ = this.results_;
-				} else {
-					result.results_ = this.resultsBuilder_.build();
-				}
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasToken()) {
-					mergeToken(other.getToken());
-				}
-				if (this.resultsBuilder_ == null) {
-					if (!other.results_.isEmpty()) {
-						if (this.results_.isEmpty()) {
-							this.results_ = other.results_;
-							this.bitField0_ = (this.bitField0_ & ~0x00000002);
-						} else {
-							ensureResultsIsMutable();
-							this.results_.addAll(other.results_);
-						}
-						onChanged();
-					}
-				} else {
-					if (!other.results_.isEmpty()) {
-						if (this.resultsBuilder_.isEmpty()) {
-							this.resultsBuilder_.dispose();
-							this.resultsBuilder_ = null;
-							this.results_ = other.results_;
-							this.bitField0_ = (this.bitField0_ & ~0x00000002);
-							this.resultsBuilder_ = com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ? getResultsFieldBuilder()
-									: null;
-						} else {
-							this.resultsBuilder_.addAllMessages(other.results_);
-						}
-					}
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasToken()) {
-
-					return false;
-				}
-				if (!getToken().isInitialized()) {
-
-					return false;
-				}
-				for (int i = 0; i < getResultsCount(); i++) {
-					if (!getResults(i).isInitialized()) {
-
-						return false;
-					}
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder();
-						if (hasToken()) {
-							subBuilder.mergeFrom(getToken());
-						}
-						input.readMessage(subBuilder, extensionRegistry);
-						setToken(subBuilder.buildPartial());
-						break;
-					}
-					case 18: {
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
-								.newBuilder();
-						input.readMessage(subBuilder, extensionRegistry);
-						addResults(subBuilder.buildPartial());
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
-			@Override
-			public boolean hasToken() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-				if (this.tokenBuilder_ == null) {
-					return this.token_;
-				} else {
-					return this.tokenBuilder_.getMessage();
-				}
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					this.token_ = value;
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = builderForValue.build();
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(builderForValue.build());
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder mergeToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000001) == 0x00000001)
-							&& (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-									.getDefaultInstance())) {
-						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder(this.token_).mergeFrom(value)
-								.buildPartial();
-					} else {
-						this.token_ = value;
-					}
-					onChanged();
-				} else {
-					this.tokenBuilder_.mergeFrom(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder clearToken() {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-					onChanged();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
-				this.bitField0_ |= 0x00000001;
-				onChanged();
-				return getTokenFieldBuilder().getBuilder();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-				if (this.tokenBuilder_ != null) {
-					return this.tokenBuilder_.getMessageOrBuilder();
-				} else {
-					return this.token_;
-				}
-			}
-
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
-				if (this.tokenBuilder_ == null) {
-					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
-							this.token_, getParentForChildren(), isClean());
-					this.token_ = null;
-				}
-				return this.tokenBuilder_;
-			}
-
-			// repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
-			private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_ = java.util.Collections
-					.emptyList();
-
-			private void ensureResultsIsMutable() {
-				if (!((this.bitField0_ & 0x00000002) == 0x00000002)) {
-					this.results_ = new java.util.ArrayList<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry>(
-							this.results_);
-					this.bitField0_ |= 0x00000002;
-				}
-			}
-
-			private com.google.protobuf.RepeatedFieldBuilder<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> resultsBuilder_;
-
-			@Override
-			public java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> getResultsList() {
-				if (this.resultsBuilder_ == null) {
-					return java.util.Collections
-							.unmodifiableList(this.results_);
-				} else {
-					return this.resultsBuilder_.getMessageList();
-				}
-			}
-
-			@Override
-			public int getResultsCount() {
-				if (this.resultsBuilder_ == null) {
-					return this.results_.size();
-				} else {
-					return this.resultsBuilder_.getCount();
-				}
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getResults(
-					int index) {
-				if (this.resultsBuilder_ == null) {
-					return this.results_.get(index);
-				} else {
-					return this.resultsBuilder_.getMessage(index);
-				}
-			}
-
-			public Builder setResults(
-					int index,
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry value) {
-				if (this.resultsBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					ensureResultsIsMutable();
-					this.results_.set(index, value);
-					onChanged();
-				} else {
-					this.resultsBuilder_.setMessage(index, value);
-				}
-				return this;
-			}
-
-			public Builder setResults(
-					int index,
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder builderForValue) {
-				if (this.resultsBuilder_ == null) {
-					ensureResultsIsMutable();
-					this.results_.set(index, builderForValue.build());
-					onChanged();
-				} else {
-					this.resultsBuilder_.setMessage(index,
-							builderForValue.build());
-				}
-				return this;
-			}
-
-			public Builder addResults(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry value) {
-				if (this.resultsBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					ensureResultsIsMutable();
-					this.results_.add(value);
-					onChanged();
-				} else {
-					this.resultsBuilder_.addMessage(value);
-				}
-				return this;
-			}
-
-			public Builder addResults(
-					int index,
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry value) {
-				if (this.resultsBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					ensureResultsIsMutable();
-					this.results_.add(index, value);
-					onChanged();
-				} else {
-					this.resultsBuilder_.addMessage(index, value);
-				}
-				return this;
-			}
-
-			public Builder addResults(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder builderForValue) {
-				if (this.resultsBuilder_ == null) {
-					ensureResultsIsMutable();
-					this.results_.add(builderForValue.build());
-					onChanged();
-				} else {
-					this.resultsBuilder_.addMessage(builderForValue.build());
-				}
-				return this;
-			}
-
-			public Builder addResults(
-					int index,
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder builderForValue) {
-				if (this.resultsBuilder_ == null) {
-					ensureResultsIsMutable();
-					this.results_.add(index, builderForValue.build());
-					onChanged();
-				} else {
-					this.resultsBuilder_.addMessage(index,
-							builderForValue.build());
-				}
-				return this;
-			}
-
-			public Builder addAllResults(
-					java.lang.Iterable<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> values) {
-				if (this.resultsBuilder_ == null) {
-					ensureResultsIsMutable();
-					super.addAll(values, this.results_);
-					onChanged();
-				} else {
-					this.resultsBuilder_.addAllMessages(values);
-				}
-				return this;
-			}
-
-			public Builder clearResults() {
-				if (this.resultsBuilder_ == null) {
-					this.results_ = java.util.Collections.emptyList();
-					this.bitField0_ = (this.bitField0_ & ~0x00000002);
-					onChanged();
-				} else {
-					this.resultsBuilder_.clear();
-				}
-				return this;
-			}
-
-			public Builder removeResults(int index) {
-				if (this.resultsBuilder_ == null) {
-					ensureResultsIsMutable();
-					this.results_.remove(index);
-					onChanged();
-				} else {
-					this.resultsBuilder_.remove(index);
-				}
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder getResultsBuilder(
-					int index) {
-				return getResultsFieldBuilder().getBuilder(index);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder getResultsOrBuilder(
-					int index) {
-				if (this.resultsBuilder_ == null) {
-					return this.results_.get(index);
-				} else {
-					return this.resultsBuilder_.getMessageOrBuilder(index);
-				}
-			}
-
-			@Override
-			public java.util.List<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsOrBuilderList() {
-				if (this.resultsBuilder_ != null) {
-					return this.resultsBuilder_.getMessageOrBuilderList();
-				} else {
-					return java.util.Collections
-							.unmodifiableList(this.results_);
-				}
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder addResultsBuilder() {
-				return getResultsFieldBuilder()
-						.addBuilder(
-								eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
-										.getDefaultInstance());
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder addResultsBuilder(
-					int index) {
-				return getResultsFieldBuilder()
-						.addBuilder(
-								index,
-								eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
-										.getDefaultInstance());
-			}
-
-			public java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder> getResultsBuilderList() {
-				return getResultsFieldBuilder().getBuilderList();
-			}
-
-			private com.google.protobuf.RepeatedFieldBuilder<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsFieldBuilder() {
-				if (this.resultsBuilder_ == null) {
-					this.resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder>(
-							this.results_,
-							((this.bitField0_ & 0x00000002) == 0x00000002),
-							getParentForChildren(), isClean());
-					this.results_ = null;
-				}
-				return this.resultsBuilder_;
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.GetReply)
-		}
-
-		static {
-			defaultInstance = new GetReply(true);
-			GetReply.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.GetReply)
-	}
-
-	public interface DeleteRequestOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		boolean hasToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
-
-		// required string key = 2;
-		boolean hasKey();
-
-		String getKey();
-	}
-
-	public static final class DeleteRequest extends
-			com.google.protobuf.GeneratedMessage implements
-			DeleteRequestOrBuilder {
-
-		// Use DeleteRequest.newBuilder() to construct.
-		private DeleteRequest(Builder builder) {
-			super(builder);
-		}
-
-		private DeleteRequest(boolean noInit) {
-		}
-
-		private static final DeleteRequest defaultInstance;
-
-		public static DeleteRequest getDefaultInstance() {
-			return DeleteRequest.defaultInstance;
-		}
-
-		@Override
-		public DeleteRequest getDefaultInstanceForType() {
-			return DeleteRequest.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		public static final int TOKEN_FIELD_NUMBER = 1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-		@Override
-		public boolean hasToken() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-			return this.token_;
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-			return this.token_;
-		}
-
-		// required string key = 2;
-		public static final int KEY_FIELD_NUMBER = 2;
-		private java.lang.Object key_;
-
-		@Override
-		public boolean hasKey() {
-			return ((this.bitField0_ & 0x00000002) == 0x00000002);
-		}
-
-		@Override
-		public String getKey() {
-			java.lang.Object ref = this.key_;
-			if (ref instanceof String) {
-				return (String) ref;
-			} else {
-				com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-				String s = bs.toStringUtf8();
-				if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-					this.key_ = s;
-				}
-				return s;
-			}
-		}
-
-		private com.google.protobuf.ByteString getKeyBytes() {
-			java.lang.Object ref = this.key_;
-			if (ref instanceof String) {
-				com.google.protobuf.ByteString b = com.google.protobuf.ByteString
-						.copyFromUtf8((String) ref);
-				this.key_ = b;
-				return b;
-			} else {
-				return (com.google.protobuf.ByteString) ref;
-			}
-		}
-
-		private void initFields() {
-			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			this.key_ = "";
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasToken()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!hasKey()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!getToken().isInitialized()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeMessage(1, this.token_);
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				output.writeBytes(2, getKeyBytes());
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(1, this.token_);
-			}
-			if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize(
-						2, getKeyBytes());
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequestOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-					getTokenFieldBuilder();
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				this.key_ = "";
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				if (this.tokenBuilder_ == null) {
-					result.token_ = this.token_;
-				} else {
-					result.token_ = this.tokenBuilder_.build();
-				}
-				if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-					to_bitField0_ |= 0x00000002;
-				}
-				result.key_ = this.key_;
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasToken()) {
-					mergeToken(other.getToken());
-				}
-				if (other.hasKey()) {
-					setKey(other.getKey());
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasToken()) {
-
-					return false;
-				}
-				if (!hasKey()) {
-
-					return false;
-				}
-				if (!getToken().isInitialized()) {
-
-					return false;
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder();
-						if (hasToken()) {
-							subBuilder.mergeFrom(getToken());
-						}
-						input.readMessage(subBuilder, extensionRegistry);
-						setToken(subBuilder.buildPartial());
-						break;
-					}
-					case 18: {
-						this.bitField0_ |= 0x00000002;
-						this.key_ = input.readBytes();
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
-			@Override
-			public boolean hasToken() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-				if (this.tokenBuilder_ == null) {
-					return this.token_;
-				} else {
-					return this.tokenBuilder_.getMessage();
-				}
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					this.token_ = value;
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = builderForValue.build();
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(builderForValue.build());
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder mergeToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000001) == 0x00000001)
-							&& (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-									.getDefaultInstance())) {
-						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder(this.token_).mergeFrom(value)
-								.buildPartial();
-					} else {
-						this.token_ = value;
-					}
-					onChanged();
-				} else {
-					this.tokenBuilder_.mergeFrom(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder clearToken() {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-					onChanged();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
-				this.bitField0_ |= 0x00000001;
-				onChanged();
-				return getTokenFieldBuilder().getBuilder();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-				if (this.tokenBuilder_ != null) {
-					return this.tokenBuilder_.getMessageOrBuilder();
-				} else {
-					return this.token_;
-				}
-			}
-
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
-				if (this.tokenBuilder_ == null) {
-					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
-							this.token_, getParentForChildren(), isClean());
-					this.token_ = null;
-				}
-				return this.tokenBuilder_;
-			}
-
-			// required string key = 2;
-			private java.lang.Object key_ = "";
-
-			@Override
-			public boolean hasKey() {
-				return ((this.bitField0_ & 0x00000002) == 0x00000002);
-			}
-
-			@Override
-			public String getKey() {
-				java.lang.Object ref = this.key_;
-				if (!(ref instanceof String)) {
-					String s = ((com.google.protobuf.ByteString) ref)
-							.toStringUtf8();
-					this.key_ = s;
-					return s;
-				} else {
-					return (String) ref;
-				}
-			}
-
-			public Builder setKey(String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				this.bitField0_ |= 0x00000002;
-				this.key_ = value;
-				onChanged();
-				return this;
-			}
-
-			public Builder clearKey() {
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.key_ = getDefaultInstance().getKey();
-				onChanged();
-				return this;
-			}
-
-			void setKey(com.google.protobuf.ByteString value) {
-				this.bitField0_ |= 0x00000002;
-				this.key_ = value;
-				onChanged();
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.DeleteRequest)
-		}
-
-		static {
-			defaultInstance = new DeleteRequest(true);
-			DeleteRequest.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.DeleteRequest)
-	}
-
-	public interface ListRequestOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		boolean hasToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
-	}
-
-	public static final class ListRequest extends
-			com.google.protobuf.GeneratedMessage implements
-			ListRequestOrBuilder {
-
-		// Use ListRequest.newBuilder() to construct.
-		private ListRequest(Builder builder) {
-			super(builder);
-		}
-
-		private ListRequest(boolean noInit) {
-		}
-
-		private static final ListRequest defaultInstance;
-
-		public static ListRequest getDefaultInstance() {
-			return ListRequest.defaultInstance;
-		}
-
-		@Override
-		public ListRequest getDefaultInstanceForType() {
-			return ListRequest.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		public static final int TOKEN_FIELD_NUMBER = 1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-		@Override
-		public boolean hasToken() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-			return this.token_;
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-			return this.token_;
-		}
-
-		private void initFields() {
-			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasToken()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!getToken().isInitialized()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeMessage(1, this.token_);
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(1, this.token_);
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequestOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-					getTokenFieldBuilder();
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				if (this.tokenBuilder_ == null) {
-					result.token_ = this.token_;
-				} else {
-					result.token_ = this.tokenBuilder_.build();
-				}
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasToken()) {
-					mergeToken(other.getToken());
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasToken()) {
-
-					return false;
-				}
-				if (!getToken().isInitialized()) {
-
-					return false;
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder();
-						if (hasToken()) {
-							subBuilder.mergeFrom(getToken());
-						}
-						input.readMessage(subBuilder, extensionRegistry);
-						setToken(subBuilder.buildPartial());
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
-			@Override
-			public boolean hasToken() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-				if (this.tokenBuilder_ == null) {
-					return this.token_;
-				} else {
-					return this.tokenBuilder_.getMessage();
-				}
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					this.token_ = value;
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = builderForValue.build();
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(builderForValue.build());
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder mergeToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000001) == 0x00000001)
-							&& (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-									.getDefaultInstance())) {
-						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder(this.token_).mergeFrom(value)
-								.buildPartial();
-					} else {
-						this.token_ = value;
-					}
-					onChanged();
-				} else {
-					this.tokenBuilder_.mergeFrom(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder clearToken() {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-					onChanged();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
-				this.bitField0_ |= 0x00000001;
-				onChanged();
-				return getTokenFieldBuilder().getBuilder();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-				if (this.tokenBuilder_ != null) {
-					return this.tokenBuilder_.getMessageOrBuilder();
-				} else {
-					return this.token_;
-				}
-			}
-
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
-				if (this.tokenBuilder_ == null) {
-					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
-							this.token_, getParentForChildren(), isClean());
-					this.token_ = null;
-				}
-				return this.tokenBuilder_;
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.ListRequest)
-		}
-
-		static {
-			defaultInstance = new ListRequest(true);
-			ListRequest.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.ListRequest)
-	}
-
-	public interface ListReplyOrBuilder extends
-			com.google.protobuf.MessageOrBuilder {
-
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		boolean hasToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
-
-		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
-
-		// repeated string keys = 2;
-		java.util.List<String> getKeysList();
-
-		int getKeysCount();
-
-		String getKeys(int index);
-	}
-
-	public static final class ListReply extends
-			com.google.protobuf.GeneratedMessage implements ListReplyOrBuilder {
-
-		// Use ListReply.newBuilder() to construct.
-		private ListReply(Builder builder) {
-			super(builder);
-		}
-
-		private ListReply(boolean noInit) {
-		}
-
-		private static final ListReply defaultInstance;
-
-		public static ListReply getDefaultInstance() {
-			return ListReply.defaultInstance;
-		}
-
-		@Override
-		public ListReply getDefaultInstanceForType() {
-			return ListReply.defaultInstance;
-		}
-
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
-		}
-
-		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-			return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable;
-		}
-
-		private int bitField0_;
-		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-		public static final int TOKEN_FIELD_NUMBER = 1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-		@Override
-		public boolean hasToken() {
-			return ((this.bitField0_ & 0x00000001) == 0x00000001);
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-			return this.token_;
-		}
-
-		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-			return this.token_;
-		}
-
-		// repeated string keys = 2;
-		public static final int KEYS_FIELD_NUMBER = 2;
-		private com.google.protobuf.LazyStringList keys_;
-
-		@Override
-		public java.util.List<String> getKeysList() {
-			return this.keys_;
-		}
-
-		@Override
-		public int getKeysCount() {
-			return this.keys_.size();
-		}
-
-		@Override
-		public String getKeys(int index) {
-			return this.keys_.get(index);
-		}
-
-		private void initFields() {
-			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			this.keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-		}
-
-		private byte memoizedIsInitialized = -1;
-
-		@Override
-		public final boolean isInitialized() {
-			byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
-				return isInitialized == 1;
-			}
-
-			if (!hasToken()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			if (!getToken().isInitialized()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
-			this.memoizedIsInitialized = 1;
-			return true;
-		}
-
-		@Override
-		public void writeTo(com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException {
-			getSerializedSize();
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				output.writeMessage(1, this.token_);
-			}
-			for (int i = 0; i < this.keys_.size(); i++) {
-				output.writeBytes(2, this.keys_.getByteString(i));
-			}
-			getUnknownFields().writeTo(output);
-		}
-
-		private int memoizedSerializedSize = -1;
-
-		@Override
-		public int getSerializedSize() {
-			int size = this.memoizedSerializedSize;
-			if (size != -1) {
-				return size;
-			}
-
-			size = 0;
-			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-				size += com.google.protobuf.CodedOutputStream
-						.computeMessageSize(1, this.token_);
-			}
-			{
-				int dataSize = 0;
-				for (int i = 0; i < this.keys_.size(); i++) {
-					dataSize += com.google.protobuf.CodedOutputStream
-							.computeBytesSizeNoTag(this.keys_.getByteString(i));
-				}
-				size += dataSize;
-				size += 1 * getKeysList().size();
-			}
-			size += getUnknownFields().getSerializedSize();
-			this.memoizedSerializedSize = size;
-			return size;
-		}
-
-		private static final long serialVersionUID = 0L;
-
-		@java.lang.Override
-		protected java.lang.Object writeReplace()
-				throws java.io.ObjectStreamException {
-			return super.writeReplace();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				com.google.protobuf.ByteString data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				byte[] data,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException {
-			return newBuilder().mergeFrom(data, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseDelimitedFrom(
-				java.io.InputStream input) throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseDelimitedFrom(
-				java.io.InputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			Builder builder = newBuilder();
-			if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-				return builder.buildParsed();
-			} else {
-				return null;
-			}
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input).buildParsed();
-		}
-
-		public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-				com.google.protobuf.CodedInputStream input,
-				com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException {
-			return newBuilder().mergeFrom(input, extensionRegistry)
-					.buildParsed();
-		}
-
-		public static Builder newBuilder() {
-			return Builder.create();
-		}
-
-		@Override
-		public Builder newBuilderForType() {
-			return newBuilder();
-		}
-
-		public static Builder newBuilder(
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply prototype) {
-			return newBuilder().mergeFrom(prototype);
-		}
-
-		@Override
-		public Builder toBuilder() {
-			return newBuilder(this);
-		}
-
-		@java.lang.Override
-		protected Builder newBuilderForType(
-				com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-			Builder builder = new Builder(parent);
-			return builder;
-		}
-
-		public static final class Builder extends
-				com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReplyOrBuilder {
-
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
-			}
-
-			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable;
-			}
-
-			// Construct using eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply.newBuilder()
-			private Builder() {
-				maybeForceBuilderInitialization();
-			}
-
-			private Builder(BuilderParent parent) {
-				super(parent);
-				maybeForceBuilderInitialization();
-			}
-
-			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-					getTokenFieldBuilder();
-				}
-			}
-
-			private static Builder create() {
-				return new Builder();
-			}
-
-			@Override
-			public Builder clear() {
-				super.clear();
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				this.keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				return this;
-			}
-
-			@Override
-			public Builder clone() {
-				return create().mergeFrom(buildPartial());
-			}
-
-			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply
-						.getDescriptor();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply getDefaultInstanceForType() {
-				return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply
-						.getDefaultInstance();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply build() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result);
-				}
-				return result;
-			}
-
-			private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply buildParsed()
-					throws com.google.protobuf.InvalidProtocolBufferException {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = buildPartial();
-				if (!result.isInitialized()) {
-					throw newUninitializedMessageException(result)
-							.asInvalidProtocolBufferException();
-				}
-				return result;
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply buildPartial() {
-				eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply(
-						this);
-				int from_bitField0_ = this.bitField0_;
-				int to_bitField0_ = 0;
-				if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-					to_bitField0_ |= 0x00000001;
-				}
-				if (this.tokenBuilder_ == null) {
-					result.token_ = this.token_;
-				} else {
-					result.token_ = this.tokenBuilder_.build();
-				}
-				if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-					this.keys_ = new com.google.protobuf.UnmodifiableLazyStringList(
-							this.keys_);
-					this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				}
-				result.keys_ = this.keys_;
-				result.bitField0_ = to_bitField0_;
-				onBuilt();
-				return result;
-			}
-
-			@Override
-			public Builder mergeFrom(com.google.protobuf.Message other) {
-				if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply) {
-					return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply) other);
-				} else {
-					super.mergeFrom(other);
-					return this;
-				}
-			}
-
-			public Builder mergeFrom(
-					eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply other) {
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply
-						.getDefaultInstance()) {
-					return this;
-				}
-				if (other.hasToken()) {
-					mergeToken(other.getToken());
-				}
-				if (!other.keys_.isEmpty()) {
-					if (this.keys_.isEmpty()) {
-						this.keys_ = other.keys_;
-						this.bitField0_ = (this.bitField0_ & ~0x00000002);
-					} else {
-						ensureKeysIsMutable();
-						this.keys_.addAll(other.keys_);
-					}
-					onChanged();
-				}
-				this.mergeUnknownFields(other.getUnknownFields());
-				return this;
-			}
-
-			@Override
-			public final boolean isInitialized() {
-				if (!hasToken()) {
-
-					return false;
-				}
-				if (!getToken().isInitialized()) {
-
-					return false;
-				}
-				return true;
-			}
-
-			@Override
-			public Builder mergeFrom(
-					com.google.protobuf.CodedInputStream input,
-					com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException {
-				com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
-						.newBuilder(this.getUnknownFields());
-				while (true) {
-					int tag = input.readTag();
-					switch (tag) {
-					case 0:
-						this.setUnknownFields(unknownFields.build());
-						onChanged();
-						return this;
-					default: {
-						if (!parseUnknownField(input, unknownFields,
-								extensionRegistry, tag)) {
-							this.setUnknownFields(unknownFields.build());
-							onChanged();
-							return this;
-						}
-						break;
-					}
-					case 10: {
-						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder();
-						if (hasToken()) {
-							subBuilder.mergeFrom(getToken());
-						}
-						input.readMessage(subBuilder, extensionRegistry);
-						setToken(subBuilder.buildPartial());
-						break;
-					}
-					case 18: {
-						ensureKeysIsMutable();
-						this.keys_.add(input.readBytes());
-						break;
-					}
-					}
-				}
-			}
-
-			private int bitField0_;
-
-			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
-			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-					.getDefaultInstance();
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
-			@Override
-			public boolean hasToken() {
-				return ((this.bitField0_ & 0x00000001) == 0x00000001);
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
-				if (this.tokenBuilder_ == null) {
-					return this.token_;
-				} else {
-					return this.tokenBuilder_.getMessage();
-				}
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (value == null) {
-						throw new NullPointerException();
-					}
-					this.token_ = value;
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder setToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = builderForValue.build();
-					onChanged();
-				} else {
-					this.tokenBuilder_.setMessage(builderForValue.build());
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder mergeToken(
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
-				if (this.tokenBuilder_ == null) {
-					if (((this.bitField0_ & 0x00000001) == 0x00000001)
-							&& (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-									.getDefaultInstance())) {
-						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-								.newBuilder(this.token_).mergeFrom(value)
-								.buildPartial();
-					} else {
-						this.token_ = value;
-					}
-					onChanged();
-				} else {
-					this.tokenBuilder_.mergeFrom(value);
-				}
-				this.bitField0_ |= 0x00000001;
-				return this;
-			}
-
-			public Builder clearToken() {
-				if (this.tokenBuilder_ == null) {
-					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-							.getDefaultInstance();
-					onChanged();
-				} else {
-					this.tokenBuilder_.clear();
-				}
-				this.bitField0_ = (this.bitField0_ & ~0x00000001);
-				return this;
-			}
-
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
-				this.bitField0_ |= 0x00000001;
-				onChanged();
-				return getTokenFieldBuilder().getBuilder();
-			}
-
-			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
-				if (this.tokenBuilder_ != null) {
-					return this.tokenBuilder_.getMessageOrBuilder();
-				} else {
-					return this.token_;
-				}
-			}
-
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
-				if (this.tokenBuilder_ == null) {
-					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
-							this.token_, getParentForChildren(), isClean());
-					this.token_ = null;
-				}
-				return this.tokenBuilder_;
-			}
-
-			// repeated string keys = 2;
-			private com.google.protobuf.LazyStringList keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-
-			private void ensureKeysIsMutable() {
-				if (!((this.bitField0_ & 0x00000002) == 0x00000002)) {
-					this.keys_ = new com.google.protobuf.LazyStringArrayList(
-							this.keys_);
-					this.bitField0_ |= 0x00000002;
-				}
-			}
-
-			@Override
-			public java.util.List<String> getKeysList() {
-				return java.util.Collections.unmodifiableList(this.keys_);
-			}
-
-			@Override
-			public int getKeysCount() {
-				return this.keys_.size();
-			}
-
-			@Override
-			public String getKeys(int index) {
-				return this.keys_.get(index);
-			}
-
-			public Builder setKeys(int index, String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				ensureKeysIsMutable();
-				this.keys_.set(index, value);
-				onChanged();
-				return this;
-			}
-
-			public Builder addKeys(String value) {
-				if (value == null) {
-					throw new NullPointerException();
-				}
-				ensureKeysIsMutable();
-				this.keys_.add(value);
-				onChanged();
-				return this;
-			}
-
-			public Builder addAllKeys(java.lang.Iterable<String> values) {
-				ensureKeysIsMutable();
-				super.addAll(values, this.keys_);
-				onChanged();
-				return this;
-			}
-
-			public Builder clearKeys() {
-				this.keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				onChanged();
-				return this;
-			}
-
-			void addKeys(com.google.protobuf.ByteString value) {
-				ensureKeysIsMutable();
-				this.keys_.add(value);
-				onChanged();
-			}
-
-			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.ListReply)
-		}
-
-		static {
-			defaultInstance = new ListReply(true);
-			ListReply.defaultInstance.initFields();
-		}
-
-		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.ListReply)
-	}
-
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable;
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable;
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable;
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable;
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable;
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable;
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable;
-	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
-	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable;
-
-	public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
-		return KeyValuePayloads.descriptor;
-	}
-
-	private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-	static {
-		java.lang.String[] descriptorData = {
-				"\n\rkvstore.proto\022\030mosaic_cloud.idl.kvstor"
-						+ "e\032\014common.proto\"V\n\013InitRequest\0227\n\005token\030"
-						+ "\001 \002(\0132(.mosaic_cloud.idl.common.Completi"
-						+ "onToken\022\016\n\006bucket\030\002 \002(\t\"%\n\007KVEntry\022\013\n\003ke"
-						+ "y\030\001 \002(\t\022\r\n\005value\030\002 \002(\014\"v\n\nSetRequest\0227\n\005"
-						+ "token\030\001 \002(\0132(.mosaic_cloud.idl.common.Co"
-						+ "mpletionToken\022\013\n\003key\030\002 \002(\t\022\023\n\010exp_time\030\003"
-						+ " \001(\005:\0010\022\r\n\005value\030\004 \002(\014\"R\n\nGetRequest\0227\n\005"
-						+ "token\030\001 \002(\0132(.mosaic_cloud.idl.common.Co"
-						+ "mpletionToken\022\013\n\003key\030\002 \003(\t\"w\n\010GetReply\0227",
-				"\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.common."
-						+ "CompletionToken\0222\n\007results\030\002 \003(\0132!.mosai"
-						+ "c_cloud.idl.kvstore.KVEntry\"U\n\rDeleteReq"
-						+ "uest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.c"
-						+ "ommon.CompletionToken\022\013\n\003key\030\002 \002(\t\"F\n\013Li"
-						+ "stRequest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud."
-						+ "idl.common.CompletionToken\"R\n\tListReply\022"
-						+ "7\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.common"
-						+ ".CompletionToken\022\014\n\004keys\030\002 \003(\tB0\n\032mosaic"
-						+ ".interop.idl.kvstoreB\020KeyValuePayloadsH\001" };
-		com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner = new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-
-			@Override
-			public com.google.protobuf.ExtensionRegistry assignDescriptors(
-					com.google.protobuf.Descriptors.FileDescriptor root) {
-				KeyValuePayloads.descriptor = root;
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor = getDescriptor()
-						.getMessageTypes().get(0);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor,
-						new java.lang.String[] { "Token", "Bucket", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest.Builder.class);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor = getDescriptor()
-						.getMessageTypes().get(1);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor,
-						new java.lang.String[] { "Key", "Value", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder.class);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor = getDescriptor()
-						.getMessageTypes().get(2);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor,
-						new java.lang.String[] { "Token", "Key", "ExpTime",
-								"Value", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest.Builder.class);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor = getDescriptor()
-						.getMessageTypes().get(3);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor,
-						new java.lang.String[] { "Token", "Key", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest.Builder.class);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor = getDescriptor()
-						.getMessageTypes().get(4);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor,
-						new java.lang.String[] { "Token", "Results", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply.Builder.class);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor = getDescriptor()
-						.getMessageTypes().get(5);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor,
-						new java.lang.String[] { "Token", "Key", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest.Builder.class);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor = getDescriptor()
-						.getMessageTypes().get(6);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor,
-						new java.lang.String[] { "Token", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest.Builder.class);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor = getDescriptor()
-						.getMessageTypes().get(7);
-				KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-						KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor,
-						new java.lang.String[] { "Token", "Keys", },
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply.class,
-						eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply.Builder.class);
-				return null;
-			}
-		};
-		com.google.protobuf.Descriptors.FileDescriptor
-				.internalBuildGeneratedFileFrom(
-						descriptorData,
-						new com.google.protobuf.Descriptors.FileDescriptor[] { eu.mosaic_cloud.platform.interop.idl.IdlCommon
-								.getDescriptor(), }, assigner);
-	}
-
-	// @@protoc_insertion_point(outer_class_scope)
+    public static final class DeleteRequest extends com.google.protobuf.GeneratedMessage implements
+            DeleteRequestOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder>
+                implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequestOrBuilder {
+
+            private int bitField0_;
+
+            // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+            private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+
+            // required string key = 2;
+            private java.lang.Object key_ = "";
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (this.tokenBuilder_ == null) {
+                    result.token_ = this.token_;
+                } else {
+                    result.token_ = this.tokenBuilder_.build();
+                }
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.key_ = this.key_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                this.key_ = "";
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                return this;
+            }
+
+            public Builder clearKey() {
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                this.key_ = getDefaultInstance().getKey();
+                onChanged();
+                return this;
+            }
+
+            public Builder clearToken() {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest
+                        .getDescriptor();
+            }
+
+            @Override
+            public String getKey() {
+                final java.lang.Object ref = this.key_;
+                if (!(ref instanceof String)) {
+                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    this.key_ = s;
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+                if (this.tokenBuilder_ == null) {
+                    return this.token_;
+                } else {
+                    return this.tokenBuilder_.getMessage();
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
+                this.bitField0_ |= 0x00000001;
+                onChanged();
+                return getTokenFieldBuilder().getBuilder();
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
+                if (this.tokenBuilder_ == null) {
+                    this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
+                            this.token_, getParentForChildren(), isClean());
+                    this.token_ = null;
+                }
+                return this.tokenBuilder_;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+                if (this.tokenBuilder_ != null) {
+                    return this.tokenBuilder_.getMessageOrBuilder();
+                } else {
+                    return this.token_;
+                }
+            }
+
+            @Override
+            public boolean hasKey() {
+                return ((this.bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            @Override
+            public boolean hasToken() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasToken()) {
+                    return false;
+                }
+                if (!hasKey()) {
+                    return false;
+                }
+                if (!getToken().isInitialized()) {
+                    return false;
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getTokenFieldBuilder();
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder();
+                        if (hasToken()) {
+                            subBuilder.mergeFrom(getToken());
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        setToken(subBuilder.buildPartial());
+                        break;
+                    }
+                    case 18: {
+                        this.bitField0_ |= 0x00000002;
+                        this.key_ = input.readBytes();
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasToken()) {
+                    mergeToken(other.getToken());
+                }
+                if (other.hasKey()) {
+                    setKey(other.getKey());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public Builder mergeToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000001) == 0x00000001)
+                            && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                    .getDefaultInstance())) {
+                        this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                    } else {
+                        this.token_ = value;
+                    }
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.mergeFrom(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            void setKey(com.google.protobuf.ByteString value) {
+                this.bitField0_ |= 0x00000002;
+                this.key_ = value;
+                onChanged();
+            }
+
+            public Builder setKey(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.bitField0_ |= 0x00000002;
+                this.key_ = value;
+                onChanged();
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    this.token_ = value;
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(builderForValue.build());
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.DeleteRequest)
+        }
+
+        private static final DeleteRequest defaultInstance;
+
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // required string key = 2;
+        public static final int KEY_FIELD_NUMBER = 2;
+
+        private java.lang.Object key_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new DeleteRequest(true);
+            DeleteRequest.defaultInstance.initFields();
+        }
+
+        private DeleteRequest(boolean noInit) {
+        }
+
+        // Use DeleteRequest.newBuilder() to construct.
+        private DeleteRequest(Builder builder) {
+            super(builder);
+        }
+
+        public static DeleteRequest getDefaultInstance() {
+            return DeleteRequest.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public DeleteRequest getDefaultInstanceForType() {
+            return DeleteRequest.defaultInstance;
+        }
+
+        @Override
+        public String getKey() {
+            final java.lang.Object ref = this.key_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                final com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                final String s = bs.toStringUtf8();
+                if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+                    this.key_ = s;
+                }
+                return s;
+            }
+        }
+
+        private com.google.protobuf.ByteString getKeyBytes() {
+            final java.lang.Object ref = this.key_;
+            if (ref instanceof String) {
+                final com.google.protobuf.ByteString b = com.google.protobuf.ByteString
+                        .copyFromUtf8((String) ref);
+                this.key_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getKeyBytes());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+            return this.token_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+            return this.token_;
+        }
+
+        @Override
+        public boolean hasKey() {
+            return ((this.bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        @Override
+        public boolean hasToken() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        private void initFields() {
+            this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+            this.key_ = "";
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasToken()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasKey()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!getToken().isInitialized()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, this.token_);
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBytes(2, getKeyBytes());
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.DeleteRequest)
+    }
+
+    public interface DeleteRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        String getKey();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
+
+        // required string key = 2;
+        boolean hasKey();
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        boolean hasToken();
+    }
+
+    public static final class GetReply extends com.google.protobuf.GeneratedMessage implements
+            GetReplyOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReplyOrBuilder {
+
+            private int bitField0_;
+
+            // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+            private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+
+            // repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
+            private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_ = java.util.Collections
+                    .emptyList();
+
+            private com.google.protobuf.RepeatedFieldBuilder<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> resultsBuilder_;
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
+            }
+
+            public Builder addAllResults(
+                    java.lang.Iterable<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> values) {
+                if (this.resultsBuilder_ == null) {
+                    ensureResultsIsMutable();
+                    super.addAll(values, this.results_);
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            public Builder addResults(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry value) {
+                if (this.resultsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureResultsIsMutable();
+                    this.results_.add(value);
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            public Builder addResults(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder builderForValue) {
+                if (this.resultsBuilder_ == null) {
+                    ensureResultsIsMutable();
+                    this.results_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            public Builder addResults(int index,
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry value) {
+                if (this.resultsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureResultsIsMutable();
+                    this.results_.add(index, value);
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            public Builder addResults(
+                    int index,
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder builderForValue) {
+                if (this.resultsBuilder_ == null) {
+                    ensureResultsIsMutable();
+                    this.results_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder addResultsBuilder() {
+                return getResultsFieldBuilder().addBuilder(
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
+                                .getDefaultInstance());
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder addResultsBuilder(
+                    int index) {
+                return getResultsFieldBuilder().addBuilder(
+                        index,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
+                                .getDefaultInstance());
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (this.tokenBuilder_ == null) {
+                    result.token_ = this.token_;
+                } else {
+                    result.token_ = this.tokenBuilder_.build();
+                }
+                if (this.resultsBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                        this.results_ = java.util.Collections.unmodifiableList(this.results_);
+                        this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                    }
+                    result.results_ = this.results_;
+                } else {
+                    result.results_ = this.resultsBuilder_.build();
+                }
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                if (this.resultsBuilder_ == null) {
+                    this.results_ = java.util.Collections.emptyList();
+                    this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                } else {
+                    this.resultsBuilder_.clear();
+                }
+                return this;
+            }
+
+            public Builder clearResults() {
+                if (this.resultsBuilder_ == null) {
+                    this.results_ = java.util.Collections.emptyList();
+                    this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.clear();
+                }
+                return this;
+            }
+
+            public Builder clearToken() {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            private void ensureResultsIsMutable() {
+                if (!((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                    this.results_ = new java.util.ArrayList<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry>(
+                            this.results_);
+                    this.bitField0_ |= 0x00000002;
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply
+                        .getDescriptor();
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getResults(
+                    int index) {
+                if (this.resultsBuilder_ == null) {
+                    return this.results_.get(index);
+                } else {
+                    return this.resultsBuilder_.getMessage(index);
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder getResultsBuilder(
+                    int index) {
+                return getResultsFieldBuilder().getBuilder(index);
+            }
+
+            public java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder> getResultsBuilderList() {
+                return getResultsFieldBuilder().getBuilderList();
+            }
+
+            @Override
+            public int getResultsCount() {
+                if (this.resultsBuilder_ == null) {
+                    return this.results_.size();
+                } else {
+                    return this.resultsBuilder_.getCount();
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsFieldBuilder() {
+                if (this.resultsBuilder_ == null) {
+                    this.resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder>(
+                            this.results_, ((this.bitField0_ & 0x00000002) == 0x00000002),
+                            getParentForChildren(), isClean());
+                    this.results_ = null;
+                }
+                return this.resultsBuilder_;
+            }
+
+            @Override
+            public java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> getResultsList() {
+                if (this.resultsBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(this.results_);
+                } else {
+                    return this.resultsBuilder_.getMessageList();
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder getResultsOrBuilder(
+                    int index) {
+                if (this.resultsBuilder_ == null) {
+                    return this.results_.get(index);
+                } else {
+                    return this.resultsBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            @Override
+            public java.util.List<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsOrBuilderList() {
+                if (this.resultsBuilder_ != null) {
+                    return this.resultsBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(this.results_);
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+                if (this.tokenBuilder_ == null) {
+                    return this.token_;
+                } else {
+                    return this.tokenBuilder_.getMessage();
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
+                this.bitField0_ |= 0x00000001;
+                onChanged();
+                return getTokenFieldBuilder().getBuilder();
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
+                if (this.tokenBuilder_ == null) {
+                    this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
+                            this.token_, getParentForChildren(), isClean());
+                    this.token_ = null;
+                }
+                return this.tokenBuilder_;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+                if (this.tokenBuilder_ != null) {
+                    return this.tokenBuilder_.getMessageOrBuilder();
+                } else {
+                    return this.token_;
+                }
+            }
+
+            @Override
+            public boolean hasToken() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasToken()) {
+                    return false;
+                }
+                if (!getToken().isInitialized()) {
+                    return false;
+                }
+                for (int i = 0; i < getResultsCount(); i++) {
+                    if (!getResults(i).isInitialized()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getTokenFieldBuilder();
+                    getResultsFieldBuilder();
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder();
+                        if (hasToken()) {
+                            subBuilder.mergeFrom(getToken());
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        setToken(subBuilder.buildPartial());
+                        break;
+                    }
+                    case 18: {
+                        final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
+                                .newBuilder();
+                        input.readMessage(subBuilder, extensionRegistry);
+                        addResults(subBuilder.buildPartial());
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasToken()) {
+                    mergeToken(other.getToken());
+                }
+                if (this.resultsBuilder_ == null) {
+                    if (!other.results_.isEmpty()) {
+                        if (this.results_.isEmpty()) {
+                            this.results_ = other.results_;
+                            this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                        } else {
+                            ensureResultsIsMutable();
+                            this.results_.addAll(other.results_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.results_.isEmpty()) {
+                        if (this.resultsBuilder_.isEmpty()) {
+                            this.resultsBuilder_.dispose();
+                            this.resultsBuilder_ = null;
+                            this.results_ = other.results_;
+                            this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                            this.resultsBuilder_ = com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ? getResultsFieldBuilder()
+                                    : null;
+                        } else {
+                            this.resultsBuilder_.addAllMessages(other.results_);
+                        }
+                    }
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public Builder mergeToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000001) == 0x00000001)
+                            && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                    .getDefaultInstance())) {
+                        this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                    } else {
+                        this.token_ = value;
+                    }
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.mergeFrom(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder removeResults(int index) {
+                if (this.resultsBuilder_ == null) {
+                    ensureResultsIsMutable();
+                    this.results_.remove(index);
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            public Builder setResults(int index,
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry value) {
+                if (this.resultsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureResultsIsMutable();
+                    this.results_.set(index, value);
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            public Builder setResults(
+                    int index,
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder builderForValue) {
+                if (this.resultsBuilder_ == null) {
+                    ensureResultsIsMutable();
+                    this.results_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    this.resultsBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    this.token_ = value;
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(builderForValue.build());
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.GetReply)
+        }
+
+        private static final GetReply defaultInstance;
+
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
+        public static final int RESULTS_FIELD_NUMBER = 2;
+
+        private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new GetReply(true);
+            GetReply.defaultInstance.initFields();
+        }
+
+        private GetReply(boolean noInit) {
+        }
+
+        // Use GetReply.newBuilder() to construct.
+        private GetReply(Builder builder) {
+            super(builder);
+        }
+
+        public static GetReply getDefaultInstance() {
+            return GetReply.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public GetReply getDefaultInstanceForType() {
+            return GetReply.defaultInstance;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getResults(
+                int index) {
+            return this.results_.get(index);
+        }
+
+        @Override
+        public int getResultsCount() {
+            return this.results_.size();
+        }
+
+        @Override
+        public java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> getResultsList() {
+            return this.results_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder getResultsOrBuilder(
+                int index) {
+            return this.results_.get(index);
+        }
+
+        @Override
+        public java.util.List<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsOrBuilderList() {
+            return this.results_;
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+            }
+            for (int i = 0; i < this.results_.size(); i++) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(2,
+                        this.results_.get(i));
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+            return this.token_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+            return this.token_;
+        }
+
+        @Override
+        public boolean hasToken() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        private void initFields() {
+            this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+            this.results_ = java.util.Collections.emptyList();
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasToken()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!getToken().isInitialized()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            for (int i = 0; i < getResultsCount(); i++) {
+                if (!getResults(i).isInitialized()) {
+                    this.memoizedIsInitialized = 0;
+                    return false;
+                }
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, this.token_);
+            }
+            for (int i = 0; i < this.results_.size(); i++) {
+                output.writeMessage(2, this.results_.get(i));
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.GetReply)
+    }
+
+    public interface GetReplyOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getResults(int index);
+
+        int getResultsCount();
+
+        // repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
+        java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> getResultsList();
+
+        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder getResultsOrBuilder(
+                int index);
+
+        java.util.List<? extends eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> getResultsOrBuilderList();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        boolean hasToken();
+    }
+
+    public static final class GetRequest extends com.google.protobuf.GeneratedMessage implements
+            GetRequestOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequestOrBuilder {
+
+            private int bitField0_;
+
+            // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+            private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+
+            // repeated string key = 2;
+            private com.google.protobuf.LazyStringList key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
+            }
+
+            public Builder addAllKey(java.lang.Iterable<String> values) {
+                ensureKeyIsMutable();
+                super.addAll(values, this.key_);
+                onChanged();
+                return this;
+            }
+
+            void addKey(com.google.protobuf.ByteString value) {
+                ensureKeyIsMutable();
+                this.key_.add(value);
+                onChanged();
+            }
+
+            public Builder addKey(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureKeyIsMutable();
+                this.key_.add(value);
+                onChanged();
+                return this;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (this.tokenBuilder_ == null) {
+                    result.token_ = this.token_;
+                } else {
+                    result.token_ = this.tokenBuilder_.build();
+                }
+                if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                    this.key_ = new com.google.protobuf.UnmodifiableLazyStringList(this.key_);
+                    this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                }
+                result.key_ = this.key_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                this.key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                return this;
+            }
+
+            public Builder clearKey() {
+                this.key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                onChanged();
+                return this;
+            }
+
+            public Builder clearToken() {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            private void ensureKeyIsMutable() {
+                if (!((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                    this.key_ = new com.google.protobuf.LazyStringArrayList(this.key_);
+                    this.bitField0_ |= 0x00000002;
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest
+                        .getDescriptor();
+            }
+
+            @Override
+            public String getKey(int index) {
+                return this.key_.get(index);
+            }
+
+            @Override
+            public int getKeyCount() {
+                return this.key_.size();
+            }
+
+            @Override
+            public java.util.List<String> getKeyList() {
+                return java.util.Collections.unmodifiableList(this.key_);
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+                if (this.tokenBuilder_ == null) {
+                    return this.token_;
+                } else {
+                    return this.tokenBuilder_.getMessage();
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
+                this.bitField0_ |= 0x00000001;
+                onChanged();
+                return getTokenFieldBuilder().getBuilder();
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
+                if (this.tokenBuilder_ == null) {
+                    this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
+                            this.token_, getParentForChildren(), isClean());
+                    this.token_ = null;
+                }
+                return this.tokenBuilder_;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+                if (this.tokenBuilder_ != null) {
+                    return this.tokenBuilder_.getMessageOrBuilder();
+                } else {
+                    return this.token_;
+                }
+            }
+
+            @Override
+            public boolean hasToken() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasToken()) {
+                    return false;
+                }
+                if (!getToken().isInitialized()) {
+                    return false;
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getTokenFieldBuilder();
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder();
+                        if (hasToken()) {
+                            subBuilder.mergeFrom(getToken());
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        setToken(subBuilder.buildPartial());
+                        break;
+                    }
+                    case 18: {
+                        ensureKeyIsMutable();
+                        this.key_.add(input.readBytes());
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasToken()) {
+                    mergeToken(other.getToken());
+                }
+                if (!other.key_.isEmpty()) {
+                    if (this.key_.isEmpty()) {
+                        this.key_ = other.key_;
+                        this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                    } else {
+                        ensureKeyIsMutable();
+                        this.key_.addAll(other.key_);
+                    }
+                    onChanged();
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public Builder mergeToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000001) == 0x00000001)
+                            && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                    .getDefaultInstance())) {
+                        this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                    } else {
+                        this.token_ = value;
+                    }
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.mergeFrom(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setKey(int index, String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureKeyIsMutable();
+                this.key_.set(index, value);
+                onChanged();
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    this.token_ = value;
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(builderForValue.build());
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.GetRequest)
+        }
+
+        private static final GetRequest defaultInstance;
+
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // repeated string key = 2;
+        public static final int KEY_FIELD_NUMBER = 2;
+
+        private com.google.protobuf.LazyStringList key_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new GetRequest(true);
+            GetRequest.defaultInstance.initFields();
+        }
+
+        private GetRequest(boolean noInit) {
+        }
+
+        // Use GetRequest.newBuilder() to construct.
+        private GetRequest(Builder builder) {
+            super(builder);
+        }
+
+        public static GetRequest getDefaultInstance() {
+            return GetRequest.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public GetRequest getDefaultInstanceForType() {
+            return GetRequest.defaultInstance;
+        }
+
+        @Override
+        public String getKey(int index) {
+            return this.key_.get(index);
+        }
+
+        @Override
+        public int getKeyCount() {
+            return this.key_.size();
+        }
+
+        @Override
+        public java.util.List<String> getKeyList() {
+            return this.key_;
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+            }
+            {
+                int dataSize = 0;
+                for (int i = 0; i < this.key_.size(); i++) {
+                    dataSize += com.google.protobuf.CodedOutputStream
+                            .computeBytesSizeNoTag(this.key_.getByteString(i));
+                }
+                size += dataSize;
+                size += 1 * getKeyList().size();
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+            return this.token_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+            return this.token_;
+        }
+
+        @Override
+        public boolean hasToken() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        private void initFields() {
+            this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+            this.key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasToken()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!getToken().isInitialized()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, this.token_);
+            }
+            for (int i = 0; i < this.key_.size(); i++) {
+                output.writeBytes(2, this.key_.getByteString(i));
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.GetRequest)
+    }
+
+    public interface GetRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        String getKey(int index);
+
+        int getKeyCount();
+
+        // repeated string key = 2;
+        java.util.List<String> getKeyList();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        boolean hasToken();
+    }
+
+    public static final class InitRequest extends com.google.protobuf.GeneratedMessage implements
+            InitRequestOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequestOrBuilder {
+
+            private int bitField0_;
+
+            // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+            private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+
+            // required string bucket = 2;
+            private java.lang.Object bucket_ = "";
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (this.tokenBuilder_ == null) {
+                    result.token_ = this.token_;
+                } else {
+                    result.token_ = this.tokenBuilder_.build();
+                }
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.bucket_ = this.bucket_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                this.bucket_ = "";
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                return this;
+            }
+
+            public Builder clearBucket() {
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                this.bucket_ = getDefaultInstance().getBucket();
+                onChanged();
+                return this;
+            }
+
+            public Builder clearToken() {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            @Override
+            public String getBucket() {
+                final java.lang.Object ref = this.bucket_;
+                if (!(ref instanceof String)) {
+                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    this.bucket_ = s;
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
+                        .getDescriptor();
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+                if (this.tokenBuilder_ == null) {
+                    return this.token_;
+                } else {
+                    return this.tokenBuilder_.getMessage();
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
+                this.bitField0_ |= 0x00000001;
+                onChanged();
+                return getTokenFieldBuilder().getBuilder();
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
+                if (this.tokenBuilder_ == null) {
+                    this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
+                            this.token_, getParentForChildren(), isClean());
+                    this.token_ = null;
+                }
+                return this.tokenBuilder_;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+                if (this.tokenBuilder_ != null) {
+                    return this.tokenBuilder_.getMessageOrBuilder();
+                } else {
+                    return this.token_;
+                }
+            }
+
+            @Override
+            public boolean hasBucket() {
+                return ((this.bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            @Override
+            public boolean hasToken() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasToken()) {
+                    return false;
+                }
+                if (!hasBucket()) {
+                    return false;
+                }
+                if (!getToken().isInitialized()) {
+                    return false;
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getTokenFieldBuilder();
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder();
+                        if (hasToken()) {
+                            subBuilder.mergeFrom(getToken());
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        setToken(subBuilder.buildPartial());
+                        break;
+                    }
+                    case 18: {
+                        this.bitField0_ |= 0x00000002;
+                        this.bucket_ = input.readBytes();
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasToken()) {
+                    mergeToken(other.getToken());
+                }
+                if (other.hasBucket()) {
+                    setBucket(other.getBucket());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public Builder mergeToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000001) == 0x00000001)
+                            && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                    .getDefaultInstance())) {
+                        this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                    } else {
+                        this.token_ = value;
+                    }
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.mergeFrom(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            void setBucket(com.google.protobuf.ByteString value) {
+                this.bitField0_ |= 0x00000002;
+                this.bucket_ = value;
+                onChanged();
+            }
+
+            public Builder setBucket(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.bitField0_ |= 0x00000002;
+                this.bucket_ = value;
+                onChanged();
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    this.token_ = value;
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(builderForValue.build());
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.InitRequest)
+        }
+
+        private static final InitRequest defaultInstance;
+
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // required string bucket = 2;
+        public static final int BUCKET_FIELD_NUMBER = 2;
+
+        private java.lang.Object bucket_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new InitRequest(true);
+            InitRequest.defaultInstance.initFields();
+        }
+
+        private InitRequest(boolean noInit) {
+        }
+
+        // Use InitRequest.newBuilder() to construct.
+        private InitRequest(Builder builder) {
+            super(builder);
+        }
+
+        public static InitRequest getDefaultInstance() {
+            return InitRequest.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public String getBucket() {
+            final java.lang.Object ref = this.bucket_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                final com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                final String s = bs.toStringUtf8();
+                if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+                    this.bucket_ = s;
+                }
+                return s;
+            }
+        }
+
+        private com.google.protobuf.ByteString getBucketBytes() {
+            final java.lang.Object ref = this.bucket_;
+            if (ref instanceof String) {
+                final com.google.protobuf.ByteString b = com.google.protobuf.ByteString
+                        .copyFromUtf8((String) ref);
+                this.bucket_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        @Override
+        public InitRequest getDefaultInstanceForType() {
+            return InitRequest.defaultInstance;
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getBucketBytes());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+            return this.token_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+            return this.token_;
+        }
+
+        @Override
+        public boolean hasBucket() {
+            return ((this.bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        @Override
+        public boolean hasToken() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        private void initFields() {
+            this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+            this.bucket_ = "";
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasToken()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasBucket()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!getToken().isInitialized()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, this.token_);
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBytes(2, getBucketBytes());
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.InitRequest)
+    }
+
+    public interface InitRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        String getBucket();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
+
+        // required string bucket = 2;
+        boolean hasBucket();
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        boolean hasToken();
+    }
+
+    public static final class KVEntry extends com.google.protobuf.GeneratedMessage implements
+            KVEntryOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder {
+
+            private int bitField0_;
+
+            // required string key = 1;
+            private java.lang.Object key_ = "";
+
+            // required bytes value = 2;
+            private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                result.key_ = this.key_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.value_ = this.value_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                this.key_ = "";
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                this.value_ = com.google.protobuf.ByteString.EMPTY;
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                return this;
+            }
+
+            public Builder clearKey() {
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                this.key_ = getDefaultInstance().getKey();
+                onChanged();
+                return this;
+            }
+
+            public Builder clearValue() {
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                this.value_ = getDefaultInstance().getValue();
+                onChanged();
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
+                        .getDescriptor();
+            }
+
+            @Override
+            public String getKey() {
+                final java.lang.Object ref = this.key_;
+                if (!(ref instanceof String)) {
+                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    this.key_ = s;
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            @Override
+            public com.google.protobuf.ByteString getValue() {
+                return this.value_;
+            }
+
+            @Override
+            public boolean hasKey() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            public boolean hasValue() {
+                return ((this.bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasKey()) {
+                    return false;
+                }
+                if (!hasValue()) {
+                    return false;
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        this.bitField0_ |= 0x00000001;
+                        this.key_ = input.readBytes();
+                        break;
+                    }
+                    case 18: {
+                        this.bitField0_ |= 0x00000002;
+                        this.value_ = input.readBytes();
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasKey()) {
+                    setKey(other.getKey());
+                }
+                if (other.hasValue()) {
+                    setValue(other.getValue());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            void setKey(com.google.protobuf.ByteString value) {
+                this.bitField0_ |= 0x00000001;
+                this.key_ = value;
+                onChanged();
+            }
+
+            public Builder setKey(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.bitField0_ |= 0x00000001;
+                this.key_ = value;
+                onChanged();
+                return this;
+            }
+
+            public Builder setValue(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.bitField0_ |= 0x00000002;
+                this.value_ = value;
+                onChanged();
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.KVEntry)
+        }
+
+        private static final KVEntry defaultInstance;
+
+        private int bitField0_;
+
+        // required string key = 1;
+        public static final int KEY_FIELD_NUMBER = 1;
+
+        private java.lang.Object key_;
+
+        // required bytes value = 2;
+        public static final int VALUE_FIELD_NUMBER = 2;
+
+        private com.google.protobuf.ByteString value_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new KVEntry(true);
+            KVEntry.defaultInstance.initFields();
+        }
+
+        private KVEntry(boolean noInit) {
+        }
+
+        // Use KVEntry.newBuilder() to construct.
+        private KVEntry(Builder builder) {
+            super(builder);
+        }
+
+        public static KVEntry getDefaultInstance() {
+            return KVEntry.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public KVEntry getDefaultInstanceForType() {
+            return KVEntry.defaultInstance;
+        }
+
+        @Override
+        public String getKey() {
+            final java.lang.Object ref = this.key_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                final com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                final String s = bs.toStringUtf8();
+                if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+                    this.key_ = s;
+                }
+                return s;
+            }
+        }
+
+        private com.google.protobuf.ByteString getKeyBytes() {
+            final java.lang.Object ref = this.key_;
+            if (ref instanceof String) {
+                final com.google.protobuf.ByteString b = com.google.protobuf.ByteString
+                        .copyFromUtf8((String) ref);
+                this.key_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(1, getKeyBytes());
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, this.value_);
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public com.google.protobuf.ByteString getValue() {
+            return this.value_;
+        }
+
+        @Override
+        public boolean hasKey() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        @Override
+        public boolean hasValue() {
+            return ((this.bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        private void initFields() {
+            this.key_ = "";
+            this.value_ = com.google.protobuf.ByteString.EMPTY;
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasKey()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasValue()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeBytes(1, getKeyBytes());
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBytes(2, this.value_);
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.KVEntry)
+    }
+
+    public interface KVEntryOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        String getKey();
+
+        com.google.protobuf.ByteString getValue();
+
+        // required string key = 1;
+        boolean hasKey();
+
+        // required bytes value = 2;
+        boolean hasValue();
+    }
+
+    public static final class ListReply extends com.google.protobuf.GeneratedMessage implements
+            ListReplyOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReplyOrBuilder {
+
+            private int bitField0_;
+
+            // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+            private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+
+            // repeated string keys = 2;
+            private com.google.protobuf.LazyStringList keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
+            }
+
+            public Builder addAllKeys(java.lang.Iterable<String> values) {
+                ensureKeysIsMutable();
+                super.addAll(values, this.keys_);
+                onChanged();
+                return this;
+            }
+
+            void addKeys(com.google.protobuf.ByteString value) {
+                ensureKeysIsMutable();
+                this.keys_.add(value);
+                onChanged();
+            }
+
+            public Builder addKeys(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureKeysIsMutable();
+                this.keys_.add(value);
+                onChanged();
+                return this;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (this.tokenBuilder_ == null) {
+                    result.token_ = this.token_;
+                } else {
+                    result.token_ = this.tokenBuilder_.build();
+                }
+                if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                    this.keys_ = new com.google.protobuf.UnmodifiableLazyStringList(this.keys_);
+                    this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                }
+                result.keys_ = this.keys_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                this.keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                return this;
+            }
+
+            public Builder clearKeys() {
+                this.keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                onChanged();
+                return this;
+            }
+
+            public Builder clearToken() {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            private void ensureKeysIsMutable() {
+                if (!((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                    this.keys_ = new com.google.protobuf.LazyStringArrayList(this.keys_);
+                    this.bitField0_ |= 0x00000002;
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply
+                        .getDescriptor();
+            }
+
+            @Override
+            public String getKeys(int index) {
+                return this.keys_.get(index);
+            }
+
+            @Override
+            public int getKeysCount() {
+                return this.keys_.size();
+            }
+
+            @Override
+            public java.util.List<String> getKeysList() {
+                return java.util.Collections.unmodifiableList(this.keys_);
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+                if (this.tokenBuilder_ == null) {
+                    return this.token_;
+                } else {
+                    return this.tokenBuilder_.getMessage();
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
+                this.bitField0_ |= 0x00000001;
+                onChanged();
+                return getTokenFieldBuilder().getBuilder();
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
+                if (this.tokenBuilder_ == null) {
+                    this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
+                            this.token_, getParentForChildren(), isClean());
+                    this.token_ = null;
+                }
+                return this.tokenBuilder_;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+                if (this.tokenBuilder_ != null) {
+                    return this.tokenBuilder_.getMessageOrBuilder();
+                } else {
+                    return this.token_;
+                }
+            }
+
+            @Override
+            public boolean hasToken() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasToken()) {
+                    return false;
+                }
+                if (!getToken().isInitialized()) {
+                    return false;
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getTokenFieldBuilder();
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder();
+                        if (hasToken()) {
+                            subBuilder.mergeFrom(getToken());
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        setToken(subBuilder.buildPartial());
+                        break;
+                    }
+                    case 18: {
+                        ensureKeysIsMutable();
+                        this.keys_.add(input.readBytes());
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasToken()) {
+                    mergeToken(other.getToken());
+                }
+                if (!other.keys_.isEmpty()) {
+                    if (this.keys_.isEmpty()) {
+                        this.keys_ = other.keys_;
+                        this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                    } else {
+                        ensureKeysIsMutable();
+                        this.keys_.addAll(other.keys_);
+                    }
+                    onChanged();
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public Builder mergeToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000001) == 0x00000001)
+                            && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                    .getDefaultInstance())) {
+                        this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                    } else {
+                        this.token_ = value;
+                    }
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.mergeFrom(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setKeys(int index, String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureKeysIsMutable();
+                this.keys_.set(index, value);
+                onChanged();
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    this.token_ = value;
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(builderForValue.build());
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.ListReply)
+        }
+
+        private static final ListReply defaultInstance;
+
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // repeated string keys = 2;
+        public static final int KEYS_FIELD_NUMBER = 2;
+
+        private com.google.protobuf.LazyStringList keys_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new ListReply(true);
+            ListReply.defaultInstance.initFields();
+        }
+
+        private ListReply(boolean noInit) {
+        }
+
+        // Use ListReply.newBuilder() to construct.
+        private ListReply(Builder builder) {
+            super(builder);
+        }
+
+        public static ListReply getDefaultInstance() {
+            return ListReply.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public ListReply getDefaultInstanceForType() {
+            return ListReply.defaultInstance;
+        }
+
+        @Override
+        public String getKeys(int index) {
+            return this.keys_.get(index);
+        }
+
+        @Override
+        public int getKeysCount() {
+            return this.keys_.size();
+        }
+
+        @Override
+        public java.util.List<String> getKeysList() {
+            return this.keys_;
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+            }
+            {
+                int dataSize = 0;
+                for (int i = 0; i < this.keys_.size(); i++) {
+                    dataSize += com.google.protobuf.CodedOutputStream
+                            .computeBytesSizeNoTag(this.keys_.getByteString(i));
+                }
+                size += dataSize;
+                size += 1 * getKeysList().size();
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+            return this.token_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+            return this.token_;
+        }
+
+        @Override
+        public boolean hasToken() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        private void initFields() {
+            this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+            this.keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasToken()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!getToken().isInitialized()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, this.token_);
+            }
+            for (int i = 0; i < this.keys_.size(); i++) {
+                output.writeBytes(2, this.keys_.getByteString(i));
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.ListReply)
+    }
+
+    public interface ListReplyOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        String getKeys(int index);
+
+        int getKeysCount();
+
+        // repeated string keys = 2;
+        java.util.List<String> getKeysList();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        boolean hasToken();
+    }
+
+    public static final class ListRequest extends com.google.protobuf.GeneratedMessage implements
+            ListRequestOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequestOrBuilder {
+
+            private int bitField0_;
+
+            // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+            private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (this.tokenBuilder_ == null) {
+                    result.token_ = this.token_;
+                } else {
+                    result.token_ = this.tokenBuilder_.build();
+                }
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            public Builder clearToken() {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
+                        .getDescriptor();
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+                if (this.tokenBuilder_ == null) {
+                    return this.token_;
+                } else {
+                    return this.tokenBuilder_.getMessage();
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
+                this.bitField0_ |= 0x00000001;
+                onChanged();
+                return getTokenFieldBuilder().getBuilder();
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
+                if (this.tokenBuilder_ == null) {
+                    this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
+                            this.token_, getParentForChildren(), isClean());
+                    this.token_ = null;
+                }
+                return this.tokenBuilder_;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+                if (this.tokenBuilder_ != null) {
+                    return this.tokenBuilder_.getMessageOrBuilder();
+                } else {
+                    return this.token_;
+                }
+            }
+
+            @Override
+            public boolean hasToken() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasToken()) {
+                    return false;
+                }
+                if (!getToken().isInitialized()) {
+                    return false;
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getTokenFieldBuilder();
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder();
+                        if (hasToken()) {
+                            subBuilder.mergeFrom(getToken());
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        setToken(subBuilder.buildPartial());
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasToken()) {
+                    mergeToken(other.getToken());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public Builder mergeToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000001) == 0x00000001)
+                            && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                    .getDefaultInstance())) {
+                        this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                    } else {
+                        this.token_ = value;
+                    }
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.mergeFrom(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    this.token_ = value;
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(builderForValue.build());
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.ListRequest)
+        }
+
+        private static final ListRequest defaultInstance;
+
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new ListRequest(true);
+            ListRequest.defaultInstance.initFields();
+        }
+
+        private ListRequest(boolean noInit) {
+        }
+
+        // Use ListRequest.newBuilder() to construct.
+        private ListRequest(Builder builder) {
+            super(builder);
+        }
+
+        public static ListRequest getDefaultInstance() {
+            return ListRequest.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public ListRequest getDefaultInstanceForType() {
+            return ListRequest.defaultInstance;
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+            return this.token_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+            return this.token_;
+        }
+
+        @Override
+        public boolean hasToken() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        private void initFields() {
+            this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasToken()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!getToken().isInitialized()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, this.token_);
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.ListRequest)
+    }
+
+    public interface ListRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        boolean hasToken();
+    }
+
+    public static final class SetRequest extends com.google.protobuf.GeneratedMessage implements
+            SetRequestOrBuilder {
+
+        public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequestOrBuilder {
+
+            private int bitField0_;
+
+            // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+            private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+
+            // required string key = 2;
+            private java.lang.Object key_ = "";
+
+            // optional int32 exp_time = 3 [default = 0];
+            private int expTime_;
+
+            // required bytes value = 4;
+            private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+
+            // Construct using
+            // eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest build() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            private eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest buildParsed()
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result)
+                            .asInvalidProtocolBufferException();
+                }
+                return result;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest buildPartial() {
+                final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = new eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest(
+                        this);
+                final int from_bitField0_ = this.bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (this.tokenBuilder_ == null) {
+                    result.token_ = this.token_;
+                } else {
+                    result.token_ = this.tokenBuilder_.build();
+                }
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.key_ = this.key_;
+                if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.expTime_ = this.expTime_;
+                if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                    to_bitField0_ |= 0x00000008;
+                }
+                result.value_ = this.value_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+            }
+
+            @Override
+            public Builder clear() {
+                super.clear();
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                this.key_ = "";
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                this.expTime_ = 0;
+                this.bitField0_ = (this.bitField0_ & ~0x00000004);
+                this.value_ = com.google.protobuf.ByteString.EMPTY;
+                this.bitField0_ = (this.bitField0_ & ~0x00000008);
+                return this;
+            }
+
+            public Builder clearExpTime() {
+                this.bitField0_ = (this.bitField0_ & ~0x00000004);
+                this.expTime_ = 0;
+                onChanged();
+                return this;
+            }
+
+            public Builder clearKey() {
+                this.bitField0_ = (this.bitField0_ & ~0x00000002);
+                this.key_ = getDefaultInstance().getKey();
+                onChanged();
+                return this;
+            }
+
+            public Builder clearToken() {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                            .getDefaultInstance();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.clear();
+                }
+                this.bitField0_ = (this.bitField0_ & ~0x00000001);
+                return this;
+            }
+
+            public Builder clearValue() {
+                this.bitField0_ = (this.bitField0_ & ~0x00000008);
+                this.value_ = getDefaultInstance().getValue();
+                onChanged();
+                return this;
+            }
+
+            @Override
+            public Builder clone() {
+                return create().mergeFrom(buildPartial());
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest getDefaultInstanceForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest
+                        .getDefaultInstance();
+            }
+
+            @Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest
+                        .getDescriptor();
+            }
+
+            @Override
+            public int getExpTime() {
+                return this.expTime_;
+            }
+
+            @Override
+            public String getKey() {
+                final java.lang.Object ref = this.key_;
+                if (!(ref instanceof String)) {
+                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    this.key_ = s;
+                    return s;
+                } else {
+                    return (String) ref;
+                }
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+                if (this.tokenBuilder_ == null) {
+                    return this.token_;
+                } else {
+                    return this.tokenBuilder_.getMessage();
+                }
+            }
+
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder() {
+                this.bitField0_ |= 0x00000001;
+                onChanged();
+                return getTokenFieldBuilder().getBuilder();
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder() {
+                if (this.tokenBuilder_ == null) {
+                    this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder>(
+                            this.token_, getParentForChildren(), isClean());
+                    this.token_ = null;
+                }
+                return this.tokenBuilder_;
+            }
+
+            @Override
+            public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+                if (this.tokenBuilder_ != null) {
+                    return this.tokenBuilder_.getMessageOrBuilder();
+                } else {
+                    return this.token_;
+                }
+            }
+
+            @Override
+            public com.google.protobuf.ByteString getValue() {
+                return this.value_;
+            }
+
+            @Override
+            public boolean hasExpTime() {
+                return ((this.bitField0_ & 0x00000004) == 0x00000004);
+            }
+
+            @Override
+            public boolean hasKey() {
+                return ((this.bitField0_ & 0x00000002) == 0x00000002);
+            }
+
+            @Override
+            public boolean hasToken() {
+                return ((this.bitField0_ & 0x00000001) == 0x00000001);
+            }
+
+            @Override
+            public boolean hasValue() {
+                return ((this.bitField0_ & 0x00000008) == 0x00000008);
+            }
+
+            @Override
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable;
+            }
+
+            @Override
+            public final boolean isInitialized() {
+                if (!hasToken()) {
+                    return false;
+                }
+                if (!hasKey()) {
+                    return false;
+                }
+                if (!hasValue()) {
+                    return false;
+                }
+                if (!getToken().isInitialized()) {
+                    return false;
+                }
+                return true;
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                    getTokenFieldBuilder();
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws java.io.IOException {
+                final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
+                        .newBuilder(this.getUnknownFields());
+                while (true) {
+                    final int tag = input.readTag();
+                    switch (tag) {
+                    case 0:
+                        this.setUnknownFields(unknownFields.build());
+                        onChanged();
+                        return this;
+                    default: {
+                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                            this.setUnknownFields(unknownFields.build());
+                            onChanged();
+                            return this;
+                        }
+                        break;
+                    }
+                    case 10: {
+                        final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder();
+                        if (hasToken()) {
+                            subBuilder.mergeFrom(getToken());
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        setToken(subBuilder.buildPartial());
+                        break;
+                    }
+                    case 18: {
+                        this.bitField0_ |= 0x00000002;
+                        this.key_ = input.readBytes();
+                        break;
+                    }
+                    case 24: {
+                        this.bitField0_ |= 0x00000004;
+                        this.expTime_ = input.readInt32();
+                        break;
+                    }
+                    case 34: {
+                        this.bitField0_ |= 0x00000008;
+                        this.value_ = input.readBytes();
+                        break;
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest) {
+                    return mergeFrom((eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                    eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest other) {
+                if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest
+                        .getDefaultInstance()) {
+                    return this;
+                }
+                if (other.hasToken()) {
+                    mergeToken(other.getToken());
+                }
+                if (other.hasKey()) {
+                    setKey(other.getKey());
+                }
+                if (other.hasExpTime()) {
+                    setExpTime(other.getExpTime());
+                }
+                if (other.hasValue()) {
+                    setValue(other.getValue());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+            }
+
+            public Builder mergeToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (((this.bitField0_ & 0x00000001) == 0x00000001)
+                            && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                    .getDefaultInstance())) {
+                        this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                    } else {
+                        this.token_ = value;
+                    }
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.mergeFrom(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setExpTime(int value) {
+                this.bitField0_ |= 0x00000004;
+                this.expTime_ = value;
+                onChanged();
+                return this;
+            }
+
+            void setKey(com.google.protobuf.ByteString value) {
+                this.bitField0_ |= 0x00000002;
+                this.key_ = value;
+                onChanged();
+            }
+
+            public Builder setKey(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.bitField0_ |= 0x00000002;
+                this.key_ = value;
+                onChanged();
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
+                if (this.tokenBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    this.token_ = value;
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(value);
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setToken(
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
+                if (this.tokenBuilder_ == null) {
+                    this.token_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    this.tokenBuilder_.setMessage(builderForValue.build());
+                }
+                this.bitField0_ |= 0x00000001;
+                return this;
+            }
+
+            public Builder setValue(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.bitField0_ |= 0x00000008;
+                this.value_ = value;
+                onChanged();
+                return this;
+            }
+            // @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.SetRequest)
+        }
+
+        private static final SetRequest defaultInstance;
+
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // required string key = 2;
+        public static final int KEY_FIELD_NUMBER = 2;
+
+        private java.lang.Object key_;
+
+        // optional int32 exp_time = 3 [default = 0];
+        public static final int EXP_TIME_FIELD_NUMBER = 3;
+
+        private int expTime_;
+
+        // required bytes value = 4;
+        public static final int VALUE_FIELD_NUMBER = 4;
+
+        private com.google.protobuf.ByteString value_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new SetRequest(true);
+            SetRequest.defaultInstance.initFields();
+        }
+
+        private SetRequest(boolean noInit) {
+        }
+
+        // Use SetRequest.newBuilder() to construct.
+        private SetRequest(Builder builder) {
+            super(builder);
+        }
+
+        public static SetRequest getDefaultInstance() {
+            return SetRequest.defaultInstance;
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        @Override
+        public SetRequest getDefaultInstanceForType() {
+            return SetRequest.defaultInstance;
+        }
+
+        @Override
+        public int getExpTime() {
+            return this.expTime_;
+        }
+
+        @Override
+        public String getKey() {
+            final java.lang.Object ref = this.key_;
+            if (ref instanceof String) {
+                return (String) ref;
+            } else {
+                final com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                final String s = bs.toStringUtf8();
+                if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+                    this.key_ = s;
+                }
+                return s;
+            }
+        }
+
+        private com.google.protobuf.ByteString getKeyBytes() {
+            final java.lang.Object ref = this.key_;
+            if (ref instanceof String) {
+                final com.google.protobuf.ByteString b = com.google.protobuf.ByteString
+                        .copyFromUtf8((String) ref);
+                this.key_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        @Override
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getKeyBytes());
+            }
+            if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
+                size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, this.expTime_);
+            }
+            if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(4, this.value_);
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken() {
+            return this.token_;
+        }
+
+        @Override
+        public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder() {
+            return this.token_;
+        }
+
+        @Override
+        public com.google.protobuf.ByteString getValue() {
+            return this.value_;
+        }
+
+        @Override
+        public boolean hasExpTime() {
+            return ((this.bitField0_ & 0x00000004) == 0x00000004);
+        }
+
+        @Override
+        public boolean hasKey() {
+            return ((this.bitField0_ & 0x00000002) == 0x00000002);
+        }
+
+        @Override
+        public boolean hasToken() {
+            return ((this.bitField0_ & 0x00000001) == 0x00000001);
+        }
+
+        @Override
+        public boolean hasValue() {
+            return ((this.bitField0_ & 0x00000008) == 0x00000008);
+        }
+
+        private void initFields() {
+            this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
+                    .getDefaultInstance();
+            this.key_ = "";
+            this.expTime_ = 0;
+            this.value_ = com.google.protobuf.ByteString.EMPTY;
+        }
+
+        @Override
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable;
+        }
+
+        @Override
+        public final boolean isInitialized() {
+            final byte isInitialized = this.memoizedIsInitialized;
+            if (isInitialized != -1) {
+                return isInitialized == 1;
+            }
+            if (!hasToken()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasKey()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!hasValue()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            if (!getToken().isInitialized()) {
+                this.memoizedIsInitialized = 0;
+                return false;
+            }
+            this.memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            final Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        @Override
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
+
+        @java.lang.Override
+        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+            return super.writeReplace();
+        }
+
+        @Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+            getSerializedSize();
+            if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeMessage(1, this.token_);
+            }
+            if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeBytes(2, getKeyBytes());
+            }
+            if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
+                output.writeInt32(3, this.expTime_);
+            }
+            if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
+                output.writeBytes(4, this.value_);
+            }
+            getUnknownFields().writeTo(output);
+        }
+        // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.SetRequest)
+    }
+
+    public interface SetRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+
+        int getExpTime();
+
+        String getKey();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken();
+
+        eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder();
+
+        com.google.protobuf.ByteString getValue();
+
+        // optional int32 exp_time = 3 [default = 0];
+        boolean hasExpTime();
+
+        // required string key = 2;
+        boolean hasKey();
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        boolean hasToken();
+
+        // required bytes value = 4;
+        boolean hasValue();
+    }
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
+
+    private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable;
+
+    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    static {
+        final java.lang.String[] descriptorData = {
+                "\n\rkvstore.proto\022\030mosaic_cloud.idl.kvstor"
+                        + "e\032\014common.proto\"V\n\013InitRequest\0227\n\005token\030"
+                        + "\001 \002(\0132(.mosaic_cloud.idl.common.Completi"
+                        + "onToken\022\016\n\006bucket\030\002 \002(\t\"%\n\007KVEntry\022\013\n\003ke"
+                        + "y\030\001 \002(\t\022\r\n\005value\030\002 \002(\014\"v\n\nSetRequest\0227\n\005"
+                        + "token\030\001 \002(\0132(.mosaic_cloud.idl.common.Co"
+                        + "mpletionToken\022\013\n\003key\030\002 \002(\t\022\023\n\010exp_time\030\003"
+                        + " \001(\005:\0010\022\r\n\005value\030\004 \002(\014\"R\n\nGetRequest\0227\n\005"
+                        + "token\030\001 \002(\0132(.mosaic_cloud.idl.common.Co"
+                        + "mpletionToken\022\013\n\003key\030\002 \003(\t\"w\n\010GetReply\0227",
+                "\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.common."
+                        + "CompletionToken\0222\n\007results\030\002 \003(\0132!.mosai"
+                        + "c_cloud.idl.kvstore.KVEntry\"U\n\rDeleteReq"
+                        + "uest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.c"
+                        + "ommon.CompletionToken\022\013\n\003key\030\002 \002(\t\"F\n\013Li"
+                        + "stRequest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud."
+                        + "idl.common.CompletionToken\"R\n\tListReply\022"
+                        + "7\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.common"
+                        + ".CompletionToken\022\014\n\004keys\030\002 \003(\tB0\n\032mosaic"
+                        + ".interop.idl.kvstoreB\020KeyValuePayloadsH\001" };
+        final com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner = new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
+
+            @Override
+            public com.google.protobuf.ExtensionRegistry assignDescriptors(
+                    com.google.protobuf.Descriptors.FileDescriptor root) {
+                KeyValuePayloads.descriptor = root;
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor = getDescriptor()
+                        .getMessageTypes().get(0);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor,
+                        new java.lang.String[] {
+                                "Token", "Bucket", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest.Builder.class);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor = getDescriptor()
+                        .getMessageTypes().get(1);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor,
+                        new java.lang.String[] {
+                                "Key", "Value", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder.class);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor = getDescriptor()
+                        .getMessageTypes().get(2);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor,
+                        new java.lang.String[] {
+                                "Token", "Key", "ExpTime", "Value", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest.Builder.class);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor = getDescriptor()
+                        .getMessageTypes().get(3);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor,
+                        new java.lang.String[] {
+                                "Token", "Key", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest.Builder.class);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor = getDescriptor()
+                        .getMessageTypes().get(4);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor,
+                        new java.lang.String[] {
+                                "Token", "Results", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply.Builder.class);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor = getDescriptor()
+                        .getMessageTypes().get(5);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor,
+                        new java.lang.String[] {
+                                "Token", "Key", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest.Builder.class);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor = getDescriptor()
+                        .getMessageTypes().get(6);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor,
+                        new java.lang.String[] {
+                            "Token", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest.Builder.class);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor = getDescriptor()
+                        .getMessageTypes().get(7);
+                KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+                        KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor,
+                        new java.lang.String[] {
+                                "Token", "Keys", },
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply.class,
+                        eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply.Builder.class);
+                return null;
+            }
+        };
+        com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
+                descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {
+                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.getDescriptor(), }, assigner);
+    }
+
+    private KeyValuePayloads() {
+    }
+
+    public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
+        return KeyValuePayloads.descriptor;
+    }
+
+    public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {
+    }
+    // @@protoc_insertion_point(outer_class_scope)
 }

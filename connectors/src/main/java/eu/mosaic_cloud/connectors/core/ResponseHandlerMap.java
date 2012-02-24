@@ -23,6 +23,7 @@ package eu.mosaic_cloud.connectors.core;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCanceled;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 
@@ -87,20 +88,6 @@ public class ResponseHandlerMap {
     }
 
     /**
-     * Removes from the map the handlers for a request and the actual request.
-     * 
-     * @param request
-     *            the request identifier
-     */
-    private CallbackCompletionDeferredFuture<?> removeRequest(final String request) {
-        Preconditions.checkNotNull(request);
-        final CallbackCompletionDeferredFuture<?> future = this.futures.remove(request);
-        Preconditions.checkState(future != null);
-        return future;
-
-    }
-
-    /**
      * Checks if the map contains an entry for the specified request.
      * 
      * @param request
@@ -132,6 +119,19 @@ public class ResponseHandlerMap {
     }
 
     /**
+     * Removes from the map the handlers for a request and the actual request.
+     * 
+     * @param request
+     *            the request identifier
+     */
+    private CallbackCompletionDeferredFuture<?> removeRequest(final String request) {
+        Preconditions.checkNotNull(request);
+        final CallbackCompletionDeferredFuture<?> future = this.futures.remove(request);
+        Preconditions.checkState(future != null);
+        return future;
+    }
+
+    /**
      * Removes a request entry from the map and triggers the callback for the
      * response.
      * 
@@ -147,5 +147,4 @@ public class ResponseHandlerMap {
         Preconditions.checkState(future != null);
         ((CallbackCompletionDeferredFuture<Object>) future).trigger.triggerSucceeded(outcome);
     }
-
 }

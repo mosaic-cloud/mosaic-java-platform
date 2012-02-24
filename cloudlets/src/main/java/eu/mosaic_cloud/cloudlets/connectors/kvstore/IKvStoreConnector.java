@@ -37,17 +37,15 @@ public interface IKvStoreConnector<Context, Value, Extra> extends IConnector<Con
         eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<Value> {
 
     /**
-     * Stores the given data and associates it with the specified key.
+     * Deletes the given key.
      * 
      * @param key
-     *            the key under which this data should be stored
-     * @param data
-     *            the data
+     *            the key to delete
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> set(String key, Value value, Extra extra);
+    CallbackCompletion<Boolean> delete(String key, Extra extra);
 
     /**
      * Gets data associated with a single key.
@@ -61,17 +59,6 @@ public interface IKvStoreConnector<Context, Value, Extra> extends IConnector<Con
     CallbackCompletion<Value> get(String key, Extra extra);
 
     /**
-     * Deletes the given key.
-     * 
-     * @param key
-     *            the key to delete
-     * @param extra
-     *            some application specific data
-     * @return a result handle for the operation
-     */
-    CallbackCompletion<Boolean> delete(String key, Extra extra);
-
-    /**
      * Lists the keys in the bucket associated with the accessor.
      * 
      * @param extra
@@ -79,4 +66,17 @@ public interface IKvStoreConnector<Context, Value, Extra> extends IConnector<Con
      * @return a result handle for the operation
      */
     CallbackCompletion<List<String>> list(Extra extra);
+
+    /**
+     * Stores the given data and associates it with the specified key.
+     * 
+     * @param key
+     *            the key under which this data should be stored
+     * @param data
+     *            the data
+     * @param extra
+     *            some application specific data
+     * @return a result handle for the operation
+     */
+    CallbackCompletion<Boolean> set(String key, Value value, Extra extra);
 }

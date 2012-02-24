@@ -34,6 +34,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the context of the cloudlet using this callback
  */
 public class DefaultCallback<C> implements ICallback<C> {
+
+    protected MosaicLogger logger = MosaicLogger.createLogger(this);
+
     /**
      * Handles any unhandled callback.
      * 
@@ -73,6 +76,4 @@ public class DefaultCallback<C> implements ICallback<C> {
         this.logger.info("unhandled cloudlet callback: `" + this.getClass().getName() + "`@`"
                 + callbackType + "` " + (positive ? "Succeeded" : "Failed"));
     }
-
-    protected MosaicLogger logger = MosaicLogger.createLogger(this);
 }

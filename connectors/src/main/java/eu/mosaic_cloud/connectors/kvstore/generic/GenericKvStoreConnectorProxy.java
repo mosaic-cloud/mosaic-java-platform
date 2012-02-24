@@ -39,14 +39,15 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
  *            type of stored data
  * 
  */
-public final class GenericKvStoreConnectorProxy<T extends Object> extends BaseKvStoreConnectorProxy<T> { // NOPMD
-                                                                                                   // by
-                                                                                                   // georgiana
-                                                                                                   // on
-                                                                                                   // 2/20/12
-                                                                                                   // 5:06
-                                                                                                   // PM
+public final class GenericKvStoreConnectorProxy<T extends Object> extends
+        BaseKvStoreConnectorProxy<T> { // NOPMD
 
+    // by
+    // georgiana
+    // on
+    // 2/20/12
+    // 5:06
+    // PM
     protected GenericKvStoreConnectorProxy(final IConfiguration configuration,
             final Channel channel, final DataEncoder<T> encoder) {
         super(configuration, channel, encoder);

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.queue.amqp;
 
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
@@ -28,23 +29,23 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * 
  */
 public enum AmqpOperations implements IOperationType {
-	DECLARE_EXCHANGE, DECLARE_QUEUE, BIND_QUEUE, CONSUME, PUBLISH, GET, ACK, CANCEL;
+    DECLARE_EXCHANGE, DECLARE_QUEUE, BIND_QUEUE, CONSUME, PUBLISH, GET, ACK, CANCEL;
 
-	private static final AmqpOperations[] COPY_OF_VALUES = values();
+    private static final AmqpOperations[] COPY_OF_VALUES = values();
 
-	/**
-	 * Tests if given operation is supported by driver.
-	 * 
-	 * @param operation
-	 *            name of operation
-	 * @return <code>true</code> if operation is supported
-	 */
-	public static boolean isOperation(String operation) {
-		for (AmqpOperations op : AmqpOperations.COPY_OF_VALUES) {
-			if (op.name().equalsIgnoreCase(operation)) {
-				return true; // NOPMD by georgiana on 10/12/11 3:35 PM
-			}
-		}
-		return false;
-	}
+    /**
+     * Tests if given operation is supported by driver.
+     * 
+     * @param operation
+     *            name of operation
+     * @return <code>true</code> if operation is supported
+     */
+    public static boolean isOperation(String operation) {
+        for (final AmqpOperations op : AmqpOperations.COPY_OF_VALUES) {
+            if (op.name().equalsIgnoreCase(operation)) {
+                return true; // NOPMD by georgiana on 10/12/11 3:35 PM
+            }
+        }
+        return false;
+    }
 }

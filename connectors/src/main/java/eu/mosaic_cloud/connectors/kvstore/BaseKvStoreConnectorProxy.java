@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.protobuf.ByteString;
+
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;
@@ -58,7 +59,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of stored data
  * 
  */
-public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorProxy implements IKvStoreConnector<T> {
+public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorProxy
+        implements IKvStoreConnector<T> {
+
     protected DataEncoder<T> encoder;
 
     protected BaseKvStoreConnectorProxy(final IConfiguration configuration, final Channel channel,
@@ -67,6 +70,7 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
         this.encoder = encoder;
     }
 
+    @Override
     public CallbackCompletion<Boolean> delete(final String key) {
         final CompletionToken token = this.generateToken();
         final DeleteRequest.Builder requestBuilder = DeleteRequest.newBuilder();
@@ -85,11 +89,13 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
         return super.destroy();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public CallbackCompletion<T> get(final String key) {
         return this.sendGetMessage(Arrays.asList(key), (Class<T>) Object.class);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public CallbackCompletion<List<String>> list() {
         final CompletionToken token = this.generateToken();
@@ -98,14 +104,6 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
         final Message message = new Message(KeyValueMessage.LIST_REQUEST, requestBuilder.build());
         return (CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest(
                 message, token, List.class));
-    }
-
-    public CallbackCompletion<Boolean> set(final String key, final int exp, final T data) {
-        return this.sendSetMessage(key, data, exp);
-    }
-
-    public CallbackCompletion<Boolean> set(final String key, final T data) {
-        return this.set(key, 0, data);
     }
 
     @Override
@@ -196,7 +194,6 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
     protected CallbackCompletion<Boolean> sendSetMessage(final String key, final T data,
             final int exp) {
         CallbackCompletion<Boolean> result;
-
         try {
             final byte[] dataBytes = this.encoder.encode(data);
             final CompletionToken token = this.generateToken();
@@ -218,4 +215,12 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
         return result;
     }
 
+    public CallbackCompletion<Boolean> set(final String key, final int exp, final T data) {
+        return this.sendSetMessage(key, data, exp);
+    }
+
+    @Override
+    public CallbackCompletion<Boolean> set(final String key, final T data) {
+        return this.set(key, 0, data);
+    }
 }

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.kvstore;
 
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
@@ -28,6 +29,5 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * 
  */
 public enum KeyValueOperations implements IOperationType {
-	SET, GET, LIST, DELETE, ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK;
-
+    SET, GET, LIST, DELETE, ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK;
 }

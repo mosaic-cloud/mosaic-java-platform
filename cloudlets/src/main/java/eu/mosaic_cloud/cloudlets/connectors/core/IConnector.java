@@ -20,7 +20,6 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
-
 /**
  * Interface for all resource accessors used by cloudlets.
  * 

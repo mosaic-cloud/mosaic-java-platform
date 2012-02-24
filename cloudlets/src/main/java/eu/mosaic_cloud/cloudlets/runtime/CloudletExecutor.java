@@ -49,6 +49,168 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
  */
 public class CloudletExecutor {
 
+    class BackupWorker extends Worker {
+
+        BackupWorker() {
+            super();
+        }
+
+        @Override
+        public void run() {
+            try {
+                Runnable task = null;
+                while ((task = getBackupTask()) != null) {
+                    runTask(task);
+                    task = null;
+                }
+            } finally {
+                workerDone(this);
+            }
+        }
+
+        /**
+         * Runs a single task.
+         */
+        private void runTask(Runnable task) {
+            this.runLock.lock();
+            try {
+                /*
+                 * Ensure that unless cloudlet executor is stopping, this thread
+                 * does not have its interrupt set. This requires a double-check
+                 * of state in case the interrupt was cleared concurrently with
+                 * a shutdownNow -- if so, the interrupt is re-enabled.
+                 */
+                if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
+                        && Threading.isCurrentThreadInterrupted()
+                        && (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
+                    this.thread.interrupt();
+                }
+                task.run();
+            } finally {
+                this.runLock.unlock();
+            }
+        }
+    }
+
+    /**
+     * Implements the worker thread.
+     * 
+     * After completing a task, workers try to get another one, via method
+     * getTask. If they cannot (i.e., getTask returns null), they exit, calling
+     * workerDone to update pool state.
+     * 
+     * When starting to run a task, unless the executor is stopped, the worker
+     * thread ensures that it is not interrupted, and uses runLock to prevent
+     * the executor from interrupting it in the midst of execution. This shields
+     * user tasks from any interrupts that may otherwise be needed during
+     * shutdown (see method interruptIdleWorkers), unless the executor is
+     * stopping (via shutdownNow) in which case interrupts are let through to
+     * affect both tasks and workers. However, this shielding does not
+     * necessarily protect the workers from lagging interrupts from other user
+     * threads directed towards tasks that have already been completed. Thus, a
+     * worker thread may be interrupted needlessly (for example in getTask), in
+     * which case it rechecks executor state to see if it should exit.
+     * 
+     * @author Georgiana Macariu
+     * 
+     */
+    class Worker implements Runnable {
+
+        /**
+         * The runLock is acquired and released surrounding each task execution.
+         * It mainly protects against interrupts that are intended to cancel the
+         * worker thread from instead interrupting the task being run.
+         */
+        protected final ReentrantLock runLock = new ReentrantLock();
+
+        /**
+         * Thread this worker is running in. Acts as a final field, but cannot
+         * be set until thread is created.
+         */
+        protected Thread thread;
+
+        Worker() {
+        }
+
+        /**
+         * Interrupts thread if not running a task.
+         */
+        protected void interruptIfIdle() {
+            if (this.runLock.tryLock()) {
+                try {
+                    if (!Threading.isCurrentThread(this.thread)) {
+                        this.thread.interrupt();
+                    }
+                } finally {
+                    this.runLock.unlock();
+                }
+            }
+        }
+
+        /**
+         * Interrupts thread even if running a task.
+         */
+        protected void interruptNow() {
+            this.thread.interrupt();
+        }
+
+        protected boolean isActive() {
+            return this.runLock.isLocked();
+        }
+
+        /**
+         * Indicates if the worker is blocked waiting for the result of an
+         * asynchronous operation in a request.
+         */
+        public boolean isBlocked() {
+            if (isActive() && (this.thread.getState() == State.WAITING)) {
+                return true;
+            }
+            return false;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Runnable#run()
+         */
+        @Override
+        public void run() {
+            try {
+                Runnable task = null;
+                while ((task = getTask()) != null) {
+                    runTask(task);
+                    task = null;
+                }
+            } finally {
+                workerDone(this);
+            }
+        }
+
+        /**
+         * Runs a single task.
+         */
+        private void runTask(Runnable task) {
+            this.runLock.lock();
+            try {
+                /*
+                 * Ensure that unless cloudlet executor is stopping, this thread
+                 * does not have its interrupt set. This requires a double-check
+                 * of state in case the interrupt was cleared concurrently with
+                 * a shutdownNow -- if so, the interrupt is re-enabled.
+                 */
+                if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
+                        && Threading.isCurrentThreadInterrupted()
+                        && (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
+                    this.thread.interrupt();
+                }
+                task.run();
+            } finally {
+                this.runLock.unlock();
+            }
+        }
+    }
+
     /**
      * Permission for checking shutdown
      */
@@ -57,13 +219,13 @@ public class CloudletExecutor {
     /**
      * The queue used for holding requests and handing off to the worker thread.
      */
-    private BlockingQueue<Runnable> requestQueue;
+    private final BlockingQueue<Runnable> requestQueue;
 
     /**
      * The queue used for holding response handler and handing off to the worker
      * thread.
      */
-    private BlockingQueue<Runnable> responseQueue;
+    private final BlockingQueue<Runnable> responseQueue;
 
     /**
      * Lock held on updates to cloudlet request, response and runState set.
@@ -130,23 +292,28 @@ public class CloudletExecutor {
      * When all cleanup is done.
      */
     volatile int runState;
+
     /**
      * Initializing the cloudlet instance.
      */
     static final int INITIALIZING = 0;
+
     /**
      * Processes requests.
      */
     static final int RUNNING = 1;
+
     /**
      * Don't accept new requests, but finish the current ones
      */
     static final int SHUTDOWN = 2;
+
     /**
      * Don't accept new requests, don't process queued requests and interrupt
      * in-progress request.
      */
     static final int STOP = 3;
+
     /**
      * Same as STOP, plus all threads have terminated.
      */
@@ -157,9 +324,9 @@ public class CloudletExecutor {
      */
     private volatile int runningWorkers;
 
-    private CountDownLatch terminationLatch = new CountDownLatch(1);
+    private final CountDownLatch terminationLatch = new CountDownLatch(1);
 
-    private ClassLoader loader;
+    private final ClassLoader loader;
 
     private static MosaicLogger logger = MosaicLogger.createLogger(CloudletExecutor.class);
 
@@ -174,21 +341,251 @@ public class CloudletExecutor {
         this.runState = CloudletExecutor.INITIALIZING;
         this.requestQueue = new LinkedBlockingQueue<Runnable>();
         this.responseQueue = new LinkedBlockingQueue<Runnable>();
-
         // FIXME: get threads from workers from a thread pool
         this.worker = new Worker();
         this.worker.thread = Threading.createAndStartThread(threading,
                 ThreadConfiguration.create(this, "worker", true).setClassLoader(loader),
                 this.worker);
-
         this.backupWorker = new BackupWorker();
         this.backupWorker.thread = Threading.createAndStartThread(threading, ThreadConfiguration
                 .create(this, "backup-worker", true).setClassLoader(loader), this.backupWorker);
-
         this.runningWorkers = 2;
         this.runState = CloudletExecutor.RUNNING;
         this.loader = loader;
         CloudletExecutor.logger.trace("CloudletExecutor started.");
+    }
+
+    /**
+     * Rechecks state after queuing a request. Called from
+     * {@link CloudletExecutor#handleRequest(Runnable)} when executor state has
+     * been observed to change after queuing a request. If the request was
+     * queued concurrently with a call to {@link CloudletExecutor#shutdownNow()}
+     * , and is still present in the queue, this request must be removed and
+     * rejected to preserve {@link CloudletExecutor#shutdownNow()} guarantees.
+     * Otherwise, this method ensures that the request will be handled at some
+     * time in the future, unless executor shutdown is executed.
+     * 
+     * @param request
+     *            the request
+     */
+    private void ensureQueuedRequestHandled(Runnable request) {
+        this.mainLock.lock();
+        boolean reject = false;
+        try {
+            final int state = this.runState;
+            if ((state != CloudletExecutor.RUNNING) && this.requestQueue.remove(request)) {
+                reject = true;
+            }
+            if (reject) {
+                CloudletExecutor.logger
+                        .info("CloudletExecutor rejects requests execution. Cloudlet state is "
+                                + this.runState);
+                reject(request);
+            } else {
+                this.queuesNotEmpty.signal();
+            }
+        } finally {
+            this.mainLock.unlock();
+        }
+    }
+
+    /**
+     * Invokes {@link CloudletExecutor#shutdown()} when this executor is no
+     * longer referenced.
+     */
+    @Override
+    protected void finalize() {
+        shutdown();
+    }
+
+    /**
+     * Gets the next response to process by the backup worker thread. The
+     * general approach is similar to
+     * {@link CloudletExecutor#handleRequest(Runnable)} in that worker threads
+     * trying to get a task to run do so on the basis of prevailing state
+     * accessed outside of locks. This may cause them to choose the "wrong"
+     * action, such as trying to exit because no tasks appear to be available,
+     * or entering a take when the executor is in the process of being shut
+     * down. These potential problems are countered by rechecking executor state
+     * (in workerCanExit) before giving up.
+     * 
+     * @return the task
+     */
+    Runnable getBackupTask() {
+        for (;;) {
+            try {
+                final int state = this.runState;
+                if (state > CloudletExecutor.SHUTDOWN) {
+                    return null;
+                }
+                Runnable r;
+                this.mainLock.lock();
+                // NOTE: wait until the main worker blocks
+                while (!this.worker.isBlocked()) {
+                    this.mainWorkerBlocked.await();
+                }
+                if (state >= CloudletExecutor.SHUTDOWN) { // NOTE: Help drain
+                                                          // queues
+                    if (this.worker.isBlocked() && !this.responseQueue.isEmpty()) {
+                        r = this.responseQueue.poll();
+                    } else {
+                        r = null;
+                    }
+                } else {
+                    if (this.worker.isBlocked()) {
+                        r = this.responseQueue.take();
+                    } else {
+                        r = null;
+                    }
+                }
+                return r;
+            } catch (final InterruptedException ie) {
+                // NOTE: On interruption, re-check runState
+                ExceptionTracer.traceIgnored(ie);
+            } finally {
+                this.mainLock.unlock();
+            }
+        }
+    }
+
+    public ClassLoader getLoader() {
+        return this.loader;
+    }
+
+    /**
+     * Gets the next task (request or response processing) for the worker thread
+     * to run. The general approach is similar to
+     * {@link CloudletExecutor#handleRequest(Runnable)} in that worker threads
+     * trying to get a task to run do so on the basis of prevailing state
+     * accessed outside of locks. This may cause them to choose the "wrong"
+     * action, such as trying to exit because no tasks appear to be available,
+     * or entering a take when the executor is in the process of being shut
+     * down. These potential problems are countered by (1) rechecking executor
+     * state (in workerCanExit) before giving up, and (2) interrupting other
+     * workers upon shutdown, so they can recheck state.
+     * 
+     * @return the task
+     */
+    Runnable getTask() {
+        for (;;) {
+            try {
+                final int state = this.runState;
+                if (state > CloudletExecutor.SHUTDOWN) {
+                    return null;
+                }
+                Runnable r;
+                this.mainLock.lock();
+                if (state == CloudletExecutor.SHUTDOWN) {
+                    if (!this.responseQueue.isEmpty()) {
+                        r = this.responseQueue.poll();
+                    } else {
+                        r = this.requestQueue.poll();
+                    }
+                } else {
+                    while (this.responseQueue.isEmpty() && this.requestQueue.isEmpty()) {
+                        this.queuesNotEmpty.await();
+                    }
+                    if (!this.responseQueue.isEmpty()) {
+                        r = this.responseQueue.take();
+                    } else {
+                        r = this.requestQueue.poll();
+                    }
+                }
+                if (r != null) {
+                    return r;
+                }
+                if (workerCanExit()) {
+                    if (this.runState >= CloudletExecutor.SHUTDOWN) {
+                        interruptBackupWorker();
+                    }
+                    return null;
+                }
+            } catch (final InterruptedException ie) {
+                // NOTE: On interruption, re-check runState
+                ExceptionTracer.traceIgnored(ie);
+            } finally {
+                this.mainLock.unlock();
+            }
+        }
+    }
+
+    /**
+     * Executes the given request sometime in the future.
+     * 
+     * If the request cannot be submitted for execution because this executor
+     * has been shutdown, the request is handled by the
+     * RejectedExecutionHandler.
+     * 
+     * @param request
+     *            the request to execute
+     * @throws RejectedExecutionException
+     *             if request cannot be accepted for execution
+     * @throws NullPointerException
+     *             if request is null
+     */
+    public void handleRequest(Runnable request) {
+        if (request == null) {
+            throw new NullPointerException();
+        }
+        this.mainLock.lock();
+        try {
+            if ((this.runState == CloudletExecutor.RUNNING) && this.requestQueue.offer(request)) {
+                this.queuesNotEmpty.signal();
+            } else {
+                CloudletExecutor.logger
+                        .info("CloudletExecutor rejects requests execution. Cloudlet state is "
+                                + this.runState);
+                reject(request); // NOTE: is shutdown
+            }
+        } finally {
+            this.mainLock.unlock();
+        }
+    }
+
+    /**
+     * Processes the given response sometime in the future.
+     * 
+     * @param response
+     *            the response to process
+     */
+    public void handleResponse(Runnable response) {
+        if (response == null) {
+            throw new NullPointerException();
+        }
+        this.mainLock.lock();
+        try {
+            if ((this.runState < CloudletExecutor.STOP) && this.responseQueue.offer(response)) {
+                if (this.worker.isBlocked()) {
+                    this.mainWorkerBlocked.signal();
+                }
+            }
+            this.queuesNotEmpty.signal();
+        } finally {
+            this.mainLock.unlock();
+        }
+    }
+
+    /**
+     * Wakes up the backup thread that might be waiting for responses so it can
+     * check for termination.
+     */
+    private void interruptBackupWorker() {
+        this.mainLock.lock();
+        try {
+            this.backupWorker.interruptIfIdle();
+        } finally {
+            this.mainLock.unlock();
+        }
+    }
+
+    /**
+     * Invokes the rejected execution handler for the given request.
+     * 
+     * @throws RejectedExecutionException
+     *             alwaysF
+     */
+    private void reject(Runnable request) {
+        throw new RejectedExecutionException();
     }
 
     /**
@@ -231,34 +628,30 @@ public class CloudletExecutor {
          * remain in non-shutdown state (which may entail tryTerminate from
          * workerDone starting a new worker to maintain liveness.)
          */
-
-        SecurityManager security = System.getSecurityManager();
+        final SecurityManager security = System.getSecurityManager();
         if (security != null) {
             security.checkPermission(CloudletExecutor.shutdownPerm);
         }
-
         this.mainLock.lock();
         try {
-            if (security != null) { // NOTE: Check if caller can modify our threads
+            if (security != null) { // NOTE: Check if caller can modify our
+                                    // threads
                 security.checkAccess(this.worker.thread);
                 security.checkAccess(this.backupWorker.thread);
             }
-
-            int state = this.runState;
+            final int state = this.runState;
             if (state < CloudletExecutor.SHUTDOWN) {
                 this.runState = CloudletExecutor.SHUTDOWN;
             }
-
             try {
                 this.worker.interruptIfIdle();
                 if (!this.worker.isActive()) {
                     this.backupWorker.interruptIfIdle();
                 }
-            } catch (SecurityException se) { // NOTE: Try to back out
+            } catch (final SecurityException se) { // NOTE: Try to back out
                 this.runState = state;
                 throw se;
             }
-
             tryTerminate(); // NOTE: Terminate now if queues empty
             CloudletExecutor.logger.trace("CloudletExecutor shuted down.");
         } finally {
@@ -268,42 +661,6 @@ public class CloudletExecutor {
 
     public void shutdownNow() {
         // FIXME
-    }
-
-    /**
-     * Invokes {@link CloudletExecutor#shutdown()} when this executor is no
-     * longer referenced.
-     */
-    @Override
-    protected void finalize() {
-        shutdown();
-    }
-
-    /**
-     * Performs bookkeeping for an existing worker thread.
-     * 
-     * @param w
-     *            the worker
-     */
-    void workerDone(Worker w) {
-        final ReentrantLock mainLock = this.mainLock;
-        mainLock.lock();
-        try {
-            if (--this.runningWorkers == 0) {
-                tryTerminate();
-            }
-        } finally {
-            mainLock.unlock();
-        }
-    }
-
-    /**
-     * The calling thread will block waiting for the executor to shutdown.
-     * 
-     * @throws InterruptedException
-     */
-    public void waitTermination() throws InterruptedException {
-        this.terminationLatch.await();
     }
 
     /**
@@ -317,14 +674,22 @@ public class CloudletExecutor {
      * are no live threads.
      */
     private void tryTerminate() {
-
-        int state = this.runState;
+        final int state = this.runState;
         if (this.runningWorkers == 0) {
             if ((state == CloudletExecutor.STOP) || (state == CloudletExecutor.SHUTDOWN)) {
                 this.runState = CloudletExecutor.TERMINATED;
                 this.terminationLatch.countDown();
             }
         }
+    }
+
+    /**
+     * The calling thread will block waiting for the executor to shutdown.
+     * 
+     * @throws InterruptedException
+     */
+    public void waitTermination() throws InterruptedException {
+        this.terminationLatch.await();
     }
 
     /**
@@ -348,395 +713,20 @@ public class CloudletExecutor {
     }
 
     /**
-     * Executes the given request sometime in the future.
+     * Performs bookkeeping for an existing worker thread.
      * 
-     * If the request cannot be submitted for execution because this executor
-     * has been shutdown, the request is handled by the
-     * RejectedExecutionHandler.
-     * 
-     * @param request
-     *            the request to execute
-     * @throws RejectedExecutionException
-     *             if request cannot be accepted for execution
-     * @throws NullPointerException
-     *             if request is null
+     * @param w
+     *            the worker
      */
-    public void handleRequest(Runnable request) {
-        if (request == null) {
-            throw new NullPointerException();
-        }
-        this.mainLock.lock();
+    void workerDone(Worker w) {
+        final ReentrantLock mainLock = this.mainLock;
+        mainLock.lock();
         try {
-            if ((this.runState == CloudletExecutor.RUNNING) && this.requestQueue.offer(request)) {
-                this.queuesNotEmpty.signal();
-            } else {
-                CloudletExecutor.logger
-                        .info("CloudletExecutor rejects requests execution. Cloudlet state is "
-                                + this.runState);
-                reject(request); // NOTE: is shutdown
+            if (--this.runningWorkers == 0) {
+                tryTerminate();
             }
         } finally {
-            this.mainLock.unlock();
+            mainLock.unlock();
         }
-    }
-
-    /**
-     * Rechecks state after queuing a request. Called from
-     * {@link CloudletExecutor#handleRequest(Runnable)} when executor state has
-     * been observed to change after queuing a request. If the request was
-     * queued concurrently with a call to {@link CloudletExecutor#shutdownNow()}
-     * , and is still present in the queue, this request must be removed and
-     * rejected to preserve {@link CloudletExecutor#shutdownNow()} guarantees.
-     * Otherwise, this method ensures that the request will be handled at some
-     * time in the future, unless executor shutdown is executed.
-     * 
-     * @param request
-     *            the request
-     */
-    private void ensureQueuedRequestHandled(Runnable request) {
-        this.mainLock.lock();
-        boolean reject = false;
-        try {
-            int state = this.runState;
-            if ((state != CloudletExecutor.RUNNING) && this.requestQueue.remove(request)) {
-                reject = true;
-            }
-
-            if (reject) {
-                CloudletExecutor.logger
-                        .info("CloudletExecutor rejects requests execution. Cloudlet state is "
-                                + this.runState);
-                reject(request);
-            } else {
-                this.queuesNotEmpty.signal();
-            }
-        } finally {
-            this.mainLock.unlock();
-        }
-    }
-
-    /**
-     * Invokes the rejected execution handler for the given request.
-     * 
-     * @throws RejectedExecutionException
-     *             alwaysF
-     */
-    private void reject(Runnable request) {
-        throw new RejectedExecutionException();
-
-    }
-
-    /**
-     * Processes the given response sometime in the future.
-     * 
-     * @param response
-     *            the response to process
-     */
-    public void handleResponse(Runnable response) {
-        if (response == null) {
-            throw new NullPointerException();
-        }
-        this.mainLock.lock();
-        try {
-            if ((this.runState < CloudletExecutor.STOP) && this.responseQueue.offer(response)) {
-                if (this.worker.isBlocked()) {
-                    this.mainWorkerBlocked.signal();
-                }
-            }
-            this.queuesNotEmpty.signal();
-        } finally {
-            this.mainLock.unlock();
-        }
-    }
-
-    /**
-     * Gets the next task (request or response processing) for the worker thread
-     * to run. The general approach is similar to
-     * {@link CloudletExecutor#handleRequest(Runnable)} in that worker threads
-     * trying to get a task to run do so on the basis of prevailing state
-     * accessed outside of locks. This may cause them to choose the "wrong"
-     * action, such as trying to exit because no tasks appear to be available,
-     * or entering a take when the executor is in the process of being shut
-     * down. These potential problems are countered by (1) rechecking executor
-     * state (in workerCanExit) before giving up, and (2) interrupting other
-     * workers upon shutdown, so they can recheck state.
-     * 
-     * @return the task
-     */
-    Runnable getTask() {
-        for (;;) {
-            try {
-                int state = this.runState;
-                if (state > CloudletExecutor.SHUTDOWN) {
-                    return null;
-                }
-                Runnable r;
-                this.mainLock.lock();
-                if (state == CloudletExecutor.SHUTDOWN) {
-                    if (!this.responseQueue.isEmpty()) {
-                        r = this.responseQueue.poll();
-                    } else {
-                        r = this.requestQueue.poll();
-                    }
-                } else {
-                    while (this.responseQueue.isEmpty() && this.requestQueue.isEmpty()) {
-                        this.queuesNotEmpty.await();
-                    }
-                    if (!this.responseQueue.isEmpty()) {
-                        r = this.responseQueue.take();
-                    } else {
-                        r = this.requestQueue.poll();
-                    }
-                }
-                if (r != null) {
-                    return r;
-                }
-                if (workerCanExit()) {
-                    if (this.runState >= CloudletExecutor.SHUTDOWN) {
-                        interruptBackupWorker();
-                    }
-                    return null;
-                }
-            } catch (InterruptedException ie) {
-                // NOTE: On interruption, re-check runState
-                ExceptionTracer.traceIgnored(ie);
-            } finally {
-                this.mainLock.unlock();
-            }
-        }
-    }
-
-    /**
-     * Gets the next response to process by the backup worker thread. The
-     * general approach is similar to
-     * {@link CloudletExecutor#handleRequest(Runnable)} in that worker threads
-     * trying to get a task to run do so on the basis of prevailing state
-     * accessed outside of locks. This may cause them to choose the "wrong"
-     * action, such as trying to exit because no tasks appear to be available,
-     * or entering a take when the executor is in the process of being shut
-     * down. These potential problems are countered by rechecking executor state
-     * (in workerCanExit) before giving up.
-     * 
-     * @return the task
-     */
-    Runnable getBackupTask() {
-        for (;;) {
-            try {
-                int state = this.runState;
-                if (state > CloudletExecutor.SHUTDOWN) {
-                    return null;
-                }
-                Runnable r;
-                this.mainLock.lock();
-                // NOTE: wait until the main worker blocks
-                while (!this.worker.isBlocked()) {
-                    this.mainWorkerBlocked.await();
-                }
-
-                if (state >= CloudletExecutor.SHUTDOWN) { // NOTE: Help drain queues
-                    if (this.worker.isBlocked() && !this.responseQueue.isEmpty()) {
-                        r = this.responseQueue.poll();
-                    } else {
-                        r = null;
-                    }
-                } else {
-                    if (this.worker.isBlocked()) {
-                        r = this.responseQueue.take();
-                    } else {
-                        r = null;
-                    }
-                }
-                return r;
-
-            } catch (InterruptedException ie) {
-                // NOTE: On interruption, re-check runState
-                ExceptionTracer.traceIgnored(ie);
-            } finally {
-                this.mainLock.unlock();
-            }
-        }
-    }
-
-    /**
-     * Wakes up the backup thread that might be waiting for responses so it can
-     * check for termination.
-     */
-    private void interruptBackupWorker() {
-        this.mainLock.lock();
-        try {
-            this.backupWorker.interruptIfIdle();
-        } finally {
-            this.mainLock.unlock();
-        }
-    }
-
-    /**
-     * Implements the worker thread.
-     * 
-     * After completing a task, workers try to get another one, via method
-     * getTask. If they cannot (i.e., getTask returns null), they exit, calling
-     * workerDone to update pool state.
-     * 
-     * When starting to run a task, unless the executor is stopped, the worker
-     * thread ensures that it is not interrupted, and uses runLock to prevent
-     * the executor from interrupting it in the midst of execution. This shields
-     * user tasks from any interrupts that may otherwise be needed during
-     * shutdown (see method interruptIdleWorkers), unless the executor is
-     * stopping (via shutdownNow) in which case interrupts are let through to
-     * affect both tasks and workers. However, this shielding does not
-     * necessarily protect the workers from lagging interrupts from other user
-     * threads directed towards tasks that have already been completed. Thus, a
-     * worker thread may be interrupted needlessly (for example in getTask), in
-     * which case it rechecks executor state to see if it should exit.
-     * 
-     * @author Georgiana Macariu
-     * 
-     */
-    class Worker implements Runnable {
-
-        /**
-         * The runLock is acquired and released surrounding each task execution.
-         * It mainly protects against interrupts that are intended to cancel the
-         * worker thread from instead interrupting the task being run.
-         */
-        protected final ReentrantLock runLock = new ReentrantLock();
-
-        /**
-         * Thread this worker is running in. Acts as a final field, but cannot
-         * be set until thread is created.
-         */
-        protected Thread thread;
-
-        Worker() {
-
-        }
-
-        protected boolean isActive() {
-            return this.runLock.isLocked();
-        }
-
-        /**
-         * Interrupts thread if not running a task.
-         */
-        protected void interruptIfIdle() {
-            if (this.runLock.tryLock()) {
-                try {
-                    if (!Threading.isCurrentThread(this.thread)) {
-                        this.thread.interrupt();
-                    }
-                } finally {
-                    this.runLock.unlock();
-                }
-            }
-        }
-
-        /**
-         * Interrupts thread even if running a task.
-         */
-        protected void interruptNow() {
-            this.thread.interrupt();
-        }
-
-        /**
-         * Runs a single task.
-         */
-        private void runTask(Runnable task) {
-            this.runLock.lock();
-            try {
-                /*
-                 * Ensure that unless cloudlet executor is stopping, this thread
-                 * does not have its interrupt set. This requires a double-check
-                 * of state in case the interrupt was cleared concurrently with
-                 * a shutdownNow -- if so, the interrupt is re-enabled.
-                 */
-                if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
-                        && Threading.isCurrentThreadInterrupted()
-                        && (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
-                    this.thread.interrupt();
-                }
-
-                task.run();
-            } finally {
-                this.runLock.unlock();
-            }
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Runnable#run()
-         */
-        @Override
-        public void run() {
-            try {
-                Runnable task = null;
-                while ((task = getTask()) != null) {
-                    runTask(task);
-                    task = null;
-                }
-            } finally {
-                workerDone(this);
-            }
-        }
-
-        /**
-         * Indicates if the worker is blocked waiting for the result of an
-         * asynchronous operation in a request.
-         */
-        public boolean isBlocked() {
-            if (isActive() && (this.thread.getState() == State.WAITING)) {
-                return true;
-            }
-            return false;
-        }
-    }
-
-    class BackupWorker extends Worker {
-
-        BackupWorker() {
-            super();
-        }
-
-        @Override
-        public void run() {
-            try {
-                Runnable task = null;
-                while ((task = getBackupTask()) != null) {
-                    runTask(task);
-                    task = null;
-                }
-            } finally {
-                workerDone(this);
-            }
-
-        }
-
-        /**
-         * Runs a single task.
-         */
-        private void runTask(Runnable task) {
-            this.runLock.lock();
-            try {
-                /*
-                 * Ensure that unless cloudlet executor is stopping, this thread
-                 * does not have its interrupt set. This requires a double-check
-                 * of state in case the interrupt was cleared concurrently with
-                 * a shutdownNow -- if so, the interrupt is re-enabled.
-                 */
-                if ((CloudletExecutor.this.runState < CloudletExecutor.STOP)
-                        && Threading.isCurrentThreadInterrupted()
-                        && (CloudletExecutor.this.runState >= CloudletExecutor.STOP)) {
-                    this.thread.interrupt();
-                }
-
-                task.run();
-            } finally {
-                this.runLock.unlock();
-            }
-        }
-    }
-
-    public ClassLoader getLoader() {
-        return this.loader;
     }
 }

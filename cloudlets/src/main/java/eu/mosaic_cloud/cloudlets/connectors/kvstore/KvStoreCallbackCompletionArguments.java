@@ -39,8 +39,32 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
         CallbackCompletionArguments<Context> {
 
     private final List<String> keys;
+
     private final Value value;
+
     private final Extra extra;
+
+    /**
+     * Creates a new argument for the callbacks of operations using more than
+     * one key.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param keys
+     *            the keys used in the operation
+     * @param value
+     *            the value associated with the key (if this callback is used
+     *            for failed operations this value should contain the error)
+     * @param extra
+     *            some application specific object
+     */
+    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet, List<String> keys,
+            Value value, Extra extra) {
+        super(cloudlet);
+        this.keys = keys;
+        this.value = value;
+        this.extra = extra;
+    }
 
     /**
      * Creates a new argument.
@@ -64,34 +88,14 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
     }
 
     /**
-     * Creates a new argument for the callbacks of operations using more than
-     * one key.
+     * Returns any application specific data used for the key-value store
+     * operation.
      * 
-     * @param cloudlet
-     *            the cloudlet
-     * @param keys
-     *            the keys used in the operation
-     * @param value
-     *            the value associated with the key (if this callback is used
-     *            for failed operations this value should contain the error)
-     * @param extra
-     *            some application specific object
+     * @return ny application specific data used for the key-value store
+     *         operation
      */
-    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet,
-            List<String> keys, Value value, Extra extra) {
-        super(cloudlet);
-        this.keys = keys;
-        this.value = value;
-        this.extra = extra;
-    }
-
-    /**
-     * Returns the value field of the argument.
-     * 
-     * @return the value field of the argument
-     */
-    public Value getValue() {
-        return this.value;
+    public Extra getExtra() {
+        return this.extra;
     }
 
     /**
@@ -113,14 +117,11 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
     }
 
     /**
-     * Returns any application specific data used for the key-value store
-     * operation.
+     * Returns the value field of the argument.
      * 
-     * @return ny application specific data used for the key-value store
-     *         operation
+     * @return the value field of the argument
      */
-    public Extra getExtra() {
-        return this.extra;
+    public Value getValue() {
+        return this.value;
     }
-
 }

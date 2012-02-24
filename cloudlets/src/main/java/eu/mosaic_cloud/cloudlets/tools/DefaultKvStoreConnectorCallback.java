@@ -36,6 +36,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public class DefaultKvStoreConnectorCallback<C, D, E> extends DefaultConnectorCallback<C> implements
         IKvStoreConnectorCallback<C, D, E> {
+
     @Override
     public CallbackCompletion<Void> deleteFailed(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
@@ -61,18 +62,6 @@ public class DefaultKvStoreConnectorCallback<C, D, E> extends DefaultConnectorCa
     }
 
     @Override
-    public CallbackCompletion<Void> setFailed(final C context,
-            final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> setSucceeded(final C context,
-            final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
-    }
-
-    @Override
     public CallbackCompletion<Void> listFailed(final C context,
             final KvStoreCallbackCompletionArguments<C, List<String>, E> arguments) {
         return this.handleUnhandledCallback(arguments, "Set Failed", false, false);
@@ -81,6 +70,18 @@ public class DefaultKvStoreConnectorCallback<C, D, E> extends DefaultConnectorCa
     @Override
     public CallbackCompletion<Void> listSucceeded(final C context,
             final KvStoreCallbackCompletionArguments<C, List<String>, E> arguments) {
+        return this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
+    }
+
+    @Override
+    public CallbackCompletion<Void> setFailed(final C context,
+            final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
+        return this.handleUnhandledCallback(arguments, "Set Failed", false, false);
+    }
+
+    @Override
+    public CallbackCompletion<Void> setSucceeded(final C context,
+            final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
         return this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
     }
 }

@@ -33,15 +33,6 @@ package eu.mosaic_cloud.platform.core.utils;
 public interface DataEncoder<T extends Object> {
 
     /**
-     * Encodes (serializes) an object as a stream of bytes.
-     * 
-     * @param data
-     *            the data to serialize
-     * @return the bytes
-     */
-    byte[] encode(T data) throws EncodingException;
-
-    /**
      * Decodes (deserializes) the data.
      * 
      * @param dataBytes
@@ -50,4 +41,12 @@ public interface DataEncoder<T extends Object> {
      */
     T decode(byte[] dataBytes) throws EncodingException;
 
+    /**
+     * Encodes (serializes) an object as a stream of bytes.
+     * 
+     * @param data
+     *            the data to serialize
+     * @return the bytes
+     */
+    byte[] encode(T data) throws EncodingException;
 }

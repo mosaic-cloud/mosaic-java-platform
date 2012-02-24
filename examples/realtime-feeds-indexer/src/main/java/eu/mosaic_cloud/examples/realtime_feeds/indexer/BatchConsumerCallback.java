@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -27,30 +28,28 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public final class BatchConsumerCallback extends QueueConsumerCallback {
 
-	@Override
-	public CallbackCompletion<Void> unregisterSucceeded(IndexerCloudletContext context,
-			CallbackArguments<IndexerCloudletContext> arguments) {
-		this.logger.info(
-				"Batch Index Message consumer unregistered successfully.");
-		ICloudletController<?> cloudlet = arguments
-				.getCloudlet();
-		context.batchConsumer.destroy();
-		return ICallback.SUCCESS;
-	}
+    @Override
+    public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
+            CallbackArguments<IndexerCloudletContext> arguments) {
+        this.logger.info("Batch Index Message consumer was destroyed successfully.");
+        context.batchConsumer = null;
+        return ICallback.SUCCESS;
+    }
 
-	@Override
-	public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
-			CallbackArguments<IndexerCloudletContext> arguments) {
-		// NOTE: if resource initialized successfully then just register as a consumer
-		return ICallback.SUCCESS;
-	}
+    @Override
+    public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
+            CallbackArguments<IndexerCloudletContext> arguments) {
+        // NOTE: if resource initialized successfully then just register as a
+        // consumer
+        return ICallback.SUCCESS;
+    }
 
-	@Override
-	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
-			CallbackArguments<IndexerCloudletContext> arguments) {
-		this.logger.info(
-				"Batch Index Message consumer was destroyed successfully.");
-		context.batchConsumer = null;
-		return ICallback.SUCCESS;
-	}
+    @Override
+    public CallbackCompletion<Void> unregisterSucceeded(IndexerCloudletContext context,
+            CallbackArguments<IndexerCloudletContext> arguments) {
+        this.logger.info("Batch Index Message consumer unregistered successfully.");
+        final ICloudletController<?> cloudlet = arguments.getCloudlet();
+        context.batchConsumer.destroy();
+        return ICallback.SUCCESS;
+    }
 }

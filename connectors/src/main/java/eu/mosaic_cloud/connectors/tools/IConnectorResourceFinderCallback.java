@@ -32,6 +32,7 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * 
  */
 public interface IConnectorResourceFinderCallback extends Callbacks {
+
     /**
      * Called when the resource driver is found
      * 

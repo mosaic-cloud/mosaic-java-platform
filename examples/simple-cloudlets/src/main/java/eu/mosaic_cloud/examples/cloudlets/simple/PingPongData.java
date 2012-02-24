@@ -17,35 +17,36 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 public class PingPongData {
 
-	private String ping;
-	private String pong;
+    private String ping;
 
-	public PingPongData() {
-	}
+    private String pong;
 
-	public String getPing() {
-		return this.ping;
-	}
+    public PingPongData() {
+    }
 
-	public void setPing(String ping) {
-		this.ping = ping;
-	}
+    public String getPing() {
+        return this.ping;
+    }
 
-	public String getPong() {
-		return this.pong;
-	}
+    public String getPong() {
+        return this.pong;
+    }
 
-	public void setPong(String pong) {
-		this.pong = pong;
-	}
+    public void setPing(String ping) {
+        this.ping = ping;
+    }
 
-	@Override
-	public String toString() {
-		return "(" + this.ping + ", " + this.pong + ")";
-	}
+    public void setPong(String pong) {
+        this.pong = pong;
+    }
 
+    @Override
+    public String toString() {
+        return "(" + this.ping + ", " + this.pong + ")";
+    }
 }

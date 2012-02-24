@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -31,14 +32,21 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
 public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors.core.IConnector, Callback extends IConnectorCallback<Context>, Context extends Object>
         implements IConnector<Context>, CallbackProxy {
+
     protected final Callback callback;
+
     protected final ICloudletController<?> cloudlet;
+
     protected final IConfiguration configuration;
+
     protected final Connector connector;
+
     protected final Context context;
+
     protected final MosaicLogger logger;
+
     private final CallbackCompletion<Void> initializeConnectorCompletion;
-    
+
     protected BaseConnector(final ICloudletController<?> cloudlet, final Connector connector,
             final IConfiguration configuration, final Callback callback, final Context context) {
         super();
@@ -59,6 +67,7 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
         final CallbackCompletion<Void> completion = this.connector.destroy();
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
+
                 @Override
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
@@ -86,6 +95,7 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
         final CallbackCompletion<Void> completion = this.connector.initialize();
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
+
                 @Override
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
@@ -101,6 +111,4 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
         }
         return (completion);
     }
-
-    
 }

@@ -39,38 +39,26 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
         IConnectorCallback<Context> {
 
     /**
-     * Called when the set operation completed successfully.
+     * Called when the delete operation completed unsuccessfully. The error can
+     * be retrieved from the <i>arguments</i> parameter.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> setSucceeded(Context context,
+    CallbackCompletion<Void> deleteFailed(Context context,
             KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
     /**
-     * Called when the set operation completed unsuccessfully. The error can be
-     * retrieved from the <i>arguments</i> parameter.
+     * Called when the delete operation completed successfully.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> setFailed(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
-
-    /**
-     * Called when the get operation completed successfully. The result of the
-     * get operation can be retrieved from the <i>arguments</i> parameter.
-     * 
-     * @param context
-     *            cloudlet context
-     * @param arguments
-     *            callback arguments
-     */
-    CallbackCompletion<Void> getSucceeded(Context context,
+    CallbackCompletion<Void> deleteSucceeded(Context context,
             KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
     /**
@@ -86,27 +74,28 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
             KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
     /**
-     * Called when the delete operation completed successfully.
+     * Called when the get operation completed successfully. The result of the
+     * get operation can be retrieved from the <i>arguments</i> parameter.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> deleteSucceeded(Context context,
+    CallbackCompletion<Void> getSucceeded(Context context,
             KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 
     /**
-     * Called when the delete operation completed unsuccessfully. The error can
-     * be retrieved from the <i>arguments</i> parameter.
+     * Called when the list operation completed unsuccessfully. The error can be
+     * retrieved from the <i>arguments</i> parameter.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> deleteFailed(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+    CallbackCompletion<Void> listFailed(Context context,
+            KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
 
     /**
      * Called when the list operation completed successfully. The result of the
@@ -121,7 +110,7 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
             KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
 
     /**
-     * Called when the list operation completed unsuccessfully. The error can be
+     * Called when the set operation completed unsuccessfully. The error can be
      * retrieved from the <i>arguments</i> parameter.
      * 
      * @param context
@@ -129,6 +118,17 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> listFailed(Context context,
-            KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
+    CallbackCompletion<Void> setFailed(Context context,
+            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+
+    /**
+     * Called when the set operation completed successfully.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> setSucceeded(Context context,
+            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
 }

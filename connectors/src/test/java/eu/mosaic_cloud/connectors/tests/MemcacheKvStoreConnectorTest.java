@@ -23,18 +23,39 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.Arrays;
 import java.util.Map;
 
-import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
-import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
-import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
-import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
+import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
+import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
+
 public class MemcacheKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String>> {
+
+    private static Context context_;
+
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        final Context context = new Context();
+        BaseConnectorTest.setupUpContext(MemcacheKvStoreConnectorTest.class, context,
+                "memcache-kv-store-connector-test.properties");
+        context.driverChannel.register(KeyValueSession.DRIVER);
+        context.driverChannel.register(MemcachedSession.DRIVER);
+        context.driverStub = MemcachedStub.create(context.configuration, context.driverChannel,
+                context.threading);
+        MemcacheKvStoreConnectorTest.context_ = context;
+    }
+
+    @AfterClass
+    public static void tearDownAfterClass() {
+        BaseConnectorTest.tearDownContext(MemcacheKvStoreConnectorTest.context_);
+    }
+
     @Override
     public void setUp() {
         this.context = MemcacheKvStoreConnectorTest.context_;
@@ -110,23 +131,4 @@ public class MemcacheKvStoreConnectorTest extends
         Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1, 30, "fantastic")));
         Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2, 30, "famous")));
     }
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        final Context context = new Context();
-        BaseConnectorTest.setupUpContext(MemcacheKvStoreConnectorTest.class, context,
-                "memcache-kv-store-connector-test.properties");
-        context.driverChannel.register(KeyValueSession.DRIVER);
-        context.driverChannel.register(MemcachedSession.DRIVER);
-        context.driverStub = MemcachedStub.create(context.configuration, context.driverChannel,
-                context.threading);
-        MemcacheKvStoreConnectorTest.context_ = context;
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        BaseConnectorTest.tearDownContext(MemcacheKvStoreConnectorTest.context_);
-    }
-
-    private static Context context_;
 }

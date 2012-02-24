@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.kvstore;
 
 import java.lang.reflect.Method;
@@ -35,63 +36,62 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 public final class KeyValueDriverFactory {
 
-	public enum DriverType {
-		REDIS(RedisDriver.class), MEMCACHED(MemcachedDriver.class), RIAKREST(
-				RiakRestDriver.class), RIAKPB(RiakPBDriver.class);
+    public enum DriverType {
+        REDIS(RedisDriver.class),
+        MEMCACHED(MemcachedDriver.class),
+        RIAKREST(RiakRestDriver.class),
+        RIAKPB(RiakPBDriver.class);
 
-		private final Class<? extends AbstractKeyValueDriver> driverClass;
+        private final Class<? extends AbstractKeyValueDriver> driverClass;
 
-		DriverType(Class<? extends AbstractKeyValueDriver> canonicalClassName) {
-			this.driverClass = canonicalClassName;
-		}
+        DriverType(Class<? extends AbstractKeyValueDriver> canonicalClassName) {
+            this.driverClass = canonicalClassName;
+        }
 
-		public Class<? extends AbstractKeyValueDriver> getDriverClass() {
-			return this.driverClass;
-		}
-	}
+        public Class<? extends AbstractKeyValueDriver> getDriverClass() {
+            return this.driverClass;
+        }
+    }
 
-	private KeyValueDriverFactory() {
-	}
+    private KeyValueDriverFactory() {
+    }
 
-	/**
-	 * Creates a driver of requested type with the specified configuration.
-	 * 
-	 * @param driverName
-	 *            the name of the driver
-	 * @param config
-	 *            the configuration for the driver
-	 * @param threadingContext
-	 *            the context used for creating threads
-	 * @return the driver
-	 * @throws ConnectorNotFoundException
-	 *             if driver cannot be instantiated for any reason
-	 */
-	public static AbstractKeyValueDriver createDriver(String driverName,
-			IConfiguration config, ThreadingContext threadingContext)
-			throws DriverNotFoundException {
-		DriverType type = null;
-		AbstractKeyValueDriver driver = null;
-
-		for (DriverType t : DriverType.values()) {
-			if (t.name().equalsIgnoreCase(driverName)) {
-				type = t;
-				break;
-			}
-		}
-		if (type != null) {
-			try {
-				Class<?> driverClass = type.getDriverClass();
-				Method createMethod = driverClass.getMethod("create",
-						IConfiguration.class, ThreadingContext.class);
-				driver = (AbstractKeyValueDriver) createMethod.invoke(null,
-						config, threadingContext);
-			} catch (Exception e) {
-				ExceptionTracer.traceIgnored(e);
-				DriverNotFoundException exception = new DriverNotFoundException(
-						e);
-				throw exception;
-			}
-		}
-		return driver;
-	}
+    /**
+     * Creates a driver of requested type with the specified configuration.
+     * 
+     * @param driverName
+     *            the name of the driver
+     * @param config
+     *            the configuration for the driver
+     * @param threadingContext
+     *            the context used for creating threads
+     * @return the driver
+     * @throws ConnectorNotFoundException
+     *             if driver cannot be instantiated for any reason
+     */
+    public static AbstractKeyValueDriver createDriver(String driverName, IConfiguration config,
+            ThreadingContext threadingContext) throws DriverNotFoundException {
+        DriverType type = null;
+        AbstractKeyValueDriver driver = null;
+        for (final DriverType t : DriverType.values()) {
+            if (t.name().equalsIgnoreCase(driverName)) {
+                type = t;
+                break;
+            }
+        }
+        if (type != null) {
+            try {
+                final Class<?> driverClass = type.getDriverClass();
+                final Method createMethod = driverClass.getMethod("create", IConfiguration.class,
+                        ThreadingContext.class);
+                driver = (AbstractKeyValueDriver) createMethod.invoke(null, config,
+                        threadingContext);
+            } catch (final Exception e) {
+                ExceptionTracer.traceIgnored(e);
+                final DriverNotFoundException exception = new DriverNotFoundException(e);
+                throw exception;
+            }
+        }
+        return driver;
+    }
 }

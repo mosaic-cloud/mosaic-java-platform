@@ -35,7 +35,7 @@ package eu.mosaic_cloud.cloudlets.core;
 public class GenericCallbackCompletionArguments<Context, Result> extends
         CallbackCompletionArguments<Context> {
 
-    private Result result;
+    private final Result result;
 
     /**
      * Creates the operation callback argument.

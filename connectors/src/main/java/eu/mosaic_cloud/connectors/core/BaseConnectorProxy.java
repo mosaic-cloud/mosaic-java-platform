@@ -23,6 +23,7 @@ package eu.mosaic_cloud.connectors.core;
 import java.util.UUID;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
@@ -44,10 +45,15 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector {
 
     protected final IConfiguration configuration;
+
     protected MosaicLogger logger;
+
     protected final ResponseHandlerMap pendingRequests;
+
     private final Channel channel;
+
     private final String identifier;
+
     private Session session;
 
     /**
@@ -69,18 +75,9 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         this.logger = MosaicLogger.createLogger(this);
     }
 
-    @Override
-    public CallbackCompletion<Void> initialize() {
-    	return (CallbackCompletion.createOutcome());
-    }
-
-    /**
-     * Returns the configuration of the connector's proxy.
-     * 
-     * @return the configuration of the connector's proxy
-     */
-    public IConfiguration getConfiguration() {
-        return this.configuration;
+    protected void connect(final String driverIdentifier, final SessionSpecification session,
+            final Message initMessage) {
+        this.channel.connect(driverIdentifier, session, initMessage, this);
     }
 
     /**
@@ -99,6 +96,7 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
     /**
      * Destroys the proxy, freeing up any allocated resources.
      */
+    @Override
     public CallbackCompletion<Void> destroy() {
         ((ZeroMqChannel) this.channel).terminate();
         return CallbackCompletion.createOutcome();
@@ -131,23 +129,25 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         return CallbackCompletion.createOutcome();
     }
 
-    @Override
-    public CallbackCompletion<Void> received(final Session session, final Message message) {
-        this.logger.debug("ConnectorProxy - Received " + message.specification.toString() + "...");
-        this.processResponse(message);
-        return CallbackCompletion.createOutcome();
-    }
-
-    protected void connect(final String driverIdentifier, final SessionSpecification session,
-            final Message initMessage) {
-        this.channel.connect(driverIdentifier, session, initMessage, this);
-    }
-
     protected CompletionToken generateToken() {
         final CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
         tokenBuilder.setMessageId(UUID.randomUUID().toString());
         tokenBuilder.setClientId(this.identifier);
         return tokenBuilder.build();
+    }
+
+    /**
+     * Returns the configuration of the connector's proxy.
+     * 
+     * @return the configuration of the connector's proxy
+     */
+    public IConfiguration getConfiguration() {
+        return this.configuration;
+    }
+
+    @Override
+    public CallbackCompletion<Void> initialize() {
+        return (CallbackCompletion.createOutcome());
     }
 
     /**
@@ -157,6 +157,13 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      *            the contents of the received message
      */
     protected abstract void processResponse(Message message);
+
+    @Override
+    public CallbackCompletion<Void> received(final Session session, final Message message) {
+        this.logger.debug("ConnectorProxy - Received " + message.specification.toString() + "...");
+        this.processResponse(message);
+        return CallbackCompletion.createOutcome();
+    }
 
     /**
      * Sends a request to the driver.
@@ -180,5 +187,4 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         this.send(message);
         return future.completion;
     }
-
 }

@@ -17,23 +17,23 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public class NopDataEncoder implements DataEncoder<byte[]> {
 
-	public NopDataEncoder() {
-	}
+    public NopDataEncoder() {
+    }
 
-	@Override
-	public byte[] encode(byte[] data) {
-		return data;
-	}
+    @Override
+    public byte[] decode(byte[] dataBytes) {
+        return dataBytes;
+    }
 
-	@Override
-	public byte[] decode(byte[] dataBytes) {
-		return dataBytes;
-	}
-
+    @Override
+    public byte[] encode(byte[] data) {
+        return data;
+    }
 }

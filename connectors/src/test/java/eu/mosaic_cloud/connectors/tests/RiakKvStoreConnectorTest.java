@@ -20,21 +20,18 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 
 public class RiakKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
-    @Override
-    public void setUp() {
-        this.context = RiakKvStoreConnectorTest.context_;
-        this.connector = GenericKvStoreConnector.create(this.context.configuration,
-                new PojoDataEncoder<String>(String.class), this.context.threading);
-    }
+
+    private static Context context_;
 
     @BeforeClass
     public static void setUpBeforeClass() {
@@ -52,5 +49,10 @@ public class RiakKvStoreConnectorTest extends
         BaseConnectorTest.tearDownContext(RiakKvStoreConnectorTest.context_);
     }
 
-    private static Context context_;
+    @Override
+    public void setUp() {
+        this.context = RiakKvStoreConnectorTest.context_;
+        this.connector = GenericKvStoreConnector.create(this.context.configuration,
+                new PojoDataEncoder<String>(String.class), this.context.threading);
+    }
 }

@@ -39,47 +39,11 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
  * 
  */
 public class ConnectorComponentResourceFinder {
-    private static ConnectorComponentResourceFinder finder;
-    final private MosaicLogger logger;
-
-    private ConnectorComponentResourceFinder() {
-        this.logger = MosaicLogger.createLogger(this);
-    }
-
-    /**
-     * Starts an asynchronous driver lookup. When the result from the mOSAIC
-     * platform arrives the provided callback will be invoked.
-     * 
-     * @param type
-     *            the type of resource to find
-     * @param threading
-     *            threading context for creating threads
-     * @param callback
-     *            the callback to be called when the resource is found
-     */
-    public void findResource(final ResourceType type, final ThreadingContext threading,
-            final IConnectorResourceFinderCallback callback) {
-        this.logger.trace("ResourceFinder - find resource");
-        final DeferredFuture<ComponentCallReply> replyFuture = ConnectorComponentCallbacks.callbacks
-                .findDriver(type);
-        final Worker worker = new Worker(replyFuture, callback);
-        Threading.createAndStartDaemonThread(threading, this, "callback", worker);
-    }
-
-    /**
-     * Returns a finder object.
-     * 
-     * @return the finder object
-     */
-    public static ConnectorComponentResourceFinder getResourceFinder() {
-        if (ConnectorComponentResourceFinder.finder == null) {
-            ConnectorComponentResourceFinder.finder = new ConnectorComponentResourceFinder();
-        }
-        return ConnectorComponentResourceFinder.finder;
-    }
 
     private class Worker implements Runnable {
+
         private final IConnectorResourceFinderCallback callback;
+
         private final DeferredFuture<ComponentCallReply> future;
 
         public Worker(final DeferredFuture<ComponentCallReply> future,
@@ -116,6 +80,45 @@ public class ConnectorComponentResourceFinder {
                 this.callback.resourceNotFound();
             }
         }
+    }
 
+    private static ConnectorComponentResourceFinder finder;
+
+    final private MosaicLogger logger;
+
+    private ConnectorComponentResourceFinder() {
+        this.logger = MosaicLogger.createLogger(this);
+    }
+
+    /**
+     * Returns a finder object.
+     * 
+     * @return the finder object
+     */
+    public static ConnectorComponentResourceFinder getResourceFinder() {
+        if (ConnectorComponentResourceFinder.finder == null) {
+            ConnectorComponentResourceFinder.finder = new ConnectorComponentResourceFinder();
+        }
+        return ConnectorComponentResourceFinder.finder;
+    }
+
+    /**
+     * Starts an asynchronous driver lookup. When the result from the mOSAIC
+     * platform arrives the provided callback will be invoked.
+     * 
+     * @param type
+     *            the type of resource to find
+     * @param threading
+     *            threading context for creating threads
+     * @param callback
+     *            the callback to be called when the resource is found
+     */
+    public void findResource(final ResourceType type, final ThreadingContext threading,
+            final IConnectorResourceFinderCallback callback) {
+        this.logger.trace("ResourceFinder - find resource");
+        final DeferredFuture<ComponentCallReply> replyFuture = ConnectorComponentCallbacks.callbacks
+                .findDriver(type);
+        final Worker worker = new Worker(replyFuture, callback);
+        Threading.createAndStartDaemonThread(threading, this, "callback", worker);
     }
 }

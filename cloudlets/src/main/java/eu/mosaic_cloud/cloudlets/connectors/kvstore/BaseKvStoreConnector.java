@@ -31,6 +31,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<Value>, Callback extends IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra>
         extends BaseConnector<Connector, Callback, Context> implements
         IKvStoreConnector<Context, Value, Extra> {
+
     protected BaseKvStoreConnector(final ICloudletController<?> cloudlet,
             final Connector connector, final IConfiguration config, final Callback callback,
             final Context context) {
@@ -47,6 +48,7 @@ public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.con
         final CallbackCompletion<Boolean> completion = this.connector.delete(key);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
+
                 @Override
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
@@ -77,6 +79,7 @@ public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.con
         final CallbackCompletion<Value> completion = this.connector.get(key);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
+
                 @Override
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
@@ -108,6 +111,7 @@ public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.con
         final CallbackCompletion<List<String>> completion = this.connector.list();
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
+
                 @Override
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
@@ -116,13 +120,13 @@ public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.con
                                 .listFailed(
                                         BaseKvStoreConnector.this.context,
                                         new KvStoreCallbackCompletionArguments<Context, List<String>, Extra>(
-                                                BaseKvStoreConnector.this.cloudlet, (String)null,
+                                                BaseKvStoreConnector.this.cloudlet, (String) null,
                                                 (List<String>) completion.getException(), extra));
                     }
                     return BaseKvStoreConnector.this.callback.listSucceeded(
                             BaseKvStoreConnector.this.context,
                             new KvStoreCallbackCompletionArguments<Context, List<String>, Extra>(
-                                    BaseKvStoreConnector.this.cloudlet, (String)null, completion
+                                    BaseKvStoreConnector.this.cloudlet, (String) null, completion
                                             .getOutcome(), extra));
                 }
             });
@@ -140,6 +144,7 @@ public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.con
         final CallbackCompletion<Boolean> completion = this.connector.set(key, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
+
                 @Override
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);

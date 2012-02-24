@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.ops;
 
 /**
@@ -30,22 +31,22 @@ package eu.mosaic_cloud.platform.core.ops;
  */
 public interface IOperationCompletionHandler<T> {
 
-	/**
-	 * Handles the result of the operation. This shall be called when operation
-	 * finishes successfully.
-	 * 
-	 * @param result
-	 *            the result
-	 */
-	void onSuccess(T result);
+    /**
+     * Handles the erroneous finish of an operation.
+     * 
+     * @param <E>
+     *            the type of the error
+     * @param error
+     *            the error
+     */
+    void onFailure(Throwable error);
 
-	/**
-	 * Handles the erroneous finish of an operation.
-	 * 
-	 * @param <E>
-	 *            the type of the error
-	 * @param error
-	 *            the error
-	 */
-	void onFailure(Throwable error);
+    /**
+     * Handles the result of the operation. This shall be called when operation
+     * finishes successfully.
+     * 
+     * @param result
+     *            the result
+     */
+    void onSuccess(T result);
 }

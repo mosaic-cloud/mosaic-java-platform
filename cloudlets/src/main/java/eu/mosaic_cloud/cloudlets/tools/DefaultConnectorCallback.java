@@ -34,6 +34,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public class DefaultConnectorCallback<C> extends DefaultCallback<C> implements
         IConnectorCallback<C> {
+
     @Override
     public CallbackCompletion<Void> destroyFailed(final C context,
             final CallbackArguments<C> arguments) {

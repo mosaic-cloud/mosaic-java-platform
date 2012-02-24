@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
+
+import org.json.JSONObject;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -25,31 +28,27 @@ import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import org.json.JSONObject;
 
 public class QueueConsumerCallback extends
-		DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
+        DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
-	@Override
-	public CallbackCompletion<Void> registerSucceeded(IndexerCloudletContext context,
-			CallbackArguments<IndexerCloudletContext> arguments) {
-		this.logger.info(
-				"Index Message consumer registered successfully.");
-		return ICallback.SUCCESS;
-	}
+    @Override
+    public CallbackCompletion<Void> consume(IndexerCloudletContext context,
+            AmqpQueueConsumeCallbackArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
+        final JSONObject message = arguments.getMessage();
+        IndexWorkflow.indexNewFeed(context, message);
+        if (this == context.batchConsumer) {
+            context.batchConsumer.acknowledge(arguments.getDelivery());
+        } else if (this == context.urgentConsumer) {
+            context.urgentConsumer.acknowledge(arguments.getDelivery());
+        }
+        return ICallback.SUCCESS;
+    }
 
-	@Override
-	public CallbackCompletion<Void> consume(
-			IndexerCloudletContext context,
-			AmqpQueueConsumeCallbackArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
-		JSONObject message = arguments.getMessage();
-
-		IndexWorkflow.indexNewFeed(context, message);
-		if (this == context.batchConsumer)
-			context.batchConsumer.acknowledge(arguments.getDelivery());
-		else if (this == context.urgentConsumer)
-			context.urgentConsumer.acknowledge(arguments.getDelivery());
-		return ICallback.SUCCESS;
-	}
-
+    @Override
+    public CallbackCompletion<Void> registerSucceeded(IndexerCloudletContext context,
+            CallbackArguments<IndexerCloudletContext> arguments) {
+        this.logger.info("Index Message consumer registered successfully.");
+        return ICallback.SUCCESS;
+    }
 }

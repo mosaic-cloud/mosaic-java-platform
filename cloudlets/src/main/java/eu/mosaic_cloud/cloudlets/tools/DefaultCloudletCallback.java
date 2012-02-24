@@ -35,6 +35,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public abstract class DefaultCloudletCallback<C> extends DefaultCallback<C> implements
         ICloudletCallback<C> {
+
     @Override
     public CallbackCompletion<Void> destroyFailed(final C context,
             final CloudletCallbackCompletionArguments<C> arguments) {

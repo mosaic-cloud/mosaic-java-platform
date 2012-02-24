@@ -20,6 +20,11 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
@@ -35,62 +40,32 @@ import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingConte
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public abstract class BaseConnectorTest<Connector extends IConnector, Context_ extends BaseConnectorTest.Context<?>> {
-    @Before
-    public abstract void setUp();
 
-    @After
-    public void tearDown() {
-        this.await(this.connector.destroy());
-        this.context = null;
-    }
+    protected static class Context<DriverStub extends AbstractDriverStub> {
 
-    @Test
-    public abstract void test();
+        IConfiguration configuration;
 
-    protected void await(final CallbackCompletion<?> completion) {
-        Assert.assertTrue(completion.await(this.context.poolTimeout));
-    }
+        ZeroMqChannel driverChannel;
 
-    protected boolean awaitBooleanOutcome(final CallbackCompletion<Boolean> completion) {
-        this.await(completion);
-        return this.getBooleanOutcome(completion);
-    }
+        DriverStub driverStub;
 
-    protected boolean awaitSuccess(final CallbackCompletion<?> completion) {
-        this.await(completion);
-        Assert.assertTrue(completion.isCompleted());
-        Assert.assertEquals(null, completion.getException());
-        return true;
-    }
+        TranscriptExceptionTracer exceptions;
 
-    protected <O> O awaitOutcome(final CallbackCompletion<O> completion) {
-        this.await(completion);
-        return this.getOutcome(completion);
-    }
+        QueueingExceptionTracer exceptions_;
 
-    protected boolean getBooleanOutcome(final CallbackCompletion<Boolean> completion) {
-        final Boolean value = this.getOutcome(completion);
-        Assert.assertNotNull(value);
-        return value.booleanValue();
-    }
+        MosaicLogger logger;
 
-    protected <O> O getOutcome(final CallbackCompletion<O> completion) {
-        Assert.assertTrue(completion.isCompleted());
-        Assert.assertEquals(null, completion.getException());
-        return completion.getOutcome();
-    }
+        long poolTimeout = 1000 * 1000;
 
-    protected void testConnector() {
-        Assert.assertNotNull(this.connector);
+        BasicThreadingContext threading;
+
+        Transcript transcript;
     }
 
     protected Connector connector;
+
     protected Context_ context;
 
     protected static <C extends Context<?>> void setupUpContext(
@@ -124,15 +99,52 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
         Assert.assertTrue(context.threading.destroy(context.poolTimeout));
     }
 
-    protected static class Context<DriverStub extends AbstractDriverStub> {
-        IConfiguration configuration;
-        ZeroMqChannel driverChannel;
-        DriverStub driverStub;
-        TranscriptExceptionTracer exceptions;
-        QueueingExceptionTracer exceptions_;
-        MosaicLogger logger;
-        long poolTimeout = 1000 * 1000;
-        BasicThreadingContext threading;
-        Transcript transcript;
+    protected void await(final CallbackCompletion<?> completion) {
+        Assert.assertTrue(completion.await(this.context.poolTimeout));
+    }
+
+    protected boolean awaitBooleanOutcome(final CallbackCompletion<Boolean> completion) {
+        this.await(completion);
+        return this.getBooleanOutcome(completion);
+    }
+
+    protected <O> O awaitOutcome(final CallbackCompletion<O> completion) {
+        this.await(completion);
+        return this.getOutcome(completion);
+    }
+
+    protected boolean awaitSuccess(final CallbackCompletion<?> completion) {
+        this.await(completion);
+        Assert.assertTrue(completion.isCompleted());
+        Assert.assertEquals(null, completion.getException());
+        return true;
+    }
+
+    protected boolean getBooleanOutcome(final CallbackCompletion<Boolean> completion) {
+        final Boolean value = this.getOutcome(completion);
+        Assert.assertNotNull(value);
+        return value.booleanValue();
+    }
+
+    protected <O> O getOutcome(final CallbackCompletion<O> completion) {
+        Assert.assertTrue(completion.isCompleted());
+        Assert.assertEquals(null, completion.getException());
+        return completion.getOutcome();
+    }
+
+    @Before
+    public abstract void setUp();
+
+    @After
+    public void tearDown() {
+        this.await(this.connector.destroy());
+        this.context = null;
+    }
+
+    @Test
+    public abstract void test();
+
+    protected void testConnector() {
+        Assert.assertNotNull(this.connector);
     }
 }

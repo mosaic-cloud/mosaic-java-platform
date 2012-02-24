@@ -50,8 +50,10 @@ public class CloudletManager {
     private List<Cloudlet<?>> cloudletPool;
 
     private ThreadingContext threading;
+
     private ClassLoader classLoader;
-    private Monitor monitor = Monitor.create(this);
+
+    private final Monitor monitor = Monitor.create(this);
 
     private IConfiguration configuration;
 
@@ -79,6 +81,80 @@ public class CloudletManager {
     }
 
     /**
+     * Creates a new cloudlet instance.
+     * 
+     * @throws CloudletException
+     *             if the cloudlet instance cannot be created
+     */
+    private void createCloudletInstance() throws CloudletException {
+        Class<?> handlerClasz;
+        Class<?> stateClasz;
+        IConfiguration resourceConfig;
+        try {
+            final String cloudletClass = ConfigUtils.resolveParameter(this.configuration,
+                    ConfigProperties.getString("CloudletComponentCallbacks.8"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+            if (cloudletClass.equals("")) {
+                throw new CloudletException("The configuration file " //$NON-NLS-1$
+                        + this.configuration.toString()
+                        + " does not specify a handler class for cloudlet " //$NON-NLS-1$
+                        + cloudletClass + "."); //$NON-NLS-1$
+            }
+            final String cloudletStateClass = ConfigUtils.resolveParameter(this.configuration,
+                    ConfigProperties.getString("CloudletComponentCallbacks.8"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+            if (cloudletStateClass.equals("")) {
+                throw new CloudletException("The configuration file " //$NON-NLS-1$
+                        + this.configuration.toString()
+                        + " does not specify a context class for cloudlet " //$NON-NLS-1$
+                        + cloudletClass + "."); //$NON-NLS-1$
+            }
+            final String resourceFile = ConfigUtils.resolveParameter(this.configuration,
+                    ConfigProperties.getString("CloudletComponentCallbacks.10"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+            handlerClasz = this.classLoader.loadClass(cloudletClass);
+            stateClasz = this.classLoader.loadClass(cloudletStateClass);
+            resourceConfig = PropertyTypeConfiguration.create(this.classLoader, resourceFile);
+            final ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
+            final Object cloudletState = invokeConstructor(stateClasz);
+            final Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler,
+                    this.threading, this.classLoader);
+            cloudlet.initialize(resourceConfig);
+            this.cloudletPool.add(cloudlet);
+        } catch (final ClassNotFoundException e) {
+            ExceptionTracer.traceDeferred(e);
+            CloudletManager.logger.error("Could not resolve class: " + e.getMessage()); //$NON-NLS-1$
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private <T> T createHandler(final Class<T> clasz) {
+        T instance = null;
+        final boolean isCallback = ICloudletCallback.class.isAssignableFrom(clasz);
+        if (!isCallback) {
+            CloudletManager.logger.error("Missmatched object class: `" + clasz.getName() + "`"); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new IllegalArgumentException();
+        }
+        try {
+            instance = clasz.newInstance();
+        } catch (final Throwable exception) {
+            ExceptionTracer.traceDeferred(exception);
+            CloudletManager.logger.error("Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new IllegalArgumentException(exception);
+        }
+        return instance;
+    }
+
+    private final Object invokeConstructor(final Class<?> clasz) {
+        Object instance;
+        try {
+            instance = clasz.newInstance();
+        } catch (final Throwable exception) {
+            CloudletManager.logger.error("Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
+            ExceptionTracer.traceIgnored(exception);
+            throw new IllegalArgumentException();
+        }
+        return (instance);
+    }
+
+    /**
      * Starts the container.
      * 
      * @throws CloudletException
@@ -94,91 +170,11 @@ public class CloudletManager {
      */
     public final void stop() {
         synchronized (this.monitor) {
-            for (Cloudlet<?> cloudlet : this.cloudletPool) {
+            for (final Cloudlet<?> cloudlet : this.cloudletPool) {
                 if (cloudlet.isActive()) {
                     cloudlet.destroy();
                 }
             }
         }
-    }
-
-    /**
-     * Creates a new cloudlet instance.
-     * 
-     * @throws CloudletException
-     *             if the cloudlet instance cannot be created
-     */
-    private void createCloudletInstance() throws CloudletException {
-        Class<?> handlerClasz;
-        Class<?> stateClasz;
-        IConfiguration resourceConfig;
-
-        try {
-
-            String cloudletClass = ConfigUtils.resolveParameter(this.configuration,
-                    ConfigProperties.getString("CloudletComponentCallbacks.8"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-            if (cloudletClass.equals("")) {
-                throw new CloudletException("The configuration file " //$NON-NLS-1$
-                        + this.configuration.toString()
-                        + " does not specify a handler class for cloudlet " //$NON-NLS-1$
-                        + cloudletClass + "."); //$NON-NLS-1$
-            }
-
-            String cloudletStateClass = ConfigUtils.resolveParameter(this.configuration,
-                    ConfigProperties.getString("CloudletComponentCallbacks.8"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-            if (cloudletStateClass.equals("")) {
-                throw new CloudletException("The configuration file " //$NON-NLS-1$
-                        + this.configuration.toString()
-                        + " does not specify a context class for cloudlet " //$NON-NLS-1$
-                        + cloudletClass + "."); //$NON-NLS-1$
-            }
-
-            String resourceFile = ConfigUtils.resolveParameter(this.configuration,
-                    ConfigProperties.getString("CloudletComponentCallbacks.10"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-
-            handlerClasz = this.classLoader.loadClass(cloudletClass);
-            stateClasz = this.classLoader.loadClass(cloudletStateClass);
-            resourceConfig = PropertyTypeConfiguration.create(this.classLoader, resourceFile);
-            ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
-            Object cloudletState = invokeConstructor(stateClasz);
-            Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler, this.threading,
-                    this.classLoader);
-            cloudlet.initialize(resourceConfig);
-            this.cloudletPool.add(cloudlet);
-        } catch (ClassNotFoundException e) {
-            ExceptionTracer.traceDeferred(e);
-            CloudletManager.logger.error("Could not resolve class: " + e.getMessage()); //$NON-NLS-1$
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    private final Object invokeConstructor(final Class<?> clasz) {
-        Object instance;
-        try {
-            instance = clasz.newInstance();
-        } catch (final Throwable exception) {
-            CloudletManager.logger.error("Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
-            ExceptionTracer.traceIgnored(exception);
-            throw new IllegalArgumentException();
-        }
-        return (instance);
-    }
-
-    private <T> T createHandler(final Class<T> clasz) {
-        T instance = null;
-        boolean isCallback = ICloudletCallback.class.isAssignableFrom(clasz);
-
-        if (!isCallback) {
-            CloudletManager.logger.error("Missmatched object class: `" + clasz.getName() + "`"); //$NON-NLS-1$ //$NON-NLS-2$
-            throw new IllegalArgumentException();
-        }
-        try {
-            instance = clasz.newInstance();
-        } catch (final Throwable exception) {
-            ExceptionTracer.traceDeferred(exception);
-            CloudletManager.logger.error("Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
-            throw new IllegalArgumentException(exception);
-        }
-        return instance;
     }
 }

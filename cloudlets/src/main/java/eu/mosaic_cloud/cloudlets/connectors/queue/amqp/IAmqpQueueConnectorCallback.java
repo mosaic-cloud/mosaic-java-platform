@@ -20,11 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-
 import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
 
 /**
  * Basic interface for AMQP accessor callbacks.
@@ -34,47 +32,46 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Context>
  *            the type of the cloudlet context
  */
-public interface IAmqpQueueConnectorCallback<Context>
-		extends
-			IQueueConnectorCallback<Context>
-{
-	/**
-	 * Called when consumer or publisher failed to register.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> registerFailed (Context context, CallbackArguments<Context> arguments);
-	
-	/**
-	 * Called when consumer or publisher registered successfully.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> registerSucceeded (Context context, CallbackArguments<Context> arguments);
-	
-	/**
-	 * Called when consumer or publisher failed to unregister.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> unregisterFailed (Context context, CallbackArguments<Context> arguments);
-	
-	/**
-	 * Called when consumer or publisher unregistered successfully.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> unregisterSucceeded (Context context, CallbackArguments<Context> arguments);
+public interface IAmqpQueueConnectorCallback<Context> extends IQueueConnectorCallback<Context> {
+
+    /**
+     * Called when consumer or publisher failed to register.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> registerFailed(Context context, CallbackArguments<Context> arguments);
+
+    /**
+     * Called when consumer or publisher registered successfully.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> registerSucceeded(Context context, CallbackArguments<Context> arguments);
+
+    /**
+     * Called when consumer or publisher failed to unregister.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> unregisterFailed(Context context, CallbackArguments<Context> arguments);
+
+    /**
+     * Called when consumer or publisher unregistered successfully.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> unregisterSucceeded(Context context,
+            CallbackArguments<Context> arguments);
 }

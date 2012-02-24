@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.ops;
 
 import java.util.concurrent.ExecutionException;
@@ -44,60 +45,57 @@ import java.util.concurrent.TimeoutException;
  */
 public class GenericResult<T> implements IResult<T> {
 
-	private final GenericOperation<T> operation;
+    private final GenericOperation<T> operation;
 
-	public GenericResult(final GenericOperation<T> operation) {
-		this.operation = operation;
-	}
+    public GenericResult(final GenericOperation<T> operation) {
+        this.operation = operation;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.mosaic_cloud.platform.core.IResult#getResult()
-	 */
-	@Override
-	public T getResult() throws InterruptedException, ExecutionException {
-		return this.operation.get();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.mosaic_cloud.platform.core.ops.IResult#cancel()
+     */
+    @Override
+    public final boolean cancel() {
+        boolean done;
+        // NOTE: first test if it was not already cancelled
+        done = this.operation.isCancelled();
+        if (!done) {
+            // NOTE: try to cancel the operation
+            done = this.operation.cancel();
+            // NOTE: cancellation may have failed if the operation was
+            // already finished
+            if (!done) {
+                done = this.operation.isDone();
+            }
+        }
+        return done;
+    }
 
-	@Override
-	public T getResult(long timeout, TimeUnit unit)
-			throws InterruptedException, ExecutionException, TimeoutException {
-		return this.operation.get(timeout, unit);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.mosaic_cloud.platform.core.IResult#getResult()
+     */
+    @Override
+    public T getResult() throws InterruptedException, ExecutionException {
+        return this.operation.get();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.mosaic_cloud.platform.core.ops.IResult#isDone()
-	 */
-	@Override
-	public final boolean isDone() {
-		return this.operation.isDone();
-	}
+    @Override
+    public T getResult(long timeout, TimeUnit unit) throws InterruptedException,
+            ExecutionException, TimeoutException {
+        return this.operation.get(timeout, unit);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.mosaic_cloud.platform.core.ops.IResult#cancel()
-	 */
-	@Override
-	public final boolean cancel() {
-		boolean done;
-
-		// NOTE: first test if it was not already cancelled
-		done = this.operation.isCancelled();
-
-		if (!done) {
-			// NOTE: try to cancel the operation
-			done = this.operation.cancel();
-
-			// NOTE: cancellation may have failed if the operation was
-			// already finished
-			if (!done) {
-				done = this.operation.isDone();
-			}
-		}
-		return done;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.mosaic_cloud.platform.core.ops.IResult#isDone()
+     */
+    @Override
+    public final boolean isDone() {
+        return this.operation.isDone();
+    }
 }

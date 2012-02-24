@@ -40,17 +40,6 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
         IKvStoreConnectorCallback<C, D, E> {
 
     /**
-     * Called when the add operation completed successfully.
-     * 
-     * @param context
-     *            cloudlet context
-     * @param arguments
-     *            callback arguments
-     */
-    CallbackCompletion<Void> addSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
-
-    /**
      * Called when the add operation completed unsuccessfully. The error can be
      * retrieved from the <i>arguments</i> parameter.
      * 
@@ -63,14 +52,14 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
     /**
-     * Called when the append operation completed successfully.
+     * Called when the add operation completed successfully.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> appendSucceeded(C context,
+    CallbackCompletion<Void> addSucceeded(C context,
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
     /**
@@ -86,15 +75,62 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
     /**
-     * Called when the prepend operation completed successfully.
+     * Called when the append operation completed successfully.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> prependSucceeded(C context,
+    CallbackCompletion<Void> appendSucceeded(C context,
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
+
+    /**
+     * Called when the cas operation completed unsuccessfully. The error can be
+     * retrieved from the <i>arguments</i> parameter.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> casFailed(C context,
+            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+
+    /**
+     * Called when the cas operation completed successfully.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> casSucceeded(C context,
+            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+
+    /**
+     * Called when the getBulk operation completed unsuccessfully. The error can
+     * be retrieved from the <i>arguments</i> parameter.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> getBulkFailed(C context,
+            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
+
+    /**
+     * Called when the getBulk operation completed successfully. The result of
+     * the get operation can be retrieved from the <i>arguments</i> parameter.
+     * 
+     * @param context
+     *            cloudlet context
+     * @param arguments
+     *            callback arguments
+     */
+    CallbackCompletion<Void> getBulkSucceeded(C context,
+            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
 
     /**
      * Called when the prepend operation completed unsuccessfully. The error can
@@ -109,14 +145,14 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
     /**
-     * Called when the replace operation completed successfully.
+     * Called when the prepend operation completed successfully.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> replaceSucceeded(C context,
+    CallbackCompletion<Void> prependSucceeded(C context,
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
     /**
@@ -132,49 +168,13 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
 
     /**
-     * Called when the getBulk operation completed successfully. The result of
-     * the get operation can be retrieved from the <i>arguments</i> parameter.
+     * Called when the replace operation completed successfully.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getBulkSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
-
-    /**
-     * Called when the getBulk operation completed unsuccessfully. The error can
-     * be retrieved from the <i>arguments</i> parameter.
-     * 
-     * @param context
-     *            cloudlet context
-     * @param arguments
-     *            callback arguments
-     */
-    CallbackCompletion<Void> getBulkFailed(C context,
-            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
-
-    /**
-     * Called when the cas operation completed successfully.
-     * 
-     * @param context
-     *            cloudlet context
-     * @param arguments
-     *            callback arguments
-     */
-    CallbackCompletion<Void> casSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
-
-    /**
-     * Called when the cas operation completed unsuccessfully. The error can be
-     * retrieved from the <i>arguments</i> parameter.
-     * 
-     * @param context
-     *            cloudlet context
-     * @param arguments
-     *            callback arguments
-     */
-    CallbackCompletion<Void> casFailed(C context,
+    CallbackCompletion<Void> replaceSucceeded(C context,
             KvStoreCallbackCompletionArguments<C, D, E> arguments);
 }

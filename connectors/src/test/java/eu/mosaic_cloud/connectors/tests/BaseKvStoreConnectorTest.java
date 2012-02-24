@@ -22,13 +22,20 @@ package eu.mosaic_cloud.connectors.tests;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import org.junit.Assert;
 import org.junit.Test;
 
+import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
+
 public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConnector<String, ?>>
         extends BaseConnectorTest<Connector, BaseKvStoreConnectorTest.Context> {
+
+    protected static class Context extends BaseConnectorTest.Context<KeyValueStub> {
+
+        public String keyPrefix = UUID.randomUUID().toString();
+    }
+
     @Override
     @Test
     public void test() {
@@ -62,9 +69,5 @@ public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConn
         final String k2 = this.context.keyPrefix + "_key_famous";
         Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1, "fantastic")));
         Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2, "famous")));
-    }
-
-    protected static class Context extends BaseConnectorTest.Context<KeyValueStub> {
-        public String keyPrefix = UUID.randomUUID().toString();
     }
 }

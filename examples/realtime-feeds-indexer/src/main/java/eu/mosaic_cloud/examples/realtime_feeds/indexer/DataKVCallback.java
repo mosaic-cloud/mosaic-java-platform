@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import java.util.HashMap;
@@ -31,42 +32,37 @@ import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCl
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class DataKVCallback extends
-		DefaultKvStoreConnectorCallback<IndexerCloudletContext, byte[], UUID> {
+        DefaultKvStoreConnectorCallback<IndexerCloudletContext, byte[], UUID> {
 
-	private static final String BUCKET_NAME = "feed-data";
+    private static final String BUCKET_NAME = "feed-data";
 
-	@Override
-	public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
-			CallbackArguments<IndexerCloudletContext> arguments) {
-		context.dataStore = null;
-		return ICallback.SUCCESS;
-	}
+    @Override
+    public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
+            CallbackArguments<IndexerCloudletContext> arguments) {
+        context.dataStore = null;
+        return ICallback.SUCCESS;
+    }
 
-	@Override
-	public CallbackCompletion<Void> getSucceeded(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[], UUID> arguments) {
-		String key = arguments.getKey();
-		this.logger.trace(
-				"succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key
-						+ ")");
-		IndexWorkflow.parseLatestFeed(arguments.getValue(),
-				arguments.getExtra());
-		return ICallback.SUCCESS;
-	}
+    @Override
+    public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
+            KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[], UUID> arguments) {
+        final String key = arguments.getKey();
+        this.logger.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key + ")");
+        final Map<String, String> errorMssg = new HashMap<String, String>(4);
+        errorMssg.put("reason", "unexpected key-value store error");
+        errorMssg.put("message", arguments.getValue().toString());
+        errorMssg.put("bucket", DataKVCallback.BUCKET_NAME);
+        errorMssg.put("key", key);
+        IndexWorkflow.onIndexError(errorMssg);
+        return ICallback.SUCCESS;
+    }
 
-	@Override
-	public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
-			KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[], UUID> arguments) {
-		String key = arguments.getKey();
-		this.logger
-				.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key
-						+ ")");
-		Map<String, String> errorMssg = new HashMap<String, String>(4);
-		errorMssg.put("reason", "unexpected key-value store error");
-		errorMssg.put("message", arguments.getValue().toString());
-		errorMssg.put("bucket", DataKVCallback.BUCKET_NAME);
-		errorMssg.put("key", key);
-		IndexWorkflow.onIndexError(errorMssg);
-		return ICallback.SUCCESS;
-	}
+    @Override
+    public CallbackCompletion<Void> getSucceeded(IndexerCloudletContext context,
+            KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[], UUID> arguments) {
+        final String key = arguments.getKey();
+        this.logger.trace("succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key + ")");
+        IndexWorkflow.parseLatestFeed(arguments.getValue(), arguments.getExtra());
+        return ICallback.SUCCESS;
+    }
 }

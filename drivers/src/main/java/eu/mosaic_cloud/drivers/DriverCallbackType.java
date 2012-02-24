@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers;
 
 /**
@@ -26,16 +27,16 @@ package eu.mosaic_cloud.drivers;
  * 
  */
 public enum DriverCallbackType {
-	AMQP("eu.mosaic_cloud.drivers.queue.amqp.AmqpDriverComponentCallbacks"), KV(
-			"eu.mosaic_cloud.drivers.kvstore.KVDriverComponentCallbacks");
+    AMQP("eu.mosaic_cloud.drivers.queue.amqp.AmqpDriverComponentCallbacks"), KV(
+            "eu.mosaic_cloud.drivers.kvstore.KVDriverComponentCallbacks");
 
-	private final String callbackClass;
+    private final String callbackClass;
 
-	DriverCallbackType(String canonicalClassName) {
-		this.callbackClass = canonicalClassName;
-	}
+    DriverCallbackType(String canonicalClassName) {
+        this.callbackClass = canonicalClassName;
+    }
 
-	public String getCallbackClass() {
-		return this.callbackClass;
-	}
+    public String getCallbackClass() {
+        return this.callbackClass;
+    }
 }

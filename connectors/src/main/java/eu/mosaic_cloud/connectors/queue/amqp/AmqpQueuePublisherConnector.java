@@ -20,7 +20,6 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-
 import eu.mosaic_cloud.connectors.core.BaseConnector;
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.interoperability.core.Channel;
@@ -31,30 +30,30 @@ import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
+public class AmqpQueuePublisherConnector<Message> extends
+        AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<Message>> implements
+        IAmqpQueuePublisherConnector<Message> {
 
-public class AmqpQueuePublisherConnector<Message>
-		extends AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<Message>>
-		implements
-			IAmqpQueuePublisherConnector<Message>
-{
-	protected AmqpQueuePublisherConnector (final AmqpQueuePublisherConnectorProxy<Message> proxy)
-	{
-		super (proxy);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> publish (final Message message)
-	{
-		return this.proxy.publish (message);
-	}
-	
-	public static <Message> AmqpQueuePublisherConnector<Message> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final ThreadingContext threading)
-	{
-		final String driverIdentity = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("GenericConnector.1"), String.class, "");
-		final String driverEndpoint = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("GenericConnector.0"), String.class, "");
-		final Channel channel = BaseConnector.createChannel (driverEndpoint, threading);
-		channel.register (AmqpSession.CONNECTOR);
-		final AmqpQueuePublisherConnectorProxy<Message> proxy = AmqpQueuePublisherConnectorProxy.create (configuration, driverIdentity, channel, messageClass, messageEncoder);
-		return new AmqpQueuePublisherConnector<Message> (proxy);
-	}
+    protected AmqpQueuePublisherConnector(final AmqpQueuePublisherConnectorProxy<Message> proxy) {
+        super(proxy);
+    }
+
+    public static <Message> AmqpQueuePublisherConnector<Message> create(
+            final IConfiguration configuration, final Class<Message> messageClass,
+            final DataEncoder<Message> messageEncoder, final ThreadingContext threading) {
+        final String driverIdentity = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("GenericConnector.1"), String.class, "");
+        final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("GenericConnector.0"), String.class, "");
+        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
+        channel.register(AmqpSession.CONNECTOR);
+        final AmqpQueuePublisherConnectorProxy<Message> proxy = AmqpQueuePublisherConnectorProxy
+                .create(configuration, driverIdentity, channel, messageClass, messageEncoder);
+        return new AmqpQueuePublisherConnector<Message>(proxy);
+    }
+
+    @Override
+    public CallbackCompletion<Void> publish(final Message message) {
+        return this.proxy.publish(message);
+    }
 }

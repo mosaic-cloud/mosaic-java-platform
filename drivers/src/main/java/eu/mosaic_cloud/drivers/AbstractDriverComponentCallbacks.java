@@ -17,9 +17,11 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
@@ -48,105 +50,109 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public abstract class AbstractDriverComponentCallbacks implements
-		ComponentCallbacks, CallbackHandler {
+public abstract class AbstractDriverComponentCallbacks implements ComponentCallbacks,
+        CallbackHandler {
 
-	protected AbstractDriverComponentCallbacks(ComponentContext context) {
-		this.threading = context.threading;
-		this.logger = MosaicLogger.createLogger(this);
-	}
+    protected static enum Status {
+        Created, Registered, Terminated, Unregistered, WaitingResourceResolved;
+    }
 
-	protected static enum Status {
-		Created, Registered, Terminated, Unregistered, WaitingResourceResolved;
-	}
+    protected Status status;
 
-	protected Status status;
-	protected ComponentController component;
-	protected ComponentCallReference pendingReference;
-	protected AbstractDriverStub stub;
-	protected ComponentIdentifier resourceGroup;
-	protected ComponentIdentifier selfGroup;
-	protected IConfiguration driverConfiguration;
-	protected ThreadingContext threading;
-	protected MosaicLogger logger;
+    protected ComponentController component;
 
-	public void terminate() {
-		Preconditions.checkState(this.component != null);
-		this.component.terminate();
-	}
+    protected ComponentCallReference pendingReference;
 
-	@Override
-	public CallbackCompletion<Void> casted(ComponentController component,
-			ComponentCastRequest request) {
-		Preconditions.checkState(this.component == component);
-		Preconditions.checkState((this.status != Status.Terminated)
-				&& (this.status != Status.Unregistered));
-		throw new UnsupportedOperationException();
-	}
+    protected AbstractDriverStub stub;
 
-	@Override
+    protected ComponentIdentifier resourceGroup;
 
-	public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
-		Preconditions.checkState(this.component == component);
-		Preconditions.checkState((this.status != Status.Terminated)
-				&& (this.status != Status.Unregistered));
-		if (this.stub != null) {
-			this.stub.destroy();
-		}
-		this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
-		this.status = Status.Terminated;
-		ExceptionTracer.traceIgnored(exception);
-		return null;
-	}
+    protected ComponentIdentifier selfGroup;
 
-	@Override
-	public CallbackCompletion<Void> terminated(ComponentController component) {
-		Preconditions.checkState(this.component == component);
-		Preconditions.checkState((this.status != Status.Terminated)
-				&& (this.status != Status.Unregistered));
-		if (this.stub != null) {
-			this.stub.destroy();
-			this.logger.trace("Driver callbacks terminated.");
-		}
-		this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
-		this.status = Status.Terminated;
-		return null;
-	}
+    protected IConfiguration driverConfiguration;
 
-	@Override
-	public final void failedCallbacks(Callbacks trigger, Throwable exception) {
-		this.failed(this.component, exception);
-	}
+    protected ThreadingContext threading;
 
-	@Override
-	public final void registeredCallbacks(Callbacks trigger, CallbackIsolate isolate) {
-	}
+    protected MosaicLogger logger;
 
-	@Override
-	public final void unregisteredCallbacks(Callbacks trigger) {
-	}
+    protected AbstractDriverComponentCallbacks(ComponentContext context) {
+        this.threading = context.threading;
+        this.logger = MosaicLogger.createLogger(this);
+    }
 
-	protected ZeroMqChannel createDriverChannel(String channelIdentifierProp,
-			String channelEndpointProp, SessionSpecification role) {
-		// NOTE: create stub and interop channel
-		Preconditions.checkNotNull(this.driverConfiguration);
-		ZeroMqChannel driverChannel = ZeroMqChannel.create(ConfigUtils
-				.resolveParameter(this.driverConfiguration,
-						channelIdentifierProp, String.class, ""),
-				this.threading, AbortingExceptionTracer.defaultInstance);
-		driverChannel.register(role);
-		driverChannel.accept(ConfigUtils
-				.resolveParameter(this.driverConfiguration,
-						channelEndpointProp, String.class, ""));
-		return driverChannel;
-	}
+    @Override
+    public CallbackCompletion<Void> casted(ComponentController component,
+            ComponentCastRequest request) {
+        Preconditions.checkState(this.component == component);
+        Preconditions.checkState((this.status != Status.Terminated)
+                && (this.status != Status.Unregistered));
+        throw new UnsupportedOperationException();
+    }
 
-	protected IConfiguration getDriverConfiguration() {
-		return this.driverConfiguration;
-	}
+    protected ZeroMqChannel createDriverChannel(String channelIdentifierProp,
+            String channelEndpointProp, SessionSpecification role) {
+        // NOTE: create stub and interop channel
+        Preconditions.checkNotNull(this.driverConfiguration);
+        final ZeroMqChannel driverChannel = ZeroMqChannel.create(ConfigUtils.resolveParameter(
+                this.driverConfiguration, channelIdentifierProp, String.class, ""), this.threading,
+                AbortingExceptionTracer.defaultInstance);
+        driverChannel.register(role);
+        driverChannel.accept(ConfigUtils.resolveParameter(this.driverConfiguration,
+                channelEndpointProp, String.class, ""));
+        return driverChannel;
+    }
 
-	protected void setDriverConfiguration(IConfiguration driverConfiguration) {
-		this.driverConfiguration = driverConfiguration;
-	}
+    @Override
+    public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
+        Preconditions.checkState(this.component == component);
+        Preconditions.checkState((this.status != Status.Terminated)
+                && (this.status != Status.Unregistered));
+        if (this.stub != null) {
+            this.stub.destroy();
+        }
+        this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
+        this.status = Status.Terminated;
+        ExceptionTracer.traceIgnored(exception);
+        return null;
+    }
 
+    @Override
+    public final void failedCallbacks(Callbacks trigger, Throwable exception) {
+        this.failed(this.component, exception);
+    }
+
+    protected IConfiguration getDriverConfiguration() {
+        return this.driverConfiguration;
+    }
+
+    @Override
+    public final void registeredCallbacks(Callbacks trigger, CallbackIsolate isolate) {
+    }
+
+    protected void setDriverConfiguration(IConfiguration driverConfiguration) {
+        this.driverConfiguration = driverConfiguration;
+    }
+
+    public void terminate() {
+        Preconditions.checkState(this.component != null);
+        this.component.terminate();
+    }
+
+    @Override
+    public CallbackCompletion<Void> terminated(ComponentController component) {
+        Preconditions.checkState(this.component == component);
+        Preconditions.checkState((this.status != Status.Terminated)
+                && (this.status != Status.Unregistered));
+        if (this.stub != null) {
+            this.stub.destroy();
+            this.logger.trace("Driver callbacks terminated.");
+        }
+        this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
+        this.status = Status.Terminated;
+        return null;
+    }
+
+    @Override
+    public final void unregisteredCallbacks(Callbacks trigger) {
+    }
 }

@@ -37,6 +37,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 public class GenericKvStoreConnector<Context, Value, Extra>
         extends
         BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>, IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra> {
+
     public GenericKvStoreConnector(
             final ICloudletController<?> cloudlet,
             final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> connector,

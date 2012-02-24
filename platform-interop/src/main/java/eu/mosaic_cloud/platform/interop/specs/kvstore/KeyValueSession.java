@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
 import java.util.Collections;
@@ -36,41 +37,43 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * 
  */
 public enum KeyValueSession implements SessionSpecification {
+    CONNECTOR(KeyValueRole.CONNECTOR, KeyValueRole.DRIVER), DRIVER(
+            KeyValueRole.DRIVER,
+            KeyValueRole.CONNECTOR);
 
-	CONNECTOR(KeyValueRole.CONNECTOR, KeyValueRole.DRIVER), DRIVER(
-			KeyValueRole.DRIVER, KeyValueRole.CONNECTOR);
+    public final KeyValueRole selfRole;
 
-	public final KeyValueRole selfRole;
-	public final KeyValueRole peerRole;
-	public final List<KeyValueMessage> messages;
+    public final KeyValueRole peerRole;
 
-	private KeyValueSession(KeyValueRole selfRole, KeyValueRole peerRole) {
-		this.selfRole = selfRole;
-		this.peerRole = peerRole;
-		List<KeyValueMessage> messages = new LinkedList<KeyValueMessage>();
-		for (KeyValueMessage message : KeyValueMessage.values()) {
-			messages.add(message);
-		}
-		this.messages = Collections.unmodifiableList(messages);
-	}
+    public final List<KeyValueMessage> messages;
 
-	@Override
-	public Iterable<? extends MessageSpecification> getMessages() {
-		return this.messages;
-	}
+    private KeyValueSession(KeyValueRole selfRole, KeyValueRole peerRole) {
+        this.selfRole = selfRole;
+        this.peerRole = peerRole;
+        final List<KeyValueMessage> messages = new LinkedList<KeyValueMessage>();
+        for (final KeyValueMessage message : KeyValueMessage.values()) {
+            messages.add(message);
+        }
+        this.messages = Collections.unmodifiableList(messages);
+    }
 
-	@Override
-	public RoleSpecification getPeerRole() {
-		return this.peerRole;
-	}
+    @Override
+    public Iterable<? extends MessageSpecification> getMessages() {
+        return this.messages;
+    }
 
-	@Override
-	public RoleSpecification getSelfRole() {
-		return this.selfRole;
-	}
+    @Override
+    public RoleSpecification getPeerRole() {
+        return this.peerRole;
+    }
 
-	@Override
-	public String getQualifiedName() {
-		return (Identifiers.generateName(this));
-	}
+    @Override
+    public String getQualifiedName() {
+        return (Identifiers.generateName(this));
+    }
+
+    @Override
+    public RoleSpecification getSelfRole() {
+        return this.selfRole;
+    }
 }

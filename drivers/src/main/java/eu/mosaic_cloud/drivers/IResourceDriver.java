@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers;
 
 /**
@@ -27,8 +28,8 @@ package eu.mosaic_cloud.drivers;
  */
 public interface IResourceDriver {
 
-	/**
-	 * Destroy the connection with the resource.
-	 */
-	void destroy();
+    /**
+     * Destroy the connection with the resource.
+     */
+    void destroy();
 }

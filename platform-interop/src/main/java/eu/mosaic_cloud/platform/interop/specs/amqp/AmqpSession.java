@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.interop.specs.amqp;
 
 import java.util.Collections;
@@ -36,41 +37,41 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * 
  */
 public enum AmqpSession implements SessionSpecification {
+    CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(AmqpRole.DRIVER, AmqpRole.CONNECTOR);
 
-	CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(AmqpRole.DRIVER,
-			AmqpRole.CONNECTOR);
+    public final AmqpRole selfRole;
 
-	public final AmqpRole selfRole;
-	public final AmqpRole peerRole;
-	public final List<AmqpMessage> messages;
+    public final AmqpRole peerRole;
 
-	private AmqpSession(AmqpRole selfRole, AmqpRole peerRole) {
-		this.selfRole = selfRole;
-		this.peerRole = peerRole;
-		List<AmqpMessage> messages = new LinkedList<AmqpMessage>();
-		for (AmqpMessage message : AmqpMessage.values()) {
-			messages.add(message);
-		}
-		this.messages = Collections.unmodifiableList(messages);
-	}
+    public final List<AmqpMessage> messages;
 
-	@Override
-	public Iterable<? extends MessageSpecification> getMessages() {
-		return this.messages;
-	}
+    private AmqpSession(AmqpRole selfRole, AmqpRole peerRole) {
+        this.selfRole = selfRole;
+        this.peerRole = peerRole;
+        final List<AmqpMessage> messages = new LinkedList<AmqpMessage>();
+        for (final AmqpMessage message : AmqpMessage.values()) {
+            messages.add(message);
+        }
+        this.messages = Collections.unmodifiableList(messages);
+    }
 
-	@Override
-	public RoleSpecification getPeerRole() {
-		return this.peerRole;
-	}
+    @Override
+    public Iterable<? extends MessageSpecification> getMessages() {
+        return this.messages;
+    }
 
-	@Override
-	public RoleSpecification getSelfRole() {
-		return this.selfRole;
-	}
+    @Override
+    public RoleSpecification getPeerRole() {
+        return this.peerRole;
+    }
 
-	@Override
-	public String getQualifiedName() {
-		return (Identifiers.generateName(this));
-	}
+    @Override
+    public String getQualifiedName() {
+        return (Identifiers.generateName(this));
+    }
+
+    @Override
+    public RoleSpecification getSelfRole() {
+        return this.selfRole;
+    }
 }

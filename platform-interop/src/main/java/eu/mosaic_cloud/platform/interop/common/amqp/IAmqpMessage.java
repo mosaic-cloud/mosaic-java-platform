@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.interop.common.amqp;
 
 /**
@@ -26,5 +27,4 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
  * 
  */
 public interface IAmqpMessage {
-
 }

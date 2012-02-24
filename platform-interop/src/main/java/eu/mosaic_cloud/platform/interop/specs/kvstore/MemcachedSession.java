@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.interop.specs.kvstore;
 
 import java.util.Collections;
@@ -37,44 +38,46 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * 
  */
 public enum MemcachedSession implements SessionSpecification {
+    CONNECTOR(MemcachedRole.CONNECTOR, MemcachedRole.DRIVER), DRIVER(
+            MemcachedRole.DRIVER,
+            MemcachedRole.CONNECTOR);
 
-	CONNECTOR(MemcachedRole.CONNECTOR, MemcachedRole.DRIVER), DRIVER(
-			MemcachedRole.DRIVER, MemcachedRole.CONNECTOR);
+    public final MemcachedRole selfRole;
 
-	public final MemcachedRole selfRole;
-	public final MemcachedRole peerRole;
-	public final List<MessageSpecification> messages;
+    public final MemcachedRole peerRole;
 
-	private MemcachedSession(MemcachedRole selfRole, MemcachedRole peerRole) {
-		this.selfRole = selfRole;
-		this.peerRole = peerRole;
-		List<MessageSpecification> messages = new LinkedList<MessageSpecification>();
-		for (MemcachedMessage message : MemcachedMessage.values()) {
-			messages.add(message);
-		}
-		for (KeyValueMessage message : KeyValueMessage.values()) {
-			messages.add(message);
-		}
-		this.messages = Collections.unmodifiableList(messages);
-	}
+    public final List<MessageSpecification> messages;
 
-	@Override
-	public Iterable<? extends MessageSpecification> getMessages() {
-		return this.messages;
-	}
+    private MemcachedSession(MemcachedRole selfRole, MemcachedRole peerRole) {
+        this.selfRole = selfRole;
+        this.peerRole = peerRole;
+        final List<MessageSpecification> messages = new LinkedList<MessageSpecification>();
+        for (final MemcachedMessage message : MemcachedMessage.values()) {
+            messages.add(message);
+        }
+        for (final KeyValueMessage message : KeyValueMessage.values()) {
+            messages.add(message);
+        }
+        this.messages = Collections.unmodifiableList(messages);
+    }
 
-	@Override
-	public RoleSpecification getPeerRole() {
-		return this.peerRole;
-	}
+    @Override
+    public Iterable<? extends MessageSpecification> getMessages() {
+        return this.messages;
+    }
 
-	@Override
-	public RoleSpecification getSelfRole() {
-		return this.selfRole;
-	}
+    @Override
+    public RoleSpecification getPeerRole() {
+        return this.peerRole;
+    }
 
-	@Override
-	public String getQualifiedName() {
-		return (Identifiers.generateName(this));
-	}
+    @Override
+    public String getQualifiedName() {
+        return (Identifiers.generateName(this));
+    }
+
+    @Override
+    public RoleSpecification getSelfRole() {
+        return this.selfRole;
+    }
 }

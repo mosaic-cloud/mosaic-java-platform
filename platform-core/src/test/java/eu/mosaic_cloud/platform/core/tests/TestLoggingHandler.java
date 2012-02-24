@@ -17,33 +17,31 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.tests;
 
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 
-public class TestLoggingHandler<T extends Object> implements
-		IOperationCompletionHandler<T> {
+public class TestLoggingHandler<T extends Object> implements IOperationCompletionHandler<T> {
 
-	private String testName = "";
-	private MosaicLogger logger;
+    private String testName = "";
 
-	public TestLoggingHandler(String testName) {
-		super();
-		this.testName = testName;
-		this.logger = MosaicLogger.createLogger(this);
-	}
+    private final MosaicLogger logger;
 
-	@Override
-	public void onSuccess(T result) {
-		logger.trace("Test " + this.testName + " finished with result: "
-				+ result);
-	}
+    public TestLoggingHandler(String testName) {
+        super();
+        this.testName = testName;
+        this.logger = MosaicLogger.createLogger(this);
+    }
 
-	@Override
-	public void onFailure(Throwable error) {
-		logger.error("Test " + this.testName + " finished with error: "
-				+ error.getMessage());
-	}
+    @Override
+    public void onFailure(Throwable error) {
+        this.logger.error("Test " + this.testName + " finished with error: " + error.getMessage());
+    }
 
+    @Override
+    public void onSuccess(T result) {
+        this.logger.trace("Test " + this.testName + " finished with result: " + result);
+    }
 }

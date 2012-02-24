@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
@@ -45,228 +46,206 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class PongCloudlet {
 
-	public static final class LifeCycleHandler extends
-			DefaultCloudletCallback<PongCloudletContext> {
+    public static final class AmqpConsumerCallback extends
+            DefaultAmqpQueueConsumerConnectorCallback<PongCloudletContext, PingMessage, Void> {
 
-		@Override
-		public CallbackCompletion<Void> initialize(PongCloudletContext context,
-				CloudletCallbackArguments<PongCloudletContext> arguments) {
-			this.logger.info("Pong Cloudlet is being initialized.");
-			ICloudletController<PongCloudletContext> cloudlet = arguments
-					.getCloudlet();
-			IConfiguration configuration = cloudlet.getConfiguration();
-			IConfiguration kvConfiguration = configuration
-					.spliceConfiguration(ConfigurationIdentifier
-							.resolveAbsolute("kvstore"));
-			context.kvStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class)
-					.create(kvConfiguration, PingPongData.class,
-							new JsonDataEncoder<PingPongData>(PingPongData.class),
-							new KeyValueCallback(), context);
-			IConfiguration queueConfiguration = configuration
-					.spliceConfiguration(ConfigurationIdentifier
-							.resolveAbsolute("queue"));
-			context.consumer = cloudlet.getConnectorFactory(IAmqpQueueConsumerConnectorFactory.class)
-					.create(queueConfiguration, PingMessage.class,
-							new JsonDataEncoder<PingMessage>(PingMessage.class),
-							new AmqpConsumerCallback(), context);
-			context.publisher = cloudlet.getConnectorFactory(IAmqpQueuePublisherConnectorFactory.class)
-					.create(queueConfiguration, PongMessage.class,
-							new JsonDataEncoder<PongMessage>(PongMessage.class),
-							new AmqpPublisherCallback(), context);
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> acknowledgeSucceeded(PongCloudletContext context,
+                GenericCallbackCompletionArguments<PongCloudletContext, Void> arguments) {
+            context.consumer.destroy();
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
-				CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
-			this.logger.info("Pong Cloudlet initialized successfully.");
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> consume(PongCloudletContext context,
+                AmqpQueueConsumeCallbackArguments<PongCloudletContext, PingMessage, Void> arguments) {
+            // NOTE: retrieve message data
+            final PingMessage data = arguments.getMessage();
+            this.logger.info("Pong Cloudlet received fetch request for key " + data.getKey());
+            // NOTE: get value from key value store
+            context.kvStore.get(data.getKey(), null);
+            context.consumer.acknowledge(arguments.getDelivery());
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> destroy(PongCloudletContext context,
-				CloudletCallbackArguments<PongCloudletContext> arguments) {
-			this.logger.info("Pong Cloudlet is being destroyed.");
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet consumer was destroyed successfully.");
+            if ((context.publisher == null) && (context.kvStore == null)) {
+                arguments.getCloudlet().destroy();
+            }
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
-				CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
-			this.logger.info("Pong Cloudlet was destroyed successfully.");
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            // NOTE: if resource initialized successfully then just register as
+            // a consumer
+            return ICallback.SUCCESS;
+        }
 
-	}
+        @Override
+        public CallbackCompletion<Void> registerSucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet consumer registered successfully.");
+            return ICallback.SUCCESS;
+        }
 
-	public static final class KeyValueCallback extends
-			DefaultKvStoreConnectorCallback<PongCloudletContext, PingPongData, Void> {
+        @Override
+        public CallbackCompletion<Void> unregisterSucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet consumer unregistered successfully.");
+            // NOTE: if unregistered as consumer is successful then destroy
+            // resource
+            final ICloudletController<?> cloudlet = arguments.getCloudlet();
+            context.consumer.destroy();
+            return ICallback.SUCCESS;
+        }
+    }
 
-		@Override
-		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			this.logger
-					.info("Pong Cloudlet - KeyValue accessor initialized successfully");
-			return ICallback.SUCCESS;
-		}
+    public static final class AmqpPublisherCallback extends
+            DefaultAmqpPublisherConnectorCallback<PongCloudletContext, PongMessage, Void> {
 
-		@Override
-		public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			context.kvStore = null;
-			if ((context.publisher == null) && (context.consumer == null)) {
-				arguments.getCloudlet().destroy();
-			}
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet publisher was destroyed successfully.");
+            context.publisher = null;
+            if ((context.consumer == null) && (context.kvStore == null)) {
+                arguments.getCloudlet().destroy();
+            }
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> getSucceeded(PongCloudletContext context,
-				KvStoreCallbackCompletionArguments<PongCloudletContext, PingPongData, Void> arguments) {
-			this.logger.info("Pong Cloudlet - key value fetch data succeeded");
+        @Override
+        public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            // NOTE: if resource initialized successfully then just register as
+            // a publisher
+            return ICallback.SUCCESS;
+        }
 
-			// NOTE: send reply to Ping Cloudlet
-			PongMessage pong = new PongMessage(arguments.getKey(),
-					arguments.getValue());
-			context.publisher.publish(pong, null);
+        @Override
+        public CallbackCompletion<Void> publishSucceeded(PongCloudletContext context,
+                GenericCallbackCompletionArguments<PongCloudletContext, Void> arguments) {
+            context.publisher.destroy();
+            return ICallback.SUCCESS;
+        }
 
-			ICloudletController<?> cloudlet = arguments
-					.getCloudlet();
-			try {
-				context.kvStore.destroy();
-			} catch (Exception e) {
-				ExceptionTracer.traceIgnored(e);
-			}
+        @Override
+        public CallbackCompletion<Void> registerSucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet publisher registered successfully.");
+            return ICallback.SUCCESS;
+        }
 
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> unregisterSucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet publisher unregistered successfully.");
+            // NOTE: if unregistered as publisher is successful then destroy
+            // resource
+            final ICloudletController<?> cloudlet = arguments.getCloudlet();
+            context.publisher.destroy();
+            return ICallback.SUCCESS;
+        }
+    }
 
-	}
+    public static final class KeyValueCallback extends
+            DefaultKvStoreConnectorCallback<PongCloudletContext, PingPongData, Void> {
 
-	public static final class AmqpConsumerCallback extends
-			DefaultAmqpQueueConsumerConnectorCallback<PongCloudletContext, PingMessage, Void> {
+        @Override
+        public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            context.kvStore = null;
+            if ((context.publisher == null) && (context.consumer == null)) {
+                arguments.getCloudlet().destroy();
+            }
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> registerSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			this.logger.info("Pong Cloudlet consumer registered successfully.");
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> getSucceeded(
+                PongCloudletContext context,
+                KvStoreCallbackCompletionArguments<PongCloudletContext, PingPongData, Void> arguments) {
+            this.logger.info("Pong Cloudlet - key value fetch data succeeded");
+            // NOTE: send reply to Ping Cloudlet
+            final PongMessage pong = new PongMessage(arguments.getKey(), arguments.getValue());
+            context.publisher.publish(pong, null);
+            final ICloudletController<?> cloudlet = arguments.getCloudlet();
+            try {
+                context.kvStore.destroy();
+            } catch (final Exception e) {
+                ExceptionTracer.traceIgnored(e);
+            }
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> unregisterSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			this.logger
-					.info("Pong Cloudlet consumer unregistered successfully.");
-			// NOTE: if unregistered as consumer is successful then destroy resource
-			ICloudletController<?> cloudlet = arguments
-					.getCloudlet();
-			context.consumer.destroy();
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
+                CallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet - KeyValue accessor initialized successfully");
+            return ICallback.SUCCESS;
+        }
+    }
 
-		@Override
-		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			// NOTE: if resource initialized successfully then just register as a consumer
-			return ICallback.SUCCESS;
-		}
+    public static final class LifeCycleHandler extends DefaultCloudletCallback<PongCloudletContext> {
 
-		@Override
-		public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			this.logger
-					.info("Pong Cloudlet consumer was destroyed successfully.");
-			if ((context.publisher == null) && (context.kvStore == null)) {
-				arguments.getCloudlet().destroy();
-			}
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> destroy(PongCloudletContext context,
+                CloudletCallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet is being destroyed.");
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> acknowledgeSucceeded(PongCloudletContext context,
-				GenericCallbackCompletionArguments<PongCloudletContext, Void> arguments) {
-			context.consumer.destroy();
-			return ICallback.SUCCESS;
-		}
+        @Override
+        public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
+                CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet was destroyed successfully.");
+            return ICallback.SUCCESS;
+        }
 
-		@Override
-		public CallbackCompletion<Void> consume(
-				PongCloudletContext context,
-				AmqpQueueConsumeCallbackArguments<PongCloudletContext, PingMessage, Void> arguments) {
+        @Override
+        public CallbackCompletion<Void> initialize(PongCloudletContext context,
+                CloudletCallbackArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet is being initialized.");
+            final ICloudletController<PongCloudletContext> cloudlet = arguments.getCloudlet();
+            final IConfiguration configuration = cloudlet.getConfiguration();
+            final IConfiguration kvConfiguration = configuration
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("kvstore"));
+            context.kvStore = cloudlet.getConnectorFactory(IKvStoreConnectorFactory.class).create(
+                    kvConfiguration, PingPongData.class,
+                    new JsonDataEncoder<PingPongData>(PingPongData.class), new KeyValueCallback(),
+                    context);
+            final IConfiguration queueConfiguration = configuration
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("queue"));
+            context.consumer = cloudlet.getConnectorFactory(
+                    IAmqpQueueConsumerConnectorFactory.class).create(queueConfiguration,
+                    PingMessage.class, new JsonDataEncoder<PingMessage>(PingMessage.class),
+                    new AmqpConsumerCallback(), context);
+            context.publisher = cloudlet.getConnectorFactory(
+                    IAmqpQueuePublisherConnectorFactory.class).create(queueConfiguration,
+                    PongMessage.class, new JsonDataEncoder<PongMessage>(PongMessage.class),
+                    new AmqpPublisherCallback(), context);
+            return ICallback.SUCCESS;
+        }
 
-			// NOTE: retrieve message data
-			PingMessage data = arguments
-					.getMessage();
+        @Override
+        public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
+                CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
+            this.logger.info("Pong Cloudlet initialized successfully.");
+            return ICallback.SUCCESS;
+        }
+    }
 
-			this.logger.info("Pong Cloudlet received fetch request for key "
-					+ data.getKey());
+    public static final class PongCloudletContext {
 
-			// NOTE: get value from key value store
-			context.kvStore.get(data.getKey(), null);
+        IAmqpQueueConsumerConnector<PongCloudletContext, PingMessage, Void> consumer;
 
-			context.consumer.acknowledge(arguments.getDelivery());
-			return ICallback.SUCCESS;
-		}
+        IAmqpQueuePublisherConnector<PongCloudletContext, PongMessage, Void> publisher;
 
-	}
-
-	public static final class AmqpPublisherCallback extends
-			DefaultAmqpPublisherConnectorCallback<PongCloudletContext, PongMessage, Void> {
-
-		@Override
-		public CallbackCompletion<Void> registerSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			this.logger
-					.info("Pong Cloudlet publisher registered successfully.");
-			return ICallback.SUCCESS;
-		}
-
-		@Override
-		public CallbackCompletion<Void> unregisterSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			this.logger
-					.info("Pong Cloudlet publisher unregistered successfully.");
-			// NOTE: if unregistered as publisher is successful then destroy resource
-			ICloudletController<?> cloudlet = arguments
-					.getCloudlet();
-			context.publisher.destroy();
-			return ICallback.SUCCESS;
-		}
-
-		@Override
-		public CallbackCompletion<Void> initializeSucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			// NOTE: if resource initialized successfully then just register as a publisher
-			return ICallback.SUCCESS;
-		}
-
-		@Override
-		public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
-				CallbackArguments<PongCloudletContext> arguments) {
-			this.logger
-					.info("Pong Cloudlet publisher was destroyed successfully.");
-			context.publisher = null;
-			if ((context.consumer == null) && (context.kvStore == null)) {
-				arguments.getCloudlet().destroy();
-			}
-			return ICallback.SUCCESS;
-		}
-
-		@Override
-		public CallbackCompletion<Void> publishSucceeded(
-				PongCloudletContext context,
-				GenericCallbackCompletionArguments<PongCloudletContext, Void> arguments) {
-			context.publisher.destroy();
-			return ICallback.SUCCESS;
-		}
-
-	}
-
-	public static final class PongCloudletContext {
-
-		IAmqpQueueConsumerConnector<PongCloudletContext, PingMessage, Void> consumer;
-		IAmqpQueuePublisherConnector<PongCloudletContext, PongMessage, Void> publisher;
-		IKvStoreConnector<PongCloudletContext, PingPongData, Void> kvStore;
-	}
+        IKvStoreConnector<PongCloudletContext, PingPongData, Void> kvStore;
+    }
 }

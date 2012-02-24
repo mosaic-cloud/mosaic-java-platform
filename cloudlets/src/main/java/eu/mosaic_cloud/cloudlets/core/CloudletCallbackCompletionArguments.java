@@ -3,6 +3,7 @@ package eu.mosaic_cloud.cloudlets.core;
 
 public class CloudletCallbackCompletionArguments<Context> extends
         CallbackCompletionArguments<Context> {
+
     public CloudletCallbackCompletionArguments(final ICloudletController<Context> cloudlet) {
         super(cloudlet);
     }

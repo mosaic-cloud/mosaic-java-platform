@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.configuration;
 
 import java.util.IdentityHashMap;
@@ -32,219 +33,202 @@ import java.util.regex.Pattern;
  */
 public final class ConfigurationIdentifier {
 
-	public static final ConfigurationIdentifier ROOT = new ConfigurationIdentifier(
-			true, null);
-	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile(
-			"^/?([a-z]([a-z0-9_.]*[a-z0-9])?/)*([a-z]([a-z0-9_.]*[a-z0-9])?)$",
-			Pattern.DOTALL);
+    public static final ConfigurationIdentifier ROOT = new ConfigurationIdentifier(true, null);
 
-	private static final IdentityHashMap<String, ConfigurationIdentifier> IDENTIFIERS = new IdentityHashMap<String, ConfigurationIdentifier>();
-	/**
-	 * Indicates if this identifier is absolute
-	 */
-	private final boolean absolute;
-	/**
-	 * The string identifier.
-	 */
-	private final String identifier;
+    private static final Pattern IDENTIFIER_PATTERN = Pattern.compile(
+            "^/?([a-z]([a-z0-9_.]*[a-z0-9])?/)*([a-z]([a-z0-9_.]*[a-z0-9])?)$", Pattern.DOTALL);
 
-	private ConfigurationIdentifier(final boolean absolute,
-			final String identifier) {
-		super();
-		this.absolute = absolute;
-		this.identifier = identifier;
-	}
+    private static final IdentityHashMap<String, ConfigurationIdentifier> IDENTIFIERS = new IdentityHashMap<String, ConfigurationIdentifier>();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(final Object identifier) {
-		boolean isEqual;
-		if (identifier == null) {
-			isEqual = false;
-		} else if (identifier instanceof ConfigurationIdentifier) {
-			final ConfigurationIdentifier otherId = (ConfigurationIdentifier) identifier;
-			isEqual = (this.absolute == otherId.absolute)
-					&& (((this.identifier != null) && this.identifier
-							.equals(otherId.identifier)) || ((this.identifier == null) && (otherId.identifier == null)));
-		} else {
-			isEqual = false;
-		}
-		return isEqual;
-	}
+    /**
+     * Indicates if this identifier is absolute
+     */
+    private final boolean absolute;
 
-	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter relative to this configuration identifier.
-	 * 
-	 * @param identifier
-	 *            the identifier to solve
-	 * @return the built identifier
-	 */
-	public ConfigurationIdentifier resolve(
-			final ConfigurationIdentifier identifier) {
-		if (identifier.absolute) {
-			throw new IllegalArgumentException();
-		}
-		return ConfigurationIdentifier.resolveRelative(this,
-				identifier.identifier);
-	}
+    /**
+     * The string identifier.
+     */
+    private final String identifier;
 
-	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter relative to this configuration identifier.
-	 * 
-	 * @param specification
-	 *            the string specification of the identifier to be built
-	 * @return the built identifier
-	 */
-	public ConfigurationIdentifier resolve(final String specification) {
-		return ConfigurationIdentifier.resolve(this, specification);
-	}
+    private ConfigurationIdentifier(final boolean absolute, final String identifier) {
+        super();
+        this.absolute = absolute;
+        this.identifier = identifier;
+    }
 
-	@Override
-	public String toString() {
-		return this.identifier;
+    /**
+     * Builds the {@link ConfigurationIdentifier} object of a configuration
+     * parameter.
+     * 
+     * @param reference
+     *            the parent {@link ConfigurationIdentifier} object
+     * @param specification
+     *            the string specification of the parameter identifier
+     * @return the built {@link ConfigurationIdentifier} object
+     */
+    private static ConfigurationIdentifier resolve(final ConfigurationIdentifier reference,
+            final String specification) {
+        boolean isAbsolute = false; // NOPMD by georgiana on 9/26/11 8:34 PM
+        String identifier_;
+        String identifier;
+        ConfigurationIdentifier parameterIdentifier;
+        if (reference == null) {
+            if (specification.charAt(0) == '/') {
+                isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
+            }
+            identifier_ = specification;
+        } else if (reference.absolute) {
+            isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
+            if (reference.identifier == null) {
+                identifier_ = "/" + specification; // NOPMD by georgiana on
+                                                   // 9/26/11 8:36 PM
+            } else {
+                identifier_ = reference.identifier + "/" + specification; // NOPMD
+                                                                          // by
+                                                                          // georgiana
+                                                                          // on
+                                                                          // 9/26/11
+                                                                          // 8:36
+                                                                          // PM
+            }
+            identifier_ = identifier_.replaceAll("//", "/");
+        } else {
+            identifier_ = reference.identifier + "/" + specification;
+        }
+        if (!ConfigurationIdentifier.IDENTIFIER_PATTERN.matcher(identifier_).matches()) {
+            throw new IllegalArgumentException(String.format(
+                    "Invalid configuration identifier: `%s`", identifier_));
+        }
+        identifier = identifier_.intern();
+        synchronized (ConfigurationIdentifier.IDENTIFIERS) {
+            if (ConfigurationIdentifier.IDENTIFIERS.containsKey(identifier)) {
+                parameterIdentifier = ConfigurationIdentifier.IDENTIFIERS.get(identifier);
+            } else {
+                parameterIdentifier = new ConfigurationIdentifier(isAbsolute, identifier);
+                ConfigurationIdentifier.IDENTIFIERS.put(parameterIdentifier.identifier,
+                        parameterIdentifier);
+            }
+        }
+        return parameterIdentifier;
+    }
 
-	}
+    /**
+     * Builds the {@link ConfigurationIdentifier} object of a configuration
+     * parameter given by an absolute identifier.
+     * 
+     * @param reference
+     *            the parent {@link ConfigurationIdentifier} object
+     * @param specification
+     *            the string specification of the parameter identifier
+     * @return the built {@link ConfigurationIdentifier} object
+     */
+    public static ConfigurationIdentifier resolveAbsolute(final String specification) {
+        return ConfigurationIdentifier.resolve(ConfigurationIdentifier.ROOT, specification);
+    }
 
-	/**
-	 * Returns if this identifier is absolute or not.
-	 * 
-	 * @return <code>true</code> if it is absolute
-	 */
-	public boolean isAbsolute() {
-		return this.absolute;
-	}
+    /**
+     * Builds the {@link ConfigurationIdentifier} object of a configuration
+     * parameter.
+     * 
+     * @param reference
+     *            the parent {@link ConfigurationIdentifier} object
+     * @param specification
+     *            the string specification of the parameter identifier
+     * @return the built {@link ConfigurationIdentifier} object
+     */
+    public static ConfigurationIdentifier resolveRelative(final ConfigurationIdentifier reference,
+            final String specification) {
+        return ConfigurationIdentifier.resolve(reference, specification);
+    }
 
-	/**
-	 * Returns the string identifier.
-	 * 
-	 * @return the string identifier
-	 */
-	public String getIdentifier() {
-		return this.identifier;
-	}
+    /**
+     * Builds the {@link ConfigurationIdentifier} object of a configuration
+     * parameter.
+     * 
+     * @param specification
+     *            the string specification of the parameter identifier
+     * @return the built {@link ConfigurationIdentifier} object
+     */
+    public static ConfigurationIdentifier resolveRelative(final String specification) {
+        return ConfigurationIdentifier.resolve(null, specification);
+    }
 
-	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter given by an absolute identifier.
-	 * 
-	 * @param reference
-	 *            the parent {@link ConfigurationIdentifier} object
-	 * @param specification
-	 *            the string specification of the parameter identifier
-	 * @return the built {@link ConfigurationIdentifier} object
-	 */
-	public static ConfigurationIdentifier resolveAbsolute(
-			final String specification) {
-		return ConfigurationIdentifier.resolve(ConfigurationIdentifier.ROOT,
-				specification);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object identifier) {
+        boolean isEqual;
+        if (identifier == null) {
+            isEqual = false;
+        } else if (identifier instanceof ConfigurationIdentifier) {
+            final ConfigurationIdentifier otherId = (ConfigurationIdentifier) identifier;
+            isEqual = (this.absolute == otherId.absolute)
+                    && (((this.identifier != null) && this.identifier.equals(otherId.identifier)) || ((this.identifier == null) && (otherId.identifier == null)));
+        } else {
+            isEqual = false;
+        }
+        return isEqual;
+    }
 
-	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter.
-	 * 
-	 * @param reference
-	 *            the parent {@link ConfigurationIdentifier} object
-	 * @param specification
-	 *            the string specification of the parameter identifier
-	 * @return the built {@link ConfigurationIdentifier} object
-	 */
-	public static ConfigurationIdentifier resolveRelative(
-			final ConfigurationIdentifier reference, final String specification) {
-		return ConfigurationIdentifier.resolve(reference, specification);
-	}
+    /**
+     * Returns the string identifier.
+     * 
+     * @return the string identifier
+     */
+    public String getIdentifier() {
+        return this.identifier;
+    }
 
-	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter.
-	 * 
-	 * @param specification
-	 *            the string specification of the parameter identifier
-	 * @return the built {@link ConfigurationIdentifier} object
-	 */
-	public static ConfigurationIdentifier resolveRelative(
-			final String specification) {
-		return ConfigurationIdentifier.resolve(null, specification);
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31; // NOPMD by georgiana on 9/27/11 1:47 PM
+        int result = 1; // NOPMD by georgiana on 9/26/11 8:37 PM
+        result = (prime * result) + (this.absolute ? 1231 : 1237);
+        result = (prime * result) + ((this.identifier == null) ? 0 : this.identifier.hashCode());
+        return result;
+    }
 
-	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter.
-	 * 
-	 * @param reference
-	 *            the parent {@link ConfigurationIdentifier} object
-	 * @param specification
-	 *            the string specification of the parameter identifier
-	 * @return the built {@link ConfigurationIdentifier} object
-	 */
-	private static ConfigurationIdentifier resolve(
-			final ConfigurationIdentifier reference, final String specification) {
-		boolean isAbsolute = false; // NOPMD by georgiana on 9/26/11 8:34 PM
-		String identifier_;
-		String identifier;
-		ConfigurationIdentifier parameterIdentifier;
+    /**
+     * Returns if this identifier is absolute or not.
+     * 
+     * @return <code>true</code> if it is absolute
+     */
+    public boolean isAbsolute() {
+        return this.absolute;
+    }
 
-		if (reference == null) {
-			if (specification.charAt(0) == '/') {
-				isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
-			}
+    /**
+     * Builds the {@link ConfigurationIdentifier} object of a configuration
+     * parameter relative to this configuration identifier.
+     * 
+     * @param identifier
+     *            the identifier to solve
+     * @return the built identifier
+     */
+    public ConfigurationIdentifier resolve(final ConfigurationIdentifier identifier) {
+        if (identifier.absolute) {
+            throw new IllegalArgumentException();
+        }
+        return ConfigurationIdentifier.resolveRelative(this, identifier.identifier);
+    }
 
-			identifier_ = specification;
-		} else if (reference.absolute) {
-			isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
-			if (reference.identifier == null) {
-				identifier_ = "/" + specification; // NOPMD by georgiana on
-													// 9/26/11 8:36 PM
-			} else {
-				identifier_ = reference.identifier + "/" + specification; // NOPMD
-																			// by
-																			// georgiana
-																			// on
-																			// 9/26/11
-																			// 8:36
-																			// PM
-			}
-			identifier_ = identifier_.replaceAll("//", "/");
-		} else {
-			identifier_ = reference.identifier + "/" + specification;
-		}
-		if (!ConfigurationIdentifier.IDENTIFIER_PATTERN.matcher(identifier_)
-				.matches()) {
-			throw new IllegalArgumentException(String.format(
-					"Invalid configuration identifier: `%s`", identifier_));
-		}
+    /**
+     * Builds the {@link ConfigurationIdentifier} object of a configuration
+     * parameter relative to this configuration identifier.
+     * 
+     * @param specification
+     *            the string specification of the identifier to be built
+     * @return the built identifier
+     */
+    public ConfigurationIdentifier resolve(final String specification) {
+        return ConfigurationIdentifier.resolve(this, specification);
+    }
 
-		identifier = identifier_.intern();
-
-		synchronized (ConfigurationIdentifier.IDENTIFIERS) {
-			if (ConfigurationIdentifier.IDENTIFIERS.containsKey(identifier)) {
-				parameterIdentifier = ConfigurationIdentifier.IDENTIFIERS
-						.get(identifier);
-			} else {
-				parameterIdentifier = new ConfigurationIdentifier(isAbsolute,
-						identifier);
-				ConfigurationIdentifier.IDENTIFIERS.put(
-						parameterIdentifier.identifier, parameterIdentifier);
-			}
-		}
-
-		return parameterIdentifier;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31; // NOPMD by georgiana on 9/27/11 1:47 PM
-		int result = 1; // NOPMD by georgiana on 9/26/11 8:37 PM
-		result = (prime * result) + (this.absolute ? 1231 : 1237);
-		result = (prime * result)
-				+ ((this.identifier == null) ? 0 : this.identifier.hashCode());
-		return result;
-	}
-
+    @Override
+    public String toString() {
+        return this.identifier;
+    }
 }

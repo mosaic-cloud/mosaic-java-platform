@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.kvstore.tests;
 
 import java.io.IOException;
@@ -25,6 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -37,324 +44,299 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class MemcachedDriverTest {
 
-	private BasicThreadingContext threadingContext;
-	private MemcachedDriver wrapper;
-	private static String keyPrefix;
+    private BasicThreadingContext threadingContext;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		MemcachedDriverTest.keyPrefix = UUID.randomUUID().toString();
-	}
+    private MemcachedDriver wrapper;
 
-	@Before
-	public void setUp() throws IOException {
-		QueueingExceptionTracer exceptions = QueueingExceptionTracer
-				.create(NullExceptionTracer.defaultInstance);
-		BasicThreadingSecurityManager.initialize();
-		this.threadingContext = BasicThreadingContext.create(this,
-				exceptions.catcher);
-		this.threadingContext.initialize();
-		this.wrapper = MemcachedDriver.create(PropertyTypeConfiguration.create(
-				MemcachedDriverTest.class.getClassLoader(),
-				"memcached-test.properties"), this.threadingContext);
-		this.wrapper.registerClient(MemcachedDriverTest.keyPrefix, "test");
-	}
+    private static String keyPrefix;
 
-	@After
-	public void tearDown() throws Exception {
-		this.wrapper.unregisterClient(MemcachedDriverTest.keyPrefix);
-		this.wrapper.destroy();
-		this.threadingContext.destroy();
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        MemcachedDriverTest.keyPrefix = UUID.randomUUID().toString();
+    }
 
-	public void testConnection() {
-		Assert.assertNotNull(this.wrapper);
-	}
+    @Before
+    public void setUp() throws IOException {
+        final QueueingExceptionTracer exceptions = QueueingExceptionTracer
+                .create(NullExceptionTracer.defaultInstance);
+        BasicThreadingSecurityManager.initialize();
+        this.threadingContext = BasicThreadingContext.create(this, exceptions.catcher);
+        this.threadingContext.initialize();
+        this.wrapper = MemcachedDriver.create(PropertyTypeConfiguration.create(
+                MemcachedDriverTest.class.getClassLoader(), "memcached-test.properties"),
+                this.threadingContext);
+        this.wrapper.registerClient(MemcachedDriverTest.keyPrefix, "test");
+    }
 
-	public void testSet() throws IOException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
-		byte[] bytes1 = SerDesUtils.pojoToBytes("fantastic");
-		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
-				"set 1");
-		IResult<Boolean> r1 = this.wrapper.invokeSetOperation(
-				MemcachedDriverTest.keyPrefix, k1, 30, bytes1, handler1);
-		Assert.assertNotNull(r1);
+    @After
+    public void tearDown() throws Exception {
+        this.wrapper.unregisterClient(MemcachedDriverTest.keyPrefix);
+        this.wrapper.destroy();
+        this.threadingContext.destroy();
+    }
 
-		String k2 = MemcachedDriverTest.keyPrefix + "_key_famous";
-		byte[] bytes2 = SerDesUtils.pojoToBytes("famous");
-		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
-				"set 2");
-		IResult<Boolean> r2 = this.wrapper.invokeSetOperation(
-				MemcachedDriverTest.keyPrefix, k2, 30, bytes2, handler2);
-		Assert.assertNotNull(r2);
+    public void testAdd() throws IOException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
+        final String k2 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
+        final byte[] b1 = SerDesUtils.pojoToBytes("wrong");
+        final byte[] b2 = SerDesUtils.pojoToBytes("fabulous");
+        final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
+                "add1");
+        final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
+                "add2");
+        final IResult<Boolean> r1 = this.wrapper.invokeAddOperation(MemcachedDriverTest.keyPrefix,
+                k1, 30, b1, handler1);
+        final IResult<Boolean> r2 = this.wrapper.invokeAddOperation(MemcachedDriverTest.keyPrefix,
+                k2, 30, b2, handler2);
+        try {
+            Assert.assertFalse(r1.getResult());
+            Assert.assertTrue(r2.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-		try {
-			Assert.assertTrue(r1.getResult());
-			Assert.assertTrue(r2.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
+    public void testAppend() throws IOException, ClassNotFoundException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
+        final byte[] b1 = SerDesUtils.pojoToBytes(" and miraculous");
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+                "append");
+        final IResult<Boolean> r1 = this.wrapper.invokeAppendOperation(
+                MemcachedDriverTest.keyPrefix, k1, b1, handler);
+        try {
+            Assert.assertTrue(r1.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+        final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
+                "Get after append");
+        final IResult<byte[]> r2 = this.wrapper.invokeGetOperation(MemcachedDriverTest.keyPrefix,
+                k1, handler1);
+        try {
+            Assert.assertEquals("fantabulous and miraculous", SerDesUtils.toObject(r2.getResult())
+                    .toString());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-	public void testGet() throws IOException, ClassNotFoundException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
-		IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>(
-				"get");
-		IResult<byte[]> r1 = this.wrapper.invokeGetOperation(
-				MemcachedDriverTest.keyPrefix, k1, handler);
+    public void testCAS() throws IOException, ClassNotFoundException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
+        final byte[] b1 = SerDesUtils.pojoToBytes("replaced by dummy");
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>("cas");
+        final IResult<Boolean> r1 = this.wrapper.invokeCASOperation(MemcachedDriverTest.keyPrefix,
+                k1, b1, handler);
+        try {
+            Assert.assertTrue(r1.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+        final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
+                "Get after cas");
+        final IResult<byte[]> r2 = this.wrapper.invokeGetOperation(MemcachedDriverTest.keyPrefix,
+                k1, handler1);
+        try {
+            Assert.assertEquals("replaced by dummy", SerDesUtils.toObject(r2.getResult())
+                    .toString());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-		try {
-			Assert.assertEquals("fantastic",
-					SerDesUtils.toObject(r1.getResult()));
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
+    public void testConnection() {
+        Assert.assertNotNull(this.wrapper);
+    }
 
-	public void testGetBulk() throws IOException, ClassNotFoundException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
-		String k2 = MemcachedDriverTest.keyPrefix + "_key_famous";
-		List<String> keys = new ArrayList<String>();
-		keys.add(k1);
-		keys.add(k2);
-		IOperationCompletionHandler<Map<String, byte[]>> handler = new TestLoggingHandler<Map<String, byte[]>>(
-				"getBulk");
-		IResult<Map<String, byte[]>> r1 = this.wrapper.invokeGetBulkOperation(
-				MemcachedDriverTest.keyPrefix, keys, handler);
+    public void testDelete() {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+                "delete");
+        final IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(
+                MemcachedDriverTest.keyPrefix, k1, handler);
+        try {
+            Assert.assertTrue(r1.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+        final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
+                "Get after delete");
+        final IResult<byte[]> r2 = this.wrapper.invokeGetOperation(MemcachedDriverTest.keyPrefix,
+                k1, handler1);
+        try {
+            Assert.assertNull(r2.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-		try {
-			Assert.assertEquals("fantastic",
-					SerDesUtils.toObject(r1.getResult().get(k1)).toString());
-			Assert.assertEquals("famous",
-					SerDesUtils.toObject(r1.getResult().get(k2)).toString());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
+    @Test
+    public void testDriver() throws IOException, ClassNotFoundException {
+        testConnection();
+        testSet();
+        testGet();
+        testGetBulk();
+        testAdd();
+        testReplace();
+        testDelete();
+    }
 
-	public void testAdd() throws IOException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
-		String k2 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		byte[] b1 = SerDesUtils.pojoToBytes("wrong");
-		byte[] b2 = SerDesUtils.pojoToBytes("fabulous");
-		IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
-				"add1");
-		IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
-				"add2");
+    public void testGet() throws IOException, ClassNotFoundException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
+        final IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>("get");
+        final IResult<byte[]> r1 = this.wrapper.invokeGetOperation(MemcachedDriverTest.keyPrefix,
+                k1, handler);
+        try {
+            Assert.assertEquals("fantastic", SerDesUtils.toObject(r1.getResult()));
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-		IResult<Boolean> r1 = this.wrapper.invokeAddOperation(
-				MemcachedDriverTest.keyPrefix, k1, 30, b1, handler1);
-		IResult<Boolean> r2 = this.wrapper.invokeAddOperation(
-				MemcachedDriverTest.keyPrefix, k2, 30, b2, handler2);
+    public void testGetBulk() throws IOException, ClassNotFoundException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
+        final String k2 = MemcachedDriverTest.keyPrefix + "_key_famous";
+        final List<String> keys = new ArrayList<String>();
+        keys.add(k1);
+        keys.add(k2);
+        final IOperationCompletionHandler<Map<String, byte[]>> handler = new TestLoggingHandler<Map<String, byte[]>>(
+                "getBulk");
+        final IResult<Map<String, byte[]>> r1 = this.wrapper.invokeGetBulkOperation(
+                MemcachedDriverTest.keyPrefix, keys, handler);
+        try {
+            Assert.assertEquals("fantastic", SerDesUtils.toObject(r1.getResult().get(k1))
+                    .toString());
+            Assert.assertEquals("famous", SerDesUtils.toObject(r1.getResult().get(k2)).toString());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-		try {
-			Assert.assertFalse(r1.getResult());
-			Assert.assertTrue(r2.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
+    public void testPrepend() throws IOException, ClassNotFoundException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
+        final byte[] b1 = SerDesUtils.pojoToBytes("it is ");
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+                "prepend");
+        final IResult<Boolean> r1 = this.wrapper.invokePrependOperation(
+                MemcachedDriverTest.keyPrefix, k1, b1, handler);
+        try {
+            Assert.assertTrue(r1.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+        final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
+                "Get after prepend");
+        final IResult<byte[]> r2 = this.wrapper.invokeGetOperation(MemcachedDriverTest.keyPrefix,
+                k1, handler1);
+        try {
+            Assert.assertEquals("it is fantabulous and miraculous",
+                    SerDesUtils.toObject(r2.getResult()).toString());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-	public void testReplace() throws IOException, ClassNotFoundException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		byte[] b1 = SerDesUtils.pojoToBytes("fantabulous");
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"replace");
-		IResult<Boolean> r1 = this.wrapper.invokeReplaceOperation(
-				MemcachedDriverTest.keyPrefix, k1, 30, b1, handler);
-		try {
-			Assert.assertTrue(r1.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
-				"Get after replace");
-		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
-				MemcachedDriverTest.keyPrefix, k1, handler1);
+    public void testReplace() throws IOException, ClassNotFoundException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
+        final byte[] b1 = SerDesUtils.pojoToBytes("fantabulous");
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+                "replace");
+        final IResult<Boolean> r1 = this.wrapper.invokeReplaceOperation(
+                MemcachedDriverTest.keyPrefix, k1, 30, b1, handler);
+        try {
+            Assert.assertTrue(r1.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+        final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
+                "Get after replace");
+        final IResult<byte[]> r2 = this.wrapper.invokeGetOperation(MemcachedDriverTest.keyPrefix,
+                k1, handler1);
+        try {
+            Assert.assertEquals("fantabulous", SerDesUtils.toObject(r2.getResult()).toString());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 
-		try {
-			Assert.assertEquals("fantabulous",
-					SerDesUtils.toObject(r2.getResult()).toString());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
-
-	public void testAppend() throws IOException, ClassNotFoundException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		byte[] b1 = SerDesUtils.pojoToBytes(" and miraculous");
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"append");
-		IResult<Boolean> r1 = this.wrapper.invokeAppendOperation(
-				MemcachedDriverTest.keyPrefix, k1, b1, handler);
-		try {
-			Assert.assertTrue(r1.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-
-		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
-				"Get after append");
-		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
-				MemcachedDriverTest.keyPrefix, k1, handler1);
-
-		try {
-			Assert.assertEquals("fantabulous and miraculous", SerDesUtils
-					.toObject(r2.getResult()).toString());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
-
-	public void testPrepend() throws IOException, ClassNotFoundException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		byte[] b1 = SerDesUtils.pojoToBytes("it is ");
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"prepend");
-		IResult<Boolean> r1 = this.wrapper.invokePrependOperation(
-				MemcachedDriverTest.keyPrefix, k1, b1, handler);
-		try {
-			Assert.assertTrue(r1.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-
-		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
-				"Get after prepend");
-		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
-				MemcachedDriverTest.keyPrefix, k1, handler1);
-
-		try {
-			Assert.assertEquals("it is fantabulous and miraculous", SerDesUtils
-					.toObject(r2.getResult()).toString());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
-
-	public void testCAS() throws IOException, ClassNotFoundException {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		byte[] b1 = SerDesUtils.pojoToBytes("replaced by dummy");
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"cas");
-		IResult<Boolean> r1 = this.wrapper.invokeCASOperation(
-				MemcachedDriverTest.keyPrefix, k1, b1, handler);
-		try {
-			Assert.assertTrue(r1.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-
-		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
-				"Get after cas");
-		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
-				MemcachedDriverTest.keyPrefix, k1, handler1);
-
-		try {
-			Assert.assertEquals("replaced by dummy",
-					SerDesUtils.toObject(r2.getResult()).toString());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
-
-	public void testDelete() {
-		String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"delete");
-		IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(
-				MemcachedDriverTest.keyPrefix, k1, handler);
-		try {
-			Assert.assertTrue(r1.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-
-		IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]>(
-				"Get after delete");
-		IResult<byte[]> r2 = this.wrapper.invokeGetOperation(
-				MemcachedDriverTest.keyPrefix, k1, handler1);
-
-		try {
-			Assert.assertNull(r2.getResult());
-		} catch (InterruptedException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		} catch (ExecutionException e) {
-			ExceptionTracer.traceIgnored(e);
-			Assert.fail();
-		}
-	}
-
-	@Test
-	public void testDriver() throws IOException, ClassNotFoundException {
-		testConnection();
-		testSet();
-		testGet();
-		testGetBulk();
-		testAdd();
-		testReplace();
-		testDelete();
-	}
+    public void testSet() throws IOException {
+        final String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
+        final byte[] bytes1 = SerDesUtils.pojoToBytes("fantastic");
+        final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
+                "set 1");
+        final IResult<Boolean> r1 = this.wrapper.invokeSetOperation(MemcachedDriverTest.keyPrefix,
+                k1, 30, bytes1, handler1);
+        Assert.assertNotNull(r1);
+        final String k2 = MemcachedDriverTest.keyPrefix + "_key_famous";
+        final byte[] bytes2 = SerDesUtils.pojoToBytes("famous");
+        final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
+                "set 2");
+        final IResult<Boolean> r2 = this.wrapper.invokeSetOperation(MemcachedDriverTest.keyPrefix,
+                k2, 30, bytes2, handler2);
+        Assert.assertNotNull(r2);
+        try {
+            Assert.assertTrue(r1.getResult());
+            Assert.assertTrue(r2.getResult());
+        } catch (final InterruptedException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        } catch (final ExecutionException e) {
+            ExceptionTracer.traceIgnored(e);
+            Assert.fail();
+        }
+    }
 }

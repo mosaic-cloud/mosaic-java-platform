@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
@@ -28,62 +29,54 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 public class TestRunner {
 
-	public static CloudletManager runHelloWorld() {
-		IConfiguration configuration;
+    public static CloudletManager runHelloWorld() {
+        IConfiguration configuration;
+        configuration = PropertyTypeConfiguration.create(TestRunner.class.getClassLoader(),
+                "hello-cloudlet.properties");
+        final CloudletManager container = startCloudlet(configuration);
+        return container;
+    }
 
-		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "hello-cloudlet.properties");
-		final CloudletManager container = startCloudlet(configuration);
-		return container;
-	}
+    public static CloudletManager runLoggingCloudlet() {
+        IConfiguration configuration;
+        configuration = PropertyTypeConfiguration.create(TestRunner.class.getClassLoader(),
+                "logging-cloudlet.properties");
+        final CloudletManager container = startCloudlet(configuration);
+        return container;
+    }
 
-	public static CloudletManager runSimpleQueueConsumer() {
-		IConfiguration configuration;
+    public static CloudletManager runSimpleQueueConsumer() {
+        IConfiguration configuration;
+        configuration = PropertyTypeConfiguration.create(TestRunner.class.getClassLoader(),
+                "consumer-cloudlet.properties");
+        final CloudletManager container = startCloudlet(configuration);
+        return container;
+    }
 
-		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "consumer-cloudlet.properties");
-		final CloudletManager container = startCloudlet(configuration);
-		return container;
-	}
+    public static CloudletManager runSimpleQueuePublisher() {
+        IConfiguration configuration;
+        configuration = PropertyTypeConfiguration.create(TestRunner.class.getClassLoader(),
+                "publisher-cloudlet.properties");
+        final CloudletManager container = startCloudlet(configuration);
+        return container;
+    }
 
-	public static CloudletManager runSimpleQueuePublisher() {
-		IConfiguration configuration;
+    public static CloudletManager runUserCloudlet() {
+        IConfiguration configuration;
+        configuration = PropertyTypeConfiguration.create(TestRunner.class.getClassLoader(),
+                "user-cloudlet.properties");
+        final CloudletManager container = startCloudlet(configuration);
+        return container;
+    }
 
-		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "publisher-cloudlet.properties");
-		final CloudletManager container = startCloudlet(configuration);
-		return container;
-	}
-
-	public static CloudletManager runLoggingCloudlet() {
-		IConfiguration configuration;
-
-		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "logging-cloudlet.properties");
-		final CloudletManager container = startCloudlet(configuration);
-		return container;
-	}
-
-	public static CloudletManager runUserCloudlet() {
-		IConfiguration configuration;
-
-		configuration = PropertyTypeConfiguration.create(
-				TestRunner.class.getClassLoader(), "user-cloudlet.properties");
-		final CloudletManager container = startCloudlet(configuration);
-		return container;
-	}
-
-	private static CloudletManager startCloudlet(IConfiguration configuration) {
-		final CloudletManager container = new CloudletManager(
-				Threading.getDefaultContext(),
-				TestRunner.class.getClassLoader(), configuration);
-
-		try {
-			container.start();
-		} catch (CloudletException e) {
-			ExceptionTracer.traceIgnored(e);
-		}
-		return container;
-	}
-
+    private static CloudletManager startCloudlet(IConfiguration configuration) {
+        final CloudletManager container = new CloudletManager(Threading.getDefaultContext(),
+                TestRunner.class.getClassLoader(), configuration);
+        try {
+            container.start();
+        } catch (final CloudletException e) {
+            ExceptionTracer.traceIgnored(e);
+        }
+        return container;
+    }
 }

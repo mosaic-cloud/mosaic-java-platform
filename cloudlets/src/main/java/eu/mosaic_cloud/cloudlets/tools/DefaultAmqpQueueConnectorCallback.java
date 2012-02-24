@@ -34,6 +34,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public class DefaultAmqpQueueConnectorCallback<C> extends DefaultQueueConnectorCallback<C>
         implements IAmqpQueueConnectorCallback<C> {
+
     @Override
     public CallbackCompletion<Void> registerFailed(final C context,
             final CallbackArguments<C> arguments) {

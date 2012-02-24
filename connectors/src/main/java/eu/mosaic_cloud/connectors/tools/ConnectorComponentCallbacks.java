@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -54,24 +55,54 @@ import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture.Trigger;
  * 
  */
 public final class ConnectorComponentCallbacks implements ComponentCallbacks, CallbackHandler {
+
+    /**
+     * Supported resource types.
+     * 
+     * @author Georgiana Macariu
+     * 
+     */
+    public static enum ResourceType {
+        // NOTE: MEMCACHED is not yet supported, but will be in the near future
+        AMQP,
+        KEY_VALUE,
+        MEMCACHED;
+    }
+
+    static enum Status {
+        Created, Ready, Terminated, Unregistered;
+    }
+
     private final ComponentIdentifier amqpGroup;
+
     private ComponentController component;
+
     private final ComponentIdentifier kvGroup;
+
     private final ComponentIdentifier mcGroup;
+
     private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
+
     private final ComponentIdentifier selfGroup;
+
     private Status status;
+
+    public static ConnectorComponentCallbacks callbacks = null;
+
+    private static MosaicLogger logger = MosaicLogger
+            .createLogger(ConnectorComponentCallbacks.class);
 
     /**
      * Creates a callback which is used by the mOSAIC platform to communicate
      * with the connectors.
      */
-    public ConnectorComponentCallbacks(@SuppressWarnings ("unused") final ComponentContext context) {
+    public ConnectorComponentCallbacks(@SuppressWarnings("unused") final ComponentContext context) {
         super();
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         ConnectorComponentCallbacks.setComponentCallbacks(this);
         final IConfiguration configuration = PropertyTypeConfiguration.create(
-                ConnectorComponentCallbacks.class.getClassLoader(), "eu/mosaic_cloud/connectors/connector-component.properties"); //$NON-NLS-1$
+                ConnectorComponentCallbacks.class.getClassLoader(),
+                "eu/mosaic_cloud/connectors/connector-component.properties"); //$NON-NLS-1$
         this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("ConnectorComponent.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
@@ -85,6 +116,10 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         this.status = Status.Created;
     }
 
+    private static void setComponentCallbacks(final ConnectorComponentCallbacks callbacks) {
+        ConnectorComponentCallbacks.callbacks = callbacks;
+    }
+
     @Override
     public CallbackCompletion<Void> called(final ComponentController component,
             final ComponentCallRequest request) {
@@ -95,8 +130,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
         if (this.status == Status.Ready) {
-            if (request.operation
-                    .equals(ConfigProperties.getString("ConnectorComponent.7"))) { //$NON-NLS-1$
+            if (request.operation.equals(ConfigProperties.getString("ConnectorComponent.7"))) { //$NON-NLS-1$
                 ConnectorComponentCallbacks.logger.debug("Testing AMQP connector"); //$NON-NLS-1$
                 try {
                     succeeded = true;
@@ -106,8 +140,7 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
                 reply = ComponentCallReply.create(true, Boolean.valueOf(succeeded),
                         ByteBuffer.allocate(0), request.reference);
                 component.callReturn(reply);
-            } else if (request.operation.equals(ConfigProperties
-                    .getString("ConnectorComponent.8"))) {
+            } else if (request.operation.equals(ConfigProperties.getString("ConnectorComponent.8"))) {
                 ConnectorComponentCallbacks.logger.debug("Testing KV connector connector"); //$NON-NLS-1$
                 try {
                     succeeded = true;
@@ -268,30 +301,5 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
     @Override
     // NOPMD by georgiana on 2/21/12 2:45 PM
     public void unregisteredCallbacks(final Callbacks trigger) {
-    }
-
-    private static void setComponentCallbacks(final ConnectorComponentCallbacks callbacks) {
-        ConnectorComponentCallbacks.callbacks = callbacks;
-    }
-
-    public static ConnectorComponentCallbacks callbacks = null;
-    private static MosaicLogger logger = MosaicLogger
-            .createLogger(ConnectorComponentCallbacks.class);
-
-    /**
-     * Supported resource types.
-     * 
-     * @author Georgiana Macariu
-     * 
-     */
-    public static enum ResourceType {
-        // NOTE: MEMCACHED is not yet supported, but will be in the near future
-        AMQP,
-        KEY_VALUE,
-        MEMCACHED;
-    }
-
-    static enum Status {
-        Created, Ready, Terminated, Unregistered;
     }
 }

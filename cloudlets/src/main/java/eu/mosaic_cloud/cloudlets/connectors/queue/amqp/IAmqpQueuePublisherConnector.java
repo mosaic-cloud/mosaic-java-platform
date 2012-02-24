@@ -20,9 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
 
 /**
  * Interface for registering and using for an AMQP resource as a publisher.
@@ -34,16 +32,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of the published data
  */
-public interface IAmqpQueuePublisherConnector<Context, Message, Extra>
-		extends
-			IAmqpQueueConnector<Context>,
-			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<Message>
-{
-	/**
-	 * Publishes a message to a queue.
-	 * 
-	 * @param data
-	 *            the data to publish
-	 */
-	CallbackCompletion<Void> publish (Message data, Extra extra);
+public interface IAmqpQueuePublisherConnector<Context, Message, Extra> extends
+        IAmqpQueueConnector<Context>,
+        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<Message> {
+
+    /**
+     * Publishes a message to a queue.
+     * 
+     * @param data
+     *            the data to publish
+     */
+    CallbackCompletion<Void> publish(Message data, Extra extra);
 }

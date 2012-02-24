@@ -20,11 +20,9 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-
 
 /**
  * Interface for handlers (callbacks) to be called when a queue consumer
@@ -34,41 +32,39 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * @author Georgiana Macariu
  * 
  */
-public interface IAmqpQueueRawConsumerCallback
-		extends
-			Callbacks
-{
-	/**
-	 * Handles the Cancel OK message.
-	 * 
-	 * @param consumerTag
-	 *            the consumer identifier
-	 */
-	CallbackCompletion<Void> handleCancelOk (String consumerTag);
-	
-	/**
-	 * Handles the Consume OK message.
-	 * 
-	 * @param consumerTag
-	 *            the consumer identifier
-	 */
-	CallbackCompletion<Void> handleConsumeOk (String consumerTag);
-	
-	/**
-	 * Handles a delivered message.
-	 * 
-	 * @param message
-	 *            the message and all its properties
-	 */
-	CallbackCompletion<Void> handleDelivery (AmqpInboundMessage message);
-	
-	/**
-	 * Handles the shutdown signals.
-	 * 
-	 * @param consumerTag
-	 *            the consumer identifier
-	 * @param signalMessage
-	 *            the signal message
-	 */
-	CallbackCompletion<Void> handleShutdownSignal (String consumerTag, String message);
+public interface IAmqpQueueRawConsumerCallback extends Callbacks {
+
+    /**
+     * Handles the Cancel OK message.
+     * 
+     * @param consumerTag
+     *            the consumer identifier
+     */
+    CallbackCompletion<Void> handleCancelOk(String consumerTag);
+
+    /**
+     * Handles the Consume OK message.
+     * 
+     * @param consumerTag
+     *            the consumer identifier
+     */
+    CallbackCompletion<Void> handleConsumeOk(String consumerTag);
+
+    /**
+     * Handles a delivered message.
+     * 
+     * @param message
+     *            the message and all its properties
+     */
+    CallbackCompletion<Void> handleDelivery(AmqpInboundMessage message);
+
+    /**
+     * Handles the shutdown signals.
+     * 
+     * @param consumerTag
+     *            the consumer identifier
+     * @param signalMessage
+     *            the signal message
+     */
+    CallbackCompletion<Void> handleShutdownSignal(String consumerTag, String message);
 }

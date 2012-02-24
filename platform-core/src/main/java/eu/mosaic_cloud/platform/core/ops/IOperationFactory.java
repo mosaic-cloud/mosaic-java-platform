@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.platform.core.ops;
 
 /**
@@ -29,20 +30,19 @@ package eu.mosaic_cloud.platform.core.ops;
  */
 public interface IOperationFactory {
 
-	/**
-	 * Builds the asynchronous operation.
-	 * 
-	 * @param type
-	 *            the type of the operation
-	 * @param parameters
-	 *            the parameters of the operation
-	 * @return the operation
-	 */
-	IOperation<?> getOperation(IOperationType type, Object... parameters);
+    /**
+     * Destroys a facory..
+     */
+    void destroy();
 
-	/**
-	 * Destroys a facory..
-	 */
-	void destroy();
-
+    /**
+     * Builds the asynchronous operation.
+     * 
+     * @param type
+     *            the type of the operation
+     * @param parameters
+     *            the parameters of the operation
+     * @return the operation
+     */
+    IOperation<?> getOperation(IOperationType type, Object... parameters);
 }

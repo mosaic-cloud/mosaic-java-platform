@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import java.io.ByteArrayInputStream;
@@ -35,63 +36,57 @@ import com.sun.syndication.io.XmlReader;
 
 public class FeedParser {
 
-	/** Parses RSS or Atom to instantiate a SyndFeed. */
-	private SyndFeedInput input;
+    /** Parses RSS or Atom to instantiate a SyndFeed. */
+    private final SyndFeedInput input;
 
-	public FeedParser() {
-		this.input = new SyndFeedInput(true);
-		this.input.setPreserveWireFeed(true);
-	}
+    public FeedParser() {
+        this.input = new SyndFeedInput(true);
+        this.input.setPreserveWireFeed(true);
+    }
 
-	public Timeline parseFeed(byte[] xmlEntry) throws IOException,
-			FeedException {
-		// NOTE: Load the feed, regardless of RSS or Atom type
-		XmlReader reader = new XmlReader(new ByteArrayInputStream(xmlEntry));
-		SyndFeed feed = this.input.build(reader);
-
-		// NOTE: check feed type, only ATOM is accepted
-		Feed atomFeed = null;
-		if (feed.getFeedType().toLowerCase().startsWith("atom")) {
-			atomFeed = (Feed) feed.originalWireFeed();
-		} else {
-			throw new FeedException("Only ATOM feeds can be parsed.");
-		}
-		Timeline timeline = new Timeline(atomFeed.getId(), feed.getLink(),
-				atomFeed.getUpdated().getTime());
-
-		List<SyndEntry> entries = feed.getEntries();
-		for (SyndEntry entry : entries) {
-			String authorName = null;
-			String authorEmail = null;
-			String authorURI = null;
-			SyndPerson author = null;
-			if (entry.getAuthors().size() > 0) {
-				author = (SyndPerson) entry.getAuthors().get(0);
-				authorName = author.getName();
-				authorEmail = author.getEmail();
-				authorURI = author.getUri();
-			}
-			String content = null;
-			String contentType = null;
-			SyndContent contentOb = null;
-			if (entry.getContents().size() > 0) {
-				contentOb = (SyndContent) entry.getContents().get(0);
-				content = contentOb.getValue();
-				contentType = contentOb.getType();
-			}
-			String title = entry.getTitleEx().getValue();
-			String titleType = entry.getTitleEx().getType();
-
-			Timeline.Entry tEntry = timeline.addEntry(entry.getUri(), title,
-					titleType, content, contentType, entry.getUpdatedDate()
-							.getTime(), authorName, authorEmail, authorURI);
-
-			List<SyndLink> links = entry.getLinks();
-			for (SyndLink link : links) {
-				tEntry.addLink(link.getRel(), link.getHref());
-			}
-		}
-		return timeline;
-	}
-
+    public Timeline parseFeed(byte[] xmlEntry) throws IOException, FeedException {
+        // NOTE: Load the feed, regardless of RSS or Atom type
+        final XmlReader reader = new XmlReader(new ByteArrayInputStream(xmlEntry));
+        final SyndFeed feed = this.input.build(reader);
+        // NOTE: check feed type, only ATOM is accepted
+        Feed atomFeed = null;
+        if (feed.getFeedType().toLowerCase().startsWith("atom")) {
+            atomFeed = (Feed) feed.originalWireFeed();
+        } else {
+            throw new FeedException("Only ATOM feeds can be parsed.");
+        }
+        final Timeline timeline = new Timeline(atomFeed.getId(), feed.getLink(), atomFeed
+                .getUpdated().getTime());
+        final List<SyndEntry> entries = feed.getEntries();
+        for (final SyndEntry entry : entries) {
+            String authorName = null;
+            String authorEmail = null;
+            String authorURI = null;
+            SyndPerson author = null;
+            if (entry.getAuthors().size() > 0) {
+                author = (SyndPerson) entry.getAuthors().get(0);
+                authorName = author.getName();
+                authorEmail = author.getEmail();
+                authorURI = author.getUri();
+            }
+            String content = null;
+            String contentType = null;
+            SyndContent contentOb = null;
+            if (entry.getContents().size() > 0) {
+                contentOb = (SyndContent) entry.getContents().get(0);
+                content = contentOb.getValue();
+                contentType = contentOb.getType();
+            }
+            final String title = entry.getTitleEx().getValue();
+            final String titleType = entry.getTitleEx().getType();
+            final Timeline.Entry tEntry = timeline.addEntry(entry.getUri(), title, titleType,
+                    content, contentType, entry.getUpdatedDate().getTime(), authorName,
+                    authorEmail, authorURI);
+            final List<SyndLink> links = entry.getLinks();
+            for (final SyndLink link : links) {
+                tEntry.addLink(link.getRel(), link.getHref());
+            }
+        }
+        return timeline;
+    }
 }

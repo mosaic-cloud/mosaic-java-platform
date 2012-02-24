@@ -20,11 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-
 import eu.mosaic_cloud.cloudlets.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-
 
 /**
  * Base accessor class for AMQP queuing systems.
@@ -37,12 +35,11 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
  *            the type of messages processed by the accessor
  */
 public abstract class BaseAmqpQueueConnector<Connector extends eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector, Callback extends IAmqpQueueConnectorCallback<Context>, Context>
-		extends BaseConnector<Connector, Callback, Context>
-		implements
-			IAmqpQueueConnector<Context>
-{
-	protected BaseAmqpQueueConnector (final ICloudletController<?> cloudlet, final Connector connector, final IConfiguration configuration, final Callback callback, final Context context)
-	{
-		super (cloudlet, connector, configuration, callback, context);
-	}
+        extends BaseConnector<Connector, Callback, Context> implements IAmqpQueueConnector<Context> {
+
+    protected BaseAmqpQueueConnector(final ICloudletController<?> cloudlet,
+            final Connector connector, final IConfiguration configuration, final Callback callback,
+            final Context context) {
+        super(cloudlet, connector, configuration, callback, context);
+    }
 }

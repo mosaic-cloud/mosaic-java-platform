@@ -23,6 +23,7 @@ package eu.mosaic_cloud.connectors.core;
 import java.util.UUID;
 
 import com.google.common.base.Preconditions;
+
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -33,7 +34,9 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 public abstract class BaseConnector<P extends BaseConnectorProxy> implements IConnector,
         CallbackProxy {
+
     protected final MosaicLogger logger;
+
     protected final P proxy;
 
     protected BaseConnector(final P proxy) {
@@ -41,11 +44,6 @@ public abstract class BaseConnector<P extends BaseConnectorProxy> implements ICo
         Preconditions.checkNotNull(proxy);
         this.proxy = proxy;
         this.logger = MosaicLogger.createLogger(this);
-    }
-
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        return CallbackCompletion.createOutcome();
     }
 
     public static Channel createChannel(final String driverEndpoint,
@@ -57,4 +55,8 @@ public abstract class BaseConnector<P extends BaseConnectorProxy> implements ICo
         return channel;
     }
 
+    @Override
+    public CallbackCompletion<Void> initialize() {
+        return CallbackCompletion.createOutcome();
+    }
 }

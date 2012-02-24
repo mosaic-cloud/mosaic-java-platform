@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.kvstore.memcached;
 
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
@@ -28,5 +29,5 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * 
  */
 public enum MemcachedOperations implements IOperationType {
-	ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK, LIST, GET, SET, DELETE;
+    ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK, LIST, GET, SET, DELETE;
 }

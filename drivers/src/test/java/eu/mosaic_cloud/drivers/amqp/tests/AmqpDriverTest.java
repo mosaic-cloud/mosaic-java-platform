@@ -17,11 +17,18 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers.amqp.tests;
 
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -35,96 +42,82 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class AmqpDriverTest {
 
-	private static IConfiguration configuration;
-	private AmqpDriver wrapper;
-	private String clientId = UUID.randomUUID().toString();
-	private BasicThreadingContext threadingContext;
+    private static IConfiguration configuration;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		AmqpDriverTest.configuration = PropertyTypeConfiguration.create(
-				AmqpDriverTest.class.getClassLoader(), "amqp-test.properties");
+    private AmqpDriver wrapper;
 
-	}
+    private final String clientId = UUID.randomUUID().toString();
 
-	@After
-	public void tearDown() throws Exception {
-		this.wrapper.destroy();
-		this.threadingContext.destroy();
-	}
+    private BasicThreadingContext threadingContext;
 
-	@Before
-	public void setUp() throws IOException {
-		QueueingExceptionTracer exceptions = QueueingExceptionTracer
-				.create(NullExceptionTracer.defaultInstance);
-		BasicThreadingSecurityManager.initialize();
-		this.threadingContext = BasicThreadingContext.create(this,
-				exceptions.catcher);
-		this.threadingContext.initialize();
-		this.wrapper = AmqpDriver.create(AmqpDriverTest.configuration,
-				this.threadingContext);
-	}
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        AmqpDriverTest.configuration = PropertyTypeConfiguration.create(
+                AmqpDriverTest.class.getClassLoader(), "amqp-test.properties");
+    }
 
-	public void testDriver() throws InterruptedException, ExecutionException {
-		Assert.assertNotNull(this.wrapper);
-	}
+    @Before
+    public void setUp() throws IOException {
+        final QueueingExceptionTracer exceptions = QueueingExceptionTracer
+                .create(NullExceptionTracer.defaultInstance);
+        BasicThreadingSecurityManager.initialize();
+        this.threadingContext = BasicThreadingContext.create(this, exceptions.catcher);
+        this.threadingContext.initialize();
+        this.wrapper = AmqpDriver.create(AmqpDriverTest.configuration, this.threadingContext);
+    }
 
-	public void testDeclareExchange() throws InterruptedException,
-			ExecutionException {
-		String exchange = ConfigUtils.resolveParameter(
-				AmqpDriverTest.configuration, "publisher.amqp.exchange",
-				String.class, "");
+    @After
+    public void tearDown() throws Exception {
+        this.wrapper.destroy();
+        this.threadingContext.destroy();
+    }
 
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"declare exchange");
-		IResult<Boolean> r = this.wrapper
-				.declareExchange(this.clientId, exchange,
-						AmqpExchangeType.DIRECT, false, false, false, handler);
-		Assert.assertTrue(r.getResult());
-	}
+    @Test
+    public void testAll() throws InterruptedException, ExecutionException {
+        testDriver();
+        testDeclareExchange();
+        testDeclareQueue();
+        testBindQueue();
+    }
 
-	public void testDeclareQueue() throws InterruptedException,
-			ExecutionException {
-		String queue = ConfigUtils.resolveParameter(
-				AmqpDriverTest.configuration, "consumer.amqp.queue",
-				String.class, "");
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"declare queue");
-		IResult<Boolean> r = this.wrapper.declareQueue(this.clientId, queue,
-				true, false, true, false, handler);
-		Assert.assertTrue(r.getResult());
-	}
+    public void testBindQueue() throws InterruptedException, ExecutionException {
+        final String exchange = ConfigUtils.resolveParameter(AmqpDriverTest.configuration,
+                "publisher.amqp.exchange", String.class, "");
+        final String routingKey = ConfigUtils.resolveParameter(AmqpDriverTest.configuration,
+                "publisher.amqp.routing_key", String.class, "");
+        final String queue = ConfigUtils.resolveParameter(AmqpDriverTest.configuration,
+                "consumer.amqp.queue", String.class, "");
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+                "bind queue");
+        final IResult<Boolean> r = this.wrapper.bindQueue(this.clientId, exchange, queue,
+                routingKey, handler);
+        Assert.assertTrue(r.getResult());
+    }
 
-	public void testBindQueue() throws InterruptedException, ExecutionException {
-		String exchange = ConfigUtils.resolveParameter(
-				AmqpDriverTest.configuration, "publisher.amqp.exchange",
-				String.class, "");
-		String routingKey = ConfigUtils.resolveParameter(
-				AmqpDriverTest.configuration, "publisher.amqp.routing_key",
-				String.class, "");
-		String queue = ConfigUtils.resolveParameter(
-				AmqpDriverTest.configuration, "consumer.amqp.queue",
-				String.class, "");
-		IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
-				"bind queue");
-		IResult<Boolean> r = this.wrapper.bindQueue(this.clientId, exchange,
-				queue, routingKey, handler);
-		Assert.assertTrue(r.getResult());
-	}
+    public void testDeclareExchange() throws InterruptedException, ExecutionException {
+        final String exchange = ConfigUtils.resolveParameter(AmqpDriverTest.configuration,
+                "publisher.amqp.exchange", String.class, "");
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+                "declare exchange");
+        final IResult<Boolean> r = this.wrapper.declareExchange(this.clientId, exchange,
+                AmqpExchangeType.DIRECT, false, false, false, handler);
+        Assert.assertTrue(r.getResult());
+    }
 
-	@Test
-	public void testAll() throws InterruptedException, ExecutionException {
-		testDriver();
-		testDeclareExchange();
-		testDeclareQueue();
-		testBindQueue();
-	}
+    public void testDeclareQueue() throws InterruptedException, ExecutionException {
+        final String queue = ConfigUtils.resolveParameter(AmqpDriverTest.configuration,
+                "consumer.amqp.queue", String.class, "");
+        final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean>(
+                "declare queue");
+        final IResult<Boolean> r = this.wrapper.declareQueue(this.clientId, queue, true, false,
+                true, false, handler);
+        Assert.assertTrue(r.getResult());
+    }
+
+    public void testDriver() throws InterruptedException, ExecutionException {
+        Assert.assertNotNull(this.wrapper);
+    }
 }
