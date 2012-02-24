@@ -30,11 +30,4 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
  *            the type of the cloudlet context
  */
 public interface IConnector<C> extends eu.mosaic_cloud.connectors.core.IConnector {
-    /**
-     * Returns the current status of the accessor.
-     * 
-     * @return the current status of the accessor
-     */
-    // !!!!
-    // ConnectorStatus getStatus();
 }
