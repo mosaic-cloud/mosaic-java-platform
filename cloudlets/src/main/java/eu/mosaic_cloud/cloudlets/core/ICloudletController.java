@@ -38,8 +38,6 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  */
 public interface ICloudletController<Context> extends Callbacks, IConnectorsFactory {
 
-    <T> T buildCallbackInvoker(T callback, Class<T> callbackType);
-
     /**
      * Destroys the cloudlet.
      * 
@@ -48,9 +46,6 @@ public interface ICloudletController<Context> extends Callbacks, IConnectorsFact
     boolean destroy();
 
     IConfiguration getConfiguration();
-
-    <T> CompletionInvocationHandler<T> getResponseInvocationHandler(
-            IOperationCompletionHandler<T> handler);
 
     /**
      * Indicates if the cloudlet is alive and can receive messages or not.
