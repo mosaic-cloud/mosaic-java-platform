@@ -193,15 +193,12 @@ public class Cloudlet<Context extends Object>
 	
 	<T> T getCallbackProxy (final Class<T> callbackType, final T callback)
 	{
-		final CloudletInvocationHandler<T> iHandler = new CloudletInvocationHandler<T> (callback);
-		final T proxy = (T) Proxy.newProxyInstance (this.executor.getLoader (), new Class[] {callbackType}, iHandler);
-		return proxy;
+		return (T) Proxy.newProxyInstance (this.executor.getLoader (), new Class[] {callbackType}, new CloudletInvocationHandler<T> (callback));
 	}
 	
 	<T> CompletionInvocationHandler<T> getResponseHandler (final IOperationCompletionHandler<T> handler)
 	{
-		final CloudletResponseInvocationHandler<T> handler = new CloudletResponseInvocationHandler<T> (handler);
-		return handler;
+		return new CloudletResponseInvocationHandler<T> (handler);
 	}
 	
 	volatile boolean active;
