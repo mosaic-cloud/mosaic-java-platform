@@ -60,7 +60,8 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
  */
 public final class AmqpQueueRawConnectorProxy
 		extends BaseConnectorProxy
-		implements IAmqpQueueRawConnector
+		implements
+			IAmqpQueueRawConnector
 { // NOPMD
 	// by
 	// georgiana
@@ -68,13 +69,14 @@ public final class AmqpQueueRawConnectorProxy
 	// 2/21/12
 	// 2:36
 	// PM
-	private AmqpQueueRawConnectorProxy (final IConfiguration config, final Channel channel)
+	protected AmqpQueueRawConnectorProxy (final IConfiguration config, final Channel channel)
 	{
 		super (config, channel);
 		this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> ();
 		this.consumerMessages = new ResponseHandlerMap ();
 	}
 	
+	@Override
 	public CallbackCompletion<Void> ack (final long delivery, final boolean multiple)
 	{
 		final CompletionToken token = this.generateToken ();
@@ -86,6 +88,7 @@ public final class AmqpQueueRawConnectorProxy
 		return this.sendRequest (message, token, Void.class);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> bindQueue (final String exchange, final String queue, final String routingKey)
 	{
 		final CompletionToken token = this.generateToken ();
@@ -98,6 +101,7 @@ public final class AmqpQueueRawConnectorProxy
 		return this.sendRequest (message, token, Void.class);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> cancel (final String consumer)
 	{
 		final CompletionToken token = this.generateToken ();
@@ -108,6 +112,7 @@ public final class AmqpQueueRawConnectorProxy
 		return this.sendRequest (message, token, Void.class);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback)
 	{
 		final CompletionToken token = this.generateToken ();
@@ -128,6 +133,7 @@ public final class AmqpQueueRawConnectorProxy
 		return result;
 	}
 	
+	@Override
 	public CallbackCompletion<Void> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive)
 	{
 		final ExchangeType eType = AmqpPayloads.DeclareExchangeRequest.ExchangeType.valueOf (type.toString ().toUpperCase ());
@@ -143,6 +149,7 @@ public final class AmqpQueueRawConnectorProxy
 		return this.sendRequest (message, token, Void.class);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive)
 	{
 		final CompletionToken token = this.generateToken ();
@@ -157,6 +164,7 @@ public final class AmqpQueueRawConnectorProxy
 		return this.sendRequest (message, token, Void.class);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> get (final String queue, final boolean autoAck)
 	{
 		final CompletionToken token = this.generateToken ();
@@ -168,6 +176,7 @@ public final class AmqpQueueRawConnectorProxy
 		return this.sendRequest (message, token, Void.class);
 	}
 	
+	@Override
 	public CallbackCompletion<Void> publish (final AmqpOutboundMessage message)
 	{
 		final CompletionToken token = this.generateToken ();
