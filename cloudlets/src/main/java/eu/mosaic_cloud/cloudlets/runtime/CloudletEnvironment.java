@@ -3,6 +3,7 @@ package eu.mosaic_cloud.cloudlets.runtime;
 
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,6 +48,11 @@ public final class CloudletEnvironment
 	public final CallbackReactor reactor;
 	public final Supplementary supplementary;
 	public final ThreadingContext threading;
+	
+	public static final CloudletEnvironment create (final IConfiguration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		return (new CloudletEnvironment (configuration, cloudletCallbackClass, cloudletContextClass, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
+	}
 	
 	public static final CloudletEnvironment create (final IConfiguration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
 	{

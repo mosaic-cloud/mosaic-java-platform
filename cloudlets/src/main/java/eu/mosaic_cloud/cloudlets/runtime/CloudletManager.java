@@ -24,13 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
-import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
@@ -49,6 +50,8 @@ public class CloudletManager {
      */
     private List<Cloudlet<?>> cloudletPool;
 
+    private CallbackReactor reactor;
+
     private ThreadingContext threading;
 
     private ClassLoader classLoader;
@@ -56,6 +59,8 @@ public class CloudletManager {
     private final Monitor monitor = Monitor.create(this);
 
     private IConfiguration configuration;
+
+    private ExceptionTracer exceptions;
 
     private static MosaicLogger logger = MosaicLogger.createLogger(CloudletManager.class);
 
@@ -68,11 +73,13 @@ public class CloudletManager {
      * @param configuration
      *            configuration object of the cloudlet
      */
-    public CloudletManager(ThreadingContext threading, ClassLoader classLoader,
-            IConfiguration configuration) {
+    public CloudletManager(CallbackReactor reactor, ThreadingContext threading, ExceptionTracer exceptions,
+    		ClassLoader classLoader, IConfiguration configuration) {
         super();
         synchronized (this.monitor) {
+        	this.reactor = reactor;
             this.threading = threading;
+            this.exceptions = exceptions;
             this.classLoader = classLoader;
             this.configuration = configuration;
             this.cloudletPool = new ArrayList<Cloudlet<?>>();
@@ -112,46 +119,19 @@ public class CloudletManager {
             handlerClasz = this.classLoader.loadClass(cloudletClass);
             stateClasz = this.classLoader.loadClass(cloudletStateClass);
             resourceConfig = PropertyTypeConfiguration.create(this.classLoader, resourceFile);
-            final ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
-            final Object cloudletState = invokeConstructor(stateClasz);
-            final Cloudlet<?> cloudlet = new Cloudlet(cloudletState, cloudlerHandler, resourceConfig,
-                    this.threading, this.classLoader);
+            // final ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
+            // final Object cloudletState = invokeConstructor(stateClasz);
+            final CloudletEnvironment environment = CloudletEnvironment.create (
+            		resourceConfig, handlerClasz, stateClasz, this.classLoader,
+            		this.reactor, this.threading, this.exceptions);
+            final Cloudlet<?> cloudlet = new Cloudlet(environment);
             cloudlet.initialize();
             this.cloudletPool.add(cloudlet);
         } catch (final ClassNotFoundException e) {
-            ExceptionTracer.traceDeferred(e);
+        	exceptions.trace (ExceptionResolution.Deferred, e);
             CloudletManager.logger.error("Could not resolve class: " + e.getMessage()); //$NON-NLS-1$
-            throw new IllegalArgumentException(e);
+            throw new Error(e);
         }
-    }
-
-    private <T> T createHandler(final Class<T> clasz) {
-        T instance = null;
-        final boolean isCallback = ICloudletCallback.class.isAssignableFrom(clasz);
-        if (!isCallback) {
-            CloudletManager.logger.error("Missmatched object class: `" + clasz.getName() + "`"); //$NON-NLS-1$ //$NON-NLS-2$
-            throw new IllegalArgumentException();
-        }
-        try {
-            instance = clasz.newInstance();
-        } catch (final Throwable exception) {
-            ExceptionTracer.traceDeferred(exception);
-            CloudletManager.logger.error("Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
-            throw new IllegalArgumentException(exception);
-        }
-        return instance;
-    }
-
-    private final Object invokeConstructor(final Class<?> clasz) {
-        Object instance;
-        try {
-            instance = clasz.newInstance();
-        } catch (final Throwable exception) {
-            CloudletManager.logger.error("Could not instantiate class: `" + clasz + "`"); //$NON-NLS-1$ //$NON-NLS-2$
-            ExceptionTracer.traceIgnored(exception);
-            throw new IllegalArgumentException();
-        }
-        return (instance);
     }
 
     /**

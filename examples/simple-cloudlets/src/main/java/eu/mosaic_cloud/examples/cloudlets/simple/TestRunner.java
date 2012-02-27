@@ -24,8 +24,10 @@ import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletManager;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 
 public class TestRunner {
 
@@ -70,12 +72,16 @@ public class TestRunner {
     }
 
     private static CloudletManager startCloudlet(IConfiguration configuration) {
-        final CloudletManager container = new CloudletManager(Threading.getDefaultContext(),
+    	AbortingExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
+    	BasicThreadingContext threading = BasicThreadingContext.create(TestRunner.class, exceptions.catcher);
+    	BasicCallbackReactor reactor = BasicCallbackReactor.create(threading, exceptions);
+    	CloudletManager container = new CloudletManager(
+    			reactor, threading, exceptions,
                 TestRunner.class.getClassLoader(), configuration);
         try {
             container.start();
         } catch (final CloudletException e) {
-            ExceptionTracer.traceIgnored(e);
+            exceptions.trace(ExceptionResolution.Ignored, e);
         }
         return container;
     }

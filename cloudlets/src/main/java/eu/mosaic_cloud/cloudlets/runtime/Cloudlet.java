@@ -21,10 +21,8 @@
 package eu.mosaic_cloud.cloudlets.runtime;
 
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -36,15 +34,18 @@ import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenOperation;
 import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
 
 
 /**
@@ -70,16 +71,23 @@ public class Cloudlet<Context extends Object>
 	 *            the class loader used for loading cloudlet classes
 	 * @throws CloudletException
 	 */
-	public Cloudlet (final Context context, final ICloudletCallback<Context> callback, final IConfiguration configuration, final ThreadingContext threading, final ClassLoader classLoader)
+	public Cloudlet (final CloudletEnvironment environment)
 	{
 		super ();
+		Preconditions.checkNotNull (environment);
 		this.monitor = Monitor.create (this);
 		synchronized (this.monitor) {
-			this.cloudletContext = context;
-			this.cloudletCallback = callback;
-			this.configuration = configuration;
-			this.threading = threading;
-			this.classLoader = classLoader;
+			this.environment = environment;
+			try {
+				this.cloudletContext = (Context) this.environment.cloudletContextClass.newInstance ();
+				this.cloudletCallback = (ICloudletCallback<Context>) this.environment.cloudletCallbackClass.newInstance ();
+			} catch (final ReflectiveOperationException exception) {
+				throw (new Error (exception));
+			}
+			this.configuration = this.environment.configuration;
+			this.threading = this.environment.threading;
+			this.exceptions = this.environment.exceptions;
+			this.classLoader = this.environment.classLoader;
 			this.cloudletController = new CloudletController ();
 			this.executor = new CloudletExecutor (this.threading, this.classLoader);
 			this.active = false;
@@ -126,9 +134,9 @@ public class Cloudlet<Context extends Object>
 				result.getResult ();
 				Cloudlet.logger.trace ("Cloudlet.destroy() - Cloudlet destroyed.");
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				this.exceptions.trace (ExceptionResolution.Ignored, e);
 			} catch (final ExecutionException e) {
-				ExceptionTracer.traceIgnored (e);
+				this.exceptions.trace (ExceptionResolution.Ignored, e);
 			}
 			this.active = false;
 			return true;
@@ -174,9 +182,9 @@ public class Cloudlet<Context extends Object>
 				initialized = true;
 				this.active = true;
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				this.exceptions.trace (ExceptionResolution.Ignored, e);
 			} catch (final ExecutionException e) {
-				ExceptionTracer.traceIgnored (e);
+				this.exceptions.trace (ExceptionResolution.Ignored, e);
 			}
 			return initialized;
 		}
@@ -193,6 +201,8 @@ public class Cloudlet<Context extends Object>
 	final Context cloudletContext;
 	final CloudletController cloudletController;
 	final IConfiguration configuration;
+	final CloudletEnvironment environment;
+	final ExceptionTracer exceptions;
 	final CloudletExecutor executor;
 	final Monitor monitor;
 	final ThreadingContext threading;
@@ -273,11 +283,11 @@ public class Cloudlet<Context extends Object>
 					try {
 						method.invoke (CloudletResponseInvocationHandler.this.handler, arguments);
 					} catch (final IllegalArgumentException e) {
-						ExceptionTracer.traceIgnored (e);
+						Cloudlet.this.exceptions.trace (ExceptionResolution.Ignored, e);
 					} catch (final IllegalAccessException e) {
-						ExceptionTracer.traceIgnored (e);
+						Cloudlet.this.exceptions.trace (ExceptionResolution.Ignored, e);
 					} catch (final InvocationTargetException e) {
-						ExceptionTracer.traceIgnored (e);
+						Cloudlet.this.exceptions.trace (ExceptionResolution.Ignored, e);
 					}
 				}
 			};

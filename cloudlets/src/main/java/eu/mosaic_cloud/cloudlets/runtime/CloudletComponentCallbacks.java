@@ -38,23 +38,23 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
-import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.tools.ChannelData;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonMapper;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture.Trigger;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
@@ -104,7 +104,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
 
     private ComponentController component;
 
-    private final ThreadingContext threading;
+    private ComponentEnvironment componentEnvironment;
 
     private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
 
@@ -118,13 +118,16 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
 
     private final List<CloudletManager> cloudletRunners = new ArrayList<CloudletManager>();
 
+    private final ExceptionTracer exceptions;
+
     /**
      * Creates a callback which is used by the mOSAIC platform to communicate
      * with the connectors.
      */
-    public CloudletComponentCallbacks(ComponentEnvironment context) {
+    public CloudletComponentCallbacks(ComponentEnvironment componentEnvironment) {
         super();
-        this.threading = context.threading;
+        this.componentEnvironment = componentEnvironment;
+        this.exceptions = this.componentEnvironment.exceptions;
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         CloudletComponentCallbacks.callbacks = this;
         final IConfiguration configuration = PropertyTypeConfiguration.create(
@@ -212,7 +215,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         }
         this.component = null;
         this.status = Status.Terminated;
-        ExceptionTracer.traceHandled(exception);
+        this.exceptions.trace (ExceptionResolution.Handled, exception);
         return null;
     }
 
@@ -264,9 +267,9 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
                 CloudletComponentCallbacks.logger.debug("Found driver on channel " + channel);
             }
         } catch (final InterruptedException e) {
-            ExceptionTracer.traceIgnored(e);
+        	this.exceptions.trace (ExceptionResolution.Ignored, e);
         } catch (final ExecutionException e) {
-            ExceptionTracer.traceIgnored(e);
+        	this.exceptions.trace (ExceptionResolution.Ignored, e);
         }
         return channel;
     }
@@ -282,7 +285,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
                         try {
                             classpathUrl = new URL(classpathPart);
                         } catch (final Exception exception) {
-                            ExceptionTracer.traceDeferred(exception);
+                        	this.exceptions.trace (ExceptionResolution.Deferred, exception);
                             throw (new IllegalArgumentException(String.format(
                                     "invalid class-path URL `%s`", classpathPart), exception));
                         }
@@ -330,7 +333,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         if (pendingReply != null) {
             if (!ok) {
                 final Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
-                ExceptionTracer.traceDeferred(e);
+            	this.exceptions.trace (ExceptionResolution.Deferred, e);
                 this.component.terminate();
                 throw (new IllegalStateException(e));
             }
@@ -365,15 +368,16 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
                 ConfigProperties.getString("CloudletComponent.11"), Integer.class, 1);
         final List<CloudletManager> containers = new ArrayList<CloudletManager>();
         for (int i = 0; i < noInstances; i++) {
-            final CloudletManager container = new CloudletManager(this.threading, loader,
-                    configuration);
+            final CloudletManager container = new CloudletManager(
+            		this.componentEnvironment.reactor, this.componentEnvironment.threading, this.componentEnvironment.exceptions,
+            		loader, configuration);
             try {
                 container.start();
                 containers.add(container);
                 CloudletComponentCallbacks.logger.trace("Starting cloudlet with config file "
                         + configurationFile);
             } catch (final CloudletException e) {
-                ExceptionTracer.traceIgnored(e);
+            	this.exceptions.trace (ExceptionResolution.Ignored, e);
             }
         }
         return containers;
