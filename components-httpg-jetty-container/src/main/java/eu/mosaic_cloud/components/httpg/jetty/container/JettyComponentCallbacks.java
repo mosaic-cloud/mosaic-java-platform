@@ -31,7 +31,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
-import eu.mosaic_cloud.components.core.ComponentContext;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine;
@@ -58,7 +58,7 @@ public final class JettyComponentCallbacks
 			ComponentCallbacks,
 			CallbackHandler
 {
-	public JettyComponentCallbacks (final ComponentContext context)
+	public JettyComponentCallbacks (final ComponentEnvironment context)
 	{
 		super ();
 		this.monitor = Monitor.create (this);

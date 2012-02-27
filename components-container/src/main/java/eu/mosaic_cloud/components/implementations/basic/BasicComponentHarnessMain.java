@@ -41,7 +41,7 @@ import java.util.LinkedList;
 
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCallbacksProvider;
-import eu.mosaic_cloud.components.core.ComponentContext;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -116,7 +116,7 @@ public final class BasicComponentHarnessMain
 		component.initialize ();
 		final ComponentController componentController = component.getController ();
 		try {
-			final ComponentCallbacks componentCallbacks = callbacksProvider.provide (ComponentContext.create (componentController, BasicComponentHarnessMain.class.getClassLoader (), reactor, threading, exceptions));
+			final ComponentCallbacks componentCallbacks = callbacksProvider.provide (ComponentEnvironment.create (componentController, BasicComponentHarnessMain.class.getClassLoader (), reactor, threading, exceptions));
 			componentController.bind (componentCallbacks, channel.getController ());
 			Preconditions.checkState (component.await ());
 		} catch (final Throwable exception) {
@@ -370,18 +370,18 @@ public final class BasicComponentHarnessMain
 		}
 		
 		@Override
-		public final ComponentCallbacks provide (final ComponentContext context)
+		public final ComponentCallbacks provide (final ComponentEnvironment context)
 		{
 			Preconditions.checkNotNull (context);
 			Method provideMethod;
 			try {
-				provideMethod = this.clasz.getMethod ("provide", ComponentContext.class);
+				provideMethod = this.clasz.getMethod ("provide", ComponentEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
 				provideMethod = null;
 			}
 			Constructor<?> provideConstructor;
 			try {
-				provideConstructor = this.clasz.getConstructor (ComponentContext.class);
+				provideConstructor = this.clasz.getConstructor (ComponentEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
 				provideConstructor = null;
 			}

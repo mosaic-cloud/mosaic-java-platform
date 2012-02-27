@@ -23,7 +23,7 @@ package eu.mosaic_cloud.drivers;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
-import eu.mosaic_cloud.components.core.ComponentContext;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
@@ -75,7 +75,7 @@ public abstract class AbstractDriverComponentCallbacks implements ComponentCallb
 
     protected MosaicLogger logger;
 
-    protected AbstractDriverComponentCallbacks(ComponentContext context) {
+    protected AbstractDriverComponentCallbacks(ComponentEnvironment context) {
         this.threading = context.threading;
         this.logger = MosaicLogger.createLogger(this);
     }

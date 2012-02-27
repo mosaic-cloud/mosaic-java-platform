@@ -29,7 +29,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
-import eu.mosaic_cloud.components.core.ComponentContext;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -49,7 +49,7 @@ public final class AbacusComponentCallbacks
 			ComponentCallbacks,
 			CallbackHandler
 {
-	public AbacusComponentCallbacks (final ComponentContext context)
+	public AbacusComponentCallbacks (final ComponentEnvironment context)
 	{
 		super ();
 		this.transcript = Transcript.create (this);

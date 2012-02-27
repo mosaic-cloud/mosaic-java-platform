@@ -38,7 +38,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
-import eu.mosaic_cloud.components.core.ComponentContext;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -122,7 +122,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
      * Creates a callback which is used by the mOSAIC platform to communicate
      * with the connectors.
      */
-    public CloudletComponentCallbacks(ComponentContext context) {
+    public CloudletComponentCallbacks(ComponentEnvironment context) {
         super();
         this.threading = context.threading;
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();

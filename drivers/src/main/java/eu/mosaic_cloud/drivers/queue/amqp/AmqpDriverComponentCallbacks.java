@@ -30,7 +30,7 @@ import java.util.Map;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
-import eu.mosaic_cloud.components.core.ComponentContext;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.AbstractDriverComponentCallbacks;
@@ -60,7 +60,7 @@ public final class AmqpDriverComponentCallbacks extends AbstractDriverComponentC
     /**
      * Creates a driver callback.
      */
-    public AmqpDriverComponentCallbacks(ComponentContext context) {
+    public AmqpDriverComponentCallbacks(ComponentEnvironment context) {
         super(context);
         try {
             final IConfiguration configuration = PropertyTypeConfiguration

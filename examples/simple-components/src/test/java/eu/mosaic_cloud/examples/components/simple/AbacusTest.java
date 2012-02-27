@@ -30,7 +30,7 @@ import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
-import eu.mosaic_cloud.components.core.ComponentContext;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
@@ -83,7 +83,7 @@ public class AbacusTest
 		final ComponentCallbacks clientComponentCallbacksProxy = reactor.createProxy (ComponentCallbacks.class);
 		Assert.assertTrue (serverComponentController.bind (serverComponentCallbacksProxy, serverChannel.getController ()).await (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (clientComponentController.bind (clientComponentCallbacksProxy, clientChannel.getController ()).await (AbacusTest.defaultPollTimeout));
-		final AbacusComponentCallbacks serverComponentCallbacks = new AbacusComponentCallbacks (ComponentContext.create (serverComponentController, this.getClass ().getClassLoader (), reactor, threading, exceptions));
+		final AbacusComponentCallbacks serverComponentCallbacks = new AbacusComponentCallbacks (ComponentEnvironment.create (serverComponentController, this.getClass ().getClassLoader (), reactor, threading, exceptions));
 		final QueueingComponentCallbacks clientComponentCallbacks = QueueingComponentCallbacks.create (clientComponentController, exceptions);
 		final CallbackIsolate serverComponentCallbacksIsolate = reactor.createIsolate ();
 		final CallbackIsolate clientComponentCallbacksIsolate = reactor.createIsolate ();
