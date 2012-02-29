@@ -18,10 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.connectors.queue;
+package eu.mosaic_cloud.connectors.queue.amqp;
 
-import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
-public interface IQueueConnector<Context> extends IConnector<Context>,
-        eu.mosaic_cloud.connectors.queue.IQueueConnector {
+public interface IAmqpQueueConsumerConnectorFactory extends
+        IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>> {
+
+    <Message> IAmqpQueueConsumerConnector<Message> create(
+            IConfiguration configuration, Class<Message> messageClass,
+            DataEncoder<? super Message> messageEncoder,
+            IAmqpQueueConsumerCallback<Message> callback);
 }

@@ -29,10 +29,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * Interface for working with key-value stores.
  * 
  * @author Georgiana Macariu
- * @param <T>
+ * @param <Value>
  *            type of stored data
  */
-public interface IKvStoreConnector<T extends Object> extends IConnector {
+public interface IKvStoreConnector<Value extends Object> extends IConnector {
 
     /**
      * Deletes the given key.
@@ -50,7 +50,7 @@ public interface IKvStoreConnector<T extends Object> extends IConnector {
      *            the key
      * @return a result handle for the operation
      */
-    CallbackCompletion<T> get(String key);
+    CallbackCompletion<Value> get(String key);
 
     /**
      * Lists the keys of the bucket used by the connector.
@@ -68,5 +68,5 @@ public interface IKvStoreConnector<T extends Object> extends IConnector {
      *            the data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> set(String key, T data);
+    CallbackCompletion<Boolean> set(String key, Value data);
 }

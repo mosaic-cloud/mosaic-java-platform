@@ -20,7 +20,8 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue;
 
-import eu.mosaic_cloud.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
 
-public interface IQueueConnectorFactory<C extends IQueueConnector<?>> extends IConnectorFactory<C> {
+
+public interface IQueueConnectorFactory<Connector extends IQueueConnector<?>> extends IConnectorFactory<Connector> {
 }
