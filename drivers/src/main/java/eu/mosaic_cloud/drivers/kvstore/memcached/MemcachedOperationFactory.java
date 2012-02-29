@@ -52,12 +52,12 @@ import net.spy.memcached.MemcachedClient;
  */
 public final class MemcachedOperationFactory implements IOperationFactory { // NOPMD
 
-                                                                            // by
-                                                                            // georgiana
-                                                                            // on
-                                                                            // 10/12/11
-                                                                            // 4:57
-                                                                            // PM
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 4:57
+    // PM
     private final MemcachedClient mcClient;
 
     private MemcachedOperationFactory(List<?> servers, String user, String password, String bucket,
@@ -317,12 +317,12 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         default:
             operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                              // by
-                                                                              // georgiana
-                                                                              // on
-                                                                              // 10/12/11
-                                                                              // 4:56
-                                                                              // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:56
+                        // PM
                         @Override
                         public Object call() throws UnsupportedOperationException {
                             throw new UnsupportedOperationException("Unsupported operation: "

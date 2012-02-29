@@ -49,10 +49,10 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
 
-                                                                    // georgiana
-                                                                    // on
-                                                                    // 10/12/11
-                                                                    // 10:07 AM
+    // georgiana
+    // on
+    // 10/12/11
+    // 10:07 AM
     private final static boolean USE_BUCKET = true;
 
     private final List<?> hosts;

@@ -28,8 +28,8 @@ import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
-import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -96,7 +96,8 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
      * Creates a callback which is used by the mOSAIC platform to communicate
      * with the connectors.
      */
-    public ConnectorComponentCallbacks(@SuppressWarnings("unused") final ComponentEnvironment context) {
+    public ConnectorComponentCallbacks(
+            @SuppressWarnings("unused") final ComponentEnvironment context) {
         super();
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         ConnectorComponentCallbacks.setComponentCallbacks(this);

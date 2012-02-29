@@ -77,13 +77,13 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
         scenario.exceptions_ = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
         scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
                 scenario.exceptions_);
-        if (configuration != null)
-	        scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
-	                configuration);
-        else
+        if (configuration != null) {
+            scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
+                    configuration);
+        } else {
             scenario.configuration = PropertyTypeConfiguration.create();
-        scenario.threading = BasicThreadingContext.create(owner,
-                scenario.exceptions.catcher);
+        }
+        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions.catcher);
         scenario.threading.initialize();
         final String driverIdentity = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.driver.identifier", String.class, "");

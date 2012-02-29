@@ -59,8 +59,8 @@ import com.rabbitmq.client.ShutdownSignalException;
  */
 public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
 
-                                                         // on 10/12/11 4:24
-                                                         // PM
+    // on 10/12/11 4:24
+    // PM
     /**
      * Listener for connection shutdown signals.
      * 
@@ -130,7 +130,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
      */
     final class ConsumerCallback implements Consumer { // NOPMD by georgiana on
 
-                                                       // 10/12/11 4:24 PM
+        // 10/12/11 4:24 PM
         ConsumerCallback() {
             super();
         }

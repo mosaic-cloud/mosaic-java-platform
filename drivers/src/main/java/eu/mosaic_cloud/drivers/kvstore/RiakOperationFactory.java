@@ -45,12 +45,12 @@ import com.basho.riak.client.bucket.Bucket;
  */
 public final class RiakOperationFactory implements IOperationFactory { // NOPMD
 
-                                                                       // by
-                                                                       // georgiana
-                                                                       // on
-                                                                       // 10/12/11
-                                                                       // 4:46
-                                                                       // PM
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 4:46
+    // PM
     private final IRiakClient riakcl;
 
     private final Bucket bucket;
@@ -226,12 +226,12 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
             ExceptionTracer.traceDeferred(e);
             operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                              // by
-                                                                              // georgiana
-                                                                              // on
-                                                                              // 10/12/11
-                                                                              // 4:45
-                                                                              // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:45
+                        // PM
                         @Override
                         public Object call() throws Exception { // NOPMD by
                                                                 // georgiana on

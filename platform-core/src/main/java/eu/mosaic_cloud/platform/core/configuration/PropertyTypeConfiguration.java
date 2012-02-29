@@ -109,6 +109,12 @@ public final class PropertyTypeConfiguration implements IConfiguration {
         this.root = root;
     }
 
+    public static PropertyTypeConfiguration create() {
+        final Properties properties = new Properties(System.getProperties());
+        final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(properties);
+        return configuration;
+    }
+
     /**
      * Creates a configuration object and loads the configuration parameters
      * from the specified resource file using a specific class loader.
@@ -156,12 +162,6 @@ public final class PropertyTypeConfiguration implements IConfiguration {
         } else {
             throw (new IllegalArgumentException());
         }
-        final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(properties);
-        return configuration;
-    }
-
-    public static PropertyTypeConfiguration create() {
-        final Properties properties = new Properties(System.getProperties());
         final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(properties);
         return configuration;
     }

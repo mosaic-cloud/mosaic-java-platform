@@ -72,11 +72,11 @@ public class TestRunner {
     }
 
     private static CloudletManager startCloudlet(IConfiguration configuration) {
-    	AbortingExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
-    	BasicThreadingContext threading = BasicThreadingContext.create(TestRunner.class, exceptions.catcher);
-    	BasicCallbackReactor reactor = BasicCallbackReactor.create(threading, exceptions);
-    	CloudletManager container = new CloudletManager(
-    			reactor, threading, exceptions,
+        final AbortingExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
+        final BasicThreadingContext threading = BasicThreadingContext.create(TestRunner.class,
+                exceptions.catcher);
+        final BasicCallbackReactor reactor = BasicCallbackReactor.create(threading, exceptions);
+        final CloudletManager container = new CloudletManager(reactor, threading, exceptions,
                 TestRunner.class.getClassLoader(), configuration);
         try {
             container.start();

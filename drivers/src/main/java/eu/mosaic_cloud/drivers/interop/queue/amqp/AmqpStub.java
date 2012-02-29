@@ -69,7 +69,7 @@ import com.rabbitmq.client.ConnectionFactory;
  */
 public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
 
-                                                   // 10/12/11 3:32 PM
+    // 10/12/11 3:32 PM
     final class ConsumerHandler implements IAmqpConsumer {
 
         private final Session session;

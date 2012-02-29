@@ -104,7 +104,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
 
     private ComponentController component;
 
-    private ComponentEnvironment componentEnvironment;
+    private final ComponentEnvironment componentEnvironment;
 
     private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
 
@@ -215,7 +215,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         }
         this.component = null;
         this.status = Status.Terminated;
-        this.exceptions.trace (ExceptionResolution.Handled, exception);
+        this.exceptions.trace(ExceptionResolution.Handled, exception);
         return null;
     }
 
@@ -267,9 +267,9 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
                 CloudletComponentCallbacks.logger.debug("Found driver on channel " + channel);
             }
         } catch (final InterruptedException e) {
-        	this.exceptions.trace (ExceptionResolution.Ignored, e);
+            this.exceptions.trace(ExceptionResolution.Ignored, e);
         } catch (final ExecutionException e) {
-        	this.exceptions.trace (ExceptionResolution.Ignored, e);
+            this.exceptions.trace(ExceptionResolution.Ignored, e);
         }
         return channel;
     }
@@ -285,7 +285,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
                         try {
                             classpathUrl = new URL(classpathPart);
                         } catch (final Exception exception) {
-                        	this.exceptions.trace (ExceptionResolution.Deferred, exception);
+                            this.exceptions.trace(ExceptionResolution.Deferred, exception);
                             throw (new IllegalArgumentException(String.format(
                                     "invalid class-path URL `%s`", classpathPart), exception));
                         }
@@ -333,7 +333,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         if (pendingReply != null) {
             if (!ok) {
                 final Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
-            	this.exceptions.trace (ExceptionResolution.Deferred, e);
+                this.exceptions.trace(ExceptionResolution.Deferred, e);
                 this.component.terminate();
                 throw (new IllegalStateException(e));
             }
@@ -369,15 +369,15 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         final List<CloudletManager> containers = new ArrayList<CloudletManager>();
         for (int i = 0; i < noInstances; i++) {
             final CloudletManager container = new CloudletManager(
-            		this.componentEnvironment.reactor, this.componentEnvironment.threading, this.componentEnvironment.exceptions,
-            		loader, configuration);
+                    this.componentEnvironment.reactor, this.componentEnvironment.threading,
+                    this.componentEnvironment.exceptions, loader, configuration);
             try {
                 container.start();
                 containers.add(container);
                 CloudletComponentCallbacks.logger.trace("Starting cloudlet with config file "
                         + configurationFile);
             } catch (final CloudletException e) {
-            	this.exceptions.trace (ExceptionResolution.Ignored, e);
+                this.exceptions.trace(ExceptionResolution.Ignored, e);
             }
         }
         return containers;

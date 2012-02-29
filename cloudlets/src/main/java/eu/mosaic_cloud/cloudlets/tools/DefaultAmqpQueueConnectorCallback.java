@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnectorCallback;
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Default AMQP resource accessor callback.
