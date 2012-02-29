@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-drivers
+ * mosaic-platform-interop
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
