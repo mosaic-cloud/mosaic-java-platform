@@ -1117,6 +1117,7 @@ public final class BasicCallbackReactor
 				this.isolate = CallbackIsolate.create (this);
 				this.actorsRegistered = new ConcurrentSkipListSet<BasicCallbackReactor.Actor<?>> (new IdentityComparator ());
 				this.actorsEnqueued = new ConcurrentLinkedQueue<BasicCallbackReactor.Actor<?>> ();
+				this.actionsEnqueued = new ConcurrentLinkedQueue<SchedulerRunnableAction> ();
 				this.destroyAction = Atomics.newReference (null);
 				this.scheduleStatus = Atomics.newReference (ScheduleStatus.Idle);
 				this.status = Atomics.newReference (Status.Active);
@@ -1128,13 +1129,30 @@ public final class BasicCallbackReactor
 		@Override
 		public final boolean awaitIsolate (final CallbackIsolate isolate, final long timeout)
 		{
+			Preconditions.checkState (isolate == this.isolate);
 			return (this.destroyFuture.await (timeout));
 		}
 		
 		@Override
 		public final CallbackCompletion<Void> destroyIsolate (final CallbackIsolate isolate)
 		{
+			Preconditions.checkState (isolate == this.isolate);
 			return (this.triggerDestroy ());
+		}
+		
+		@Override
+		public final CallbackCompletion<Void> enqueueOnIsolate (final CallbackIsolate isolate, final Runnable runnable)
+		{
+			Preconditions.checkState (isolate == this.isolate);
+			Preconditions.checkNotNull (runnable);
+			synchronized (this.monitor) {
+				this.reactor.transcript.traceDebugging ("enqueueing runnable `%{object:identity}` on scheduler `%{object:identity}`...", runnable, this);
+				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
+				final SchedulerRunnableAction action = new SchedulerRunnableAction (this, runnable);
+				this.actionsEnqueued.add (action);
+				this.schedule ();
+				return (action.future.completion);
+			}
 		}
 		
 		@Override
@@ -1166,9 +1184,27 @@ public final class BasicCallbackReactor
 						break;
 					actor.executeActions ();
 				}
+				this.reactor.transcript.traceDebugging ("executed enqueued actors on scheduler `%{object:identity}.`", this);
 			}
 			{
-				this.reactor.transcript.traceDebugging ("executed enqueued actors on scheduler `%{object:identity}.`", this);
+				this.reactor.transcript.traceDebugging ("executing enqueued runnables on scheduler `%{object:identity}`...", this);
+				while (true) {
+					final SchedulerRunnableAction action = this.actionsEnqueued.poll ();
+					if (action == null)
+						break;
+					// FIXME
+					this.reactor.transcript.traceDebugging ("invocking runnable `%{object:identity}` on scheduler `%{object:identity}`...", action.runnable, this);
+					try {
+						action.runnable.run ();
+						action.future.triggerSuccess (null);
+					} catch (final Throwable exception) {
+						this.reactor.exceptions.traceDeferredException (exception);
+						action.future.triggerFailure (exception);
+					}
+				}
+				this.reactor.transcript.traceDebugging ("executed enqueued runnables on scheduler `%{object:identity}.`", this);
+			}
+			{
 				if (this.destroyAction.get () != null)
 					this.executeDestroy ();
 			}
@@ -1267,6 +1303,7 @@ public final class BasicCallbackReactor
 			}
 		}
 		
+		final ConcurrentLinkedQueue<SchedulerRunnableAction> actionsEnqueued;
 		final ConcurrentLinkedQueue<Actor<?>> actorsEnqueued;
 		final ConcurrentSkipListSet<Actor<?>> actorsRegistered;
 		final AtomicReference<SchedulerDestroyAction> destroyAction;
@@ -1330,5 +1367,17 @@ public final class BasicCallbackReactor
 				this.reactor.exceptions.traceIgnoredException (exception);
 			}
 		}
+	}
+	
+	static final class SchedulerRunnableAction
+			extends SchedulerAction
+	{
+		SchedulerRunnableAction (final Scheduler scheduler, final Runnable runnable)
+		{
+			super (scheduler, new Future<Void> (scheduler.reactor));
+			this.runnable = runnable;
+		}
+		
+		final Runnable runnable;
 	}
 }

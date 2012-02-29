@@ -27,5 +27,7 @@ public interface CallbackIsolateBackend
 	
 	public abstract CallbackCompletion<Void> destroyIsolate (final CallbackIsolate isolate);
 	
+	public abstract CallbackCompletion<Void> enqueueOnIsolate (final CallbackIsolate isolate, final Runnable runnable);
+	
 	public abstract CallbackReactor getReactor ();
 }

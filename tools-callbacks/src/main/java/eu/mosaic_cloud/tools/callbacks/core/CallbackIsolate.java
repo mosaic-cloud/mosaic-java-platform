@@ -68,6 +68,17 @@ public final class CallbackIsolate
 		}
 	}
 	
+	public final CallbackCompletion<Void> enqueue (final Runnable runnable)
+	{
+		Preconditions.checkNotNull (runnable);
+		try {
+			return (this.backend.enqueueOnIsolate (this, runnable));
+		} catch (final Throwable exception) {
+			ExceptionTracer.defaultInstance.traceDeferredException (exception);
+			return (CallbackCompletion.createFailure (exception));
+		}
+	}
+	
 	public final CallbackReactor getReactor ()
 	{
 		try {

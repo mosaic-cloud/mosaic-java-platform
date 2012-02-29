@@ -22,4 +22,5 @@ package eu.mosaic_cloud.tools.callbacks.core;
 
 
 public interface CallbackProxy
+		extends Callbacks
 {}

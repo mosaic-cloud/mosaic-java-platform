@@ -122,7 +122,9 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 				ExceptionTracer.defaultInstance.traceIgnoredException (exception);
 				return (false);
 			}
-		if (this.outcome == CallbackCompletion.exceptionOutcome)
+		else if (this.outcome == CallbackCompletion.exceptionOutcome)
+			return (true);
+		else
 			return (true);
 		assert (this.backend != null);
 		try {
