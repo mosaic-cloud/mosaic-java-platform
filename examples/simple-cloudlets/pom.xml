@@ -28,6 +28,16 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-callbacks</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-exceptions</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-threading</artifactId>
 			<version>${project.version}</version>
 		</dependency>
