@@ -39,8 +39,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${versions.plugins.compiler}</version>
 				<configuration>
-					<source>${versions.java.compiler}</source>
-					<target>${versions.java.compiler}</target>
+					<source>${versions.java.source}</source>
+					<target>${versions.java.target}</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -237,7 +237,8 @@
 		<versions.plugins.wagon>1.0</versions.plugins.wagon>
 		<versions.plugins.war>2.1.1</versions.plugins.war>
 		
-		<versions.java.compiler>1.7</versions.java.compiler>
+		<versions.java.source>1.6</versions.java.source>
+		<versions.java.target>1.7</versions.java.target>
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
