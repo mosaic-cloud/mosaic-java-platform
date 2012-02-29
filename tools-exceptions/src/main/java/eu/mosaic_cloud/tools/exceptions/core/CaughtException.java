@@ -21,31 +21,45 @@
 package eu.mosaic_cloud.tools.exceptions.core;
 
 
+import com.google.common.base.Preconditions;
+
+
 public class CaughtException
 		extends Error
 {
-	public CaughtException (final ExceptionResolution resolution, final Throwable exception)
+	public CaughtException (final ExceptionResolution resolution, final Throwable caught)
 	{
-		super (exception);
+		super (caught);
+		Preconditions.checkNotNull (caught);
+		this.caught = caught;
 		this.resolution = resolution;
 		this.messageFormat = null;
 		this.messageArguments = null;
 	}
 	
-	public CaughtException (final ExceptionResolution resolution, final Throwable exception, final String message)
+	public CaughtException (final ExceptionResolution resolution, final Throwable caught, final String message)
 	{
-		super (message, exception);
+		super (message, caught);
+		Preconditions.checkNotNull (caught);
+		this.caught = caught;
 		this.resolution = resolution;
 		this.messageFormat = null;
 		this.messageArguments = null;
 	}
 	
-	public CaughtException (final ExceptionResolution resolution, final Throwable exception, final String messageFormat, final Object ... messageArguments)
+	public CaughtException (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments)
 	{
-		super (String.format (messageFormat, messageArguments), exception);
+		super (String.format (messageFormat, messageArguments), caught);
+		Preconditions.checkNotNull (caught);
+		this.caught = caught;
 		this.resolution = resolution;
 		this.messageFormat = messageFormat;
 		this.messageArguments = messageArguments;
+	}
+	
+	public final Throwable getCaught ()
+	{
+		return (this.caught);
 	}
 	
 	public final Object[] getMessageArguments ()
@@ -76,8 +90,9 @@ public class CaughtException
 			tracer.trace (this.resolution, cause, this.messageFormat, this.messageArguments);
 	}
 	
+	public final Throwable caught;
+	public final ExceptionResolution resolution;
 	protected final Object[] messageArguments;
 	protected final String messageFormat;
-	protected final ExceptionResolution resolution;
 	private static final long serialVersionUID = 1L;
 }
