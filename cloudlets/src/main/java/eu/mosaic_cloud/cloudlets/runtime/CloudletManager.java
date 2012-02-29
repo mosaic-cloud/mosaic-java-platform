@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -124,7 +125,7 @@ public class CloudletManager {
             final CloudletEnvironment environment = CloudletEnvironment.create (
             		resourceConfig, handlerClasz, stateClasz, this.classLoader,
             		this.reactor, this.threading, this.exceptions);
-            final Cloudlet<?> cloudlet = new Cloudlet(environment);
+            final Cloudlet<?> cloudlet = Cloudlet.create(environment);
             cloudlet.initialize();
             this.cloudletPool.add(cloudlet);
         } catch (final ClassNotFoundException e) {
@@ -151,9 +152,7 @@ public class CloudletManager {
     public final void stop() {
         synchronized (this.monitor) {
             for (final Cloudlet<?> cloudlet : this.cloudletPool) {
-                if (cloudlet.isActive()) {
-                    cloudlet.destroy();
-                }
+            	cloudlet.destroy();
             }
         }
     }
