@@ -31,28 +31,28 @@ import org.junit.BeforeClass;
 public class RedisKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
 
-    private static Context context_;
+    private static Scenario scenario_;
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        final Context context = new Context();
-        BaseConnectorTest.setupUpContext(RedisKvStoreConnectorTest.class, context,
+        final Scenario scenario = new Scenario();
+        BaseConnectorTest.setUpScenario(RedisKvStoreConnectorTest.class, scenario,
                 "redis-kv-store-connector-test.properties");
-        context.driverChannel.register(KeyValueSession.DRIVER);
-        context.driverStub = KeyValueStub.create(context.configuration, context.threading,
-                context.driverChannel);
-        RedisKvStoreConnectorTest.context_ = context;
+        scenario.driverChannel.register(KeyValueSession.DRIVER);
+        scenario.driverStub = KeyValueStub.create(scenario.configuration, scenario.threading,
+                scenario.driverChannel);
+        RedisKvStoreConnectorTest.scenario_ = scenario;
     }
 
     @AfterClass
     public static void tearDownAfterClass() {
-        BaseConnectorTest.tearDownContext(RedisKvStoreConnectorTest.context_);
+        BaseConnectorTest.tearDownScenario(RedisKvStoreConnectorTest.scenario_);
     }
 
     @Override
     public void setUp() {
-        this.context = RedisKvStoreConnectorTest.context_;
-        this.connector = GenericKvStoreConnector.create(this.context.configuration,
-                new PojoDataEncoder<String>(String.class), this.context.threading);
+        this.scenario = RedisKvStoreConnectorTest.scenario_;
+        this.connector = GenericKvStoreConnector.create(this.scenario.configuration,
+                new PojoDataEncoder<String>(String.class), this.scenario.threading);
     }
 }

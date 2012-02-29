@@ -41,9 +41,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class BaseConnectorTest<Connector extends IConnector, Context_ extends BaseConnectorTest.Context<?>> {
+public abstract class BaseConnectorTest<Connector extends IConnector, Scenario extends BaseConnectorTest.BaseScenario<?>> {
 
-    protected static class Context<DriverStub extends AbstractDriverStub> {
+    protected static class BaseScenario<DriverStub extends AbstractDriverStub> {
 
         IConfiguration configuration;
 
@@ -57,7 +57,7 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
 
         MosaicLogger logger;
 
-        long poolTimeout = 1000 * 1000;
+        long poolTimeout = 1000;
 
         BasicThreadingContext threading;
 
@@ -66,41 +66,44 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
 
     protected Connector connector;
 
-    protected Context_ context;
+    protected Scenario scenario;
 
-    protected static <C extends Context<?>> void setupUpContext(
-            final Class<? extends BaseConnectorTest<?, C>> owner, final C context,
+    protected static <Scenario extends BaseScenario<?>> void setUpScenario(
+            final Class<? extends BaseConnectorTest<?, Scenario>> owner, final Scenario scenario,
             final String configuration) {
         BasicThreadingSecurityManager.initialize();
-        context.logger = MosaicLogger.createLogger(owner);
-        context.transcript = Transcript.create(owner);
-        context.exceptions_ = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
-        context.exceptions = TranscriptExceptionTracer.create(context.transcript,
-                context.exceptions_);
-        context.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
-                configuration);
-        context.threading = BasicThreadingContext.create(MemcacheKvStoreConnectorTest.class,
-                context.exceptions.catcher);
-        context.threading.initialize();
-        final String driverIdentity = ConfigUtils.resolveParameter(context.configuration,
+        scenario.logger = MosaicLogger.createLogger(owner);
+        scenario.transcript = Transcript.create(owner);
+        scenario.exceptions_ = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
+        scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
+                scenario.exceptions_);
+        if (configuration != null)
+	        scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
+	                configuration);
+        else
+            scenario.configuration = PropertyTypeConfiguration.create();
+        scenario.threading = BasicThreadingContext.create(owner,
+                scenario.exceptions.catcher);
+        scenario.threading.initialize();
+        final String driverIdentity = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.driver.identifier", String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(context.configuration,
+        final String driverEndpoint = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.channel.address", String.class, "");
-        context.driverChannel = ZeroMqChannel.create(driverIdentity, context.threading,
+        scenario.driverChannel = ZeroMqChannel.create(driverIdentity, scenario.threading,
                 AbortingExceptionTracer.defaultInstance);
-        context.driverChannel.accept(driverEndpoint);
+        scenario.driverChannel.accept(driverEndpoint);
     }
 
-    protected static void tearDownContext(final Context<?> context) {
-        if (context.driverStub != null) {
-            context.driverStub.destroy();
+    protected static void tearDownScenario(final BaseScenario<?> scenario) {
+        if (scenario.driverStub != null) {
+            scenario.driverStub.destroy();
         }
-        Assert.assertTrue(context.driverChannel.terminate(context.poolTimeout));
-        Assert.assertTrue(context.threading.destroy(context.poolTimeout));
+        Assert.assertTrue(scenario.driverChannel.terminate(scenario.poolTimeout));
+        Assert.assertTrue(scenario.threading.destroy(scenario.poolTimeout));
     }
 
     protected void await(final CallbackCompletion<?> completion) {
-        Assert.assertTrue(completion.await(this.context.poolTimeout));
+        Assert.assertTrue(completion.await(this.scenario.poolTimeout));
     }
 
     protected boolean awaitBooleanOutcome(final CallbackCompletion<Boolean> completion) {
@@ -108,7 +111,7 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
         return this.getBooleanOutcome(completion);
     }
 
-    protected <O> O awaitOutcome(final CallbackCompletion<O> completion) {
+    protected <Outcome> Outcome awaitOutcome(final CallbackCompletion<Outcome> completion) {
         this.await(completion);
         return this.getOutcome(completion);
     }
@@ -126,7 +129,7 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
         return value.booleanValue();
     }
 
-    protected <O> O getOutcome(final CallbackCompletion<O> completion) {
+    protected <Outcome> Outcome getOutcome(final CallbackCompletion<Outcome> completion) {
         Assert.assertTrue(completion.isCompleted());
         Assert.assertEquals(null, completion.getException());
         return completion.getOutcome();
@@ -137,8 +140,8 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Context_ e
 
     @After
     public void tearDown() {
-        this.await(this.connector.destroy());
-        this.context = null;
+        this.awaitSuccess(this.connector.destroy());
+        this.scenario = null;
     }
 
     @Test

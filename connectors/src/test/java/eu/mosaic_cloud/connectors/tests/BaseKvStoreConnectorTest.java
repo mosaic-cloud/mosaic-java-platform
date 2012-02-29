@@ -29,9 +29,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConnector<String, ?>>
-        extends BaseConnectorTest<Connector, BaseKvStoreConnectorTest.Context> {
+        extends BaseConnectorTest<Connector, BaseKvStoreConnectorTest.Scenario> {
 
-    protected static class Context extends BaseConnectorTest.Context<KeyValueStub> {
+    protected static class Scenario extends BaseConnectorTest.BaseScenario<KeyValueStub> {
 
         public String keyPrefix = UUID.randomUUID().toString();
     }
@@ -47,8 +47,8 @@ public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConn
     }
 
     protected void testDelete() {
-        final String k1 = this.context.keyPrefix + "_key_fantastic";
-        final String k2 = this.context.keyPrefix + "_key_fabulous";
+        final String k1 = this.scenario.keyPrefix + "_key_fantastic";
+        final String k2 = this.scenario.keyPrefix + "_key_fabulous";
         Assert.assertTrue(this.awaitBooleanOutcome(this.connector.delete(k1)));
         Assert.assertFalse(this.awaitBooleanOutcome(this.connector.delete(k2)));
         Assert.assertNull(this.awaitOutcome(this.connector.get(k1)));
@@ -56,7 +56,7 @@ public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConn
     }
 
     protected void testGet() {
-        final String k1 = this.context.keyPrefix + "_key_fantastic";
+        final String k1 = this.scenario.keyPrefix + "_key_fantastic";
         Assert.assertEquals("fantastic", this.awaitOutcome(this.connector.get(k1)));
     }
 
@@ -65,8 +65,8 @@ public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConn
     }
 
     protected void testSet() {
-        final String k1 = this.context.keyPrefix + "_key_fantastic";
-        final String k2 = this.context.keyPrefix + "_key_famous";
+        final String k1 = this.scenario.keyPrefix + "_key_fantastic";
+        final String k2 = this.scenario.keyPrefix + "_key_famous";
         Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1, "fantastic")));
         Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2, "famous")));
     }
