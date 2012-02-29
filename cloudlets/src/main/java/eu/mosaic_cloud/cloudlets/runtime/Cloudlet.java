@@ -21,278 +21,806 @@
 package eu.mosaic_cloud.cloudlets.runtime;
 
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.core.CloudletException;
+import eu.mosaic_cloud.cloudlets.core.CloudletState;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
-import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
-import eu.mosaic_cloud.platform.core.ops.EventDrivenOperation;
-import eu.mosaic_cloud.platform.core.ops.EventDrivenResult;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackFunnelHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+import eu.mosaic_cloud.tools.callbacks.tools.StateMachine;
+import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.StateAndOutput;
+import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
+import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import com.google.common.base.Preconditions;
 
 
-/**
- * This class handles the internals of cloudlet execution. An object of this
- * class will be created by the container for each user cloudlet. The link
- * between the user cloudlet and this object is done by an
- * {@link ICloudletController} object.
- * 
- * @author Georgiana Macariu
- * 
- * @param <Context>
- *            the context of the cloudlet
- */
-public class Cloudlet<Context extends Object>
+public final class Cloudlet<Context extends Object>
+		extends Object
 {
-	/**
-	 * Creates a new cloudlet instance.
-	 * 
-	 * @param config
-	 *            configuration data required for configuring and initializing
-	 *            the cloudlet instance
-	 * @param loader
-	 *            the class loader used for loading cloudlet classes
-	 * @throws CloudletException
-	 */
-	public Cloudlet (final CloudletEnvironment environment)
+	@SuppressWarnings ("unchecked")
+	private Cloudlet (final CloudletEnvironment environment)
 	{
 		super ();
-		Preconditions.checkNotNull (environment);
-		this.monitor = Monitor.create (this);
-		synchronized (this.monitor) {
+		{
+			Preconditions.checkNotNull (environment);
 			this.environment = environment;
-			try {
-				this.cloudletContext = (Context) this.environment.cloudletContextClass.newInstance ();
-				this.cloudletCallback = (ICloudletCallback<Context>) this.environment.cloudletCallbackClass.newInstance ();
-			} catch (final ReflectiveOperationException exception) {
-				throw (new Error (exception));
-			}
-			this.configuration = this.environment.configuration;
+			this.fsm = new Fsm ();
+		}
+		{
+			this.transcript = Transcript.create (this);
+			this.exceptions = TranscriptExceptionTracer.create (this.transcript, this.environment.exceptions);
+			this.failures = QueueingExceptionTracer.create (this.exceptions);
+			this.reactor = this.environment.reactor;
 			this.threading = this.environment.threading;
-			this.exceptions = this.environment.exceptions;
 			this.classLoader = this.environment.classLoader;
-			this.cloudletController = new CloudletController ();
-			this.executor = new CloudletExecutor (this.threading, this.classLoader);
-			this.active = false;
+			this.configuration = this.environment.configuration;
 		}
-	}
-	
-	public boolean destroy ()
-	{
-		synchronized (this.monitor) {
-			final IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object> () {
-				@Override
-				public void onFailure (final Throwable error)
-				{
-					Cloudlet.this.cloudletCallback.destroyFailed (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
-					Cloudlet.this.executor.shutdown ();
-				}
-				
-				@Override
-				public void onSuccess (final Object result)
-				{
-					Cloudlet.this.cloudletCallback.destroySucceeded (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
-					Cloudlet.this.executor.shutdown ();
-				}
-			};
-			final List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>> ();
-			final CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object> (complHandler);
-			handlers.add (complHandler);
-			final EventDrivenOperation<Object> destroyOperation = new EventDrivenOperation<Object> (handlers, iHandler);
-			destroyOperation.setOperation (new Runnable () {
-				@Override
-				public void run ()
-				{
-					Cloudlet.this.cloudletCallback.destroy (Cloudlet.this.cloudletContext, new CloudletCallbackArguments<Context> (Cloudlet.this.cloudletController));
-					final List<IOperationCompletionHandler<Object>> handlers = destroyOperation.getCompletionHandlers ();
-					for (final IOperationCompletionHandler<Object> handler : handlers) {
-						handler.onSuccess (null);
-					}
-				}
-			});
-			final IResult<Object> result = new EventDrivenResult<Object> (destroyOperation);
-			this.executor.handleRequest (destroyOperation.getOperation ());
+		{
+			Context controllerContext;
+			ICloudletCallback<Context> controllerCallbacksDelegate;
 			try {
-				Cloudlet.logger.trace ("Cloudlet.destroy() - Waiting for destroy.");
-				result.getResult ();
-				Cloudlet.logger.trace ("Cloudlet.destroy() - Cloudlet destroyed.");
-			} catch (final InterruptedException e) {
-				this.exceptions.trace (ExceptionResolution.Ignored, e);
-			} catch (final ExecutionException e) {
-				this.exceptions.trace (ExceptionResolution.Ignored, e);
+				controllerContext = (Context) this.environment.cloudletContextClass.newInstance ();
+			} catch (final ReflectiveOperationException exception) {
+				controllerContext = null;
+				this.handleInternalFailure (null, new Error ());
 			}
-			this.active = false;
-			return true;
-		}
-	}
-	
-	public boolean initialize ()
-	{
-		synchronized (this.monitor) {
-			boolean initialized = false;
-			final IOperationCompletionHandler<Object> complHandler = new IOperationCompletionHandler<Object> () {
-				@Override
-				public void onFailure (final Throwable error)
-				{
-					Cloudlet.this.cloudletCallback.initializeFailed (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
-				}
-				
-				@Override
-				public void onSuccess (final Object result)
-				{
-					Cloudlet.this.cloudletCallback.initializeSucceeded (Cloudlet.this.cloudletContext, new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.cloudletController));
-				}
-			};
-			final List<IOperationCompletionHandler<Object>> handlers = new ArrayList<IOperationCompletionHandler<Object>> ();
-			final CompletionInvocationHandler<Object> iHandler = new CloudletResponseInvocationHandler<Object> (complHandler);
-			handlers.add (complHandler);
-			final EventDrivenOperation<Object> initOperation = new EventDrivenOperation<Object> (handlers, iHandler);
-			initOperation.setOperation (new Runnable () {
-				@Override
-				public void run ()
-				{
-					Cloudlet.this.cloudletCallback.initialize (Cloudlet.this.cloudletContext, new CloudletCallbackArguments<Context> (Cloudlet.this.cloudletController));
-					final List<IOperationCompletionHandler<Object>> handlers = initOperation.getCompletionHandlers ();
-					for (final IOperationCompletionHandler<Object> handler : handlers) {
-						handler.onSuccess (null);
-					}
-				}
-			});
-			final IResult<Object> result = new EventDrivenResult<Object> (initOperation);
-			this.executor.handleRequest (initOperation.getOperation ());
 			try {
-				result.getResult ();
-				initialized = true;
-				this.active = true;
-			} catch (final InterruptedException e) {
-				this.exceptions.trace (ExceptionResolution.Ignored, e);
-			} catch (final ExecutionException e) {
-				this.exceptions.trace (ExceptionResolution.Ignored, e);
+				controllerCallbacksDelegate = (ICloudletCallback<Context>) this.environment.cloudletCallbackClass.newInstance ();
+			} catch (final ReflectiveOperationException exception) {
+				controllerCallbacksDelegate = null;
+				this.handleInternalFailure (null, new Error ());
 			}
-			return initialized;
+			this.controllerHandler = new ControllerHandler ();
+			this.callbacksHandler = new CallbacksHandler ();
+			this.callbacksDelegate = controllerCallbacksDelegate;
+			this.controllerContext = controllerContext;
+			this.genericCallbacksHandler = new GenericCallbacksHandler ();
+			this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
+			this.connectorsFactory = new ConnectorsFactory ();
+		}
+		{
+			this.isolate = this.reactor.createIsolate ();
+			this.controllerProxy = this.reactor.createProxy (ICloudletController.class);
+			this.callbacksProxy = this.reactor.createProxy (ICloudletCallback.class);
+			this.genericCallbacksProxies = new ConcurrentHashMap<CallbackProxy, Callbacks> ();
 		}
 	}
 	
-	public boolean isActive ()
+	public final CallbackCompletion<Void> destroy ()
 	{
-		return this.active;
+		final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create (Void.class);
+		this.isolate.enqueue (new Runnable () {
+			@Override
+			public final void run ()
+			{
+				Cloudlet.this.controllerHandler.destroy (future);
+			}
+		});
+		return (future.completion);
 	}
 	
-	volatile boolean active;
+	public final CallbackCompletion<Void> initialize ()
+	{
+		final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create (Void.class);
+		this.isolate.enqueue (new Runnable () {
+			@Override
+			public final void run ()
+			{
+				Cloudlet.this.controllerHandler.initialize (future);
+			}
+		});
+		return (future.completion);
+	}
+	
+	final void handleDelegateFailure (final Callbacks delegate, final Throwable exception)
+	{
+		new FsmVoidAccess () {
+			@Override
+			protected Void execute ()
+			{
+				Cloudlet.this.failures.traceHandledException (exception);
+				if (Cloudlet.this.fsm.hasState (FsmState.Active))
+					Cloudlet.this.controllerProxy.destroy ();
+				return (null);
+			}
+		}.trigger ();
+	}
+	
+	final void handleInternalFailure (final Callbacks proxy, final Throwable exception)
+	{
+		new FsmVoidTransaction (FsmTransition.InternalFailure) {
+			@Override
+			protected StateAndOutput<FsmState, Void> execute ()
+			{
+				Cloudlet.this.failures.traceHandledException (exception);
+				if (Cloudlet.this.fsm.hasState (FsmState.Failed))
+					return (StateAndOutput.create (FsmState.Failed, null));
+				Cloudlet.this.reactor.destroyProxy (Cloudlet.this.controllerProxy);
+				Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
+				for (final CallbackProxy genericCallbacksProxy : Cloudlet.this.genericCallbacksProxies.keySet ())
+					Cloudlet.this.reactor.destroyProxy (genericCallbacksProxy);
+				Cloudlet.this.reactor.destroyIsolate (Cloudlet.this.isolate);
+				if (Cloudlet.this.initializeFuture != null) {
+					Preconditions.checkState (Cloudlet.this.destroyFuture == null);
+					Cloudlet.this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
+					Cloudlet.this.initializeFuture = null;
+				}
+				if (Cloudlet.this.destroyFuture != null) {
+					Preconditions.checkState (Cloudlet.this.initializeFuture == null);
+					Cloudlet.this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures.queue));
+					Cloudlet.this.destroyFuture = null;
+				}
+				return (StateAndOutput.create (FsmState.Failed, null));
+			}
+		}.trigger ();
+	}
+	
+	final ICloudletCallback<Context> callbacksDelegate;
+	final CallbacksHandler callbacksHandler;
+	final ICloudletCallback<Context> callbacksProxy;
 	final ClassLoader classLoader;
-	final ICloudletCallback<Context> cloudletCallback;
-	final Context cloudletContext;
-	final CloudletController cloudletController;
 	final IConfiguration configuration;
+	final ConnectorsFactory connectorsFactory;
+	final Context controllerContext;
+	final ControllerHandler controllerHandler;
+	final ICloudletController<Context> controllerProxy;
+	CallbackCompletionDeferredFuture<Void> destroyFuture;
 	final CloudletEnvironment environment;
-	final ExceptionTracer exceptions;
-	final CloudletExecutor executor;
-	final Monitor monitor;
+	final TranscriptExceptionTracer exceptions;
+	final QueueingExceptionTracer failures;
+	final Fsm fsm;
+	final ConcurrentHashMap<Callbacks, CallbackProxy> genericCallbacksDelegates;
+	final GenericCallbacksHandler genericCallbacksHandler;
+	final ConcurrentHashMap<CallbackProxy, Callbacks> genericCallbacksProxies;
+	CallbackCompletionDeferredFuture<Void> initializeFuture;
+	final CallbackIsolate isolate;
+	final CallbackReactor reactor;
 	final ThreadingContext threading;
-	static final MosaicLogger logger = MosaicLogger.createLogger (Cloudlet.class);
+	final Transcript transcript;
 	
-	/**
-	 * An implementation of the cloudlet controller. Basically, all operation in
-	 * the controller's interface are redirected to operations of the cloudlet
-	 * object.
-	 * 
-	 * @author Georgiana Macariu
-	 * 
-	 */
-	class CloudletController
+	public static final <Context extends Object> Cloudlet<Context> create (final CloudletEnvironment environment)
+	{
+		return (new Cloudlet<Context> (environment));
+	}
+	
+	final class CallbacksHandler
+			extends Object
 			implements
-				ICloudletController<Context>
+				ICloudletCallback<Context>,
+				CallbackHandler
 	{
 		@Override
-		public boolean destroy ()
+		public final CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments)
+		{
+			try {
+				return (Cloudlet.this.callbacksDelegate.destroy (context, arguments));
+			} catch (final Throwable exception) {
+				Cloudlet.this.handleDelegateFailure (this, exception);
+				return (CallbackCompletion.createFailure (exception));
+			}
+		}
+		
+		@Override
+		public final CallbackCompletion<Void> destroyFailed (final Context context, final CloudletCallbackCompletionArguments<Context> arguments)
+		{
+			try {
+				return (Cloudlet.this.callbacksDelegate.destroyFailed (context, arguments));
+			} catch (final Throwable exception) {
+				Cloudlet.this.handleDelegateFailure (this, exception);
+				return (CallbackCompletion.createFailure (exception));
+			}
+		}
+		
+		@Override
+		public final CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments)
+		{
+			try {
+				return (Cloudlet.this.callbacksDelegate.destroySucceeded (context, arguments));
+			} catch (final Throwable exception) {
+				Cloudlet.this.handleDelegateFailure (this, exception);
+				return (CallbackCompletion.createFailure (exception));
+			}
+		}
+		
+		@Override
+		public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
+		{
+			Preconditions.checkState (proxy == Cloudlet.this.callbacksProxy);
+			Cloudlet.this.handleInternalFailure (proxy, exception);
+		}
+		
+		@Override
+		public final CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments)
+		{
+			try {
+				return (Cloudlet.this.callbacksDelegate.initialize (context, arguments));
+			} catch (final Throwable exception) {
+				Cloudlet.this.handleDelegateFailure (this, exception);
+				return (CallbackCompletion.createFailure (exception));
+			}
+		}
+		
+		@Override
+		public final CallbackCompletion<Void> initializeFailed (final Context context, final CloudletCallbackCompletionArguments<Context> arguments)
+		{
+			try {
+				return (Cloudlet.this.callbacksDelegate.initializeFailed (context, arguments));
+			} catch (final Throwable exception) {
+				Cloudlet.this.handleDelegateFailure (this, exception);
+				return (CallbackCompletion.createFailure (exception));
+			}
+		}
+		
+		@Override
+		public final CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments)
+		{
+			try {
+				return (Cloudlet.this.callbacksDelegate.initializeSucceeded (context, arguments));
+			} catch (final Throwable exception) {
+				Cloudlet.this.handleDelegateFailure (this, exception);
+				return (CallbackCompletion.createFailure (exception));
+			}
+		}
+		
+		@Override
+		public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
+		{
+			final FsmCallbackCompletionTransaction initializeSucceededCompletedTransaction = new FsmCallbackCompletionTransaction (FsmTransition.CallbacksInitializeSucceededCompleted) {
+				@Override
+				protected final StateAndOutput<FsmState, Void> execute (final CallbackCompletion<Void> initializedCompletion)
+				{
+					Preconditions.checkState (Cloudlet.this.initializeFuture != null);
+					final Throwable exception = initializedCompletion.getException ();
+					if (exception == null) {
+						Cloudlet.this.initializeFuture.trigger.triggerSucceeded (null);
+						Cloudlet.this.initializeFuture = null;
+						return (StateAndOutput.create (FsmState.Active, null));
+					} else {
+						Cloudlet.this.failures.traceHandledException (exception);
+						Cloudlet.this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
+						Cloudlet.this.initializeFuture = null;
+						Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
+						return (StateAndOutput.create (FsmState.CallbacksUnregisterPending, null));
+					}
+				}
+			};
+			final FsmCallbackCompletionTransaction initializeFailedCompletedTransaction = new FsmCallbackCompletionTransaction (FsmTransition.CallbacksInitializeSucceededCompleted) {
+				@Override
+				protected final StateAndOutput<FsmState, Void> execute (final CallbackCompletion<Void> initializedCompletion)
+				{
+					Preconditions.checkState (Cloudlet.this.initializeFuture != null);
+					Cloudlet.this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
+					Cloudlet.this.initializeFuture = null;
+					final Throwable exception = initializedCompletion.getException ();
+					if (exception != null)
+						Cloudlet.this.failures.traceHandledException (exception);
+					Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
+					return (StateAndOutput.create (FsmState.CallbacksUnregisterPending, null));
+				}
+			};
+			final FsmCallbackCompletionTransaction initializeCompletedTransaction = new FsmCallbackCompletionTransaction (FsmTransition.CallbacksInitializeCompleted) {
+				@Override
+				protected final StateAndOutput<FsmState, Void> execute (final CallbackCompletion<Void> initializeCompletion)
+				{
+					final Throwable exception = initializeCompletion.getException ();
+					if (exception == null) {
+						final CloudletCallbackCompletionArguments<Context> arguments = new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.controllerProxy);
+						final CallbackCompletion<Void> initializedCompletion = Cloudlet.this.callbacksProxy.initializeSucceeded (Cloudlet.this.controllerContext, arguments);
+						initializeSucceededCompletedTransaction.observe (initializedCompletion);
+						return (StateAndOutput.create (FsmState.CallbacksInitializeSucceededPending, null));
+					} else {
+						Cloudlet.this.failures.traceHandledException (exception);
+						final CloudletCallbackCompletionArguments<Context> arguments = new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.controllerProxy, exception);
+						final CallbackCompletion<Void> initializedCompletion = Cloudlet.this.callbacksProxy.initializeFailed (Cloudlet.this.controllerContext, arguments);
+						initializeFailedCompletedTransaction.observe (initializedCompletion);
+						return (StateAndOutput.create (FsmState.CallbacksInitializeFailedPending, null));
+					}
+				}
+			};
+			new FsmVoidTransaction (FsmTransition.CallbacksRegisterCompleted) {
+				@Override
+				public final StateAndOutput<FsmState, Void> execute ()
+				{
+					final CloudletCallbackArguments<Context> arguments = new CloudletCallbackArguments<Context> (Cloudlet.this.controllerProxy);
+					final CallbackCompletion<Void> completion = Cloudlet.this.callbacksProxy.initialize (Cloudlet.this.controllerContext, arguments);
+					initializeCompletedTransaction.observe (completion);
+					return (StateAndOutput.create (FsmState.CallbacksInitializePending, null));
+				}
+			}.trigger ();
+		}
+		
+		@Override
+		public final void unregisteredCallbacks (final Callbacks proxy)
+		{
+			new FsmVoidTransaction (FsmTransition.CallbacksUnregisterCompleted) {
+				@Override
+				protected StateAndOutput<FsmState, Void> execute ()
+				{
+					Cloudlet.this.reactor.destroyProxy (Cloudlet.this.controllerProxy);
+					return (StateAndOutput.create (FsmState.ControllerUnregisterPending, null));
+				}
+			}.trigger ();
+		}
+	}
+	
+	final class ConnectorsFactory
+			extends Object
+			implements
+				IConnectorsFactory
+	{
+		@Override
+		public final <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory)
+		{
+			return (new FsmAccess<Void, Factory> () {
+				@Override
+				protected final Factory execute (final Void input)
+				{
+					throw (new UnsupportedOperationException ());
+				}
+			}).trigger (null);
+		}
+	}
+	
+	final class ControllerHandler
+			extends Object
+			implements
+				ICloudletController<Context>,
+				CallbackHandler
+	{
+		@Override
+		public final CallbackCompletion<Void> destroy ()
 		{
 			return (Cloudlet.this.destroy ());
 		}
 		
 		@Override
-		public IConfiguration getConfiguration ()
+		public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
+		{
+			Preconditions.checkState (proxy == Cloudlet.this.controllerProxy);
+			Cloudlet.this.handleInternalFailure (proxy, exception);
+		}
+		
+		@Override
+		public final IConfiguration getConfiguration ()
 		{
 			return (Cloudlet.this.configuration);
 		}
 		
 		@Override
-		public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory)
+		public final <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory)
 		{
-			// FIXME
-			throw (new UnsupportedOperationException ());
+			return (Cloudlet.this.connectorsFactory.getConnectorFactory (factory));
 		}
 		
 		@Override
-		public boolean isActive ()
+		public final CloudletState getState ()
 		{
-			return (Cloudlet.this.isActive ());
-		}
-	}
-	
-	/**
-	 * This handler will serialize the execution of response handlers received
-	 * by a cloudlet instance.
-	 * 
-	 * @author Georgiana Macariu
-	 * 
-	 */
-	class CloudletResponseInvocationHandler<T>
-			extends CompletionInvocationHandler<T>
-	{
-		/**
-		 * Creates the handler.
-		 * 
-		 * @param handler
-		 *            the response handler to execute
-		 */
-		CloudletResponseInvocationHandler (final IOperationCompletionHandler<T> handler)
-		{
-			super (handler);
+			return (Cloudlet.this.fsm.getState ().mapping);
 		}
 		
 		@Override
-		public CompletionInvocationHandler<T> createHandler (final IOperationCompletionHandler<T> handler)
+		public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
 		{
-			return new CloudletResponseInvocationHandler<T> (handler);
-		}
-		
-		@Override
-		public Object invoke (final Object proxy, final Method method, final Object[] arguments)
-		{
-			final Runnable task = new Runnable () {
+			new FsmVoidTransaction (FsmTransition.ControllerRegisterCompleted) {
 				@Override
-				public void run ()
+				protected StateAndOutput<FsmState, Void> execute ()
 				{
-					try {
-						method.invoke (CloudletResponseInvocationHandler.this.handler, arguments);
-					} catch (final IllegalArgumentException e) {
-						Cloudlet.this.exceptions.trace (ExceptionResolution.Ignored, e);
-					} catch (final IllegalAccessException e) {
-						Cloudlet.this.exceptions.trace (ExceptionResolution.Ignored, e);
-					} catch (final InvocationTargetException e) {
-						Cloudlet.this.exceptions.trace (ExceptionResolution.Ignored, e);
+					Cloudlet.this.reactor.assignHandler (Cloudlet.this.callbacksProxy, Cloudlet.this.callbacksHandler, isolate);
+					return (StateAndOutput.create (FsmState.CallbacksRegisterPending, null));
+				}
+			}.trigger ();
+		}
+		
+		@Override
+		public final void unregisteredCallbacks (final Callbacks proxy)
+		{
+			new FsmVoidTransaction (FsmTransition.ControllerUnregisterCompleted) {
+				@Override
+				protected StateAndOutput<FsmState, Void> execute ()
+				{
+					Preconditions.checkState (Cloudlet.this.destroyFuture != null);
+					if (Cloudlet.this.failures.queue.isEmpty ()) {
+						Cloudlet.this.destroyFuture.trigger.triggerSucceeded (null);
+						Cloudlet.this.destroyFuture = null;
+						return (StateAndOutput.create (FsmState.Destroyed, null));
+					} else {
+						Cloudlet.this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
+						Cloudlet.this.destroyFuture = null;
+						return (StateAndOutput.create (FsmState.Failed, null));
+					}
+				}
+			}.trigger ();
+		}
+		
+		final void destroy (final CallbackCompletionDeferredFuture<Void> future)
+		{
+			final FsmCallbackCompletionTransaction destroySucceededCompletedTransaction = new FsmCallbackCompletionTransaction (FsmTransition.CallbacksDestroySucceededCompleted) {
+				@Override
+				protected final StateAndOutput<FsmState, Void> execute (final CallbackCompletion<Void> destroyedCompletion)
+				{
+					final Throwable exception = destroyedCompletion.getException ();
+					if (exception != null)
+						Cloudlet.this.failures.traceHandledException (exception);
+					Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
+					return (StateAndOutput.create (FsmState.CallbacksUnregisterPending, null));
+				}
+			};
+			final FsmCallbackCompletionTransaction destroyFailedCompletedTransaction = new FsmCallbackCompletionTransaction (FsmTransition.CallbacksDestroyFailedCompleted) {
+				@Override
+				protected final StateAndOutput<FsmState, Void> execute (final CallbackCompletion<Void> destroyedCompletion)
+				{
+					final Throwable exception = destroyedCompletion.getException ();
+					if (exception != null)
+						Cloudlet.this.failures.traceHandledException (exception);
+					Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
+					return (StateAndOutput.create (FsmState.CallbacksUnregisterPending, null));
+				}
+			};
+			final FsmCallbackCompletionTransaction destroyCompletedTransaction = new FsmCallbackCompletionTransaction (FsmTransition.CallbacksDestroyCompleted) {
+				@Override
+				protected final StateAndOutput<FsmState, Void> execute (final CallbackCompletion<Void> destroyCompletion)
+				{
+					final Throwable exception = destroyCompletion.getException ();
+					if (exception == null) {
+						final CloudletCallbackCompletionArguments<Context> arguments = new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.controllerProxy);
+						final CallbackCompletion<Void> destroyedCompletion = Cloudlet.this.callbacksProxy.destroySucceeded (Cloudlet.this.controllerContext, arguments);
+						destroySucceededCompletedTransaction.observe (destroyedCompletion);
+						return (StateAndOutput.create (FsmState.CallbacksDestroySucceededPending, null));
+					} else {
+						Cloudlet.this.failures.traceHandledException (exception);
+						final CloudletCallbackCompletionArguments<Context> arguments = new CloudletCallbackCompletionArguments<Context> (Cloudlet.this.controllerProxy, exception);
+						final CallbackCompletion<Void> destroyedCompletion = Cloudlet.this.callbacksProxy.destroyFailed (Cloudlet.this.controllerContext, arguments);
+						destroyFailedCompletedTransaction.observe (destroyedCompletion);
+						return (StateAndOutput.create (FsmState.CallbacksDestroyFailedPending, null));
 					}
 				}
 			};
-			Cloudlet.this.executor.handleResponse (task);
-			return null;
+			new FsmVoidTransaction (FsmTransition.ExternalDestroy) {
+				@Override
+				public final StateAndOutput<FsmState, Void> execute ()
+				{
+					Preconditions.checkState (Cloudlet.this.destroyFuture == null);
+					Cloudlet.this.destroyFuture = future;
+					final CloudletCallbackArguments<Context> arguments = new CloudletCallbackArguments<Context> (Cloudlet.this.controllerProxy);
+					final CallbackCompletion<Void> completion = Cloudlet.this.callbacksProxy.destroy (Cloudlet.this.controllerContext, arguments);
+					destroyCompletedTransaction.observe (completion);
+					return (StateAndOutput.create (FsmState.CallbacksDestroyPending, null));
+				}
+			}.trigger ();
+		}
+		
+		final void initialize (final CallbackCompletionDeferredFuture<Void> future)
+		{
+			new FsmVoidTransaction (FsmTransition.ExternalInitialize) {
+				@Override
+				protected final StateAndOutput<FsmState, Void> execute ()
+				{
+					Preconditions.checkState (Cloudlet.this.initializeFuture == null);
+					Cloudlet.this.initializeFuture = future;
+					Cloudlet.this.reactor.assignHandler (Cloudlet.this.controllerProxy, Cloudlet.this.controllerHandler, Cloudlet.this.isolate);
+					return (StateAndOutput.create (FsmState.ControllerRegisterPending, null));
+				}
+			}.trigger ();
+		}
+	}
+	
+	final class GenericCallbacksHandler
+			extends Object
+			implements
+				CallbackFunnelHandler
+	{
+		GenericCallbacksHandler ()
+		{
+			super ();
+		}
+		
+		@Override
+		public final CallbackCompletion<?> executeCallback (final Callbacks proxy, final Method method, final Object[] arguments)
+		{
+			return (new FsmCallbackAccess () {
+				@Override
+				protected CallbackCompletion<Void> execute ()
+				{
+					final Callbacks delegate = Cloudlet.this.genericCallbacksDelegates.get (proxy);
+					Preconditions.checkState (delegate != null);
+					try {
+						return (CallbackCompletion.class.cast (method.invoke (delegate, arguments)));
+					} catch (final Throwable exception) {
+						Cloudlet.this.handleDelegateFailure (delegate, exception);
+						return (CallbackCompletion.createFailure (exception));
+					}
+				}
+			}.trigger ());
+		}
+		
+		@Override
+		public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
+		{
+			Preconditions.checkState (Cloudlet.this.genericCallbacksProxies.containsKey (proxy));
+			Cloudlet.this.handleInternalFailure (proxy, exception);
+		}
+		
+		@Override
+		public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
+		{
+			new FsmVoidAccess () {
+				@Override
+				protected Void execute ()
+				{
+					Preconditions.checkState (Cloudlet.this.genericCallbacksProxies.containsKey (proxy));
+					return (null);
+				}
+			}.trigger ();
+		}
+		
+		@Override
+		public final void unregisteredCallbacks (final Callbacks proxy)
+		{
+			new FsmVoidAccess () {
+				@Override
+				protected Void execute ()
+				{
+					final Callbacks delegate = Cloudlet.this.genericCallbacksProxies.get (proxy);
+					Preconditions.checkState (delegate != null);
+					Preconditions.checkState (Cloudlet.this.genericCallbacksDelegates.remove (delegate) == proxy);
+					Preconditions.checkState (Cloudlet.this.genericCallbacksProxies.remove (proxy) == delegate);
+					return (null);
+				}
+			}.trigger ();
+		}
+	}
+	
+	private final class Fsm
+			extends StateMachine<FsmState, FsmTransition>
+	{
+		Fsm ()
+		{
+			super (FsmState.class, FsmTransition.class);
+			this.defineStates (FsmState.class);
+			this.defineTransition (FsmTransition.ExternalInitialize, FsmState.Created, FsmState.ControllerRegisterPending);
+			this.defineTransition (FsmTransition.ControllerRegisterCompleted, FsmState.ControllerRegisterPending, new FsmState[] {FsmState.CallbacksRegisterPending, FsmState.Failed});
+			this.defineTransition (FsmTransition.CallbacksRegisterCompleted, FsmState.CallbacksRegisterPending, new FsmState[] {FsmState.CallbacksInitializePending, FsmState.ControllerUnregisterPending});
+			this.defineTransition (FsmTransition.CallbacksInitializeCompleted, FsmState.CallbacksInitializePending, new FsmState[] {FsmState.CallbacksInitializeSucceededPending, FsmState.CallbacksInitializeFailedPending});
+			this.defineTransition (FsmTransition.CallbacksInitializeSucceededCompleted, FsmState.CallbacksInitializeSucceededPending, new FsmState[] {FsmState.Active, FsmState.CallbacksUnregisterPending});
+			this.defineTransition (FsmTransition.CallbacksInitializeFailedCompleted, FsmState.CallbacksInitializeFailedPending, FsmState.CallbacksDestroyPending);
+			this.defineTransition (FsmTransition.ExternalDestroy, FsmState.Active, FsmState.CallbacksDestroyPending);
+			this.defineTransition (FsmTransition.CallbacksDestroyCompleted, FsmState.CallbacksDestroyPending, new FsmState[] {FsmState.CallbacksDestroySucceededPending, FsmState.CallbacksDestroyFailedPending});
+			this.defineTransition (FsmTransition.CallbacksDestroySucceededCompleted, FsmState.CallbacksDestroySucceededPending, FsmState.CallbacksUnregisterPending);
+			this.defineTransition (FsmTransition.CallbacksDestroyFailedCompleted, FsmState.CallbacksDestroyFailedPending, FsmState.CallbacksUnregisterPending);
+			this.defineTransition (FsmTransition.CallbacksUnregisterCompleted, FsmState.CallbacksUnregisterPending, FsmState.ControllerUnregisterPending);
+			this.defineTransition (FsmTransition.ControllerUnregisterCompleted, FsmState.ControllerUnregisterPending, new FsmState[] {FsmState.Destroyed, FsmState.Failed});
+			this.defineTransition (FsmTransition.InternalFailure, FsmState.values (), new FsmState[] {FsmState.Failed});
+			this.initialize (FsmState.Created);
+		}
+	}
+	
+	private abstract class FsmAccess<Input extends Object, Output extends Object>
+			extends Object
+			implements
+				StateMachine.AccessorOperation<Fsm.Accessor, Input, Output>
+	{
+		@Override
+		public final Output execute (final Fsm.Accessor access, final Input input)
+		{
+			return (this.execute (input));
+		}
+		
+		protected abstract Output execute (Input input);
+		
+		final Output trigger (final Input input)
+		{
+			return (Cloudlet.this.fsm.execute (this, input));
+		}
+	}
+	
+	private abstract class FsmCallbackAccess
+			extends FsmAccess<Void, CallbackCompletion<Void>>
+	{
+		protected abstract CallbackCompletion<Void> execute ();
+		
+		@Override
+		protected final CallbackCompletion<Void> execute (final Void input)
+		{
+			return (this.execute ());
+		}
+		
+		final CallbackCompletion<Void> trigger ()
+		{
+			return (this.trigger (null));
+		}
+	}
+	
+	private abstract class FsmCallbackCompletionTransaction
+			extends FsmTransaction<CallbackCompletion<Void>, Void>
+	{
+		protected FsmCallbackCompletionTransaction (final FsmTransition transition)
+		{
+			super (transition);
+		}
+		
+		final void observe (final CallbackCompletion<Void> completion)
+		{
+			completion.observe (new Observer (completion));
+		}
+		
+		private final class Observer
+				extends Object
+				implements
+					CallbackCompletionObserver,
+					CallbackProxy,
+					Runnable
+		{
+			Observer (final CallbackCompletion<Void> completion)
+			{
+				super ();
+				this.completion = completion;
+			}
+			
+			@Override
+			public final CallbackCompletion<Void> completed (final CallbackCompletion<?> completion1)
+			{
+				Preconditions.checkState (this.completion == completion1);
+				return (Cloudlet.this.isolate.enqueue (this));
+			}
+			
+			@Override
+			public final void run ()
+			{
+				FsmCallbackCompletionTransaction.this.trigger (this.completion);
+			}
+			
+			final CallbackCompletion<Void> completion;
+		}
+	}
+	
+	private abstract class FsmCallbackTransaction
+			extends FsmTransaction<Void, CallbackCompletion<Void>>
+	{
+		protected FsmCallbackTransaction (final FsmTransition transition)
+		{
+			super (transition);
+		}
+		
+		protected abstract StateAndOutput<FsmState, CallbackCompletion<Void>> execute ();
+		
+		@Override
+		protected final StateAndOutput<FsmState, CallbackCompletion<Void>> execute (final Void input)
+		{
+			return (this.execute ());
+		}
+		
+		final CallbackCompletion<Void> trigger ()
+		{
+			return (this.trigger (null));
+		}
+	}
+	
+	private enum FsmState
+			implements
+				StateMachine.State
+	{
+		Active (CloudletState.ACTIVE),
+		CallbacksDestroyFailedPending (CloudletState.DESTROYING),
+		CallbacksDestroyPending (CloudletState.DESTROYING),
+		CallbacksDestroySucceededPending (CloudletState.DESTROYING),
+		CallbacksInitializeFailedPending (CloudletState.INITIALIZING),
+		CallbacksInitializePending (CloudletState.INITIALIZING),
+		CallbacksInitializeSucceededPending (CloudletState.INITIALIZING),
+		CallbacksRegisterPending (CloudletState.INITIALIZING),
+		CallbacksUnregisterPending (CloudletState.DESTROYING),
+		ControllerRegisterPending (CloudletState.INITIALIZING),
+		ControllerUnregisterPending (CloudletState.DESTROYING),
+		Created (CloudletState.CREATED),
+		Destroyed (CloudletState.DESTROYED),
+		Failed (CloudletState.FAILED);
+		FsmState (final CloudletState mapping)
+		{
+			this.mapping = mapping;
+		}
+		
+		public final CloudletState mapping;
+	}
+	
+	private abstract class FsmTransaction<Input, Output>
+			extends Object
+			implements
+				StateMachine.TransactionOperation<Fsm.Transaction, FsmState, Input, Output>
+	{
+		protected FsmTransaction (final FsmTransition transition)
+		{
+			super ();
+			this.transition = transition;
+		}
+		
+		@Override
+		public final StateAndOutput<FsmState, Output> execute (final Fsm.Transaction transaction, final Input input)
+		{
+			return (this.execute (input));
+		}
+		
+		protected abstract StateAndOutput<FsmState, Output> execute (Input input);
+		
+		final Output trigger (final Input input)
+		{
+			return (Cloudlet.this.fsm.execute (this.transition, this, input));
+		}
+		
+		final FsmTransition transition;
+	}
+	
+	private enum FsmTransition
+			implements
+				StateMachine.Transition
+	{
+		CallbacksDestroyCompleted,
+		CallbacksDestroyFailedCompleted,
+		CallbacksDestroySucceededCompleted,
+		CallbacksInitializeCompleted,
+		CallbacksInitializeFailedCompleted,
+		CallbacksInitializeSucceededCompleted,
+		CallbacksRegisterCompleted,
+		CallbacksUnregisterCompleted,
+		ControllerRegisterCompleted,
+		ControllerUnregisterCompleted,
+		ExternalDestroy,
+		ExternalInitialize,
+		InternalFailure;
+	}
+	
+	private abstract class FsmVoidAccess
+			extends FsmAccess<Void, Void>
+	{
+		protected abstract Void execute ();
+		
+		@Override
+		protected final Void execute (final Void input)
+		{
+			return (this.execute ());
+		}
+		
+		final Void trigger ()
+		{
+			return (this.trigger (null));
+		}
+	}
+	
+	private abstract class FsmVoidTransaction
+			extends FsmTransaction<Void, Void>
+	{
+		protected FsmVoidTransaction (final FsmTransition transition)
+		{
+			super (transition);
+		}
+		
+		protected abstract StateAndOutput<FsmState, Void> execute ();
+		
+		@Override
+		protected final StateAndOutput<FsmState, Void> execute (final Void input)
+		{
+			return (this.execute ());
+		}
+		
+		final Void trigger ()
+		{
+			return (this.trigger (null));
 		}
 	}
 }
