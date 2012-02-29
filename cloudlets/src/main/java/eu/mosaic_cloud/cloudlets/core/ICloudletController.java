@@ -20,11 +20,12 @@
 
 package eu.mosaic_cloud.cloudlets.core;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.ops.CompletionInvocationHandler;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+
 
 /**
  * Interface for cloudlet control operations. Each cloudlet has access to an
@@ -33,24 +34,15 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
- *            the type of the context of the cloudlet
  */
-public interface ICloudletController<Context> extends Callbacks, IConnectorsFactory {
-
-    /**
-     * Destroys the cloudlet.
-     * 
-     * @return <code>true</code> if cloudlet was successfully destroyed
-     */
-    boolean destroy();
-
-    IConfiguration getConfiguration();
-
-    /**
-     * Indicates if the cloudlet is alive and can receive messages or not.
-     * 
-     * @return <code>true</code> if cloudlet is alive
-     */
-    boolean isActive();
+public interface ICloudletController<Context>
+		extends
+			Callbacks,
+			IConnectorsFactory
+{
+	CallbackCompletion<Void> destroy ();
+	
+	IConfiguration getConfiguration ();
+	
+	CloudletState getState ();
 }
