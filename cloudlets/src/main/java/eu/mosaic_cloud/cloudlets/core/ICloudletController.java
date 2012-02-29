@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.core;
 
 
-import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;

@@ -24,13 +24,13 @@ package eu.mosaic_cloud.cloudlets.runtime;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
-import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletState;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;

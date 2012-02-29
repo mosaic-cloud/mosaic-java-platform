@@ -18,7 +18,8 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.connectors.core;
+package eu.mosaic_cloud.connectors.core;
 
-public interface IConnectorFactory<Connector extends IConnector<?>> {
+
+public interface IConnectorFactory<Connector extends IConnector> {
 }

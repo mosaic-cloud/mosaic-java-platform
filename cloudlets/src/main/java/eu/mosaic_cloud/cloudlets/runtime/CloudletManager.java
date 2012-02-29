@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

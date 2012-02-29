@@ -41,8 +41,8 @@ import java.util.LinkedList;
 
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCallbacksProvider;
-import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentController;
+import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;

@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.connectors.core;
+package eu.mosaic_cloud.connectors.core;
 
 public interface IConnectorsFactory {
 
