@@ -47,12 +47,12 @@ import com.basho.riak.client.response.StoreResponse;
  */
 public final class RiakRestOperationFactory implements IOperationFactory { // NOPMD
 
-                                                                           // by
-                                                                           // georgiana
-                                                                           // on
-                                                                           // 10/12/11
-                                                                           // 4:46
-                                                                           // PM
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 4:46
+    // PM
     private final RiakClient riakcl;
 
     private final String bucket;
@@ -165,12 +165,12 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
         if (!(type instanceof KeyValueOperations)) {
             return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                         // by
-                                                                         // georgiana
-                                                                         // on
-                                                                         // 10/12/11
-                                                                         // 4:46
-                                                                         // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:46
+                        // PM
                         @Override
                         public Object call() throws UnsupportedOperationException {
                             throw new UnsupportedOperationException("Unsupported operation: "
@@ -217,12 +217,12 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
             ExceptionTracer.traceDeferred(e);
             operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                              // by
-                                                                              // georgiana
-                                                                              // on
-                                                                              // 10/12/11
-                                                                              // 4:45
-                                                                              // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:45
+                        // PM
                         @Override
                         public Object call() throws Exception { // NOPMD by
                                                                 // georgiana on

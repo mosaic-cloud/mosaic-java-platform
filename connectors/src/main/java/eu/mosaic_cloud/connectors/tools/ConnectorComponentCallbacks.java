@@ -96,7 +96,8 @@ public final class ConnectorComponentCallbacks implements ComponentCallbacks, Ca
      * Creates a callback which is used by the mOSAIC platform to communicate
      * with the connectors.
      */
-    public ConnectorComponentCallbacks(@SuppressWarnings("unused") final ComponentEnvironment context) {
+    public ConnectorComponentCallbacks(
+            @SuppressWarnings("unused") final ComponentEnvironment context) {
         super();
         this.pendingReferences = new IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>>();
         ConnectorComponentCallbacks.setComponentCallbacks(this);

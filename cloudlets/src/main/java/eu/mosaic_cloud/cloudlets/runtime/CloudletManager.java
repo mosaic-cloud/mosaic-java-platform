@@ -73,11 +73,11 @@ public class CloudletManager {
      * @param configuration
      *            configuration object of the cloudlet
      */
-    public CloudletManager(CallbackReactor reactor, ThreadingContext threading, ExceptionTracer exceptions,
-    		ClassLoader classLoader, IConfiguration configuration) {
+    public CloudletManager(CallbackReactor reactor, ThreadingContext threading,
+            ExceptionTracer exceptions, ClassLoader classLoader, IConfiguration configuration) {
         super();
         synchronized (this.monitor) {
-        	this.reactor = reactor;
+            this.reactor = reactor;
             this.threading = threading;
             this.exceptions = exceptions;
             this.classLoader = classLoader;
@@ -119,16 +119,17 @@ public class CloudletManager {
             handlerClasz = this.classLoader.loadClass(cloudletClass);
             stateClasz = this.classLoader.loadClass(cloudletStateClass);
             resourceConfig = PropertyTypeConfiguration.create(this.classLoader, resourceFile);
-            // final ICloudletCallback<?> cloudlerHandler = (ICloudletCallback<?>) createHandler(handlerClasz);
+            // final ICloudletCallback<?> cloudlerHandler =
+            // (ICloudletCallback<?>) createHandler(handlerClasz);
             // final Object cloudletState = invokeConstructor(stateClasz);
-            final CloudletEnvironment environment = CloudletEnvironment.create (
-            		resourceConfig, handlerClasz, stateClasz, this.classLoader,
-            		this.reactor, this.threading, this.exceptions);
+            final CloudletEnvironment environment = CloudletEnvironment.create(resourceConfig,
+                    handlerClasz, stateClasz, this.classLoader, this.reactor, this.threading,
+                    this.exceptions);
             final Cloudlet<?> cloudlet = Cloudlet.create(environment);
             cloudlet.initialize();
             this.cloudletPool.add(cloudlet);
         } catch (final ClassNotFoundException e) {
-        	exceptions.trace (ExceptionResolution.Deferred, e);
+            this.exceptions.trace(ExceptionResolution.Deferred, e);
             CloudletManager.logger.error("Could not resolve class: " + e.getMessage()); //$NON-NLS-1$
             throw new Error(e);
         }
@@ -151,7 +152,7 @@ public class CloudletManager {
     public final void stop() {
         synchronized (this.monitor) {
             for (final Cloudlet<?> cloudlet : this.cloudletPool) {
-            	cloudlet.destroy();
+                cloudlet.destroy();
             }
         }
     }

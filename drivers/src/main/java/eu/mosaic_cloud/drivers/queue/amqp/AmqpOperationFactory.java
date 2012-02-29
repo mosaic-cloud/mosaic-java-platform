@@ -47,9 +47,9 @@ import com.rabbitmq.client.GetResponse;
  */
 final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
 
-                                                                // georgiana on
-                                                                // 10/12/11 4:13
-                                                                // PM
+    // georgiana on
+    // 10/12/11 4:13
+    // PM
     /**
 	 * 
 	 */
@@ -294,12 +294,12 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
         if (!(type instanceof AmqpOperations)) {
             return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                         // by
-                                                                         // georgiana
-                                                                         // on
-                                                                         // 10/12/11
-                                                                         // 4:13
-                                                                         // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:13
+                        // PM
                         @Override
                         public Object call() throws UnsupportedOperationException {
                             throw new UnsupportedOperationException("Unsupported operation: "
@@ -336,12 +336,12 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
         default:
             operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                              // by
-                                                                              // georgiana
-                                                                              // on
-                                                                              // 10/12/11
-                                                                              // 4:14
-                                                                              // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:14
+                        // PM
                         @Override
                         public Object call() throws UnsupportedOperationException {
                             throw new UnsupportedOperationException("Unsupported operation: "

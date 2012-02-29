@@ -67,7 +67,7 @@ import com.google.common.base.Preconditions;
  */
 public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
 
-                                                  // 10/12/11 2:56 PM
+    // 10/12/11 2:56 PM
     private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub>();
 
     /**

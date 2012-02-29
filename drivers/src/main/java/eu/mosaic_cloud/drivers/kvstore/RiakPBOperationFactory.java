@@ -48,12 +48,12 @@ import com.google.protobuf.ByteString;
  */
 public final class RiakPBOperationFactory implements IOperationFactory { // NOPMD
 
-                                                                         // by
-                                                                         // georgiana
-                                                                         // on
-                                                                         // 10/12/11
-                                                                         // 4:49
-                                                                         // PM
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 4:49
+    // PM
     private final RiakClient riakcl;
 
     private final String bucket;
@@ -169,12 +169,12 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
         if (!(type instanceof KeyValueOperations)) {
             return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                         // by
-                                                                         // georgiana
-                                                                         // on
-                                                                         // 10/12/11
-                                                                         // 4:49
-                                                                         // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:49
+                        // PM
                         @Override
                         public Object call() throws UnsupportedOperationException {
                             throw new UnsupportedOperationException("Unsupported operation: "
@@ -222,12 +222,12 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
             ExceptionTracer.traceDeferred(e);
             operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                              // by
-                                                                              // georgiana
-                                                                              // on
-                                                                              // 10/12/11
-                                                                              // 4:48
-                                                                              // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 4:48
+                        // PM
                         @Override
                         public Object call() throws Exception { // NOPMD by
                                                                 // georgiana on

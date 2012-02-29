@@ -42,12 +42,12 @@ import redis.clients.util.SafeEncoder;
  */
 public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 
-                                                                        // by
-                                                                        // georgiana
-                                                                        // on
-                                                                        // 10/12/11
-                                                                        // 1:07
-                                                                        // PM
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 1:07
+    // PM
     private final Jedis redisClient;
 
     private RedisOperationFactory(String host, int port, String passwd, String bucket) {
@@ -160,12 +160,12 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
         if (!(type instanceof KeyValueOperations)) {
             return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                         // by
-                                                                         // georgiana
-                                                                         // on
-                                                                         // 10/12/11
-                                                                         // 12:59
-                                                                         // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 12:59
+                        // PM
                         @Override
                         public Object call() throws UnsupportedOperationException {
                             throw new UnsupportedOperationException("Unsupported operation: "
@@ -190,12 +190,12 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
         default:
             operation = new GenericOperation<Object>(new Callable<Object>() { // NOPMD
 
-                                                                              // by
-                                                                              // georgiana
-                                                                              // on
-                                                                              // 10/12/11
-                                                                              // 1:03
-                                                                              // PM
+                        // by
+                        // georgiana
+                        // on
+                        // 10/12/11
+                        // 1:03
+                        // PM
                         @Override
                         public Object call() throws UnsupportedOperationException {
                             throw new UnsupportedOperationException("Unsupported operation: "
