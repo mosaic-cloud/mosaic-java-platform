@@ -43,13 +43,4 @@ public final class UrgentConsumerCallback extends QueueConsumerCallback {
         // consumer
         return ICallback.SUCCESS;
     }
-
-    @Override
-    public CallbackCompletion<Void> unregisterSucceeded(IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
-        this.logger.info("Urgent Index Message consumer unregistered successfully.");
-        final ICloudletController<?> cloudlet = arguments.getCloudlet();
-        context.urgentConsumer.destroy();
-        return ICallback.SUCCESS;
-    }
 }

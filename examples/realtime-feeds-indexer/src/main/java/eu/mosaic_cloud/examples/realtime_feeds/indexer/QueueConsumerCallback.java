@@ -44,11 +44,4 @@ public class QueueConsumerCallback extends
         }
         return ICallback.SUCCESS;
     }
-
-    @Override
-    public CallbackCompletion<Void> registerSucceeded(IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
-        this.logger.info("Index Message consumer registered successfully.");
-        return ICallback.SUCCESS;
-    }
 }

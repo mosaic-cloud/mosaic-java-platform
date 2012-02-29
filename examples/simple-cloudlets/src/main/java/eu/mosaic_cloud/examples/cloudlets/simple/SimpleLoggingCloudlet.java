@@ -70,6 +70,7 @@ public class SimpleLoggingCloudlet {
         public CallbackCompletion<Void> destroySucceeded(LoggingCloudletContext context,
                 CallbackArguments<LoggingCloudletContext> arguments) {
             this.logger.info("LoggingCloudlet consumer was destroyed successfully.");
+            context.consumerRunning = false;
             context.consumer = null;
             if (context.publisher == null) {
                 arguments.getCloudlet().destroy();
@@ -80,28 +81,8 @@ public class SimpleLoggingCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(LoggingCloudletContext context,
                 CallbackArguments<LoggingCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a consumer
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
-            this.logger.info("LoggingCloudlet consumer registered successfully.");
+            this.logger.info("LoggingCloudlet consumer initialized successfully.");
             context.consumerRunning = true;
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> unregisterSucceeded(LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
-            this.logger.info("LoggingCloudlet consumer unregistered successfully.");
-            // NOTE: if unregistered as consumer is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
-            context.consumer.destroy();
-            context.consumerRunning = false;
             return ICallback.SUCCESS;
         }
     }
@@ -114,6 +95,7 @@ public class SimpleLoggingCloudlet {
         public CallbackCompletion<Void> destroySucceeded(LoggingCloudletContext context,
                 CallbackArguments<LoggingCloudletContext> arguments) {
             this.logger.info("LoggingCloudlet publisher was destroyed successfully.");
+            context.publisherRunning = false;
             context.publisher = null;
             if (context.consumer == null) {
                 arguments.getCloudlet().destroy();
@@ -124,8 +106,8 @@ public class SimpleLoggingCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(LoggingCloudletContext context,
                 CallbackArguments<LoggingCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a publisher
+            this.logger.info("LoggingCloudlet publisher initialized successfully.");
+            context.publisherRunning = true;
             return ICallback.SUCCESS;
         }
 
@@ -133,26 +115,6 @@ public class SimpleLoggingCloudlet {
         public CallbackCompletion<Void> publishSucceeded(LoggingCloudletContext context,
                 GenericCallbackCompletionArguments<LoggingCloudletContext, Void> arguments) {
             context.publisher.destroy();
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
-            this.logger.info("LoggingCloudlet publisher registered successfully.");
-            context.publisherRunning = true;
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> unregisterSucceeded(LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
-            this.logger.info("LoggingCloudlet publisher unregistered successfully.");
-            // NOTE: if unregistered as publisher is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
-            context.publisher.destroy();
-            context.publisherRunning = false;
             return ICallback.SUCCESS;
         }
     }

@@ -52,33 +52,14 @@ public class PublisherCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(PublisherCloudletContext context,
                 CallbackArguments<PublisherCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a publisher
+            this.logger.info("PublisherCloudlet publisher initialized successfully.");
+            context.publisher.publish("TEST MESSAGE!", null);
             return ICallback.SUCCESS;
         }
 
         @Override
         public CallbackCompletion<Void> publishSucceeded(PublisherCloudletContext context,
                 GenericCallbackCompletionArguments<PublisherCloudletContext, Void> arguments) {
-            context.publisher.destroy();
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(PublisherCloudletContext context,
-                CallbackArguments<PublisherCloudletContext> arguments) {
-            this.logger.info("PublisherCloudlet publisher registered successfully.");
-            context.publisher.publish("TEST MESSAGE!", null);
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> unregisterSucceeded(PublisherCloudletContext context,
-                CallbackArguments<PublisherCloudletContext> arguments) {
-            this.logger.info("PublisherCloudlet publisher unregistered successfully.");
-            // NOTE: if unregistered as publisher is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
             context.publisher.destroy();
             return ICallback.SUCCESS;
         }

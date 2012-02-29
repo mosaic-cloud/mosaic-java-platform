@@ -76,26 +76,7 @@ public class PingCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(PingCloudletContext context,
                 CallbackArguments<PingCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a consumer
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(PingCloudletContext context,
-                CallbackArguments<PingCloudletContext> arguments) {
-            this.logger.info("Ping Cloudlet consumer registered successfully.");
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> unregisterSucceeded(PingCloudletContext context,
-                CallbackArguments<PingCloudletContext> arguments) {
-            this.logger.info("Ping Cloudlet consumer unregistered successfully.");
-            // NOTE: if unregistered as consumer is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
-            context.consumer.destroy();
+            this.logger.info("Ping Cloudlet consumer initialized successfully.");
             return ICallback.SUCCESS;
         }
     }
@@ -117,34 +98,15 @@ public class PingCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(PingCloudletContext context,
                 CallbackArguments<PingCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a publisher
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> publishSucceeded(PingCloudletContext context,
-                GenericCallbackCompletionArguments<PingCloudletContext, Void> arguments) {
-            context.publisher.destroy();
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(PingCloudletContext context,
-                CallbackArguments<PingCloudletContext> arguments) {
-            this.logger.info("Ping Cloudlet publisher registered successfully.");
+            this.logger.info("Ping Cloudlet publisher initialized successfully.");
             final PingMessage data = new PingMessage("pingpong");
             context.publisher.publish(data, null);
             return ICallback.SUCCESS;
         }
 
         @Override
-        public CallbackCompletion<Void> unregisterSucceeded(PingCloudletContext context,
-                CallbackArguments<PingCloudletContext> arguments) {
-            this.logger.info("Ping Cloudlet publisher unregistered successfully.");
-            // NOTE: if unregistered as publisher is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
+        public CallbackCompletion<Void> publishSucceeded(PingCloudletContext context,
+                GenericCallbackCompletionArguments<PingCloudletContext, Void> arguments) {
             context.publisher.destroy();
             return ICallback.SUCCESS;
         }

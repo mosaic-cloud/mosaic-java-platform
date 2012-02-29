@@ -70,26 +70,7 @@ public class ConsumerCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(ConsumerCloudletContext context,
                 CallbackArguments<ConsumerCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a consumer
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(ConsumerCloudletContext context,
-                CallbackArguments<ConsumerCloudletContext> arguments) {
-            this.logger.info("ConsumerCloudlet consumer registered successfully.");
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> unregisterSucceeded(ConsumerCloudletContext context,
-                CallbackArguments<ConsumerCloudletContext> arguments) {
-            this.logger.info("ConsumerCloudlet consumer unregistered successfully.");
-            // NOTE: if unregistered as consumer is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
-            context.consumer.destroy();
+            this.logger.info("ConsumerCloudlet consumer initialized successfully.");
             return ICallback.SUCCESS;
         }
     }

@@ -34,28 +34,4 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public class DefaultAmqpQueueConnectorCallback<C> extends DefaultQueueConnectorCallback<C>
         implements IAmqpQueueConnectorCallback<C> {
-
-    @Override
-    public CallbackCompletion<Void> registerFailed(final C context,
-            final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Register Failed", false, true);
-    }
-
-    @Override
-    public CallbackCompletion<Void> registerSucceeded(final C context,
-            final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Register Succeeded", true, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> unregisterFailed(final C context,
-            final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Unregister Failed", false, true);
-    }
-
-    @Override
-    public CallbackCompletion<Void> unregisterSucceeded(final C context,
-            final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Unregister Succeeded", true, false);
-    }
 }

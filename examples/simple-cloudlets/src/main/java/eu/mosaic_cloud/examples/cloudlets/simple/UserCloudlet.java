@@ -72,6 +72,7 @@ public class UserCloudlet {
         public CallbackCompletion<Void> destroySucceeded(UserCloudletContext context,
                 CallbackArguments<UserCloudletContext> arguments) {
             this.logger.info("UserCloudlet consumer was destroyed successfully.");
+            context.consumerRunning = false;
             context.consumer = null;
             if (context.publisher == null) {
                 arguments.getCloudlet().destroy();
@@ -82,28 +83,8 @@ public class UserCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
                 CallbackArguments<UserCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a consumer
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
-            this.logger.info("UserCloudlet consumer registered successfully.");
+            this.logger.info("UserCloudlet consumer initialized successfully.");
             context.consumerRunning = true;
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> unregisterSucceeded(UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
-            this.logger.info("UserCloudlet consumer unregistered successfully.");
-            // NOTE: if unregistered as consumer is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
-            context.consumer.destroy();
-            context.consumerRunning = false;
             return ICallback.SUCCESS;
         }
     }
@@ -115,6 +96,7 @@ public class UserCloudlet {
         public CallbackCompletion<Void> destroySucceeded(UserCloudletContext context,
                 CallbackArguments<UserCloudletContext> arguments) {
             this.logger.info("UserCloudlet publisher was destroyed successfully.");
+            context.publisherRunning = false;
             context.publisher = null;
             if (context.consumer == null) {
                 arguments.getCloudlet().destroy();
@@ -125,22 +107,7 @@ public class UserCloudlet {
         @Override
         public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
                 CallbackArguments<UserCloudletContext> arguments) {
-            // NOTE: if resource initialized successfully then just register as
-            // a publisher
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> publishSucceeded(UserCloudletContext context,
-                GenericCallbackCompletionArguments<UserCloudletContext, Void> arguments) {
-            context.publisher.destroy();
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> registerSucceeded(UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
-            this.logger.info("UserCloudlet publisher registered successfully.");
+            this.logger.info("UserCloudlet publisher initialized successfully.");
             context.publisherRunning = true;
             final String user = ConfigUtils.resolveParameter(arguments.getCloudlet()
                     .getConfiguration(), "test.user", String.class, "error");
@@ -152,14 +119,9 @@ public class UserCloudlet {
         }
 
         @Override
-        public CallbackCompletion<Void> unregisterSucceeded(UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
-            this.logger.info("UserCloudlet publisher unregistered successfully.");
-            // NOTE: if unregistered as publisher is successful then destroy
-            // resource
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
+        public CallbackCompletion<Void> publishSucceeded(UserCloudletContext context,
+                GenericCallbackCompletionArguments<UserCloudletContext, Void> arguments) {
             context.publisher.destroy();
-            context.publisherRunning = false;
             return ICallback.SUCCESS;
         }
     }
