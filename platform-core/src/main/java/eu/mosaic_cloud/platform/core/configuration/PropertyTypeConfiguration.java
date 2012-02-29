@@ -153,7 +153,15 @@ public final class PropertyTypeConfiguration implements IConfiguration {
         if (stream != null) {
             properties.load(stream);
             stream.close();
+        } else {
+            throw (new IllegalArgumentException());
         }
+        final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(properties);
+        return configuration;
+    }
+
+    public static PropertyTypeConfiguration create() {
+        final Properties properties = new Properties(System.getProperties());
         final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(properties);
         return configuration;
     }
