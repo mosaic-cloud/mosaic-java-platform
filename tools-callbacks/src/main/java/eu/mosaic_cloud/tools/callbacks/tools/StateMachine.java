@@ -52,19 +52,74 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		this.transcript.traceDebugging ("created machine `%{object}`.", this);
 	}
 	
+	public final void execute (final _Transition_ transition, final _State_ finalState)
+	{
+		new Transaction (transition).execute_ (new Callable<StateAndOutput<_State_, Void>> () {
+			@Override
+			public final StateAndOutput<_State_, Void> call ()
+			{
+				return (StateAndOutput.create (finalState, null));
+			}
+		});
+	}
+	
+	public final <_Output_ extends Object> _Output_ execute (final _Transition_ transition, final _State_ finalState, final Callable<_Output_> operation)
+			throws CaughtException
+	{
+		return (new Transaction (transition).execute (finalState, operation));
+	}
+	
 	public final void execute (final _Transition_ transition, final _State_ finalState, final Runnable operation)
+			throws CaughtException
 	{
 		new Transaction (transition).execute (finalState, operation);
 	}
 	
 	public final void execute (final _Transition_ transition, final Callable<_State_> operation)
+			throws CaughtException
 	{
 		new Transaction (transition).execute (operation);
 	}
 	
+	public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final _Transition_ transition, final TransactionOperation<? super Transaction, _State_, _Input_, _Output_> operation, final _Input_ input)
+			throws CaughtException
+	{
+		return (new Transaction (transition).execute (operation, input));
+	}
+	
+	public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final AccessorOperation<? super Accessor, _Input_, _Output_> operation, final _Input_ input)
+			throws CaughtException
+	{
+		return (new Accessor ().execute (operation, input));
+	}
+	
+	public final <_Output_ extends Object> _Output_ execute (final Callable<_Output_> operation)
+			throws CaughtException
+	{
+		return (new Accessor ().execute (operation));
+	}
+	
 	public final void execute (final Runnable operation)
+			throws CaughtException
 	{
 		new Accessor ().execute (operation);
+	}
+	
+	public final <_Output_ extends Object> _Output_ execute1 (final _Transition_ transition, final Callable<StateAndOutput<_State_, _Output_>> operation)
+			throws CaughtException
+	{
+		return (new Transaction (transition).execute1 (operation));
+	}
+	
+	public final _State_ getState ()
+	{
+		return (this.capsule.currentState.get ());
+	}
+	
+	public final boolean hasState (final _State_ state)
+	{
+		Preconditions.checkNotNull (state);
+		return (this.capsule.currentState.get () == state);
 	}
 	
 	protected final void defineState (final _State_ state)
@@ -94,6 +149,11 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		this.defineTransition (transition, (_State_[]) new Enum<?>[] {initialState}, (_State_[]) new Enum<?>[] {finalState});
 	}
 	
+	protected final void defineTransition (final _Transition_ transition, final _State_ initialState, final _State_[] finalStates)
+	{
+		this.defineTransition (transition, (_State_[]) new Enum<?>[] {initialState}, finalStates);
+	}
+	
 	protected final void defineTransition (final _Transition_ transition, final _State_[] initialStates, final _State_[] finalStates)
 	{
 		synchronized (this.capsule.monitor) {
@@ -102,12 +162,6 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			Preconditions.checkState (this.capsule.transitionDefinitions[definition.ordinal] == null);
 			this.capsule.transitionDefinitions[definition.ordinal] = definition;
 		}
-	}
-	
-	protected final boolean hasState (final _State_ state)
-	{
-		Preconditions.checkNotNull (state);
-		return (this.capsule.currentState.get () == state);
 	}
 	
 	protected final void initialize (final _State_ state)
@@ -156,22 +210,32 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			}
 		}
 		
-		public final void execute (final AccessorOperation<? super Accessor> operation)
+		public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final AccessorOperation<? super Accessor, _Input_, _Output_> operation, final _Input_ input)
 				throws CaughtException
 		{
 			Preconditions.checkNotNull (operation);
 			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` access `%{object:identity}` operation `%{object}` in state `%s`...", StateMachine.this, this, operation, StateMachine.this.capsule.currentState.get ().name ());
-			this.execute_ (new Runnable () {
+			final _Output_ output = this.execute_ (new Callable<_Output_> () {
 				@Override
-				public final void run ()
+				public final _Output_ call ()
 				{
 					try {
-						operation.execute (Accessor.this);
+						return (operation.execute (Accessor.this, input));
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!"));
 					}
 				}
 			});
+			return (output);
+		}
+		
+		public final <_Output_ extends Object> _Output_ execute (final Callable<_Output_> operation)
+				throws CaughtException
+		{
+			Preconditions.checkNotNull (operation);
+			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` access `%{object:identity}` operation `%{object}` in state `%s`...", StateMachine.this, this, operation, StateMachine.this.capsule.currentState.get ().name ());
+			final _Output_ output = this.execute_ (operation);
+			return (output);
 		}
 		
 		public final void execute (final Runnable operation)
@@ -179,7 +243,14 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		{
 			Preconditions.checkNotNull (operation);
 			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` access `%{object:identity}` operation `%{object}` in state `%s`...", StateMachine.this, this, operation, StateMachine.this.capsule.currentState.get ().name ());
-			this.execute_ (operation);
+			this.execute_ (new Callable<Void> () {
+				@Override
+				public final Void call ()
+				{
+					operation.run ();
+					return (null);
+				}
+			});
 		}
 		
 		public final void release ()
@@ -190,26 +261,28 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			}
 		}
 		
-		private final void execute_ (final Runnable operation)
+		private final <_Output_ extends Object> _Output_ execute_ (final Callable<_Output_> operation)
 		{
 			try {
 				this.begin ();
+				final _Output_ output;
 				try {
-					operation.run ();
+					output = operation.call ();
 				} catch (final CaughtException exception) {
 					throw (exception);
 				} catch (final Throwable exception) {
 					throw (new DeferredException (exception, "operation failed; aborting!"));
 				}
+				return (output);
 			} finally {
 				this.close ();
 			}
 		}
 	}
 	
-	public interface AccessorOperation<_Accessor_ extends StateMachine<?, ?>.Accessor>
+	public interface AccessorOperation<_Accessor_ extends StateMachine<?, ?>.Accessor, _Input_ extends Object, _Output_ extends Object>
 	{
-		public abstract void execute (final _Accessor_ accessor)
+		public abstract _Output_ execute (final _Accessor_ accessor, _Input_ input)
 				throws Throwable;
 	}
 	
@@ -291,6 +364,25 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	public interface State
 	{}
 	
+	public static final class StateAndOutput<_State_ extends Enum<_State_> & State, _Output_ extends Object>
+			extends Object
+	{
+		private StateAndOutput (final _State_ state, final _Output_ output)
+		{
+			super ();
+			this.state = state;
+			this.output = output;
+		}
+		
+		public final _Output_ output;
+		public final _State_ state;
+		
+		public static final <_State_ extends Enum<_State_> & State, _Output_ extends Object> StateAndOutput<_State_, _Output_> create (final _State_ state, final _Output_ output)
+		{
+			return (new StateAndOutput<_State_, _Output_> (state, output));
+		}
+	}
+	
 	public class Transaction
 			extends Isolate
 	{
@@ -348,22 +440,44 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			}
 		}
 		
+		public final <_Output_ extends Object> _Output_ execute (final _State_ finalState, final Callable<_Output_> operation)
+				throws CaughtException
+		{
+			Preconditions.checkNotNull (finalState);
+			Preconditions.checkNotNull (operation);
+			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object:identity}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), StateMachine.this.capsule.currentState.get ().name ());
+			final _Output_ output = this.execute_ (new Callable<StateAndOutput<_State_, _Output_>> () {
+				@Override
+				public final StateAndOutput<_State_, _Output_> call ()
+				{
+					final _Output_ output;
+					try {
+						output = operation.call ();
+					} catch (final Throwable exception) {
+						throw (new DeferredException (exception, "operation failed; aborting!"));
+					}
+					return (StateAndOutput.create (finalState, output));
+				}
+			});
+			return (output);
+		}
+		
 		public final void execute (final _State_ finalState, final Runnable operation)
 				throws CaughtException
 		{
 			Preconditions.checkNotNull (finalState);
 			Preconditions.checkNotNull (operation);
 			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object:identity}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), StateMachine.this.capsule.currentState.get ().name ());
-			this.execute_ (new Callable<_State_> () {
+			this.execute_ (new Callable<StateAndOutput<_State_, Void>> () {
 				@Override
-				public final _State_ call ()
+				public final StateAndOutput<_State_, Void> call ()
 				{
 					try {
 						operation.run ();
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!"));
 					}
-					return (finalState);
+					return (StateAndOutput.create (finalState, null));
 				}
 			});
 		}
@@ -373,25 +487,47 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		{
 			Preconditions.checkNotNull (operation);
 			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object:identity}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), StateMachine.this.capsule.currentState.get ().name ());
-			this.execute_ (operation);
+			this.execute_ (new Callable<StateAndOutput<_State_, Void>> () {
+				@Override
+				public final StateAndOutput<_State_, Void> call ()
+				{
+					final _State_ finalState;
+					try {
+						finalState = operation.call ();
+					} catch (final Throwable exception) {
+						throw (new DeferredException (exception, "operation failed; aborting!"));
+					}
+					return (StateAndOutput.create (finalState, null));
+				}
+			});
 		}
 		
-		public final void execute (final TransactionOperation<_State_, ? super Transaction> operation)
+		public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final TransactionOperation<? super Transaction, _State_, _Input_, _Output_> operation, final _Input_ input)
 				throws CaughtException
 		{
 			Preconditions.checkNotNull (operation);
 			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object:identity}` operation `%{object}` with transaction `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), StateMachine.this.capsule.currentState.get ().name ());
-			this.execute_ (new Callable<_State_> () {
+			final _Output_ output = this.execute_ (new Callable<StateAndOutput<_State_, _Output_>> () {
 				@Override
-				public final _State_ call ()
+				public final StateAndOutput<_State_, _Output_> call ()
 				{
 					try {
-						return (operation.execute (Transaction.this));
+						return (operation.execute (Transaction.this, input));
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!"));
 					}
 				}
 			});
+			return (output);
+		}
+		
+		public final <_Output_ extends Object> _Output_ execute1 (final Callable<StateAndOutput<_State_, _Output_>> operation)
+				throws CaughtException
+		{
+			Preconditions.checkNotNull (operation);
+			StateMachine.this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object:identity}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), StateMachine.this.capsule.currentState.get ().name ());
+			final _Output_ output = this.execute_ (operation);
+			return (output);
 		}
 		
 		public final _Transition_ getTransition ()
@@ -407,23 +543,33 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			}
 		}
 		
-		private final void execute_ (final Callable<_State_> operation)
+		private final <_Output_ extends Object> _Output_ execute_ (final Callable<StateAndOutput<_State_, _Output_>> operation)
 				throws CaughtException
 		{
 			try {
 				this.begin ();
-				_State_ state;
+				final StateAndOutput<_State_, _Output_> stateAndOutput;
 				try {
-					state = operation.call ();
+					stateAndOutput = operation.call ();
 				} catch (final CaughtException exception) {
 					throw (exception);
 				} catch (final Throwable exception) {
 					throw (new DeferredException (exception, "operation failed; aborting!"));
 				}
+				final _State_ state;
+				final _Output_ output;
+				if (stateAndOutput != null) {
+					state = stateAndOutput.state;
+					output = stateAndOutput.output;
+				} else {
+					state = null;
+					output = null;
+				}
 				if (state != null)
-					this.commit (state);
+					this.commit (stateAndOutput.state);
 				else
 					this.rollback ();
+				return (output);
 			} finally {
 				this.close ();
 			}
@@ -434,9 +580,9 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		private _State_ initialState;
 	}
 	
-	public interface TransactionOperation<_State_ extends Enum<_State_> & State, _Transaction_ extends StateMachine<_State_, ?>.Transaction>
+	public interface TransactionOperation<_Transaction_ extends StateMachine<_State_, ?>.Transaction, _State_ extends Enum<_State_> & State, _Input_ extends Object, _Output_ extends Object>
 	{
-		public abstract _State_ execute (final _Transaction_ transaction)
+		public abstract StateAndOutput<_State_, _Output_> execute (final _Transaction_ transaction, _Input_ input)
 				throws Throwable;
 	}
 	

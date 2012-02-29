@@ -18,11 +18,12 @@
  * #L%
  */
 
-package eu.mosaic_cloud.tools.callbacks.implementations.basic.tests;
+package eu.mosaic_cloud.tools.callbacks.tools.tests;
 
 
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.AccessorOperation;
+import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.StateAndOutput;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.TransactionOperation;
 
 import org.junit.Test;
@@ -38,35 +39,37 @@ public final class StateMachineTest
 			machine.new Accessor ().begin ().release ();
 		}
 		{
-			machine.new Accessor ().execute (new AccessorOperation<TestStateMachine.Accessor> () {
+			machine.new Accessor ().execute (new AccessorOperation<TestStateMachine.Accessor, Void, Void> () {
 				@Override
-				public final void execute (final TestStateMachine.Accessor accessor)
-				{}
-			});
+				public final Void execute (final TestStateMachine.Accessor accessor, final Void input)
+				{
+					return (null);
+				}
+			}, null);
 		}
 		{
 			machine.new Transaction (TestStateMachine.Transition.Executing).begin ().commit (TestStateMachine.State.Ready);
 		}
 		{
-			machine.new Transaction (TestStateMachine.Transition.Executing).execute (new TransactionOperation<TestStateMachine.State, TestStateMachine.Transaction> () {
+			machine.new Transaction (TestStateMachine.Transition.Executing).execute (new TransactionOperation<TestStateMachine.Transaction, TestStateMachine.State, Void, Void> () {
 				@Override
-				public final TestStateMachine.State execute (final TestStateMachine.Transaction transaction)
+				public final StateAndOutput<TestStateMachine.State, Void> execute (final TestStateMachine.Transaction transaction, final Void input)
 				{
-					return (TestStateMachine.State.Ready);
+					return (StateAndOutput.create (TestStateMachine.State.Ready, null));
 				}
-			});
+			}, null);
 		}
 		{
 			machine.new Transaction (TestStateMachine.Transition.Executing).begin ().rollback ();
 		}
 		{
-			machine.new Transaction (TestStateMachine.Transition.Executing).execute (new TransactionOperation<TestStateMachine.State, TestStateMachine.Transaction> () {
+			machine.new Transaction (TestStateMachine.Transition.Executing).execute (new TransactionOperation<TestStateMachine.Transaction, TestStateMachine.State, Void, Void> () {
 				@Override
-				public final TestStateMachine.State execute (final TestStateMachine.Transaction transaction)
+				public final StateAndOutput<TestStateMachine.State, Void> execute (final TestStateMachine.Transaction transaction, final Void input)
 				{
-					return (null);
+					return (StateAndOutput.create (TestStateMachine.State.Ready, null));
 				}
-			});
+			}, null);
 		}
 		/*{
 			try (final TestStateMachine.Transaction transaction = machine.new Transaction ()) {
