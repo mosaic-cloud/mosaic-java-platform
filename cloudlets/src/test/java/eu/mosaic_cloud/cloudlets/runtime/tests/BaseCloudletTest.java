@@ -23,6 +23,8 @@ package eu.mosaic_cloud.cloudlets.runtime.tests;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.runtime.Cloudlet;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletEnvironment;
+import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -49,6 +51,8 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         Class<? extends ICloudletCallback<Context>> callbacksClass;
 
         IConfiguration configuration;
+
+        IConnectorsFactory connectors;
 
         TranscriptExceptionTracer exceptions;
 
@@ -94,9 +98,11 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         scenario.reactor.initialize();
         scenario.callbacksClass = callbacksClass;
         scenario.contextClass = contextClass;
+        scenario.connectors = DefaultConnectorsFactory.create (scenario.threading);
         scenario.environment = CloudletEnvironment.create(scenario.configuration,
                 scenario.callbacksClass, scenario.contextClass,
-                scenario.callbacksClass.getClassLoader(), scenario.reactor, scenario.threading,
+                scenario.callbacksClass.getClassLoader(), scenario.connectors,
+                scenario.reactor, scenario.threading,
                 scenario.exceptions);
     }
 

@@ -1,0 +1,80 @@
+
+package eu.mosaic_cloud.cloudlets.tools;
+
+
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.generic.GenericKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.IMemcacheKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.IMemcacheKvStoreConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.IMemcacheKvStoreConnectorFactory;
+import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.MemcacheKvStoreConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
+
+
+public class DefaultConnectorsFactory
+		extends eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory
+		implements
+			IConnectorsFactory
+{
+	public static/*final*/DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ThreadingContext threading)
+	{
+		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory ();
+		DefaultConnectorsFactory.initialize (factory, cloudlet, threading);
+		return (factory);
+	}
+	
+	protected static/*final*/void initialize (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet, final ThreadingContext threading)
+	{
+		Preconditions.checkNotNull (factory);
+		eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory.initialize (factory, threading);
+		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
+			@Override
+			public <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder, final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context callbackContext)
+			{
+				final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> backingConnector = (eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
+				return (new GenericKvStoreConnector<Context, Value, Extra> (cloudlet, backingConnector, configuration, callback, callbackContext));
+			}
+		});
+		factory.registerFactory (IMemcacheKvStoreConnectorFactory.class, new IMemcacheKvStoreConnectorFactory () {
+			@Override
+			public <Context, Value, Extra> IMemcacheKvStoreConnector<Context, Value, Extra> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder, final IMemcacheKvStoreConnectorCallback<Context, Value, Extra> callback, final Context callbackContext)
+			{
+				final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<Value> backingConnector = (eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<Value>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
+				return (new MemcacheKvStoreConnector<Context, Value, Extra> (cloudlet, backingConnector, configuration, callback, callbackContext));
+			}
+		});
+		factory.registerFactory (IAmqpQueueConsumerConnectorFactory.class, new IAmqpQueueConsumerConnectorFactory () {
+			@Override
+			public <Context, Message, Extra> IAmqpQueueConsumerConnector<Context, Message, Extra> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder, final IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> callback, final Context callbackContext)
+			{
+				final AmqpQueueConsumerConnector.Callback<Message> backingCallback = new AmqpQueueConsumerConnector.Callback<Message> ();
+				final eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConsumerConnector<Message> backingConnector = (eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConsumerConnector<Message>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory.class).create (configuration, messageClass, messageEncoder, backingCallback);
+				return (new AmqpQueueConsumerConnector<Context, Message, Extra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback));
+			}
+		});
+		factory.registerFactory (IAmqpQueuePublisherConnectorFactory.class, new IAmqpQueuePublisherConnectorFactory () {
+			@Override
+			public <Context, Message, Extra> IAmqpQueuePublisherConnector<Context, Message, Extra> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder, final IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> callback, final Context callbackContext)
+			{
+				final eu.mosaic_cloud.connectors.queue.amqp.AmqpQueuePublisherConnector<Message> backingConnector = (eu.mosaic_cloud.connectors.queue.amqp.AmqpQueuePublisherConnector<Message>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory.class).create (configuration, messageClass, messageEncoder);
+				return (new AmqpQueuePublisherConnector<Context, Message, Extra> (cloudlet, backingConnector, configuration, callback, callbackContext));
+			}
+		});
+	}
+}
