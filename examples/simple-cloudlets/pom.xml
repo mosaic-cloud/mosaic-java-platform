@@ -27,6 +27,13 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>cloudlets</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-callbacks</artifactId>
 			<version>${project.version}</version>
@@ -40,6 +47,12 @@
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-threading</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${versions.dependencies.junit}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	

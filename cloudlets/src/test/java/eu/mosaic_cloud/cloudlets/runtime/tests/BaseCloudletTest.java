@@ -42,41 +42,41 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseScenario<Context>, Context extends Object> {
+public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseScenario<?>> {
 
-    protected static class BaseScenario<Context extends Object> {
+    public static class BaseScenario<Context extends Object> {
 
-        Class<Context> contextClass;
+        public Class<Context> contextClass;
 
-        Class<? extends ICloudletCallback<Context>> callbacksClass;
+        public Class<? extends ICloudletCallback<Context>> callbacksClass;
 
-        IConfiguration configuration;
+        public IConfiguration configuration;
 
-        IConnectorsFactory connectors;
+        public IConnectorsFactory connectors;
 
-        TranscriptExceptionTracer exceptions;
+        public TranscriptExceptionTracer exceptions;
 
-        QueueingExceptionTracer exceptions_;
+        public QueueingExceptionTracer exceptions_;
 
-        MosaicLogger logger;
+        public MosaicLogger logger;
 
-        long poolTimeout = 1000 * 1000;
+        public long poolTimeout = 1000;
 
-        BasicCallbackReactor reactor;
+        public BasicCallbackReactor reactor;
 
-        BasicThreadingContext threading;
+        public BasicThreadingContext threading;
 
-        Transcript transcript;
+        public Transcript transcript;
 
-        CloudletEnvironment environment;
+        public CloudletEnvironment environment;
     }
 
-    protected Cloudlet<Context> cloudlet;
+    protected Cloudlet<?> cloudlet;
 
     protected Scenario scenario;
 
     protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario(
-            final Class<? extends BaseCloudletTest<Scenario, Context>> owner,
+            final Class<? extends BaseCloudletTest<?>> owner,
             final Scenario scenario, final String configuration,
             final Class<? extends ICloudletCallback<Context>> callbacksClass,
             final Class<Context> contextClass) {

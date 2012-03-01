@@ -31,7 +31,7 @@ import org.junit.Test;
 public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConnector<String, ?>>
         extends BaseConnectorTest<Connector, BaseKvStoreConnectorTest.Scenario> {
 
-    protected static class Scenario extends BaseConnectorTest.BaseScenario<KeyValueStub> {
+    public static class Scenario extends BaseConnectorTest.BaseScenario<KeyValueStub> {
 
         public String keyPrefix = UUID.randomUUID().toString();
     }

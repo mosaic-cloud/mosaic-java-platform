@@ -43,25 +43,25 @@ import org.junit.Test;
 
 public abstract class BaseConnectorTest<Connector extends IConnector, Scenario extends BaseConnectorTest.BaseScenario<?>> {
 
-    protected static class BaseScenario<DriverStub extends AbstractDriverStub> {
+    public static class BaseScenario<DriverStub extends AbstractDriverStub> {
 
-        IConfiguration configuration;
+        public IConfiguration configuration;
 
-        ZeroMqChannel driverChannel;
+        public ZeroMqChannel driverChannel;
 
-        DriverStub driverStub;
+        public DriverStub driverStub;
 
-        TranscriptExceptionTracer exceptions;
+        public TranscriptExceptionTracer exceptions;
 
-        QueueingExceptionTracer exceptions_;
+        public QueueingExceptionTracer exceptions_;
 
-        MosaicLogger logger;
+        public MosaicLogger logger;
 
-        long poolTimeout = 1000;
+        public long poolTimeout = 1000;
 
-        BasicThreadingContext threading;
+        public BasicThreadingContext threading;
 
-        Transcript transcript;
+        public Transcript transcript;
     }
 
     protected Connector connector;

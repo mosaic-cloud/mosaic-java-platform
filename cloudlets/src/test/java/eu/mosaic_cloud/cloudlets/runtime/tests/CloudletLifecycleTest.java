@@ -27,7 +27,7 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public class CloudletLifecycleTest extends
-        BaseCloudletTest<BaseCloudletTest.BaseScenario<VoidCloudletContext>, VoidCloudletContext> {
+        BaseCloudletTest<BaseCloudletTest.BaseScenario<VoidCloudletContext>> {
 
     public static class Callbacks extends DefaultCloudletCallback<VoidCloudletContext> {
 
