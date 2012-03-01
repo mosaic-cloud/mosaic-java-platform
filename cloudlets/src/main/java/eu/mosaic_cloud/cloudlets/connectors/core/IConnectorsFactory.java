@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-connectors
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
