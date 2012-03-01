@@ -45,8 +45,6 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
 
     protected final MosaicLogger logger;
 
-    private final CallbackCompletion<Void> initializeConnectorCompletion;
-
     protected BaseConnector(final ICloudletController<?> cloudlet, final Connector connector,
             final IConfiguration configuration, final Callback callback, final Context context) {
         super();
@@ -59,7 +57,6 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
         this.callback = callback;
         this.context = context;
         this.logger = MosaicLogger.createLogger(this);
-        this.initializeConnectorCompletion = this.initializeConnector();
     }
 
     @Override
@@ -86,12 +83,7 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
     }
 
     @Override
-    @Deprecated
     public CallbackCompletion<Void> initialize() {
-        return (this.initializeConnectorCompletion);
-    }
-
-    private CallbackCompletion<Void> initializeConnector() {
         final CallbackCompletion<Void> completion = this.connector.initialize();
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
