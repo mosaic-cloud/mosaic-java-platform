@@ -46,6 +46,16 @@ public abstract class BaseConnector<P extends BaseConnectorProxy> implements ICo
         this.logger = MosaicLogger.createLogger(this);
     }
 
+    @Override
+    public CallbackCompletion<Void> destroy() {
+        return this.proxy.destroy();
+    }
+
+    @Override
+    public CallbackCompletion<Void> initialize() {
+        return this.proxy.initialize();
+    }
+
     public static Channel createChannel(final String driverEndpoint,
             final ThreadingContext threading) {
         final String connectorIdentity = UUID.randomUUID().toString();
@@ -53,10 +63,5 @@ public abstract class BaseConnector<P extends BaseConnectorProxy> implements ICo
                 AbortingExceptionTracer.defaultInstance);
         channel.connect(driverEndpoint);
         return channel;
-    }
-
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        return CallbackCompletion.createOutcome();
     }
 }

@@ -58,7 +58,7 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
         BaseKvStoreConnectorProxy<T> implements IMemcacheKvStoreConnector<T> {
 
     protected MemcacheKvStoreConnectorProxy(final IConfiguration configuration,
-            final Channel channel, final DataEncoder<T> encoder) {
+            final Channel channel, final DataEncoder<? super T> encoder) {
         super(configuration, channel, encoder);
     }
 
@@ -80,7 +80,7 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
      */
     public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(final String bucket,
             final IConfiguration configuration, final String driverIdentity, final Channel channel,
-            final DataEncoder<T> encoder) {
+            final DataEncoder<? super T> encoder) {
         final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T>(
                 configuration, channel, encoder);
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
@@ -174,6 +174,11 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
     }
 
     @Override
+    public CallbackCompletion<Void> initialize() {
+        return CallbackCompletion.createOutcome();
+    }
+
+    @Override
     public CallbackCompletion<Boolean> prepend(final String key, final T data) {
         CallbackCompletion<Boolean> result;
         try {
@@ -212,7 +217,7 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
                 final Map<String, Object> values = new HashMap<String, Object>();
                 for (final KVEntry entry : resultEntries) {
                     try {
-                        final T value = this.encoder.decode(resultEntries.get(0).getValue()
+                        final T value = (T) this.encoder.decode(resultEntries.get(0).getValue()
                                 .toByteArray());
                         values.put(entry.getKey(), value);
                     } catch (final EncodingException exception) {

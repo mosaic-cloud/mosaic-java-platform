@@ -40,7 +40,7 @@ public class AmqpQueueConsumerConnector<Message> extends
 
     public static <Message> AmqpQueueConsumerConnector<Message> create(
             final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder,
+            final DataEncoder<? super Message> messageEncoder,
             final IAmqpQueueConsumerCallback<Message> callback, final ThreadingContext threading) {
         final String driverIdentity = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericConnector.1"), String.class, "");

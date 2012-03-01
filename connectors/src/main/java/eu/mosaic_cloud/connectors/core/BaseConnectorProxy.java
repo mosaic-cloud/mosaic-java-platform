@@ -145,11 +145,6 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         return this.configuration;
     }
 
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        return (CallbackCompletion.createOutcome());
-    }
-
     /**
      * Process a received response for a previous submitted request.
      * 

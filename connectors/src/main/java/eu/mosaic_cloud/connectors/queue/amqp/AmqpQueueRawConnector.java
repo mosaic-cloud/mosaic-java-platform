@@ -104,12 +104,6 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
     }
 
     @Override
-    public CallbackCompletion<Void> destroy() {
-        this.logger.trace("AmqpConnector was destroyed.");
-        return this.proxy.destroy();
-    }
-
-    @Override
     public CallbackCompletion<Void> get(final String queue, final boolean autoAck) {
         return this.proxy.get(queue, autoAck);
     }

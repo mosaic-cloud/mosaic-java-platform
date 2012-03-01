@@ -40,7 +40,7 @@ public class AmqpQueuePublisherConnector<Message> extends
 
     public static <Message> AmqpQueuePublisherConnector<Message> create(
             final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder, final ThreadingContext threading) {
+            final DataEncoder<? super Message> messageEncoder, final ThreadingContext threading) {
         final String driverIdentity = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericConnector.1"), String.class, "");
         final String driverEndpoint = ConfigUtils.resolveParameter(configuration,

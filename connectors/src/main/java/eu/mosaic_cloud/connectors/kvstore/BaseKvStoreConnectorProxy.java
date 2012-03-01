@@ -62,10 +62,10 @@ import com.google.protobuf.ByteString;
 public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorProxy
         implements IKvStoreConnector<T> {
 
-    protected DataEncoder<T> encoder;
+    protected DataEncoder<? super T> encoder;
 
     protected BaseKvStoreConnectorProxy(final IConfiguration configuration, final Channel channel,
-            final DataEncoder<T> encoder) {
+            final DataEncoder<? super T> encoder) {
         super(configuration, channel);
         this.encoder = encoder;
     }
@@ -161,7 +161,7 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
             T value = null; // NOPMD by georgiana on 2/20/12 5:02 PM
             if (!resultEntries.isEmpty()) {
                 try {
-                    value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD
+                    value = (T) this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD
                                                                                                 // by
                                                                                                 // georgiana
                                                                                                 // on

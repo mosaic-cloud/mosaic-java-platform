@@ -70,7 +70,7 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
             final DeliveryToken delivery = new DeliveryToken(inbound.getDelivery());
             final Message message;
             try {
-                message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode(inbound
+                message = (Message) AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode(inbound
                         .getData());
             } catch (final EncodingException exception) {
                 ExceptionTracer.traceDeferred(exception);
@@ -146,7 +146,7 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
      */
     protected AmqpQueueConsumerConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
             final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder,
+            final DataEncoder<? super Message> messageEncoder,
             final IAmqpQueueConsumerCallback<Message> callback) {
         super(rawProxy, configuration, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
@@ -187,7 +187,7 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
 
     public static <Message> AmqpQueueConsumerConnectorProxy<Message> create(
             final IConfiguration configuration, final String driverIdentity, final Channel channel,
-            final Class<Message> messageClass, final DataEncoder<Message> messageEncoder,
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
             final IAmqpQueueConsumerCallback<Message> callback) {
         final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
                 configuration, driverIdentity, channel);

@@ -18,9 +18,14 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.core;
+package eu.mosaic_cloud.connectors.queue.amqp;
 
-public interface IConnectorsFactory {
+import eu.mosaic_cloud.connectors.queue.IQueueConnectorFactory;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 
-    <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory(Class<Factory> factory);
+public interface IAmqpQueueRawConnectorFactory extends
+        IQueueConnectorFactory<IAmqpQueueRawConnector> {
+
+    IAmqpQueueRawConnector create(
+            IConfiguration configuration);
 }

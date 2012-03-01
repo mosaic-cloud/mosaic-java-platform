@@ -206,6 +206,11 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     }
 
     @Override
+    public CallbackCompletion<Void> initialize() {
+        return CallbackCompletion.createOutcome();
+    }
+
+    @Override
     protected void processResponse(final Message message) { // NOPMD by
                                                             // georgiana on
                                                             // 2/21/12 2:35 PM

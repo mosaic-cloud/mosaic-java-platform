@@ -1,0 +1,77 @@
+
+package eu.mosaic_cloud.connectors.tools;
+
+
+import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory;
+import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
+import eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector;
+import eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnectorFactory;
+import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallback;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnectorFactory;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+
+import com.google.common.base.Preconditions;
+
+
+public class DefaultConnectorsFactory
+		extends BaseConnectorsFactory
+{
+	public static/*final*/DefaultConnectorsFactory create (final ThreadingContext threading)
+	{
+		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory ();
+		DefaultConnectorsFactory.initialize (factory, threading);
+		return (factory);
+	}
+	
+	protected static/*final*/void initialize (final DefaultConnectorsFactory factory, final ThreadingContext threading)
+	{
+		Preconditions.checkNotNull (factory);
+		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
+			@Override
+			public <Value> IKvStoreConnector<Value> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder)
+			{
+				return (GenericKvStoreConnector.create (configuration, valueEncoder, threading));
+			}
+		});
+		factory.registerFactory (IMemcacheKvStoreConnectorFactory.class, new IMemcacheKvStoreConnectorFactory () {
+			@Override
+			public <Value> IMemcacheKvStoreConnector<Value> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder)
+			{
+				return (MemcacheKvStoreConnector.create (configuration, valueEncoder, threading));
+			}
+		});
+		factory.registerFactory (IAmqpQueueRawConnectorFactory.class, new IAmqpQueueRawConnectorFactory () {
+			@Override
+			public IAmqpQueueRawConnector create (final IConfiguration configuration)
+			{
+				return (AmqpQueueRawConnector.create (configuration, threading));
+			}
+		});
+		factory.registerFactory (IAmqpQueueConsumerConnectorFactory.class, new IAmqpQueueConsumerConnectorFactory () {
+			@Override
+			public <Message> IAmqpQueueConsumerConnector<Message> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder, final IAmqpQueueConsumerCallback<Message> callback)
+			{
+				return (AmqpQueueConsumerConnector.create (configuration, messageClass, messageEncoder, callback, threading));
+			}
+		});
+		factory.registerFactory (IAmqpQueuePublisherConnectorFactory.class, new IAmqpQueuePublisherConnectorFactory () {
+			@Override
+			public <Message> IAmqpQueuePublisherConnector<Message> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder)
+			{
+				return (AmqpQueuePublisherConnector.create (configuration, messageClass, messageEncoder, threading));
+			}
+		});
+	}
+}

@@ -86,7 +86,7 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
      */
     protected AmqpQueuePublisherConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
             final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder) {
+            final DataEncoder<? super Message> messageEncoder) {
         super(rawProxy, configuration, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
         this.exchange = ConfigUtils.resolveParameter(configuration,
@@ -113,7 +113,7 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
 
     public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
             final IConfiguration configuration, final String driverIdentity, final Channel channel,
-            final Class<Message> messageClass, final DataEncoder<Message> messageEncoder) {
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder) {
         final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
                 configuration, driverIdentity, channel);
         final IConfiguration subConfiguration = configuration

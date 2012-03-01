@@ -61,7 +61,7 @@ public class GenericKvStoreConnector<T extends Object> extends
      * @return the connector
      */
     public static <T extends Object> GenericKvStoreConnector<T> create(
-            final IConfiguration configuration, final DataEncoder<T> encoder,
+            final IConfiguration configuration, final DataEncoder<? super T> encoder,
             final ThreadingContext threading) {
         final String bucket = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");

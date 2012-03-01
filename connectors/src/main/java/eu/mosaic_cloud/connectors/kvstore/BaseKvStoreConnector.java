@@ -49,12 +49,6 @@ public abstract class BaseKvStoreConnector<D extends Object, P extends BaseKvSto
     }
 
     @Override
-    public CallbackCompletion<Void> destroy() {
-        this.logger.trace("GenericKeyValueStoreConnector destroyed.");
-        return this.proxy.destroy();
-    }
-
-    @Override
     public CallbackCompletion<D> get(final String key) {
         return this.proxy.get(key);
     }

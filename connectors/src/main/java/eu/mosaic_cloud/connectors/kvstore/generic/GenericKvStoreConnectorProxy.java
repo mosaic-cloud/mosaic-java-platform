@@ -28,6 +28,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used
@@ -49,8 +50,13 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
     // 5:06
     // PM
     protected GenericKvStoreConnectorProxy(final IConfiguration configuration,
-            final Channel channel, final DataEncoder<T> encoder) {
+            final Channel channel, final DataEncoder<? super T> encoder) {
         super(configuration, channel, encoder);
+    }
+
+    @Override
+    public CallbackCompletion<Void> initialize() {
+        return CallbackCompletion.createOutcome();
     }
 
     /**
@@ -71,7 +77,7 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
      */
     public static <T extends Object> GenericKvStoreConnectorProxy<T> create(final String bucket,
             final IConfiguration configuration, final String driverIdentity, final Channel channel,
-            final DataEncoder<T> encoder) {
+            final DataEncoder<? super T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T>(
                 configuration, channel, encoder);
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();

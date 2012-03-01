@@ -64,7 +64,7 @@ public class MemcacheKvStoreConnector<T extends Object> extends
      * @throws Throwable
      */
     public static <T extends Object> MemcacheKvStoreConnector<T> create(
-            final IConfiguration config, final DataEncoder<T> encoder,
+            final IConfiguration config, final DataEncoder<? super T> encoder,
             final ThreadingContext threading) {
         final String bucket = ConfigUtils.resolveParameter(config,
                 ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
@@ -98,11 +98,6 @@ public class MemcacheKvStoreConnector<T extends Object> extends
     @Override
     public CallbackCompletion<Map<String, T>> getBulk(final List<String> keys) {
         return this.proxy.getBulk(keys);
-    }
-
-    @Override
-    public CallbackCompletion<List<String>> list() {
-        return this.proxy.list();
     }
 
     @Override
