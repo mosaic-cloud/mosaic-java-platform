@@ -8,6 +8,8 @@ import eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.BaseScenario;
 
 import org.junit.Test;
 
+import junit.framework.Assert;
+
 
 public abstract class BaseCloudletTest
 		extends eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest<BaseScenario<?>>
@@ -17,6 +19,8 @@ public abstract class BaseCloudletTest
 	public void test ()
 	{
 		this.awaitSuccess (this.cloudlet.initialize ());
+		Assert.assertTrue (this.cloudlet.await (this.scenario.poolTimeout));
+		this.cloudlet = null;
 	}
 	
 	protected <Context> void setUp (final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass)

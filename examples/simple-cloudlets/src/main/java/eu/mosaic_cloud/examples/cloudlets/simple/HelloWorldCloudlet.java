@@ -61,7 +61,7 @@ public class HelloWorldCloudlet {
         public CallbackCompletion<Void> initializeSucceeded(HelloCloudletContext context,
                 CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
             this.logger.info("HelloWorld cloudlet was initialized successfully.");
-            System.out.println("Hello world!");
+            this.logger.info ("Hello world!");
             final ICloudletController<HelloCloudletContext> cloudlet = arguments.getCloudlet();
             cloudlet.destroy();
             return ICallback.SUCCESS;

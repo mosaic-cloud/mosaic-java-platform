@@ -140,8 +140,13 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
 
     @After
     public void tearDown() {
-        this.awaitSuccess(this.connector.destroy());
-        this.scenario = null;
+    	try {
+	    	if (this.connector != null)
+	            this.awaitSuccess(this.connector.destroy());
+    	} finally {
+	    	this.connector = null;
+	        this.scenario = null;
+    	}
     }
 
     @Test

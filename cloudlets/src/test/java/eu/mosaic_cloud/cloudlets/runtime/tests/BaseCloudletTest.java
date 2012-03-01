@@ -149,8 +149,13 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 
     @After
     public void tearDown() {
-        this.awaitSuccess(this.cloudlet.destroy());
-        this.scenario = null;
+    	try {
+	    	if (this.cloudlet != null)
+	    		this.awaitSuccess(this.cloudlet.destroy());
+    	} finally {
+	    	this.cloudlet = null;
+	        this.scenario = null;
+    	}
     }
 
     @Test

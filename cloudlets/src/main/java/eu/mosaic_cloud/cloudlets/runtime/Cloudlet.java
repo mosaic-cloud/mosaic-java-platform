@@ -112,6 +112,16 @@ public final class Cloudlet<Context extends Object>
 		}
 	}
 	
+	public final boolean await ()
+	{
+		return (this.await (-1));
+	}
+	
+	public final boolean await (final long timeout)
+	{
+		return (this.isolate.await (timeout));
+	}
+	
 	public final CallbackCompletion<Void> destroy ()
 	{
 		final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create (Void.class);
@@ -552,10 +562,14 @@ public final class Cloudlet<Context extends Object>
 					if (Cloudlet.this.failures.queue.isEmpty ()) {
 						Cloudlet.this.destroyFuture.trigger.triggerSucceeded (null);
 						Cloudlet.this.destroyFuture = null;
+						// FIXME
+						Cloudlet.this.reactor.destroyIsolate (Cloudlet.this.isolate);
 						return (StateAndOutput.create (FsmState.Destroyed, null));
 					} else {
 						Cloudlet.this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
 						Cloudlet.this.destroyFuture = null;
+						// FIXME
+						Cloudlet.this.reactor.destroyIsolate (Cloudlet.this.isolate);
 						return (StateAndOutput.create (FsmState.Failed, null));
 					}
 				}
