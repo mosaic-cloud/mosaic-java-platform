@@ -104,8 +104,7 @@ public final class Cloudlet<Context extends Object>
 			this.genericCallbacksHandler = new GenericCallbacksHandler ();
 			this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
 			this.connectorsFactory = new ConnectorsFactory ();
-			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.threading, this.exceptions);
-			// this.connectorsFactoryDelegate = this.environment.connectors;
+			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.environment.connectors, this.threading, this.exceptions);
 		}
 		{
 			this.isolate = this.reactor.createIsolate ();

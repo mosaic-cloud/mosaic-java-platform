@@ -39,6 +39,7 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.connectors.tools.BaseConnectorsFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -48,21 +49,25 @@ import com.google.common.base.Preconditions;
 
 
 public class DefaultConnectorsFactory
-		extends eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory
+		extends BaseConnectorsFactory
 		implements
 			IConnectorsFactory
 {
-	public static/*final*/DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions)
+	protected DefaultConnectorsFactory (final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate)
 	{
-		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory ();
-		DefaultConnectorsFactory.initialize (factory, cloudlet, threading, exceptions);
+		super (delegate);
+	}
+	
+	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (delegate);
+		DefaultConnectorsFactory.initialize (factory, cloudlet);
 		return (factory);
 	}
 	
-	protected static/*final*/void initialize (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions)
+	protected static final void initialize (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet)
 	{
 		Preconditions.checkNotNull (factory);
-		eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory.initialize (factory, threading, exceptions);
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
 			public <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder, final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context callbackContext)

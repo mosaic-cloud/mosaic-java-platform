@@ -36,17 +36,30 @@ public abstract class BaseConnectorsFactory
 		implements
 			IConnectorsFactory
 {
-	protected BaseConnectorsFactory ()
+	protected BaseConnectorsFactory (final IConnectorsFactory delegate)
 	{
 		super ();
 		this.monitor = Monitor.create (this);
+		this.delegate = delegate;
 		this.factories = new ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> ();
 	}
 	
 	@Override
 	public <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory (final Class<Factory> factoryClass)
 	{
-		return (factoryClass.cast (this.factories.get (factoryClass)));
+		{
+			final Factory factory = factoryClass.cast (this.factories.get (factoryClass));
+			if (factory != null)
+				return (factory);
+		}
+		{
+			if (this.delegate != null) {
+				final Factory factory = this.delegate.getConnectorFactory (factoryClass);
+				if (factory != null)
+					return (factory);
+			}
+		}
+		return (null);
 	}
 	
 	protected final <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> void registerFactory (final Class<Factory> factoryClass, final Factory factory)
@@ -63,5 +76,6 @@ public abstract class BaseConnectorsFactory
 	}
 	
 	final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> factories;
+	final IConnectorsFactory delegate;
 	final Monitor monitor;
 }
