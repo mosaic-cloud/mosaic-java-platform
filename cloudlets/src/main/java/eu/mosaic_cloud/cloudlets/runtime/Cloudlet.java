@@ -36,6 +36,7 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmCallbackCompletionTransaction;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmState;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmTransition;
+import eu.mosaic_cloud.cloudlets.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
@@ -58,6 +59,7 @@ import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 
 
 public final class Cloudlet<Context extends Object>
@@ -103,7 +105,8 @@ public final class Cloudlet<Context extends Object>
 			this.genericCallbacksHandler = new GenericCallbacksHandler ();
 			this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
 			this.connectorsFactory = new ConnectorsFactory ();
-			this.connectorsFactoryDelegate = this.environment.connectors;
+			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.threading, this.exceptions);
+			// this.connectorsFactoryDelegate = this.environment.connectors;
 		}
 		{
 			this.isolate = this.reactor.createIsolate ();
@@ -213,6 +216,11 @@ public final class Cloudlet<Context extends Object>
 		}.trigger ();
 	}
 	
+	public static final <Context extends Object> Cloudlet<Context> create (final CloudletEnvironment environment)
+	{
+		return (new Cloudlet<Context> (environment));
+	}
+	
 	final ICloudletCallback<Context> callbacksDelegate;
 	final CallbacksHandler callbacksHandler;
 	final ICloudletCallback<Context> callbacksProxy;
@@ -236,11 +244,6 @@ public final class Cloudlet<Context extends Object>
 	final CallbackReactor reactor;
 	final ThreadingContext threading;
 	final Transcript transcript;
-	
-	public static final <Context extends Object> Cloudlet<Context> create (final CloudletEnvironment environment)
-	{
-		return (new Cloudlet<Context> (environment));
-	}
 	
 	final class CallbacksHandler
 			extends Object

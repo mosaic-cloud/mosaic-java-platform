@@ -60,7 +60,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 
         public MosaicLogger logger;
 
-        public long poolTimeout = 1000;
+        public long poolTimeout = 1000 * 3600;
 
         public BasicCallbackReactor reactor;
 
