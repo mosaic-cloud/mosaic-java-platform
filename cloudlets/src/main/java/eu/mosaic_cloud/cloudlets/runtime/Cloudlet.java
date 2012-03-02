@@ -59,7 +59,6 @@ import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
 
 
 public final class Cloudlet<Context extends Object>

@@ -33,7 +33,7 @@ public final class IgnoredException
 	{
 		super (ExceptionResolution.Ignored, exception, message);
 	}
-
+	
 	public IgnoredException (final Throwable exception, final String messageFormat, final Object ... messageArguments)
 	{
 		super (ExceptionResolution.Ignored, exception, messageFormat, messageArguments);

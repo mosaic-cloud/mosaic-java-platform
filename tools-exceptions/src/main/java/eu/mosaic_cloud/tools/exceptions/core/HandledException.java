@@ -33,7 +33,7 @@ public final class HandledException
 	{
 		super (ExceptionResolution.Handled, exception, message);
 	}
-
+	
 	public HandledException (final Throwable exception, final String messageFormat, final Object ... messageArguments)
 	{
 		super (ExceptionResolution.Handled, exception, messageFormat, messageArguments);
