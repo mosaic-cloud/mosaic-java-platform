@@ -22,9 +22,8 @@ package eu.mosaic_cloud.connectors.kvstore.generic;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
@@ -32,8 +31,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used
@@ -55,15 +52,14 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
     // 5:06
     // PM
     protected GenericKvStoreConnectorProxy(final IConfiguration configuration,
-            final Channel channel, final Resolver resolver,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
+            final ConnectorEnvironment environment,
             final DataEncoder<? super T> encoder) {
-        super(configuration, channel, resolver, threading, exceptions, encoder);
+        super(configuration, environment, encoder);
         final String bucket = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
         // FIXME
         final String driverIdentity = null;
-        channel.register(KeyValueSession.CONNECTOR);
+        this.channel.register(KeyValueSession.CONNECTOR);
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());
         requestBuilder.setBucket(bucket);
@@ -94,11 +90,10 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
      */
     public static <T extends Object> GenericKvStoreConnectorProxy<T> create(
             final IConfiguration configuration,
-            final Channel channel, final Resolver resolver,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
+            final ConnectorEnvironment environment,
             final DataEncoder<? super T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T>(
-                configuration, channel, resolver, threading, exceptions, encoder);
+                configuration, environment, encoder);
         return proxy;
     }
 }

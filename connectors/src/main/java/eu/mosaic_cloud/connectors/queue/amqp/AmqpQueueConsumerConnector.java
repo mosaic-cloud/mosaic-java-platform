@@ -20,13 +20,10 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 public class AmqpQueueConsumerConnector<Message> extends
         AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<Message>> implements
@@ -37,13 +34,11 @@ public class AmqpQueueConsumerConnector<Message> extends
     }
 
     public static <Message> AmqpQueueConsumerConnector<Message> create(
-            final IConfiguration configuration,
+            final IConfiguration configuration, final ConnectorEnvironment environment,
             final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
-            final IAmqpQueueConsumerCallback<Message> callback,
-            final Channel channel, final Resolver resolver,
-            final ThreadingContext threading, final ExceptionTracer exceptions) {
+            final IAmqpQueueConsumerCallback<Message> callback) {
         final AmqpQueueConsumerConnectorProxy<Message> proxy = AmqpQueueConsumerConnectorProxy
-                .create(configuration, channel, resolver, threading, exceptions, messageClass, messageEncoder,
+                .create(configuration, environment, messageClass, messageEncoder,
                 		callback);
         return new AmqpQueueConsumerConnector<Message>(proxy);
     }

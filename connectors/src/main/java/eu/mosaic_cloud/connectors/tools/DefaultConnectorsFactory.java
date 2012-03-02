@@ -38,12 +38,8 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnectorFactory;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
@@ -56,49 +52,49 @@ public class DefaultConnectorsFactory
 		super (delegate);
 	}
 	
-	public static final DefaultConnectorsFactory create (final IConnectorsFactory delegate, final Channel channel, final Resolver resolver, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final DefaultConnectorsFactory create (final IConnectorsFactory delegate, final ConnectorEnvironment environment)
 	{
 		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (delegate);
-		DefaultConnectorsFactory.initialize (factory, channel, resolver, threading, exceptions);
+		DefaultConnectorsFactory.initialize (factory, environment);
 		return (factory);
 	}
 	
-	protected static final void initialize (final DefaultConnectorsFactory factory, final Channel channel, final Resolver resolver, final ThreadingContext threading, final ExceptionTracer exceptions)
+	protected static final void initialize (final DefaultConnectorsFactory factory, final ConnectorEnvironment environment)
 	{
 		Preconditions.checkNotNull (factory);
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
 			public <Value> IKvStoreConnector<Value> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder)
 			{
-				return (GenericKvStoreConnector.create (configuration, valueEncoder, channel, resolver, threading, exceptions));
+				return (GenericKvStoreConnector.create (configuration, environment, valueEncoder));
 			}
 		});
 		factory.registerFactory (IMemcacheKvStoreConnectorFactory.class, new IMemcacheKvStoreConnectorFactory () {
 			@Override
 			public <Value> IMemcacheKvStoreConnector<Value> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder)
 			{
-				return (MemcacheKvStoreConnector.create (configuration, valueEncoder, channel, resolver, threading, exceptions));
+				return (MemcacheKvStoreConnector.create (configuration, environment, valueEncoder));
 			}
 		});
 		factory.registerFactory (IAmqpQueueRawConnectorFactory.class, new IAmqpQueueRawConnectorFactory () {
 			@Override
 			public IAmqpQueueRawConnector create (final IConfiguration configuration)
 			{
-				return (AmqpQueueRawConnector.create (configuration, channel, resolver, threading, exceptions));
+				return (AmqpQueueRawConnector.create (configuration, environment));
 			}
 		});
 		factory.registerFactory (IAmqpQueueConsumerConnectorFactory.class, new IAmqpQueueConsumerConnectorFactory () {
 			@Override
 			public <Message> IAmqpQueueConsumerConnector<Message> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder, final IAmqpQueueConsumerCallback<Message> callback)
 			{
-				return (AmqpQueueConsumerConnector.create (configuration, messageClass, messageEncoder, callback, channel, resolver, threading, exceptions));
+				return (AmqpQueueConsumerConnector.create (configuration, environment, messageClass, messageEncoder, callback));
 			}
 		});
 		factory.registerFactory (IAmqpQueuePublisherConnectorFactory.class, new IAmqpQueuePublisherConnectorFactory () {
 			@Override
 			public <Message> IAmqpQueuePublisherConnector<Message> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder)
 			{
-				return (AmqpQueuePublisherConnector.create (configuration, messageClass, messageEncoder, channel, resolver, threading, exceptions));
+				return (AmqpQueuePublisherConnector.create (configuration, environment, messageClass, messageEncoder));
 			}
 		});
 	}

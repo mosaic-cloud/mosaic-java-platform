@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-components-core
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,13 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.components.core;
+package eu.mosaic_cloud.connectors.tools;
 
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.mosaic_cloud.interoperability.core.ChannelFactory;
+import eu.mosaic_cloud.interoperability.core.ChannelResolver;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -34,23 +37,22 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import com.google.common.base.Preconditions;
 
 
-public final class ComponentEnvironment
-		extends Object
+public final class ConnectorEnvironment
 {
-	private ComponentEnvironment (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
+	private ConnectorEnvironment (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
 	{
 		super ();
-		Preconditions.checkNotNull (component);
-		Preconditions.checkNotNull (classLoader);
 		Preconditions.checkNotNull (reactor);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
+		Preconditions.checkNotNull (channelFactory);
+		Preconditions.checkNotNull (channelResolver);
 		Preconditions.checkNotNull (supplementary);
-		this.component = component;
-		this.classLoader = classLoader;
 		this.reactor = reactor;
 		this.threading = threading;
 		this.exceptions = exceptions;
+		this.channelFactory = channelFactory;
+		this.channelResolver = channelResolver;
 		this.supplementary = SupplementaryEnvironment.create (supplementary, new UncaughtExceptionHandler () {
 			@Override
 			public void uncaughtException (final Thread thread, final Throwable exception)
@@ -60,18 +62,18 @@ public final class ComponentEnvironment
 		});
 	}
 	
-	public static final ComponentEnvironment create (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
 	{
-		return (new ComponentEnvironment (component, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
+		return (new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, new HashMap<String, Object> ()));
 	}
 	
-	public static final ComponentEnvironment create (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> environment)
+	public static final ConnectorEnvironment create (final IConfiguration configuration, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
 	{
-		return (new ComponentEnvironment (component, classLoader, reactor, threading, exceptions, environment));
+		return (new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, supplementary));
 	}
 	
-	public final ClassLoader classLoader;
-	public final ComponentController component;
+	public final ChannelFactory channelFactory;
+	public final ChannelResolver channelResolver;
 	public final ExceptionTracer exceptions;
 	public final CallbackReactor reactor;
 	public final SupplementaryEnvironment supplementary;

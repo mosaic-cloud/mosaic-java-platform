@@ -25,9 +25,8 @@ import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -123,10 +122,9 @@ public class CloudletManager {
             stateClasz = this.classLoader.loadClass(cloudletStateClass);
             resourceConfig = PropertyTypeConfiguration.create(this.classLoader, resourceFile);
             // FIXME
-            final Channel channel = null;
-            final Resolver resolver = null;
+            final ConnectorEnvironment connectorEnvironment = null;
             final CloudletEnvironment environment = CloudletEnvironment.create(resourceConfig,
-                    handlerClasz, stateClasz, this.classLoader, DefaultConnectorsFactory.create (null, channel, resolver, this.threading, this.exceptions),
+                    handlerClasz, stateClasz, this.classLoader, DefaultConnectorsFactory.create (null, connectorEnvironment),
                     this.reactor, this.threading,
                     this.exceptions);
             final Cloudlet<?> cloudlet = Cloudlet.create(environment);

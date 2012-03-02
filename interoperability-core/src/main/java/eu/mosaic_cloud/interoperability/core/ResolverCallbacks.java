@@ -10,5 +10,5 @@ public interface ResolverCallbacks
 		extends
 			Callbacks
 {
-	public abstract CallbackCompletion<Void> resolved (final Resolver resolver, final String target, final String peer, final String endpoint);
+	public abstract CallbackCompletion<Void> resolved (final ChannelResolver resolver, final String target, final String peer, final String endpoint);
 }

@@ -24,13 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Connector for key-value distributed storage systems implementing the
@@ -61,11 +58,10 @@ public class MemcacheKvStoreConnector<T extends Object> extends
      * @throws Throwable
      */
     public static <T extends Object> MemcacheKvStoreConnector<T> create(
-            final IConfiguration config, final DataEncoder<? super T> encoder,
-            final Channel channel, final Resolver resolver,
-            final ThreadingContext threading, final ExceptionTracer exceptions) {
+            final IConfiguration config, final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
         final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(
-                config, channel, resolver, threading, exceptions, encoder);
+                config, environment, encoder);
         return new MemcacheKvStoreConnector<T>(proxy);
     }
 

@@ -21,12 +21,9 @@
 package eu.mosaic_cloud.connectors.kvstore.generic;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Connector for key-value distributed storage systems .
@@ -59,11 +56,10 @@ public class GenericKvStoreConnector<T extends Object> extends
      * @return the connector
      */
     public static <T extends Object> GenericKvStoreConnector<T> create(
-            final IConfiguration configuration, final DataEncoder<? super T> encoder,
-            final Channel channel, final Resolver resolver,
-            final ThreadingContext threading, final ExceptionTracer exceptions) {
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create(
-                configuration, channel, resolver, threading, exceptions, encoder);
+                configuration, environment, encoder);
         return new GenericKvStoreConnector<T>(proxy);
     }
 }

@@ -25,9 +25,8 @@ import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
@@ -47,8 +46,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.protobuf.ByteString;
 
@@ -68,10 +65,9 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
     protected DataEncoder<? super T> encoder;
 
     protected BaseKvStoreConnectorProxy(final IConfiguration configuration,
-    		final Channel channel, final Resolver resolver,
-    		final ThreadingContext threading, final ExceptionTracer exceptions,
+    		final ConnectorEnvironment environment,
             final DataEncoder<? super T> encoder) {
-        super(configuration, channel, resolver, threading, exceptions);
+        super(configuration, environment);
         this.encoder = encoder;
     }
 

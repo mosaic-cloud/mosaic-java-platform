@@ -24,9 +24,8 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.runtime.Cloudlet;
 import eu.mosaic_cloud.cloudlets.runtime.CloudletEnvironment;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -101,9 +100,8 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         scenario.callbacksClass = callbacksClass;
         scenario.contextClass = contextClass;
         // FIXME
-        final Channel channel = null;
-        final Resolver resolver = null;
-        scenario.connectors = DefaultConnectorsFactory.create (null, channel, resolver, scenario.threading, scenario.exceptions);
+        final ConnectorEnvironment connectorEnvironment = null;
+        scenario.connectors = DefaultConnectorsFactory.create (null, connectorEnvironment);
         scenario.environment = CloudletEnvironment.create(scenario.configuration,
                 scenario.callbacksClass, scenario.contextClass,
                 scenario.callbacksClass.getClassLoader(), scenario.connectors,

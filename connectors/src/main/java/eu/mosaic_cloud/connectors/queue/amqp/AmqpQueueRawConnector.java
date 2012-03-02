@@ -21,14 +21,11 @@
 package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Connector for queuing systems implementing the AMQP protocol.
@@ -55,10 +52,9 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
      * @throws Throwable
      */
     public static AmqpQueueRawConnector create(final IConfiguration configuration,
-    		final Channel channel, final Resolver resolver,
-            final ThreadingContext threading, final ExceptionTracer exceptions) {
+    		final ConnectorEnvironment environment) {
         final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(
-        		configuration, channel, resolver, threading, exceptions);
+        		configuration, environment);
         return new AmqpQueueRawConnector(proxy);
     }
 

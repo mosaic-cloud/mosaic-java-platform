@@ -24,9 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.core.ResponseHandlerMap;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
@@ -48,8 +47,6 @@ import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.protobuf.ByteString;
 
@@ -75,14 +72,13 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     // 2:36
     // PM
     protected AmqpQueueRawConnectorProxy(final IConfiguration config,
-    		final Channel channel, final Resolver resolver,
-    		final ThreadingContext threading, final ExceptionTracer exceptions) {
-        super(config, channel, resolver, threading, exceptions);
+    		final ConnectorEnvironment environment) {
+        super(config, environment);
         this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
         this.consumerMessages = new ResponseHandlerMap();
         // FIXME
         final String driverIdentity = null;
-        channel.register(AmqpSession.CONNECTOR);
+        this.channel.register(AmqpSession.CONNECTOR);
         this.connect(driverIdentity, AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
     }
 
@@ -98,10 +94,9 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
      * @return the proxy
      */
     public static AmqpQueueRawConnectorProxy create(final IConfiguration configuration,
-            final Channel channel, final Resolver resolver,
-            final ThreadingContext threading, final ExceptionTracer exceptions) {
+    		final ConnectorEnvironment environment) {
         final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(
-        		configuration, channel, resolver, threading, exceptions);
+        		configuration, environment);
         return proxy;
     }
 

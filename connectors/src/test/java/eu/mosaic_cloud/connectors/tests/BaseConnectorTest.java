@@ -23,9 +23,11 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.IConnector;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.Resolver;
+import eu.mosaic_cloud.interoperability.core.ChannelFactory;
+import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
@@ -33,6 +35,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -49,15 +52,27 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
 
     public static class BaseScenario<DriverStub extends AbstractDriverStub> {
 
-    	public Channel channel;
+    	public BasicCallbackReactor callbacks;
 
-    	public Resolver resolver;
+    	public ChannelFactory channelFactory;
+
+    	public ChannelResolver channelResolver;
 
         public IConfiguration configuration;
 
+        public ZeroMqChannel connectorChannel;
+
+        public String connectorIdentity;
+
         public ZeroMqChannel driverChannel;
 
+        public String driverEndpoint;
+
+        public String driverIdentity;
+
         public DriverStub driverStub;
+
+        public ConnectorEnvironment environment;
 
         public TranscriptExceptionTracer exceptions;
 
@@ -80,35 +95,42 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
             final Class<? extends BaseConnectorTest<?, Scenario>> owner, final Scenario scenario,
             final String configuration) {
         BasicThreadingSecurityManager.initialize();
+        scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(), configuration);
         scenario.logger = MosaicLogger.createLogger(owner);
         scenario.transcript = Transcript.create(owner);
         scenario.exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
         scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
                 scenario.exceptionsQueue);
-        if (configuration != null) {
-            scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
-                    configuration);
-        } else {
-            scenario.configuration = PropertyTypeConfiguration.create();
-        }
         scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions, scenario.exceptions.catcher);
         scenario.threading.initialize();
-        final String driverIdentity = ConfigUtils.resolveParameter(scenario.configuration,
+        scenario.callbacks = BasicCallbackReactor.create(scenario.threading, scenario.exceptions);
+        scenario.callbacks.initialize();
+        scenario.connectorIdentity = UUID.randomUUID().toString();
+        scenario.driverIdentity = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.driver.identifier", String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(scenario.configuration,
+        scenario.driverEndpoint = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.channel.address", String.class, "");
-        scenario.driverChannel = ZeroMqChannel.create(driverIdentity, scenario.threading,
+        scenario.connectorChannel = ZeroMqChannel.create(scenario.connectorIdentity, scenario.threading,
                 scenario.exceptions);
-        scenario.driverChannel.accept(driverEndpoint);
-        scenario.channel = ZeroMqChannel.create(UUID.randomUUID().toString(),
-        		scenario.threading, scenario.exceptions);
-        scenario.resolver = new Resolver() {
+        scenario.driverChannel = ZeroMqChannel.create(scenario.driverIdentity, scenario.threading,
+                scenario.exceptions);
+        scenario.driverChannel.accept(scenario.driverEndpoint);
+        scenario.channelFactory = new ChannelFactory() {
         	@Override
-			public final void resolve(String target, ResolverCallbacks callbacks) {
-				Assert.assertEquals(driverIdentity, target);
-				callbacks.resolved(this, target, driverIdentity, driverEndpoint);
+			public final Channel create() {
+        		return scenario.connectorChannel;
 			}
 		};
+        scenario.channelResolver = new ChannelResolver() {
+        	@Override
+			public final void resolve(String target, ResolverCallbacks callbacks) {
+				Assert.assertEquals(scenario.driverIdentity, target);
+				callbacks.resolved(this, target, scenario.driverIdentity, scenario.driverEndpoint);
+			}
+		};
+		scenario.environment = ConnectorEnvironment.create (
+				scenario.callbacks, scenario.threading, scenario.exceptions,
+				scenario.channelFactory, scenario.channelResolver);
     }
 
     protected static void tearDownScenario(final BaseScenario<?> scenario) {
@@ -116,7 +138,10 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
             scenario.driverStub.destroy();
         }
         Assert.assertTrue(scenario.driverChannel.terminate(scenario.poolTimeout));
+        Assert.assertTrue(scenario.connectorChannel.terminate(scenario.poolTimeout));
+        Assert.assertTrue(scenario.callbacks.destroy(scenario.poolTimeout));
         Assert.assertTrue(scenario.threading.destroy(scenario.poolTimeout));
+        Assert.assertNull(scenario.exceptionsQueue.queue.poll());
     }
 
     protected void await(final CallbackCompletion<?> completion) {
