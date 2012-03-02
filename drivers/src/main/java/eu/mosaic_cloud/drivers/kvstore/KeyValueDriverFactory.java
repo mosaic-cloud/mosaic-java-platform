@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.drivers.kvstore;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
@@ -84,9 +85,14 @@ public final class KeyValueDriverFactory {
                 final Class<?> driverClass = type.getDriverClass();
                 final Method createMethod = driverClass.getMethod("create", IConfiguration.class,
                         ThreadingContext.class);
-                driver = (AbstractKeyValueDriver) createMethod.invoke(null, config,
-                        threadingContext);
-            } catch (final Exception e) {
+                try {
+                    driver = (AbstractKeyValueDriver) createMethod.invoke(null, config,
+                            threadingContext);
+                } catch (final InvocationTargetException exception) {
+                	ExceptionTracer.traceHandled(exception);
+                	throw exception.getCause();
+                }
+            } catch (final Throwable e) {
                 ExceptionTracer.traceIgnored(e);
                 final DriverNotFoundException exception = new DriverNotFoundException(e);
                 throw exception;

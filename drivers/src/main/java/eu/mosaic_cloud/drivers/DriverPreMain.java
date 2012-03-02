@@ -41,9 +41,7 @@ public final class DriverPreMain {
      * @throws SecurityException
      * @throws Exception
      */
-    public static void main(String[] arguments) throws SecurityException, IllegalArgumentException,
-            ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException {
+    public static void main(String[] arguments) throws Throwable {
         Preconditions.checkArgument(arguments != null);
         Preconditions.checkArgument(arguments.length == 1,
                 "invalid arguments; expected: <resource type: amqp | kv | memcached>");

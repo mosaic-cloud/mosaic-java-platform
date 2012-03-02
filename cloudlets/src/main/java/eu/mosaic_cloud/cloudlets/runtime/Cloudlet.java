@@ -22,6 +22,7 @@ package eu.mosaic_cloud.cloudlets.runtime;
 
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,7 +50,7 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.StateAndOutput;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -443,14 +444,22 @@ public final class Cloudlet<Context extends Object>
 							}
 						}
 						try {
-							return (method.invoke (ConnectorFactory.this.factoryDelegate, oldArguments));
+							try {
+								return (method.invoke (ConnectorFactory.this.factoryDelegate, oldArguments));
+							} catch (final InvocationTargetException exception) {
+								Cloudlet.this.exceptions.traceHandledException (exception);
+								throw (exception.getCause ());
+							}
+						} catch (final CaughtException.Wrapper exception) {
+							throw (exception);
 						} catch (final Throwable exception) {
-							throw (new CaughtException (ExceptionResolution.Deferred, exception));
+							throw (new DeferredException (exception).wrap ());
 						}
 					}
 				}.trigger (null));
-			} catch (final CaughtException exception) {
-				throw (exception.caught);
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.exception.trace (Cloudlet.this.exceptions);
+				throw (wrapper.exception.caught);
 			}
 		}
 		
@@ -476,26 +485,31 @@ public final class Cloudlet<Context extends Object>
 			Preconditions.checkNotNull (factoryClass);
 			Preconditions.checkArgument (factoryClass.isInterface ());
 			Preconditions.checkArgument (IConnectorFactory.class.isAssignableFrom (factoryClass));
-			return (Cloudlet.this.fsm.new FsmAccess<Void, Factory> () {
-				@Override
-				protected final Factory execute (final Void input)
-				{
+			try {
+				return (Cloudlet.this.fsm.new FsmAccess<Void, Factory> () {
+					@Override
+					protected final Factory execute (final Void input)
 					{
-						final ConnectorFactory<?, ?> factory = ConnectorsFactory.this.factories.get (factoryClass);
-						if (factory != null)
-							return (factoryClass.cast (factory.factoryProxy));
+						{
+							final ConnectorFactory<?, ?> factory = ConnectorsFactory.this.factories.get (factoryClass);
+							if (factory != null)
+								return (factoryClass.cast (factory.factoryProxy));
+						}
+						{
+							final Factory factoryDelegate = Cloudlet.this.connectorsFactoryDelegate.getConnectorFactory (factoryClass);
+							Preconditions.checkArgument (factoryDelegate != null);
+							Preconditions.checkArgument (factoryClass.isInstance (factoryDelegate));
+							final ConnectorFactory<Connector, Factory> factory = new ConnectorFactory<Connector, Factory> (factoryClass, factoryDelegate);
+							final ConnectorFactory<?, ?> factory1 = ConnectorsFactory.this.factories.putIfAbsent (factoryClass, factory);
+							Preconditions.checkState (factory1 == null);
+							return (factory.factoryProxy);
+						}
 					}
-					{
-						final Factory factoryDelegate = Cloudlet.this.connectorsFactoryDelegate.getConnectorFactory (factoryClass);
-						Preconditions.checkArgument (factoryDelegate != null);
-						Preconditions.checkArgument (factoryClass.isInstance (factoryDelegate));
-						final ConnectorFactory<Connector, Factory> factory = new ConnectorFactory<Connector, Factory> (factoryClass, factoryDelegate);
-						final ConnectorFactory<?, ?> factory1 = ConnectorsFactory.this.factories.putIfAbsent (factoryClass, factory);
-						Preconditions.checkState (factory1 == null);
-						return (factory.factoryProxy);
-					}
-				}
-			}).trigger (null);
+				}).trigger (null);
+			} catch (final CaughtException.Wrapper exception) {
+				exception.rethrow ();
+				throw (new AssertionError ());
+			}
 		}
 		
 		final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, ConnectorFactory<? extends IConnector, ? extends IConnectorFactory<?>>> factories;
@@ -670,7 +684,12 @@ public final class Cloudlet<Context extends Object>
 					final Callbacks delegate = Cloudlet.this.genericCallbacksDelegates.get (proxy);
 					Preconditions.checkState (delegate != null);
 					try {
-						return (CallbackCompletion.class.cast (method.invoke (delegate, arguments)));
+						try {
+							return ((CallbackCompletion) (method.invoke (delegate, arguments)));
+						} catch (final InvocationTargetException exception) {
+							Cloudlet.this.exceptions.traceHandledException (exception);
+							throw (exception.getCause ());
+						}
 					} catch (final Throwable exception) {
 						Cloudlet.this.handleDelegateFailure (delegate, exception);
 						return (CallbackCompletion.createFailure (exception));

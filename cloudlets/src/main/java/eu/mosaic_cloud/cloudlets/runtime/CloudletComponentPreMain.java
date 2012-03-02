@@ -39,7 +39,7 @@ public class CloudletComponentPreMain {
      * @param args
      * @throws Exception
      */
-    public static void main(String[] arguments) throws Exception {
+    public static void main(String[] arguments) throws Throwable {
         Preconditions.checkArgument(arguments != null);
         Preconditions.checkArgument((arguments.length == 2) || (arguments.length == 3),
                 "invalid arguments: <cloudlet jar> <cloudlet descriptor> [<no_of_instances>]");

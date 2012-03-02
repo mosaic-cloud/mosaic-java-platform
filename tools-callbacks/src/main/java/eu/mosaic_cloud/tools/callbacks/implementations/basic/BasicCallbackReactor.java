@@ -23,6 +23,7 @@ package eu.mosaic_cloud.tools.callbacks.implementations.basic;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Comparator;
@@ -229,7 +230,12 @@ public final class BasicCallbackReactor
 			final CallbackCompletion<?> returnedCompletion;
 			final CallbackCompletion<?> finalCompletion;
 			try {
-				returnedCompletion = (CallbackCompletion<?>) method.invoke (delegate, arguments);
+				try {
+					returnedCompletion = (CallbackCompletion<?>) method.invoke (delegate, arguments);
+				} catch (final InvocationTargetException exception) {
+					this.reactor.exceptions.traceHandledException (exception);
+					throw (exception.getCause ());
+				}
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);
 				if (chainedFuture != null) {
@@ -434,7 +440,12 @@ public final class BasicCallbackReactor
 			this.reactor.transcript.traceDebugging ("invocking method callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`) the method `%{method}` with arguments `%{array}`...", handler, this.proxy, this, scheduler.isolate, scheduler, action.method, action.arguments);
 			final CallbackCompletion<?> returnedCompletion;
 			try {
-				returnedCompletion = (CallbackCompletion<?>) action.method.invoke (handler, action.arguments);
+				try {
+					returnedCompletion = (CallbackCompletion<?>) action.method.invoke (handler, action.arguments);
+				} catch (final InvocationTargetException exception) {
+					this.reactor.exceptions.traceHandledException (exception);
+					throw (exception.getCause ());
+				}
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);
 				action.future.triggerFailure (exception);

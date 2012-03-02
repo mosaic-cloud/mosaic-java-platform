@@ -37,7 +37,7 @@ public final class AbacusComponentPreMain
 	}
 	
 	public static final void main (final String[] arguments)
-			throws Exception
+			throws Throwable
 	{
 		Preconditions.checkArgument (arguments != null);
 		Preconditions.checkArgument (arguments.length == 1, "invalid arguments; expected: <component-identifier>");

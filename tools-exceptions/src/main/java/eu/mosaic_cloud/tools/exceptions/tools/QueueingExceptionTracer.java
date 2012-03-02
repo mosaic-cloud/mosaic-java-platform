@@ -48,19 +48,19 @@ public final class QueueingExceptionTracer
 	@Override
 	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception)
 	{
-		this.enqueue (new CaughtException (resolution, exception));
+		this.enqueue (CaughtException.create (resolution, exception));
 	}
 	
 	@Override
 	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
 	{
-		this.enqueue (new CaughtException (resolution, exception, message));
+		this.enqueue (CaughtException.create (resolution, exception, message));
 	}
 	
 	@Override
 	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
 	{
-		this.enqueue (new CaughtException (resolution, exception, format, tokens));
+		this.enqueue (CaughtException.create (resolution, exception, format, tokens));
 	}
 	
 	private final void enqueue (final CaughtException exception)

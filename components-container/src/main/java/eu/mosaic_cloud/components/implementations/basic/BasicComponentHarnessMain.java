@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -390,8 +391,13 @@ public final class BasicComponentHarnessMain
 			if (provideMethod != null) {
 				final CallbackProxy callbacksProxy;
 				try {
-					callbacksProxy = (CallbackProxy) provideMethod.invoke (null, context);
-				} catch (final Exception exception) {
+					try {
+						callbacksProxy = (CallbackProxy) provideMethod.invoke (null, context);
+					} catch (final InvocationTargetException exception) {
+						context.exceptions.trace (ExceptionResolution.Handled, exception);
+						throw (exception.getCause ());
+					}
+				} catch (final Throwable exception) {
 					context.exceptions.trace (ExceptionResolution.Deferred, exception);
 					throw (new IllegalArgumentException (String.format ("invalid component callbacks provider class `%s` (error encountered while invocking)", this.clasz.getName ()), exception));
 				} finally {

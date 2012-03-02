@@ -31,7 +31,7 @@ public class IndexerCloudletPreMain {
      * @param args
      * @throws Exception
      */
-    public static void main(String[] arguments) throws Exception {
+    public static void main(String[] arguments) throws Throwable {
         Preconditions.checkArgument(arguments != null);
         Preconditions.checkArgument(arguments.length == 0, "invalid arguments");
         CloudletContainerParameters.classpath = null;
