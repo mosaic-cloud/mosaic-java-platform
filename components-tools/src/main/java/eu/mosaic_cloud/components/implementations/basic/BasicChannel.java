@@ -147,7 +147,7 @@ public final class BasicChannel
 				}
 				{
 					this.threading = threading;
-					this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "workers", true, this.exceptions.catcher));
+					this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "workers", true, this.exceptions, this.exceptions.catcher));
 					this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 					this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 					this.inboundMessages = new LinkedBlockingQueue<ChannelMessage> ();

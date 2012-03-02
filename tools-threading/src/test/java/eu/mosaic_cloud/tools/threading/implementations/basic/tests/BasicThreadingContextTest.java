@@ -50,8 +50,8 @@ public final class BasicThreadingContextTest
 	public final void prepare ()
 	{
 		BasicThreadingSecurityManager.initialize ();
-		this.exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		this.threading = BasicThreadingContext.create (this, this.exceptions.catcher);
+		this.exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		this.threading = BasicThreadingContext.create (this, this.exceptionsQueue, this.exceptionsQueue.catcher);
 		Assert.assertTrue (this.threading.initialize (this.waitTimeout));
 	}
 	
@@ -103,7 +103,7 @@ public final class BasicThreadingContextTest
 		Assert.assertTrue (waiter.awaitCompleted (this.waitTimeout));
 		Assert.assertTrue (this.threading.destroy (this.waitTimeout));
 		while (true) {
-			final CaughtException exception = this.exceptions.queue.poll ();
+			final CaughtException exception = this.exceptionsQueue.queue.poll ();
 			if (exception == null)
 				break;
 			Assert.assertTrue ((exception.getCause () instanceof SecurityException) || (exception.getCause () instanceof AssertionError));
@@ -126,10 +126,10 @@ public final class BasicThreadingContextTest
 	public final void unprepare ()
 	{
 		Assert.assertTrue (this.threading.destroy (this.waitTimeout));
-		Assert.assertNull (this.exceptions.queue.poll ());
+		Assert.assertNull (this.exceptionsQueue.queue.poll ());
 	}
 	
-	private QueueingExceptionTracer exceptions;
+	private QueueingExceptionTracer exceptionsQueue;
 	private final int forkFanout = 2;
 	private final int forkLevel = 6;
 	private BasicThreadingContext threading;

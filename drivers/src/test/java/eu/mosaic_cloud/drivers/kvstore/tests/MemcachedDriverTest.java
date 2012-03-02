@@ -38,6 +38,8 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -60,10 +62,11 @@ public class MemcachedDriverTest {
 
     @Before
     public void setUp() throws IOException {
-        final QueueingExceptionTracer exceptions = QueueingExceptionTracer
-                .create(NullExceptionTracer.defaultInstance);
+        final Transcript transcript = Transcript.create(this);
+        final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
+        final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create(transcript, exceptionsQueue);
         BasicThreadingSecurityManager.initialize();
-        this.threadingContext = BasicThreadingContext.create(this, exceptions.catcher);
+        this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
         this.wrapper = MemcachedDriver.create(PropertyTypeConfiguration.create(
                 MemcachedDriverTest.class.getClassLoader(), "memcached-test.properties"),

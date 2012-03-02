@@ -60,7 +60,7 @@ public final class BasicComponentTest
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
-		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		Assert.assertTrue (threading.initialize (BasicComponentTest.defaultPollTimeout));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		Assert.assertTrue (reactor.initialize (BasicComponentTest.defaultPollTimeout));

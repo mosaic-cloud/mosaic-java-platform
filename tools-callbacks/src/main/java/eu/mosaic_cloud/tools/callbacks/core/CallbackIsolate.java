@@ -22,6 +22,7 @@ package eu.mosaic_cloud.tools.callbacks.core;
 
 
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
 
 import com.google.common.base.Preconditions;
@@ -51,7 +52,8 @@ public final class CallbackIsolate
 		try {
 			return (this.backend.awaitIsolate (this, timeout));
 		} catch (final Throwable exception) {
-			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			// FIXME
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			return (false);
 		}
 	}
@@ -74,7 +76,8 @@ public final class CallbackIsolate
 		try {
 			return (this.backend.enqueueOnIsolate (this, runnable));
 		} catch (final Throwable exception) {
-			ExceptionTracer.defaultInstance.traceDeferredException (exception);
+			// FIXME
+			FallbackExceptionTracer.defaultInstance.traceDeferredException (exception);
 			return (CallbackCompletion.createFailure (exception));
 		}
 	}
@@ -84,7 +87,8 @@ public final class CallbackIsolate
 		try {
 			return (this.backend.getReactor ());
 		} catch (final Throwable exception) {
-			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			// FIXME
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			return (null);
 		}
 	}

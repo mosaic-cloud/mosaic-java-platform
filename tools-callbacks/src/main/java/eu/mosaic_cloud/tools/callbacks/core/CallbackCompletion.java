@@ -23,6 +23,7 @@ package eu.mosaic_cloud.tools.callbacks.core;
 
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionFutureBackend;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
 
 import com.google.common.base.Preconditions;
@@ -75,7 +76,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 		try {
 			return (this.backend.awaitCompletion (this, timeout));
 		} catch (final Throwable exception) {
-			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+	         // FIXME
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			return (false);
 		}
 	}
@@ -107,7 +109,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 		try {
 			return (this.backend.getReactor ());
 		} catch (final Throwable exception) {
-			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+	         // FIXME
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			return (null);
 		}
 	}
@@ -119,7 +122,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 				if (!this.backend.awaitCompletion (this, 0))
 					return (false);
 			} catch (final Throwable exception) {
-				ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+	            // FIXME
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 				return (false);
 			}
 		else if (this.outcome == CallbackCompletion.exceptionOutcome)
@@ -137,7 +141,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 			}
 			return (true);
 		} catch (final Throwable exception) {
-			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+	         // FIXME
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			return (false);
 		}
 	}
@@ -152,7 +157,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 			else
 				observer.completed (this);
 		} catch (final Throwable exception) {
-			ExceptionTracer.defaultInstance.traceIgnoredException (exception);
+	         // FIXME
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 		}
 	}
 	

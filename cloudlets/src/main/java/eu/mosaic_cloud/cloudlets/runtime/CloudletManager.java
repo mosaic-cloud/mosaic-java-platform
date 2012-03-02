@@ -124,7 +124,7 @@ public class CloudletManager {
             // (ICloudletCallback<?>) createHandler(handlerClasz);
             // final Object cloudletState = invokeConstructor(stateClasz);
             final CloudletEnvironment environment = CloudletEnvironment.create(resourceConfig,
-                    handlerClasz, stateClasz, this.classLoader, DefaultConnectorsFactory.create (this.threading),
+                    handlerClasz, stateClasz, this.classLoader, DefaultConnectorsFactory.create (this.threading, this.exceptions),
                     this.reactor, this.threading,
                     this.exceptions);
             final Cloudlet<?> cloudlet = Cloudlet.create(environment);

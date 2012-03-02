@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.platform.core.exceptions;
 
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
-import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -35,7 +35,7 @@ public final class ExceptionTracer {
         super();
         final Transcript transcript = Transcript.create(this);
         this.transcriptTracer = TranscriptExceptionTracer.create(transcript,
-                NullExceptionTracer.defaultInstance);
+                FallbackExceptionTracer.defaultInstance);
     }
 
     public static void traceDeferred(Throwable exception) {

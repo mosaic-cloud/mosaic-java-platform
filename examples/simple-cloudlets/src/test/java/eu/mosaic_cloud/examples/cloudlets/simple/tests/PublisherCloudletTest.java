@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-tools-exceptions
+ * mosaic-examples-simple-cloudlets
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,14 +18,18 @@
  * #L%
  */
 
-package eu.mosaic_cloud.tools.exceptions.core;
+package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
 
-public interface ExceptionTracer
+import eu.mosaic_cloud.examples.cloudlets.simple.PublisherCloudlet;
+
+
+public class PublisherCloudletTest
+		extends BaseCloudletTest
 {
-	public abstract void trace (final ExceptionResolution resolution, final Throwable exception);
-	
-	public abstract void trace (final ExceptionResolution resolution, final Throwable exception, final String message);
-	
-	public abstract void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens);
+	@Override
+	public void setUp ()
+	{
+		this.setUp (PublisherCloudlet.LifeCycleHandler.class, PublisherCloudlet.PublisherCloudletContext.class);
+	}
 }

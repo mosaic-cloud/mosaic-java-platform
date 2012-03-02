@@ -57,7 +57,7 @@ public class AmqpQueueRawConnectorTest extends
     public void setUp() {
         this.scenario = AmqpQueueRawConnectorTest.scenario_;
         this.connector = AmqpQueueRawConnector.create(this.scenario.configuration,
-                this.scenario.threading);
+                this.scenario.threading, this.scenario.exceptions);
     }
 
     @Override

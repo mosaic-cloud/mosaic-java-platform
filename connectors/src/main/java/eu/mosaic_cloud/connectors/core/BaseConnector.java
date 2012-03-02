@@ -27,7 +27,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
@@ -57,10 +57,10 @@ public abstract class BaseConnector<P extends BaseConnectorProxy> implements ICo
     }
 
     public static Channel createChannel(final String driverEndpoint,
-            final ThreadingContext threading) {
+            final ThreadingContext threading, final ExceptionTracer exceptions) {
         final String connectorIdentity = UUID.randomUUID().toString();
         final ZeroMqChannel channel = ZeroMqChannel.create(connectorIdentity, threading,
-                AbortingExceptionTracer.defaultInstance);
+                exceptions);
         channel.connect(driverEndpoint);
         return channel;
     }

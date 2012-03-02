@@ -28,6 +28,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 public class AmqpQueueConsumerConnector<Message> extends
@@ -41,12 +42,13 @@ public class AmqpQueueConsumerConnector<Message> extends
     public static <Message> AmqpQueueConsumerConnector<Message> create(
             final IConfiguration configuration, final Class<Message> messageClass,
             final DataEncoder<? super Message> messageEncoder,
-            final IAmqpQueueConsumerCallback<Message> callback, final ThreadingContext threading) {
+            final IAmqpQueueConsumerCallback<Message> callback, final ThreadingContext threading,
+            final ExceptionTracer exceptions) {
         final String driverIdentity = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericConnector.1"), String.class, "");
         final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
+        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading, exceptions);
         channel.register(AmqpSession.CONNECTOR);
         final AmqpQueueConsumerConnectorProxy<Message> proxy = AmqpQueueConsumerConnectorProxy
                 .create(configuration, driverIdentity, channel, messageClass, messageEncoder,

@@ -26,7 +26,8 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 
 public class TestRunner {
@@ -72,9 +73,9 @@ public class TestRunner {
     }
 
     private static CloudletManager startCloudlet(IConfiguration configuration) {
-        final AbortingExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
+        final BaseExceptionTracer exceptions = FallbackExceptionTracer.defaultInstance;
         final BasicThreadingContext threading = BasicThreadingContext.create(TestRunner.class,
-                exceptions.catcher);
+                exceptions, exceptions.catcher);
         final BasicCallbackReactor reactor = BasicCallbackReactor.create(threading, exceptions);
         final CloudletManager container = new CloudletManager(reactor, threading, exceptions,
                 TestRunner.class.getClassLoader(), configuration);

@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -236,9 +237,9 @@ public final class Threading
 		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
-	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
+	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true, catcher), runnable));
+		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
@@ -246,9 +247,9 @@ public final class Threading
 		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
 	}
 	
-	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
+	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false, catcher), runnable));
+		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createAndStartThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)
@@ -261,9 +262,9 @@ public final class Threading
 		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
-	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
+	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true, catcher), runnable));
+		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
@@ -271,9 +272,9 @@ public final class Threading
 		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
 	}
 	
-	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final UncaughtExceptionHandler catcher)
+	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false, catcher), runnable));
+		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)

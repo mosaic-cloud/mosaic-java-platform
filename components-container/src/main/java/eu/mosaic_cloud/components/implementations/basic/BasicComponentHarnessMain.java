@@ -50,7 +50,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -166,8 +166,8 @@ public final class BasicComponentHarnessMain
 	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
 	{
 		BasicThreadingSecurityManager.initialize ();
-		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
-		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		final BaseExceptionTracer exceptions = FallbackExceptionTracer.defaultInstance;
+		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, exceptions.catcher);
 		threading.initialize ();
 		try {
 			BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
@@ -281,7 +281,7 @@ public final class BasicComponentHarnessMain
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
-			this.thread = Threading.createAndStartDaemonThread (this.threading, this, "piper", this, this);
+			this.thread = Threading.createAndStartDaemonThread (this.threading, this, "piper", this, exceptions, this);
 		}
 		
 		public final boolean join ()

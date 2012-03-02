@@ -60,7 +60,7 @@ public class MemcacheKvStoreConnectorTest extends
     public void setUp() {
         this.scenario = MemcacheKvStoreConnectorTest.scenario_;
         this.connector = MemcacheKvStoreConnector.create(this.scenario.configuration,
-                new PojoDataEncoder<String>(String.class), this.scenario.threading);
+                new PojoDataEncoder<String>(String.class), this.scenario.threading, this.scenario.exceptions);
     }
 
     @Override

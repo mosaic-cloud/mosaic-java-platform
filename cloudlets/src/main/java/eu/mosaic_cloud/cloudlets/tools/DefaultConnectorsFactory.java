@@ -41,6 +41,7 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
@@ -51,17 +52,17 @@ public class DefaultConnectorsFactory
 		implements
 			IConnectorsFactory
 {
-	public static/*final*/DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ThreadingContext threading)
+	public static/*final*/DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory ();
-		DefaultConnectorsFactory.initialize (factory, cloudlet, threading);
+		DefaultConnectorsFactory.initialize (factory, cloudlet, threading, exceptions);
 		return (factory);
 	}
 	
-	protected static/*final*/void initialize (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet, final ThreadingContext threading)
+	protected static/*final*/void initialize (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		Preconditions.checkNotNull (factory);
-		eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory.initialize (factory, threading);
+		eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory.initialize (factory, threading, exceptions);
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
 			public <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder, final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context callbackContext)

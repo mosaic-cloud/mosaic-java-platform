@@ -28,7 +28,6 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -53,7 +52,7 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
 
         public TranscriptExceptionTracer exceptions;
 
-        public QueueingExceptionTracer exceptions_;
+        public QueueingExceptionTracer exceptionsQueue;
 
         public MosaicLogger logger;
 
@@ -74,23 +73,23 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
         BasicThreadingSecurityManager.initialize();
         scenario.logger = MosaicLogger.createLogger(owner);
         scenario.transcript = Transcript.create(owner);
-        scenario.exceptions_ = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
+        scenario.exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
         scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
-                scenario.exceptions_);
+                scenario.exceptionsQueue);
         if (configuration != null) {
             scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
                     configuration);
         } else {
             scenario.configuration = PropertyTypeConfiguration.create();
         }
-        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions.catcher);
+        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions, scenario.exceptions.catcher);
         scenario.threading.initialize();
         final String driverIdentity = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.driver.identifier", String.class, "");
         final String driverEndpoint = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.channel.address", String.class, "");
         scenario.driverChannel = ZeroMqChannel.create(driverIdentity, scenario.threading,
-                AbortingExceptionTracer.defaultInstance);
+                scenario.exceptions);
         scenario.driverChannel.accept(driverEndpoint);
     }
 

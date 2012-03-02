@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -46,7 +47,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	protected StateMachine (final Class<_State_> stateClass, final Class<_Transition_> transitionClass, final Transcript transcript, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.capsule = new Capsule (stateClass, transitionClass, (transcript != null) ? transcript : Transcript.create (this), (exceptions != null) ? exceptions : ExceptionTracer.defaultInstance);
+		// FIXME
+		this.capsule = new Capsule (stateClass, transitionClass, (transcript != null) ? transcript : Transcript.create (this), (exceptions != null) ? exceptions : FallbackExceptionTracer.defaultInstance);
 		this.transcript = this.capsule.transcript;
 		this.exceptions = this.capsule.exceptions;
 		this.transcript.traceDebugging ("created machine `%{object}`.", this);

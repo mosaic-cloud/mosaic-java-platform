@@ -56,7 +56,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 
         public TranscriptExceptionTracer exceptions;
 
-        public QueueingExceptionTracer exceptions_;
+        public QueueingExceptionTracer exceptionsQueue;
 
         public MosaicLogger logger;
 
@@ -83,22 +83,22 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         BasicThreadingSecurityManager.initialize();
         scenario.logger = MosaicLogger.createLogger(owner);
         scenario.transcript = Transcript.create(owner);
-        scenario.exceptions_ = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
+        scenario.exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
         scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
-                scenario.exceptions_);
+                scenario.exceptionsQueue);
         if (configuration != null) {
             scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
                     configuration);
         } else {
             scenario.configuration = PropertyTypeConfiguration.create();
         }
-        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions.catcher);
+        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions, scenario.exceptions.catcher);
         scenario.threading.initialize();
         scenario.reactor = BasicCallbackReactor.create(scenario.threading, scenario.exceptions);
         scenario.reactor.initialize();
         scenario.callbacksClass = callbacksClass;
         scenario.contextClass = contextClass;
-        scenario.connectors = DefaultConnectorsFactory.create (scenario.threading);
+        scenario.connectors = DefaultConnectorsFactory.create (scenario.threading, scenario.exceptions);
         scenario.environment = CloudletEnvironment.create(scenario.configuration,
                 scenario.callbacksClass, scenario.contextClass,
                 scenario.callbacksClass.getClassLoader(), scenario.connectors,

@@ -36,6 +36,7 @@ import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.tools.classpath_exporter.ClasspathExporter;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonCoder;
@@ -98,8 +99,8 @@ public final class MosBasicComponentLauncher
 			throws Throwable
 	{
 		BasicThreadingSecurityManager.initialize ();
-		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
-		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		final BaseExceptionTracer exceptions = FallbackExceptionTracer.defaultInstance;
+		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, exceptions.catcher);
 		threading.initialize ();
 		MosBasicComponentLauncher.main (arguments, loader, threading, exceptions);
 		threading.destroy ();

@@ -28,6 +28,7 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
@@ -62,14 +63,14 @@ public class GenericKvStoreConnector<T extends Object> extends
      */
     public static <T extends Object> GenericKvStoreConnector<T> create(
             final IConfiguration configuration, final DataEncoder<? super T> encoder,
-            final ThreadingContext threading) {
+            final ThreadingContext threading, final ExceptionTracer exceptions) {
         final String bucket = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
         final String driverIdentity = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericConnector.1"), String.class, "");
         final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
+        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading, exceptions);
         channel.register(KeyValueSession.CONNECTOR);
         final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create(bucket,
                 configuration, driverIdentity, channel, encoder);

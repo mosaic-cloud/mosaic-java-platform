@@ -55,7 +55,7 @@ public final class BasicChannelTest
 		final Pipe pipe = Pipe.open ();
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
-		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		Assert.assertTrue (threading.initialize (BasicChannelTest.defaultPollTimeout));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		Assert.assertTrue (reactor.initialize (BasicChannelTest.defaultPollTimeout));
