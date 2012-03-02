@@ -466,6 +466,11 @@ public final class ZeroMqChannel
 		}
 	}
 	
+	public static final ZeroMqChannel create (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		return (new ZeroMqChannel (self, threading, exceptions));
+	}
+	
 	final TranscriptExceptionTracer exceptions;
 	final ExecutorService executor;
 	final ConcurrentLinkedQueue<Handler> handlers;
@@ -475,11 +480,6 @@ public final class ZeroMqChannel
 	final State state;
 	final ThreadingContext threading;
 	final Transcript transcript;
-	
-	public static final ZeroMqChannel create (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new ZeroMqChannel (self, threading, exceptions));
-	}
 	
 	private static final class Acceptor
 			extends Object

@@ -97,12 +97,6 @@ public final class ClasspathExporter
 		}
 	}
 	
-	private final InetSocketAddress address;
-	private final TranscriptExceptionTracer exceptions;
-	private final ClassLoader loader;
-	private Server server;
-	private final Transcript transcript;
-	
 	public static final ClasspathExporter create (final InetSocketAddress address, final ClassLoader loader, final ExceptionTracer exceptions)
 	{
 		return (new ClasspathExporter (address, loader, exceptions));
@@ -134,4 +128,10 @@ public final class ClasspathExporter
 		}
 		exporter.stopServer ();
 	}
+	
+	private final InetSocketAddress address;
+	private final TranscriptExceptionTracer exceptions;
+	private final ClassLoader loader;
+	private Server server;
+	private final Transcript transcript;
 }

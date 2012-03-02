@@ -206,16 +206,6 @@ public final class BasicThreadingContextTest
 			this.forker.completed.countDown ();
 		}
 		
-		public final ArrayBlockingQueue<Thread> queue;
-		private final CountDownLatch completed;
-		private final ThreadFactory creator;
-		private final Runnable delegate;
-		private final int fanout;
-		private final AtomicBoolean forked;
-		private final Forker forker;
-		private final int level;
-		private final CountDownLatch running;
-		
 		public static final int getCount (final int level, final int fanout, final boolean cummulative)
 		{
 			Preconditions.checkArgument (level >= 1);
@@ -230,6 +220,16 @@ public final class BasicThreadingContextTest
 				throw (new UnsupportedOperationException ());
 			return (count);
 		}
+		
+		public final ArrayBlockingQueue<Thread> queue;
+		private final CountDownLatch completed;
+		private final ThreadFactory creator;
+		private final Runnable delegate;
+		private final int fanout;
+		private final AtomicBoolean forked;
+		private final Forker forker;
+		private final int level;
+		private final CountDownLatch running;
 	}
 	
 	public static final class ManagedUnmanagedThreadFactory

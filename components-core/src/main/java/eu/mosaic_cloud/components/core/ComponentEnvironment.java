@@ -55,13 +55,6 @@ public final class ComponentEnvironment
 		this.supplementary = new Supplementary (supplementary);
 	}
 	
-	public final ClassLoader classLoader;
-	public final ComponentController component;
-	public final ExceptionTracer exceptions;
-	public final CallbackReactor reactor;
-	public final Supplementary supplementary;
-	public final ThreadingContext threading;
-	
 	public static final ComponentEnvironment create (final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		return (new ComponentEnvironment (component, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
@@ -71,6 +64,13 @@ public final class ComponentEnvironment
 	{
 		return (new ComponentEnvironment (component, classLoader, reactor, threading, exceptions, environment));
 	}
+	
+	public final ClassLoader classLoader;
+	public final ComponentController component;
+	public final ExceptionTracer exceptions;
+	public final CallbackReactor reactor;
+	public final Supplementary supplementary;
+	public final ThreadingContext threading;
 	
 	public final class Supplementary
 			extends Object

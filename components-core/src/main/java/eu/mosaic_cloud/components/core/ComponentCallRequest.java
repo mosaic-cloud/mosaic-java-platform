@@ -41,11 +41,6 @@ public final class ComponentCallRequest
 		this.reference = reference;
 	}
 	
-	public final ByteBuffer data;
-	public final Object inputs;
-	public final String operation;
-	public final ComponentCallReference reference;
-	
 	public static final ComponentCallRequest create (final String operation, final Object inputs, final ByteBuffer data, final ComponentCallReference reference)
 	{
 		return (new ComponentCallRequest (operation, inputs, data, reference));
@@ -55,4 +50,9 @@ public final class ComponentCallRequest
 	{
 		return (new ComponentCallRequest (operation, inputs, ByteBuffer.allocate (0), reference));
 	}
+	
+	public final ByteBuffer data;
+	public final Object inputs;
+	public final String operation;
+	public final ComponentCallReference reference;
 }

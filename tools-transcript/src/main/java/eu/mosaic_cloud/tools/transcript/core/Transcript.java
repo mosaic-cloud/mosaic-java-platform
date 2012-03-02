@@ -129,8 +129,6 @@ public final class Transcript
 		this.trace (TranscriptTraceType.Warning, format, tokens);
 	}
 	
-	private final TranscriptBackend backend;
-	
 	public static final Transcript create (final Class<?> owner)
 	{
 		Preconditions.checkNotNull (owner);
@@ -142,4 +140,6 @@ public final class Transcript
 		Preconditions.checkNotNull (owner);
 		return (new Transcript (LogbackTranscriptBackend.create (owner)));
 	}
+	
+	private final TranscriptBackend backend;
 }

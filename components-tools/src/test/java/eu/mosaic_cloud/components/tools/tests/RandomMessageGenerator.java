@@ -114,12 +114,11 @@ public final class RandomMessageGenerator
 		return (object);
 	}
 	
-	protected final Random random;
-	
 	public static final RandomMessageGenerator create ()
 	{
 		return (new RandomMessageGenerator ());
 	}
 	
+	protected final Random random;
 	public static final RandomMessageGenerator defaultInstance = RandomMessageGenerator.create ();
 }

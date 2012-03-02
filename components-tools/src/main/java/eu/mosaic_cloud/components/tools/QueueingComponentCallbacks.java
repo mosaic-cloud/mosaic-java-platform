@@ -134,11 +134,6 @@ public final class QueueingComponentCallbacks
 	public final void unregisteredCallbacks (final Callbacks proxy)
 	{}
 	
-	public final BlockingQueue<ComponentMessage> queue;
-	private final ComponentController component;
-	private final ExceptionTracer exceptions;
-	private final long waitTimeout;
-	
 	public static final QueueingComponentCallbacks create (final ComponentController component, final BlockingQueue<ComponentMessage> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
 		return (new QueueingComponentCallbacks (component, queue, waitTimeout, exceptions));
@@ -148,4 +143,9 @@ public final class QueueingComponentCallbacks
 	{
 		return (new QueueingComponentCallbacks (component, new LinkedBlockingQueue<ComponentMessage> (), 0, exceptions));
 	}
+	
+	public final BlockingQueue<ComponentMessage> queue;
+	private final ComponentController component;
+	private final ExceptionTracer exceptions;
+	private final long waitTimeout;
 }

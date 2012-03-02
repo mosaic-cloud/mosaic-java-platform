@@ -39,8 +39,6 @@ public final class QueuedExceptions
 		Preconditions.checkNotNull (queue);
 	}
 	
-	public final BlockingQueue<CaughtException> queue;
-	
 	public static final QueuedExceptions create (final BlockingQueue<CaughtException> queue)
 	{
 		return (new QueuedExceptions (queue));
@@ -53,5 +51,6 @@ public final class QueuedExceptions
 		return (QueuedExceptions.create (queue));
 	}
 	
+	public final BlockingQueue<CaughtException> queue;
 	private static final long serialVersionUID = 1L;
 }

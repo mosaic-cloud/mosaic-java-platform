@@ -85,9 +85,6 @@ public final class QueueingExceptionTracer
 		}
 	}
 	
-	public final BlockingQueue<CaughtException> queue;
-	private final long waitTimeout;
-	
 	public static final QueueingExceptionTracer create (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate)
 	{
 		return (new QueueingExceptionTracer (queue, waitTimeout, delegate));
@@ -97,4 +94,7 @@ public final class QueueingExceptionTracer
 	{
 		return (new QueueingExceptionTracer (new LinkedBlockingQueue<CaughtException> (), 0, delegate));
 	}
+	
+	public final BlockingQueue<CaughtException> queue;
+	private final long waitTimeout;
 }

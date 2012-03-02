@@ -94,13 +94,12 @@ public final class BasicChannel
 		return (this.backend.initialize (timeout));
 	}
 	
-	final Backend backend;
-	
 	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		return (new BasicChannel (input, output, coder, reactor, threading, exceptions));
 	}
 	
+	final Backend backend;
 	static final long defaultPollTimeout = 100;
 	
 	private static final class Backend

@@ -45,12 +45,12 @@ public final class CallbackCompletionDeferredFuture<_Outcome_ extends Object>
 		return (this.future);
 	}
 	
-	public final CallbackCompletion<_Outcome_> completion;
-	public final DeferredFuture<_Outcome_> future;
-	public final DeferredFuture.Trigger<_Outcome_> trigger;
-	
 	public static final <_Outcome_ extends Object> CallbackCompletionDeferredFuture<_Outcome_> create (final Class<_Outcome_> outcomeClass)
 	{
 		return (new CallbackCompletionDeferredFuture<_Outcome_> (outcomeClass));
 	}
+	
+	public final CallbackCompletion<_Outcome_> completion;
+	public final DeferredFuture<_Outcome_> future;
+	public final DeferredFuture.Trigger<_Outcome_> trigger;
 }

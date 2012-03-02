@@ -57,10 +57,10 @@ public final class TranscriptExceptionTracer
 		this.transcript.trace (resolution, exception, format, tokens);
 	}
 	
-	private final TranscriptBackend transcript;
-	
 	public static final TranscriptExceptionTracer create (final TranscriptBackend transcript, final ExceptionTracer delegate)
 	{
 		return (new TranscriptExceptionTracer (transcript, delegate));
 	}
+	
+	private final TranscriptBackend transcript;
 }

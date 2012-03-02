@@ -58,17 +58,14 @@ public final class ThreadConfiguration
 		return (new ThreadConfiguration (this.owner, name, this.daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final Thread.UncaughtExceptionHandler catcher;
-	public final ClassLoader classLoader;
-	public final boolean daemon;
-	public final String name;
-	public final ExceptionTracer exceptions;
-	public final Reference<Object> owner;
-	public final int priority;
-	
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon)
 	{
 		return (ThreadConfiguration.create (owner, name, daemon, -1, null, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher));
 	}
 	
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority)
@@ -81,10 +78,12 @@ public final class ThreadConfiguration
 		return (new ThreadConfiguration (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, null));
 	}
 	
-	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
-	{
-		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher));
-	}
-	
+	public final Thread.UncaughtExceptionHandler catcher;
+	public final ClassLoader classLoader;
+	public final boolean daemon;
+	public final ExceptionTracer exceptions;
+	public final String name;
+	public final Reference<Object> owner;
+	public final int priority;
 	public static final Pattern namePattern = Pattern.compile ("^[a-z0-9]([a-z0-9-]*[a-z0-9])?$");
 }

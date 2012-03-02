@@ -140,12 +140,12 @@ public final class BasicCallbackReactor
 		return (true);
 	}
 	
-	final Reactor reactor;
-	
 	public static final BasicCallbackReactor create (final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		return (new BasicCallbackReactor (threading, exceptions));
 	}
+	
+	final Reactor reactor;
 	
 	static abstract class Action<_Target_ extends ActionTarget, _Outcome_ extends Object>
 			extends Object

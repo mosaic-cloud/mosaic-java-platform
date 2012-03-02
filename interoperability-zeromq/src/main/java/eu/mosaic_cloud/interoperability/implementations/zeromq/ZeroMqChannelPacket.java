@@ -39,12 +39,12 @@ public final class ZeroMqChannelPacket
 		this.payload = payload;
 	}
 	
-	public final ByteBuffer header;
-	public final ByteBuffer payload;
-	public final String peer;
-	
 	public static final ZeroMqChannelPacket create (final String peer, final ByteBuffer header, final ByteBuffer payload)
 	{
 		return (new ZeroMqChannelPacket (peer, header, payload));
 	}
+	
+	public final ByteBuffer header;
+	public final ByteBuffer payload;
+	public final String peer;
 }

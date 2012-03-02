@@ -376,13 +376,13 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			this.output = output;
 		}
 		
-		public final _Output_ output;
-		public final _State_ state;
-		
 		public static final <_State_ extends Enum<_State_> & State, _Output_ extends Object> StateAndOutput<_State_, _Output_> create (final _State_ state, final _Output_ output)
 		{
 			return (new StateAndOutput<_State_, _Output_> (state, output));
 		}
+		
+		public final _Output_ output;
+		public final _State_ state;
 	}
 	
 	public class Transaction

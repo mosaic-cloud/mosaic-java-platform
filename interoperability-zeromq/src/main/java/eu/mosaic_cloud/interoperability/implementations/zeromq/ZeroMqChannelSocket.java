@@ -263,6 +263,11 @@ public final class ZeroMqChannelSocket
 			}
 	}
 	
+	public static final ZeroMqChannelSocket create (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
+	}
+	
 	final Runnable dequeueTrigger;
 	final TranscriptExceptionTracer exceptions;
 	final LinkedBlockingQueue<ZeroMqChannelPacket> inboundPackets;
@@ -273,12 +278,6 @@ public final class ZeroMqChannelSocket
 	ZMQ.Socket socket;
 	final ThreadingContext threading;
 	final Transcript transcript;
-	
-	public static final ZeroMqChannelSocket create (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
-	}
-	
 	public static final long defaultDelay = 50;
 	static final ZMQ.Context defaultContext = ZMQ.context (1);
 	

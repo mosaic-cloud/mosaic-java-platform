@@ -79,11 +79,11 @@ public final class DefaultJavaSerializationPayloadCoder
 		return (buffer);
 	}
 	
-	private final Class<? extends Serializable> clasz;
-	private final boolean nullAllowed;
-	
 	public static final DefaultJavaSerializationPayloadCoder create (final Class<? extends Serializable> clasz, final boolean nullAllowed)
 	{
 		return (new DefaultJavaSerializationPayloadCoder (clasz, nullAllowed));
 	}
+	
+	private final Class<? extends Serializable> clasz;
+	private final boolean nullAllowed;
 }

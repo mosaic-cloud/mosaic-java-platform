@@ -108,12 +108,11 @@ public final class DefaultChannelMessageCoder
 		return (packet.asReadOnlyBuffer ());
 	}
 	
-	private final JsonCoder jsonCoder;
-	
 	public static final DefaultChannelMessageCoder create ()
 	{
 		return (new DefaultChannelMessageCoder (DefaultJsonCoder.defaultInstance));
 	}
 	
+	private final JsonCoder jsonCoder;
 	public static final DefaultChannelMessageCoder defaultInstance = DefaultChannelMessageCoder.create ();
 }

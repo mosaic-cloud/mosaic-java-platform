@@ -265,7 +265,7 @@ public final class BasicThreadingContext
 			return (this.configuration.catcher);
 		return (null);
 	}
-
+	
 	final ExceptionTracer resolveExceptions (final Thread thread)
 	{
 		Preconditions.checkNotNull (thread);
@@ -433,8 +433,8 @@ public final class BasicThreadingContext
 			Preconditions.checkState (this == Thread.currentThread ());
 			Preconditions.checkState (this.running.compareAndSet (false, true));
 			Preconditions.checkState (Threading.getCurrentContext () == BasicThreadingContext.this);
-			final ExceptionTracer exceptions = resolveExceptions (this);
-			if (exceptions != null && exceptions != FallbackExceptionTracer.defaultInstance)
+			final ExceptionTracer exceptions = BasicThreadingContext.this.resolveExceptions (this);
+			if ((exceptions != null) && (exceptions != FallbackExceptionTracer.defaultInstance))
 				FallbackExceptionTracer.defaultInstance.setThreadTracer (exceptions);
 			super.run ();
 		}

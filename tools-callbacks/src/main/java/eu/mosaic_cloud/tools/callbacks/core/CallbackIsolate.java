@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
 
@@ -93,10 +92,10 @@ public final class CallbackIsolate
 		}
 	}
 	
-	private final CallbackIsolateBackend backend;
-	
 	public static final CallbackIsolate create (final CallbackIsolateBackend backend)
 	{
 		return (new CallbackIsolate (backend));
 	}
+	
+	private final CallbackIsolateBackend backend;
 }

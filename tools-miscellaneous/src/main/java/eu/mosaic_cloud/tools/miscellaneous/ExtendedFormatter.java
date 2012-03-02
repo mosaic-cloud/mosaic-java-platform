@@ -141,8 +141,6 @@ public final class ExtendedFormatter
 		return (builder.toString ());
 	}
 	
-	private final Locale locale;
-	
 	public static final ExtendedFormatter create ()
 	{
 		return (new ExtendedFormatter (Locale.getDefault ()));
@@ -153,6 +151,7 @@ public final class ExtendedFormatter
 		return (new ExtendedFormatter (locale));
 	}
 	
+	private final Locale locale;
 	public static final ExtendedFormatter defaultInstance = ExtendedFormatter.create ();
 	private static final Pattern extendedFormatPattern = Pattern.compile (ExtendedFormatter.extendedFormatPatternSpecification);
 	private static final String extendedFormatPatternSpecification = "(%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%]))|(%\\{[a-z:-]+\\})";

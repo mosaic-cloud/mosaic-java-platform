@@ -52,13 +52,13 @@ public final class DeferredFuture<_Outcome_ extends Object>
 		this.set (this.outcomeClass.cast (outcome));
 	}
 	
-	public final Class<_Outcome_> outcomeClass;
-	public final Trigger<_Outcome_> trigger;
-	
 	public static final <_Outcome_ extends Object> DeferredFuture<_Outcome_> create (final Class<_Outcome_> outcomeClass)
 	{
 		return (new DeferredFuture<_Outcome_> (outcomeClass));
 	}
+	
+	public final Class<_Outcome_> outcomeClass;
+	public final Trigger<_Outcome_> trigger;
 	
 	public static final class Trigger<_Outcome_ extends Object>
 			extends Object
