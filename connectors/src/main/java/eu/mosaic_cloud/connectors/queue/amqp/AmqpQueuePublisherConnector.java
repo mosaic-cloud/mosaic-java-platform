@@ -20,10 +20,8 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
@@ -40,17 +38,13 @@ public class AmqpQueuePublisherConnector<Message> extends
     }
 
     public static <Message> AmqpQueuePublisherConnector<Message> create(
-            final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<? super Message> messageEncoder, final ThreadingContext threading,
-            final ExceptionTracer exceptions) {
-        final String driverIdentity = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading, exceptions);
+            final IConfiguration configuration,
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
+            final Channel channel, final Resolver resolver,
+            final ThreadingContext threading, final ExceptionTracer exceptions) {
         channel.register(AmqpSession.CONNECTOR);
         final AmqpQueuePublisherConnectorProxy<Message> proxy = AmqpQueuePublisherConnectorProxy
-                .create(configuration, driverIdentity, channel, messageClass, messageEncoder);
+                .create(configuration, channel, resolver, threading, exceptions, messageClass, messageEncoder);
         return new AmqpQueuePublisherConnector<Message>(proxy);
     }
 

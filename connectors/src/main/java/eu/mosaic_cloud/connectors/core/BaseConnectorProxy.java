@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
@@ -33,6 +34,8 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
@@ -64,7 +67,7 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      * @param channel
      *            the channel on which to communicate with the driver
      */
-    protected BaseConnectorProxy(final IConfiguration configuration, final Channel channel) {
+    protected BaseConnectorProxy(final IConfiguration configuration, final Channel channel, final Resolver resolver, final ThreadingContext threading, final ExceptionTracer exceptions) {
         super();
         Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(channel);

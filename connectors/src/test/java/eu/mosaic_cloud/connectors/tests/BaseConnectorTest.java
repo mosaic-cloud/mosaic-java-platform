@@ -20,8 +20,13 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
+import java.util.UUID;
+
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
+import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.interoperability.core.Resolver;
+import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -43,6 +48,10 @@ import org.junit.Test;
 public abstract class BaseConnectorTest<Connector extends IConnector, Scenario extends BaseConnectorTest.BaseScenario<?>> {
 
     public static class BaseScenario<DriverStub extends AbstractDriverStub> {
+
+    	public Channel channel;
+
+    	public Resolver resolver;
 
         public IConfiguration configuration;
 
@@ -91,6 +100,15 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
         scenario.driverChannel = ZeroMqChannel.create(driverIdentity, scenario.threading,
                 scenario.exceptions);
         scenario.driverChannel.accept(driverEndpoint);
+        scenario.channel = ZeroMqChannel.create(UUID.randomUUID().toString(),
+        		scenario.threading, scenario.exceptions);
+        scenario.resolver = new Resolver() {
+        	@Override
+			public final void resolve(String target, ResolverCallbacks callbacks) {
+				Assert.assertEquals(driverIdentity, target);
+				callbacks.resolved(this, target, driverIdentity, driverEndpoint);
+			}
+		};
     }
 
     protected static void tearDownScenario(final BaseScenario<?> scenario) {

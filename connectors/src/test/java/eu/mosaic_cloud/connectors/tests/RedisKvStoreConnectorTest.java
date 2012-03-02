@@ -53,6 +53,8 @@ public class RedisKvStoreConnectorTest extends
     public void setUp() {
         this.scenario = RedisKvStoreConnectorTest.scenario_;
         this.connector = GenericKvStoreConnector.create(this.scenario.configuration,
-                new PojoDataEncoder<String>(String.class), this.scenario.threading, this.scenario.exceptions);
+                new PojoDataEncoder<String>(String.class),
+                this.scenario.channel, this.scenario.resolver,
+                this.scenario.threading, this.scenario.exceptions);
     }
 }

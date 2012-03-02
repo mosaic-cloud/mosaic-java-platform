@@ -24,15 +24,18 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * This class provides access for cloudlets to an AMQP-based queueing system as
@@ -112,10 +115,11 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
     }
 
     public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
-            final IConfiguration configuration, final String driverIdentity, final Channel channel,
+            final IConfiguration configuration, final Channel channel, final Resolver resolver,
+            final ThreadingContext threading, final ExceptionTracer exceptions,
             final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder) {
         final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
-                configuration, driverIdentity, channel);
+                configuration, channel, resolver, threading, exceptions);
         final IConfiguration subConfiguration = configuration
                 .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
         final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
@@ -141,7 +145,8 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
         try {
             data = this.messageEncoder.encode(message);
         } catch (final EncodingException exception) {
-            ExceptionTracer.traceDeferred(exception);
+        	// FIXME
+            FallbackExceptionTracer.defaultInstance.traceDeferredException(exception);
             return (CallbackCompletion.createFailure(exception));
         }
         final AmqpOutboundMessage outbound = new AmqpOutboundMessage(this.exchange,

@@ -21,13 +21,11 @@
 package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.interoperability.core.Resolver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -57,15 +55,10 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
      * @throws Throwable
      */
     public static AmqpQueueRawConnector create(final IConfiguration configuration,
+    		final Channel channel, final Resolver resolver,
             final ThreadingContext threading, final ExceptionTracer exceptions) {
-        final String driverIdentity = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading, exceptions);
-        channel.register(AmqpSession.CONNECTOR);
-        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(configuration,
-                driverIdentity, channel);
+        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(
+        		configuration, channel, resolver, threading, exceptions);
         return new AmqpQueueRawConnector(proxy);
     }
 
