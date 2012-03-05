@@ -39,7 +39,7 @@ public class RedisKvStoreConnectorTest extends
     public static void setUpBeforeClass() {
         final Scenario scenario = new Scenario();
         BaseConnectorTest.setUpScenario(RedisKvStoreConnectorTest.class, scenario,
-                "redis-kv-store-connector-test.properties");
+                "redis-kv-store-driver-test.properties");
         scenario.driverChannel.register(KeyValueSession.DRIVER);
         scenario.driverStub = KeyValueStub.create(scenario.configuration, scenario.threading,
                 scenario.driverChannel);

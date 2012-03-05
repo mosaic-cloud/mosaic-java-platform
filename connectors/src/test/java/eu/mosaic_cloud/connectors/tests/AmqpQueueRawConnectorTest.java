@@ -40,7 +40,7 @@ public class AmqpQueueRawConnectorTest extends
     public static void setUpBeforeClass() {
         final BaseScenario<AmqpStub> scenario = new BaseScenario<AmqpStub>();
         BaseConnectorTest.setUpScenario(AmqpQueueRawConnectorTest.class, scenario,
-                "amqp-queue-raw-connector-test.properties");
+                "amqp-queue-driver-test.properties");
         scenario.driverChannel.register(AmqpSession.DRIVER);
         scenario.driverStub = AmqpStub.create(scenario.configuration, scenario.driverChannel,
                 scenario.threading);

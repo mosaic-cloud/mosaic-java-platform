@@ -68,7 +68,7 @@ public class RiakRestDriverTest {
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
         this.wrapper = RiakRestDriver.create(PropertyTypeConfiguration.create(
-                RiakRestDriverTest.class.getClassLoader(), "riakrest-test.properties"),
+                RiakRestDriverTest.class.getClassLoader(), "riak-http-kv-store-driver-test.properties"),
                 this.threadingContext);
         this.wrapper.registerClient(RiakRestDriverTest.keyPrefix, "test");
     }

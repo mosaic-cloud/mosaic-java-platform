@@ -33,6 +33,13 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>drivers</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.components</groupId>
 			<artifactId>components-core</artifactId>
 			<version>${project.version}</version>

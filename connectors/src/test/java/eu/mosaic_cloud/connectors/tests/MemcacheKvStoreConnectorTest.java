@@ -45,7 +45,7 @@ public class MemcacheKvStoreConnectorTest extends
     public static void setUpBeforeClass() {
         final Scenario scenario = new Scenario();
         BaseConnectorTest.setUpScenario(MemcacheKvStoreConnectorTest.class, scenario,
-                "memcache-kv-store-connector-test.properties");
+                "memcache-kv-store-driver-test.properties");
         scenario.driverChannel.register(KeyValueSession.DRIVER);
         scenario.driverChannel.register(MemcachedSession.DRIVER);
         scenario.driverStub = MemcachedStub.create(scenario.configuration, scenario.driverChannel,

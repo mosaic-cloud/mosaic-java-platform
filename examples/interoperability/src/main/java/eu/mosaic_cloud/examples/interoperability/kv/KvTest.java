@@ -72,5 +72,5 @@ public final class KvTest
 	}
 	
 	public static final long defaultPollTimeout = 1000;
-	public static final String defaultServerEndpoint = "tcp://127.0.0.1:31028";
+	public static final String defaultServerEndpoint = "inproc://e3b24530-215f-4977-b24a-b04f1768ead6";
 }

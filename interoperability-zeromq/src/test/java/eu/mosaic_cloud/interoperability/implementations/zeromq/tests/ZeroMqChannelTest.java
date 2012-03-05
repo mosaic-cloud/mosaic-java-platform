@@ -76,6 +76,6 @@ public final class ZeroMqChannelTest
 	}
 	
 	public static final long defaultPollTimeout = 1000;
-	public static final String defaultServerEndpoint = "tcp://127.0.0.1:31027";
+	public static final String defaultServerEndpoint = "inproc://fd2d7ca5-355b-4a6a-b12a-21b034b29fe3";
 	public static final int defaultTries = 16;
 }

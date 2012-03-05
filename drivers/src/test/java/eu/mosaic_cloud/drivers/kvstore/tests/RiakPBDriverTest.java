@@ -68,7 +68,7 @@ public class RiakPBDriverTest {
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
         this.wrapper = RiakPBDriver.create(PropertyTypeConfiguration.create(
-                RiakPBDriverTest.class.getClassLoader(), "riakpb-test.properties"),
+                RiakPBDriverTest.class.getClassLoader(), "riak-pb-kv-store-driver-test.properties"),
                 this.threadingContext);
         this.wrapper.registerClient(RiakPBDriverTest.keyPrefix, "test");
     }

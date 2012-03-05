@@ -37,7 +37,7 @@ public class RiakKvStoreConnectorTest extends
     public static void setUpBeforeClass() {
         final Scenario scenario = new Scenario();
         BaseConnectorTest.setUpScenario(RiakKvStoreConnectorTest.class, scenario,
-                "riak-kv-store-connector-test.properties");
+                "riak-http-kv-store-driver-test.properties");
         scenario.driverChannel.register(KeyValueSession.DRIVER);
         scenario.driverStub = KeyValueStub.create(scenario.configuration, scenario.threading,
                 scenario.driverChannel);
