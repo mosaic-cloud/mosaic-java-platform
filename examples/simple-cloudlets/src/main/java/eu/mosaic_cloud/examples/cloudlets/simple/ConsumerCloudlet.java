@@ -37,8 +37,6 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-import org.junit.Ignore;
-
 public class ConsumerCloudlet {
 
     public static final class AmqpConsumerCallback extends

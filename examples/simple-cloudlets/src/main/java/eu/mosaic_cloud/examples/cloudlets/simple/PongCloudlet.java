@@ -44,8 +44,6 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-import org.junit.Ignore;
-
 public class PongCloudlet {
 
     public static final class AmqpConsumerCallback extends

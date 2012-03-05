@@ -168,7 +168,7 @@ public final class ZeroMqChannel
 			//	}
 			for (final Coder coder : coders) {
 				if (this.state.coders.containsKey (coder.key))
-						continue;
+					continue;
 				this.transcript.traceDebugging ("registering coder: `%s` -> %s...", coder.key, coder.coder);
 				this.state.coders.put (coder.key, coder);
 			}
