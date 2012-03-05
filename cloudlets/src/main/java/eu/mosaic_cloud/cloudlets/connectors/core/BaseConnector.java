@@ -69,11 +69,11 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
                     if (completion.getException() != null) {
-                        return BaseConnector.this.callback.initializeFailed(
+                        return BaseConnector.this.callback.destroyFailed(
                                 BaseConnector.this.context, new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.initializeSucceeded(
+                    return BaseConnector.this.callback.destroySucceeded(
                             BaseConnector.this.context, new CallbackArguments<Context>(
                                     BaseConnector.this.cloudlet));
                 }
@@ -92,11 +92,11 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
                     if (completion.getException() != null) {
-                        return BaseConnector.this.callback.destroyFailed(
+                        return BaseConnector.this.callback.initializeFailed(
                                 BaseConnector.this.context, new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.destroySucceeded(BaseConnector.this.context,
+                    return BaseConnector.this.callback.initializeSucceeded(BaseConnector.this.context,
                             new CallbackArguments<Context>(BaseConnector.this.cloudlet));
                 }
             });
