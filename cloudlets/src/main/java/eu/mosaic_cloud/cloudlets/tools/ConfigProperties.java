@@ -43,4 +43,7 @@ public class ConfigProperties {
             return '!' + key + '!';
         }
     }
+    
+    public static final boolean inDebugging = java.lang.management.ManagementFactory.getRuntimeMXBean().
+    	    getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 }
