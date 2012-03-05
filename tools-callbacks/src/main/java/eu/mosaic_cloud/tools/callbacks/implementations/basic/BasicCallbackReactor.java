@@ -460,7 +460,10 @@ public final class BasicCallbackReactor
 			final CallbackCompletion<?> returnedCompletion;
 			try {
 				try {
-					returnedCompletion = (CallbackCompletion<?>) action.method.invoke (handler, action.arguments);
+					if (handler instanceof CallbackFunnelHandler)
+						returnedCompletion = (CallbackCompletion<?>) ((CallbackFunnelHandler) handler).executeCallback (this.proxy, action.method, action.arguments);
+					else
+						returnedCompletion = (CallbackCompletion<?>) action.method.invoke (handler, action.arguments);
 				} catch (final InvocationTargetException exception) {
 					this.reactor.exceptions.traceHandledException (exception);
 					throw (exception.getCause ());
