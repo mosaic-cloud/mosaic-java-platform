@@ -24,7 +24,9 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
@@ -33,8 +35,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 
@@ -88,14 +88,36 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
     	// FIXME
         final String driverEndpoint = ConfigUtils.resolveParameter(
         		this.configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
+                ConfigProperties.getString("GenericConnector.0"), String.class, null);
         final String driverIdentity = ConfigUtils.resolveParameter(
         		this.configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        ((ZeroMqChannel) this.channel).connect (driverEndpoint);
+                ConfigProperties.getString("GenericConnector.1"), String.class, null);
+        final String driverTarget = ConfigUtils.resolveParameter(
+        		this.configuration,
+                ConfigProperties.getString("GenericConnector.2"), String.class, null);
         this.channel.register(session);
-        this.channel.connect(driverIdentity, session, initMessage, this);
-        return CallbackCompletion.createOutcome();
+        if (driverEndpoint != null && driverIdentity != null) {
+        	// FIXME
+	        ((ZeroMqChannel) this.channel).connect (driverEndpoint);
+	        this.channel.connect(driverIdentity, session, initMessage, this);
+	        return CallbackCompletion.createOutcome();
+        } else {
+        	final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create(Void.class);
+        	this.environment.channelResolver.resolve(driverTarget, new ResolverCallbacks() {
+        		@Override
+				public CallbackCompletion<Void> resolved(ChannelResolver resolver, String target, String peer, String endpoint)
+				{
+					Preconditions.checkState(driverTarget.equals (target));
+					Preconditions.checkState(peer != null);
+					Preconditions.checkState(endpoint != null);
+					// FIXME
+			        ((ZeroMqChannel) BaseConnectorProxy.this.channel).connect (endpoint);
+			        BaseConnectorProxy.this.channel.connect(peer, session, initMessage, BaseConnectorProxy.this);
+					return CallbackCompletion.createOutcome();
+				}
+			});
+        	return future.completion;
+        }
     }
 
     protected CallbackCompletion<Void> disconnect(final Message finalMessage) {
