@@ -279,6 +279,20 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
         return AmqpStub.stub;
     }
 
+
+    public static AmqpStub createDetached(IConfiguration config, ZeroMqChannel channel,
+            ThreadingContext threading) {
+        final MosaicLogger sLogger = MosaicLogger.createLogger(AmqpStub.class);
+        synchronized (AbstractDriverStub.MONITOR) {
+            final AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
+            final AmqpDriver driver = AmqpDriver.create(config, threading);
+            final AmqpStub stub = new AmqpStub(config, transmitter, driver, channel);
+            channel.accept(AmqpSession.DRIVER, stub);
+            sLogger.trace("AmqpStub: created new stub."); //$NON-NLS-1$
+            return stub;
+        }
+    }
+
     /**
      * Reads resource connection data from the configuration data.
      * 

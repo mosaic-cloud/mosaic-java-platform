@@ -48,7 +48,7 @@ public class MemcacheKvStoreConnectorTest extends
                 "memcache-kv-store-driver-test.properties");
         scenario.driverChannel.register(KeyValueSession.DRIVER);
         scenario.driverChannel.register(MemcachedSession.DRIVER);
-        scenario.driverStub = MemcachedStub.create(scenario.configuration, scenario.driverChannel,
+        scenario.driverStub = MemcachedStub.createDetached(scenario.configuration, scenario.driverChannel,
                 scenario.threading);
         MemcacheKvStoreConnectorTest.scenario_ = scenario;
     }

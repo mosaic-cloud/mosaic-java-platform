@@ -119,12 +119,12 @@ public abstract class BaseCloudletTest
 		{
 			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create (this.getClass ().getClassLoader (), "amqp-queue-driver-test.properties");
 			scenario.driversChannel.register (AmqpSession.DRIVER);
-			scenario.amqpDriverStub = AmqpStub.create (driverConfiguration, scenario.driversChannel, scenario.threading);
+			scenario.amqpDriverStub = AmqpStub.createDetached (driverConfiguration, scenario.driversChannel, scenario.threading);
 		}
 		{
 			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create (this.getClass ().getClassLoader (), "riak-http-kv-store-driver-test.properties");
 			scenario.driversChannel.register (KeyValueSession.DRIVER);
-			scenario.kvDriverStub = KeyValueStub.create (driverConfiguration, scenario.threading, scenario.driversChannel);
+			scenario.kvDriverStub = KeyValueStub.createDetached (driverConfiguration, scenario.threading, scenario.driversChannel);
 		}
 		this.cloudlet = Cloudlet.create (this.scenario.environment);
 	}

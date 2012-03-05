@@ -128,6 +128,27 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
         return stub;
     }
 
+    public static MemcachedStub createDetached(IConfiguration config, ZeroMqChannel channel,
+            ThreadingContext threading) {
+        final MosaicLogger sLogger = MosaicLogger.createLogger(MemcachedStub.class);
+        MemcachedStub stub;
+        try {
+            sLogger.trace("MemcachedStub: create new stub.");
+            final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
+            final MemcachedDriver driver = MemcachedDriver.create(config, threading);
+            stub = new MemcachedStub(config, transmitter, driver, channel);
+            channel.accept(KeyValueSession.DRIVER, stub);
+            channel.accept(MemcachedSession.DRIVER, stub);
+        } catch (final IOException e) {
+            ExceptionTracer.traceDeferred(e);
+            final ConnectionException e1 = new ConnectionException(
+                    "The Memcached proxy cannot connect to the driver: " + e.getMessage(), e);
+            ExceptionTracer.traceIgnored(e1);
+            stub = null;
+        }
+        return stub;
+    }
+
     @Override
     public synchronized void destroy() {
         synchronized (AbstractDriverStub.MONITOR) {

@@ -209,6 +209,31 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
         return stub;
     }
 
+    public static KeyValueStub createDetached(IConfiguration config, ThreadingContext threadingContext,
+            ZeroMqChannel channel) {
+        final MosaicLogger sLogger = MosaicLogger.createLogger(KeyValueStub.class);
+        KeyValueStub stub;
+        try {
+            sLogger.trace("KeyValueStub: create new stub."); //$NON-NLS-1$
+            final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter();
+            final String driverName = ConfigUtils.resolveParameter(config,
+                    ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+            final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver(
+                    driverName, config, threadingContext);
+            stub = new KeyValueStub(config, transmitter, driver, channel);
+            stub.driverClass = KeyValueDriverFactory.DriverType.valueOf(
+                    driverName.toUpperCase(Locale.ENGLISH)).getDriverClass();
+            channel.accept(KeyValueSession.DRIVER, stub);
+        } catch (final DriverNotFoundException e) {
+            ExceptionTracer.traceDeferred(e);
+            final ConnectionException e1 = new ConnectionException(
+                    "The required key-value driver cannot be provided: " + e.getMessage(), e);
+            ExceptionTracer.traceIgnored(e1);
+            stub = null;
+        }
+        return stub;
+    }
+
     /**
      * Reads resource connection data from the configuration data.
      * 
