@@ -41,6 +41,8 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
             final Context context, final Callback<Message> backingCallback) {
         super(cloudlet, connector, configuration, callback, context);
         backingCallback.connector = this;
+        // FIXME
+        this.initialize();
     }
 
     @Override

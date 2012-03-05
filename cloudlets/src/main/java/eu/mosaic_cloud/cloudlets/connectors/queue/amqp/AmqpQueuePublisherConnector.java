@@ -38,6 +38,8 @@ public class AmqpQueuePublisherConnector<Context, Message, Extra>
             final IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> callback,
             final Context context) {
         super(cloudlet, connector, configuration, callback, context);
+        // FIXME
+        this.initialize();
     }
 
     @Override

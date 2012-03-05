@@ -103,14 +103,16 @@ public final class Cloudlet<Context extends Object>
 			this.controllerContext = controllerContext;
 			this.genericCallbacksHandler = new GenericCallbacksHandler ();
 			this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
-			this.connectorsFactory = new ConnectorsFactory ();
-			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.environment.connectors, this.threading, this.exceptions);
 		}
 		{
 			this.isolate = this.reactor.createIsolate ();
 			this.controllerProxy = this.reactor.createProxy (ICloudletController.class);
 			this.callbacksProxy = this.reactor.createProxy (ICloudletCallback.class);
 			this.genericCallbacksProxies = new ConcurrentHashMap<CallbackProxy, Callbacks> ();
+		}
+		{
+			this.connectorsFactory = new ConnectorsFactory ();
+			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.environment.connectors, this.threading, this.exceptions);
 		}
 	}
 	
