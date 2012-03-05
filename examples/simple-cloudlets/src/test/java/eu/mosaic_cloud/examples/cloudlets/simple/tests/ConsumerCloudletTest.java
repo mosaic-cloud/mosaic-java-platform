@@ -30,6 +30,6 @@ public class ConsumerCloudletTest
 	@Override
 	public void setUp ()
 	{
-		this.setUp (ConsumerCloudlet.LifeCycleHandler.class, ConsumerCloudlet.ConsumerCloudletContext.class);
+		this.setUp (ConsumerCloudlet.LifeCycleHandler.class, ConsumerCloudlet.ConsumerCloudletContext.class, "consumer-cloudlet.properties");
 	}
 }

@@ -21,18 +21,54 @@
 package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
 
+import java.util.UUID;
+
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.runtime.Cloudlet;
-import eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.BaseScenario;
+import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
+import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
+import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
+import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.interoperability.core.ChannelFactory;
+import eu.mosaic_cloud.interoperability.core.ChannelResolver;
+import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
+import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
+import org.junit.After;
 import org.junit.Test;
+
+import com.google.common.base.Preconditions;
 
 import junit.framework.Assert;
 
 
 public abstract class BaseCloudletTest
-		extends eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest<BaseScenario<?>>
+		extends eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest<BaseCloudletTest.Scenario<?>>
 {
+	@Override
+	@After
+	public void tearDown ()
+	{
+		try {
+			if (this.scenario.amqpDriverStub != null)
+				this.scenario.amqpDriverStub.destroy ();
+			if (this.scenario.kvDriverStub != null)
+				this.scenario.kvDriverStub.destroy ();
+			if (this.scenario.driversChannel != null)
+				this.scenario.driversChannel.terminate ();
+			if (this.scenario.connectorsChannel != null)
+				this.scenario.connectorsChannel.terminate ();
+			if (this.cloudlet != null)
+				this.awaitSuccess (this.cloudlet.destroy ());
+		} finally {
+			this.cloudlet = null;
+			this.scenario = null;
+		}
+	}
+	
 	@Override
 	@Test
 	public void test ()
@@ -42,11 +78,67 @@ public abstract class BaseCloudletTest
 		this.cloudlet = null;
 	}
 	
-	protected <Context> void setUp (final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass)
+	protected <Context> void setUp (final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final String configuration)
 	{
-		final BaseScenario<Context> scenario = new BaseScenario<Context> ();
+		final Scenario<Context> scenario = new Scenario<Context> ();
 		this.scenario = scenario;
-		eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.setUpScenario (this.getClass (), scenario, null, callbacksClass, contextClass);
+		final ChannelFactory connectorsChannelFactory = new ChannelFactory () {
+			@Override
+			public Channel create ()
+			{
+				Preconditions.checkState (scenario.connectorsChannel != null);
+				Preconditions.checkState (scenario.driversChannel != null);
+				return (scenario.connectorsChannel);
+			}
+		};
+		final ChannelResolver connectorsChannelResolver = new ChannelResolver () {
+			@Override
+			public void resolve (final String target, final ResolverCallbacks callbacks)
+			{
+				Preconditions.checkNotNull (target);
+				Preconditions.checkNotNull (callbacks);
+				Preconditions.checkState (scenario.connectorsChannel != null);
+				Preconditions.checkState (scenario.driversChannel != null);
+				if ("a5e40f0b2c041bc694ace68ace08420d40f9cbc0".equals (target))
+					callbacks.resolved (this, target, scenario.driversIdentity, scenario.driversEndpoint);
+				if ("a3e40f0b2c041bc694ace68ace08420d40f9cbc0".equals (target))
+					callbacks.resolved (this, target, scenario.driversIdentity, scenario.driversEndpoint);
+				throw (new IllegalArgumentException ());
+			}
+		};
+		eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.setUpScenario (this.getClass (), scenario, configuration, callbacksClass, contextClass, connectorsChannelFactory, connectorsChannelResolver);
+		{
+			scenario.connectorsIdentity = UUID.randomUUID ().toString ();
+			scenario.connectorsChannel = ZeroMqChannel.create (scenario.connectorsIdentity, scenario.threading, scenario.exceptions);
+		}
+		{
+			scenario.driversIdentity = UUID.randomUUID ().toString ();
+			scenario.driversEndpoint = "inproc://" + UUID.randomUUID ().toString ();
+			scenario.driversChannel = ZeroMqChannel.create (scenario.driversIdentity, scenario.threading, scenario.exceptions);
+			scenario.driversChannel.accept (scenario.driversEndpoint);
+		}
+		{
+			scenario.driversChannel.register (AmqpSession.DRIVER);
+			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create (this.getClass ().getClassLoader (), "amqp-queue-driver-test.properties");
+			scenario.amqpDriverStub = AmqpStub.create (driverConfiguration, scenario.driversChannel, scenario.threading);
+		}
+		{
+			scenario.driversChannel.register (KeyValueSession.DRIVER);
+			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create (this.getClass ().getClassLoader (), "riak-http-kv-store-driver-test.properties");
+			scenario.kvDriverStub = KeyValueStub.create (driverConfiguration, scenario.threading, scenario.driversChannel);
+		}
 		this.cloudlet = Cloudlet.create (this.scenario.environment);
+	}
+	
+	public static class Scenario<Context extends Object>
+			extends eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.BaseScenario<Context>
+	{
+		public AbstractDriverStub amqpDriverStub;
+		public ZeroMqChannel connectorsChannel;
+		public String connectorsIdentity;
+		public ZeroMqChannel driversChannel;
+		public String driversEndpoint;
+		public String driversIdentity;
+		public AbstractDriverStub kvDriverStub;
 	}
 }

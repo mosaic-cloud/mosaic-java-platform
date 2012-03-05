@@ -21,15 +21,15 @@
 package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
 
-import eu.mosaic_cloud.examples.cloudlets.simple.HelloWorldCloudlet;
+import eu.mosaic_cloud.examples.cloudlets.simple.SimpleLoggingCloudlet;
 
 
-public class HelloWorldCloudletTest
+public class SimpleLoggingCloudletTest
 		extends BaseCloudletTest
 {
 	@Override
 	public void setUp ()
 	{
-		this.setUp (HelloWorldCloudlet.LifeCycleHandler.class, HelloWorldCloudlet.HelloCloudletContext.class, "hello-cloudlet.properties");
+		this.setUp (SimpleLoggingCloudlet.LifeCycleHandler.class, SimpleLoggingCloudlet.LoggingCloudletContext.class, "simple-logging-cloudlet.properties");
 	}
 }

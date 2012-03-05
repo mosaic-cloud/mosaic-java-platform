@@ -30,6 +30,6 @@ public class PublisherCloudletTest
 	@Override
 	public void setUp ()
 	{
-		this.setUp (PublisherCloudlet.LifeCycleHandler.class, PublisherCloudlet.PublisherCloudletContext.class);
+		this.setUp (PublisherCloudlet.LifeCycleHandler.class, PublisherCloudlet.PublisherCloudletContext.class, "publisher-cloudlet.properties");
 	}
 }
