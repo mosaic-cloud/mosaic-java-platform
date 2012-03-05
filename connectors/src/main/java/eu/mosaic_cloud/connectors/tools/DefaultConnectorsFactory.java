@@ -62,6 +62,7 @@ public class DefaultConnectorsFactory
 	protected static final void initialize (final DefaultConnectorsFactory factory, final ConnectorEnvironment environment)
 	{
 		Preconditions.checkNotNull (factory);
+		Preconditions.checkNotNull (environment);
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
 			public <Value> IKvStoreConnector<Value> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder)

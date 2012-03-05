@@ -68,6 +68,7 @@ public class DefaultConnectorsFactory
 	protected static final void initialize (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet)
 	{
 		Preconditions.checkNotNull (factory);
+		Preconditions.checkNotNull (cloudlet);
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
 			public <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create (final IConfiguration configuration, final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder, final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context callbackContext)
