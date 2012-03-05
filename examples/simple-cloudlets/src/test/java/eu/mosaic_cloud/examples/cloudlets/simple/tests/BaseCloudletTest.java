@@ -52,21 +52,19 @@ public abstract class BaseCloudletTest
 	@After
 	public void tearDown ()
 	{
-		try {
-			if (this.scenario.amqpDriverStub != null)
-				this.scenario.amqpDriverStub.destroy ();
-			if (this.scenario.kvDriverStub != null)
-				this.scenario.kvDriverStub.destroy ();
-			if (this.scenario.driversChannel != null)
-				this.scenario.driversChannel.terminate ();
-			if (this.scenario.connectorsChannel != null)
-				this.scenario.connectorsChannel.terminate ();
-			if (this.cloudlet != null)
-				this.awaitSuccess (this.cloudlet.destroy ());
-		} finally {
-			this.cloudlet = null;
-			this.scenario = null;
-		}
+		if (this.scenario.amqpDriverStub != null)
+			this.scenario.amqpDriverStub.destroy ();
+		if (this.scenario.kvDriverStub != null)
+			this.scenario.kvDriverStub.destroy ();
+		if (this.scenario.driversChannel != null)
+			this.scenario.driversChannel.terminate ();
+		if (this.scenario.connectorsChannel != null)
+			this.scenario.connectorsChannel.terminate ();
+		if (this.cloudlet != null)
+			this.awaitSuccess (this.cloudlet.destroy ());
+		eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.tearDownScenario (this.scenario);
+		this.cloudlet = null;
+		this.scenario = null;
 	}
 	
 	@Override
@@ -114,18 +112,18 @@ public abstract class BaseCloudletTest
 		}
 		{
 			scenario.driversIdentity = UUID.randomUUID ().toString ();
-			scenario.driversEndpoint = "inproc://" + UUID.randomUUID ().toString ();
+			scenario.driversEndpoint = "inproc://" + scenario.driversIdentity;
 			scenario.driversChannel = ZeroMqChannel.create (scenario.driversIdentity, scenario.threading, scenario.exceptions);
 			scenario.driversChannel.accept (scenario.driversEndpoint);
 		}
 		{
-			scenario.driversChannel.register (AmqpSession.DRIVER);
 			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create (this.getClass ().getClassLoader (), "amqp-queue-driver-test.properties");
+			scenario.driversChannel.register (AmqpSession.DRIVER);
 			scenario.amqpDriverStub = AmqpStub.create (driverConfiguration, scenario.driversChannel, scenario.threading);
 		}
 		{
-			scenario.driversChannel.register (KeyValueSession.DRIVER);
 			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create (this.getClass ().getClassLoader (), "riak-http-kv-store-driver-test.properties");
+			scenario.driversChannel.register (KeyValueSession.DRIVER);
 			scenario.kvDriverStub = KeyValueStub.create (driverConfiguration, scenario.threading, scenario.driversChannel);
 		}
 		this.cloudlet = Cloudlet.create (this.scenario.environment);

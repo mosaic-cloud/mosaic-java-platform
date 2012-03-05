@@ -44,6 +44,8 @@ import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
+import org.junit.Ignore;
+
 public class PongCloudlet {
 
     public static final class AmqpConsumerCallback extends
@@ -72,6 +74,7 @@ public class PongCloudlet {
         public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
                 CallbackArguments<PongCloudletContext> arguments) {
             this.logger.info("Pong Cloudlet consumer was destroyed successfully.");
+            context.consumer = null;
             if ((context.publisher == null) && (context.kvStore == null)) {
                 arguments.getCloudlet().destroy();
             }

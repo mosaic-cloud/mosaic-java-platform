@@ -23,7 +23,10 @@ package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
 import eu.mosaic_cloud.examples.cloudlets.simple.ConsumerCloudlet;
 
+import org.junit.Ignore;
 
+
+@Ignore
 public class ConsumerCloudletTest
 		extends BaseCloudletTest
 {

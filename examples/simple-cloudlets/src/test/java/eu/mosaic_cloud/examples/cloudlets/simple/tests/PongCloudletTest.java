@@ -23,7 +23,10 @@ package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
 import eu.mosaic_cloud.examples.cloudlets.simple.PongCloudlet;
 
+import org.junit.Ignore;
 
+
+@Ignore
 public class PongCloudletTest
 		extends BaseCloudletTest
 {
