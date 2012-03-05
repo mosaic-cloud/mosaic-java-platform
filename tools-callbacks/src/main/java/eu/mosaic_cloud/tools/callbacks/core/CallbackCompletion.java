@@ -149,7 +149,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 	public final void observe (final CallbackCompletionObserver observer)
 	{
 		Preconditions.checkNotNull (observer);
-		Preconditions.checkArgument (observer instanceof CallbackProxy);
+		// FIXME
+		// Preconditions.checkArgument (observer instanceof CallbackProxy);
 		try {
 			if (this.backend != null)
 				this.backend.observeCompletion (this, observer);
