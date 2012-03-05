@@ -58,13 +58,11 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	@After
 	public void tearDown ()
 	{
-		try {
-			if (this.cloudlet != null)
-				this.awaitSuccess (this.cloudlet.destroy ());
-		} finally {
-			this.cloudlet = null;
-			this.scenario = null;
-		}
+		if (this.cloudlet != null)
+			this.awaitSuccess (this.cloudlet.destroy ());
+		BaseCloudletTest.tearDownScenario (this.scenario);
+		this.cloudlet = null;
+		this.scenario = null;
 	}
 	
 	@Test
@@ -170,7 +168,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 		public TranscriptExceptionTracer exceptions;
 		public QueueingExceptionTracer exceptionsQueue;
 		public MosaicLogger logger;
-		public long poolTimeout = 1000 * (ConfigProperties.inDebugging ? 3600 : 1);
+		public long poolTimeout = 6 * 1000 * (ConfigProperties.inDebugging ? 3600 : 1);
 		public BasicCallbackReactor reactor;
 		public BasicThreadingContext threading;
 		public Transcript transcript;
