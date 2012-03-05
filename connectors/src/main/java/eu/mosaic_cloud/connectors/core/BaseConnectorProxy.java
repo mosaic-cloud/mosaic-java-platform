@@ -37,6 +37,7 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import com.google.common.base.Preconditions;
 
@@ -113,6 +114,7 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
 					// FIXME
 			        ((ZeroMqChannel) BaseConnectorProxy.this.channel).connect (endpoint);
 			        BaseConnectorProxy.this.channel.connect(peer, session, initMessage, BaseConnectorProxy.this);
+			        future.trigger.triggerSucceeded (null);
 					return CallbackCompletion.createOutcome();
 				}
 			});
@@ -206,6 +208,9 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      *            the request
      */
     protected void send(final Message request) {
+    	// FIXME
+    	while (this.session == null)
+    		Thread.yield ();
         this.session.send(request);
     }
 

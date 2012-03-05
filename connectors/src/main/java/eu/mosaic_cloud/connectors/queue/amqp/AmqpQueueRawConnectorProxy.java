@@ -144,6 +144,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
         requestBuilder.setConsumer(consumer);
         requestBuilder.setExclusive(exclusive);
         requestBuilder.setAutoAck(autoAck);
+        requestBuilder.setExtra(ByteString.EMPTY);
         this.pendingConsumers.put(consumer, consumerCallback);
         final Message mssg = new Message(AmqpMessage.CONSUME_REQUEST, requestBuilder.build());
         final CallbackCompletion<Void> result = this.sendRequest(mssg, token, Void.class); // NOPMD
@@ -266,8 +267,9 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
                     + consumerId);
             final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.remove(consumerId);
             callback.handleCancelOk(consumerId);
-            this.consumerMessages.succeed(consumerId, null);
-            this.consumerMessages.cancel(consumerId);
+            // FIXME
+            // this.consumerMessages.succeed(consumerId, null);
+            // this.consumerMessages.cancel(consumerId);
         }
             break;
         case SERVER_CANCEL: {
