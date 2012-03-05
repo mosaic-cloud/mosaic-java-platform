@@ -32,8 +32,10 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class MemcacheKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String>> {
 

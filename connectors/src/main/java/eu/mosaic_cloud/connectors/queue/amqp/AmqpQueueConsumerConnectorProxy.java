@@ -214,6 +214,7 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
     @Override
     public CallbackCompletion<Void> initialize() {
         // FIXME
+    	this.raw.initialize();
         this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
                 this.exchangeAutoDelete, this.definePassive);
         this.raw.declareQueue(this.queue, this.queueExclusive, this.queueDurable,

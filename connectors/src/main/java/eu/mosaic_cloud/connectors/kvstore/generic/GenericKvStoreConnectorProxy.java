@@ -27,6 +27,8 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
@@ -55,21 +57,17 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
             final ConnectorEnvironment environment,
             final DataEncoder<? super T> encoder) {
         super(configuration, environment, encoder);
-        final String bucket = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
-        // FIXME
-        final String driverIdentity = null;
-        this.channel.register(KeyValueSession.CONNECTOR);
-        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
-        requestBuilder.setToken(this.generateToken());
-        requestBuilder.setBucket(bucket);
-        this.connect(driverIdentity, KeyValueSession.CONNECTOR, new Message(
-                KeyValueMessage.ACCESS, requestBuilder.build()));
     }
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        return CallbackCompletion.createOutcome();
+        final String bucket = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
+        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
+        requestBuilder.setToken(this.generateToken());
+        requestBuilder.setBucket(bucket);
+        return this.connect(KeyValueSession.CONNECTOR, new Message(
+                KeyValueMessage.ACCESS, requestBuilder.build()));
     }
 
     /**

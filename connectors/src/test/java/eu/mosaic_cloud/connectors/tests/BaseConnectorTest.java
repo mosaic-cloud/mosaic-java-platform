@@ -196,5 +196,6 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
 
     protected void testConnector() {
         Assert.assertNotNull(this.connector);
+        Assert.assertTrue(this.awaitSuccess(this.connector.initialize()));
     }
 }

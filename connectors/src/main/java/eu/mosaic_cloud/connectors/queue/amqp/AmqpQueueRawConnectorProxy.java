@@ -76,10 +76,6 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
         super(config, environment);
         this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
         this.consumerMessages = new ResponseHandlerMap();
-        // FIXME
-        final String driverIdentity = null;
-        this.channel.register(AmqpSession.CONNECTOR);
-        this.connect(driverIdentity, AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
     }
 
     /**
@@ -199,6 +195,11 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     }
 
     @Override
+    public CallbackCompletion<Void> destroy() {
+    	return this.disconnect(null);
+    }
+
+    @Override
     public CallbackCompletion<Void> get(final String queue, final boolean autoAck) {
         final CompletionToken token = this.generateToken();
         final AmqpPayloads.GetRequest.Builder requestBuilder = AmqpPayloads.GetRequest.newBuilder();
@@ -211,7 +212,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        return CallbackCompletion.createOutcome();
+    	return this.connect(AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
     }
 
     @Override

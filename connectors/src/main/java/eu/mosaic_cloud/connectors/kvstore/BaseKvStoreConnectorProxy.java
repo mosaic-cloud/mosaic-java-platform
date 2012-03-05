@@ -86,8 +86,7 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
         final CompletionToken token = this.generateToken();
         final AbortRequest.Builder requestBuilder = AbortRequest.newBuilder();
         requestBuilder.setToken(token);
-        this.send(new Message(KeyValueMessage.ABORTED, requestBuilder.build()));
-        return super.destroy();
+        return this.disconnect(new Message(KeyValueMessage.ABORTED, requestBuilder.build()));
     }
 
     @Override

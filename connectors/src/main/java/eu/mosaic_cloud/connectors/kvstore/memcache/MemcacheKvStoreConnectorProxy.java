@@ -63,16 +63,6 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
             final ConnectorEnvironment environment,
             final DataEncoder<? super T> encoder) {
         super(configuration, environment, encoder);
-        final String bucket = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
-        // FIXME
-        final String driverIdentity = null;
-        this.channel.register(MemcachedSession.CONNECTOR);
-        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
-        requestBuilder.setToken(this.generateToken());
-        requestBuilder.setBucket(bucket);
-        this.connect(driverIdentity, MemcachedSession.CONNECTOR, new Message(
-                KeyValueMessage.ACCESS, requestBuilder.build()));
     }
 
     /**
@@ -184,7 +174,13 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        return CallbackCompletion.createOutcome();
+        final String bucket = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
+        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
+        requestBuilder.setToken(this.generateToken());
+        requestBuilder.setBucket(bucket);
+        return this.connect(MemcachedSession.CONNECTOR, new Message(
+                KeyValueMessage.ACCESS, requestBuilder.build()));
     }
 
     @Override

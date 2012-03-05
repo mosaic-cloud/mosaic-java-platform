@@ -29,9 +29,12 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 
@@ -80,11 +83,27 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         this.pendingRequests = new ResponseHandlerMap();
     }
 
-    protected void connect(final String driverIdentifier, final SessionSpecification session,
+    protected CallbackCompletion<Void> connect(final SessionSpecification session,
             final Message initMessage) {
-        this.channel.connect(driverIdentifier, session, initMessage, this);
+    	// FIXME
+        final String driverEndpoint = ConfigUtils.resolveParameter(
+        		this.configuration,
+                ConfigProperties.getString("GenericConnector.0"), String.class, "");
+        final String driverIdentity = ConfigUtils.resolveParameter(
+        		this.configuration,
+                ConfigProperties.getString("GenericConnector.1"), String.class, "");
+        ((ZeroMqChannel) this.channel).connect (driverEndpoint);
+        this.channel.register(session);
+        this.channel.connect(driverIdentity, session, initMessage, this);
+        return CallbackCompletion.createOutcome();
     }
 
+    protected CallbackCompletion<Void> disconnect(final Message finalMessage) {
+    	// FIXME
+    	if (finalMessage != null)
+    		this.send(finalMessage);
+        return CallbackCompletion.createOutcome();
+    }
     /**
      * Called after session was created.
      * 
@@ -95,15 +114,6 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
     public CallbackCompletion<Void> created(final Session session) {
         Preconditions.checkState(this.session == null);
         this.session = session;
-        return CallbackCompletion.createOutcome();
-    }
-
-    /**
-     * Destroys the proxy, freeing up any allocated resources.
-     */
-    @Override
-    public CallbackCompletion<Void> destroy() {
-        ((ZeroMqChannel) this.channel).terminate();
         return CallbackCompletion.createOutcome();
     }
 

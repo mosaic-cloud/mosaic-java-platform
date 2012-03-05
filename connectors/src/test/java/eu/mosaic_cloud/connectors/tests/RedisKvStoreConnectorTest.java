@@ -27,7 +27,9 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
+@Ignore
 public class RedisKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
 

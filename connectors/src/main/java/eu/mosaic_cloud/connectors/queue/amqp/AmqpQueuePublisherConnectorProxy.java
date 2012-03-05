@@ -131,6 +131,7 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
     @Override
     public CallbackCompletion<Void> initialize() {
         // FIXME
+    	this.raw.initialize();
         return this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
                 this.exchangeAutoDelete, this.definePassive);
     }
