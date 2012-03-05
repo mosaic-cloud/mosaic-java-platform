@@ -101,9 +101,10 @@ public abstract class BaseCloudletTest
 				Preconditions.checkState (scenario.driversChannel != null);
 				if ("a5e40f0b2c041bc694ace68ace08420d40f9cbc0".equals (target))
 					callbacks.resolved (this, target, scenario.driversIdentity, scenario.driversEndpoint);
-				if ("a3e40f0b2c041bc694ace68ace08420d40f9cbc0".equals (target))
+				else if ("a3e40f0b2c041bc694ace68ace08420d40f9cbc0".equals (target))
 					callbacks.resolved (this, target, scenario.driversIdentity, scenario.driversEndpoint);
-				throw (new IllegalArgumentException ());
+				else
+					throw (new IllegalArgumentException ());
 			}
 		};
 		eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.setUpScenario (this.getClass (), scenario, configuration, callbacksClass, contextClass, connectorsChannelFactory, connectorsChannelResolver);
