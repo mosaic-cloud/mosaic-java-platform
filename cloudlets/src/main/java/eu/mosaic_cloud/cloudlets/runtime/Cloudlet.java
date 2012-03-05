@@ -437,18 +437,19 @@ public final class Cloudlet<Context extends Object>
 							newArguments = new Object[oldArguments.length];
 							for (int index = 0; index < oldArguments.length; index++) {
 								final Class<?> argumentType = argumentTypes[index];
-								final Object argument = oldArguments[index];
+								final Object oldArgument = oldArguments[index];
 								final Object newArgument;
-								if ((argument != null) && argumentType.isInterface () && ICallback.class.isAssignableFrom (argumentType))
-									newArgument = Cloudlet.this.createGenericCallbacksProxy ((Class<ICallback<?>>) argumentType, (ICallback<?>) argumentType.cast (argument));
+								if ((oldArgument != null) && argumentType.isInterface () && ICallback.class.isAssignableFrom (argumentType))
+									newArgument = Cloudlet.this.createGenericCallbacksProxy ((Class<ICallback<?>>) argumentType, (ICallback<?>) argumentType.cast (oldArgument));
 								else
-									newArgument = argument;
+									newArgument = oldArgument;
 								newArguments[index] = newArgument;
 							}
-						}
+						} else
+							newArguments = oldArguments;
 						try {
 							try {
-								return (method.invoke (ConnectorFactory.this.factoryDelegate, oldArguments));
+								return (method.invoke (ConnectorFactory.this.factoryDelegate, newArguments));
 							} catch (final InvocationTargetException exception) {
 								Cloudlet.this.exceptions.traceHandledException (exception);
 								throw (exception.getCause ());
@@ -684,7 +685,7 @@ public final class Cloudlet<Context extends Object>
 				@Override
 				protected CallbackCompletion<Void> execute ()
 				{
-					final Callbacks delegate = Cloudlet.this.genericCallbacksDelegates.get (proxy);
+					final Callbacks delegate = Cloudlet.this.genericCallbacksProxies.get (proxy);
 					Preconditions.checkState (delegate != null);
 					try {
 						try {
