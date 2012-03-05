@@ -160,12 +160,15 @@ public final class ZeroMqChannel
 			coders.add (coder);
 		}
 		synchronized (this.state.monitor) {
-			for (final Coder coder : coders)
-				if (this.state.coders.containsKey (coder.key)) {
-					this.transcript.traceError ("error encountered while registering coder: already registered; throwing!");
-					throw (new IllegalStateException ());
-				}
+			// FIXME
+			// for (final Coder coder : coders)
+			//	if (this.state.coders.containsKey (coder.key)) {
+			//		this.transcript.traceError ("error encountered while registering coder: already registered; throwing!");
+			//		throw (new IllegalStateException ());
+			//	}
 			for (final Coder coder : coders) {
+				if (this.state.coders.containsKey (coder.key))
+						continue;
 				this.transcript.traceDebugging ("registering coder: `%s` -> %s...", coder.key, coder.coder);
 				this.state.coders.put (coder.key, coder);
 			}
