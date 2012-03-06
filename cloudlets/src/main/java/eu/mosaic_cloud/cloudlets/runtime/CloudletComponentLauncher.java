@@ -20,40 +20,21 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
+
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
-import com.google.common.base.Preconditions;
 
-/**
- * Launches a cloudlet.
- * 
- * @author Georgiana Macariu
- * 
- */
-public class CloudletComponentLauncher {
-
-    private CloudletComponentLauncher() {
-        super();
-        throw new UnsupportedOperationException();
-    }
-
-    public static void main(final String descriptor, final String[] arguments) throws Throwable {
-        Preconditions.checkNotNull(descriptor);
-        Preconditions.checkArgument(arguments != null);
-        CloudletComponentPreMain.CloudletContainerParameters.classpath = null;
-        CloudletComponentPreMain.CloudletContainerParameters.configFile = descriptor;
-        final String[] finalArguments = new String[arguments.length + 1];
-        finalArguments[0] = "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks";
-        System.arraycopy(arguments, 0, finalArguments, 1, arguments.length);
-        MosBasicComponentLauncher.main(finalArguments, null);
-    }
-
-    public static void main(final String[] arguments) throws Throwable {
-        Preconditions.checkArgument((arguments != null) && (arguments.length >= 1),
-                "invalid arguments: expected `<descriptor> ...`");
-        CloudletComponentPreMain.CloudletContainerParameters.classpath = null;
-        CloudletComponentPreMain.CloudletContainerParameters.configFile = arguments[0];
-        arguments[0] = "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks";
-        MosBasicComponentLauncher.main(arguments);
-    }
+public final class CloudletComponentLauncher
+{
+	private CloudletComponentLauncher ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static void main (final String[] arguments)
+			throws Throwable
+	{
+		MosBasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
+	}
 }

@@ -20,23 +20,25 @@
 
 package eu.mosaic_cloud.drivers;
 
-/**
- * Enums of component callbacks for resource drivers.
- * 
- * @author Georgiana Macariu
- * 
- */
-public enum DriverCallbackType {
-    AMQP("eu.mosaic_cloud.drivers.queue.amqp.AmqpDriverComponentCallbacks"), KV(
-            "eu.mosaic_cloud.drivers.kvstore.KVDriverComponentCallbacks");
 
-    private final String callbackClass;
+import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
-    DriverCallbackType(String canonicalClassName) {
-        this.callbackClass = canonicalClassName;
-    }
+import com.google.common.base.Preconditions;
 
-    public String getCallbackClass() {
-        return this.callbackClass;
-    }
+
+public final class DriverComponentLauncher
+{
+	private DriverComponentLauncher ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static void main (final String[] arguments)
+			throws Throwable
+	{
+		arguments[0] = DriverComponentType.valueOf (arguments[0].toUpperCase ()).getCallbackClass ();
+		Preconditions.checkNotNull (arguments[0], "invalid arguments; expected: `<amqp | kv> ...`");
+		MosBasicComponentLauncher.main (arguments);
+	}
 }

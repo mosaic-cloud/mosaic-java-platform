@@ -340,10 +340,10 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
             this.status = Status.Ready;
             CloudletComponentCallbacks.logger
                     .info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
-            if (CloudletContainerParameters.configFile != null) {
+            if (CloudletContainerParameters.properties != null) {
                 final ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
                 final List<CloudletManager> containers = startCloudlet(loader,
-                        CloudletContainerParameters.configFile);
+                        CloudletContainerParameters.properties);
                 if (containers != null) {
                     this.cloudletRunners.addAll(containers);
                 }

@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-examples-simple-components
+ * mosaic-drivers
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,24 +18,25 @@
  * #L%
  */
 
-package eu.mosaic_cloud.examples.components.simple;
+package eu.mosaic_cloud.drivers;
 
+/**
+ * Enums of component callbacks for resource drivers.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
+public enum DriverComponentType {
+    AMQP("eu.mosaic_cloud.drivers.queue.amqp.AmqpDriverComponentCallbacks"), KV(
+            "eu.mosaic_cloud.drivers.kvstore.KVDriverComponentCallbacks");
 
-import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
+    private final String callbackClass;
 
+    DriverComponentType(String canonicalClassName) {
+        this.callbackClass = canonicalClassName;
+    }
 
-public final class AbacusComponentPreMain
-		extends Object
-{
-	private AbacusComponentPreMain ()
-	{
-		super ();
-		throw (new UnsupportedOperationException ());
-	}
-	
-	public static final void main (final String[] arguments)
-			throws Throwable
-	{
-		BasicComponentHarnessPreMain.main (AbacusComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments);
-	}
+    public String getCallbackClass() {
+        return this.callbackClass;
+    }
 }

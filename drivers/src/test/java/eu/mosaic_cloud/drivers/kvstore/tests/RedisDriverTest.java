@@ -58,10 +58,6 @@ public class RedisDriverTest {
 
     private BasicThreadingContext threadingContext;
 
-    public static void main(String... args) {
-        JUnitCore.main("eu.mosaic_cloud.drivers.kvstore.tests.RedisDriverTest");
-    }
-
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         RedisDriverTest.keyPrefix = UUID.randomUUID().toString();

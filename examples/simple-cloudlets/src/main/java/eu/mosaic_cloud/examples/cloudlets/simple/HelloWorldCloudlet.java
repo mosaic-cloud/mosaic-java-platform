@@ -24,7 +24,6 @@ import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentLauncher;
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -66,9 +65,5 @@ public class HelloWorldCloudlet {
             cloudlet.destroy();
             return ICallback.SUCCESS;
         }
-    }
-
-    public static void main(String[] arguments) throws Throwable {
-        CloudletComponentLauncher.main("hello-cloudlet.properties", arguments);
     }
 }

@@ -152,7 +152,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.drivers.DriverPreMain</mainClass>
+							<mainClass>eu.mosaic_cloud.drivers.DriverComponentPreMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

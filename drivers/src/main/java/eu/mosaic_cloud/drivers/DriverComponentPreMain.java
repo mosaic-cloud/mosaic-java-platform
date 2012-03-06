@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-examples-realtime-feeds-indexer
+ * mosaic-drivers
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,25 +18,28 @@
  * #L%
  */
 
-package eu.mosaic_cloud.examples.realtime_feeds.indexer;
+package eu.mosaic_cloud.drivers;
 
-import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
+
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
 import com.google.common.base.Preconditions;
 
-public class IndexerCloudletPreMain {
 
-    /**
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] arguments) throws Throwable {
-        Preconditions.checkArgument(arguments != null);
-        Preconditions.checkArgument(arguments.length == 0, "invalid arguments");
-        CloudletContainerParameters.classpath = null;
-        CloudletContainerParameters.configFile = "indexer-cloudlet.properties";
-        BasicComponentHarnessPreMain.main(new String[] {
-            "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks" });
-    }
+public final class DriverComponentPreMain
+		extends Object
+{
+	private DriverComponentPreMain ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static final void main (final String[] arguments)
+			throws Throwable
+	{
+		final String callbacksClass = DriverComponentType.valueOf (arguments[0].toUpperCase ()).getCallbackClass ();
+		Preconditions.checkNotNull (callbacksClass, "invalid arguments; expected: `<amqp | kv> ...`");
+		BasicComponentHarnessPreMain.main (callbacksClass, arguments);
+	}
 }
