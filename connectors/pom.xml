@@ -40,11 +40,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.components</groupId>
-			<artifactId>components-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>eu.mosaic_cloud.interoperability</groupId>
 			<artifactId>interoperability-core</artifactId>
 			<version>${project.version}</version>
