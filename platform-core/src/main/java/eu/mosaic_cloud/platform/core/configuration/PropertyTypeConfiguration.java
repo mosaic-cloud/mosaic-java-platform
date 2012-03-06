@@ -169,12 +169,12 @@ public final class PropertyTypeConfiguration implements IConfiguration {
     @Override
     public <T> void addParameter(ConfigurationIdentifier identifier, T value) {
         final String property = identifier.getIdentifier();
-        this.properties.put(property, value);
+        this.properties.put(property, value.toString());
     }
 
     @Override
     public <T> void addParameter(String property, T value) {
-        this.properties.put(property, value);
+        this.properties.put(property, value.toString());
     }
 
     private <T extends Object> T decodeValue(Class<T> valueClass, String encodedValue) {

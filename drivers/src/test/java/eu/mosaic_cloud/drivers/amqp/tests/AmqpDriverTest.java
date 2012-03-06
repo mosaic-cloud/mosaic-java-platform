@@ -45,6 +45,10 @@ import org.junit.Test;
 
 public class AmqpDriverTest {
 
+    private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
+
+    private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
+
     private static IConfiguration configuration;
 
     private AmqpDriver wrapper;
@@ -55,8 +59,29 @@ public class AmqpDriverTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        AmqpDriverTest.configuration = PropertyTypeConfiguration.create(
-                AmqpDriverTest.class.getClassLoader(), "amqp-test.properties");
+        AmqpDriverTest.configuration = PropertyTypeConfiguration.create();
+
+        configuration.addParameter("interop.channel.address", "inproc://");
+        configuration.addParameter("interop.driver.identifier", "driver.amqp.1");
+
+        String host = System.getProperty(MOSAIC_AMQP_HOST, "127.0.0.1");
+        configuration.addParameter("amqp.host", host);
+        int port = Integer.parseInt(System.getProperty(MOSAIC_AMQP_PORT, "5672"));
+        configuration.addParameter("amqp.port", port);
+
+        configuration.addParameter("amqp.driver_threads", 10);
+
+        configuration.addParameter("consumer.amqp.queue", "queue-x");
+        configuration.addParameter("consumer.amqp.consumer_id", "consumer-x");
+        configuration.addParameter("consumer.amqp.auto_ack", true);
+        configuration.addParameter("consumer.amqp.exclusive", false);
+
+        configuration.addParameter("publisher.amqp.exchange", "exchange-x");
+        configuration.addParameter("publisher.amqp.routing_key", "rk-x");
+        configuration.addParameter("publisher.amqp.manadatory", true);
+        configuration.addParameter("publisher.amqp.immediate", true);
+        configuration.addParameter("publisher.amqp.durable", false);
+
     }
 
     @Before

@@ -28,6 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -47,6 +48,10 @@ import org.junit.Test;
 
 public class MemcachedDriverTest {
 
+    private static final String MOSAIC_MEMCACHED_PORT = "mosaic.tests.resources.memcached.port";
+
+    private static final String MOSAIC_MEMCACHED_HOST = "mosaic.tests.resources.memcached.host";
+
     private BasicThreadingContext threadingContext;
 
     private MemcachedDriver wrapper;
@@ -65,9 +70,22 @@ public class MemcachedDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions.catcher);
         this.threadingContext.initialize();
-        this.wrapper = MemcachedDriver.create(PropertyTypeConfiguration.create(
-                MemcachedDriverTest.class.getClassLoader(), "memcached-test.properties"),
-                this.threadingContext);
+
+        IConfiguration configuration = PropertyTypeConfiguration.create();
+
+        String host = System.getProperty(MOSAIC_MEMCACHED_HOST, "127.0.0.1");
+        configuration.addParameter("memcached.host_1", host);
+        int port = Integer.parseInt(System.getProperty(MOSAIC_MEMCACHED_PORT, "8091"));
+        configuration.addParameter("memcached.port_1", port);
+
+        configuration.addParameter("kvstore.driver_name", "MEMCACHED");
+        configuration.addParameter("kvstore.driver_threads", 2);
+        configuration.addParameter("kvstore.bucket", "test");
+
+        configuration.addParameter("kvstore.user", "test");
+        configuration.addParameter("kvstore.passwd", "test");
+
+        this.wrapper = MemcachedDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(MemcachedDriverTest.keyPrefix, "test");
     }
 

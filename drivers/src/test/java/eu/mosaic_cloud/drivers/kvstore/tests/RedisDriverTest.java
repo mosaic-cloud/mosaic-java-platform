@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RedisDriver;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -47,6 +48,10 @@ import org.junit.Test;
 import org.junit.runner.JUnitCore;
 
 public class RedisDriverTest {
+
+    private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
+
+    private static final String MOSAIC_REDIS_PORT = "mosaic.tests.resources.redis.port";
 
     private AbstractKeyValueDriver wrapper;
 
@@ -70,9 +75,19 @@ public class RedisDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions.catcher);
         this.threadingContext.initialize();
-        this.wrapper = RedisDriver.create(PropertyTypeConfiguration.create(
-                RedisDriverTest.class.getClassLoader(), "redis-test.properties"),
-                this.threadingContext);
+
+        IConfiguration configuration = PropertyTypeConfiguration.create();
+
+        String host = System.getProperty(MOSAIC_REDIS_HOST, "127.0.0.1");
+        configuration.addParameter("kvstore.host", host);
+        Integer port = Integer.valueOf(System.getProperty(MOSAIC_REDIS_PORT, "6379"));
+        configuration.addParameter("kvstore.port", port);
+
+        configuration.addParameter("kvstore.driver_name", "REDIS");
+        configuration.addParameter("kvstore.driver_threads", 1);
+        configuration.addParameter("kvstore.bucket", "12");
+
+        this.wrapper = RedisDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
     }
 

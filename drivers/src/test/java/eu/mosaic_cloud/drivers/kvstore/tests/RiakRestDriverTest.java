@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RiakRestDriver;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -46,6 +47,10 @@ import org.junit.Test;
 
 public class RiakRestDriverTest {
 
+    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
+
+    private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
+
     private AbstractKeyValueDriver wrapper;
 
     private BasicThreadingContext threadingContext;
@@ -64,9 +69,19 @@ public class RiakRestDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions.catcher);
         this.threadingContext.initialize();
-        this.wrapper = RiakRestDriver.create(PropertyTypeConfiguration.create(
-                RiakRestDriverTest.class.getClassLoader(), "riakrest-test.properties"),
-                this.threadingContext);
+
+        IConfiguration configuration = PropertyTypeConfiguration.create();
+
+        String host = System.getProperty(MOSAIC_RIAK_HOST, "127.0.0.1");
+        configuration.addParameter("kvstore.host", host);
+        int port = Integer.parseInt(System.getProperty(MOSAIC_RIAK_PORT, "8098"));
+        configuration.addParameter("kvstore.port", port);
+
+        configuration.addParameter("kvstore.driver_name", "RIAKREST");
+        configuration.addParameter("kvstore.driver_threads", 2);
+        configuration.addParameter("kvstore.bucket", "10");
+
+        this.wrapper = RiakRestDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(RiakRestDriverTest.keyPrefix, "test");
     }
 
