@@ -40,6 +40,25 @@ public final class FallbackExceptionTracer
 		this.threadDelegate = new InheritableThreadLocal<ExceptionTracer> ();
 	}
 	
+	public final ExceptionTracer resolveDelegate ()
+	{
+		{
+			final ExceptionTracer delegate = this.globalDelegate.get ();
+			if (delegate == this)
+				return (null);
+			if (delegate != null)
+				return (delegate);
+		}
+		{
+			final ExceptionTracer delegate = this.threadDelegate.get ();
+			if (delegate == this)
+				return (null);
+			if (delegate != null)
+				return (delegate);
+		}
+		return (AbortingExceptionTracer.defaultInstance);
+	}
+	
 	public final void setGlobalTracer (final ExceptionTracer tracer)
 	{
 		Preconditions.checkNotNull (tracer);
@@ -57,17 +76,7 @@ public final class FallbackExceptionTracer
 	@Override
 	protected final ExceptionTracer getDelegate ()
 	{
-		{
-			final ExceptionTracer delegate = this.globalDelegate.get ();
-			if (delegate != null)
-				return (delegate);
-		}
-		{
-			final ExceptionTracer delegate = this.threadDelegate.get ();
-			if (delegate != null)
-				return (delegate);
-		}
-		return (AbortingExceptionTracer.defaultInstance);
+		return (this.resolveDelegate ());
 	}
 	
 	@Override
