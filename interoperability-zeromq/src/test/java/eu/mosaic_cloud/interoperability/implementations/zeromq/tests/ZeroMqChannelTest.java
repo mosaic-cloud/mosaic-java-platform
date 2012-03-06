@@ -30,6 +30,8 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,9 +42,11 @@ public final class ZeroMqChannelTest
 	@Test
 	public final void test ()
 	{
+		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		Assert.assertTrue (threading.initialize (ZeroMqChannelTest.defaultPollTimeout));
 		final String serverIdentifier = UUID.randomUUID ().toString ();
 		final String clientIdentifier = UUID.randomUUID ().toString ();
@@ -68,10 +72,10 @@ public final class ZeroMqChannelTest
 		Assert.assertTrue (server.terminate (ZeroMqChannelTest.defaultPollTimeout));
 		Assert.assertTrue (client.terminate (ZeroMqChannelTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (ZeroMqChannelTest.defaultPollTimeout));
-		Assert.assertNull (exceptions.queue.poll ());
+		Assert.assertNull (exceptionsQueue.queue.poll ());
 	}
 	
 	public static final long defaultPollTimeout = 1000;
-	public static final String defaultServerEndpoint = "tcp://127.0.0.1:31027";
+	public static final String defaultServerEndpoint = "inproc://fd2d7ca5-355b-4a6a-b12a-21b034b29fe3";
 	public static final int defaultTries = 16;
 }

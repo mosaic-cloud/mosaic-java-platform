@@ -100,13 +100,13 @@ public final class ThreadBundle<_Thread_ extends Thread>
 		}
 	}
 	
-	private final ReferenceQueue<_Thread_> collector;
-	private final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
-	
 	public static final <_Thread_ extends Thread> ThreadBundle<_Thread_> create ()
 	{
 		return (new ThreadBundle<_Thread_> ());
 	}
+	
+	private final ReferenceQueue<_Thread_> collector;
+	private final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
 	
 	private static final class ThreadComparator
 			extends Object

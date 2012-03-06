@@ -20,36 +20,22 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
+
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
-import com.google.common.base.Preconditions;
 
-public class CloudletComponentPreMain {
-
-    public static class CloudletContainerParameters {
-
-        public static String classpath;
-
-        public static String configFile;
-
-        public static int noInstances = 1;
-    }
-
-    /**
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] arguments) throws Exception {
-        Preconditions.checkArgument(arguments != null);
-        Preconditions.checkArgument((arguments.length == 2) || (arguments.length == 3),
-                "invalid arguments: <cloudlet jar> <cloudlet descriptor> [<no_of_instances>]");
-        CloudletComponentPreMain.CloudletContainerParameters.classpath = arguments[0];
-        CloudletComponentPreMain.CloudletContainerParameters.configFile = arguments[1];
-        if (arguments.length == 3) {
-            CloudletComponentPreMain.CloudletContainerParameters.noInstances = Integer
-                    .parseInt(arguments[2]);
-        }
-        BasicComponentHarnessPreMain.main(new String[] {
-            "eu.mosaic_cloud.cloudlets.runtime.ContainerComponentCallbacks" });
-    }
+public final class CloudletComponentPreMain
+		extends Object
+{
+	private CloudletComponentPreMain ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static final void main (final String[] arguments)
+			throws Throwable
+	{
+		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments);
+	}
 }

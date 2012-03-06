@@ -72,6 +72,7 @@ public class PongCloudlet {
         public CallbackCompletion<Void> destroySucceeded(PongCloudletContext context,
                 CallbackArguments<PongCloudletContext> arguments) {
             this.logger.info("Pong Cloudlet consumer was destroyed successfully.");
+            context.consumer = null;
             if ((context.publisher == null) && (context.kvStore == null)) {
                 arguments.getCloudlet().destroy();
             }

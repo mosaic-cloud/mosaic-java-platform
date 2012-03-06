@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -97,12 +97,6 @@ public final class ClasspathExporter
 		}
 	}
 	
-	private final InetSocketAddress address;
-	private final TranscriptExceptionTracer exceptions;
-	private final ClassLoader loader;
-	private Server server;
-	private final Transcript transcript;
-	
 	public static final ClasspathExporter create (final InetSocketAddress address, final ClassLoader loader, final ExceptionTracer exceptions)
 	{
 		return (new ClasspathExporter (address, loader, exceptions));
@@ -115,7 +109,7 @@ public final class ClasspathExporter
 	
 	public static final void main (final String[] arguments, final ClassLoader loader)
 	{
-		ClasspathExporter.main (arguments, loader, AbortingExceptionTracer.defaultInstance);
+		ClasspathExporter.main (arguments, loader, FallbackExceptionTracer.defaultInstance);
 	}
 	
 	public static final void main (final String[] arguments, final ClassLoader loader, final ExceptionTracer exceptions)
@@ -134,4 +128,10 @@ public final class ClasspathExporter
 		}
 		exporter.stopServer ();
 	}
+	
+	private final InetSocketAddress address;
+	private final TranscriptExceptionTracer exceptions;
+	private final ClassLoader loader;
+	private Server server;
+	private final Transcript transcript;
 }

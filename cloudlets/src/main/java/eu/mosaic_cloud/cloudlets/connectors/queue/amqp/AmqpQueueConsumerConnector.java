@@ -22,6 +22,7 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallback;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueDeliveryToken;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -37,8 +38,11 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
             final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> connector,
             final IConfiguration configuration,
             final IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> callback,
-            final Context context) {
+            final Context context, final Callback<Message> backingCallback) {
         super(cloudlet, connector, configuration, callback, context);
+        backingCallback.connector = this;
+        // FIXME
+        this.initialize();
     }
 
     @Override
@@ -71,5 +75,23 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
             });
         }
         return completion;
+    }
+
+	protected CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery, Message message)
+	{
+		if (this.callback != null) {
+			return this.callback.consume(this.context, new AmqpQueueConsumeCallbackArguments<Context, Message, Extra>(this.cloudlet, delivery, message));
+		}
+		return CallbackCompletion.createFailure(new IllegalStateException());
+	}
+
+    public static final class Callback<Message> implements IAmqpQueueConsumerCallback<Message> {
+ 
+    	@Override
+		public final CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery, Message message) {
+			return this.connector.consume(delivery, message);
+		}
+
+		AmqpQueueConsumerConnector<?, Message, ?> connector = null;
     }
 }

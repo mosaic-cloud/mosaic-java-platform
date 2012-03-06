@@ -20,15 +20,10 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.connectors.core.ConfigProperties;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 public class AmqpQueueConsumerConnector<Message> extends
         AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<Message>> implements
@@ -39,18 +34,12 @@ public class AmqpQueueConsumerConnector<Message> extends
     }
 
     public static <Message> AmqpQueueConsumerConnector<Message> create(
-            final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder,
-            final IAmqpQueueConsumerCallback<Message> callback, final ThreadingContext threading) {
-        final String driverIdentity = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
-        channel.register(AmqpSession.CONNECTOR);
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
+            final IAmqpQueueConsumerCallback<Message> callback) {
         final AmqpQueueConsumerConnectorProxy<Message> proxy = AmqpQueueConsumerConnectorProxy
-                .create(configuration, driverIdentity, channel, messageClass, messageEncoder,
-                        callback);
+                .create(configuration, environment, messageClass, messageEncoder,
+                		callback);
         return new AmqpQueueConsumerConnector<Message>(proxy);
     }
 

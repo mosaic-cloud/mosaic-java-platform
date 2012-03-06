@@ -23,6 +23,7 @@ package eu.mosaic_cloud.tools.callbacks.implementations.basic;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Comparator;
@@ -38,9 +39,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCanceled;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionBackend;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackFunnelHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolateBackend;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
@@ -140,12 +143,12 @@ public final class BasicCallbackReactor
 		return (true);
 	}
 	
-	final Reactor reactor;
-	
 	public static final BasicCallbackReactor create (final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		return (new BasicCallbackReactor (threading, exceptions));
 	}
+	
+	final Reactor reactor;
 	
 	static abstract class Action<_Target_ extends ActionTarget, _Outcome_ extends Object>
 			extends Object
@@ -201,16 +204,33 @@ public final class BasicCallbackReactor
 				throws Throwable
 		{
 			if (method.getDeclaringClass () == Object.class)
-				return (method.invoke (this, arguments));
-			if (method.getReturnType () != CallbackCompletion.class)
-				throw (new IllegalAccessError ());
+				try {
+					return (method.invoke (this, arguments));
+				} catch (final InvocationTargetException exception) {
+					this.reactor.exceptions.traceHandledException (exception);
+					throw (exception.getCause ());
+				}
 			synchronized (this.monitor) {
 				this.reactor.transcript.traceDebugging ("invocking (triggered) for proxy `%{object:identity}` the method `%{method}` with arguments `%{array}`...", this.proxy, method, arguments);
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
 				if (this.handlerStatus.get () != HandlerStatus.Delegated) {
-					final ActorCallbackAction<?> action = new ActorCallbackAction<Object> (this, method, arguments);
-					this.enqueueAction (action);
-					return (action.future.completion);
+					if (method.getReturnType () == CallbackCompletion.class) {
+						final ActorCallbackAction<?> action = new ActorCallbackAction<Object> (this, method, arguments);
+						this.enqueueAction (action);
+						return (action.future.completion);
+					}
+					// FIXME
+					if (method.isAnnotationPresent (CallbackPassthrough.class)) {
+						if (this.handlerStatus.get () == HandlerStatus.Assigned)
+							try {
+								return (method.invoke (this.handler.get (), arguments));
+							} catch (final InvocationTargetException exception) {
+								this.reactor.exceptions.traceHandledException (exception);
+								throw (exception.getCause ());
+							}
+						throw (new IllegalAccessError ());
+					}
+					throw (new IllegalAccessError ());
 				}
 			}
 			return (this.delegateInvokeCallback (method, arguments, null));
@@ -229,7 +249,12 @@ public final class BasicCallbackReactor
 			final CallbackCompletion<?> returnedCompletion;
 			final CallbackCompletion<?> finalCompletion;
 			try {
-				returnedCompletion = (CallbackCompletion<?>) method.invoke (delegate, arguments);
+				try {
+					returnedCompletion = (CallbackCompletion<?>) method.invoke (delegate, arguments);
+				} catch (final InvocationTargetException exception) {
+					this.reactor.exceptions.traceHandledException (exception);
+					throw (exception.getCause ());
+				}
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);
 				if (chainedFuture != null) {
@@ -434,7 +459,15 @@ public final class BasicCallbackReactor
 			this.reactor.transcript.traceDebugging ("invocking method callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`) the method `%{method}` with arguments `%{array}`...", handler, this.proxy, this, scheduler.isolate, scheduler, action.method, action.arguments);
 			final CallbackCompletion<?> returnedCompletion;
 			try {
-				returnedCompletion = (CallbackCompletion<?>) action.method.invoke (handler, action.arguments);
+				try {
+					if (handler instanceof CallbackFunnelHandler)
+						returnedCompletion = (CallbackCompletion<?>) ((CallbackFunnelHandler) handler).executeCallback (this.proxy, action.method, action.arguments);
+					else
+						returnedCompletion = (CallbackCompletion<?>) action.method.invoke (handler, action.arguments);
+				} catch (final InvocationTargetException exception) {
+					this.reactor.exceptions.traceHandledException (exception);
+					throw (exception.getCause ());
+				}
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);
 				action.future.triggerFailure (exception);
@@ -479,7 +512,7 @@ public final class BasicCallbackReactor
 		{
 			Preconditions.checkNotNull (scheduler);
 			Preconditions.checkNotNull (handler);
-			Preconditions.checkArgument (this.specification.isInstance (handler));
+			Preconditions.checkArgument (this.specification.isInstance (handler) || CallbackFunnelHandler.class.isInstance (handler));
 			synchronized (this.monitor) {
 				this.reactor.transcript.traceDebugging ("assigning (triggered) handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
 				Preconditions.checkState (this.status.get () == Status.Active);
@@ -950,7 +983,8 @@ public final class BasicCallbackReactor
 			Preconditions.checkNotNull (proxy);
 			Preconditions.checkNotNull (isolate);
 			Preconditions.checkNotNull (handler);
-			Preconditions.checkArgument (Callbacks.class.isInstance (handler));
+			// FIXME
+			// Preconditions.checkArgument (Callbacks.class.isInstance (handler));
 			Preconditions.checkArgument (!CallbackProxy.class.isInstance (handler));
 			Preconditions.checkArgument (CallbackHandler.class.isInstance (handler));
 			synchronized (this.monitor) {

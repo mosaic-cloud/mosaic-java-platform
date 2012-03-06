@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentPreMain.CloudletContainerParameters;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -340,10 +339,10 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
             this.status = Status.Ready;
             CloudletComponentCallbacks.logger
                     .info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
-            if (CloudletContainerParameters.configFile != null) {
+            if (CloudletContainerParameters.properties != null) {
                 final ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
                 final List<CloudletManager> containers = startCloudlet(loader,
-                        CloudletContainerParameters.configFile);
+                        CloudletContainerParameters.properties);
                 if (containers != null) {
                     this.cloudletRunners.addAll(containers);
                 }

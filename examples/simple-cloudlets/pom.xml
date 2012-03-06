@@ -23,7 +23,42 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>platform-interop</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>cloudlets</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>cloudlets</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>drivers</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>drivers</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.interoperability</groupId>
+			<artifactId>interoperability-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.interoperability</groupId>
+			<artifactId>interoperability-zeromq</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -32,14 +67,15 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-exceptions</artifactId>
-			<version>${project.version}</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${versions.dependencies.guava}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-threading</artifactId>
-			<version>${project.version}</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${versions.dependencies.junit}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	

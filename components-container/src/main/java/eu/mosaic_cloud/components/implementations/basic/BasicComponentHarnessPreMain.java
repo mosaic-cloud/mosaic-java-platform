@@ -21,11 +21,15 @@
 package eu.mosaic_cloud.components.implementations.basic;
 
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import eu.mosaic_cloud.tools.miscellaneous.BrokenInputStream;
+import eu.mosaic_cloud.tools.miscellaneous.BrokenPrintStream;
+
+import com.google.common.base.Preconditions;
 
 
 public final class BasicComponentHarnessPreMain
@@ -40,21 +44,29 @@ public final class BasicComponentHarnessPreMain
 	static {
 		stdin = System.in;
 		stdout = System.out;
-		System.setIn (new ByteArrayInputStream (new byte[0]));
-		System.setOut (System.err);
+		System.setIn (BrokenInputStream.create ());
+		System.setOut (BrokenPrintStream.create ());
+	}
+	
+	public static final void main (final String callbacksClass, final String[] arguments)
+			throws Throwable
+	{
+		final Class<?> mainClass = BasicComponentHarnessPreMain.class.getClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("PreMain", "Main"));
+		final Method mainMethod = mainClass.getMethod ("main", String.class, String[].class);
+		try {
+			mainMethod.invoke (null, new Object[] {callbacksClass, arguments});
+		} catch (final InvocationTargetException exception) {
+			throw (exception.getCause ());
+		}
 	}
 	
 	public static final void main (final String[] arguments)
-			throws ClassNotFoundException,
-				SecurityException,
-				NoSuchMethodException,
-				IllegalArgumentException,
-				IllegalAccessException,
-				InvocationTargetException
+			throws Throwable
 	{
-		final Class<?> mainClass = BasicComponentHarnessPreMain.class.getClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("PreMain", "Main"));
-		final Method mainMethod = mainClass.getMethod ("main", String[].class);
-		mainMethod.invoke (null, new Object[] {arguments});
+		Preconditions.checkArgument ((arguments != null) && (arguments.length > 0) && (arguments[0] != null), "invalid arguments; expected: `<component-callbacks-class> ...`");
+		final String[] finalArguments = new String[arguments.length - 1];
+		System.arraycopy (arguments, 1, finalArguments, 0, arguments.length - 1);
+		BasicComponentHarnessPreMain.main (arguments[0], finalArguments);
 	}
 	
 	static final InputStream stdin;

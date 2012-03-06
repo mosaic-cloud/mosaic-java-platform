@@ -75,10 +75,10 @@ public final class FanoutExceptionTracer
 			}
 	}
 	
-	private final ExceptionTracer[] delegates;
-	
 	public static final FanoutExceptionTracer create (final ExceptionTracer ... delegates)
 	{
 		return (new FanoutExceptionTracer (delegates));
 	}
+	
+	private final ExceptionTracer[] delegates;
 }

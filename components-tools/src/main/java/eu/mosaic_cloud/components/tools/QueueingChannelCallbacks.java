@@ -114,11 +114,6 @@ public final class QueueingChannelCallbacks
 	public final void unregisteredCallbacks (final Callbacks proxy)
 	{}
 	
-	public final BlockingQueue<ChannelMessage> queue;
-	private final ChannelController channel;
-	private final ExceptionTracer exceptions;
-	private final long waitTimeout;
-	
 	public static final QueueingChannelCallbacks create (final ChannelController channel, final BlockingQueue<ChannelMessage> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
 		return (new QueueingChannelCallbacks (channel, queue, waitTimeout, exceptions));
@@ -128,4 +123,9 @@ public final class QueueingChannelCallbacks
 	{
 		return (new QueueingChannelCallbacks (channel, new LinkedBlockingQueue<ChannelMessage> (), 0, exceptions));
 	}
+	
+	public final BlockingQueue<ChannelMessage> queue;
+	private final ChannelController channel;
+	private final ExceptionTracer exceptions;
+	private final long waitTimeout;
 }

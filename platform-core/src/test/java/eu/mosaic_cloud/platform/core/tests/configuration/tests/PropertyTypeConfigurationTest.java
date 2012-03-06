@@ -46,7 +46,7 @@ public class PropertyTypeConfigurationTest {
                 "configuration-test.properties");
         PropertyTypeConfigurationTest.fileConfiguration = PropertyTypeConfiguration
                 .create(new FileInputStream("src/test/resources/configuration-test.properties"));
-        PropertyTypeConfigurationTest.systemConfiguration = PropertyTypeConfiguration.create(null);
+        PropertyTypeConfigurationTest.systemConfiguration = PropertyTypeConfiguration.create();
     }
 
     @Test

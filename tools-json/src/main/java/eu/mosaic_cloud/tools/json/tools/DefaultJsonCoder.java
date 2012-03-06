@@ -83,13 +83,12 @@ public final class DefaultJsonCoder
 		return (JSONValue.toJSONString (structure, this.style));
 	}
 	
-	private final Charset metaDataCharset;
-	private final JSONStyle style;
-	
 	public static final DefaultJsonCoder create ()
 	{
 		return (new DefaultJsonCoder ());
 	}
 	
+	private final Charset metaDataCharset;
+	private final JSONStyle style;
 	public static final DefaultJsonCoder defaultInstance = DefaultJsonCoder.create ();
 }

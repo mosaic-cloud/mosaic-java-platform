@@ -63,6 +63,8 @@ public class MemcacheKvStoreConnector<C, D, E>
             final IConfiguration config, final IMemcacheKvStoreConnectorCallback<C, D, E> callback,
             final C context) {
         super(cloudlet, connector, config, callback, context);
+        // FIXME
+        this.initialize();
     }
 
     @Override

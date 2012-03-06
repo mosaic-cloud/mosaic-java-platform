@@ -20,15 +20,10 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.connectors.core.ConfigProperties;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 public class AmqpQueuePublisherConnector<Message> extends
         AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<Message>> implements
@@ -39,16 +34,10 @@ public class AmqpQueuePublisherConnector<Message> extends
     }
 
     public static <Message> AmqpQueuePublisherConnector<Message> create(
-            final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder, final ThreadingContext threading) {
-        final String driverIdentity = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
-        channel.register(AmqpSession.CONNECTOR);
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder) {
         final AmqpQueuePublisherConnectorProxy<Message> proxy = AmqpQueuePublisherConnectorProxy
-                .create(configuration, driverIdentity, channel, messageClass, messageEncoder);
+                .create(configuration, environment, messageClass, messageEncoder);
         return new AmqpQueuePublisherConnector<Message>(proxy);
     }
 

@@ -22,12 +22,16 @@ package eu.mosaic_cloud.connectors.core;
 
 import java.util.UUID;
 
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -50,7 +54,9 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
 
     protected final ResponseHandlerMap pendingRequests;
 
-    private final Channel channel;
+    protected final Channel channel;
+
+    private final ConnectorEnvironment environment;
 
     private final String identifier;
 
@@ -64,22 +70,63 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      * @param channel
      *            the channel on which to communicate with the driver
      */
-    protected BaseConnectorProxy(final IConfiguration configuration, final Channel channel) {
+    protected BaseConnectorProxy(final IConfiguration configuration, final ConnectorEnvironment environment) {
         super();
         Preconditions.checkNotNull(configuration);
-        Preconditions.checkNotNull(channel);
+        Preconditions.checkNotNull(environment);
         this.configuration = configuration;
-        this.channel = channel;
+        this.environment = environment;
+        // FIXME
+        this.channel = this.environment.channelFactory.create();
+        this.logger = MosaicLogger.createLogger(this);
         this.identifier = UUID.randomUUID().toString();
         this.pendingRequests = new ResponseHandlerMap();
-        this.logger = MosaicLogger.createLogger(this);
     }
 
-    protected void connect(final String driverIdentifier, final SessionSpecification session,
+    protected CallbackCompletion<Void> connect(final SessionSpecification session,
             final Message initMessage) {
-        this.channel.connect(driverIdentifier, session, initMessage, this);
+    	// FIXME
+        final String driverEndpoint = ConfigUtils.resolveParameter(
+        		this.configuration,
+                ConfigProperties.getString("GenericConnector.0"), String.class, null);
+        final String driverIdentity = ConfigUtils.resolveParameter(
+        		this.configuration,
+                ConfigProperties.getString("GenericConnector.1"), String.class, null);
+        final String driverTarget = ConfigUtils.resolveParameter(
+        		this.configuration,
+                ConfigProperties.getString("GenericConnector.2"), String.class, null);
+        this.channel.register(session);
+        if (driverEndpoint != null && driverIdentity != null) {
+        	// FIXME
+	        ((ZeroMqChannel) this.channel).connect (driverEndpoint);
+	        this.channel.connect(driverIdentity, session, initMessage, this);
+	        return CallbackCompletion.createOutcome();
+        } else {
+        	final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create(Void.class);
+        	this.environment.channelResolver.resolve(driverTarget, new ResolverCallbacks() {
+        		@Override
+				public CallbackCompletion<Void> resolved(ChannelResolver resolver, String target, String peer, String endpoint)
+				{
+					Preconditions.checkState(driverTarget.equals (target));
+					Preconditions.checkState(peer != null);
+					Preconditions.checkState(endpoint != null);
+					// FIXME
+			        ((ZeroMqChannel) BaseConnectorProxy.this.channel).connect (endpoint);
+			        BaseConnectorProxy.this.channel.connect(peer, session, initMessage, BaseConnectorProxy.this);
+			        future.trigger.triggerSucceeded (null);
+					return CallbackCompletion.createOutcome();
+				}
+			});
+        	return future.completion;
+        }
     }
 
+    protected CallbackCompletion<Void> disconnect(final Message finalMessage) {
+    	// FIXME
+    	if (finalMessage != null)
+    		this.send(finalMessage);
+        return CallbackCompletion.createOutcome();
+    }
     /**
      * Called after session was created.
      * 
@@ -90,15 +137,6 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
     public CallbackCompletion<Void> created(final Session session) {
         Preconditions.checkState(this.session == null);
         this.session = session;
-        return CallbackCompletion.createOutcome();
-    }
-
-    /**
-     * Destroys the proxy, freeing up any allocated resources.
-     */
-    @Override
-    public CallbackCompletion<Void> destroy() {
-        ((ZeroMqChannel) this.channel).terminate();
         return CallbackCompletion.createOutcome();
     }
 
@@ -145,11 +183,6 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         return this.configuration;
     }
 
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        return (CallbackCompletion.createOutcome());
-    }
-
     /**
      * Process a received response for a previous submitted request.
      * 
@@ -174,6 +207,9 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      *            the request
      */
     protected void send(final Message request) {
+    	// FIXME
+    	while (this.session == null)
+    		Thread.yield ();
         this.session.send(request);
     }
 

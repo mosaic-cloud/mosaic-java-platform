@@ -45,10 +45,10 @@ public final class UncaughtExceptionHandler
 		this.delegate.trace (ExceptionResolution.Ignored, exception);
 	}
 	
-	private final ExceptionTracer delegate;
-	
 	public static final UncaughtExceptionHandler create (final ExceptionTracer delegate)
 	{
 		return (new UncaughtExceptionHandler (delegate));
 	}
+	
+	private final ExceptionTracer delegate;
 }

@@ -42,8 +42,6 @@ public final class ComponentIdentifier
 		return (this.string);
 	}
 	
-	public final String string;
-	
 	public static final ComponentIdentifier resolve (final String string)
 	{
 		Preconditions.checkNotNull (string);
@@ -61,6 +59,7 @@ public final class ComponentIdentifier
 		}
 	}
 	
+	public final String string;
 	public static final Pattern stringPattern = Pattern.compile ("^[0-9a-f]{40}$");
 	private static final HashBiMap<String, ComponentIdentifier> identifiers = HashBiMap.create ();
 }

@@ -21,15 +21,11 @@
 package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.connectors.core.ConfigProperties;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
-import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Connector for queuing systems implementing the AMQP protocol.
@@ -56,15 +52,9 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
      * @throws Throwable
      */
     public static AmqpQueueRawConnector create(final IConfiguration configuration,
-            final ThreadingContext threading) {
-        final String driverIdentity = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
-        channel.register(AmqpSession.CONNECTOR);
-        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(configuration,
-                driverIdentity, channel);
+    		final ConnectorEnvironment environment) {
+        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(
+        		configuration, environment);
         return new AmqpQueueRawConnector(proxy);
     }
 
@@ -101,12 +91,6 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
     public CallbackCompletion<Void> declareQueue(final String queue, final boolean exclusive,
             final boolean durable, final boolean autoDelete, final boolean passive) {
         return this.proxy.declareQueue(queue, exclusive, durable, autoDelete, passive);
-    }
-
-    @Override
-    public CallbackCompletion<Void> destroy() {
-        this.logger.trace("AmqpConnector was destroyed.");
-        return this.proxy.destroy();
     }
 
     @Override

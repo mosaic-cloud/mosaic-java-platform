@@ -22,6 +22,7 @@ package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public final class JettyComponentPreMain
 	}
 	
 	public static final void main (final String[] arguments)
-			throws Exception
+			throws Throwable
 	{
 		Preconditions.checkArgument (arguments != null);
 		if ((arguments.length == 2) && !"00000000cf14614e8810102fa887b6bc90dc2a40".equals (arguments[0])) {
@@ -66,7 +67,11 @@ public final class JettyComponentPreMain
 			Preconditions.checkArgument (JettyComponentContext.appWar.canRead (), "invalid appWar file; (can not read)");
 			final Class<?> mainClass = JettyComponentPreMain.class.getClassLoader ().loadClass ("eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine");
 			final Method mainMethod = mainClass.getMethod ("main", String[].class);
-			mainMethod.invoke (null, new Object[] {new String[] {"--server", "127.0.0.1", "--port", "21688", "--auto-declare", "true", "--webapp", JettyComponentContext.appWar.getAbsolutePath (), "--tmp", temporary}});
+			try {
+				mainMethod.invoke (null, new Object[] {new String[] {"--server", "127.0.0.1", "--port", "21688", "--auto-declare", "true", "--webapp", JettyComponentContext.appWar.getAbsolutePath (), "--tmp", temporary}});
+			} catch (final InvocationTargetException exception) {
+				throw (exception.getCause ());
+			}
 		} else
 			throw (new IllegalArgumentException ("invalid arguments; expected: <component-identifier> <war-file>"));
 	}

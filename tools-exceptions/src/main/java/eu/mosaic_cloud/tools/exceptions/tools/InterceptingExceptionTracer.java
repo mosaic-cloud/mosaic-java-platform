@@ -23,6 +23,7 @@ package eu.mosaic_cloud.tools.exceptions.tools;
 
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
 public abstract class InterceptingExceptionTracer
@@ -42,8 +43,8 @@ public abstract class InterceptingExceptionTracer
 			// NOTE: intentional
 		}
 		try {
-			final ExceptionTracer delegate = this.getDelegate ();
-			if (delegate != null)
+			final ExceptionTracer delegate = this.getDelegateSafe ();
+			if ((delegate != null) && (delegate != this))
 				delegate.trace (resolution, exception);
 		} catch (final Throwable exception1) {
 			// NOTE: intentional
@@ -59,8 +60,8 @@ public abstract class InterceptingExceptionTracer
 			// NOTE: intentional
 		}
 		try {
-			final ExceptionTracer delegate = this.getDelegate ();
-			if (delegate != null)
+			final ExceptionTracer delegate = this.getDelegateSafe ();
+			if ((delegate != null) && (delegate != this))
 				delegate.trace (resolution, exception, message);
 		} catch (final Throwable exception1) {
 			// intentional
@@ -76,8 +77,8 @@ public abstract class InterceptingExceptionTracer
 			// NOTE: intentional
 		}
 		try {
-			final ExceptionTracer delegate = this.getDelegate ();
-			if (delegate != null)
+			final ExceptionTracer delegate = this.getDelegateSafe ();
+			if ((delegate != null) && (delegate != this))
 				delegate.trace (resolution, exception, format, tokens);
 		} catch (final Throwable exception1) {
 			// NOTE: intentional
@@ -85,6 +86,14 @@ public abstract class InterceptingExceptionTracer
 	}
 	
 	protected abstract ExceptionTracer getDelegate ();
+	
+	protected final ExceptionTracer getDelegateSafe ()
+	{
+		final ExceptionTracer delegate = this.getDelegate ();
+		if (delegate == FallbackExceptionTracer.defaultInstance)
+			return (FallbackExceptionTracer.defaultInstance.resolveDelegate ());
+		return (delegate);
+	}
 	
 	protected abstract void trace_ (final ExceptionResolution resolution, final Throwable exception);
 	

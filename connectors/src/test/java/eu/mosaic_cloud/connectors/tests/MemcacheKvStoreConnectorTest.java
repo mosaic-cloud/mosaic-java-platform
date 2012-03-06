@@ -32,8 +32,10 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class MemcacheKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String>> {
 
@@ -43,10 +45,10 @@ public class MemcacheKvStoreConnectorTest extends
     public static void setUpBeforeClass() {
         final Scenario scenario = new Scenario();
         BaseConnectorTest.setUpScenario(MemcacheKvStoreConnectorTest.class, scenario,
-                "memcache-kv-store-connector-test.properties");
+                "memcache-kv-store-driver-test.properties");
         scenario.driverChannel.register(KeyValueSession.DRIVER);
         scenario.driverChannel.register(MemcachedSession.DRIVER);
-        scenario.driverStub = MemcachedStub.create(scenario.configuration, scenario.driverChannel,
+        scenario.driverStub = MemcachedStub.createDetached(scenario.configuration, scenario.driverChannel,
                 scenario.threading);
         MemcacheKvStoreConnectorTest.scenario_ = scenario;
     }
@@ -60,7 +62,7 @@ public class MemcacheKvStoreConnectorTest extends
     public void setUp() {
         this.scenario = MemcacheKvStoreConnectorTest.scenario_;
         this.connector = MemcacheKvStoreConnector.create(this.scenario.configuration,
-                new PojoDataEncoder<String>(String.class), this.scenario.threading);
+        		this.scenario.environment, new PojoDataEncoder<String>(String.class));
     }
 
     @Override

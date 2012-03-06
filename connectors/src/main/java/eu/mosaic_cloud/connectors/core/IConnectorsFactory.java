@@ -22,5 +22,5 @@ package eu.mosaic_cloud.connectors.core;
 
 public interface IConnectorsFactory {
 
-    <Factory extends IConnectorFactory<?>> Factory getConnectorFactory(Class<Factory> factory);
+    <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory(Class<Factory> factory);
 }

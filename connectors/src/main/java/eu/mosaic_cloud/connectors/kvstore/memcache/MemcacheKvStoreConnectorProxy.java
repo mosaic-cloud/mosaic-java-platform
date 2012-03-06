@@ -24,10 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
@@ -58,8 +60,9 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
         BaseKvStoreConnectorProxy<T> implements IMemcacheKvStoreConnector<T> {
 
     protected MemcacheKvStoreConnectorProxy(final IConfiguration configuration,
-            final Channel channel, final DataEncoder<T> encoder) {
-        super(configuration, channel, encoder);
+            final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
+        super(configuration, environment, encoder);
     }
 
     /**
@@ -78,16 +81,12 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
      *            the key-value store
      * @return the proxy
      */
-    public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(final String bucket,
-            final IConfiguration configuration, final String driverIdentity, final Channel channel,
-            final DataEncoder<T> encoder) {
+    public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
         final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T>(
-                configuration, channel, encoder);
-        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
-        requestBuilder.setToken(proxy.generateToken());
-        requestBuilder.setBucket(bucket);
-        proxy.connect(driverIdentity, MemcachedSession.CONNECTOR, new Message(
-                KeyValueMessage.ACCESS, requestBuilder.build()));
+                configuration, environment, encoder);
         return proxy;
     }
 
@@ -174,6 +173,17 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
     }
 
     @Override
+    public CallbackCompletion<Void> initialize() {
+        final String bucket = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
+        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
+        requestBuilder.setToken(this.generateToken());
+        requestBuilder.setBucket(bucket);
+        return this.connect(MemcachedSession.CONNECTOR, new Message(
+                KeyValueMessage.ACCESS, requestBuilder.build()));
+    }
+
+    @Override
     public CallbackCompletion<Boolean> prepend(final String key, final T data) {
         CallbackCompletion<Boolean> result;
         try {
@@ -212,7 +222,7 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
                 final Map<String, Object> values = new HashMap<String, Object>();
                 for (final KVEntry entry : resultEntries) {
                     try {
-                        final T value = this.encoder.decode(resultEntries.get(0).getValue()
+                        final T value = (T) this.encoder.decode(resultEntries.get(0).getValue()
                                 .toByteArray());
                         values.put(entry.getKey(), value);
                     } catch (final EncodingException exception) {

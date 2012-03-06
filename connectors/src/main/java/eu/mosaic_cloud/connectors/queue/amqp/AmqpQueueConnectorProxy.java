@@ -22,24 +22,22 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.common.base.Preconditions;
 
-public abstract class AmqpQueueConnectorProxy<Message> extends Object implements
-        IAmqpQueueConnector {
+public abstract class AmqpQueueConnectorProxy<Message> implements IAmqpQueueConnector {
 
     protected final IConfiguration config;
 
     protected final Class<Message> messageClass;
 
-    protected final DataEncoder<Message> messageEncoder;
+    protected final DataEncoder<? super Message> messageEncoder;
 
     protected final AmqpQueueRawConnectorProxy raw;
 
     protected AmqpQueueConnectorProxy(final AmqpQueueRawConnectorProxy raw,
             final IConfiguration config, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder) {
+            final DataEncoder<? super Message> messageEncoder) {
         super();
         Preconditions.checkNotNull(raw);
         Preconditions.checkNotNull(config);
@@ -50,7 +48,4 @@ public abstract class AmqpQueueConnectorProxy<Message> extends Object implements
         this.messageClass = messageClass;
         this.messageEncoder = messageEncoder;
     }
-
-    @Override
-    public abstract CallbackCompletion<Void> destroy();
 }

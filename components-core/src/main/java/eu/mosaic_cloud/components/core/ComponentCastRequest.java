@@ -39,10 +39,6 @@ public final class ComponentCastRequest
 		this.data = data;
 	}
 	
-	public final ByteBuffer data;
-	public final Object inputs;
-	public final String operation;
-	
 	public static final ComponentCastRequest create (final String operation, final Object inputs)
 	{
 		return (new ComponentCastRequest (operation, inputs, ByteBuffer.allocate (0)));
@@ -52,4 +48,8 @@ public final class ComponentCastRequest
 	{
 		return (new ComponentCastRequest (operation, inputs, data));
 	}
+	
+	public final ByteBuffer data;
+	public final Object inputs;
+	public final String operation;
 }

@@ -23,17 +23,11 @@ package eu.mosaic_cloud.connectors.kvstore.memcache;
 import java.util.List;
 import java.util.Map;
 
-import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Connector for key-value distributed storage systems implementing the
@@ -64,19 +58,10 @@ public class MemcacheKvStoreConnector<T extends Object> extends
      * @throws Throwable
      */
     public static <T extends Object> MemcacheKvStoreConnector<T> create(
-            final IConfiguration config, final DataEncoder<T> encoder,
-            final ThreadingContext threading) {
-        final String bucket = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
-        final String driverIdentity = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
-        channel.register(KeyValueSession.CONNECTOR);
-        channel.register(MemcachedSession.CONNECTOR);
-        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(bucket,
-                config, driverIdentity, channel, encoder);
+            final IConfiguration config, final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
+        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(
+                config, environment, encoder);
         return new MemcacheKvStoreConnector<T>(proxy);
     }
 
@@ -98,11 +83,6 @@ public class MemcacheKvStoreConnector<T extends Object> extends
     @Override
     public CallbackCompletion<Map<String, T>> getBulk(final List<String> keys) {
         return this.proxy.getBulk(keys);
-    }
-
-    @Override
-    public CallbackCompletion<List<String>> list() {
-        return this.proxy.list();
     }
 
     @Override

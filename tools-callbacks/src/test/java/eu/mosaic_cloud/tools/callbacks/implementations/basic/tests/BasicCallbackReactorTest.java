@@ -32,6 +32,8 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,9 +44,11 @@ public final class BasicCallbackReactorTest
 	@Test
 	public final void test ()
 	{
+		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		Assert.assertTrue (threading.initialize (BasicCallbackReactorTest.defaultPollTimeout));
 		final BasicCallbackReactor reactor = BasicCallbackReactor.create (threading, exceptions);
 		Assert.assertTrue (reactor.initialize (BasicCallbackReactorTest.defaultPollTimeout));
@@ -88,7 +92,7 @@ public final class BasicCallbackReactorTest
 		Assert.assertTrue (isolate.destroy ().await (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertTrue (reactor.destroy (BasicCallbackReactorTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (BasicCallbackReactorTest.defaultPollTimeout));
-		Assert.assertNull (exceptions.queue.poll ());
+		Assert.assertNull (exceptionsQueue.queue.poll ());
 	}
 	
 	public static final int defaultCallCount = 16;

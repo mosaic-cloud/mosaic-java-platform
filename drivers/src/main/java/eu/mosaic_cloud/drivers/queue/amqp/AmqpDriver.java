@@ -42,6 +42,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
+import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -574,7 +575,12 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
         if (this.connected) {
             try {
                 for (final Map.Entry<String, Channel> channel : AmqpDriver.this.channels.entrySet()) {
-                    channel.getValue().close();
+                    // FIXME
+                    try {
+                        channel.getValue().close();
+                    } catch (AlreadyClosedException e) {
+                        ExceptionTracer.traceHandled(e);
+                    }
                 }
                 this.connection.close();
                 this.connected = false;
@@ -583,6 +589,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
                 this.logger.error("AMQP cannot close connection with server."); //$NON-NLS-1$
             }
         }
+        this.executor.shutdown();
         this.logger.trace("AmqpDriver destroyed."); //$NON-NLS-1$
     }
 

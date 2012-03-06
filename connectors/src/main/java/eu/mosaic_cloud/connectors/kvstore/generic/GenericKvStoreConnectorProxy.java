@@ -20,14 +20,17 @@
 
 package eu.mosaic_cloud.connectors.kvstore.generic;
 
+import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used
@@ -49,8 +52,20 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
     // 5:06
     // PM
     protected GenericKvStoreConnectorProxy(final IConfiguration configuration,
-            final Channel channel, final DataEncoder<T> encoder) {
-        super(configuration, channel, encoder);
+            final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
+        super(configuration, environment, encoder);
+    }
+
+    @Override
+    public CallbackCompletion<Void> initialize() {
+        final String bucket = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
+        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
+        requestBuilder.setToken(this.generateToken());
+        requestBuilder.setBucket(bucket);
+        return this.connect(KeyValueSession.CONNECTOR, new Message(
+                KeyValueMessage.ACCESS, requestBuilder.build()));
     }
 
     /**
@@ -69,16 +84,12 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
      *            the key-value store
      * @return the proxy
      */
-    public static <T extends Object> GenericKvStoreConnectorProxy<T> create(final String bucket,
-            final IConfiguration configuration, final String driverIdentity, final Channel channel,
-            final DataEncoder<T> encoder) {
+    public static <T extends Object> GenericKvStoreConnectorProxy<T> create(
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T>(
-                configuration, channel, encoder);
-        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
-        requestBuilder.setToken(proxy.generateToken());
-        requestBuilder.setBucket(bucket);
-        proxy.connect(driverIdentity, KeyValueSession.CONNECTOR, new Message(
-                KeyValueMessage.ACCESS, requestBuilder.build()));
+                configuration, environment, encoder);
         return proxy;
     }
 }

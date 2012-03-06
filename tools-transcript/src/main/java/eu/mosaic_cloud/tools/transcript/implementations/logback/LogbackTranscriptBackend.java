@@ -145,9 +145,6 @@ public final class LogbackTranscriptBackend
 		}
 	}
 	
-	private final ExtendedFormatter formatter;
-	private final Logger logger;
-	
 	public static final LogbackTranscriptBackend create (final Class<?> owner)
 	{
 		Preconditions.checkNotNull (owner);
@@ -159,4 +156,7 @@ public final class LogbackTranscriptBackend
 		Preconditions.checkNotNull (owner);
 		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (owner.getClass ()), ExtendedFormatter.defaultInstance));
 	}
+	
+	private final ExtendedFormatter formatter;
+	private final Logger logger;
 }

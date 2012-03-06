@@ -21,10 +21,7 @@
 package eu.mosaic_cloud.examples.components.simple;
 
 
-import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
-
-import com.google.common.base.Preconditions;
 
 
 public final class AbacusComponentPreMain
@@ -37,11 +34,8 @@ public final class AbacusComponentPreMain
 	}
 	
 	public static final void main (final String[] arguments)
-			throws Exception
+			throws Throwable
 	{
-		Preconditions.checkArgument (arguments != null);
-		Preconditions.checkArgument (arguments.length == 1, "invalid arguments; expected: <component-identifier>");
-		ComponentIdentifier.resolve (arguments[0]);
-		BasicComponentHarnessPreMain.main (new String[] {AbacusComponentPreMain.class.getName ().replace ("PreMain", "Callbacks")});
+		BasicComponentHarnessPreMain.main (AbacusComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments);
 	}
 }

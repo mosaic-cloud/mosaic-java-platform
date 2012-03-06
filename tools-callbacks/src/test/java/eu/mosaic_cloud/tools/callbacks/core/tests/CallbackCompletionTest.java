@@ -61,6 +61,14 @@ public final class CallbackCompletionTest
 		return this.getBooleanOutcome (completion);
 	}
 	
+	protected final boolean awaitFailure (final CallbackCompletion<?> completion)
+	{
+		CallbackCompletionTest.await (completion, this.defaultPoolTimeout);
+		Assert.assertTrue (completion.isCompleted ());
+		Assert.assertNotNull (completion.getException ());
+		return true;
+	}
+	
 	protected final <_Outcome_ extends Object> _Outcome_ awaitOutcome (final CallbackCompletion<_Outcome_> completion)
 	{
 		CallbackCompletionTest.await (completion, this.defaultPoolTimeout);
@@ -72,14 +80,6 @@ public final class CallbackCompletionTest
 		CallbackCompletionTest.await (completion, this.defaultPoolTimeout);
 		Assert.assertTrue (completion.isCompleted ());
 		Assert.assertEquals (null, completion.getException ());
-		return true;
-	}
-
-	protected final boolean awaitFailure (final CallbackCompletion<?> completion)
-	{
-		CallbackCompletionTest.await (completion, this.defaultPoolTimeout);
-		Assert.assertTrue (completion.isCompleted ());
-		Assert.assertNotNull (completion.getException ());
 		return true;
 	}
 	
@@ -97,10 +97,10 @@ public final class CallbackCompletionTest
 		return completion.getOutcome ();
 	}
 	
-	public final long defaultPoolTimeout = 1000;
-	
 	protected static final void await (final CallbackCompletion<?> completion, final long timeout)
 	{
 		Assert.assertTrue (completion.await (timeout));
 	}
+	
+	public final long defaultPoolTimeout = 1000;
 }

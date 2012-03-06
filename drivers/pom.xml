@@ -70,6 +70,11 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-transcript</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-exceptions</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -147,7 +152,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.drivers.DriverPreMain</mainClass>
+							<mainClass>eu.mosaic_cloud.drivers.DriverComponentPreMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

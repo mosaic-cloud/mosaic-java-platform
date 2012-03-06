@@ -31,6 +31,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadController;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -51,6 +53,9 @@ public final class BasicThreadingContext
 		super ();
 		Preconditions.checkNotNull (group);
 		Preconditions.checkNotNull (configuration);
+		Preconditions.checkNotNull (configuration.owner);
+		Preconditions.checkNotNull (configuration.exceptions);
+		Preconditions.checkNotNull (configuration.catcher);
 		Preconditions.checkState (System.getSecurityManager () instanceof BasicThreadingSecurityManager);
 		this.owner = BasicThreadingContext.buildOwner (configuration);
 		this.configuration = configuration;
@@ -261,18 +266,46 @@ public final class BasicThreadingContext
 		return (null);
 	}
 	
+	final ExceptionTracer resolveExceptions (final Thread thread)
+	{
+		Preconditions.checkNotNull (thread);
+		Preconditions.checkArgument (this.isManaged (thread));
+		final ExceptionTracer threadExceptions;
+		{
+			if (thread instanceof BasicThread)
+				threadExceptions = ((BasicThread) thread).configuration.exceptions;
+			else
+				threadExceptions = null;
+		}
+		if (threadExceptions != null)
+			return (threadExceptions);
+		final ExceptionTracer groupExceptions;
+		{
+			for (ThreadGroup group = thread.getThreadGroup (); true; group = group.getParent ()) {
+				if (group == null) {
+					groupExceptions = null;
+					break;
+				}
+				if (group instanceof BasicThreadGroup) {
+					final ExceptionTracer groupExceptions2 = ((BasicThreadGroup) group).configuration.exceptions;
+					if (groupExceptions2 != null) {
+						groupExceptions = groupExceptions2;
+						break;
+					}
+				}
+			}
+		}
+		if (groupExceptions != null)
+			return (groupExceptions);
+		if (this.configuration.exceptions != null)
+			return (this.configuration.exceptions);
+		return (null);
+	}
+	
 	private final void handleException (final UncaughtExceptionHandler catcher, final Thread thread, final Throwable exception)
 	{
 		catcher.uncaughtException (thread, exception);
 	}
-	
-	private final ThreadConfiguration configuration;
-	private final BasicThreadGroup defaultGroup;
-	private final BasicThreadGroup group;
-	private final AtomicBoolean initialized;
-	private final WeakReference<Object> owner;
-	private final AtomicBoolean sealed;
-	private final ThreadBundle<Thread> threads;
 	
 	public static final WeakReference<Object> buildOwner (final ThreadConfiguration configuration)
 	{
@@ -328,10 +361,18 @@ public final class BasicThreadingContext
 		return (finalName);
 	}
 	
-	public static final BasicThreadingContext create (final Object owner, final Thread.UncaughtExceptionHandler catcher)
+	public static final BasicThreadingContext create (final Object owner, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
 	{
-		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, null, true, catcher)));
+		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, null, true, exceptions, catcher)));
 	}
+	
+	private final ThreadConfiguration configuration;
+	private final BasicThreadGroup defaultGroup;
+	private final BasicThreadGroup group;
+	private final AtomicBoolean initialized;
+	private final WeakReference<Object> owner;
+	private final AtomicBoolean sealed;
+	private final ThreadBundle<Thread> threads;
 	
 	public final class BasicThread
 			extends Thread
@@ -392,6 +433,9 @@ public final class BasicThreadingContext
 			Preconditions.checkState (this == Thread.currentThread ());
 			Preconditions.checkState (this.running.compareAndSet (false, true));
 			Preconditions.checkState (Threading.getCurrentContext () == BasicThreadingContext.this);
+			final ExceptionTracer exceptions = BasicThreadingContext.this.resolveExceptions (this);
+			if ((exceptions != null) && (exceptions != FallbackExceptionTracer.defaultInstance))
+				FallbackExceptionTracer.defaultInstance.setThreadTracer (exceptions);
 			super.run ();
 		}
 		

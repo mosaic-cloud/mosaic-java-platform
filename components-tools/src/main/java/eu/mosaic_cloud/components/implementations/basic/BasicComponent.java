@@ -94,12 +94,12 @@ public final class BasicComponent
 		return (this.backend.initialize (timeout));
 	}
 	
-	final Backend backend;
-	
 	public static final BasicComponent create (final CallbackReactor reactor, final ExceptionTracer exceptions)
 	{
 		return (new BasicComponent (reactor, exceptions));
 	}
+	
+	final Backend backend;
 	
 	public interface ComponentInternals
 			extends

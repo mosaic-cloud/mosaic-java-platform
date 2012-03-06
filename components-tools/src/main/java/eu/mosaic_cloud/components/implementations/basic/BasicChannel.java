@@ -94,13 +94,14 @@ public final class BasicChannel
 		return (this.backend.initialize (timeout));
 	}
 	
-	final Backend backend;
-	
 	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
 		return (new BasicChannel (input, output, coder, reactor, threading, exceptions));
 	}
 	
+	final Backend backend;
+	static final int defaultBufferSize = 1024;
+	static final int defaultMaximumPacketSize = 1024 * 1024;
 	static final long defaultPollTimeout = 100;
 	
 	private static final class Backend
@@ -147,7 +148,7 @@ public final class BasicChannel
 				}
 				{
 					this.threading = threading;
-					this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "workers", true, this.exceptions.catcher));
+					this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "workers", true, this.exceptions, this.exceptions.catcher));
 					this.inboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 					this.outboundPackets = new LinkedBlockingQueue<ByteBuffer> ();
 					this.inboundMessages = new LinkedBlockingQueue<ChannelMessage> ();
@@ -495,7 +496,8 @@ public final class BasicChannel
 			this.selector = this.channel.selector;
 			this.inboundPackets = this.channel.inboundPackets;
 			this.outboundPackets = this.channel.outboundPackets;
-			this.inputBufferSize = 1024;
+			this.maximumPacketSize = BasicChannel.defaultMaximumPacketSize;
+			this.inputBufferSize = BasicChannel.defaultBufferSize;
 			this.inputKey = null;
 			this.outputKey = null;
 			this.inputPending = null;
@@ -608,6 +610,8 @@ public final class BasicChannel
 						if (this.inputPending.position () >= 4) {
 							this.inputPendingSize = this.inputPending.getInt (0) + 4;
 							if (this.inputPending.capacity () < this.inputPendingSize) {
+								if (this.inputPendingSize > this.maximumPacketSize)
+									throw (new IgnoredException (new BufferOverflowException (), "unexpected inbound packet size; aborting!"));
 								final ByteBuffer buffer = ByteBuffer.allocate (this.inputPendingSize);
 								this.inputPending.compact ();
 								buffer.put (this.inputPending);
@@ -700,6 +704,7 @@ public final class BasicChannel
 		SelectionKey inputKey;
 		ByteBuffer inputPending;
 		int inputPendingSize;
+		final int maximumPacketSize;
 		final LinkedBlockingQueue<ByteBuffer> outboundPackets;
 		final WritableByteChannel output;
 		SelectionKey outputKey;

@@ -75,10 +75,6 @@ public final class QueueingQueueCallbackHandler<_Element_ extends Object>
 	public final void unregisteredCallbacks (final Callbacks proxy)
 	{}
 	
-	public final BlockingQueue<_Element_> queue;
-	private final ExceptionTracer exceptions;
-	private final long waitTimeout;
-	
 	public static final <_Element_ extends Object> QueueingQueueCallbackHandler<_Element_> create (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions)
 	{
 		return (new QueueingQueueCallbackHandler<_Element_> (queue, waitTimeout, exceptions));
@@ -88,4 +84,8 @@ public final class QueueingQueueCallbackHandler<_Element_ extends Object>
 	{
 		return (new QueueingQueueCallbackHandler<_Element_> (new LinkedBlockingQueue<_Element_> (), 0, exceptions));
 	}
+	
+	public final BlockingQueue<_Element_> queue;
+	private final ExceptionTracer exceptions;
+	private final long waitTimeout;
 }

@@ -25,7 +25,7 @@ import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
@@ -62,11 +62,12 @@ import com.google.protobuf.ByteString;
 public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseConnectorProxy
         implements IKvStoreConnector<T> {
 
-    protected DataEncoder<T> encoder;
+    protected DataEncoder<? super T> encoder;
 
-    protected BaseKvStoreConnectorProxy(final IConfiguration configuration, final Channel channel,
-            final DataEncoder<T> encoder) {
-        super(configuration, channel);
+    protected BaseKvStoreConnectorProxy(final IConfiguration configuration,
+    		final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
+        super(configuration, environment);
         this.encoder = encoder;
     }
 
@@ -85,8 +86,7 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
         final CompletionToken token = this.generateToken();
         final AbortRequest.Builder requestBuilder = AbortRequest.newBuilder();
         requestBuilder.setToken(token);
-        this.send(new Message(KeyValueMessage.ABORTED, requestBuilder.build()));
-        return super.destroy();
+        return this.disconnect(new Message(KeyValueMessage.ABORTED, requestBuilder.build()));
     }
 
     @Override
@@ -161,7 +161,7 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
             T value = null; // NOPMD by georgiana on 2/20/12 5:02 PM
             if (!resultEntries.isEmpty()) {
                 try {
-                    value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD
+                    value = (T) this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD
                                                                                                 // by
                                                                                                 // georgiana
                                                                                                 // on

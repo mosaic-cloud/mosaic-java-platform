@@ -23,16 +23,16 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 /**
  * This class provides access for cloudlets to an AMQP-based queueing system as
@@ -70,10 +70,11 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
             final DeliveryToken delivery = new DeliveryToken(inbound.getDelivery());
             final Message message;
             try {
-                message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode(inbound
+                message = (Message) AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode(inbound
                         .getData());
             } catch (final EncodingException exception) {
-                ExceptionTracer.traceDeferred(exception);
+            	// FIXME
+                FallbackExceptionTracer.defaultInstance.traceDeferredException(exception);
                 return (CallbackCompletion.createFailure(exception));
             }
             return this.delegate.consume(delivery, message);
@@ -146,7 +147,7 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
      */
     protected AmqpQueueConsumerConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
             final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder,
+            final DataEncoder<? super Message> messageEncoder,
             final IAmqpQueueConsumerCallback<Message> callback) {
         super(rawProxy, configuration, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
@@ -186,11 +187,11 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
     }
 
     public static <Message> AmqpQueueConsumerConnectorProxy<Message> create(
-            final IConfiguration configuration, final String driverIdentity, final Channel channel,
-            final Class<Message> messageClass, final DataEncoder<Message> messageEncoder,
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
             final IAmqpQueueConsumerCallback<Message> callback) {
         final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
-                configuration, driverIdentity, channel);
+                configuration, environment);
         final IConfiguration subConfiguration = configuration
                 .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
         final AmqpQueueConsumerConnectorProxy<Message> proxy = new AmqpQueueConsumerConnectorProxy<Message>(
@@ -213,6 +214,7 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
     @Override
     public CallbackCompletion<Void> initialize() {
         // FIXME
+    	this.raw.initialize();
         this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
                 this.exchangeAutoDelete, this.definePassive);
         this.raw.declareQueue(this.queue, this.queueExclusive, this.queueDurable,

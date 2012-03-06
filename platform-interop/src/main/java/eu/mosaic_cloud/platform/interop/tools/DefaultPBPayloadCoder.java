@@ -22,6 +22,7 @@ package eu.mosaic_cloud.platform.interop.tools;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
@@ -62,7 +63,12 @@ public class DefaultPBPayloadCoder implements PayloadCoder {
     @Override
     public Object decode(ByteBuffer buffer) throws Throwable {
         final Method createMethod = this.clasz.getMethod("parseFrom", byte[].class);
-        final Object object = createMethod.invoke(null, buffer.array());
+        final Object object;
+        try {
+        	object = createMethod.invoke(null, buffer.array());
+        } catch (final InvocationTargetException exception) {
+            throw exception.getCause();
+        }
         if (!this.nullAllowed && (object == null)) {
             throw new IOException("unexpected null object");
         }

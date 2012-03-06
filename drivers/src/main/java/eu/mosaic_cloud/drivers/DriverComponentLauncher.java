@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-platform-core
+ * mosaic-drivers
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,15 +18,27 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.tests;
+package eu.mosaic_cloud.drivers;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({
-    ElementType.TYPE })
-public @interface Serial {
+import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
+
+import com.google.common.base.Preconditions;
+
+
+public final class DriverComponentLauncher
+{
+	private DriverComponentLauncher ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static void main (final String[] arguments)
+			throws Throwable
+	{
+		arguments[0] = DriverComponentType.valueOf (arguments[0].toUpperCase ()).getCallbackClass ();
+		Preconditions.checkNotNull (arguments[0], "invalid arguments; expected: `<amqp | kv> ...`");
+		MosBasicComponentLauncher.main (arguments);
+	}
 }

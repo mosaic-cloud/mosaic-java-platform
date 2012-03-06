@@ -45,8 +45,6 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
 
     protected final MosaicLogger logger;
 
-    private final CallbackCompletion<Void> initializeConnectorCompletion;
-
     protected BaseConnector(final ICloudletController<?> cloudlet, final Connector connector,
             final IConfiguration configuration, final Callback callback, final Context context) {
         super();
@@ -59,7 +57,6 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
         this.callback = callback;
         this.context = context;
         this.logger = MosaicLogger.createLogger(this);
-        this.initializeConnectorCompletion = this.initializeConnector();
     }
 
     @Override
@@ -72,11 +69,11 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
                     if (completion.getException() != null) {
-                        return BaseConnector.this.callback.initializeFailed(
+                        return BaseConnector.this.callback.destroyFailed(
                                 BaseConnector.this.context, new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.initializeSucceeded(
+                    return BaseConnector.this.callback.destroySucceeded(
                             BaseConnector.this.context, new CallbackArguments<Context>(
                                     BaseConnector.this.cloudlet));
                 }
@@ -86,12 +83,7 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
     }
 
     @Override
-    @Deprecated
     public CallbackCompletion<Void> initialize() {
-        return (this.initializeConnectorCompletion);
-    }
-
-    private CallbackCompletion<Void> initializeConnector() {
         final CallbackCompletion<Void> completion = this.connector.initialize();
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
@@ -100,11 +92,11 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
                 public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
                     if (completion.getException() != null) {
-                        return BaseConnector.this.callback.destroyFailed(
+                        return BaseConnector.this.callback.initializeFailed(
                                 BaseConnector.this.context, new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.destroySucceeded(BaseConnector.this.context,
+                    return BaseConnector.this.callback.initializeSucceeded(BaseConnector.this.context,
                             new CallbackArguments<Context>(BaseConnector.this.cloudlet));
                 }
             });

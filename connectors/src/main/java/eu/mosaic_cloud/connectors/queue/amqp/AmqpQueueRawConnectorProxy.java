@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.core.ResponseHandlerMap;
-import eu.mosaic_cloud.interoperability.core.Channel;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
@@ -71,8 +71,9 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     // 2/21/12
     // 2:36
     // PM
-    protected AmqpQueueRawConnectorProxy(final IConfiguration config, final Channel channel) {
-        super(config, channel);
+    protected AmqpQueueRawConnectorProxy(final IConfiguration config,
+    		final ConnectorEnvironment environment) {
+        super(config, environment);
         this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
         this.consumerMessages = new ResponseHandlerMap();
     }
@@ -89,10 +90,9 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
      * @return the proxy
      */
     public static AmqpQueueRawConnectorProxy create(final IConfiguration configuration,
-            final String driverIdentity, final Channel channel) {
-        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(configuration,
-                channel);
-        proxy.connect(driverIdentity, AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
+    		final ConnectorEnvironment environment) {
+        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(
+        		configuration, environment);
         return proxy;
     }
 
@@ -144,6 +144,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
         requestBuilder.setConsumer(consumer);
         requestBuilder.setExclusive(exclusive);
         requestBuilder.setAutoAck(autoAck);
+        requestBuilder.setExtra(ByteString.EMPTY);
         this.pendingConsumers.put(consumer, consumerCallback);
         final Message mssg = new Message(AmqpMessage.CONSUME_REQUEST, requestBuilder.build());
         final CallbackCompletion<Void> result = this.sendRequest(mssg, token, Void.class); // NOPMD
@@ -195,6 +196,11 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     }
 
     @Override
+    public CallbackCompletion<Void> destroy() {
+    	return this.disconnect(null);
+    }
+
+    @Override
     public CallbackCompletion<Void> get(final String queue, final boolean autoAck) {
         final CompletionToken token = this.generateToken();
         final AmqpPayloads.GetRequest.Builder requestBuilder = AmqpPayloads.GetRequest.newBuilder();
@@ -203,6 +209,11 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
         requestBuilder.setAutoAck(autoAck);
         final Message message = new Message(AmqpMessage.GET_REQUEST, requestBuilder.build());
         return this.sendRequest(message, token, Void.class);
+    }
+
+    @Override
+    public CallbackCompletion<Void> initialize() {
+    	return this.connect(AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
     }
 
     @Override
@@ -256,8 +267,9 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
                     + consumerId);
             final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers.remove(consumerId);
             callback.handleCancelOk(consumerId);
-            this.consumerMessages.succeed(consumerId, null);
-            this.consumerMessages.cancel(consumerId);
+            // FIXME
+            // this.consumerMessages.succeed(consumerId, null);
+            // this.consumerMessages.cancel(consumerId);
         }
             break;
         case SERVER_CANCEL: {

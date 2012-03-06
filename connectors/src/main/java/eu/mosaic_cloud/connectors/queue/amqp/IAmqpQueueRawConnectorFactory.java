@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-drivers
+ * mosaic-connectors
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,25 +18,14 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers;
+package eu.mosaic_cloud.connectors.queue.amqp;
 
-/**
- * Enums of component callbacks for resource drivers.
- * 
- * @author Georgiana Macariu
- * 
- */
-public enum DriverCallbackType {
-    AMQP("eu.mosaic_cloud.drivers.queue.amqp.AmqpDriverComponentCallbacks"), KV(
-            "eu.mosaic_cloud.drivers.kvstore.KVDriverComponentCallbacks");
+import eu.mosaic_cloud.connectors.queue.IQueueConnectorFactory;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 
-    private final String callbackClass;
+public interface IAmqpQueueRawConnectorFactory extends
+        IQueueConnectorFactory<IAmqpQueueRawConnector> {
 
-    DriverCallbackType(String canonicalClassName) {
-        this.callbackClass = canonicalClassName;
-    }
-
-    public String getCallbackClass() {
-        return this.callbackClass;
-    }
+    IAmqpQueueRawConnector create(
+            IConfiguration configuration);
 }

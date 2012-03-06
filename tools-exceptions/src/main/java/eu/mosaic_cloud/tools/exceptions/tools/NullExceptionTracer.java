@@ -25,7 +25,7 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 
 
-public class NullExceptionTracer
+public final class NullExceptionTracer
 		extends Object
 		implements
 			ExceptionTracer
@@ -37,15 +37,21 @@ public class NullExceptionTracer
 	
 	@Override
 	public void trace (final ExceptionResolution resolution, final Throwable exception)
-	{}
+	{
+		// NOTE: intentional
+	}
 	
 	@Override
 	public void trace (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{}
+	{
+		// NOTE: intentional
+	}
 	
 	@Override
 	public void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{}
+	{
+		// NOTE: intentional
+	}
 	
 	public static final NullExceptionTracer defaultInstance = new NullExceptionTracer ();
 }

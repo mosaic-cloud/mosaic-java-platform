@@ -44,5 +44,7 @@ public class GenericKvStoreConnector<Context, Value, Extra>
             final IConfiguration config,
             final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context context) {
         super(cloudlet, connector, config, callback, context);
+        // FIXME
+        this.initialize();
     }
 }

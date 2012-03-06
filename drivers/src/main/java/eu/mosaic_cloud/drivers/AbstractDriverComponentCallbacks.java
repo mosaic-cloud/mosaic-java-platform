@@ -31,13 +31,13 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
@@ -73,10 +73,13 @@ public abstract class AbstractDriverComponentCallbacks implements ComponentCallb
 
     protected ThreadingContext threading;
 
+    protected ExceptionTracer exceptions;
+
     protected MosaicLogger logger;
 
     protected AbstractDriverComponentCallbacks(ComponentEnvironment context) {
         this.threading = context.threading;
+        this.exceptions = context.exceptions;
         this.logger = MosaicLogger.createLogger(this);
     }
 
@@ -95,7 +98,7 @@ public abstract class AbstractDriverComponentCallbacks implements ComponentCallb
         Preconditions.checkNotNull(this.driverConfiguration);
         final ZeroMqChannel driverChannel = ZeroMqChannel.create(ConfigUtils.resolveParameter(
                 this.driverConfiguration, channelIdentifierProp, String.class, ""), this.threading,
-                AbortingExceptionTracer.defaultInstance);
+                this.exceptions);
         driverChannel.register(role);
         driverChannel.accept(ConfigUtils.resolveParameter(this.driverConfiguration,
                 channelEndpointProp, String.class, ""));
@@ -112,7 +115,7 @@ public abstract class AbstractDriverComponentCallbacks implements ComponentCallb
         }
         this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
         this.status = Status.Terminated;
-        ExceptionTracer.traceIgnored(exception);
+        this.exceptions.trace(ExceptionResolution.Ignored, exception);
         return null;
     }
 

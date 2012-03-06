@@ -100,10 +100,10 @@ public final class CallbackFuture<_Outcome_ extends Object>
 		return (this.completion.isCompleted ());
 	}
 	
-	public final CallbackCompletion<_Outcome_> completion;
-	
 	public static final <_Outcome_ extends Object> CallbackFuture<_Outcome_> create (final CallbackCompletion<_Outcome_> completion)
 	{
 		return (new CallbackFuture<_Outcome_> (completion));
 	}
+	
+	public final CallbackCompletion<_Outcome_> completion;
 }

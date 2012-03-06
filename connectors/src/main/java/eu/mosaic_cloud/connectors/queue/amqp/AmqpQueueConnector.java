@@ -42,6 +42,6 @@ public abstract class AmqpQueueConnector<P extends AmqpQueueConnectorProxy<?>> i
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        return CallbackCompletion.createOutcome();
+        return this.proxy.initialize();
     }
 }

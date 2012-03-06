@@ -27,7 +27,9 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
+@Ignore
 public class RedisKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
 
@@ -37,9 +39,9 @@ public class RedisKvStoreConnectorTest extends
     public static void setUpBeforeClass() {
         final Scenario scenario = new Scenario();
         BaseConnectorTest.setUpScenario(RedisKvStoreConnectorTest.class, scenario,
-                "redis-kv-store-connector-test.properties");
+                "redis-kv-store-driver-test.properties");
         scenario.driverChannel.register(KeyValueSession.DRIVER);
-        scenario.driverStub = KeyValueStub.create(scenario.configuration, scenario.threading,
+        scenario.driverStub = KeyValueStub.createDetached(scenario.configuration, scenario.threading,
                 scenario.driverChannel);
         RedisKvStoreConnectorTest.scenario_ = scenario;
     }
@@ -53,6 +55,6 @@ public class RedisKvStoreConnectorTest extends
     public void setUp() {
         this.scenario = RedisKvStoreConnectorTest.scenario_;
         this.connector = GenericKvStoreConnector.create(this.scenario.configuration,
-                new PojoDataEncoder<String>(String.class), this.scenario.threading);
+                this.scenario.environment, new PojoDataEncoder<String>(String.class));
     }
 }

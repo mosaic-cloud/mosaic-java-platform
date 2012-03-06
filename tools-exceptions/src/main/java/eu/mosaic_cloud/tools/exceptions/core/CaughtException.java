@@ -22,12 +22,13 @@ package eu.mosaic_cloud.tools.exceptions.core;
 
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 
 
-public class CaughtException
-		extends Error
+public abstract class CaughtException
+		extends Throwable
 {
-	public CaughtException (final ExceptionResolution resolution, final Throwable caught)
+	CaughtException (final ExceptionResolution resolution, final Throwable caught)
 	{
 		super (caught);
 		Preconditions.checkNotNull (caught);
@@ -37,7 +38,7 @@ public class CaughtException
 		this.messageArguments = null;
 	}
 	
-	public CaughtException (final ExceptionResolution resolution, final Throwable caught, final String message)
+	CaughtException (final ExceptionResolution resolution, final Throwable caught, final String message)
 	{
 		super (message, caught);
 		Preconditions.checkNotNull (caught);
@@ -47,7 +48,7 @@ public class CaughtException
 		this.messageArguments = null;
 	}
 	
-	public CaughtException (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments)
+	CaughtException (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments)
 	{
 		super (String.format (messageFormat, messageArguments), caught);
 		Preconditions.checkNotNull (caught);
@@ -77,6 +78,11 @@ public class CaughtException
 		return (this.resolution);
 	}
 	
+	public final void rethrow ()
+	{
+		Throwables.propagate (this.caught);
+	}
+	
 	public final void trace (final ExceptionTracer tracer)
 	{
 		final Throwable cause = this.getCause ();
@@ -90,9 +96,74 @@ public class CaughtException
 			tracer.trace (this.resolution, cause, this.messageFormat, this.messageArguments);
 	}
 	
+	public final Wrapper wrap ()
+	{
+		return (new Wrapper (this));
+	}
+	
+	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught)
+	{
+		switch (resolution) {
+			case Handled :
+				return (new HandledException (caught));
+			case Deferred :
+				return (new DeferredException (caught));
+			case Ignored :
+				return (new IgnoredException (caught));
+			default:
+				throw (new AssertionError ());
+		}
+	}
+	
+	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught, final String message)
+	{
+		switch (resolution) {
+			case Handled :
+				return (new HandledException (caught, message));
+			case Deferred :
+				return (new DeferredException (caught, message));
+			case Ignored :
+				return (new IgnoredException (caught, message));
+			default:
+				throw (new AssertionError ());
+		}
+	}
+	
+	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments)
+	{
+		switch (resolution) {
+			case Handled :
+				return (new HandledException (caught, messageFormat, messageArguments));
+			case Deferred :
+				return (new DeferredException (caught, messageFormat, messageArguments));
+			case Ignored :
+				return (new IgnoredException (caught, messageFormat, messageArguments));
+			default:
+				throw (new AssertionError ());
+		}
+	}
+	
 	public final Throwable caught;
 	public final ExceptionResolution resolution;
 	protected final Object[] messageArguments;
 	protected final String messageFormat;
 	private static final long serialVersionUID = 1L;
+	
+	public static final class Wrapper
+			extends Error
+	{
+		Wrapper (final CaughtException exception)
+		{
+			super ();
+			this.exception = exception;
+		}
+		
+		public final void rethrow ()
+		{
+			this.exception.rethrow ();
+		}
+		
+		public final CaughtException exception;
+		private static final long serialVersionUID = 1L;
+	}
 }

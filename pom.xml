@@ -49,7 +49,7 @@
 				<version>${versions.plugins.dependency}</version>
 				<executions>
 					<execution>
-						<phase>verify</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>analyze-only</goal>
 						</goals>
@@ -207,6 +207,7 @@
 		<versions.dependencies.guava>11.0</versions.dependencies.guava>
 		<versions.dependencies.jackson>1.9.3</versions.dependencies.jackson>
 		<versions.dependencies.jetty-eclipse>8.0.0.M3</versions.dependencies.jetty-eclipse> <!-- TO UPGRADE -->
+		<versions.dependencies.jewelcli>0.8.1</versions.dependencies.jewelcli>
 		<versions.dependencies.json>20090211</versions.dependencies.json>
 		<versions.dependencies.json-smart>1.0.9</versions.dependencies.json-smart>
 		<versions.dependencies.jsp-eclipse>7.4.2.v20110526</versions.dependencies.jsp-eclipse> <!-- TO UPGRADE -->

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -50,7 +51,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -62,6 +63,8 @@ import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.lexicalscope.jewel.cli.CliFactory;
+import com.lexicalscope.jewel.cli.Option;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.net.SocketAppender;
@@ -76,9 +79,9 @@ public final class BasicComponentHarnessMain
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final ComponentCallbacksProvider componentProvider, final InputStream input, final OutputStream output, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacksProvider callbacksProvider, final InputStream input, final OutputStream output, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		Preconditions.checkNotNull (componentProvider);
+		Preconditions.checkNotNull (callbacksProvider);
 		Preconditions.checkNotNull (input);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
@@ -94,7 +97,7 @@ public final class BasicComponentHarnessMain
 		final Piper inputPiper = new Piper (Channels.newChannel (input), inputPipe.sink (), threading, exceptions);
 		final Piper outputPiper = new Piper (outputPipe.source (), Channels.newChannel (output), threading, exceptions);
 		try {
-			BasicComponentHarnessMain.main (componentProvider, inputPipe.source (), outputPipe.sink (), threading, exceptions);
+			BasicComponentHarnessMain.main (callbacksProvider, inputPipe.source (), outputPipe.sink (), threading, exceptions);
 		} finally {
 			inputPiper.join ();
 			outputPiper.join ();
@@ -129,9 +132,9 @@ public final class BasicComponentHarnessMain
 		}
 	}
 	
-	public static final void main (final ComponentCallbacksProvider componentProvider, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final ComponentCallbacksProvider callbacksProvider, final SocketAddress address, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		Preconditions.checkNotNull (componentProvider);
+		Preconditions.checkNotNull (callbacksProvider);
 		Preconditions.checkNotNull (address);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
@@ -152,7 +155,7 @@ public final class BasicComponentHarnessMain
 			throw (new Error (exception));
 		}
 		try {
-			BasicComponentHarnessMain.main (componentProvider, input, output, threading, exceptions);
+			BasicComponentHarnessMain.main (callbacksProvider, input, output, threading, exceptions);
 		} finally {
 			try {
 				connection.close ();
@@ -163,22 +166,22 @@ public final class BasicComponentHarnessMain
 		}
 	}
 	
-	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
+	public static final void main (final String callbacksArgument, final String classpathArgument, final String channelArgument, final String loggerArgument)
 	{
 		BasicThreadingSecurityManager.initialize ();
-		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
-		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions.catcher);
+		final BaseExceptionTracer exceptions = FallbackExceptionTracer.defaultInstance;
+		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, exceptions.catcher);
 		threading.initialize ();
 		try {
-			BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
+			BasicComponentHarnessMain.main (callbacksArgument, classpathArgument, channelArgument, loggerArgument, threading, exceptions);
 		} finally {
 			threading.destroy ();
 		}
 	}
 	
-	public static final void main (final String componentArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final void main (final String callbacksArgument, final String classpathArgument, final String channelArgument, final String loggerArgument, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		Preconditions.checkNotNull (componentArgument);
+		Preconditions.checkNotNull (callbacksArgument);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
 		final ClassLoader classLoader;
@@ -202,15 +205,15 @@ public final class BasicComponentHarnessMain
 			classLoader = new URLClassLoader (classLoaderUrls.toArray (new URL[0]), BasicComponentHarnessMain.class.getClassLoader ());
 		} else
 			classLoader = ClassLoader.getSystemClassLoader ();
-		final Class<?> componentClass;
+		final Class<?> callbacksClass;
 		try {
-			componentClass = classLoader.loadClass (componentArgument);
+			callbacksClass = classLoader.loadClass (callbacksArgument);
 		} catch (final Exception exception) {
 			exceptions.trace (ExceptionResolution.Deferred, exception);
-			throw (new IllegalArgumentException (String.format ("invalid component class `%s` (error encountered while resolving)", componentArgument), exception));
+			throw (new IllegalArgumentException (String.format ("invalid component callbacks class `%s` (error encountered while resolving)", callbacksArgument), exception));
 		}
-		Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (componentClass), "invalid component class `%s` (not an instance of `ComponentCallbacks`)", componentClass.getName ());
-		final ComponentCallbacksProvider componentProvider = new Provider (componentClass);
+		Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (callbacksClass), "invalid component callbacks class `%s` (not an instance of `ComponentCallbacks`)", callbacksClass.getName ());
+		final ComponentCallbacksProvider callbacksProvider = new Provider (callbacksClass);
 		if (loggerArgument != null) {
 			final Logger logger = (Logger) LoggerFactory.getLogger (BasicComponentHarnessMain.class);
 			final String[] loggerParts = loggerArgument.split (":");
@@ -225,46 +228,36 @@ public final class BasicComponentHarnessMain
 			logger.addAppender (appender);
 		}
 		if ((channelArgument == null) || (channelArgument.equals ("stdio")))
-			BasicComponentHarnessMain.main (componentProvider, BasicComponentHarnessPreMain.stdin, BasicComponentHarnessPreMain.stdout, threading, exceptions);
+			BasicComponentHarnessMain.main (callbacksProvider, BasicComponentHarnessPreMain.stdin, BasicComponentHarnessPreMain.stdout, threading, exceptions);
 		else {
 			final String[] channelParts = channelArgument.split (":");
 			Preconditions.checkArgument (channelParts.length == 2);
 			final InetSocketAddress channelAddress = new InetSocketAddress (channelParts[0], Integer.parseInt (channelParts[1]));
-			BasicComponentHarnessMain.main (componentProvider, channelAddress, threading, exceptions);
+			BasicComponentHarnessMain.main (callbacksProvider, channelAddress, threading, exceptions);
 		}
 	}
 	
-	public static final void main (final String[] arguments)
+	public static final void main (final String callbacksArgument, final String[] argumentList)
 	{
-		Preconditions.checkNotNull (arguments);
-		Preconditions.checkArgument ((arguments.length >= 1) && (arguments.length <= 4), "invalid arguments; aborting! (expected `<component-callbacks-class-name> <class-path-urls> <channel-endpoint> <logger-endpoint>`");
-		final String componentArgument;
-		final String classpathArgument;
-		final String channelArgument;
-		final String loggerArgument;
-		if (arguments.length == 1) {
-			componentArgument = arguments[0];
-			classpathArgument = null;
-			channelArgument = null;
-			loggerArgument = null;
-		} else if (arguments.length == 2) {
-			componentArgument = arguments[0];
-			classpathArgument = arguments[1];
-			channelArgument = null;
-			loggerArgument = null;
-		} else if (arguments.length == 3) {
-			componentArgument = arguments[0];
-			classpathArgument = arguments[1];
-			channelArgument = arguments[2];
-			loggerArgument = null;
-		} else if (arguments.length == 4) {
-			componentArgument = arguments[0];
-			classpathArgument = arguments[1];
-			channelArgument = arguments[2];
-			loggerArgument = arguments[3];
-		} else
-			throw (new AssertionError ());
-		BasicComponentHarnessMain.main (componentArgument, classpathArgument, channelArgument, loggerArgument);
+		Preconditions.checkArgument (callbacksArgument != null, "invalid arguments; expected callbacks class");
+		Preconditions.checkArgument (argumentList != null, "invalid arguments; expected argument list");
+		final Arguments arguments = CliFactory.parseArguments (Arguments.class, argumentList);
+		final String classpathArgument = arguments.getClasspath ();
+		final String channelArgument = arguments.getChannelEndpoint ();
+		final String loggerArgument = arguments.getLoggingEndpoint ();
+		BasicComponentHarnessMain.main (callbacksArgument, classpathArgument, channelArgument, loggerArgument);
+	}
+	
+	public static interface Arguments
+	{
+		@Option (longName = "channel-endpoint")
+		public abstract String getChannelEndpoint ();
+		
+		@Option (longName = "classpath")
+		public abstract String getClasspath ();
+		
+		@Option (longName = "logging-endpoint")
+		public abstract String getLoggingEndpoint ();
 	}
 	
 	private static final class Piper
@@ -281,7 +274,7 @@ public final class BasicComponentHarnessMain
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;
-			this.thread = Threading.createAndStartDaemonThread (this.threading, this, "piper", this, this);
+			this.thread = Threading.createAndStartDaemonThread (this.threading, this, "piper", this, exceptions, this);
 		}
 		
 		public final boolean join ()
@@ -390,8 +383,13 @@ public final class BasicComponentHarnessMain
 			if (provideMethod != null) {
 				final CallbackProxy callbacksProxy;
 				try {
-					callbacksProxy = (CallbackProxy) provideMethod.invoke (null, context);
-				} catch (final Exception exception) {
+					try {
+						callbacksProxy = (CallbackProxy) provideMethod.invoke (null, context);
+					} catch (final InvocationTargetException exception) {
+						context.exceptions.trace (ExceptionResolution.Handled, exception);
+						throw (exception.getCause ());
+					}
+				} catch (final Throwable exception) {
 					context.exceptions.trace (ExceptionResolution.Deferred, exception);
 					throw (new IllegalArgumentException (String.format ("invalid component callbacks provider class `%s` (error encountered while invocking)", this.clasz.getName ()), exception));
 				} finally {

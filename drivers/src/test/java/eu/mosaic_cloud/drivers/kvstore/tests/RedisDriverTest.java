@@ -39,14 +39,17 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.JUnitCore;
 
+@Ignore
 public class RedisDriverTest {
 
     private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
@@ -59,10 +62,6 @@ public class RedisDriverTest {
 
     private BasicThreadingContext threadingContext;
 
-    public static void main(String... args) {
-        JUnitCore.main("eu.mosaic_cloud.drivers.kvstore.tests.RedisDriverTest");
-    }
-
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
@@ -70,10 +69,13 @@ public class RedisDriverTest {
 
     @Before
     public void setUp() throws Exception {
-        final QueueingExceptionTracer exceptions = QueueingExceptionTracer
+        final Transcript transcript = Transcript.create(this);
+        final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer
                 .create(NullExceptionTracer.defaultInstance);
+        final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create(transcript,
+                exceptionsQueue);
         BasicThreadingSecurityManager.initialize();
-        this.threadingContext = BasicThreadingContext.create(this, exceptions.catcher);
+        this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
 
         IConfiguration configuration = PropertyTypeConfiguration.create();

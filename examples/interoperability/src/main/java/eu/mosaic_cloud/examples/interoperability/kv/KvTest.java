@@ -29,6 +29,8 @@ import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,9 +41,11 @@ public final class KvTest
 	@Test
 	public final void test ()
 	{
+		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
-		final QueueingExceptionTracer exceptions = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
-		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions.catcher);
+		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
+		final BasicThreadingContext threading = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		Assert.assertTrue (threading.initialize (KvTest.defaultPollTimeout));
 		final String serverIdentity = UUID.randomUUID ().toString ();
 		final String clientIdentity = UUID.randomUUID ().toString ();
@@ -64,9 +68,9 @@ public final class KvTest
 		Assert.assertTrue (serverChannel.terminate (KvTest.defaultPollTimeout));
 		Assert.assertTrue (clientChannel.terminate (KvTest.defaultPollTimeout));
 		Assert.assertTrue (threading.destroy (KvTest.defaultPollTimeout));
-		Assert.assertNull (exceptions.queue.poll ());
+		Assert.assertNull (exceptionsQueue.queue.poll ());
 	}
 	
 	public static final long defaultPollTimeout = 1000;
-	public static final String defaultServerEndpoint = "tcp://127.0.0.1:31028";
+	public static final String defaultServerEndpoint = "inproc://e3b24530-215f-4977-b24a-b04f1768ead6";
 }

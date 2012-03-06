@@ -97,14 +97,13 @@ public final class CallbackCompletionFutureBackend
 		this.future.addListener (new Observer (completion, observer), this.executor);
 	}
 	
-	private final Executor executor;
-	private final ListenableFuture<?> future;
-	
 	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createCompletion (final ListenableFuture<_Outcome_> future)
 	{
 		return (CallbackCompletion.createDeferred (new CallbackCompletionFutureBackend (future, null)));
 	}
 	
+	private final Executor executor;
+	private final ListenableFuture<?> future;
 	private static final Object exceptionMarker = new Object ();
 	private static final Executor inlineExecutor = MoreExecutors.sameThreadExecutor ();
 	private static final Object timeoutMarker = new Object ();

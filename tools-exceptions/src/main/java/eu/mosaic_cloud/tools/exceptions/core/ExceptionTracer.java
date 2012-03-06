@@ -21,15 +21,6 @@
 package eu.mosaic_cloud.tools.exceptions.core;
 
 
-import java.util.concurrent.atomic.AtomicReference;
-
-import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.InterceptingExceptionTracer;
-
-import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.Atomics;
-
-
 public interface ExceptionTracer
 {
 	public abstract void trace (final ExceptionResolution resolution, final Throwable exception);
@@ -37,42 +28,4 @@ public interface ExceptionTracer
 	public abstract void trace (final ExceptionResolution resolution, final Throwable exception, final String message);
 	
 	public abstract void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens);
-	
-	public static final DefaultExceptionTracer defaultInstance = new DefaultExceptionTracer ();
-	
-	public static final class DefaultExceptionTracer
-			extends InterceptingExceptionTracer
-	{
-		DefaultExceptionTracer ()
-		{
-			super ();
-			this.delegate = Atomics.newReference ((ExceptionTracer) AbortingExceptionTracer.defaultInstance);
-		}
-		
-		public final void setTracer (final ExceptionTracer tracer)
-		{
-			Preconditions.checkNotNull (tracer);
-			this.delegate.set (tracer);
-		}
-		
-		@Override
-		protected final ExceptionTracer getDelegate ()
-		{
-			return (this.delegate.get ());
-		}
-		
-		@Override
-		protected final void trace_ (final ExceptionResolution resolution, final Throwable exception)
-		{}
-		
-		@Override
-		protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
-		{}
-		
-		@Override
-		protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-		{}
-		
-		private final AtomicReference<ExceptionTracer> delegate;
-	}
 }

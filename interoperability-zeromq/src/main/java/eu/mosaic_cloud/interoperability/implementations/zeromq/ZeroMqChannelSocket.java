@@ -23,6 +23,7 @@ package eu.mosaic_cloud.interoperability.implementations.zeromq;
 
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
+import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -48,6 +49,8 @@ public final class ZeroMqChannelSocket
 		this.transcript = Transcript.create (this);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.self = self;
+		this.connectedEndpoints = new HashSet<String> ();
+		this.acceptingEndpoints = new HashSet<String> ();
 		this.inboundPackets = new LinkedBlockingQueue<ZeroMqChannelPacket> ();
 		this.outboundPackets = new LinkedBlockingQueue<ZeroMqChannelPacket> ();
 		this.dequeueTrigger = dequeueTrigger;
@@ -63,7 +66,9 @@ public final class ZeroMqChannelSocket
 			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
-		this.socket.bind (endpoint);
+		// FIXME
+		if (this.acceptingEndpoints.add (endpoint))
+			this.socket.bind (endpoint);
 		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 	}
 	
@@ -75,7 +80,9 @@ public final class ZeroMqChannelSocket
 			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
-		this.socket.connect (endpoint);
+		// FIXME
+		if (this.connectedEndpoints.add (endpoint))
+			this.socket.connect (endpoint);
 		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 	}
 	
@@ -143,6 +150,8 @@ public final class ZeroMqChannelSocket
 	final void setup ()
 	{
 		this.transcript.traceDebugging ("setting-up...");
+		this.connectedEndpoints.clear ();
+		this.acceptingEndpoints.clear ();
 		this.socket = ZeroMqChannelSocket.defaultContext.socket (ZMQ.XREP);
 		this.socket.setIdentity (this.self.getBytes ());
 	}
@@ -263,6 +272,13 @@ public final class ZeroMqChannelSocket
 			}
 	}
 	
+	public static final ZeroMqChannelSocket create (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
+	{
+		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
+	}
+	
+	final HashSet<String> acceptingEndpoints;
+	final HashSet<String> connectedEndpoints;
 	final Runnable dequeueTrigger;
 	final TranscriptExceptionTracer exceptions;
 	final LinkedBlockingQueue<ZeroMqChannelPacket> inboundPackets;
@@ -273,12 +289,6 @@ public final class ZeroMqChannelSocket
 	ZMQ.Socket socket;
 	final ThreadingContext threading;
 	final Transcript transcript;
-	
-	public static final ZeroMqChannelSocket create (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
-	}
-	
 	public static final long defaultDelay = 50;
 	static final ZMQ.Context defaultContext = ZMQ.context (1);
 	

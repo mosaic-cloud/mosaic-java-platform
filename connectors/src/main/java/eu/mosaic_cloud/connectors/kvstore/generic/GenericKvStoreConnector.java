@@ -20,15 +20,10 @@
 
 package eu.mosaic_cloud.connectors.kvstore.generic;
 
-import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 /**
  * Connector for key-value distributed storage systems .
@@ -61,18 +56,10 @@ public class GenericKvStoreConnector<T extends Object> extends
      * @return the connector
      */
     public static <T extends Object> GenericKvStoreConnector<T> create(
-            final IConfiguration configuration, final DataEncoder<T> encoder,
-            final ThreadingContext threading) {
-        final String bucket = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
-        final String driverIdentity = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class, "");
-        final String driverEndpoint = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class, "");
-        final Channel channel = BaseConnector.createChannel(driverEndpoint, threading);
-        channel.register(KeyValueSession.CONNECTOR);
-        final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create(bucket,
-                configuration, driverIdentity, channel, encoder);
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final DataEncoder<? super T> encoder) {
+        final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create(
+                configuration, environment, encoder);
         return new GenericKvStoreConnector<T>(proxy);
     }
 }
