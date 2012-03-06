@@ -49,7 +49,7 @@
 				<version>${versions.plugins.dependency}</version>
 				<executions>
 					<execution>
-						<phase>verify</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>analyze-only</goal>
 						</goals>
