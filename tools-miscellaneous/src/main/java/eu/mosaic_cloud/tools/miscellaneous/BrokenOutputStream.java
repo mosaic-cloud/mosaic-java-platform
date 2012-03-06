@@ -1,6 +1,9 @@
+
 package eu.mosaic_cloud.tools.miscellaneous;
 
+
 import java.io.OutputStream;
+
 
 public final class BrokenOutputStream
 		extends OutputStream

@@ -1,6 +1,9 @@
+
 package eu.mosaic_cloud.tools.miscellaneous;
 
+
 import java.io.InputStream;
+
 
 public final class BrokenInputStream
 		extends InputStream
