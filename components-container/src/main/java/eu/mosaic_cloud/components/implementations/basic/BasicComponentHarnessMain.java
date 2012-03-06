@@ -63,6 +63,8 @@ import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.lexicalscope.jewel.cli.CliFactory;
+import com.lexicalscope.jewel.cli.Option;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.net.SocketAppender;
@@ -235,32 +237,27 @@ public final class BasicComponentHarnessMain
 		}
 	}
 	
-	public static final void main (final String callbacksArgument, final String[] arguments)
+	public static final void main (final String callbacksArgument, final String[] argumentList)
 	{
 		Preconditions.checkArgument (callbacksArgument != null, "invalid arguments; expected callbacks class");
-		Preconditions.checkArgument ((arguments != null) && (arguments.length <= 3), "invalid arguments; expected arguments: `<class-path-urls> <channel-endpoint> <logger-endpoint>`");
-		final String classpathArgument;
-		final String channelArgument;
-		final String loggerArgument;
-		if (arguments.length == 0) {
-			classpathArgument = null;
-			channelArgument = null;
-			loggerArgument = null;
-		} else if (arguments.length == 1) {
-			classpathArgument = arguments[1];
-			channelArgument = null;
-			loggerArgument = null;
-		} else if (arguments.length == 2) {
-			classpathArgument = arguments[1];
-			channelArgument = arguments[2];
-			loggerArgument = null;
-		} else if (arguments.length == 3) {
-			classpathArgument = arguments[1];
-			channelArgument = arguments[2];
-			loggerArgument = arguments[3];
-		} else
-			throw (new AssertionError ());
+		Preconditions.checkArgument (argumentList != null, "invalid arguments; expected argument list");
+		final Arguments arguments = CliFactory.parseArguments (Arguments.class, argumentList);
+		final String classpathArgument = arguments.getClasspath ();
+		final String channelArgument = arguments.getChannelEndpoint ();
+		final String loggerArgument = arguments.getLoggingEndpoint ();
 		BasicComponentHarnessMain.main (callbacksArgument, classpathArgument, channelArgument, loggerArgument);
+	}
+	
+	public static interface Arguments
+	{
+		@Option (longName = "channel-endpoint")
+		public abstract String getChannelEndpoint ();
+		
+		@Option (longName = "classpath")
+		public abstract String getClasspath ();
+		
+		@Option (longName = "logging-endpoint")
+		public abstract String getLoggingEndpoint ();
 	}
 	
 	private static final class Piper
