@@ -31,15 +31,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <D>
+ * @param <TValue>
  *            type of stored data
- * @param <P>
+ * @param <TProxy>
  *            type of connector proxy
  */
-public abstract class BaseKvStoreConnector<D extends Object, P extends BaseKvStoreConnectorProxy<D>>
-        extends BaseConnector<P> implements IKvStoreConnector<D> {
+public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends BaseKvStoreConnectorProxy<TValue>>
+        extends BaseConnector<TProxy> implements IKvStoreConnector<TValue> {
 
-    protected BaseKvStoreConnector(final P proxy) {
+    protected BaseKvStoreConnector(final TProxy proxy) {
         super(proxy);
     }
 
@@ -49,7 +49,7 @@ public abstract class BaseKvStoreConnector<D extends Object, P extends BaseKvSto
     }
 
     @Override
-    public CallbackCompletion<D> get(final String key) {
+    public CallbackCompletion<TValue> get(final String key) {
         return this.proxy.get(key);
     }
 
@@ -59,7 +59,7 @@ public abstract class BaseKvStoreConnector<D extends Object, P extends BaseKvSto
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final D data) {
+    public CallbackCompletion<Boolean> set(final String key, final TValue data) {
         return this.proxy.set(key, data);
     }
 }

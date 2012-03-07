@@ -28,6 +28,6 @@ public interface IKvStoreConnectorFactory extends IConnectorFactory<IKvStoreConn
 
     <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create(
             IConfiguration configuration, Class<Value> valueClass,
-            DataEncoder<? super Value> valueEncoder,
+            DataEncoder<Value> valueEncoder,
             IKvStoreConnectorCallback<Context, Value, Extra> callback, Context callbackContext);
 }

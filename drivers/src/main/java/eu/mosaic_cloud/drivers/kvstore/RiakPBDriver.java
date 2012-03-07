@@ -74,7 +74,6 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
     }
 
     private final String riakHost;
-
     private final int riakPort;
 
     /**

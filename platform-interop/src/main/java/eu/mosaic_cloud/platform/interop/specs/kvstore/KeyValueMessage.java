@@ -50,9 +50,7 @@ public enum KeyValueMessage implements MessageSpecification {
     LIST_REPLY(MessageType.Exchange, KeyValuePayloads.ListReply.class);
 
     public PayloadCoder coder = null;
-
     public final String identifier;
-
     public final MessageType type;
 
     /**

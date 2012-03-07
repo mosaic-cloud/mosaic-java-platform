@@ -50,13 +50,9 @@ import org.junit.Test;
 public class RiakPBDriverTest {
 
     private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakpb.port";
-
     private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
-
     private RiakPBDriver wrapper;
-
     private BasicThreadingContext threadingContext;
-
     private static String keyPrefix;
 
     @BeforeClass

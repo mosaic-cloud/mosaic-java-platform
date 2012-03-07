@@ -36,25 +36,15 @@ public class Timeline {
     class Entry {
 
         private final String id;
-
         private final String title;
-
         private final String titleType;
-
         private final String content;
-
         private final String contentType;
-
         private final long timestamp;
-
         private final String authorName;
-
         private final String authorEmail;
-
         private final String authorURI;
-
         private final Map<String, String> links;
-
         private String key;
 
         public Entry(String id, String title, String titleType, String content, String contentType,
@@ -157,11 +147,8 @@ public class Timeline {
     }
 
     private final String id;
-
     private final String url;
-
     private final long timestamp;
-
     private final List<Entry> entries;
 
     public Timeline(String id, String url, long timestamp) {

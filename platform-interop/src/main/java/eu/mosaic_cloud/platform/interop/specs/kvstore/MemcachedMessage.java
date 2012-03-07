@@ -47,9 +47,7 @@ public enum MemcachedMessage implements MessageSpecification {
             MemcachedPayloads.CasRequest.class);
 
     public PayloadCoder coder = null;
-
     public final String identifier;
-
     public final MessageType type;
 
     /**

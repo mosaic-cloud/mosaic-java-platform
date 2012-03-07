@@ -39,9 +39,7 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
         CallbackCompletionArguments<Context> {
 
     private final List<String> keys;
-
     private final Value value;
-
     private final Extra extra;
 
     /**

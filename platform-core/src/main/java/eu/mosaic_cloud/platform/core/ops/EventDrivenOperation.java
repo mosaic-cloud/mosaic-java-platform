@@ -50,13 +50,9 @@ import com.google.common.util.concurrent.Atomics;
 public class EventDrivenOperation<T> implements IOperation<T>, IOperationCompletionHandler<T> {
 
     private CountDownLatch doneSignal;
-
     private AtomicReference<T> result;
-
     private AtomicReference<Throwable> exception;
-
     private List<IOperationCompletionHandler<T>> completionHandlers;
-
     private Runnable operation = null;
 
     /**

@@ -71,11 +71,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
     final class ConnectionShutdownListener implements ShutdownListener {
 
         private static final int DEFAULT_MAX_RECONNECTION_TRIES = 3;
-
         private static final long DEFAULT_MIN_RECONNECTION_TIME = 1000;
-
         private final int maxReconnectionTries;
-
         private final long minReconnectionTime;
 
         public ConnectionShutdownListener() {
@@ -290,21 +287,13 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
     }
 
     private boolean connected;
-
     private final IConfiguration configuration;
-
     private final AmqpOperationFactory opFactory;
-
     private Connection connection;
-
     private ConcurrentHashMap<String, Channel> channels;
-
     private final ReturnCallback returnCallback;
-
     private final ShutdownListener shutdownListener;
-
     protected final ConcurrentHashMap<String, IAmqpConsumer> consumers;
-
     private final ExecutorService executor;
 
     /**

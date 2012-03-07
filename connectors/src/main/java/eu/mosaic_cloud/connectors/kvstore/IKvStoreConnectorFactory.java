@@ -24,8 +24,9 @@ import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
-public interface IKvStoreConnectorFactory extends IConnectorFactory<IKvStoreConnector<?>> {
+public interface IKvStoreConnectorFactory extends
+        IConnectorFactory<IKvStoreConnector<?>> {
 
-    <Value> IKvStoreConnector<Value> create(IConfiguration configuration, Class<Value> valueClass,
-            DataEncoder<? super Value> valueEncoder);
+    <TValue> IKvStoreConnector<TValue> create(IConfiguration configuration,
+            Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
 }

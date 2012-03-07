@@ -40,9 +40,7 @@ public enum AmqpSession implements SessionSpecification {
     CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(AmqpRole.DRIVER, AmqpRole.CONNECTOR);
 
     public final AmqpRole selfRole;
-
     public final AmqpRole peerRole;
-
     public final List<AmqpMessage> messages;
 
     private AmqpSession(AmqpRole selfRole, AmqpRole peerRole) {

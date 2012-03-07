@@ -206,9 +206,7 @@ public class PongCloudlet {
     public static final class PongCloudletContext {
 
         IAmqpQueueConsumerConnector<PongCloudletContext, PingMessage, Void> consumer;
-
         IAmqpQueuePublisherConnector<PongCloudletContext, PongMessage, Void> publisher;
-
         IKvStoreConnector<PongCloudletContext, PingPongData, Void> kvStore;
     }
 }

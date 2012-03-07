@@ -23,15 +23,8 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
-/**
- * Interface for handlers (callbacks) to be called when a queue consumer
- * receives a message. Methods defined in this interface are called by the
- * connector when one of the consume messages is received from the driver.
- * 
- * @author Georgiana Macariu
- * 
- */
-public interface IAmqpQueueConsumerCallback<Message> extends Callbacks {
+
+public interface IAmqpQueueConsumerCallback<TMessage> extends Callbacks {
 
     /**
      * Handles a delivered message.
@@ -39,5 +32,6 @@ public interface IAmqpQueueConsumerCallback<Message> extends Callbacks {
      * @param message
      *            the message and all its properties
      */
-    CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery, Message message);
+    CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery,
+            TMessage message);
 }

@@ -173,11 +173,8 @@ public class UserCloudlet {
     public static final class UserCloudletContext {
 
         IAmqpQueueConsumerConnector<UserCloudletContext, AuthenticationToken, Void> consumer;
-
         IAmqpQueuePublisherConnector<UserCloudletContext, LoggingData, Void> publisher;
-
         boolean publisherRunning = false;
-
         boolean consumerRunning = false;
     }
 }

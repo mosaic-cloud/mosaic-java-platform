@@ -158,7 +158,6 @@ public class PingCloudlet {
     public static final class PingCloudletContext {
 
         IAmqpQueueConsumerConnector<PingCloudletContext, PongMessage, Void> consumer;
-
         IAmqpQueuePublisherConnector<PingCloudletContext, PingMessage, Void> publisher;
     }
 }

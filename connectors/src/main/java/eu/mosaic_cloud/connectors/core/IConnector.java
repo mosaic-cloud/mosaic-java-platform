@@ -33,17 +33,11 @@ public interface IConnector extends Callbacks {
 
     /**
      * Destroy the connection with the resource.
-     * 
-     * @throws Throwable
-     *             if connector cannot be destroyed
      */
     CallbackCompletion<Void> destroy();
 
     /**
      * Initialize the connection with the resource.
-     * 
-     * @throws Throwable
-     *             if connector cannot be destroyed
      */
     CallbackCompletion<Void> initialize();
 }

@@ -236,9 +236,7 @@ public final class Cloudlet<Context extends Object> extends Object {
             extends Object implements InvocationHandler {
 
         final Class<Factory> factoryClass;
-
         final Factory factoryDelegate;
-
         final Factory factoryProxy;
 
         ConnectorFactory(final Class<Factory> factoryClass, final Factory factoryDelegate) {
@@ -579,49 +577,27 @@ public final class Cloudlet<Context extends Object> extends Object {
     }
 
     final ICloudletCallback<Context> callbacksDelegate;
-
     final CallbacksHandler callbacksHandler;
-
     final ICloudletCallback<Context> callbacksProxy;
-
     final ClassLoader classLoader;
-
     final IConfiguration configuration;
-
     final ConnectorsFactory connectorsFactory;
-
     final IConnectorsFactory connectorsFactoryDelegate;
-
     final Context controllerContext;
-
     final ControllerHandler controllerHandler;
-
     final ICloudletController<Context> controllerProxy;
-
     CallbackCompletionDeferredFuture<Void> destroyFuture;
-
     final CloudletEnvironment environment;
-
     final TranscriptExceptionTracer exceptions;
-
     final QueueingExceptionTracer failures;
-
     final CloudletFsm fsm;
-
     final ConcurrentHashMap<Callbacks, CallbackProxy> genericCallbacksDelegates;
-
     final GenericCallbacksHandler genericCallbacksHandler;
-
     final ConcurrentHashMap<CallbackProxy, Callbacks> genericCallbacksProxies;
-
     CallbackCompletionDeferredFuture<Void> initializeFuture;
-
     final CallbackIsolate isolate;
-
     final CallbackReactor reactor;
-
     final ThreadingContext threading;
-
     final Transcript transcript;
 
     @SuppressWarnings("unchecked")

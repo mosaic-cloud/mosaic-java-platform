@@ -35,12 +35,12 @@ public class RiakKvStoreConnectorTest extends
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        final Scenario scenario = new Scenario();
-        BaseConnectorTest.setUpScenario(RiakKvStoreConnectorTest.class, scenario,
+        final Scenario scenario = new Scenario(RiakKvStoreConnectorTest.class,
                 "riak-http-kv-store-driver-test.properties");
-        scenario.driverChannel.register(KeyValueSession.DRIVER);
-        scenario.driverStub = KeyValueStub.createDetached(scenario.configuration,
-                scenario.threading, scenario.driverChannel);
+        BaseConnectorTest.setUpScenario(RiakKvStoreConnectorTest.class);
+        scenario.registerDriverRole(KeyValueSession.DRIVER);
+        driverStub = KeyValueStub.createDetached(scenario.getConfiguration(),
+                scenario.getThreading(), scenario.getDriverChannel());
         RiakKvStoreConnectorTest.scenario_ = scenario;
     }
 
@@ -52,7 +52,8 @@ public class RiakKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = RiakKvStoreConnectorTest.scenario_;
-        this.connector = GenericKvStoreConnector.create(this.scenario.configuration,
-                this.scenario.environment, new PojoDataEncoder<String>(String.class));
+        this.connector = GenericKvStoreConnector.create(this.scenario
+                .getConfiguration(), this.scenario.getEnvironment(),
+                new PojoDataEncoder<String>(String.class));
     }
 }

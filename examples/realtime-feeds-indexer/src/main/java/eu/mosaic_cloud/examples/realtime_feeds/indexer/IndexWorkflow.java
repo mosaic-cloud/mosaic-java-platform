@@ -41,9 +41,7 @@ import com.sun.syndication.io.FeedException;
 public class IndexWorkflow {
 
     private static final String INDEX_TASK_TYPE = "index-data";
-
     private static Map<UUID, IndexWorkflow> indexers = new HashMap<UUID, IndexWorkflow>();
-
     private static MosaicLogger logger = MosaicLogger.createLogger(IndexWorkflow.class);
 
     private static final IndexWorkflow createIndexer(IndexerCloudletContext context,
@@ -96,25 +94,15 @@ public class IndexWorkflow {
     }
 
     private UUID key;
-
     private final JSONObject indexMessage;
-
     private final IndexerCloudletContext context;
-
     private Timeline currentTimeline;
-
     private final FeedParser parser;
-
     private JSONObject currentFeedMetaData;
-
     private final JSONObject newFeedTask;
-
     private JSONObject previousFeedMetaData;
-
     private final JSONArray newFeedItems;
-
     private boolean indexDone = false;
-
     private JSONObject newTimeline;
 
     private IndexWorkflow(IndexerCloudletContext context, JSONObject recvMessage) {

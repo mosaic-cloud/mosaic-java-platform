@@ -53,7 +53,6 @@ import org.junit.Test;
 public class RedisDriverTest {
 
     private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
-
     private static final String MOSAIC_REDIS_PORT = "mosaic.tests.resources.redis.port";
 
     @BeforeClass
@@ -62,9 +61,7 @@ public class RedisDriverTest {
     }
 
     private AbstractKeyValueDriver wrapper;
-
     private static String keyPrefix;
-
     private BasicThreadingContext threadingContext;
 
     @Before

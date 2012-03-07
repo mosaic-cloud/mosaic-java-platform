@@ -53,13 +53,9 @@ import org.junit.Test;
 public class MemcachedDriverTest {
 
     private static final String MOSAIC_MEMCACHED_PORT = "mosaic.tests.resources.memcached.port";
-
     private static final String MOSAIC_MEMCACHED_HOST = "mosaic.tests.resources.memcached.host";
-
     private BasicThreadingContext threadingContext;
-
     private MemcachedDriver wrapper;
-
     private static String keyPrefix;
 
     @BeforeClass

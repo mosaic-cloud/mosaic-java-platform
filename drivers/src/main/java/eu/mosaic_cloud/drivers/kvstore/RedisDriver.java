@@ -69,9 +69,7 @@ public final class RedisDriver extends AbstractKeyValueDriver {
     }
 
     private final String host;
-
     private final int port;
-
     private String password;
 
     /**

@@ -25,25 +25,30 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-public class AmqpQueueConsumerConnector<Message> extends
-        AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<Message>> implements
-        IAmqpQueueConsumerConnector<Message> {
+public class AmqpQueueConsumerConnector<TMessage> extends
+        AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>> implements
+        IAmqpQueueConsumerConnector<TMessage> {
 
-    public static <Message> AmqpQueueConsumerConnector<Message> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
-            final IAmqpQueueConsumerCallback<Message> callback) {
-        final AmqpQueueConsumerConnectorProxy<Message> proxy = AmqpQueueConsumerConnectorProxy
-                .create(configuration, environment, messageClass, messageEncoder, callback);
-        return new AmqpQueueConsumerConnector<Message>(proxy);
+    public static <M> AmqpQueueConsumerConnector<M> create(
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment,
+            final Class<M> messageClass,
+            final DataEncoder<M> messageEncoder,
+            final IAmqpQueueConsumerCallback<M> callback) {
+        final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy
+                .create(configuration, environment, messageClass,
+                        messageEncoder, callback);
+        return new AmqpQueueConsumerConnector<M>(proxy);
     }
 
-    protected AmqpQueueConsumerConnector(final AmqpQueueConsumerConnectorProxy<Message> proxy) {
+    protected AmqpQueueConsumerConnector(
+            final AmqpQueueConsumerConnectorProxy<TMessage> proxy) {
         super(proxy);
     }
 
     @Override
-    public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery) {
+    public CallbackCompletion<Void> acknowledge(
+            final IAmqpQueueDeliveryToken delivery) {
         return this.proxy.acknowledge(delivery);
     }
 }

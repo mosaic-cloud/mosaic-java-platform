@@ -79,17 +79,11 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
     protected class DriverOperationFinishedHandler implements IOperationCompletionHandler {
 
         private IResult<?> result;
-
         private KeyValueOperations operation;
-
         private final CompletionToken complToken;
-
         private final CountDownLatch signal;
-
         private final AbstractKeyValueDriver driver;
-
         private final KeyValueResponseTransmitter transmitter;
-
         private final Session session;
 
         public DriverOperationFinishedHandler(CompletionToken complToken, Session session,

@@ -47,9 +47,7 @@ public final class PropertyTypeConfiguration implements IConfiguration {
     public final class PropertyTypeParameter<T> implements IConfigurationParameter<T> {
 
         private final ConfigurationIdentifier identifier;
-
         private T value;
-
         private final Class<T> valueClass;
 
         public PropertyTypeParameter(ConfigurationIdentifier identifier, Class<T> valueClass) {
@@ -151,7 +149,6 @@ public final class PropertyTypeConfiguration implements IConfiguration {
     }
 
     private final Properties properties;
-
     private final ConfigurationIdentifier root;
 
     private PropertyTypeConfiguration(Properties properties) {

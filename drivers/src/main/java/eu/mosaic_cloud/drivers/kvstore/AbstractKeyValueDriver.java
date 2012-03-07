@@ -47,9 +47,7 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
     private class BucketData {
 
         private final String bucketName;
-
         private final AtomicInteger noClients;
-
         private final IOperationFactory opFactory;
 
         public BucketData(String bucket) {
@@ -67,7 +65,6 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
      * Map between bucket name and bucket data.
      */
     private final Map<String, BucketData> bucketFactories;
-
     /**
      * Map between clientId and bucket data.
      */

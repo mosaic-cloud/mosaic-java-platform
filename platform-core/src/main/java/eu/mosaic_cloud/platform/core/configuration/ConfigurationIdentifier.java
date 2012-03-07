@@ -34,10 +34,8 @@ import java.util.regex.Pattern;
 public final class ConfigurationIdentifier {
 
     public static final ConfigurationIdentifier ROOT = new ConfigurationIdentifier(true, null);
-
     private static final Pattern IDENTIFIER_PATTERN = Pattern.compile(
             "^/?([a-z]([a-z0-9_.]*[a-z0-9])?/)*([a-z]([a-z0-9_.]*[a-z0-9])?)$", Pattern.DOTALL);
-
     private static final IdentityHashMap<String, ConfigurationIdentifier> IDENTIFIERS = new IdentityHashMap<String, ConfigurationIdentifier>();
 
     /**
@@ -141,7 +139,6 @@ public final class ConfigurationIdentifier {
      * Indicates if this identifier is absolute
      */
     private final boolean absolute;
-
     /**
      * The string identifier.
      */

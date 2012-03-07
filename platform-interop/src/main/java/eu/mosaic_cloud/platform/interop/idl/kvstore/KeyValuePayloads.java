@@ -41,13 +41,10 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string key = 2;
             private java.lang.Object key_ = "";
 
@@ -380,7 +377,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -391,7 +387,6 @@ public final class KeyValuePayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -416,11 +411,8 @@ public final class KeyValuePayloads {
         }
 
         private java.lang.Object key_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new DeleteRequest(true);
@@ -655,17 +647,13 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
             private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_ = java.util.Collections
                     .emptyList();
-
             private com.google.protobuf.RepeatedFieldBuilder<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry.Builder, eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder> resultsBuilder_;
 
             // Construct using
@@ -1196,7 +1184,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -1207,7 +1194,6 @@ public final class KeyValuePayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
         public static final int RESULTS_FIELD_NUMBER = 2;
 
@@ -1239,11 +1225,8 @@ public final class KeyValuePayloads {
         }
 
         private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new GetReply(true);
@@ -1478,13 +1461,10 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // repeated string key = 2;
             private com.google.protobuf.LazyStringList key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
 
@@ -1844,7 +1824,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -1855,7 +1834,6 @@ public final class KeyValuePayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // repeated string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -1880,11 +1858,8 @@ public final class KeyValuePayloads {
         }
 
         private com.google.protobuf.LazyStringList key_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new GetRequest(true);
@@ -2106,13 +2081,10 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string bucket = 2;
             private java.lang.Object bucket_ = "";
 
@@ -2445,7 +2417,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -2456,7 +2427,6 @@ public final class KeyValuePayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string bucket = 2;
         public static final int BUCKET_FIELD_NUMBER = 2;
 
@@ -2481,11 +2451,8 @@ public final class KeyValuePayloads {
         }
 
         private java.lang.Object bucket_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new InitRequest(true);
@@ -2720,10 +2687,8 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required string key = 1;
             private java.lang.Object key_ = "";
-
             // required bytes value = 2;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -2968,7 +2933,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required string key = 1;
         public static final int KEY_FIELD_NUMBER = 1;
 
@@ -2979,7 +2943,6 @@ public final class KeyValuePayloads {
         }
 
         private java.lang.Object key_;
-
         // required bytes value = 2;
         public static final int VALUE_FIELD_NUMBER = 2;
 
@@ -3004,11 +2967,8 @@ public final class KeyValuePayloads {
         }
 
         private com.google.protobuf.ByteString value_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new KVEntry(true);
@@ -3232,13 +3192,10 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // repeated string keys = 2;
             private com.google.protobuf.LazyStringList keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
 
@@ -3598,7 +3555,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -3609,7 +3565,6 @@ public final class KeyValuePayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // repeated string keys = 2;
         public static final int KEYS_FIELD_NUMBER = 2;
 
@@ -3634,11 +3589,8 @@ public final class KeyValuePayloads {
         }
 
         private com.google.protobuf.LazyStringList keys_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ListReply(true);
@@ -3860,11 +3812,9 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
 
             // Construct using
@@ -4147,7 +4097,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -4167,11 +4116,8 @@ public final class KeyValuePayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ListRequest(true);
@@ -4361,19 +4307,14 @@ public final class KeyValuePayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string key = 2;
             private java.lang.Object key_ = "";
-
             // optional int32 exp_time = 3 [default = 0];
             private int expTime_;
-
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -4786,7 +4727,6 @@ public final class KeyValuePayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -4803,7 +4743,6 @@ public final class KeyValuePayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -4812,7 +4751,6 @@ public final class KeyValuePayloads {
         }
 
         private java.lang.Object key_;
-
         // optional int32 exp_time = 3 [default = 0];
         public static final int EXP_TIME_FIELD_NUMBER = 3;
 
@@ -4829,7 +4767,6 @@ public final class KeyValuePayloads {
         }
 
         private int expTime_;
-
         // required bytes value = 4;
         public static final int VALUE_FIELD_NUMBER = 4;
 
@@ -4859,11 +4796,8 @@ public final class KeyValuePayloads {
         }
 
         private com.google.protobuf.ByteString value_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new SetRequest(true);
@@ -5106,37 +5040,21 @@ public final class KeyValuePayloads {
     }
 
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_InitRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_KVEntry_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_SetRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_GetRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_GetReply_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_ListRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_ListReply_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         final java.lang.String[] descriptorData = {

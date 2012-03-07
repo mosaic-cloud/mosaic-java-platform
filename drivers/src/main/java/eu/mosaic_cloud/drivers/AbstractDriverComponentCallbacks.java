@@ -58,23 +58,14 @@ public abstract class AbstractDriverComponentCallbacks implements ComponentCallb
     }
 
     protected Status status;
-
     protected ComponentController component;
-
     protected ComponentCallReference pendingReference;
-
     protected AbstractDriverStub stub;
-
     protected ComponentIdentifier resourceGroup;
-
     protected ComponentIdentifier selfGroup;
-
     protected IConfiguration driverConfiguration;
-
     protected ThreadingContext threading;
-
     protected ExceptionTracer exceptions;
-
     protected MosaicLogger logger;
 
     protected AbstractDriverComponentCallbacks(ComponentEnvironment context) {

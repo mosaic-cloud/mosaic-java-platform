@@ -29,13 +29,9 @@ package eu.mosaic_cloud.drivers.interop;
 public class DriverConnectionData {
 
     private final String host;
-
     private final int port;
-
     private String user = "";
-
     private String password = "";
-
     private final String driverName;
 
     /**

@@ -36,7 +36,6 @@ import eu.mosaic_cloud.platform.interop.tools.ChannelData;
 public class CloudletComponentResourceFinder {
 
     private static CloudletComponentResourceFinder finder;
-
     private static MosaicLogger logger = MosaicLogger
             .createLogger(CloudletComponentResourceFinder.class);
 

@@ -71,19 +71,12 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
     }
 
     protected IConfiguration configuration;
-
     protected MosaicLogger logger;
-
     private final ResponseTransmitter transmitter;
-
     private final IResourceDriver driver;
-
     private final List<Session> sessions;
-
     private final ZeroMqChannel commChannel;
-
     protected static final Object MONITOR = Monitor.create(AbstractDriverStub.class);
-
     private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer>();
 
     /**

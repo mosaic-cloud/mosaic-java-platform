@@ -51,19 +51,12 @@ public class CloudletManager {
      * when holding mainLock.
      */
     private List<Cloudlet<?>> cloudletPool;
-
     private CallbackReactor reactor;
-
     private ThreadingContext threading;
-
     private ClassLoader classLoader;
-
     private final Monitor monitor = Monitor.create(this);
-
     private IConfiguration configuration;
-
     private ExceptionTracer exceptions;
-
     private static MosaicLogger logger = MosaicLogger.createLogger(CloudletManager.class);
 
     /**

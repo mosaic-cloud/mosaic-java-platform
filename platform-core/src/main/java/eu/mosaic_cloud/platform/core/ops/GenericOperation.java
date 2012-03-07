@@ -91,9 +91,7 @@ public class GenericOperation<T> implements IOperation<T> {
     }
 
     private IOperationCompletionHandler<T> complHandler;
-
     private final FutureTask<T> operation;
-
     private final CountDownLatch cHandlerSet = new CountDownLatch(1);
 
     /**

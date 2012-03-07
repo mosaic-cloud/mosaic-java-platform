@@ -41,7 +41,6 @@ import com.google.protobuf.GeneratedMessage;
 public class DefaultPBPayloadCoder implements PayloadCoder {
 
     private final Class<? extends GeneratedMessage> clasz;
-
     private final boolean nullAllowed;
 
     /**

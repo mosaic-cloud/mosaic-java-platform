@@ -50,17 +50,11 @@ public abstract class BaseCloudletTest extends
             eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.BaseScenario<Context> {
 
         public AbstractDriverStub amqpDriverStub;
-
         public ZeroMqChannel connectorsChannel;
-
         public String connectorsIdentity;
-
         public ZeroMqChannel driversChannel;
-
         public String driversEndpoint;
-
         public String driversIdentity;
-
         public AbstractDriverStub kvDriverStub;
     }
 

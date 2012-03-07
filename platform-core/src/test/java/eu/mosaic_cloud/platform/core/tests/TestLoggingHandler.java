@@ -26,7 +26,6 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 public class TestLoggingHandler<T extends Object> implements IOperationCompletionHandler<T> {
 
     private String testName = "";
-
     private final MosaicLogger logger;
 
     public TestLoggingHandler(String testName) {

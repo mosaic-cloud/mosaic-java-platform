@@ -38,12 +38,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * driver.
  * 
  * @author Georgiana Macariu
- * @param <T>
+ * @param <TValue>
  *            type of stored data
  * 
  */
-public final class GenericKvStoreConnectorProxy<T extends Object> extends
-        BaseKvStoreConnectorProxy<T> { // NOPMD
+public final class GenericKvStoreConnectorProxy<TValue extends Object> extends
+        BaseKvStoreConnectorProxy<TValue> {
 
     /**
      * Returns a proxy for key-value distributed storage systems.
@@ -62,32 +62,30 @@ public final class GenericKvStoreConnectorProxy<T extends Object> extends
      * @return the proxy
      */
     public static <T extends Object> GenericKvStoreConnectorProxy<T> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final DataEncoder<? super T> encoder) {
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment,
+            final DataEncoder<T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T>(
                 configuration, environment, encoder);
         return proxy;
     }
 
-    // by
-    // georgiana
-    // on
-    // 2/20/12
-    // 5:06
-    // PM
+   
     protected GenericKvStoreConnectorProxy(final IConfiguration configuration,
-            final ConnectorEnvironment environment, final DataEncoder<? super T> encoder) {
+            final ConnectorEnvironment environment,
+            final DataEncoder<TValue> encoder) {
         super(configuration, environment, encoder);
     }
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        final String bucket = ConfigUtils.resolveParameter(this.configuration,
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
+        final String bucket = ConfigUtils.resolveParameter(this.getConfiguration(),
+                ConfigProperties.getString("GenericKvStoreConnector.1"),
+                String.class, "");
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());
         requestBuilder.setBucket(bucket);
-        return this.connect(KeyValueSession.CONNECTOR, new Message(KeyValueMessage.ACCESS,
-                requestBuilder.build()));
+        return this.connect(KeyValueSession.CONNECTOR, new Message(
+                KeyValueMessage.ACCESS, requestBuilder.build()));
     }
 }

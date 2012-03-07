@@ -37,12 +37,12 @@ public class RedisKvStoreConnectorTest extends
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        final Scenario scenario = new Scenario();
-        BaseConnectorTest.setUpScenario(RedisKvStoreConnectorTest.class, scenario,
+        final Scenario scenario = new Scenario(RedisKvStoreConnectorTest.class,
                 "redis-kv-store-driver-test.properties");
-        scenario.driverChannel.register(KeyValueSession.DRIVER);
-        scenario.driverStub = KeyValueStub.createDetached(scenario.configuration,
-                scenario.threading, scenario.driverChannel);
+        BaseConnectorTest.setUpScenario(RedisKvStoreConnectorTest.class);
+        scenario.registerDriverRole(KeyValueSession.DRIVER);
+        driverStub = KeyValueStub.createDetached(scenario.getConfiguration(),
+                scenario.getThreading(), scenario.getDriverChannel());
         RedisKvStoreConnectorTest.scenario_ = scenario;
     }
 
@@ -54,7 +54,8 @@ public class RedisKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = RedisKvStoreConnectorTest.scenario_;
-        this.connector = GenericKvStoreConnector.create(this.scenario.configuration,
-                this.scenario.environment, new PojoDataEncoder<String>(String.class));
+        this.connector = GenericKvStoreConnector.create(this.scenario
+                .getConfiguration(), this.scenario.getEnvironment(),
+                new PojoDataEncoder<String>(String.class));
     }
 }

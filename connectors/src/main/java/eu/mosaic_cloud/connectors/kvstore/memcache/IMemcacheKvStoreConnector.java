@@ -30,10 +30,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * Interface for working with key-value memcached compatible stores.
  * 
  * @author Georgiana Macariu
- * @param <Value>
+ * @param <TValue>
  *            type of stored data
  */
-public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStoreConnector<Value> {
+public interface IMemcacheKvStoreConnector<TValue extends Object> extends
+        IKvStoreConnector<TValue> {
 
     /**
      * Stores specified data, but only if the server *doesn't* already hold data
@@ -55,7 +56,7 @@ public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStor
      *            the data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> add(String key, int exp, Value data);
+    CallbackCompletion<Boolean> add(String key, int exp, TValue data);
 
     /**
      * Adds specified data to an existing key after existing data.
@@ -66,7 +67,7 @@ public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStor
      *            the appended data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> append(String key, Value data);
+    CallbackCompletion<Boolean> append(String key, TValue data);
 
     /**
      * Stores specified data but only if no one else has updated since I last
@@ -78,7 +79,7 @@ public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStor
      *            the data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> cas(String key, Value data);
+    CallbackCompletion<Boolean> cas(String key, TValue data);
 
     /**
      * Gets data associated with several keys.
@@ -87,7 +88,7 @@ public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStor
      *            the keys
      * @return a result handle for the operation
      */
-    CallbackCompletion<Map<String, Value>> getBulk(List<String> keys);
+    CallbackCompletion<Map<String, TValue>> getBulk(List<String> keys);
 
     /**
      * Adds specified data to an existing key before existing data.
@@ -98,7 +99,7 @@ public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStor
      *            the pre-appended data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> prepend(String key, Value data);
+    CallbackCompletion<Boolean> prepend(String key, TValue data);
 
     /**
      * Stores specified data, but only if the server *does* already hold data
@@ -120,7 +121,7 @@ public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStor
      *            the data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> replace(String key, int exp, Value data);
+    CallbackCompletion<Boolean> replace(String key, int exp, TValue data);
 
     /**
      * Stores the given data and associates it with the specified key.
@@ -141,5 +142,5 @@ public interface IMemcacheKvStoreConnector<Value extends Object> extends IKvStor
      *            the data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> set(String key, int exp, Value data);
+    CallbackCompletion<Boolean> set(String key, int exp, TValue data);
 }

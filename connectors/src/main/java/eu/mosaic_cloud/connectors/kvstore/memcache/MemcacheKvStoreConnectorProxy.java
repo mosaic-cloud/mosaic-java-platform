@@ -52,12 +52,13 @@ import com.google.protobuf.ByteString;
  * to communicate with a memcached driver.
  * 
  * @author Georgiana Macariu
- * @param <T>
+ * @param <TValue>
  *            type of stored data
  * 
  */
-public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
-        BaseKvStoreConnectorProxy<T> implements IMemcacheKvStoreConnector<T> {
+public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
+        BaseKvStoreConnectorProxy<TValue> implements
+        IMemcacheKvStoreConnector<TValue> {
 
     /**
      * Returns a proxy for key-value distributed storage systems.
@@ -76,20 +77,22 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
      * @return the proxy
      */
     public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final DataEncoder<? super T> encoder) {
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment, final DataEncoder<T> encoder) {
         final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T>(
                 configuration, environment, encoder);
         return proxy;
     }
 
     protected MemcacheKvStoreConnectorProxy(final IConfiguration configuration,
-            final ConnectorEnvironment environment, final DataEncoder<? super T> encoder) {
+            final ConnectorEnvironment environment,
+            final DataEncoder<TValue> encoder) {
         super(configuration, environment, encoder);
     }
 
     @Override
-    public CallbackCompletion<Boolean> add(final String key, final int exp, final T data) {
+    public CallbackCompletion<Boolean> add(final String key, final int exp,
+            final TValue data) {
         CallbackCompletion<Boolean> result;
         try {
             final byte[] dataBytes = this.encoder.encode(data);
@@ -102,12 +105,7 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
             requestBuilder.setExpTime(exp);
             final Message message = new Message(MemcachedMessage.ADD_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD
-                                                                      // by
-                                                                      // georgiana
-                                                                      // on
-                                                                      // 2/20/12
-                                                                      // 5:47 PM
+            result = this.sendRequest(message, token, Boolean.class);
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -115,7 +113,8 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
     }
 
     @Override
-    public CallbackCompletion<Boolean> append(final String key, final T data) {
+    public CallbackCompletion<Boolean> append(final String key,
+            final TValue data) {
         CallbackCompletion<Boolean> result;
         try {
             final byte[] dataBytes = this.encoder.encode(data);
@@ -125,14 +124,9 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
             requestBuilder.setToken(token);
             requestBuilder.setKey(key);
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(MemcachedMessage.APPEND_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD
-                                                                      // by
-                                                                      // georgiana
-                                                                      // on
-                                                                      // 2/20/12
-                                                                      // 5:47 PM
+            final Message message = new Message(
+                    MemcachedMessage.APPEND_REQUEST, requestBuilder.build());
+            result = this.sendRequest(message, token, Boolean.class);
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -140,7 +134,7 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
     }
 
     @Override
-    public CallbackCompletion<Boolean> cas(final String key, final T data) {
+    public CallbackCompletion<Boolean> cas(final String key, final TValue data) {
         CallbackCompletion<Boolean> result;
         try {
             final byte[] dataBytes = this.encoder.encode(data);
@@ -152,12 +146,7 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.CAS_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD
-                                                                      // by
-                                                                      // georgiana
-                                                                      // on
-                                                                      // 2/20/12
-                                                                      // 5:47 PM
+            result = this.sendRequest(message, token, Boolean.class);
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -166,23 +155,28 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
 
     @Override
     @SuppressWarnings("unchecked")
-    public CallbackCompletion<Map<String, T>> getBulk(final List<String> keys) {
-        return this.sendGetMessage(keys, (Class<Map<String, T>>) ((Class<?>) Map.class));
+    public CallbackCompletion<Map<String, TValue>> getBulk(
+            final List<String> keys) {
+        return this.sendGetMessage(keys,
+                (Class<Map<String, TValue>>) ((Class<?>) Map.class));
     }
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        final String bucket = ConfigUtils.resolveParameter(this.configuration,
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
+        final String bucket = ConfigUtils.resolveParameter(
+                this.getConfiguration(),
+                ConfigProperties.getString("GenericKvStoreConnector.1"),
+                String.class, "");
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());
         requestBuilder.setBucket(bucket);
-        return this.connect(MemcachedSession.CONNECTOR, new Message(KeyValueMessage.ACCESS,
-                requestBuilder.build()));
+        return this.connect(MemcachedSession.CONNECTOR, new Message(
+                KeyValueMessage.ACCESS, requestBuilder.build()));
     }
 
     @Override
-    public CallbackCompletion<Boolean> prepend(final String key, final T data) {
+    public CallbackCompletion<Boolean> prepend(final String key,
+            final TValue data) {
         CallbackCompletion<Boolean> result;
         try {
             final byte[] dataBytes = this.encoder.encode(data);
@@ -192,14 +186,9 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
             requestBuilder.setToken(token);
             requestBuilder.setKey(key);
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(MemcachedMessage.PREPEND_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD
-                                                                      // by
-                                                                      // georgiana
-                                                                      // on
-                                                                      // 2/20/12
-                                                                      // 5:47 PM
+            final Message message = new Message(
+                    MemcachedMessage.PREPEND_REQUEST, requestBuilder.build());
+            result = this.sendRequest(message, token, Boolean.class);
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -213,18 +202,19 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
             final KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
             final CompletionToken token = getPayload.getToken();
             this.logger.debug("KvStoreConnectorProxy - Received "
-                    + message.specification.toString() + " response [" + token.getMessageId()
-                    + "]...");
+                    + message.specification.toString() + " response ["
+                    + token.getMessageId() + "]...");
             if (this.pendingRequests.peek(token.getMessageId()).future.outcomeClass == Map.class) {
                 final List<KVEntry> resultEntries = getPayload.getResultsList();
                 final Map<String, Object> values = new HashMap<String, Object>();
                 for (final KVEntry entry : resultEntries) {
                     try {
-                        final T value = (T) this.encoder.decode(resultEntries.get(0).getValue()
-                                .toByteArray());
+                        final TValue value = this.encoder.decode(resultEntries
+                                .get(0).getValue().toByteArray());
                         values.put(entry.getKey(), value);
                     } catch (final EncodingException exception) {
-                        this.pendingRequests.fail(token.getMessageId(), exception);
+                        this.pendingRequests.fail(token.getMessageId(),
+                                exception);
                         return;
                     }
                 }
@@ -237,7 +227,8 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
     }
 
     @Override
-    public CallbackCompletion<Boolean> replace(final String key, final int exp, final T data) {
+    public CallbackCompletion<Boolean> replace(final String key, final int exp,
+            final TValue data) {
         CallbackCompletion<Boolean> result;
         try {
             final byte[] dataBytes = this.encoder.encode(data);
@@ -248,14 +239,9 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
             requestBuilder.setKey(key);
             requestBuilder.setExpTime(exp);
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(MemcachedMessage.REPLACE_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD
-                                                                      // by
-                                                                      // georgiana
-                                                                      // on
-                                                                      // 2/20/12
-                                                                      // 5:47 PM
+            final Message message = new Message(
+                    MemcachedMessage.REPLACE_REQUEST, requestBuilder.build());
+            result = this.sendRequest(message, token, Boolean.class);
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }

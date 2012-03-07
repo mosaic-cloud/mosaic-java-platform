@@ -23,7 +23,6 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 public class PingPongData {
 
     private String ping;
-
     private String pong;
 
     public PingPongData() {

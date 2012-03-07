@@ -43,9 +43,7 @@ public enum MemcachedSession implements SessionSpecification {
             MemcachedRole.CONNECTOR);
 
     public final MemcachedRole selfRole;
-
     public final MemcachedRole peerRole;
-
     public final List<MessageSpecification> messages;
 
     private MemcachedSession(MemcachedRole selfRole, MemcachedRole peerRole) {

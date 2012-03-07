@@ -40,19 +40,14 @@ public final class MemcachedPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string key = 2;
             private java.lang.Object key_ = "";
-
             // required int32 exp_time = 3;
             private int expTime_;
-
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -468,7 +463,6 @@ public final class MemcachedPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -485,7 +479,6 @@ public final class MemcachedPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -494,7 +487,6 @@ public final class MemcachedPayloads {
         }
 
         private java.lang.Object key_;
-
         // required int32 exp_time = 3;
         public static final int EXP_TIME_FIELD_NUMBER = 3;
 
@@ -511,7 +503,6 @@ public final class MemcachedPayloads {
         }
 
         private int expTime_;
-
         // required bytes value = 4;
         public static final int VALUE_FIELD_NUMBER = 4;
 
@@ -541,11 +532,8 @@ public final class MemcachedPayloads {
         }
 
         private com.google.protobuf.ByteString value_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new AddRequest(true);
@@ -808,19 +796,14 @@ public final class MemcachedPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string key = 2;
             private java.lang.Object key_ = "";
-
             // required int32 exp_time = 3;
             private int expTime_;
-
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -1236,7 +1219,6 @@ public final class MemcachedPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -1253,7 +1235,6 @@ public final class MemcachedPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -1262,7 +1243,6 @@ public final class MemcachedPayloads {
         }
 
         private java.lang.Object key_;
-
         // required int32 exp_time = 3;
         public static final int EXP_TIME_FIELD_NUMBER = 3;
 
@@ -1279,7 +1259,6 @@ public final class MemcachedPayloads {
         }
 
         private int expTime_;
-
         // required bytes value = 4;
         public static final int VALUE_FIELD_NUMBER = 4;
 
@@ -1309,11 +1288,8 @@ public final class MemcachedPayloads {
         }
 
         private com.google.protobuf.ByteString value_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new AppendRequest(true);
@@ -1575,19 +1551,14 @@ public final class MemcachedPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string key = 2;
             private java.lang.Object key_ = "";
-
             // required int32 exp_time = 3;
             private int expTime_;
-
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -2003,7 +1974,6 @@ public final class MemcachedPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -2020,7 +1990,6 @@ public final class MemcachedPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -2029,7 +1998,6 @@ public final class MemcachedPayloads {
         }
 
         private java.lang.Object key_;
-
         // required int32 exp_time = 3;
         public static final int EXP_TIME_FIELD_NUMBER = 3;
 
@@ -2046,7 +2014,6 @@ public final class MemcachedPayloads {
         }
 
         private int expTime_;
-
         // required bytes value = 4;
         public static final int VALUE_FIELD_NUMBER = 4;
 
@@ -2076,11 +2043,8 @@ public final class MemcachedPayloads {
         }
 
         private com.google.protobuf.ByteString value_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new CasRequest(true);
@@ -2343,19 +2307,14 @@ public final class MemcachedPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string key = 2;
             private java.lang.Object key_ = "";
-
             // required int32 exp_time = 3;
             private int expTime_;
-
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -2771,7 +2730,6 @@ public final class MemcachedPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -2788,7 +2746,6 @@ public final class MemcachedPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -2797,7 +2754,6 @@ public final class MemcachedPayloads {
         }
 
         private java.lang.Object key_;
-
         // required int32 exp_time = 3;
         public static final int EXP_TIME_FIELD_NUMBER = 3;
 
@@ -2814,7 +2770,6 @@ public final class MemcachedPayloads {
         }
 
         private int expTime_;
-
         // required bytes value = 4;
         public static final int VALUE_FIELD_NUMBER = 4;
 
@@ -2844,11 +2799,8 @@ public final class MemcachedPayloads {
         }
 
         private com.google.protobuf.ByteString value_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new PrependRequest(true);
@@ -3111,19 +3063,14 @@ public final class MemcachedPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string key = 2;
             private java.lang.Object key_ = "";
-
             // required int32 exp_time = 3;
             private int expTime_;
-
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -3539,7 +3486,6 @@ public final class MemcachedPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -3556,7 +3502,6 @@ public final class MemcachedPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
 
@@ -3565,7 +3510,6 @@ public final class MemcachedPayloads {
         }
 
         private java.lang.Object key_;
-
         // required int32 exp_time = 3;
         public static final int EXP_TIME_FIELD_NUMBER = 3;
 
@@ -3582,7 +3526,6 @@ public final class MemcachedPayloads {
         }
 
         private int expTime_;
-
         // required bytes value = 4;
         public static final int VALUE_FIELD_NUMBER = 4;
 
@@ -3612,11 +3555,8 @@ public final class MemcachedPayloads {
         }
 
         private com.google.protobuf.ByteString value_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ReplaceRequest(true);
@@ -3863,25 +3803,15 @@ public final class MemcachedPayloads {
     }
 
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_AddRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_AddRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_AppendRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_AppendRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_PrependRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_PrependRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_kvstore_CasRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_kvstore_CasRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         final java.lang.String[] descriptorData = {

@@ -53,27 +53,16 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
     public static class BaseScenario<Context extends Object> {
 
         public Class<? extends ICloudletCallback<Context>> callbacksClass;
-
         public IConfiguration configuration;
-
         public IConnectorsFactory connectors;
-
         public Class<Context> contextClass;
-
         public CloudletEnvironment environment;
-
         public TranscriptExceptionTracer exceptions;
-
         public QueueingExceptionTracer exceptionsQueue;
-
         public MosaicLogger logger;
-
         public long poolTimeout = 6 * 1000 * (ConfigProperties.inDebugging ? 3600 : 1);
-
         public BasicCallbackReactor reactor;
-
         public BasicThreadingContext threading;
-
         public Transcript transcript;
     }
 
@@ -142,7 +131,6 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
     }
 
     protected Cloudlet<?> cloudlet;
-
     protected Scenario scenario;
 
     protected void await(final CallbackCompletion<?> completion) {

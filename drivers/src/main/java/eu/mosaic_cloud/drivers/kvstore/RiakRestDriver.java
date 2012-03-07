@@ -73,7 +73,6 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
     }
 
     private final String riakHost;
-
     private final int riakPort;
 
     /**

@@ -40,16 +40,12 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required int64 delivery = 2;
             private long delivery_;
-
             // required bool multiple = 3;
             private boolean multiple_;
 
@@ -404,7 +400,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -421,7 +416,6 @@ public final class AmqpPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required int64 delivery = 2;
         public static final int DELIVERY_FIELD_NUMBER = 2;
 
@@ -431,7 +425,6 @@ public final class AmqpPayloads {
         }
 
         private long delivery_;
-
         // required bool multiple = 3;
         public static final int MULTIPLE_FIELD_NUMBER = 3;
 
@@ -442,11 +435,8 @@ public final class AmqpPayloads {
         }
 
         private boolean multiple_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new Ack(true);
@@ -690,19 +680,14 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string exchange = 2;
             private java.lang.Object exchange_ = "";
-
             // required string queue = 3;
             private java.lang.Object queue_ = "";
-
             // required string routing_key = 4;
             private java.lang.Object routingKey_ = "";
 
@@ -1147,7 +1132,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -1162,7 +1146,6 @@ public final class AmqpPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string exchange = 2;
         public static final int EXCHANGE_FIELD_NUMBER = 2;
 
@@ -1178,7 +1161,6 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object exchange_;
-
         // required string queue = 3;
         public static final int QUEUE_FIELD_NUMBER = 3;
 
@@ -1195,7 +1177,6 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object queue_;
-
         // required string routing_key = 4;
         public static final int ROUTING_KEY_FIELD_NUMBER = 4;
 
@@ -1225,11 +1206,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object routingKey_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new BindQueueRequest(true);
@@ -1532,7 +1510,6 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required string consumer_tag = 1;
             private java.lang.Object consumerTag_ = "";
 
@@ -1742,7 +1719,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required string consumer_tag = 1;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 
@@ -1762,11 +1738,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object consumerTag_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new CancelOkMessage(true);
@@ -1967,13 +1940,10 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string consumer = 2;
             private java.lang.Object consumer_ = "";
 
@@ -2306,7 +2276,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -2317,7 +2286,6 @@ public final class AmqpPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string consumer = 2;
         public static final int CONSUMER_FIELD_NUMBER = 2;
 
@@ -2342,11 +2310,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object consumer_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new CancelRequest(true);
@@ -2582,7 +2547,6 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required string consumer_tag = 1;
             private java.lang.Object consumerTag_ = "";
 
@@ -2792,7 +2756,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required string consumer_tag = 1;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 
@@ -2812,11 +2775,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object consumerTag_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ConsumeOkMessage(true);
@@ -3017,13 +2977,10 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string consumer_tag = 2;
             private java.lang.Object consumerTag_ = "";
 
@@ -3356,7 +3313,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -3367,7 +3323,6 @@ public final class AmqpPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string consumer_tag = 2;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 2;
 
@@ -3392,11 +3347,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object consumerTag_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ConsumeReply(true);
@@ -3632,25 +3584,18 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string queue = 2;
             private java.lang.Object queue_ = "";
-
             // required string consumer = 3;
             private java.lang.Object consumer_ = "";
-
             // optional bool exclusive = 4 [default = true];
             private boolean exclusive_ = true;
-
             // optional bool auto_ack = 5 [default = true];
             private boolean autoAck_ = true;
-
             // required bytes extra = 6;
             private com.google.protobuf.ByteString extra_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -4146,14 +4091,10 @@ public final class AmqpPayloads {
         }
 
         private static final ConsumeRequest defaultInstance;
-
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string queue = 2;
         public static final int QUEUE_FIELD_NUMBER = 2;
 
@@ -4169,7 +4110,6 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object queue_;
-
         // required string consumer = 3;
         public static final int CONSUMER_FIELD_NUMBER = 3;
 
@@ -4190,7 +4130,6 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object consumer_;
-
         // optional bool exclusive = 4 [default = true];
         public static final int EXCLUSIVE_FIELD_NUMBER = 4;
 
@@ -4206,7 +4145,6 @@ public final class AmqpPayloads {
         }
 
         private boolean exclusive_;
-
         // optional bool auto_ack = 5 [default = true];
         public static final int AUTO_ACK_FIELD_NUMBER = 5;
 
@@ -4225,7 +4163,6 @@ public final class AmqpPayloads {
         }
 
         private boolean autoAck_;
-
         // required bytes extra = 6;
         public static final int EXTRA_FIELD_NUMBER = 6;
 
@@ -4241,11 +4178,8 @@ public final class AmqpPayloads {
         }
 
         private com.google.protobuf.ByteString extra_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ConsumeRequest(true);
@@ -4575,27 +4509,20 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string exchange = 2;
             private java.lang.Object exchange_ = "";
-
             // required
             // .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType type =
             // 3;
             private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType type_ = eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType.DIRECT;
-
             // optional bool durable = 4 [default = false];
             private boolean durable_;
-
             // optional bool auto_delete = 5 [default = true];
             private boolean autoDelete_ = true;
-
             // optional bool passive = 6 [default = true];
             private boolean passive_ = true;
 
@@ -5083,11 +5010,8 @@ public final class AmqpPayloads {
             DIRECT(0, 0), FANOUT(1, 1), TOPIC(2, 2), ;
 
             public static final int DIRECT_VALUE = 0;
-
             public static final int FANOUT_VALUE = 1;
-
             public static final int TOPIC_VALUE = 2;
-
             private static com.google.protobuf.Internal.EnumLiteMap<ExchangeType> internalValueMap = new com.google.protobuf.Internal.EnumLiteMap<ExchangeType>() {
 
                 @Override
@@ -5095,7 +5019,6 @@ public final class AmqpPayloads {
                     return ExchangeType.valueOf(number);
                 }
             };
-
             private static final ExchangeType[] VALUES = {
                     DIRECT, FANOUT, TOPIC, };
 
@@ -5131,7 +5054,6 @@ public final class AmqpPayloads {
             }
 
             private final int index;
-
             private final int value;
 
             private ExchangeType(int index, int value) {
@@ -5163,7 +5085,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -5177,18 +5098,13 @@ public final class AmqpPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string exchange = 2;
         public static final int EXCHANGE_FIELD_NUMBER = 2;
-
         private java.lang.Object exchange_;
-
         // required .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType
         // type = 3;
         public static final int TYPE_FIELD_NUMBER = 3;
-
         private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType type_;
-
         // optional bool durable = 4 [default = false];
         public static final int DURABLE_FIELD_NUMBER = 4;
 
@@ -5209,7 +5125,6 @@ public final class AmqpPayloads {
         }
 
         private boolean durable_;
-
         // optional bool auto_delete = 5 [default = true];
         public static final int AUTO_DELETE_FIELD_NUMBER = 5;
 
@@ -5223,7 +5138,6 @@ public final class AmqpPayloads {
         }
 
         private boolean autoDelete_;
-
         // optional bool passive = 6 [default = true];
         public static final int PASSIVE_FIELD_NUMBER = 6;
 
@@ -5246,11 +5160,8 @@ public final class AmqpPayloads {
         }
 
         private boolean passive_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new DeclareExchangeRequest(true);
@@ -5562,25 +5473,18 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string queue = 2;
             private java.lang.Object queue_ = "";
-
             // optional bool exclusive = 3 [default = true];
             private boolean exclusive_ = true;
-
             // optional bool durable = 4 [default = false];
             private boolean durable_;
-
             // optional bool auto_delete = 5 [default = true];
             private boolean autoDelete_ = true;
-
             // optional bool passive = 6 [default = true];
             private boolean passive_ = true;
 
@@ -6051,14 +5955,10 @@ public final class AmqpPayloads {
         }
 
         private static final DeclareQueueRequest defaultInstance;
-
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string queue = 2;
         public static final int QUEUE_FIELD_NUMBER = 2;
 
@@ -6074,7 +5974,6 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object queue_;
-
         // optional bool exclusive = 3 [default = true];
         public static final int EXCLUSIVE_FIELD_NUMBER = 3;
 
@@ -6095,7 +5994,6 @@ public final class AmqpPayloads {
         }
 
         private boolean exclusive_;
-
         // optional bool durable = 4 [default = false];
         public static final int DURABLE_FIELD_NUMBER = 4;
 
@@ -6111,7 +6009,6 @@ public final class AmqpPayloads {
         }
 
         private boolean durable_;
-
         // optional bool auto_delete = 5 [default = true];
         public static final int AUTO_DELETE_FIELD_NUMBER = 5;
 
@@ -6130,7 +6027,6 @@ public final class AmqpPayloads {
         }
 
         private boolean autoDelete_;
-
         // optional bool passive = 6 [default = true];
         public static final int PASSIVE_FIELD_NUMBER = 6;
 
@@ -6146,11 +6042,8 @@ public final class AmqpPayloads {
         }
 
         private boolean passive_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new DeclareQueueRequest(true);
@@ -6448,31 +6341,22 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required string consumer_tag = 1;
             private java.lang.Object consumerTag_ = "";
-
             // required int64 delivery_tag = 2;
             private long deliveryTag_;
-
             // required string exchange = 3;
             private java.lang.Object exchange_ = "";
-
             // required string routing_key = 4;
             private java.lang.Object routingKey_ = "";
-
             // required int32 delivery_mode = 5;
             private int deliveryMode_;
-
             // required bytes data = 6;
             private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
-
             // optional string content_type = 7;
             private java.lang.Object contentType_ = "";
-
             // optional string correlation_id = 8;
             private java.lang.Object correlationId_ = "";
-
             // optional string reply_to = 9;
             private java.lang.Object replyTo_ = "";
 
@@ -7062,44 +6946,28 @@ public final class AmqpPayloads {
         }
 
         private static final DeliveryMessage defaultInstance;
-
         private int bitField0_;
-
         // required string consumer_tag = 1;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
-
         private java.lang.Object consumerTag_;
-
         // required int64 delivery_tag = 2;
         public static final int DELIVERY_TAG_FIELD_NUMBER = 2;
-
         private long deliveryTag_;
-
         // required string exchange = 3;
         public static final int EXCHANGE_FIELD_NUMBER = 3;
-
         private java.lang.Object exchange_;
-
         // required string routing_key = 4;
         public static final int ROUTING_KEY_FIELD_NUMBER = 4;
-
         private java.lang.Object routingKey_;
-
         // required int32 delivery_mode = 5;
         public static final int DELIVERY_MODE_FIELD_NUMBER = 5;
-
         private int deliveryMode_;
-
         // required bytes data = 6;
         public static final int DATA_FIELD_NUMBER = 6;
-
         private com.google.protobuf.ByteString data_;
-
         // optional string content_type = 7;
         public static final int CONTENT_TYPE_FIELD_NUMBER = 7;
-
         private java.lang.Object contentType_;
-
         // optional string correlation_id = 8;
         public static final int CORRELATION_ID_FIELD_NUMBER = 8;
 
@@ -7191,16 +7059,11 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object correlationId_;
-
         // optional string reply_to = 9;
         public static final int REPLY_TO_FIELD_NUMBER = 9;
-
         private java.lang.Object replyTo_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new DeliveryMessage(true);
@@ -7662,16 +7525,12 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string queue = 2;
             private java.lang.Object queue_ = "";
-
             // optional bool auto_ack = 3 [default = true];
             private boolean autoAck_ = true;
 
@@ -8041,7 +7900,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -8058,7 +7916,6 @@ public final class AmqpPayloads {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string queue = 2;
         public static final int QUEUE_FIELD_NUMBER = 2;
 
@@ -8068,7 +7925,6 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object queue_;
-
         // optional bool auto_ack = 3 [default = true];
         public static final int AUTO_ACK_FIELD_NUMBER = 3;
 
@@ -8079,11 +7935,8 @@ public final class AmqpPayloads {
         }
 
         private boolean autoAck_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new GetRequest(true);
@@ -8344,37 +8197,26 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required bytes data = 2;
             private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
-
             // optional bool durable = 3 [default = false];
             private boolean durable_;
-
             // required string exchange = 4;
             private java.lang.Object exchange_ = "";
-
             // optional bool immediate = 5 [default = true];
             private boolean immediate_ = true;
-
             // optional bool mandatory = 6 [default = true];
             private boolean mandatory_ = true;
-
             // required string routing_key = 7;
             private java.lang.Object routingKey_ = "";
-
             // optional string content_type = 8;
             private java.lang.Object contentType_ = "";
-
             // optional string correlation_id = 9;
             private java.lang.Object correlationId_ = "";
-
             // optional string reply_to = 10;
             private java.lang.Object replyTo_ = "";
 
@@ -9070,54 +8912,34 @@ public final class AmqpPayloads {
         }
 
         private static final PublishRequest defaultInstance;
-
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required bytes data = 2;
         public static final int DATA_FIELD_NUMBER = 2;
-
         private com.google.protobuf.ByteString data_;
-
         // optional bool durable = 3 [default = false];
         public static final int DURABLE_FIELD_NUMBER = 3;
-
         private boolean durable_;
-
         // required string exchange = 4;
         public static final int EXCHANGE_FIELD_NUMBER = 4;
-
         private java.lang.Object exchange_;
-
         // optional bool immediate = 5 [default = true];
         public static final int IMMEDIATE_FIELD_NUMBER = 5;
-
         private boolean immediate_;
-
         // optional bool mandatory = 6 [default = true];
         public static final int MANDATORY_FIELD_NUMBER = 6;
-
         private boolean mandatory_;
-
         // required string routing_key = 7;
         public static final int ROUTING_KEY_FIELD_NUMBER = 7;
-
         private java.lang.Object routingKey_;
-
         // optional string content_type = 8;
         public static final int CONTENT_TYPE_FIELD_NUMBER = 8;
-
         private java.lang.Object contentType_;
-
         // optional string correlation_id = 9;
         public static final int CORRELATION_ID_FIELD_NUMBER = 9;
-
         private java.lang.Object correlationId_;
-
         // optional string reply_to = 10;
         public static final int REPLY_TO_FIELD_NUMBER = 10;
 
@@ -9209,11 +9031,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object replyTo_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new PublishRequest(true);
@@ -9676,7 +9495,6 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required string consumer_tag = 1;
             private java.lang.Object consumerTag_ = "";
 
@@ -9886,7 +9704,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required string consumer_tag = 1;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 
@@ -9906,11 +9723,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object consumerTag_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ServerCancelRequest(true);
@@ -10111,10 +9925,8 @@ public final class AmqpPayloads {
             }
 
             private int bitField0_;
-
             // required string consumer_tag = 1;
             private java.lang.Object consumerTag_ = "";
-
             // required string message = 2;
             private java.lang.Object message_ = "";
 
@@ -10373,7 +10185,6 @@ public final class AmqpPayloads {
         }
 
         private int bitField0_;
-
         // required string consumer_tag = 1;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 
@@ -10384,7 +10195,6 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object consumerTag_;
-
         // required string message = 2;
         public static final int MESSAGE_FIELD_NUMBER = 2;
 
@@ -10409,11 +10219,8 @@ public final class AmqpPayloads {
         }
 
         private java.lang.Object message_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new ShutdownMessage(true);
@@ -10645,61 +10452,33 @@ public final class AmqpPayloads {
     }
 
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_ConsumeReply_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_GetRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_Ack_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_CancelRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         final java.lang.String[] descriptorData = {

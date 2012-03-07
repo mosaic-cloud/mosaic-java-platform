@@ -23,15 +23,20 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConnector<String, ?>>
-        extends BaseConnectorTest<Connector, BaseKvStoreConnectorTest.Scenario> {
+public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreConnector<String, ?>>
+        extends BaseConnectorTest<TConnector, BaseKvStoreConnectorTest.Scenario> {
 
-    public static class Scenario extends BaseConnectorTest.BaseScenario<KeyValueStub> {
+    public static class Scenario extends
+            BaseScenario{
+        public <C extends BaseKvStoreConnector<String, ?>> Scenario(
+                Class<? extends BaseKvStoreConnectorTest<C>> owner,
+                String configuration) {
+            super(owner, configuration);
+        }
 
         public String keyPrefix = UUID.randomUUID().toString();
     }
@@ -57,7 +62,8 @@ public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConn
 
     protected void testGet() {
         final String k1 = this.scenario.keyPrefix + "_key_fantastic";
-        Assert.assertEquals("fantastic", this.awaitOutcome(this.connector.get(k1)));
+        Assert.assertEquals("fantastic",
+                this.awaitOutcome(this.connector.get(k1)));
     }
 
     protected void testList() {
@@ -67,7 +73,9 @@ public abstract class BaseKvStoreConnectorTest<Connector extends BaseKvStoreConn
     protected void testSet() {
         final String k1 = this.scenario.keyPrefix + "_key_fantastic";
         final String k2 = this.scenario.keyPrefix + "_key_famous";
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1, "fantastic")));
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2, "famous")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1,
+                "fantastic")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2,
+                "famous")));
     }
 }

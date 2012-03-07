@@ -34,9 +34,7 @@ import org.junit.Test;
 public class PropertyTypeConfigurationTest {
 
     private static PropertyTypeConfiguration configuration;
-
     private static PropertyTypeConfiguration fileConfiguration;
-
     private static PropertyTypeConfiguration systemConfiguration;
 
     @BeforeClass

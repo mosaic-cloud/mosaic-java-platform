@@ -129,9 +129,7 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
     }
 
     private final List<?> hosts;
-
     private final String username;
-
     private final String password;
 
     /**

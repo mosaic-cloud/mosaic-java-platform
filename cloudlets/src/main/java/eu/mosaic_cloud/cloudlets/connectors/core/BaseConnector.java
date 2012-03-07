@@ -34,15 +34,10 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
         implements IConnector<Context>, CallbackProxy {
 
     protected final Callback callback;
-
     protected final ICloudletController<?> cloudlet;
-
     protected final IConfiguration configuration;
-
     protected final Connector connector;
-
     protected final Context context;
-
     protected final MosaicLogger logger;
 
     protected BaseConnector(final ICloudletController<?> cloudlet, final Connector connector,

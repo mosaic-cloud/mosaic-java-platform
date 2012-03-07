@@ -23,16 +23,15 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
- * Interface for registering and using for an AMQP resource as a consumer.
+ * Interface for using for an AMQP resource as a consumer.
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
- *            the type of the context of the cloudlet using this accessor
- * @param <Message>
+ * @param <TMessage>
  *            the type of the consumed data
  */
-public interface IAmqpQueueConsumerConnector<Message> extends IAmqpQueueConnector {
+public interface IAmqpQueueConsumerConnector<TMessage> extends
+        IAmqpQueueConnector {
 
     /**
      * Acknowledges a message.

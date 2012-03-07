@@ -28,7 +28,6 @@ import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 public final class ExceptionTracer {
 
     private final TranscriptExceptionTracer transcriptTracer;
-
     private static final ExceptionTracer DEFAULT_INSTANCE = new ExceptionTracer();
 
     public static void traceDeferred(Throwable exception) {

@@ -25,24 +25,28 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-public class AmqpQueuePublisherConnector<Message> extends
-        AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<Message>> implements
-        IAmqpQueuePublisherConnector<Message> {
+public class AmqpQueuePublisherConnector<TMessage> extends
+        AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<TMessage>> implements
+        IAmqpQueuePublisherConnector<TMessage> {
 
-    public static <Message> AmqpQueuePublisherConnector<Message> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder) {
-        final AmqpQueuePublisherConnectorProxy<Message> proxy = AmqpQueuePublisherConnectorProxy
-                .create(configuration, environment, messageClass, messageEncoder);
-        return new AmqpQueuePublisherConnector<Message>(proxy);
+    public static <M> AmqpQueuePublisherConnector<M> create(
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment,
+            final Class<M> messageClass,
+            final DataEncoder<M> messageEncoder) {
+        final AmqpQueuePublisherConnectorProxy<M> proxy = AmqpQueuePublisherConnectorProxy
+                .create(configuration, environment, messageClass,
+                        messageEncoder);
+        return new AmqpQueuePublisherConnector<M>(proxy);
     }
 
-    protected AmqpQueuePublisherConnector(final AmqpQueuePublisherConnectorProxy<Message> proxy) {
+    protected AmqpQueuePublisherConnector(
+            final AmqpQueuePublisherConnectorProxy<TMessage> proxy) {
         super(proxy);
     }
 
     @Override
-    public CallbackCompletion<Void> publish(final Message message) {
+    public CallbackCompletion<Void> publish(final TMessage message) {
         return this.proxy.publish(message);
     }
 }

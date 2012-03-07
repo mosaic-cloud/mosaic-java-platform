@@ -56,21 +56,13 @@ public final class CloudletEnvironment {
     }
 
     public final ClassLoader classLoader;
-
     public final Class<?> cloudletCallbackClass;
-
     public final Class<?> cloudletContextClass;
-
     public final IConfiguration configuration;
-
     public final IConnectorsFactory connectors;
-
     public final ExceptionTracer exceptions;
-
     public final CallbackReactor reactor;
-
     public final SupplementaryEnvironment supplementary;
-
     public final ThreadingContext threading;
 
     private CloudletEnvironment(final IConfiguration configuration,

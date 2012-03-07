@@ -80,7 +80,6 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
     // 4:49
     // PM
     private final RiakClient riakcl;
-
     private final String bucket;
 
     private RiakPBOperationFactory(String riakHost, int port, String bucket) throws IOException {

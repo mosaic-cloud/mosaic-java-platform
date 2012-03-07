@@ -237,13 +237,9 @@ public class LoggingCloudlet {
     public static final class LoggingCloudletContext {
 
         IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData, Void> consumer;
-
         IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken, Void> publisher;
-
         IKvStoreConnector<LoggingCloudletContext, String, Void> kvStore;
-
         boolean publisherRunning = false;
-
         boolean consumerRunning = false;
     }
 }

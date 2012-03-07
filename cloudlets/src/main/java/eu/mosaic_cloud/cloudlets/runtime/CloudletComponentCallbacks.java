@@ -95,28 +95,17 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
     }
 
     public static CloudletComponentCallbacks callbacks = null;
-
     private static MosaicLogger logger = MosaicLogger
             .createLogger(CloudletComponentCallbacks.class);
-
     private Status status;
-
     private ComponentController component;
-
     private final ComponentEnvironment componentEnvironment;
-
     private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
-
     private final ComponentIdentifier amqpGroup;
-
     private final ComponentIdentifier kvGroup;
-
     private final ComponentIdentifier mcGroup;
-
     private final ComponentIdentifier selfGroup;
-
     private final List<CloudletManager> cloudletRunners = new ArrayList<CloudletManager>();
-
     private final ExceptionTracer exceptions;
 
     /**

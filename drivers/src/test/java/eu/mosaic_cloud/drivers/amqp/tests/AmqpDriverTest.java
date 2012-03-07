@@ -48,9 +48,7 @@ import org.junit.Test;
 public class AmqpDriverTest {
 
     private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
-
     private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
-
     private static IConfiguration configuration;
 
     @BeforeClass
@@ -76,9 +74,7 @@ public class AmqpDriverTest {
     }
 
     private AmqpDriver wrapper;
-
     private final String clientId = UUID.randomUUID().toString();
-
     private BasicThreadingContext threadingContext;
 
     @Before

@@ -26,14 +26,22 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
 import com.google.common.base.Preconditions;
 
-public abstract class BaseConnector<P extends BaseConnectorProxy> implements IConnector,
-        CallbackProxy {
+/**
+ * Base class for all connectors. Any connector will have an associated proxy.
+ * This proxy will handle all communication between the connector and the proxy.
+ * 
+ * @author Georgiana Macariu
+ * 
+ * @param <TProxy>
+ *            the type of the associated proxy
+ */
+public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
+        implements IConnector, CallbackProxy {
 
     protected final MosaicLogger logger;
+    protected final TProxy proxy;
 
-    protected final P proxy;
-
-    protected BaseConnector(final P proxy) {
+    protected BaseConnector(final TProxy proxy) {
         super();
         Preconditions.checkNotNull(proxy);
         this.proxy = proxy;

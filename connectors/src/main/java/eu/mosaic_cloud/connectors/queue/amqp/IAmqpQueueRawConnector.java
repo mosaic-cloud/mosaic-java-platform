@@ -36,7 +36,8 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      *            <code>true</code> to acknowledge all messages up to and
      *            including the supplied delivery tag; <code>false</code> to
      *            acknowledge just the supplied delivery tag.
-     * @return <code>true</code> if messages were acknowledged successfully
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
     CallbackCompletion<Void> ack(final long delivery, final boolean multiple);
 
@@ -49,10 +50,11 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      *            the name of the exchange
      * @param routingKey
      *            the routing key to use for the binding
-     * @return <code>true</code> if the queue bind succeeded
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
-    CallbackCompletion<Void> bindQueue(final String exchange, final String queue,
-            final String routingKey);
+    CallbackCompletion<Void> bindQueue(final String exchange,
+            final String queue, final String routingKey);
 
     /**
      * Cancels a consumer.
@@ -60,7 +62,8 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      * @param consumer
      *            a client- or server-generated consumer tag to establish
      *            context
-     * @return <code>true</code> if consumer was canceled
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
     CallbackCompletion<Void> cancel(final String consumer);
 
@@ -77,11 +80,11 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      *            <code>true</code> if the server should consider messages
      *            acknowledged once delivered; false if the server should expect
      *            explicit acknowledgments
-     * @param extra
      * @param consumerCallback
      *            the consumer callback (this will called when the queuing
      *            system will send Consume messages)
-     * @return the client-generated consumer tag to establish context
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
     CallbackCompletion<Void> consume(final String queue, final String consumer,
             final boolean exclusive, final boolean autoAck,
@@ -103,10 +106,12 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      * @param passive
      *            <code>true</code> if we declare an exchange passively; that
      *            is, check if the named exchange exists
-     * @return <code>true</code> if the exchange declaration succeeded
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
-    CallbackCompletion<Void> declareExchange(final String name, final AmqpExchangeType type,
-            final boolean durable, final boolean autoDelete, final boolean passive);
+    CallbackCompletion<Void> declareExchange(final String name,
+            final AmqpExchangeType type, final boolean durable,
+            final boolean autoDelete, final boolean passive);
 
     /**
      * Declare a queue.
@@ -125,10 +130,12 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      * @param passive
      *            <code>true</code> if we declare a queue passively; i.e., check
      *            if it exists
-     * @return <code>true</code> if the queue declaration succeeded
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
-    CallbackCompletion<Void> declareQueue(final String queue, final boolean exclusive,
-            final boolean durable, final boolean autoDelete, final boolean passive);
+    CallbackCompletion<Void> declareQueue(final String queue,
+            final boolean exclusive, final boolean durable,
+            final boolean autoDelete, final boolean passive);
 
     /**
      * Retrieve a message from a queue.
@@ -139,7 +146,8 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      *            <code>true</code> if the server should consider messages
      *            acknowledged once delivered; <code>false</code> if the server
      *            should expect explicit acknowledgments
-     * @return <code>true</code> if message was retrieved successfully
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
     CallbackCompletion<Void> get(final String queue, final boolean autoAck);
 
@@ -148,7 +156,8 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      * 
      * @param message
      *            the message, message properties and destination data
-     * @return <code>true</code> if message was published successfully
+     * @return a handle to be used in order to know when and how the operation
+     *         completes
      */
     CallbackCompletion<Void> publish(final AmqpOutboundMessage message);
 }

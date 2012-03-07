@@ -167,11 +167,8 @@ public class SimpleLoggingCloudlet {
     public static final class LoggingCloudletContext {
 
         IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData, Void> consumer;
-
         IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken, Void> publisher;
-
         boolean publisherRunning = false;
-
         boolean consumerRunning = false;
     }
 }

@@ -31,25 +31,15 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
 public class AmqpInboundMessage implements IAmqpMessage {
 
     private final String callback;
-
     private final String consumer;
-
     private final String contentEncoding;
-
     private final String contentType;
-
     private final String correlation;
-
     private final byte[] data;
-
     private final long delivery;
-
     private final boolean durable;
-
     private final String exchange;
-
     private final String identifier;
-
     private final String routingKey;
 
     /**

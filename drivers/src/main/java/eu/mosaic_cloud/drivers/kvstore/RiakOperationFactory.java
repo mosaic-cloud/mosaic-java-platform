@@ -69,7 +69,6 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
     // 4:46
     // PM
     private final IRiakClient riakcl;
-
     private final Bucket bucket;
 
     private RiakOperationFactory(String riakHost, int riakPort, String bucket, boolean restCl)

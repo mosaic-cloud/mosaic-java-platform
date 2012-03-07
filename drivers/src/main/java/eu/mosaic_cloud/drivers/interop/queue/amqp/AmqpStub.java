@@ -178,17 +178,11 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
     final class DriverOperationFinishedHandler implements IOperationCompletionHandler {
 
         private IResult<?> result;
-
         private AmqpOperations operation;
-
         private final CompletionToken complToken;
-
         private final CountDownLatch signal;
-
         private final AmqpDriver driver;
-
         private final AmqpResponseTransmitter transmitter;
-
         private final Session session;
 
         public DriverOperationFinishedHandler(CompletionToken complToken, Session session) {

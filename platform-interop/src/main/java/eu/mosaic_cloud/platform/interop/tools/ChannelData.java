@@ -29,7 +29,6 @@ package eu.mosaic_cloud.platform.interop.tools;
 public class ChannelData {
 
     private final String channelIdentifier;
-
     private final String channelEndpoint;
 
     /**

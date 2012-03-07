@@ -72,9 +72,7 @@ public enum AmqpMessage implements MessageSpecification {
             AmqpPayloads.ShutdownMessage.class);
 
     public PayloadCoder coder = null;
-
     public final String identifier;
-
     public final MessageType type;
 
     /**

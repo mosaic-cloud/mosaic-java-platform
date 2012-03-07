@@ -34,138 +34,115 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
-/**
- * This class provides access for cloudlets to an AMQP-based queueing system as
- * a message consumer.
- * 
- * @author Georgiana Macariu
- * 
- * @param <Message>
- *            the type of the messages consumed by the cloudlet
- */
-public final class AmqpQueueConsumerConnectorProxy<Message> extends
-        AmqpQueueConnectorProxy<Message> implements IAmqpQueueConsumerConnector<Message> {
+public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
+        AmqpQueueConnectorProxy<TMessage> implements
+        IAmqpQueueConsumerConnector<TMessage> {
 
-    protected class AmqpConsumerCallback extends Object implements IAmqpQueueRawConsumerCallback {
+    protected class AmqpConsumerCallback implements
+            IAmqpQueueRawConsumerCallback {
 
-        protected final IAmqpQueueConsumerCallback<Message> delegate;
+        protected final IAmqpQueueConsumerCallback<TMessage> delegate;
 
-        protected AmqpConsumerCallback(final IAmqpQueueConsumerCallback<Message> delegate) {
+        protected AmqpConsumerCallback(
+                final IAmqpQueueConsumerCallback<TMessage> delegate) {
             super();
             this.delegate = delegate;
         }
 
         @Override
         public CallbackCompletion<Void> handleCancelOk(final String consumerTag) {
-            return (CallbackCompletion.createOutcome());
+            return CallbackCompletion.createOutcome();
         }
 
         @Override
         public CallbackCompletion<Void> handleConsumeOk(final String consumerTag) {
-            return (CallbackCompletion.createOutcome());
+            return CallbackCompletion.createOutcome();
         }
 
         @Override
-        public CallbackCompletion<Void> handleDelivery(final AmqpInboundMessage inbound) {
-            final DeliveryToken delivery = new DeliveryToken(inbound.getDelivery());
-            final Message message;
+        public CallbackCompletion<Void> handleDelivery(
+                final AmqpInboundMessage inbound) {
+            final DeliveryToken delivery = new DeliveryToken(
+                    inbound.getDelivery());
+            final TMessage message;
+            CallbackCompletion<Void> result;
             try {
-                message = (Message) AmqpQueueConsumerConnectorProxy.this.messageEncoder
+                message = AmqpQueueConsumerConnectorProxy.this.messageEncoder
                         .decode(inbound.getData());
+                result = this.delegate.consume(delivery, message);
             } catch (final EncodingException exception) {
-                // FIXME
-                FallbackExceptionTracer.defaultInstance.traceDeferredException(exception);
-                return (CallbackCompletion.createFailure(exception));
+                FallbackExceptionTracer.defaultInstance
+                        .traceDeferredException(exception);
+                result = CallbackCompletion.createFailure(exception);
             }
-            return this.delegate.consume(delivery, message);
+
+            return result;
         }
 
         @Override
-        public CallbackCompletion<Void> handleShutdownSignal(final String consumerTag,
-                final String message) {
+        public CallbackCompletion<Void> handleShutdownSignal(
+                final String consumerTag, final String message) {
             return CallbackCompletion.createOutcome();
         }
     }
 
-    protected static class DeliveryToken extends Object implements IAmqpQueueDeliveryToken {
+    protected static class DeliveryToken implements IAmqpQueueDeliveryToken {
 
-        public final long token;
+        private final long token;
 
         DeliveryToken(final long token) {
             super();
             this.token = token;
         }
+
+        public long getToken() {
+            return token;
+        }
     }
 
-    public static <Message> AmqpQueueConsumerConnectorProxy<Message> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
-            final IAmqpQueueConsumerCallback<Message> callback) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
-                configuration, environment);
+    private final AmqpConsumerCallback callback;
+    private final String bindingRoutingKey;
+    private final boolean consumerAutoAck;
+    private final boolean definePassive;
+    private final String exchange;
+    private final boolean exchangeAutoDelete;
+    private final boolean exchangeDurable;
+    private final AmqpExchangeType exchangeType;
+    private final String identity;
+    private final String queue;
+    private final boolean queueAutoDelete;
+    private final boolean queueDurable;
+    private final boolean queueExclusive;
+
+    public static <M> AmqpQueueConsumerConnectorProxy<M> create(
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment,
+            final Class<M> messageClass,
+            final DataEncoder<M> messageEncoder,
+            final IAmqpQueueConsumerCallback<M> callback) {
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy
+                .create(configuration, environment);
         final IConfiguration subConfiguration = configuration
-                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
-        final AmqpQueueConsumerConnectorProxy<Message> proxy = new AmqpQueueConsumerConnectorProxy<Message>(
-                rawProxy, subConfiguration, messageClass, messageEncoder, callback);
+                .spliceConfiguration(ConfigurationIdentifier
+                        .resolveRelative("publisher"));
+        final AmqpQueueConsumerConnectorProxy<M> proxy = new AmqpQueueConsumerConnectorProxy<M>(
+                rawProxy, subConfiguration, messageClass, messageEncoder,
+                callback);
         return proxy;
     }
 
-    protected final String bindingRoutingKey;
-
-    protected final AmqpConsumerCallback callback;
-
-    protected final boolean consumerAutoAck;
-
-    protected final boolean definePassive;
-
-    protected final String exchange;
-
-    protected final boolean exchangeAutoDelete;
-
-    protected final boolean exchangeDurable;
-
-    protected final AmqpExchangeType exchangeType;
-
-    protected final String identity;
-
-    protected final String queue;
-
-    protected final boolean queueAutoDelete;
-
-    protected final boolean queueDurable;
-
-    protected final boolean queueExclusive;
-
-    /**
-     * Creates a new AMQP queue consumer.
-     * 
-     * @param configuration
-     *            configuration data required by the accessor:
-     *            <ul>
-     *            <li>amqp.consumer.queue - name of the queue from which to
-     *            consume messages</li>
-     *            <li>amqp.consumer.consumer_id - an if of this consumer</li>
-     *            <li>amqp.consumer.auto_ack - true if the server should
-     *            consider messages acknowledged once delivered; false if the
-     *            server should expect explicit acknowledgements</li>
-     *            <li>amqp.consumer.exclusive - true if this is an exclusive
-     *            consumer</li>
-     *            </ul>
-     * @param cloudlet
-     *            the cloudlet controller of the cloudlet using the accessor
-     * @param messageClass
-     *            the type of the consumed messages
-     * @param messageEncoder
-     *            encoder used for serializing data
-     */
-    protected AmqpQueueConsumerConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
-            final IConfiguration configuration, final Class<Message> messageClass,
-            final DataEncoder<? super Message> messageEncoder,
-            final IAmqpQueueConsumerCallback<Message> callback) {
+    private AmqpQueueConsumerConnectorProxy(
+            final AmqpQueueRawConnectorProxy rawProxy,
+            final IConfiguration configuration,
+            final Class<TMessage> messageClass,
+            final DataEncoder<TMessage> messageEncoder,
+            final IAmqpQueueConsumerCallback<TMessage> callback) {
         super(rawProxy, configuration, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
-        this.exchange = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
+        this.exchange = ConfigUtils
+                .resolveParameter(
+                        configuration,
+                        ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
         this.exchangeType = ConfigUtils
                 .resolveParameter(
                         configuration,
@@ -178,16 +155,20 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
                 .resolveParameter(
                         configuration,
                         ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
-        this.queue = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("AmqpQueueConnector.2"), String.class, this.identity); //$NON-NLS-1$ 
+        this.queue = ConfigUtils
+                .resolveParameter(
+                        configuration,
+                        ConfigProperties.getString("AmqpQueueConnector.2"), String.class, this.identity); //$NON-NLS-1$ 
         this.queueExclusive = ConfigUtils
                 .resolveParameter(
                         configuration,
                         ConfigProperties.getString("AmqpQueueConnector.6"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
         this.queueAutoDelete = this.exchangeAutoDelete;
         this.queueDurable = this.exchangeDurable;
-        this.bindingRoutingKey = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
+        this.bindingRoutingKey = ConfigUtils
+                .resolveParameter(
+                        configuration,
+                        ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
         this.consumerAutoAck = ConfigUtils
                 .resolveParameter(
                         this.config,
@@ -200,25 +181,25 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
     }
 
     @Override
-    public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery) {
+    public CallbackCompletion<Void> acknowledge(
+            final IAmqpQueueDeliveryToken delivery) {
         return this.raw.ack(((DeliveryToken) delivery).token, false);
     }
 
     @Override
     public CallbackCompletion<Void> destroy() {
-        // FIXME
         this.raw.cancel(this.identity);
         return this.raw.destroy();
     }
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        // FIXME
         this.raw.initialize();
-        this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
-                this.exchangeAutoDelete, this.definePassive);
-        this.raw.declareQueue(this.queue, this.queueExclusive, this.queueDurable,
-                this.queueAutoDelete, this.definePassive);
+        this.raw.declareExchange(this.exchange, this.exchangeType,
+                this.exchangeDurable, this.exchangeAutoDelete,
+                this.definePassive);
+        this.raw.declareQueue(this.queue, this.queueExclusive,
+                this.queueDurable, this.queueAutoDelete, this.definePassive);
         this.raw.bindQueue(this.exchange, this.queue, this.bindingRoutingKey);
         return this.raw.consume(this.queue, this.identity, this.queueExclusive,
                 this.consumerAutoAck, this.callback);

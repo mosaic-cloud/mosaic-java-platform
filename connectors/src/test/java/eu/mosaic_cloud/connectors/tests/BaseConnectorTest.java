@@ -23,141 +23,53 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.IConnector;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.ChannelFactory;
-import eu.mosaic_cloud.interoperability.core.ChannelResolver;
-import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
-import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
-import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
-import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
-import eu.mosaic_cloud.tools.transcript.core.Transcript;
-import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class BaseConnectorTest<Connector extends IConnector, Scenario extends BaseConnectorTest.BaseScenario<?>> {
+public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario extends BaseScenario> {
 
-    public static class BaseScenario<DriverStub extends AbstractDriverStub> {
+    protected static MosaicLogger logger;
+    protected static AbstractDriverStub driverStub;
+    protected static String connectorIdentity;
+    protected TScenario scenario;
+    protected TConnector connector;
 
-        public BasicCallbackReactor callbacks;
-
-        public ChannelFactory channelFactory;
-
-        public ChannelResolver channelResolver;
-
-        public IConfiguration configuration;
-
-        public ZeroMqChannel connectorChannel;
-
-        public String connectorIdentity;
-
-        public ZeroMqChannel driverChannel;
-
-        public String driverEndpoint;
-
-        public String driverIdentity;
-
-        public DriverStub driverStub;
-
-        public ConnectorEnvironment environment;
-
-        public TranscriptExceptionTracer exceptions;
-
-        public QueueingExceptionTracer exceptionsQueue;
-
-        public MosaicLogger logger;
-
-        public long poolTimeout = 1000;
-
-        public BasicThreadingContext threading;
-
-        public Transcript transcript;
-    }
-
-    protected static <Scenario extends BaseScenario<?>> void setUpScenario(
-            final Class<? extends BaseConnectorTest<?, Scenario>> owner, final Scenario scenario,
-            final String configuration) {
+    protected static <TScenario extends BaseScenario> void setUpScenario(
+            final Class<? extends BaseConnectorTest<?, TScenario>> owner) {
+        // create configuration
         BasicThreadingSecurityManager.initialize();
-        scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
-                configuration);
-        scenario.logger = MosaicLogger.createLogger(owner);
-        scenario.transcript = Transcript.create(owner);
-        scenario.exceptionsQueue = QueueingExceptionTracer
-                .create(NullExceptionTracer.defaultInstance);
-        scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
-                scenario.exceptionsQueue);
-        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions,
-                scenario.exceptions.catcher);
-        scenario.threading.initialize();
-        scenario.callbacks = BasicCallbackReactor.create(scenario.threading, scenario.exceptions);
-        scenario.callbacks.initialize();
-        scenario.connectorIdentity = UUID.randomUUID().toString();
-        scenario.driverIdentity = ConfigUtils.resolveParameter(scenario.configuration,
-                "interop.driver.identifier", String.class, "");
-        scenario.driverEndpoint = ConfigUtils.resolveParameter(scenario.configuration,
-                "interop.channel.address", String.class, "");
-        scenario.connectorChannel = ZeroMqChannel.create(scenario.connectorIdentity,
-                scenario.threading, scenario.exceptions);
-        scenario.driverChannel = ZeroMqChannel.create(scenario.driverIdentity, scenario.threading,
-                scenario.exceptions);
-        scenario.driverChannel.accept(scenario.driverEndpoint);
-        scenario.channelFactory = new ChannelFactory() {
+        BaseConnectorTest.connectorIdentity = UUID.randomUUID().toString();
 
-            @Override
-            public final Channel create() {
-                return scenario.connectorChannel;
-            }
-        };
-        scenario.channelResolver = new ChannelResolver() {
-
-            @Override
-            public final void resolve(String target, ResolverCallbacks callbacks) {
-                Assert.assertEquals(scenario.driverIdentity, target);
-                callbacks.resolved(this, target, scenario.driverIdentity, scenario.driverEndpoint);
-            }
-        };
-        scenario.environment = ConnectorEnvironment.create(scenario.callbacks, scenario.threading,
-                scenario.exceptions, scenario.channelFactory, scenario.channelResolver);
+        // initialize logging system
+        BaseConnectorTest.logger = MosaicLogger.createLogger(owner);
     }
 
-    protected static void tearDownScenario(final BaseScenario<?> scenario) {
-        if (scenario.driverStub != null) {
-            scenario.driverStub.destroy();
+    protected static void tearDownScenario(final BaseScenario scenario) {
+        if (BaseConnectorTest.driverStub != null) {
+            BaseConnectorTest.driverStub.destroy();
         }
-        Assert.assertTrue(scenario.driverChannel.terminate(scenario.poolTimeout));
-        Assert.assertTrue(scenario.connectorChannel.terminate(scenario.poolTimeout));
-        Assert.assertTrue(scenario.callbacks.destroy(scenario.poolTimeout));
-        Assert.assertTrue(scenario.threading.destroy(scenario.poolTimeout));
-        Assert.assertNull(scenario.exceptionsQueue.queue.poll());
+        scenario.destroy();
     }
-
-    protected Connector connector;
-
-    protected Scenario scenario;
 
     protected void await(final CallbackCompletion<?> completion) {
-        Assert.assertTrue(completion.await(this.scenario.poolTimeout));
+        Assert.assertTrue(completion.await(this.scenario.getPoolTimeout()));
     }
 
-    protected boolean awaitBooleanOutcome(final CallbackCompletion<Boolean> completion) {
+    protected boolean awaitBooleanOutcome(
+            final CallbackCompletion<Boolean> completion) {
         this.await(completion);
         return this.getBooleanOutcome(completion);
     }
 
-    protected <Outcome> Outcome awaitOutcome(final CallbackCompletion<Outcome> completion) {
+    protected <Outcome> Outcome awaitOutcome(
+            final CallbackCompletion<Outcome> completion) {
         this.await(completion);
         return this.getOutcome(completion);
     }
@@ -169,13 +81,15 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
         return true;
     }
 
-    protected boolean getBooleanOutcome(final CallbackCompletion<Boolean> completion) {
+    protected boolean getBooleanOutcome(
+            final CallbackCompletion<Boolean> completion) {
         final Boolean value = this.getOutcome(completion);
         Assert.assertNotNull(value);
         return value.booleanValue();
     }
 
-    protected <Outcome> Outcome getOutcome(final CallbackCompletion<Outcome> completion) {
+    protected <Outcome> Outcome getOutcome(
+            final CallbackCompletion<Outcome> completion) {
         Assert.assertTrue(completion.isCompleted());
         Assert.assertEquals(null, completion.getException());
         return completion.getOutcome();

@@ -40,11 +40,9 @@ public final class IdlCommon {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
 
             // Construct using
@@ -326,7 +324,6 @@ public final class IdlCommon {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -346,11 +343,8 @@ public final class IdlCommon {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new AbortRequest(true);
@@ -540,11 +534,9 @@ public final class IdlCommon {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
 
             // Construct using
@@ -826,7 +818,6 @@ public final class IdlCommon {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -846,11 +837,8 @@ public final class IdlCommon {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new AccessRequest(true);
@@ -1040,10 +1028,8 @@ public final class IdlCommon {
             }
 
             private int bitField0_;
-
             // required string message_id = 1;
             private java.lang.Object messageId_ = "";
-
             // optional string client_id = 2;
             private java.lang.Object clientId_ = "";
 
@@ -1299,7 +1285,6 @@ public final class IdlCommon {
         }
 
         private int bitField0_;
-
         // required string message_id = 1;
         public static final int MESSAGE_ID_FIELD_NUMBER = 1;
 
@@ -1310,7 +1295,6 @@ public final class IdlCommon {
         }
 
         private java.lang.Object messageId_;
-
         // optional string client_id = 2;
         public static final int CLIENT_ID_FIELD_NUMBER = 2;
 
@@ -1335,11 +1319,8 @@ public final class IdlCommon {
         }
 
         private java.lang.Object clientId_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new CompletionToken(true);
@@ -1582,13 +1563,10 @@ public final class IdlCommon {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-
             // required string error_message = 2;
             private java.lang.Object errorMessage_ = "";
 
@@ -1918,7 +1896,6 @@ public final class IdlCommon {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -1929,7 +1906,6 @@ public final class IdlCommon {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         // required string error_message = 2;
         public static final int ERROR_MESSAGE_FIELD_NUMBER = 2;
 
@@ -1954,11 +1930,8 @@ public final class IdlCommon {
         }
 
         private java.lang.Object errorMessage_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new Error(true);
@@ -2194,11 +2167,9 @@ public final class IdlCommon {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
 
             // Construct using
@@ -2478,7 +2449,6 @@ public final class IdlCommon {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -2498,11 +2468,8 @@ public final class IdlCommon {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new NotOk(true);
@@ -2692,11 +2659,9 @@ public final class IdlCommon {
             }
 
             private int bitField0_;
-
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
-
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
 
             // Construct using
@@ -2975,7 +2940,6 @@ public final class IdlCommon {
         }
 
         private int bitField0_;
-
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
@@ -2994,11 +2958,8 @@ public final class IdlCommon {
         }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
         private byte memoizedIsInitialized = -1;
-
         private int memoizedSerializedSize = -1;
-
         private static final long serialVersionUID = 0L;
         static {
             defaultInstance = new Ok(true);
@@ -3173,29 +3134,17 @@ public final class IdlCommon {
     }
 
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_common_CompletionToken_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_CompletionToken_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_common_Ok_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_Ok_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_common_NotOk_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_NotOk_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_common_Error_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_Error_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_common_AccessRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_AccessRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_common_AbortRequest_descriptor;
-
     private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_AbortRequest_fieldAccessorTable;
-
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         final java.lang.String[] descriptorData = {

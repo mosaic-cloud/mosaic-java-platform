@@ -38,7 +38,6 @@ public class AmqpQueueConsumeCallbackArguments<Context, Message, Extra> extends
         CallbackArguments<Context> {
 
     private final IAmqpQueueDeliveryToken delivery;
-
     private final Message message;
 
     /**

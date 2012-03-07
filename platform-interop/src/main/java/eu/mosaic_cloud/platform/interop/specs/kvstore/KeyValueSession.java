@@ -42,9 +42,7 @@ public enum KeyValueSession implements SessionSpecification {
             KeyValueRole.CONNECTOR);
 
     public final KeyValueRole selfRole;
-
     public final KeyValueRole peerRole;
-
     public final List<KeyValueMessage> messages;
 
     private KeyValueSession(KeyValueRole selfRole, KeyValueRole peerRole) {

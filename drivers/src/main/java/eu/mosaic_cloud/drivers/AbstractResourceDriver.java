@@ -41,11 +41,8 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public abstract class AbstractResourceDriver implements IResourceDriver {
 
     private final List<IResult<?>> pendingResults;
-
     private final ExecutorService executor;
-
     private boolean destroyed = false;
-
     protected MosaicLogger logger;
 
     /**

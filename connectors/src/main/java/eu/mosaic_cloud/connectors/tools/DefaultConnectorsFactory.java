@@ -44,65 +44,79 @@ import com.google.common.base.Preconditions;
 
 public class DefaultConnectorsFactory extends BaseConnectorsFactory {
 
-    public static final DefaultConnectorsFactory create(final IConnectorsFactory delegate,
+    public static final DefaultConnectorsFactory create(
+            final IConnectorsFactory delegate,
             final ConnectorEnvironment environment) {
-        final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(delegate);
+        final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(
+                delegate);
         DefaultConnectorsFactory.initialize(factory, environment);
         return (factory);
     }
 
-    protected static final void initialize(final DefaultConnectorsFactory factory,
+    protected static final void initialize(
+            final DefaultConnectorsFactory factory,
             final ConnectorEnvironment environment) {
         Preconditions.checkNotNull(factory);
         Preconditions.checkNotNull(environment);
-        factory.registerFactory(IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory() {
+        factory.registerFactory(IKvStoreConnectorFactory.class,
+                new IKvStoreConnectorFactory() {
 
-            @Override
-            public <Value> IKvStoreConnector<Value> create(final IConfiguration configuration,
-                    final Class<Value> valueClass, final DataEncoder<? super Value> valueEncoder) {
-                return (GenericKvStoreConnector.create(configuration, environment, valueEncoder));
-            }
-        });
+                    @Override
+                    public <TValue> IKvStoreConnector<TValue> create(
+                            final IConfiguration configuration,
+                            final Class<TValue> valueClass,
+                            final DataEncoder<TValue> valueEncoder) {
+                        return (GenericKvStoreConnector.create(configuration,
+                                environment, valueEncoder));
+                    }
+                });
         factory.registerFactory(IMemcacheKvStoreConnectorFactory.class,
                 new IMemcacheKvStoreConnectorFactory() {
 
                     @Override
-                    public <Value> IMemcacheKvStoreConnector<Value> create(
-                            final IConfiguration configuration, final Class<Value> valueClass,
-                            final DataEncoder<? super Value> valueEncoder) {
-                        return (MemcacheKvStoreConnector.create(configuration, environment,
-                                valueEncoder));
+                    public <TValue> IMemcacheKvStoreConnector<TValue> create(
+                            final IConfiguration configuration,
+                            final Class<TValue> valueClass,
+                            final DataEncoder<TValue> valueEncoder) {
+                        return (MemcacheKvStoreConnector.create(configuration,
+                                environment, valueEncoder));
                     }
                 });
         factory.registerFactory(IAmqpQueueRawConnectorFactory.class,
                 new IAmqpQueueRawConnectorFactory() {
 
                     @Override
-                    public IAmqpQueueRawConnector create(final IConfiguration configuration) {
-                        return (AmqpQueueRawConnector.create(configuration, environment));
+                    public IAmqpQueueRawConnector create(
+                            final IConfiguration configuration) {
+                        return (AmqpQueueRawConnector.create(configuration,
+                                environment));
                     }
                 });
         factory.registerFactory(IAmqpQueueConsumerConnectorFactory.class,
                 new IAmqpQueueConsumerConnectorFactory() {
 
                     @Override
-                    public <Message> IAmqpQueueConsumerConnector<Message> create(
-                            final IConfiguration configuration, final Class<Message> messageClass,
-                            final DataEncoder<? super Message> messageEncoder,
-                            final IAmqpQueueConsumerCallback<Message> callback) {
-                        return (AmqpQueueConsumerConnector.create(configuration, environment,
-                                messageClass, messageEncoder, callback));
+                    public <TMessage> IAmqpQueueConsumerConnector<TMessage> create(
+                            final IConfiguration configuration,
+                            final Class<TMessage> messageClass,
+                            final DataEncoder<TMessage> messageEncoder,
+                            final IAmqpQueueConsumerCallback<TMessage> callback) {
+                        return (AmqpQueueConsumerConnector.create(
+                                configuration, environment, messageClass,
+                                messageEncoder, callback));
                     }
                 });
         factory.registerFactory(IAmqpQueuePublisherConnectorFactory.class,
                 new IAmqpQueuePublisherConnectorFactory() {
 
                     @Override
-                    public <Message> IAmqpQueuePublisherConnector<Message> create(
-                            final IConfiguration configuration, final Class<Message> messageClass,
-                            final DataEncoder<? super Message> messageEncoder) {
-                        return (AmqpQueuePublisherConnector.create(configuration, environment,
-                                messageClass, messageEncoder));
+                    public <TMessage> IAmqpQueuePublisherConnector<TMessage> create(
+                            final IConfiguration configuration,
+                            final Class<TMessage> messageClass,
+                            final DataEncoder<TMessage> messageEncoder) {
+                        return (AmqpQueuePublisherConnector.create(
+                                configuration, environment, messageClass,
+                                messageEncoder));
                     }
                 });
     }
