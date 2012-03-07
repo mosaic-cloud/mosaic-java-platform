@@ -55,32 +55,6 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
     // 10:07 AM
     private final static boolean USE_BUCKET = true;
 
-    private final List<?> hosts;
-
-    private final String username;
-
-    private final String password;
-
-    /**
-     * Creates a new memcached driver.
-     * 
-     * @param noThreads
-     *            number of threads to be used for serving requests
-     * @param hosts
-     *            the hostname and port of the Memcached servers
-     * @param user
-     *            the username for connecting to the server
-     * @param passwd
-     *            the password for connecting to the server
-     */
-    private MemcachedDriver(ThreadingContext threading, int noThreads, List<?> hosts, String user,
-            String password) {
-        super(threading, noThreads);
-        this.hosts = hosts;
-        this.username = user;
-        this.password = password;
-    }
-
     /**
      * Returns a Memcached driver.
      * 
@@ -152,6 +126,32 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
                 ConfigProperties.getString("KVStoreDriver.4"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
         driver = new MemcachedDriver(threading, noThreads, nodesURI, user, passwd);
         return driver;
+    }
+
+    private final List<?> hosts;
+
+    private final String username;
+
+    private final String password;
+
+    /**
+     * Creates a new memcached driver.
+     * 
+     * @param noThreads
+     *            number of threads to be used for serving requests
+     * @param hosts
+     *            the hostname and port of the Memcached servers
+     * @param user
+     *            the username for connecting to the server
+     * @param passwd
+     *            the password for connecting to the server
+     */
+    private MemcachedDriver(ThreadingContext threading, int noThreads, List<?> hosts, String user,
+            String password) {
+        super(threading, noThreads);
+        this.hosts = hosts;
+        this.username = user;
+        this.password = password;
     }
 
     @Override

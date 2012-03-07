@@ -20,19 +20,16 @@
 
 package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
-
 import eu.mosaic_cloud.examples.cloudlets.simple.UserCloudlet;
 
 import org.junit.Ignore;
 
-
 @Ignore
-public class UserCloudletTest
-		extends BaseCloudletTest
-{
-	@Override
-	public void setUp ()
-	{
-		this.setUp (UserCloudlet.LifeCycleHandler.class, UserCloudlet.UserCloudletContext.class, "user-cloudlet.properties");
-	}
+public class UserCloudletTest extends BaseCloudletTest {
+
+    @Override
+    public void setUp() {
+        this.setUp(UserCloudlet.LifeCycleHandler.class, UserCloudlet.UserCloudletContext.class,
+                "user-cloudlet.properties");
+    }
 }

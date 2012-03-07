@@ -264,6 +264,31 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
         }
     }
 
+    /**
+     * Returns an AMQP driver.
+     * 
+     * @param configuration
+     *            configuration data required for starting the driver
+     * @return an AMQP driver
+     */
+    public static AmqpDriver create(IConfiguration configuration, ThreadingContext threading) { // NOPMD
+                                                                                                // by
+                                                                                                // georgiana
+                                                                                                // on
+                                                                                                // 10/12/11
+                                                                                                // 4:19
+                                                                                                // PM
+        final int noThreads = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
+        AmqpDriver driver = new AmqpDriver(configuration, threading, noThreads);
+        // NOTE: open connection - moved to the stub
+        driver.connectResource();
+        if (!driver.connected) {
+            driver = null; // NOPMD by georgiana on 10/12/11 3:38 PM
+        }
+        return driver;
+    }
+
     private boolean connected;
 
     private final IConfiguration configuration;
@@ -300,31 +325,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
         this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
         this.executor = threading.createFixedThreadPool(
                 ThreadConfiguration.create(this, "operations", true), 1);
-    }
-
-    /**
-     * Returns an AMQP driver.
-     * 
-     * @param configuration
-     *            configuration data required for starting the driver
-     * @return an AMQP driver
-     */
-    public static AmqpDriver create(IConfiguration configuration, ThreadingContext threading) { // NOPMD
-                                                                                                // by
-                                                                                                // georgiana
-                                                                                                // on
-                                                                                                // 10/12/11
-                                                                                                // 4:19
-                                                                                                // PM
-        final int noThreads = ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
-        AmqpDriver driver = new AmqpDriver(configuration, threading, noThreads);
-        // NOTE: open connection - moved to the stub
-        driver.connectResource();
-        if (!driver.connected) {
-            driver = null; // NOPMD by georgiana on 10/12/11 3:38 PM
-        }
-        return driver;
     }
 
     /**
@@ -578,7 +578,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
                     // FIXME
                     try {
                         channel.getValue().close();
-                    } catch (AlreadyClosedException e) {
+                    } catch (final AlreadyClosedException e) {
                         ExceptionTracer.traceHandled(e);
                     }
                 }

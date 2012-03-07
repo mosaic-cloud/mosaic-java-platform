@@ -53,43 +53,41 @@ public class AmqpDriverTest {
 
     private static IConfiguration configuration;
 
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        AmqpDriverTest.configuration = PropertyTypeConfiguration.create();
+        AmqpDriverTest.configuration.addParameter("interop.channel.address", "inproc://");
+        AmqpDriverTest.configuration.addParameter("interop.driver.identifier", "driver.amqp.1");
+        final String host = System.getProperty(AmqpDriverTest.MOSAIC_AMQP_HOST, "127.0.0.1");
+        AmqpDriverTest.configuration.addParameter("amqp.host", host);
+        final int port = Integer.parseInt(System.getProperty(AmqpDriverTest.MOSAIC_AMQP_PORT,
+                "5672"));
+        AmqpDriverTest.configuration.addParameter("amqp.port", port);
+        AmqpDriverTest.configuration.addParameter("amqp.driver_threads", 10);
+        AmqpDriverTest.configuration.addParameter("consumer.amqp.queue", "queue-x");
+        AmqpDriverTest.configuration.addParameter("consumer.amqp.consumer_id", "consumer-x");
+        AmqpDriverTest.configuration.addParameter("consumer.amqp.auto_ack", true);
+        AmqpDriverTest.configuration.addParameter("consumer.amqp.exclusive", false);
+        AmqpDriverTest.configuration.addParameter("publisher.amqp.exchange", "exchange-x");
+        AmqpDriverTest.configuration.addParameter("publisher.amqp.routing_key", "rk-x");
+        AmqpDriverTest.configuration.addParameter("publisher.amqp.manadatory", true);
+        AmqpDriverTest.configuration.addParameter("publisher.amqp.immediate", true);
+        AmqpDriverTest.configuration.addParameter("publisher.amqp.durable", false);
+    }
+
     private AmqpDriver wrapper;
 
     private final String clientId = UUID.randomUUID().toString();
 
     private BasicThreadingContext threadingContext;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        AmqpDriverTest.configuration = PropertyTypeConfiguration.create();
-
-        configuration.addParameter("interop.channel.address", "inproc://");
-        configuration.addParameter("interop.driver.identifier", "driver.amqp.1");
-
-        String host = System.getProperty(MOSAIC_AMQP_HOST, "127.0.0.1");
-        configuration.addParameter("amqp.host", host);
-        int port = Integer.parseInt(System.getProperty(MOSAIC_AMQP_PORT, "5672"));
-        configuration.addParameter("amqp.port", port);
-
-        configuration.addParameter("amqp.driver_threads", 10);
-
-        configuration.addParameter("consumer.amqp.queue", "queue-x");
-        configuration.addParameter("consumer.amqp.consumer_id", "consumer-x");
-        configuration.addParameter("consumer.amqp.auto_ack", true);
-        configuration.addParameter("consumer.amqp.exclusive", false);
-
-        configuration.addParameter("publisher.amqp.exchange", "exchange-x");
-        configuration.addParameter("publisher.amqp.routing_key", "rk-x");
-        configuration.addParameter("publisher.amqp.manadatory", true);
-        configuration.addParameter("publisher.amqp.immediate", true);
-        configuration.addParameter("publisher.amqp.durable", false);
-    }
-
     @Before
     public void setUp() throws IOException {
-    	final Transcript transcript = Transcript.create(this);
-        final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
-        final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create(transcript, exceptionsQueue);
+        final Transcript transcript = Transcript.create(this);
+        final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer
+                .create(NullExceptionTracer.defaultInstance);
+        final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create(transcript,
+                exceptionsQueue);
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();

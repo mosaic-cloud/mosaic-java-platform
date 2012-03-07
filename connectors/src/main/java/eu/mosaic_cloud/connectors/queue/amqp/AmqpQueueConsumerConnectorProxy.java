@@ -70,10 +70,10 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
             final DeliveryToken delivery = new DeliveryToken(inbound.getDelivery());
             final Message message;
             try {
-                message = (Message) AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode(inbound
-                        .getData());
+                message = (Message) AmqpQueueConsumerConnectorProxy.this.messageEncoder
+                        .decode(inbound.getData());
             } catch (final EncodingException exception) {
-            	// FIXME
+                // FIXME
                 FallbackExceptionTracer.defaultInstance.traceDeferredException(exception);
                 return (CallbackCompletion.createFailure(exception));
             }
@@ -95,6 +95,19 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
             super();
             this.token = token;
         }
+    }
+
+    public static <Message> AmqpQueueConsumerConnectorProxy<Message> create(
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
+            final IAmqpQueueConsumerCallback<Message> callback) {
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
+                configuration, environment);
+        final IConfiguration subConfiguration = configuration
+                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+        final AmqpQueueConsumerConnectorProxy<Message> proxy = new AmqpQueueConsumerConnectorProxy<Message>(
+                rawProxy, subConfiguration, messageClass, messageEncoder, callback);
+        return proxy;
     }
 
     protected final String bindingRoutingKey;
@@ -186,19 +199,6 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
         this.callback = new AmqpConsumerCallback(callback);
     }
 
-    public static <Message> AmqpQueueConsumerConnectorProxy<Message> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
-            final IAmqpQueueConsumerCallback<Message> callback) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
-                configuration, environment);
-        final IConfiguration subConfiguration = configuration
-                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
-        final AmqpQueueConsumerConnectorProxy<Message> proxy = new AmqpQueueConsumerConnectorProxy<Message>(
-                rawProxy, subConfiguration, messageClass, messageEncoder, callback);
-        return proxy;
-    }
-
     @Override
     public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery) {
         return this.raw.ack(((DeliveryToken) delivery).token, false);
@@ -214,7 +214,7 @@ public final class AmqpQueueConsumerConnectorProxy<Message> extends
     @Override
     public CallbackCompletion<Void> initialize() {
         // FIXME
-    	this.raw.initialize();
+        this.raw.initialize();
         this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
                 this.exchangeAutoDelete, this.definePassive);
         this.raw.declareQueue(this.queue, this.queueExclusive, this.queueDurable,

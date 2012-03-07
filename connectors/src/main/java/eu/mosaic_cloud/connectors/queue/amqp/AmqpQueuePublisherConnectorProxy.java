@@ -46,6 +46,18 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 public final class AmqpQueuePublisherConnectorProxy<Message> extends
         AmqpQueueConnectorProxy<Message> implements IAmqpQueuePublisherConnector<Message> {
 
+    public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder) {
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
+                configuration, environment);
+        final IConfiguration subConfiguration = configuration
+                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+        final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
+                rawProxy, subConfiguration, messageClass, messageEncoder);
+        return proxy;
+    }
+
     protected final boolean definePassive;
 
     protected final String exchange;
@@ -111,18 +123,6 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
                         ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
     }
 
-    public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
-                configuration, environment);
-        final IConfiguration subConfiguration = configuration
-                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
-        final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
-                rawProxy, subConfiguration, messageClass, messageEncoder);
-        return proxy;
-    }
-
     @Override
     public CallbackCompletion<Void> destroy() {
         return this.raw.destroy();
@@ -131,7 +131,7 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
     @Override
     public CallbackCompletion<Void> initialize() {
         // FIXME
-    	this.raw.initialize();
+        this.raw.initialize();
         return this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
                 this.exchangeAutoDelete, this.definePassive);
     }
@@ -142,7 +142,7 @@ public final class AmqpQueuePublisherConnectorProxy<Message> extends
         try {
             data = this.messageEncoder.encode(message);
         } catch (final EncodingException exception) {
-        	// FIXME
+            // FIXME
             FallbackExceptionTracer.defaultInstance.traceDeferredException(exception);
             return (CallbackCompletion.createFailure(exception));
         }

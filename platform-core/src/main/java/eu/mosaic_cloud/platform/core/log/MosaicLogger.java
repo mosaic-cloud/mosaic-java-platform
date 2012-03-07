@@ -31,12 +31,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class MosaicLogger {
 
-    private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
-
-    private MosaicLogger(Class<?> owner) {
-        this.logger = LoggerFactory.getLogger(owner);
-    }
-
     /**
      * Returns a mOSAIC logger.
      * 
@@ -65,6 +59,12 @@ public final class MosaicLogger {
         // on 9/27/11 7:15
         // PM
         return new MosaicLogger(owner.getClass());
+    }
+
+    private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
+
+    private MosaicLogger(Class<?> owner) {
+        this.logger = LoggerFactory.getLogger(owner);
     }
 
     /**

@@ -143,26 +143,6 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 
     private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub>();
 
-    private Class<? extends AbstractKeyValueDriver> driverClass;
-
-    /**
-     * Creates a new stub for the key-value store driver.
-     * 
-     * @param config
-     *            the configuration data for the stub and driver
-     * @param transmitter
-     *            the transmitter object which will send responses to requests
-     *            submitted to this stub
-     * @param driver
-     *            the driver used for processing requests submitted to this stub
-     * @param commChannel
-     *            the channel for communicating with connectors
-     */
-    public KeyValueStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
-            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
-        super(config, transmitter, driver, commChannel);
-    }
-
     /**
      * Returns a stub for the key-value store driver.
      * 
@@ -209,8 +189,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
         return stub;
     }
 
-    public static KeyValueStub createDetached(IConfiguration config, ThreadingContext threadingContext,
-            ZeroMqChannel channel) {
+    public static KeyValueStub createDetached(IConfiguration config,
+            ThreadingContext threadingContext, ZeroMqChannel channel) {
         final MosaicLogger sLogger = MosaicLogger.createLogger(KeyValueStub.class);
         KeyValueStub stub;
         try {
@@ -218,8 +198,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter();
             final String driverName = ConfigUtils.resolveParameter(config,
                     ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-            final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver(
-                    driverName, config, threadingContext);
+            final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver(driverName,
+                    config, threadingContext);
             stub = new KeyValueStub(config, transmitter, driver, channel);
             stub.driverClass = KeyValueDriverFactory.DriverType.valueOf(
                     driverName.toUpperCase(Locale.ENGLISH)).getDriverClass();
@@ -263,6 +243,26 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             cData = new DriverConnectionData(resourceHost, resourcePort, driver, user, passwd);
         }
         return cData;
+    }
+
+    private Class<? extends AbstractKeyValueDriver> driverClass;
+
+    /**
+     * Creates a new stub for the key-value store driver.
+     * 
+     * @param config
+     *            the configuration data for the stub and driver
+     * @param transmitter
+     *            the transmitter object which will send responses to requests
+     *            submitted to this stub
+     * @param driver
+     *            the driver used for processing requests submitted to this stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    public KeyValueStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
+            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
+        super(config, transmitter, driver, commChannel);
     }
 
     @Override

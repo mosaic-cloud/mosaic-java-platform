@@ -32,8 +32,8 @@ public final class ConfigProperties {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
             .getBundle(ConfigProperties.BUNDLE_NAME);
 
-    private ConfigProperties() {
-    }
+    public static final boolean inDebugging = java.lang.management.ManagementFactory
+            .getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 
     public static String getString(String key) {
         String retString;
@@ -45,7 +45,7 @@ public final class ConfigProperties {
         }
         return retString;
     }
-    
-    public static final boolean inDebugging = java.lang.management.ManagementFactory.getRuntimeMXBean().
-            getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+
+    private ConfigProperties() {
+    }
 }

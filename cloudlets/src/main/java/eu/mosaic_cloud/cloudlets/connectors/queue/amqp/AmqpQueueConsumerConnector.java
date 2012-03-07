@@ -33,6 +33,17 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
         BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message>, IAmqpQueueConsumerConnectorCallback<Context, Message, Extra>, Context>
         implements IAmqpQueueConsumerConnector<Context, Message, Extra> {
 
+    public static final class Callback<Message> implements IAmqpQueueConsumerCallback<Message> {
+
+        AmqpQueueConsumerConnector<?, Message, ?> connector = null;
+
+        @Override
+        public final CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery,
+                Message message) {
+            return this.connector.consume(delivery, message);
+        }
+    }
+
     public AmqpQueueConsumerConnector(
             final ICloudletController<?> cloudlet,
             final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> connector,
@@ -77,21 +88,12 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
         return completion;
     }
 
-	protected CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery, Message message)
-	{
-		if (this.callback != null) {
-			return this.callback.consume(this.context, new AmqpQueueConsumeCallbackArguments<Context, Message, Extra>(this.cloudlet, delivery, message));
-		}
-		return CallbackCompletion.createFailure(new IllegalStateException());
-	}
-
-    public static final class Callback<Message> implements IAmqpQueueConsumerCallback<Message> {
- 
-    	@Override
-		public final CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery, Message message) {
-			return this.connector.consume(delivery, message);
-		}
-
-		AmqpQueueConsumerConnector<?, Message, ?> connector = null;
+    protected CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery, Message message) {
+        if (this.callback != null) {
+            return this.callback.consume(this.context,
+                    new AmqpQueueConsumeCallbackArguments<Context, Message, Extra>(this.cloudlet,
+                            delivery, message));
+        }
+        return CallbackCompletion.createFailure(new IllegalStateException());
     }
 }

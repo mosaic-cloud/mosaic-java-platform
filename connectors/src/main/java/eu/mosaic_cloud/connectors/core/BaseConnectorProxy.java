@@ -70,7 +70,8 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      * @param channel
      *            the channel on which to communicate with the driver
      */
-    protected BaseConnectorProxy(final IConfiguration configuration, final ConnectorEnvironment environment) {
+    protected BaseConnectorProxy(final IConfiguration configuration,
+            final ConnectorEnvironment environment) {
         super();
         Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(environment);
@@ -85,48 +86,42 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
 
     protected CallbackCompletion<Void> connect(final SessionSpecification session,
             final Message initMessage) {
-    	// FIXME
-        final String driverEndpoint = ConfigUtils.resolveParameter(
-        		this.configuration,
+        // FIXME
+        final String driverEndpoint = ConfigUtils.resolveParameter(this.configuration,
                 ConfigProperties.getString("GenericConnector.0"), String.class, null);
-        final String driverIdentity = ConfigUtils.resolveParameter(
-        		this.configuration,
+        final String driverIdentity = ConfigUtils.resolveParameter(this.configuration,
                 ConfigProperties.getString("GenericConnector.1"), String.class, null);
-        final String driverTarget = ConfigUtils.resolveParameter(
-        		this.configuration,
+        final String driverTarget = ConfigUtils.resolveParameter(this.configuration,
                 ConfigProperties.getString("GenericConnector.2"), String.class, null);
         this.channel.register(session);
-        if (driverEndpoint != null && driverIdentity != null) {
-        	// FIXME
-	        ((ZeroMqChannel) this.channel).connect (driverEndpoint);
-	        this.channel.connect(driverIdentity, session, initMessage, this);
-	        return CallbackCompletion.createOutcome();
+        if ((driverEndpoint != null) && (driverIdentity != null)) {
+            // FIXME
+            ((ZeroMqChannel) this.channel).connect(driverEndpoint);
+            this.channel.connect(driverIdentity, session, initMessage, this);
+            return CallbackCompletion.createOutcome();
         } else {
-        	final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create(Void.class);
-        	this.environment.channelResolver.resolve(driverTarget, new ResolverCallbacks() {
-        		@Override
-				public CallbackCompletion<Void> resolved(ChannelResolver resolver, String target, String peer, String endpoint)
-				{
-					Preconditions.checkState(driverTarget.equals (target));
-					Preconditions.checkState(peer != null);
-					Preconditions.checkState(endpoint != null);
-					// FIXME
-			        ((ZeroMqChannel) BaseConnectorProxy.this.channel).connect (endpoint);
-			        BaseConnectorProxy.this.channel.connect(peer, session, initMessage, BaseConnectorProxy.this);
-			        future.trigger.triggerSucceeded (null);
-					return CallbackCompletion.createOutcome();
-				}
-			});
-        	return future.completion;
+            final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture
+                    .create(Void.class);
+            this.environment.channelResolver.resolve(driverTarget, new ResolverCallbacks() {
+
+                @Override
+                public CallbackCompletion<Void> resolved(ChannelResolver resolver, String target,
+                        String peer, String endpoint) {
+                    Preconditions.checkState(driverTarget.equals(target));
+                    Preconditions.checkState(peer != null);
+                    Preconditions.checkState(endpoint != null);
+                    // FIXME
+                    ((ZeroMqChannel) BaseConnectorProxy.this.channel).connect(endpoint);
+                    BaseConnectorProxy.this.channel.connect(peer, session, initMessage,
+                            BaseConnectorProxy.this);
+                    future.trigger.triggerSucceeded(null);
+                    return CallbackCompletion.createOutcome();
+                }
+            });
+            return future.completion;
         }
     }
 
-    protected CallbackCompletion<Void> disconnect(final Message finalMessage) {
-    	// FIXME
-    	if (finalMessage != null)
-    		this.send(finalMessage);
-        return CallbackCompletion.createOutcome();
-    }
     /**
      * Called after session was created.
      * 
@@ -150,6 +145,14 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
     public CallbackCompletion<Void> destroyed(final Session session) {
         Preconditions.checkState(this.session == session);
         this.pendingRequests.cancelAll();
+        return CallbackCompletion.createOutcome();
+    }
+
+    protected CallbackCompletion<Void> disconnect(final Message finalMessage) {
+        // FIXME
+        if (finalMessage != null) {
+            this.send(finalMessage);
+        }
         return CallbackCompletion.createOutcome();
     }
 
@@ -207,9 +210,10 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      *            the request
      */
     protected void send(final Message request) {
-    	// FIXME
-    	while (this.session == null)
-    		Thread.yield ();
+        // FIXME
+        while (this.session == null) {
+            Thread.yield();
+        }
         this.session.send(request);
     }
 

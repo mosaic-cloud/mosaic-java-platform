@@ -61,23 +61,6 @@ import com.google.protobuf.ByteString;
 public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy implements
         IAmqpQueueRawConnector { // NOPMD
 
-    private final ResponseHandlerMap consumerMessages;
-
-    private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
-
-    // by
-    // georgiana
-    // on
-    // 2/21/12
-    // 2:36
-    // PM
-    protected AmqpQueueRawConnectorProxy(final IConfiguration config,
-    		final ConnectorEnvironment environment) {
-        super(config, environment);
-        this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
-        this.consumerMessages = new ResponseHandlerMap();
-    }
-
     /**
      * Returns a proxy for AMQP queuing systems.
      * 
@@ -90,10 +73,27 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
      * @return the proxy
      */
     public static AmqpQueueRawConnectorProxy create(final IConfiguration configuration,
-    		final ConnectorEnvironment environment) {
-        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(
-        		configuration, environment);
+            final ConnectorEnvironment environment) {
+        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(configuration,
+                environment);
         return proxy;
+    }
+
+    private final ResponseHandlerMap consumerMessages;
+
+    private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
+
+    // by
+    // georgiana
+    // on
+    // 2/21/12
+    // 2:36
+    // PM
+    protected AmqpQueueRawConnectorProxy(final IConfiguration config,
+            final ConnectorEnvironment environment) {
+        super(config, environment);
+        this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
+        this.consumerMessages = new ResponseHandlerMap();
     }
 
     @Override
@@ -197,7 +197,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
 
     @Override
     public CallbackCompletion<Void> destroy() {
-    	return this.disconnect(null);
+        return this.disconnect(null);
     }
 
     @Override
@@ -213,7 +213,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
 
     @Override
     public CallbackCompletion<Void> initialize() {
-    	return this.connect(AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
+        return this.connect(AmqpSession.CONNECTOR, new Message(AmqpMessage.ACCESS, null));
     }
 
     @Override

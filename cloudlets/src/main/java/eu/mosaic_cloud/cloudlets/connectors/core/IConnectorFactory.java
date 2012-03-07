@@ -20,5 +20,6 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
-public interface IConnectorFactory<Connector extends IConnector<?>> extends eu.mosaic_cloud.connectors.core.IConnectorFactory<Connector> {
+public interface IConnectorFactory<Connector extends IConnector<?>> extends
+        eu.mosaic_cloud.connectors.core.IConnectorFactory<Connector> {
 }

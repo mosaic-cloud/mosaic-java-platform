@@ -48,8 +48,8 @@ public class MemcacheKvStoreConnectorTest extends
                 "memcache-kv-store-driver-test.properties");
         scenario.driverChannel.register(KeyValueSession.DRIVER);
         scenario.driverChannel.register(MemcachedSession.DRIVER);
-        scenario.driverStub = MemcachedStub.createDetached(scenario.configuration, scenario.driverChannel,
-                scenario.threading);
+        scenario.driverStub = MemcachedStub.createDetached(scenario.configuration,
+                scenario.driverChannel, scenario.threading);
         MemcacheKvStoreConnectorTest.scenario_ = scenario;
     }
 
@@ -62,7 +62,7 @@ public class MemcacheKvStoreConnectorTest extends
     public void setUp() {
         this.scenario = MemcacheKvStoreConnectorTest.scenario_;
         this.connector = MemcacheKvStoreConnector.create(this.scenario.configuration,
-        		this.scenario.environment, new PojoDataEncoder<String>(String.class));
+                this.scenario.environment, new PojoDataEncoder<String>(String.class));
     }
 
     @Override

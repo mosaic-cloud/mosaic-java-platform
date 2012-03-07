@@ -77,21 +77,18 @@ public class MemcachedDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
-
-        IConfiguration configuration = PropertyTypeConfiguration.create();
-
-        String host = System.getProperty(MOSAIC_MEMCACHED_HOST, "127.0.0.1");
+        final IConfiguration configuration = PropertyTypeConfiguration.create();
+        final String host = System.getProperty(MemcachedDriverTest.MOSAIC_MEMCACHED_HOST,
+                "127.0.0.1");
         configuration.addParameter("memcached.host_1", host);
-        int port = Integer.parseInt(System.getProperty(MOSAIC_MEMCACHED_PORT, "8091"));
+        final int port = Integer.parseInt(System.getProperty(
+                MemcachedDriverTest.MOSAIC_MEMCACHED_PORT, "8091"));
         configuration.addParameter("memcached.port_1", port);
-
         configuration.addParameter("kvstore.driver_name", "MEMCACHED");
         configuration.addParameter("kvstore.driver_threads", 2);
         configuration.addParameter("kvstore.bucket", "test");
-
         configuration.addParameter("kvstore.user", "test");
         configuration.addParameter("kvstore.passwd", "test");
-
         this.wrapper = MemcachedDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(MemcachedDriverTest.keyPrefix, "test");
     }

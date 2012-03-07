@@ -20,19 +20,16 @@
 
 package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
-
 import eu.mosaic_cloud.examples.cloudlets.simple.PongCloudlet;
 
 import org.junit.Ignore;
 
-
 @Ignore
-public class PongCloudletTest
-		extends BaseCloudletTest
-{
-	@Override
-	public void setUp ()
-	{
-		this.setUp (PongCloudlet.LifeCycleHandler.class, PongCloudlet.PongCloudletContext.class, "pong-cloudlet.properties");
-	}
+public class PongCloudletTest extends BaseCloudletTest {
+
+    @Override
+    public void setUp() {
+        this.setUp(PongCloudlet.LifeCycleHandler.class, PongCloudlet.PongCloudletContext.class,
+                "pong-cloudlet.properties");
+    }
 }

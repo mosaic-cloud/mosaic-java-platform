@@ -47,6 +47,21 @@ import com.basho.riak.client.response.StoreResponse;
  */
 public final class RiakRestOperationFactory implements IOperationFactory { // NOPMD
 
+    /**
+     * Creates a new factory.
+     * 
+     * @param riakHost
+     *            the hostname of the Riak server
+     * @param port
+     *            the port for the Riak server
+     * @param bucket
+     *            the bucket associated with the connection
+     * @return the factory
+     */
+    public static RiakRestOperationFactory getFactory(String riakHost, int port, String bucket) {
+        return new RiakRestOperationFactory(riakHost, port, bucket);
+    }
+
     // by
     // georgiana
     // on
@@ -62,21 +77,6 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
         final String address = "http://" + riakHost + ":" + riakPort + "/riak";
         this.riakcl = new RiakClient(address);
         this.bucket = bucket;
-    }
-
-    /**
-     * Creates a new factory.
-     * 
-     * @param riakHost
-     *            the hostname of the Riak server
-     * @param port
-     *            the port for the Riak server
-     * @param bucket
-     *            the bucket associated with the connection
-     * @return the factory
-     */
-    public static RiakRestOperationFactory getFactory(String riakHost, int port, String bucket) {
-        return new RiakRestOperationFactory(riakHost, port, bucket);
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {

@@ -40,26 +40,6 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 public final class RiakPBDriver extends AbstractKeyValueDriver {
 
-    private final String riakHost;
-
-    private final int riakPort;
-
-    /**
-     * Creates a new Riak driver.
-     * 
-     * @param noThreads
-     *            number of threads to be used for serving requests
-     * @param riakHost
-     *            the hostname of the Riak server
-     * @param riakPort
-     *            the port for the Riak server
-     */
-    private RiakPBDriver(ThreadingContext threading, int noThreads, String riakHost, int riakPort) {
-        super(threading, noThreads);
-        this.riakHost = riakHost;
-        this.riakPort = riakPort;
-    }
-
     /**
      * Returns a Riak driver.
      * 
@@ -91,6 +71,26 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
         final MosaicLogger sLogger = MosaicLogger.createLogger(RiakPBDriver.class);
         sLogger.trace("Created Riak PB driver for host " + host + ":" + port);
         return new RiakPBDriver(threading, noThreads, host, port);
+    }
+
+    private final String riakHost;
+
+    private final int riakPort;
+
+    /**
+     * Creates a new Riak driver.
+     * 
+     * @param noThreads
+     *            number of threads to be used for serving requests
+     * @param riakHost
+     *            the hostname of the Riak server
+     * @param riakPort
+     *            the port for the Riak server
+     */
+    private RiakPBDriver(ThreadingContext threading, int noThreads, String riakHost, int riakPort) {
+        super(threading, noThreads);
+        this.riakHost = riakHost;
+        this.riakPort = riakPort;
     }
 
     @Override

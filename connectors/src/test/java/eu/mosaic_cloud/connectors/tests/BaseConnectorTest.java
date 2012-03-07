@@ -52,11 +52,11 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
 
     public static class BaseScenario<DriverStub extends AbstractDriverStub> {
 
-    	public BasicCallbackReactor callbacks;
+        public BasicCallbackReactor callbacks;
 
-    	public ChannelFactory channelFactory;
+        public ChannelFactory channelFactory;
 
-    	public ChannelResolver channelResolver;
+        public ChannelResolver channelResolver;
 
         public IConfiguration configuration;
 
@@ -87,21 +87,20 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
         public Transcript transcript;
     }
 
-    protected Connector connector;
-
-    protected Scenario scenario;
-
     protected static <Scenario extends BaseScenario<?>> void setUpScenario(
             final Class<? extends BaseConnectorTest<?, Scenario>> owner, final Scenario scenario,
             final String configuration) {
         BasicThreadingSecurityManager.initialize();
-        scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(), configuration);
+        scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
+                configuration);
         scenario.logger = MosaicLogger.createLogger(owner);
         scenario.transcript = Transcript.create(owner);
-        scenario.exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
+        scenario.exceptionsQueue = QueueingExceptionTracer
+                .create(NullExceptionTracer.defaultInstance);
         scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
                 scenario.exceptionsQueue);
-        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions, scenario.exceptions.catcher);
+        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions,
+                scenario.exceptions.catcher);
         scenario.threading.initialize();
         scenario.callbacks = BasicCallbackReactor.create(scenario.threading, scenario.exceptions);
         scenario.callbacks.initialize();
@@ -110,27 +109,28 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
                 "interop.driver.identifier", String.class, "");
         scenario.driverEndpoint = ConfigUtils.resolveParameter(scenario.configuration,
                 "interop.channel.address", String.class, "");
-        scenario.connectorChannel = ZeroMqChannel.create(scenario.connectorIdentity, scenario.threading,
-                scenario.exceptions);
+        scenario.connectorChannel = ZeroMqChannel.create(scenario.connectorIdentity,
+                scenario.threading, scenario.exceptions);
         scenario.driverChannel = ZeroMqChannel.create(scenario.driverIdentity, scenario.threading,
                 scenario.exceptions);
         scenario.driverChannel.accept(scenario.driverEndpoint);
         scenario.channelFactory = new ChannelFactory() {
-        	@Override
-			public final Channel create() {
-        		return scenario.connectorChannel;
-			}
-		};
+
+            @Override
+            public final Channel create() {
+                return scenario.connectorChannel;
+            }
+        };
         scenario.channelResolver = new ChannelResolver() {
-        	@Override
-			public final void resolve(String target, ResolverCallbacks callbacks) {
-				Assert.assertEquals(scenario.driverIdentity, target);
-				callbacks.resolved(this, target, scenario.driverIdentity, scenario.driverEndpoint);
-			}
-		};
-		scenario.environment = ConnectorEnvironment.create (
-				scenario.callbacks, scenario.threading, scenario.exceptions,
-				scenario.channelFactory, scenario.channelResolver);
+
+            @Override
+            public final void resolve(String target, ResolverCallbacks callbacks) {
+                Assert.assertEquals(scenario.driverIdentity, target);
+                callbacks.resolved(this, target, scenario.driverIdentity, scenario.driverEndpoint);
+            }
+        };
+        scenario.environment = ConnectorEnvironment.create(scenario.callbacks, scenario.threading,
+                scenario.exceptions, scenario.channelFactory, scenario.channelResolver);
     }
 
     protected static void tearDownScenario(final BaseScenario<?> scenario) {
@@ -143,6 +143,10 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
         Assert.assertTrue(scenario.threading.destroy(scenario.poolTimeout));
         Assert.assertNull(scenario.exceptionsQueue.queue.poll());
     }
+
+    protected Connector connector;
+
+    protected Scenario scenario;
 
     protected void await(final CallbackCompletion<?> completion) {
         Assert.assertTrue(completion.await(this.scenario.poolTimeout));
@@ -182,13 +186,14 @@ public abstract class BaseConnectorTest<Connector extends IConnector, Scenario e
 
     @After
     public void tearDown() {
-    	try {
-	    	if (this.connector != null)
-	            this.awaitSuccess(this.connector.destroy());
-    	} finally {
-	    	this.connector = null;
-	        this.scenario = null;
-    	}
+        try {
+            if (this.connector != null) {
+                this.awaitSuccess(this.connector.destroy());
+            }
+        } finally {
+            this.connector = null;
+            this.scenario = null;
+        }
     }
 
     @Test

@@ -73,9 +73,8 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
                                 BaseConnector.this.context, new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.destroySucceeded(
-                            BaseConnector.this.context, new CallbackArguments<Context>(
-                                    BaseConnector.this.cloudlet));
+                    return BaseConnector.this.callback.destroySucceeded(BaseConnector.this.context,
+                            new CallbackArguments<Context>(BaseConnector.this.cloudlet));
                 }
             });
         }
@@ -96,8 +95,9 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
                                 BaseConnector.this.context, new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.initializeSucceeded(BaseConnector.this.context,
-                            new CallbackArguments<Context>(BaseConnector.this.cloudlet));
+                    return BaseConnector.this.callback.initializeSucceeded(
+                            BaseConnector.this.context, new CallbackArguments<Context>(
+                                    BaseConnector.this.cloudlet));
                 }
             });
         }

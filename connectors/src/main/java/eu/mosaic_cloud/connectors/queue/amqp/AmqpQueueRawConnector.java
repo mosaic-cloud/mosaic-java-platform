@@ -36,10 +36,6 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorProxy> implements
         IAmqpQueueRawConnector {
 
-    protected AmqpQueueRawConnector(final AmqpQueueRawConnectorProxy proxy) {
-        super(proxy);
-    }
-
     /**
      * Returns an AMQP connector. For AMQP it should always return a new
      * connector.
@@ -52,10 +48,14 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
      * @throws Throwable
      */
     public static AmqpQueueRawConnector create(final IConfiguration configuration,
-    		final ConnectorEnvironment environment) {
-        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(
-        		configuration, environment);
+            final ConnectorEnvironment environment) {
+        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(configuration,
+                environment);
         return new AmqpQueueRawConnector(proxy);
+    }
+
+    protected AmqpQueueRawConnector(final AmqpQueueRawConnectorProxy proxy) {
+        super(proxy);
     }
 
     @Override

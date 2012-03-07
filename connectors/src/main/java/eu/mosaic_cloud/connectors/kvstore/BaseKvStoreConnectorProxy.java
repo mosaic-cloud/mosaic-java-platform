@@ -65,8 +65,7 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
     protected DataEncoder<? super T> encoder;
 
     protected BaseKvStoreConnectorProxy(final IConfiguration configuration,
-    		final ConnectorEnvironment environment,
-            final DataEncoder<? super T> encoder) {
+            final ConnectorEnvironment environment, final DataEncoder<? super T> encoder) {
         super(configuration, environment);
         this.encoder = encoder;
     }
@@ -162,12 +161,12 @@ public abstract class BaseKvStoreConnectorProxy<T extends Object> extends BaseCo
             if (!resultEntries.isEmpty()) {
                 try {
                     value = (T) this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD
-                                                                                                // by
-                                                                                                // georgiana
-                                                                                                // on
-                                                                                                // 2/20/12
-                                                                                                // 5:02
-                                                                                                // PM
+                    // by
+                    // georgiana
+                    // on
+                    // 2/20/12
+                    // 5:02
+                    // PM
                 } catch (final EncodingException exception) {
                     this.pendingRequests.fail(token.getMessageId(), exception);
                     return;

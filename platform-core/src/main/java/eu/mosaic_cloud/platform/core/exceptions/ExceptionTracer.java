@@ -31,13 +31,6 @@ public final class ExceptionTracer {
 
     private static final ExceptionTracer DEFAULT_INSTANCE = new ExceptionTracer();
 
-    public ExceptionTracer() {
-        super();
-        final Transcript transcript = Transcript.create(this);
-        this.transcriptTracer = TranscriptExceptionTracer.create(transcript,
-                FallbackExceptionTracer.defaultInstance);
-    }
-
     public static void traceDeferred(Throwable exception) {
         ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Deferred, exception, null);
     }
@@ -65,6 +58,13 @@ public final class ExceptionTracer {
             final Object... tokens) {
         ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored, exception, format,
                 tokens);
+    }
+
+    public ExceptionTracer() {
+        super();
+        final Transcript transcript = Transcript.create(this);
+        this.transcriptTracer = TranscriptExceptionTracer.create(transcript,
+                FallbackExceptionTracer.defaultInstance);
     }
 
     public void trace(ExceptionResolution resolution, Throwable exception, String message_) {

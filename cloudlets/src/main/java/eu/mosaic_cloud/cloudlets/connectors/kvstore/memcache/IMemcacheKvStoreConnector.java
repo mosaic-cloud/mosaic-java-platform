@@ -26,7 +26,6 @@ import java.util.Map;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-
 /**
  * Basic interface for cloudlets to access memcached-based key-value storages.
  * 
@@ -35,7 +34,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Context>
  *            the type of the context of the cloudlet
  */
-public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends IKvStoreConnector<Context, Value, Extra>,
+public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
+        IKvStoreConnector<Context, Value, Extra>,
         eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector<Value> {
 
     /**

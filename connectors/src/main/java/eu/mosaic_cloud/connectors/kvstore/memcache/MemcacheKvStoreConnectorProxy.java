@@ -59,12 +59,6 @@ import com.google.protobuf.ByteString;
 public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
         BaseKvStoreConnectorProxy<T> implements IMemcacheKvStoreConnector<T> {
 
-    protected MemcacheKvStoreConnectorProxy(final IConfiguration configuration,
-            final ConnectorEnvironment environment,
-            final DataEncoder<? super T> encoder) {
-        super(configuration, environment, encoder);
-    }
-
     /**
      * Returns a proxy for key-value distributed storage systems.
      * 
@@ -82,12 +76,16 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
      * @return the proxy
      */
     public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(
-            final IConfiguration configuration,
-            final ConnectorEnvironment environment,
+            final IConfiguration configuration, final ConnectorEnvironment environment,
             final DataEncoder<? super T> encoder) {
         final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T>(
                 configuration, environment, encoder);
         return proxy;
+    }
+
+    protected MemcacheKvStoreConnectorProxy(final IConfiguration configuration,
+            final ConnectorEnvironment environment, final DataEncoder<? super T> encoder) {
+        super(configuration, environment, encoder);
     }
 
     @Override
@@ -179,8 +177,8 @@ public final class MemcacheKvStoreConnectorProxy<T extends Object> extends
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());
         requestBuilder.setBucket(bucket);
-        return this.connect(MemcachedSession.CONNECTOR, new Message(
-                KeyValueMessage.ACCESS, requestBuilder.build()));
+        return this.connect(MemcachedSession.CONNECTOR, new Message(KeyValueMessage.ACCESS,
+                requestBuilder.build()));
     }
 
     @Override

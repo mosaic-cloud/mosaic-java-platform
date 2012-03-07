@@ -20,25 +20,20 @@
 
 package eu.mosaic_cloud.drivers;
 
-
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
 import com.google.common.base.Preconditions;
 
+public final class DriverComponentLauncher {
 
-public final class DriverComponentLauncher
-{
-	private DriverComponentLauncher ()
-	{
-		super ();
-		throw (new UnsupportedOperationException ());
-	}
-	
-	public static void main (final String[] arguments)
-			throws Throwable
-	{
-		arguments[0] = DriverComponentType.valueOf (arguments[0].toUpperCase ()).getCallbackClass ();
-		Preconditions.checkNotNull (arguments[0], "invalid arguments; expected: `<amqp | kv> ...`");
-		MosBasicComponentLauncher.main (arguments);
-	}
+    public static void main(final String[] arguments) throws Throwable {
+        arguments[0] = DriverComponentType.valueOf(arguments[0].toUpperCase()).getCallbackClass();
+        Preconditions.checkNotNull(arguments[0], "invalid arguments; expected: `<amqp | kv> ...`");
+        MosBasicComponentLauncher.main(arguments);
+    }
+
+    private DriverComponentLauncher() {
+        super();
+        throw (new UnsupportedOperationException());
+    }
 }

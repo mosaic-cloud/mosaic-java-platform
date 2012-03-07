@@ -20,7 +20,6 @@
 
 package eu.mosaic_cloud.connectors.tools;
 
-
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,46 +35,57 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
+public final class ConnectorEnvironment {
 
-public final class ConnectorEnvironment
-{
-	private ConnectorEnvironment (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
-	{
-		super ();
-		Preconditions.checkNotNull (reactor);
-		Preconditions.checkNotNull (threading);
-		Preconditions.checkNotNull (exceptions);
-		Preconditions.checkNotNull (channelFactory);
-		Preconditions.checkNotNull (channelResolver);
-		Preconditions.checkNotNull (supplementary);
-		this.reactor = reactor;
-		this.threading = threading;
-		this.exceptions = exceptions;
-		this.channelFactory = channelFactory;
-		this.channelResolver = channelResolver;
-		this.supplementary = SupplementaryEnvironment.create (supplementary, new UncaughtExceptionHandler () {
-			@Override
-			public void uncaughtException (final Thread thread, final Throwable exception)
-			{
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
-		});
-	}
-	
-	public static final ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
-	{
-		return (new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, new HashMap<String, Object> ()));
-	}
-	
-	public static final ConnectorEnvironment create (final IConfiguration configuration, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
-	{
-		return (new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, supplementary));
-	}
-	
-	public final ChannelFactory channelFactory;
-	public final ChannelResolver channelResolver;
-	public final ExceptionTracer exceptions;
-	public final CallbackReactor reactor;
-	public final SupplementaryEnvironment supplementary;
-	public final ThreadingContext threading;
+    public static final ConnectorEnvironment create(final CallbackReactor reactor,
+            final ThreadingContext threading, final ExceptionTracer exceptions,
+            final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+        return (new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
+                channelResolver, new HashMap<String, Object>()));
+    }
+
+    public static final ConnectorEnvironment create(final IConfiguration configuration,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
+            final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
+        return (new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
+                channelResolver, supplementary));
+    }
+
+    public final ChannelFactory channelFactory;
+
+    public final ChannelResolver channelResolver;
+
+    public final ExceptionTracer exceptions;
+
+    public final CallbackReactor reactor;
+
+    public final SupplementaryEnvironment supplementary;
+
+    public final ThreadingContext threading;
+
+    private ConnectorEnvironment(final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
+            final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
+        super();
+        Preconditions.checkNotNull(reactor);
+        Preconditions.checkNotNull(threading);
+        Preconditions.checkNotNull(exceptions);
+        Preconditions.checkNotNull(channelFactory);
+        Preconditions.checkNotNull(channelResolver);
+        Preconditions.checkNotNull(supplementary);
+        this.reactor = reactor;
+        this.threading = threading;
+        this.exceptions = exceptions;
+        this.channelFactory = channelFactory;
+        this.channelResolver = channelResolver;
+        this.supplementary = SupplementaryEnvironment.create(supplementary,
+                new UncaughtExceptionHandler() {
+
+                    @Override
+                    public void uncaughtException(final Thread thread, final Throwable exception) {
+                        exceptions.trace(ExceptionResolution.Ignored, exception);
+                    }
+                });
+    }
 }

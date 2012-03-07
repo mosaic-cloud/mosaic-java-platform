@@ -93,22 +93,6 @@ public final class PropertyTypeConfiguration implements IConfiguration {
         }
     }
 
-    private final Properties properties;
-
-    private final ConfigurationIdentifier root;
-
-    private PropertyTypeConfiguration(Properties properties) {
-        super();
-        this.properties = properties;
-        this.root = ConfigurationIdentifier.ROOT;
-    }
-
-    private PropertyTypeConfiguration(Properties properties, ConfigurationIdentifier root) {
-        super();
-        this.properties = properties;
-        this.root = root;
-    }
-
     public static PropertyTypeConfiguration create() {
         final Properties properties = new Properties(System.getProperties());
         final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(properties);
@@ -164,6 +148,22 @@ public final class PropertyTypeConfiguration implements IConfiguration {
         }
         final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration(properties);
         return configuration;
+    }
+
+    private final Properties properties;
+
+    private final ConfigurationIdentifier root;
+
+    private PropertyTypeConfiguration(Properties properties) {
+        super();
+        this.properties = properties;
+        this.root = ConfigurationIdentifier.ROOT;
+    }
+
+    private PropertyTypeConfiguration(Properties properties, ConfigurationIdentifier root) {
+        super();
+        this.properties = properties;
+        this.root = root;
     }
 
     @Override

@@ -17,12 +17,13 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.drivers._maven;
+
 /* just ignore this class as it is needed to please Maven dependency analysis */
-public final class _MavenDependencyMarker
-{
-	private _MavenDependencyMarker ()
-	{
-		throw (new UnsupportedOperationException ());
-	}
+public final class _MavenDependencyMarker {
+
+    private _MavenDependencyMarker() {
+        throw (new UnsupportedOperationException());
+    }
 }

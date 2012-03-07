@@ -124,9 +124,9 @@ public class CloudletManager {
             // FIXME
             final ConnectorEnvironment connectorEnvironment = null;
             final CloudletEnvironment environment = CloudletEnvironment.create(resourceConfig,
-                    handlerClasz, stateClasz, this.classLoader, DefaultConnectorsFactory.create (null, connectorEnvironment),
-                    this.reactor, this.threading,
-                    this.exceptions);
+                    handlerClasz, stateClasz, this.classLoader,
+                    DefaultConnectorsFactory.create(null, connectorEnvironment), this.reactor,
+                    this.threading, this.exceptions);
             final Cloudlet<?> cloudlet = Cloudlet.create(environment);
             cloudlet.initialize();
             this.cloudletPool.add(cloudlet);

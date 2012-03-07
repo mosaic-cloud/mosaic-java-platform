@@ -29,18 +29,17 @@ public class AmqpQueueConsumerConnector<Message> extends
         AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<Message>> implements
         IAmqpQueueConsumerConnector<Message> {
 
-    protected AmqpQueueConsumerConnector(final AmqpQueueConsumerConnectorProxy<Message> proxy) {
-        super(proxy);
-    }
-
     public static <Message> AmqpQueueConsumerConnector<Message> create(
             final IConfiguration configuration, final ConnectorEnvironment environment,
             final Class<Message> messageClass, final DataEncoder<? super Message> messageEncoder,
             final IAmqpQueueConsumerCallback<Message> callback) {
         final AmqpQueueConsumerConnectorProxy<Message> proxy = AmqpQueueConsumerConnectorProxy
-                .create(configuration, environment, messageClass, messageEncoder,
-                		callback);
+                .create(configuration, environment, messageClass, messageEncoder, callback);
         return new AmqpQueueConsumerConnector<Message>(proxy);
+    }
+
+    protected AmqpQueueConsumerConnector(final AmqpQueueConsumerConnectorProxy<Message> proxy) {
+        super(proxy);
     }
 
     @Override

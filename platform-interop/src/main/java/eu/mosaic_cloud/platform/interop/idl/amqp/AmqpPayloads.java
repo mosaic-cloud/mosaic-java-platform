@@ -31,6 +31,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.AckOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -54,14 +62,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
             }
 
             @Override
@@ -393,67 +393,20 @@ public final class AmqpPayloads {
 
         private static final Ack defaultInstance;
 
-        private int bitField0_;
-
-        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
-        public static final int TOKEN_FIELD_NUMBER = 1;
-
-        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-        // required int64 delivery = 2;
-        public static final int DELIVERY_FIELD_NUMBER = 2;
-
-        private long delivery_;
-
-        // required bool multiple = 3;
-        public static final int MULTIPLE_FIELD_NUMBER = 3;
-
-        private boolean multiple_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new Ack(true);
-            Ack.defaultInstance.initFields();
-        }
-
-        private Ack(boolean noInit) {
-        }
-
-        // Use Ack.newBuilder() to construct.
-        private Ack(Builder builder) {
-            super(builder);
-        }
-
-        public static Ack getDefaultInstance() {
-            return Ack.defaultInstance;
-        }
-
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
         }
 
-        public static Builder newBuilder() {
-            return Builder.create();
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
+        private int bitField0_;
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseDelimitedFrom(
                 java.io.InputStream input,
@@ -467,10 +420,20 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // required int64 delivery = 2;
+        public static final int DELIVERY_FIELD_NUMBER = 2;
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack prototype) {
+            return newBuilder().mergeFrom(prototype);
         }
+
+        private long delivery_;
+
+        // required bool multiple = 3;
+        public static final int MULTIPLE_FIELD_NUMBER = 3;
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom(
                 byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -478,9 +441,38 @@ public final class AmqpPayloads {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
+        private boolean multiple_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new Ack(true);
+            Ack.defaultInstance.initFields();
+        }
+
+        public static Ack getDefaultInstance() {
+            return Ack.defaultInstance;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom(
-                com.google.protobuf.ByteString data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
@@ -513,6 +505,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private Ack(boolean noInit) {
+        }
+
+        // Use Ack.newBuilder() to construct.
+        private Ack(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -681,6 +681,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -707,14 +715,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
             }
 
             @Override
@@ -1136,72 +1136,51 @@ public final class AmqpPayloads {
 
         private static final BindQueueRequest defaultInstance;
 
-        private int bitField0_;
-
-        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
-        public static final int TOKEN_FIELD_NUMBER = 1;
-
-        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-        // required string exchange = 2;
-        public static final int EXCHANGE_FIELD_NUMBER = 2;
-
-        private java.lang.Object exchange_;
-
-        // required string queue = 3;
-        public static final int QUEUE_FIELD_NUMBER = 3;
-
-        private java.lang.Object queue_;
-
-        // required string routing_key = 4;
-        public static final int ROUTING_KEY_FIELD_NUMBER = 4;
-
-        private java.lang.Object routingKey_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new BindQueueRequest(true);
-            BindQueueRequest.defaultInstance.initFields();
-        }
-
-        private BindQueueRequest(boolean noInit) {
-        }
-
-        // Use BindQueueRequest.newBuilder() to construct.
-        private BindQueueRequest(Builder builder) {
-            super(builder);
-        }
-
         public static BindQueueRequest getDefaultInstance() {
             return BindQueueRequest.defaultInstance;
         }
 
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
 
         public static Builder newBuilder(
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest prototype) {
             return newBuilder().mergeFrom(prototype);
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
         }
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // required string exchange = 2;
+        public static final int EXCHANGE_FIELD_NUMBER = 2;
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object exchange_;
+
+        // required string queue = 3;
+        public static final int QUEUE_FIELD_NUMBER = 3;
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseDelimitedFrom(
                 java.io.InputStream input,
@@ -1215,15 +1194,28 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private java.lang.Object queue_;
+
+        // required string routing_key = 4;
+        public static final int ROUTING_KEY_FIELD_NUMBER = 4;
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
@@ -1232,16 +1224,16 @@ public final class AmqpPayloads {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
+        private java.lang.Object routingKey_;
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-            return newBuilder().mergeFrom(input).buildParsed();
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new BindQueueRequest(true);
+            BindQueueRequest.defaultInstance.initFields();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom(
@@ -1261,6 +1253,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private BindQueueRequest(boolean noInit) {
+        }
+
+        // Use BindQueueRequest.newBuilder() to construct.
+        private BindQueueRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -1523,6 +1523,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessageOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
+            }
+
             private int bitField0_;
 
             // required string consumer_tag = 1;
@@ -1537,14 +1545,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
             }
 
             @Override
@@ -1721,56 +1721,12 @@ public final class AmqpPayloads {
 
         private static final CancelOkMessage defaultInstance;
 
-        private int bitField0_;
-
-        // required string consumer_tag = 1;
-        public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
-
-        private java.lang.Object consumerTag_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new CancelOkMessage(true);
-            CancelOkMessage.defaultInstance.initFields();
-        }
-
-        private CancelOkMessage(boolean noInit) {
-        }
-
-        // Use CancelOkMessage.newBuilder() to construct.
-        private CancelOkMessage(Builder builder) {
-            super(builder);
-        }
-
         public static CancelOkMessage getDefaultInstance() {
             return CancelOkMessage.defaultInstance;
         }
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseDelimitedFrom(
@@ -1785,15 +1741,51 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private int bitField0_;
+
+        // required string consumer_tag = 1;
+        public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage prototype) {
+            return newBuilder().mergeFrom(prototype);
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom(
                 byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object consumerTag_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new CancelOkMessage(true);
+            CancelOkMessage.defaultInstance.initFields();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom(
@@ -1831,6 +1823,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private CancelOkMessage(boolean noInit) {
+        }
+
+        // Use CancelOkMessage.newBuilder() to construct.
+        private CancelOkMessage(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -1958,6 +1958,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -1978,14 +1986,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
             }
 
             @Override
@@ -2293,35 +2293,33 @@ public final class AmqpPayloads {
 
         private static final CancelRequest defaultInstance;
 
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
         private int bitField0_;
 
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 
         // required string consumer = 2;
         public static final int CONSUMER_FIELD_NUMBER = 2;
-
-        private java.lang.Object consumer_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new CancelRequest(true);
-            CancelRequest.defaultInstance.initFields();
-        }
-
-        private CancelRequest(boolean noInit) {
-        }
-
-        // Use CancelRequest.newBuilder() to construct.
-        private CancelRequest(Builder builder) {
-            super(builder);
-        }
 
         public static CancelRequest getDefaultInstance() {
             return CancelRequest.defaultInstance;
@@ -2329,25 +2327,6 @@ public final class AmqpPayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseDelimitedFrom(
@@ -2362,28 +2341,41 @@ public final class AmqpPayloads {
             }
         }
 
+        private java.lang.Object consumer_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new CancelRequest(true);
+            CancelRequest.defaultInstance.initFields();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom(
@@ -2408,6 +2400,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private CancelRequest(boolean noInit) {
+        }
+
+        // Use CancelRequest.newBuilder() to construct.
+        private CancelRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -2573,6 +2573,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessageOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
+            }
+
             private int bitField0_;
 
             // required string consumer_tag = 1;
@@ -2587,14 +2595,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
             }
 
             @Override
@@ -2771,56 +2771,12 @@ public final class AmqpPayloads {
 
         private static final ConsumeOkMessage defaultInstance;
 
-        private int bitField0_;
-
-        // required string consumer_tag = 1;
-        public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
-
-        private java.lang.Object consumerTag_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new ConsumeOkMessage(true);
-            ConsumeOkMessage.defaultInstance.initFields();
-        }
-
-        private ConsumeOkMessage(boolean noInit) {
-        }
-
-        // Use ConsumeOkMessage.newBuilder() to construct.
-        private ConsumeOkMessage(Builder builder) {
-            super(builder);
-        }
-
         public static ConsumeOkMessage getDefaultInstance() {
             return ConsumeOkMessage.defaultInstance;
         }
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseDelimitedFrom(
@@ -2835,15 +2791,51 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private int bitField0_;
+
+        // required string consumer_tag = 1;
+        public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage prototype) {
+            return newBuilder().mergeFrom(prototype);
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom(
                 byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object consumerTag_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new ConsumeOkMessage(true);
+            ConsumeOkMessage.defaultInstance.initFields();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom(
@@ -2881,6 +2873,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private ConsumeOkMessage(boolean noInit) {
+        }
+
+        // Use ConsumeOkMessage.newBuilder() to construct.
+        private ConsumeOkMessage(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -3008,6 +3008,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReplyOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -3028,14 +3036,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
             }
 
             @Override
@@ -3343,35 +3343,33 @@ public final class AmqpPayloads {
 
         private static final ConsumeReply defaultInstance;
 
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
         private int bitField0_;
 
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
 
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 
         // required string consumer_tag = 2;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 2;
-
-        private java.lang.Object consumerTag_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new ConsumeReply(true);
-            ConsumeReply.defaultInstance.initFields();
-        }
-
-        private ConsumeReply(boolean noInit) {
-        }
-
-        // Use ConsumeReply.newBuilder() to construct.
-        private ConsumeReply(Builder builder) {
-            super(builder);
-        }
 
         public static ConsumeReply getDefaultInstance() {
             return ConsumeReply.defaultInstance;
@@ -3379,25 +3377,6 @@ public final class AmqpPayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseDelimitedFrom(
@@ -3412,28 +3391,41 @@ public final class AmqpPayloads {
             }
         }
 
+        private java.lang.Object consumerTag_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new ConsumeReply(true);
+            ConsumeReply.defaultInstance.initFields();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom(
@@ -3458,6 +3450,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private ConsumeReply(boolean noInit) {
+        }
+
+        // Use ConsumeReply.newBuilder() to construct.
+        private ConsumeReply(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -3623,6 +3623,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -3655,14 +3663,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
             }
 
             @Override
@@ -4157,71 +4157,24 @@ public final class AmqpPayloads {
         // required string queue = 2;
         public static final int QUEUE_FIELD_NUMBER = 2;
 
-        private java.lang.Object queue_;
-
-        // required string consumer = 3;
-        public static final int CONSUMER_FIELD_NUMBER = 3;
-
-        private java.lang.Object consumer_;
-
-        // optional bool exclusive = 4 [default = true];
-        public static final int EXCLUSIVE_FIELD_NUMBER = 4;
-
-        private boolean exclusive_;
-
-        // optional bool auto_ack = 5 [default = true];
-        public static final int AUTO_ACK_FIELD_NUMBER = 5;
-
-        private boolean autoAck_;
-
-        // required bytes extra = 6;
-        public static final int EXTRA_FIELD_NUMBER = 6;
-
-        private com.google.protobuf.ByteString extra_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new ConsumeRequest(true);
-            ConsumeRequest.defaultInstance.initFields();
-        }
-
-        private ConsumeRequest(boolean noInit) {
-        }
-
-        // Use ConsumeRequest.newBuilder() to construct.
-        private ConsumeRequest(Builder builder) {
-            super(builder);
-        }
-
-        public static ConsumeRequest getDefaultInstance() {
-            return ConsumeRequest.defaultInstance;
-        }
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
         public static Builder newBuilder(
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest prototype) {
             return newBuilder().mergeFrom(prototype);
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object queue_;
+
+        // required string consumer = 3;
+        public static final int CONSUMER_FIELD_NUMBER = 3;
+
+        public static ConsumeRequest getDefaultInstance() {
+            return ConsumeRequest.defaultInstance;
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseDelimitedFrom(
@@ -4236,15 +4189,49 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private java.lang.Object consumer_;
+
+        // optional bool exclusive = 4 [default = true];
+        public static final int EXCLUSIVE_FIELD_NUMBER = 4;
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private boolean exclusive_;
+
+        // optional bool auto_ack = 5 [default = true];
+        public static final int AUTO_ACK_FIELD_NUMBER = 5;
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        private boolean autoAck_;
+
+        // required bytes extra = 6;
+        public static final int EXTRA_FIELD_NUMBER = 6;
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom(
@@ -4253,11 +4240,16 @@ public final class AmqpPayloads {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        private com.google.protobuf.ByteString extra_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new ConsumeRequest(true);
+            ConsumeRequest.defaultInstance.initFields();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom(
@@ -4282,6 +4274,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private ConsumeRequest(boolean noInit) {
+        }
+
+        // Use ConsumeRequest.newBuilder() to construct.
+        private ConsumeRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -4566,6 +4566,14 @@ public final class AmqpPayloads {
                 implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -4600,14 +4608,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
             }
 
             @Override
@@ -5099,15 +5099,6 @@ public final class AmqpPayloads {
             private static final ExchangeType[] VALUES = {
                     DIRECT, FANOUT, TOPIC, };
 
-            private final int index;
-
-            private final int value;
-
-            private ExchangeType(int index, int value) {
-                this.index = index;
-                this.value = value;
-            }
-
             public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
                 return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest
                         .getDescriptor().getEnumTypes().get(0);
@@ -5139,6 +5130,15 @@ public final class AmqpPayloads {
                 }
             }
 
+            private final int index;
+
+            private final int value;
+
+            private ExchangeType(int index, int value) {
+                this.index = index;
+                this.value = value;
+            }
+
             @Override
             public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
                 return getDescriptor();
@@ -5158,10 +5158,23 @@ public final class AmqpPayloads {
 
         private static final DeclareExchangeRequest defaultInstance;
 
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
         private int bitField0_;
 
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
+
+        public static DeclareExchangeRequest getDefaultInstance() {
+            return DeclareExchangeRequest.defaultInstance;
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 
@@ -5179,53 +5192,6 @@ public final class AmqpPayloads {
         // optional bool durable = 4 [default = false];
         public static final int DURABLE_FIELD_NUMBER = 4;
 
-        private boolean durable_;
-
-        // optional bool auto_delete = 5 [default = true];
-        public static final int AUTO_DELETE_FIELD_NUMBER = 5;
-
-        private boolean autoDelete_;
-
-        // optional bool passive = 6 [default = true];
-        public static final int PASSIVE_FIELD_NUMBER = 6;
-
-        private boolean passive_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new DeclareExchangeRequest(true);
-            DeclareExchangeRequest.defaultInstance.initFields();
-        }
-
-        private DeclareExchangeRequest(boolean noInit) {
-        }
-
-        // Use DeclareExchangeRequest.newBuilder() to construct.
-        private DeclareExchangeRequest(Builder builder) {
-            super(builder);
-        }
-
-        public static DeclareExchangeRequest getDefaultInstance() {
-            return DeclareExchangeRequest.defaultInstance;
-        }
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseDelimitedFrom(
                 java.io.InputStream input) throws java.io.IOException {
             final Builder builder = newBuilder();
@@ -5235,6 +5201,31 @@ public final class AmqpPayloads {
                 return null;
             }
         }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        private boolean durable_;
+
+        // optional bool auto_delete = 5 [default = true];
+        public static final int AUTO_DELETE_FIELD_NUMBER = 5;
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        private boolean autoDelete_;
+
+        // optional bool passive = 6 [default = true];
+        public static final int PASSIVE_FIELD_NUMBER = 6;
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseDelimitedFrom(
                 java.io.InputStream input,
@@ -5249,20 +5240,21 @@ public final class AmqpPayloads {
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom(
                 byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom(
-                com.google.protobuf.ByteString data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private boolean passive_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new DeclareExchangeRequest(true);
+            DeclareExchangeRequest.defaultInstance.initFields();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom(
@@ -5294,6 +5286,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private DeclareExchangeRequest(boolean noInit) {
+        }
+
+        // Use DeclareExchangeRequest.newBuilder() to construct.
+        private DeclareExchangeRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -5553,6 +5553,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -5585,14 +5593,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
             }
 
             @Override
@@ -6062,71 +6062,24 @@ public final class AmqpPayloads {
         // required string queue = 2;
         public static final int QUEUE_FIELD_NUMBER = 2;
 
-        private java.lang.Object queue_;
-
-        // optional bool exclusive = 3 [default = true];
-        public static final int EXCLUSIVE_FIELD_NUMBER = 3;
-
-        private boolean exclusive_;
-
-        // optional bool durable = 4 [default = false];
-        public static final int DURABLE_FIELD_NUMBER = 4;
-
-        private boolean durable_;
-
-        // optional bool auto_delete = 5 [default = true];
-        public static final int AUTO_DELETE_FIELD_NUMBER = 5;
-
-        private boolean autoDelete_;
-
-        // optional bool passive = 6 [default = true];
-        public static final int PASSIVE_FIELD_NUMBER = 6;
-
-        private boolean passive_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new DeclareQueueRequest(true);
-            DeclareQueueRequest.defaultInstance.initFields();
-        }
-
-        private DeclareQueueRequest(boolean noInit) {
-        }
-
-        // Use DeclareQueueRequest.newBuilder() to construct.
-        private DeclareQueueRequest(Builder builder) {
-            super(builder);
-        }
-
-        public static DeclareQueueRequest getDefaultInstance() {
-            return DeclareQueueRequest.defaultInstance;
-        }
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
         public static Builder newBuilder(
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest prototype) {
             return newBuilder().mergeFrom(prototype);
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object queue_;
+
+        // optional bool exclusive = 3 [default = true];
+        public static final int EXCLUSIVE_FIELD_NUMBER = 3;
+
+        public static DeclareQueueRequest getDefaultInstance() {
+            return DeclareQueueRequest.defaultInstance;
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseDelimitedFrom(
@@ -6141,15 +6094,49 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private boolean exclusive_;
+
+        // optional bool durable = 4 [default = false];
+        public static final int DURABLE_FIELD_NUMBER = 4;
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private boolean durable_;
+
+        // optional bool auto_delete = 5 [default = true];
+        public static final int AUTO_DELETE_FIELD_NUMBER = 5;
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        private boolean autoDelete_;
+
+        // optional bool passive = 6 [default = true];
+        public static final int PASSIVE_FIELD_NUMBER = 6;
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom(
@@ -6158,11 +6145,16 @@ public final class AmqpPayloads {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        private boolean passive_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new DeclareQueueRequest(true);
+            DeclareQueueRequest.defaultInstance.initFields();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom(
@@ -6187,6 +6179,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private DeclareQueueRequest(boolean noInit) {
+        }
+
+        // Use DeclareQueueRequest.newBuilder() to construct.
+        private DeclareQueueRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -6439,6 +6439,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessageOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
+            }
+
             private int bitField0_;
 
             // required string consumer_tag = 1;
@@ -6477,14 +6485,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
             }
 
             @Override
@@ -7103,31 +7103,6 @@ public final class AmqpPayloads {
         // optional string correlation_id = 8;
         public static final int CORRELATION_ID_FIELD_NUMBER = 8;
 
-        private java.lang.Object correlationId_;
-
-        // optional string reply_to = 9;
-        public static final int REPLY_TO_FIELD_NUMBER = 9;
-
-        private java.lang.Object replyTo_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new DeliveryMessage(true);
-            DeliveryMessage.defaultInstance.initFields();
-        }
-
-        private DeliveryMessage(boolean noInit) {
-        }
-
-        // Use DeliveryMessage.newBuilder() to construct.
-        private DeliveryMessage(Builder builder) {
-            super(builder);
-        }
-
         public static DeliveryMessage getDefaultInstance() {
             return DeliveryMessage.defaultInstance;
         }
@@ -7213,6 +7188,31 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object correlationId_;
+
+        // optional string reply_to = 9;
+        public static final int REPLY_TO_FIELD_NUMBER = 9;
+
+        private java.lang.Object replyTo_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new DeliveryMessage(true);
+            DeliveryMessage.defaultInstance.initFields();
+        }
+
+        private DeliveryMessage(boolean noInit) {
+        }
+
+        // Use DeliveryMessage.newBuilder() to construct.
+        private DeliveryMessage(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -7653,6 +7653,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -7676,14 +7684,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
             }
 
             @Override
@@ -8029,67 +8029,21 @@ public final class AmqpPayloads {
 
         private static final GetRequest defaultInstance;
 
-        private int bitField0_;
-
-        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
-        public static final int TOKEN_FIELD_NUMBER = 1;
-
-        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-
-        // required string queue = 2;
-        public static final int QUEUE_FIELD_NUMBER = 2;
-
-        private java.lang.Object queue_;
-
-        // optional bool auto_ack = 3 [default = true];
-        public static final int AUTO_ACK_FIELD_NUMBER = 3;
-
-        private boolean autoAck_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new GetRequest(true);
-            GetRequest.defaultInstance.initFields();
-        }
-
-        private GetRequest(boolean noInit) {
-        }
-
-        // Use GetRequest.newBuilder() to construct.
-        private GetRequest(Builder builder) {
-            super(builder);
-        }
-
-        public static GetRequest getDefaultInstance() {
-            return GetRequest.defaultInstance;
-        }
-
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
         }
 
-        public static Builder newBuilder() {
-            return Builder.create();
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
+        private int bitField0_;
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseDelimitedFrom(
                 java.io.InputStream input,
@@ -8103,10 +8057,20 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        // required string queue = 2;
+        public static final int QUEUE_FIELD_NUMBER = 2;
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
         }
+
+        private java.lang.Object queue_;
+
+        // optional bool auto_ack = 3 [default = true];
+        public static final int AUTO_ACK_FIELD_NUMBER = 3;
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom(
                 byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -8114,17 +8078,45 @@ public final class AmqpPayloads {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
+        private boolean autoAck_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new GetRequest(true);
+            GetRequest.defaultInstance.initFields();
+        }
+
+        public static GetRequest getDefaultInstance() {
+            return GetRequest.defaultInstance;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom(
-                com.google.protobuf.ByteString data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom(
@@ -8149,6 +8141,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private GetRequest(boolean noInit) {
+        }
+
+        // Use GetRequest.newBuilder() to construct.
+        private GetRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -8335,6 +8335,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -8379,14 +8387,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
             }
 
             @Override
@@ -9121,26 +9121,6 @@ public final class AmqpPayloads {
         // optional string reply_to = 10;
         public static final int REPLY_TO_FIELD_NUMBER = 10;
 
-        private java.lang.Object replyTo_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new PublishRequest(true);
-            PublishRequest.defaultInstance.initFields();
-        }
-
-        private PublishRequest(boolean noInit) {
-        }
-
-        // Use PublishRequest.newBuilder() to construct.
-        private PublishRequest(Builder builder) {
-            super(builder);
-        }
-
         public static PublishRequest getDefaultInstance() {
             return PublishRequest.defaultInstance;
         }
@@ -9226,6 +9206,26 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object replyTo_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new PublishRequest(true);
+            PublishRequest.defaultInstance.initFields();
+        }
+
+        private PublishRequest(boolean noInit) {
+        }
+
+        // Use PublishRequest.newBuilder() to construct.
+        private PublishRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -9667,6 +9667,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequestOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
+            }
+
             private int bitField0_;
 
             // required string consumer_tag = 1;
@@ -9681,14 +9689,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
             }
 
             @Override
@@ -9865,56 +9865,12 @@ public final class AmqpPayloads {
 
         private static final ServerCancelRequest defaultInstance;
 
-        private int bitField0_;
-
-        // required string consumer_tag = 1;
-        public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
-
-        private java.lang.Object consumerTag_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new ServerCancelRequest(true);
-            ServerCancelRequest.defaultInstance.initFields();
-        }
-
-        private ServerCancelRequest(boolean noInit) {
-        }
-
-        // Use ServerCancelRequest.newBuilder() to construct.
-        private ServerCancelRequest(Builder builder) {
-            super(builder);
-        }
-
         public static ServerCancelRequest getDefaultInstance() {
             return ServerCancelRequest.defaultInstance;
         }
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseDelimitedFrom(
@@ -9929,15 +9885,51 @@ public final class AmqpPayloads {
             }
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+        private int bitField0_;
+
+        // required string consumer_tag = 1;
+        public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom(
                 byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        private java.lang.Object consumerTag_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new ServerCancelRequest(true);
+            ServerCancelRequest.defaultInstance.initFields();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom(
@@ -9975,6 +9967,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private ServerCancelRequest(boolean noInit) {
+        }
+
+        // Use ServerCancelRequest.newBuilder() to construct.
+        private ServerCancelRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -10102,6 +10102,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessageOrBuilder {
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
+            }
+
             private int bitField0_;
 
             // required string consumer_tag = 1;
@@ -10119,14 +10127,6 @@ public final class AmqpPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
             }
 
             @Override
@@ -10360,35 +10360,33 @@ public final class AmqpPayloads {
 
         private static final ShutdownMessage defaultInstance;
 
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
         private int bitField0_;
 
         // required string consumer_tag = 1;
         public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
         private java.lang.Object consumerTag_;
 
         // required string message = 2;
         public static final int MESSAGE_FIELD_NUMBER = 2;
-
-        private java.lang.Object message_;
-
-        private byte memoizedIsInitialized = -1;
-
-        private int memoizedSerializedSize = -1;
-
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new ShutdownMessage(true);
-            ShutdownMessage.defaultInstance.initFields();
-        }
-
-        private ShutdownMessage(boolean noInit) {
-        }
-
-        // Use ShutdownMessage.newBuilder() to construct.
-        private ShutdownMessage(Builder builder) {
-            super(builder);
-        }
 
         public static ShutdownMessage getDefaultInstance() {
             return ShutdownMessage.defaultInstance;
@@ -10396,25 +10394,6 @@ public final class AmqpPayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseDelimitedFrom(
@@ -10429,28 +10408,41 @@ public final class AmqpPayloads {
             }
         }
 
+        private java.lang.Object message_;
+
+        private byte memoizedIsInitialized = -1;
+
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+        static {
+            defaultInstance = new ShutdownMessage(true);
+            ShutdownMessage.defaultInstance.initFields();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
+        }
+
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom(
@@ -10475,6 +10467,14 @@ public final class AmqpPayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        private ShutdownMessage(boolean noInit) {
+        }
+
+        // Use ShutdownMessage.newBuilder() to construct.
+        private ShutdownMessage(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -10880,14 +10880,14 @@ public final class AmqpPayloads {
                     eu.mosaic_cloud.platform.interop.idl.IdlCommon.getDescriptor(), }, assigner);
     }
 
-    private AmqpPayloads() {
-    }
-
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return AmqpPayloads.descriptor;
     }
 
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {
     }
+
     // @@protoc_insertion_point(outer_class_scope)
+    private AmqpPayloads() {
+    }
 }

@@ -46,38 +46,6 @@ public class IndexWorkflow {
 
     private static MosaicLogger logger = MosaicLogger.createLogger(IndexWorkflow.class);
 
-    private UUID key;
-
-    private final JSONObject indexMessage;
-
-    private final IndexerCloudletContext context;
-
-    private Timeline currentTimeline;
-
-    private final FeedParser parser;
-
-    private JSONObject currentFeedMetaData;
-
-    private final JSONObject newFeedTask;
-
-    private JSONObject previousFeedMetaData;
-
-    private final JSONArray newFeedItems;
-
-    private boolean indexDone = false;
-
-    private JSONObject newTimeline;
-
-    private IndexWorkflow(IndexerCloudletContext context, JSONObject recvMessage) {
-        super();
-        this.parser = new FeedParser();
-        this.currentFeedMetaData = new JSONObject();
-        this.newFeedTask = new JSONObject();
-        this.newFeedItems = new JSONArray();
-        this.context = context;
-        this.indexMessage = recvMessage;
-    }
-
     private static final IndexWorkflow createIndexer(IndexerCloudletContext context,
             JSONObject recvMessage) {
         final IndexWorkflow aIndexer = new IndexWorkflow(context, recvMessage);
@@ -125,6 +93,38 @@ public class IndexWorkflow {
 
     public static void updateFeedMetadata(UUID extra) {
         getIndexer(extra).handleMetadataUpdate();
+    }
+
+    private UUID key;
+
+    private final JSONObject indexMessage;
+
+    private final IndexerCloudletContext context;
+
+    private Timeline currentTimeline;
+
+    private final FeedParser parser;
+
+    private JSONObject currentFeedMetaData;
+
+    private final JSONObject newFeedTask;
+
+    private JSONObject previousFeedMetaData;
+
+    private final JSONArray newFeedItems;
+
+    private boolean indexDone = false;
+
+    private JSONObject newTimeline;
+
+    private IndexWorkflow(IndexerCloudletContext context, JSONObject recvMessage) {
+        super();
+        this.parser = new FeedParser();
+        this.currentFeedMetaData = new JSONObject();
+        this.newFeedTask = new JSONObject();
+        this.newFeedItems = new JSONArray();
+        this.context = context;
+        this.indexMessage = recvMessage;
     }
 
     private void doFeedDiff(JSONObject fetchedData) {

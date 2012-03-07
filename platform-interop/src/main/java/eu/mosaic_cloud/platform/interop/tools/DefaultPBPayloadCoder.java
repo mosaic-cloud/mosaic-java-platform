@@ -65,7 +65,7 @@ public class DefaultPBPayloadCoder implements PayloadCoder {
         final Method createMethod = this.clasz.getMethod("parseFrom", byte[].class);
         final Object object;
         try {
-        	object = createMethod.invoke(null, buffer.array());
+            object = createMethod.invoke(null, buffer.array());
         } catch (final InvocationTargetException exception) {
             throw exception.getCause();
         }

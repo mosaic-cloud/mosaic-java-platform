@@ -40,10 +40,6 @@ public class MemcacheKvStoreConnector<T extends Object> extends
         BaseKvStoreConnector<T, MemcacheKvStoreConnectorProxy<T>> implements
         IMemcacheKvStoreConnector<T> {
 
-    protected MemcacheKvStoreConnector(final MemcacheKvStoreConnectorProxy<T> proxy) {
-        super(proxy);
-    }
-
     /**
      * Creates the connector.
      * 
@@ -60,9 +56,13 @@ public class MemcacheKvStoreConnector<T extends Object> extends
     public static <T extends Object> MemcacheKvStoreConnector<T> create(
             final IConfiguration config, final ConnectorEnvironment environment,
             final DataEncoder<? super T> encoder) {
-        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(
-                config, environment, encoder);
+        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(config,
+                environment, encoder);
         return new MemcacheKvStoreConnector<T>(proxy);
+    }
+
+    protected MemcacheKvStoreConnector(final MemcacheKvStoreConnectorProxy<T> proxy) {
+        super(proxy);
     }
 
     @Override

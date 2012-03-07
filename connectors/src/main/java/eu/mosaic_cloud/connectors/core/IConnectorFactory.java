@@ -20,6 +20,5 @@
 
 package eu.mosaic_cloud.connectors.core;
 
-
 public interface IConnectorFactory<Connector extends IConnector> {
 }

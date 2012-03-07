@@ -35,13 +35,6 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 public class GenericKvStoreConnector<T extends Object> extends
         BaseKvStoreConnector<T, GenericKvStoreConnectorProxy<T>> { // NOPMD by
 
-    // georgiana
-    // on 2/20/12
-    // 5:04 PM
-    protected GenericKvStoreConnector(final GenericKvStoreConnectorProxy<T> proxy) {
-        super(proxy);
-    }
-
     /**
      * Creates the connector.
      * 
@@ -61,5 +54,12 @@ public class GenericKvStoreConnector<T extends Object> extends
         final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create(
                 configuration, environment, encoder);
         return new GenericKvStoreConnector<T>(proxy);
+    }
+
+    // georgiana
+    // on 2/20/12
+    // 5:04 PM
+    protected GenericKvStoreConnector(final GenericKvStoreConnectorProxy<T> proxy) {
+        super(proxy);
     }
 }

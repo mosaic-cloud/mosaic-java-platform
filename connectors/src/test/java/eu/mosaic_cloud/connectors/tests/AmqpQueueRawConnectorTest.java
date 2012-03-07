@@ -42,8 +42,8 @@ public class AmqpQueueRawConnectorTest extends
         BaseConnectorTest.setUpScenario(AmqpQueueRawConnectorTest.class, scenario,
                 "amqp-queue-driver-test.properties");
         scenario.driverChannel.register(AmqpSession.DRIVER);
-        scenario.driverStub = AmqpStub.createDetached(scenario.configuration, scenario.driverChannel,
-                scenario.threading);
+        scenario.driverStub = AmqpStub.createDetached(scenario.configuration,
+                scenario.driverChannel, scenario.threading);
         AmqpQueueRawConnectorTest.scenario_ = scenario;
     }
 
@@ -57,7 +57,7 @@ public class AmqpQueueRawConnectorTest extends
     public void setUp() {
         this.scenario = AmqpQueueRawConnectorTest.scenario_;
         this.connector = AmqpQueueRawConnector.create(this.scenario.configuration,
-        		this.scenario.environment);
+                this.scenario.environment);
     }
 
     @Override

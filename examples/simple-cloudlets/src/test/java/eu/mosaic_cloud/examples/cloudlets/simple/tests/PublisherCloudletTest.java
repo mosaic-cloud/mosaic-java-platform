@@ -20,16 +20,13 @@
 
 package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
-
 import eu.mosaic_cloud.examples.cloudlets.simple.PublisherCloudlet;
 
+public class PublisherCloudletTest extends BaseCloudletTest {
 
-public class PublisherCloudletTest
-		extends BaseCloudletTest
-{
-	@Override
-	public void setUp ()
-	{
-		this.setUp (PublisherCloudlet.LifeCycleHandler.class, PublisherCloudlet.PublisherCloudletContext.class, "publisher-cloudlet.properties");
-	}
+    @Override
+    public void setUp() {
+        this.setUp(PublisherCloudlet.LifeCycleHandler.class,
+                PublisherCloudlet.PublisherCloudletContext.class, "publisher-cloudlet.properties");
+    }
 }

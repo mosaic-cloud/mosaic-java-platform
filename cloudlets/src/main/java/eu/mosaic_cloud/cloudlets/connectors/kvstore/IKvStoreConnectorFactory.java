@@ -24,7 +24,6 @@ import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
-
 public interface IKvStoreConnectorFactory extends IConnectorFactory<IKvStoreConnector<?, ?, ?>> {
 
     <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create(

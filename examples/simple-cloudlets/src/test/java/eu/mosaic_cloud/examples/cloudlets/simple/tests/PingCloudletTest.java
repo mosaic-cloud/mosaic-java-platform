@@ -20,16 +20,13 @@
 
 package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
-
 import eu.mosaic_cloud.examples.cloudlets.simple.PingCloudlet;
 
+public class PingCloudletTest extends BaseCloudletTest {
 
-public class PingCloudletTest
-		extends BaseCloudletTest
-{
-	@Override
-	public void setUp ()
-	{
-		this.setUp (PingCloudlet.LifeCycleHandler.class, PingCloudlet.PingCloudletContext.class, "ping-cloudlet.properties");
-	}
+    @Override
+    public void setUp() {
+        this.setUp(PingCloudlet.LifeCycleHandler.class, PingCloudlet.PingCloudletContext.class,
+                "ping-cloudlet.properties");
+    }
 }

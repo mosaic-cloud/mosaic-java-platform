@@ -54,9 +54,6 @@ public final class KeyValueDriverFactory {
         }
     }
 
-    private KeyValueDriverFactory() {
-    }
-
     /**
      * Creates a driver of requested type with the specified configuration.
      * 
@@ -89,8 +86,8 @@ public final class KeyValueDriverFactory {
                     driver = (AbstractKeyValueDriver) createMethod.invoke(null, config,
                             threadingContext);
                 } catch (final InvocationTargetException exception) {
-                	ExceptionTracer.traceHandled(exception);
-                	throw exception.getCause();
+                    ExceptionTracer.traceHandled(exception);
+                    throw exception.getCause();
                 }
             } catch (final Throwable e) {
                 ExceptionTracer.traceIgnored(e);
@@ -99,5 +96,8 @@ public final class KeyValueDriverFactory {
             }
         }
         return driver;
+    }
+
+    private KeyValueDriverFactory() {
     }
 }

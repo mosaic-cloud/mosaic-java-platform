@@ -40,9 +40,6 @@ public class CloudletComponentResourceFinder {
     private static MosaicLogger logger = MosaicLogger
             .createLogger(CloudletComponentResourceFinder.class);
 
-    private CloudletComponentResourceFinder() {
-    }
-
     /**
      * Returns a finder object.
      * 
@@ -53,6 +50,9 @@ public class CloudletComponentResourceFinder {
             CloudletComponentResourceFinder.finder = new CloudletComponentResourceFinder();
         }
         return CloudletComponentResourceFinder.finder;
+    }
+
+    private CloudletComponentResourceFinder() {
     }
 
     /**

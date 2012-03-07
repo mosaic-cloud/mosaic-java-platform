@@ -20,26 +20,22 @@
 
 package eu.mosaic_cloud.drivers;
 
-
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
 import com.google.common.base.Preconditions;
 
+public final class DriverComponentPreMain extends Object {
 
-public final class DriverComponentPreMain
-		extends Object
-{
-	private DriverComponentPreMain ()
-	{
-		super ();
-		throw (new UnsupportedOperationException ());
-	}
-	
-	public static final void main (final String[] arguments)
-			throws Throwable
-	{
-		final String callbacksClass = DriverComponentType.valueOf (arguments[0].toUpperCase ()).getCallbackClass ();
-		Preconditions.checkNotNull (callbacksClass, "invalid arguments; expected: `<amqp | kv> ...`");
-		BasicComponentHarnessPreMain.main (callbacksClass, arguments);
-	}
+    public static final void main(final String[] arguments) throws Throwable {
+        final String callbacksClass = DriverComponentType.valueOf(arguments[0].toUpperCase())
+                .getCallbackClass();
+        Preconditions
+                .checkNotNull(callbacksClass, "invalid arguments; expected: `<amqp | kv> ...`");
+        BasicComponentHarnessPreMain.main(callbacksClass, arguments);
+    }
+
+    private DriverComponentPreMain() {
+        super();
+        throw (new UnsupportedOperationException());
+    }
 }
