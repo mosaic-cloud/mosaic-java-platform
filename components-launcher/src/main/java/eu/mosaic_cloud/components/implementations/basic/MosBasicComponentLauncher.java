@@ -33,10 +33,11 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
+import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessMain.ArgumentsProvider;
 import eu.mosaic_cloud.tools.classpath_exporter.ClasspathExporter;
+import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.json.tools.DefaultJsonCoder;
@@ -99,7 +100,7 @@ public final class MosBasicComponentLauncher
 			throws Throwable
 	{
 		BasicThreadingSecurityManager.initialize ();
-		final BaseExceptionTracer exceptions = FallbackExceptionTracer.defaultInstance;
+		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, exceptions.catcher);
 		threading.initialize ();
 		MosBasicComponentLauncher.main (arguments, loader, threading, exceptions);
@@ -146,7 +147,42 @@ public final class MosBasicComponentLauncher
 				@Override
 				public final void run ()
 				{
-					BasicComponentHarnessMain.main (clasz, null, String.format ("%s:%d", channelAddress.getAddress ().getHostAddress (), Integer.valueOf (channelAddress.getPort ())), null, threading, exceptions);
+					final ArgumentsProvider argumentsProvider = new ArgumentsProvider () {
+						@Override
+						public final String getCallbacks ()
+						{
+							return (clasz);
+						}
+						
+						@Override
+						public final String getChannelEndpoint ()
+						{
+							return (String.format ("%s:%d", channelAddress.getAddress ().getHostAddress (), Integer.valueOf (channelAddress.getPort ())));
+						}
+						
+						@Override
+						public final String getClasspath ()
+						{
+							return (null);
+						}
+						
+						@Override
+						public final String getIdentifier ()
+						{
+							return (null);
+						}
+						
+						@Override
+						public final String getLoggingEndpoint ()
+						{
+							return (null);
+						}
+					};
+					try {
+						BasicComponentHarnessMain.main (argumentsProvider, loader, threading, null, exceptions);
+					} catch (final Throwable exeption) {
+						throw (CaughtException.create (ExceptionResolution.Deferred, exeption).wrap ());
+					}
 				}
 			};
 		} else if ("remote".equals (arguments[1])) {
