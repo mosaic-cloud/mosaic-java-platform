@@ -51,22 +51,24 @@ public final class BasicComponentHarnessPreMain
 	public static final void main (final String callbacksClass, final String[] arguments)
 			throws Throwable
 	{
-		final Class<?> mainClass = BasicComponentHarnessPreMain.class.getClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("PreMain", "Main"));
-		final Method mainMethod = mainClass.getMethod ("main", String.class, String[].class);
-		try {
-			mainMethod.invoke (null, new Object[] {callbacksClass, arguments});
-		} catch (final InvocationTargetException exception) {
-			throw (exception.getCause ());
-		}
+		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
+		final String[] finalArguments = new String[arguments.length + 2];
+		finalArguments[0] = "--callbacks-class";
+		finalArguments[1] = callbacksClass;
+		System.arraycopy (arguments, 0, finalArguments, 2, arguments.length);
+		BasicComponentHarnessPreMain.main (finalArguments);
 	}
 	
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		Preconditions.checkArgument ((arguments != null) && (arguments.length > 0) && (arguments[0] != null), "invalid arguments; expected: `<component-callbacks-class> ...`");
-		final String[] finalArguments = new String[arguments.length - 1];
-		System.arraycopy (arguments, 1, finalArguments, 0, arguments.length - 1);
-		BasicComponentHarnessPreMain.main (arguments[0], finalArguments);
+		final Class<?> mainClass = BasicComponentHarnessPreMain.class.getClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("PreMain", "Main"));
+		final Method mainMethod = mainClass.getMethod ("main", String[].class);
+		try {
+			mainMethod.invoke (null, new Object[] {arguments});
+		} catch (final InvocationTargetException exception) {
+			throw (exception.getCause ());
+		}
 	}
 	
 	static final InputStream stdin;
