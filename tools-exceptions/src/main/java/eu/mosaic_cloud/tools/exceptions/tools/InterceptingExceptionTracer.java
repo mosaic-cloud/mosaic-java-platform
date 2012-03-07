@@ -44,7 +44,7 @@ public abstract class InterceptingExceptionTracer
 		}
 		try {
 			final ExceptionTracer delegate = this.getDelegateSafe ();
-			if ((delegate != null) && (delegate != this))
+			if (delegate != null)
 				delegate.trace (resolution, exception);
 		} catch (final Throwable exception1) {
 			// NOTE: intentional
@@ -61,7 +61,7 @@ public abstract class InterceptingExceptionTracer
 		}
 		try {
 			final ExceptionTracer delegate = this.getDelegateSafe ();
-			if ((delegate != null) && (delegate != this))
+			if (delegate != null)
 				delegate.trace (resolution, exception, message);
 		} catch (final Throwable exception1) {
 			// intentional
@@ -78,7 +78,7 @@ public abstract class InterceptingExceptionTracer
 		}
 		try {
 			final ExceptionTracer delegate = this.getDelegateSafe ();
-			if ((delegate != null) && (delegate != this))
+			if (delegate != null)
 				delegate.trace (resolution, exception, format, tokens);
 		} catch (final Throwable exception1) {
 			// NOTE: intentional
@@ -89,10 +89,18 @@ public abstract class InterceptingExceptionTracer
 	
 	protected final ExceptionTracer getDelegateSafe ()
 	{
-		final ExceptionTracer delegate = this.getDelegate ();
-		if (delegate == FallbackExceptionTracer.defaultInstance)
-			return (FallbackExceptionTracer.defaultInstance.resolveDelegate ());
-		return (delegate);
+		final ExceptionTracer directDelegate = this.getDelegate ();
+		if (directDelegate == this)
+			return (null);
+		if (directDelegate == FallbackExceptionTracer.defaultInstance) {
+			final ExceptionTracer fallbackDelegate = FallbackExceptionTracer.defaultInstance.resolveDelegate ();
+			if (fallbackDelegate == this)
+				return (null);
+			if (fallbackDelegate == FallbackExceptionTracer.defaultInstance)
+				return (null);
+			return (fallbackDelegate);
+		}
+		return (directDelegate);
 	}
 	
 	protected abstract void trace_ (final ExceptionResolution resolution, final Throwable exception);
