@@ -1,12 +1,19 @@
 #!/dev/null
 
-if ! test "${#}" -ge 1 ; then
-	echo "[ee] invalid arguments; aborting!" >&2
-	exit 1
-fi
-
 _identifier="${1:-000000009bd607dfc15147519d8cb1daf64e932d}"
-shift 1
+if test "${#}" -ge 1 ; then
+	for _argument in "${@}" ; do
+		if test -z "${_identifier}" ; then
+			_identifier="${_argument}"
+			break
+		fi
+		case "${_argument}" in
+			( --component-identifier )
+				_identifier=''
+			;;
+		esac
+	done
+fi
 
 if test -n "${mosaic_component_temporary:-}" ; then
 	_tmp="${mosaic_component_temporary:-}"
