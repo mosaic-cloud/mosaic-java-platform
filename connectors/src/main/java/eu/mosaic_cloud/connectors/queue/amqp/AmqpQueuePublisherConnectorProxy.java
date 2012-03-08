@@ -109,20 +109,21 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
 
     @Override
     public CallbackCompletion<Void> publish(final TMessage message) {
-        final byte[] data;
-        CallbackCompletion<Void> result;
+        byte[] data = null;
+        CallbackCompletion<Void> result = null;
         try {
             data = this.messageEncoder.encode(message);
-            final AmqpOutboundMessage outbound = new AmqpOutboundMessage(
-                    this.exchange, this.publishRoutingKey, data, false, false,
-                    false, null);
-            result = this.raw.publish(outbound);
         } catch (final EncodingException exception) {
             FallbackExceptionTracer.defaultInstance
                     .traceDeferredException(exception);
             result = CallbackCompletion.createFailure(exception);
         }
-
+        if (result == null) {
+	        final AmqpOutboundMessage outbound = new AmqpOutboundMessage(
+	                this.exchange, this.publishRoutingKey, data, false, false,
+	                false, null);
+	        result = this.raw.publish(outbound);
+        }
         return result;
     }
 }
