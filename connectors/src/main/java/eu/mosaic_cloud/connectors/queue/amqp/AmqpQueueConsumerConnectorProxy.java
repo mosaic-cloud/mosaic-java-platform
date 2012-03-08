@@ -97,7 +97,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
         }
 
         public long getToken() {
-            return token;
+            return this.token;
         }
     }
 
@@ -184,7 +184,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
     @Override
     public CallbackCompletion<Void> acknowledge(
             final IAmqpQueueDeliveryToken delivery) {
-        return this.raw.ack(((DeliveryToken) delivery).token, false);
+        return this.raw.ack(((DeliveryToken) delivery).getToken(), false);
     }
 
     @Override
