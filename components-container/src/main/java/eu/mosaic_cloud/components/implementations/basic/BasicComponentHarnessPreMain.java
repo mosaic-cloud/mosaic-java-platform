@@ -48,14 +48,15 @@ public final class BasicComponentHarnessPreMain
 		System.setOut (BrokenPrintStream.create ());
 	}
 	
-	public static final void main (final String callbacksClass, final String[] arguments)
+	public static final void main (final String callbacksClass, final String[] arguments, final int argumentsOffset)
 			throws Throwable
 	{
 		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
-		final String[] finalArguments = new String[arguments.length + 2];
+		Preconditions.checkArgument (argumentsOffset >= 0 && argumentsOffset <= arguments.length, "invalid arguments offset");
+		final String[] finalArguments = new String[(arguments.length + 2) - argumentsOffset];
 		finalArguments[0] = "--component-callbacks-class";
 		finalArguments[1] = callbacksClass;
-		System.arraycopy (arguments, 0, finalArguments, 2, arguments.length);
+		System.arraycopy (arguments, argumentsOffset, finalArguments, 2, arguments.length - argumentsOffset);
 		BasicComponentHarnessPreMain.main (finalArguments);
 	}
 	
