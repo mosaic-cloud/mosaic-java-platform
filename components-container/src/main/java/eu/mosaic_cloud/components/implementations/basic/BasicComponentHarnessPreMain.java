@@ -53,7 +53,7 @@ public final class BasicComponentHarnessPreMain
 	{
 		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
 		final String[] finalArguments = new String[arguments.length + 2];
-		finalArguments[0] = "--callbacks-class";
+		finalArguments[0] = "--component-callbacks-class";
 		finalArguments[1] = callbacksClass;
 		System.arraycopy (arguments, 0, finalArguments, 2, arguments.length);
 		BasicComponentHarnessPreMain.main (finalArguments);

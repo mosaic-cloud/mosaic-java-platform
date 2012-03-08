@@ -149,9 +149,15 @@ public final class MosBasicComponentLauncher
 				{
 					final ArgumentsProvider argumentsProvider = new ArgumentsProvider () {
 						@Override
-						public final String getCallbacks ()
+						public final String getCallbacksClass ()
 						{
 							return (clasz);
+						}
+						
+						@Override
+						public final String getCallbacksOptions ()
+						{
+							return (null);
 						}
 						
 						@Override
