@@ -64,18 +64,19 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
                 final AmqpInboundMessage inbound) {
             final DeliveryToken delivery = new DeliveryToken(
                     inbound.getDelivery());
-            final TMessage message;
-            CallbackCompletion<Void> result;
+            TMessage message = null;
+            CallbackCompletion<Void> result = null;
             try {
                 message = AmqpQueueConsumerConnectorProxy.this.messageEncoder
                         .decode(inbound.getData());
-                result = this.delegate.consume(delivery, message);
             } catch (final EncodingException exception) {
                 FallbackExceptionTracer.defaultInstance
                         .traceDeferredException(exception);
                 result = CallbackCompletion.createFailure(exception);
             }
-
+            if (result == null) {
+                result = this.delegate.consume(delivery, message);
+            }
             return result;
         }
 
