@@ -47,6 +47,16 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-json</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-miscellaneous</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.lexicalscope.jewelcli</groupId>
 			<artifactId>jewelcli</artifactId>
 			<version>${versions.dependencies.jewelcli}</version>
