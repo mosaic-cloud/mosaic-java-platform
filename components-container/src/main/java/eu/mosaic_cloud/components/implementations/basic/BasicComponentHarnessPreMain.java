@@ -52,7 +52,7 @@ public final class BasicComponentHarnessPreMain
 			throws Throwable
 	{
 		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
-		Preconditions.checkArgument (argumentsOffset >= 0 && argumentsOffset <= arguments.length, "invalid arguments offset");
+		Preconditions.checkArgument ((argumentsOffset >= 0) && (argumentsOffset <= arguments.length), "invalid arguments offset");
 		final String[] finalArguments = new String[(arguments.length + 2) - argumentsOffset];
 		finalArguments[0] = "--component-callbacks-class";
 		finalArguments[1] = callbacksClass;
