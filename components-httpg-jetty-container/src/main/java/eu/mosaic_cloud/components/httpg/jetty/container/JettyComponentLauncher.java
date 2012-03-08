@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-drivers
+ * mosaic-components-httpg-jetty-container
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
