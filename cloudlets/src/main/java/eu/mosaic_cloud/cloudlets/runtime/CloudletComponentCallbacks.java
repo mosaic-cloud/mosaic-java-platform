@@ -20,12 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -137,32 +134,9 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
     @Override
     public CallbackCompletion<Void> called(ComponentController component,
             ComponentCallRequest request) {
-        List<CloudletManager> containers = null;
         Preconditions.checkState(this.component == component);
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
-        if (this.status == Status.Ready) {
-            if (request.operation.equals(ConfigProperties.getString("CloudletComponent.4"))) {
-                // FIXME
-                final List<?> operands = DefaultJsonMapper.defaultInstance.decode(request.inputs,
-                        List.class);
-                final ClassLoader loader = getCloudletClassLoader(operands.get(0).toString());
-                for (int i = 1; i < operands.size(); i++) {
-                    CloudletComponentCallbacks.logger.debug("Loading cloudlet in JAR "
-                            + operands.get(0) + " with configuration " + operands.get(i));
-                    containers = startCloudlet(loader, operands.get(i).toString());
-                    if (containers != null) {
-                        this.cloudletRunners.addAll(containers);
-                    }
-                }
-                final ComponentCallReply reply = ComponentCallReply.create(true,
-                        Boolean.valueOf(true), ByteBuffer.allocate(0), request.reference);
-                component.callReturn(reply);
-                return null;
-            } else {
-                throw new UnsupportedOperationException();
-            }
-        }
         throw new UnsupportedOperationException();
     }
 
@@ -262,38 +236,6 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         return channel;
     }
 
-    private ClassLoader getCloudletClassLoader(String classpathArgument) {
-        final ClassLoader classLoader;
-        if (classpathArgument != null) {
-            final LinkedList<URL> classLoaderUrls = new LinkedList<URL>();
-            for (final String classpathPart : classpathArgument.split(";")) {
-                if (classpathPart.length() > 0) {
-                    final URL classpathUrl;
-                    if (classpathPart.startsWith("http:") || classpathPart.startsWith("file:")) {
-                        try {
-                            classpathUrl = new URL(classpathPart);
-                        } catch (final Exception exception) {
-                            this.exceptions.trace(ExceptionResolution.Deferred, exception);
-                            throw (new IllegalArgumentException(String.format(
-                                    "invalid class-path URL `%s`", classpathPart), exception));
-                        }
-                    } else {
-                        throw (new IllegalArgumentException(String.format(
-                                "invalid class-path URL `%s`", classpathPart)));
-                    }
-                    CloudletComponentCallbacks.logger.trace("Loading cloudlet from " + classpathUrl
-                            + "...");
-                    classLoaderUrls.add(classpathUrl);
-                }
-            }
-            classLoader = new URLClassLoader(classLoaderUrls.toArray(new URL[0]),
-                    CloudletComponentCallbacks.class.getClassLoader());
-        } else {
-            classLoader = ClassLoader.getSystemClassLoader();
-        }
-        return classLoader;
-    }
-
     @Override
     public CallbackCompletion<Void> initialized(ComponentController component) {
         Preconditions.checkState(this.component == null);
@@ -328,10 +270,11 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
             this.status = Status.Ready;
             CloudletComponentCallbacks.logger
                     .info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
-            if (CloudletContainerParameters.properties != null) {
-                final ClassLoader loader = getCloudletClassLoader(CloudletContainerParameters.classpath);
+            final String properties = this.componentEnvironment.supplementary.get("descriptor", String.class, null);
+            if (properties != null) {
+                final ClassLoader loader = this.componentEnvironment.classLoader;
                 final List<CloudletManager> containers = startCloudlet(loader,
-                        CloudletContainerParameters.properties);
+                        properties);
                 if (containers != null) {
                     this.cloudletRunners.addAll(containers);
                 }
