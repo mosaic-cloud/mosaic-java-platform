@@ -50,9 +50,6 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
     // georgiana on
     // 10/12/11 4:13
     // PM
-    /**
-	 * 
-	 */
     private final AmqpDriver amqpDriver;
 
     AmqpOperationFactory(AmqpDriver amqpDriver) {
