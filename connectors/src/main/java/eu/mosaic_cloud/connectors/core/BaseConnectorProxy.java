@@ -72,6 +72,8 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
         Preconditions.checkNotNull(environment);
         this.configuration = configuration;
         this.environment = environment;
+        // FIXME: the channel acquisition should be made as part of the channel
+        // endpoint resolution
         this.channel = this.environment.getCommunicationChannel();
         this.logger = MosaicLogger.createLogger(this);
         this.identifier = UUID.randomUUID().toString();
@@ -112,11 +114,14 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
                             .equals(target));
                     Preconditions.checkState(peer != null);
                     Preconditions.checkState(endpoint != null);
+                    // FIXME: The connection operation should be done by the channel resolver.
                     ((ZeroMqChannel) BaseConnectorProxy.this.channel)
                             .connect(endpoint);
                     BaseConnectorProxy.this.channel.connect(peer,
                             session, initMessage,
                             BaseConnectorProxy.this);
+                    // FIXME: Calling `connect` is not enough; the connection is successfull only
+                    // after the call of `created(Session)` was done.
                     future.trigger.triggerSucceeded(null);
                     return CallbackCompletion.createOutcome();
                 }
@@ -154,6 +159,10 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
     }
 
     protected CallbackCompletion<Void> disconnect(final Message finalMessage) {
+        // FIXME: The disconnection should push the termination also to the interoperability layer.
+        // Currently the driver side has no ideea that the connector was disconnected except if
+        // the `finalMessage` contains such information.
+        // FIXME: The `finalMessage` should always exist and should always be an "terminal" one.
         if (finalMessage != null) {
             this.send(finalMessage);
         }
@@ -218,6 +227,8 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
      *            the request
      */
     protected void send(final Message request) {
+        // FIXME: Currently this is a hack to avoid a race condition introduced by the `connect` code above.
+        // For now we just busy-wait until the session object is available
         while (this.session == null) {
             Thread.yield();
         }

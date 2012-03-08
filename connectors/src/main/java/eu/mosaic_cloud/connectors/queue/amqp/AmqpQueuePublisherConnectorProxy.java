@@ -101,7 +101,9 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
 
     @Override
     public CallbackCompletion<Void> initialize() {
+        // FIXME: We should wait for `initialize` to succeed or fail, and then continue.
         this.raw.initialize();
+        // FIXME: If this operation fail we should continue with `destroy`.
         return this.raw.declareExchange(this.exchange, this.exchangeType,
                 this.exchangeDurable, this.exchangeAutoDelete,
                 this.definePassive);

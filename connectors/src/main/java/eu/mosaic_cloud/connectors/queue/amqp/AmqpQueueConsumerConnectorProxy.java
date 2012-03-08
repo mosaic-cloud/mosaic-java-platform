@@ -189,13 +189,16 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
 
     @Override
     public CallbackCompletion<Void> destroy() {
+        // FIXME: We should wait for `cancel` to succeed or fail, and then continue.
         this.raw.cancel(this.identity);
         return this.raw.destroy();
     }
 
     @Override
     public CallbackCompletion<Void> initialize() {
+        // FIXME: We should wait for each of these operation to either succeed or fail before going further.
         this.raw.initialize();
+        // FIXME: If any of these operations fail we should continue with `destroy`.
         this.raw.declareExchange(this.exchange, this.exchangeType,
                 this.exchangeDurable, this.exchangeAutoDelete,
                 this.definePassive);
