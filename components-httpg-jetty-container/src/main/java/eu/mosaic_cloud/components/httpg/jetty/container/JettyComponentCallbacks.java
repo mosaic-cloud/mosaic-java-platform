@@ -68,6 +68,7 @@ public final class JettyComponentCallbacks
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
 			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, DeferredFuture.Trigger<ComponentCallReply>> ();
 			this.status = Status.WaitingRegistered;
+			JettyComponentContext.selfIdentifier = context.identifier;
 			JettyComponentContext.callbacks = this;
 			JettyComponent.create ();
 		}
@@ -279,10 +280,10 @@ public final class JettyComponentCallbacks
 			jettyProperties.setProperty ("queue", JettyComponentContext.httpgRequestsQueue);
 			if (JettyComponentContext.httpgRequestsAutodeclare)
 				jettyProperties.setProperty ("auto-declare", "true");
-			jettyProperties.setProperty ("webapp", JettyComponentContext.appWar.getAbsolutePath ());
-			jettyProperties.setProperty ("tmp", JettyComponentContext.appTmp.getAbsolutePath ());
-			jettyProperties.setProperty ("app-context", JettyComponentContext.appContextPath);
-			jettyProperties.setProperty ("tmp", "./temporary");
+			jettyProperties.setProperty ("webapp", JettyComponentContext.applicationWar.getAbsolutePath ());
+			jettyProperties.setProperty ("tmp", JettyComponentContext.applicationTemporary.getAbsolutePath ());
+			jettyProperties.setProperty ("app-context", JettyComponentContext.applicationContextPath);
+			jettyProperties.setProperty ("tmp", JettyComponentContext.applicationTemporary.getAbsolutePath ());
 			final Server jettyServer;
 			jettyServer = ServerCommandLine.createServer (jettyProperties);
 			this.jettyServer = jettyServer;

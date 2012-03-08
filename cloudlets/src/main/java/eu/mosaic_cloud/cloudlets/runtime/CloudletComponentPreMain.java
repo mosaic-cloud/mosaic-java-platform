@@ -27,7 +27,7 @@ public final class CloudletComponentPreMain extends Object {
     public static final void main(final String[] arguments) throws Throwable {
         BasicComponentHarnessPreMain
                 .main(CloudletComponentPreMain.class.getName().replace("PreMain", "Callbacks"),
-                        arguments);
+                        arguments, 0);
     }
 
     private CloudletComponentPreMain() {

@@ -66,14 +66,21 @@ public final class JettyComponent
 		this.cast (ComponentIdentifier.resolve (component), ComponentCastRequest.create (operation, inputs));
 	}
 	
-	public final ComponentIdentifier getSelf ()
+	public final ComponentIdentifier getGroup ()
+	{
+		final ComponentIdentifier group = JettyComponentContext.selfGroup;
+		Preconditions.checkState (group != null);
+		return (group);
+	}
+	
+	public final ComponentIdentifier getIdentifier ()
 	{
 		final ComponentIdentifier identifier = JettyComponentContext.selfIdentifier;
 		Preconditions.checkState (identifier != null);
 		return (identifier);
 	}
 	
-	public final boolean isActive ()
+	public final boolean isStandalone ()
 	{
 		return (JettyComponentContext.callbacks != null);
 	}
