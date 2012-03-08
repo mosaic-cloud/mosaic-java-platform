@@ -119,10 +119,10 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
             result = CallbackCompletion.createFailure(exception);
         }
         if (result == null) {
-	        final AmqpOutboundMessage outbound = new AmqpOutboundMessage(
-	                this.exchange, this.publishRoutingKey, data, false, false,
-	                false, null);
-	        result = this.raw.publish(outbound);
+            final AmqpOutboundMessage outbound = new AmqpOutboundMessage(
+                    this.exchange, this.publishRoutingKey, data, false, false,
+                    false, null);
+            result = this.raw.publish(outbound);
         }
         return result;
     }

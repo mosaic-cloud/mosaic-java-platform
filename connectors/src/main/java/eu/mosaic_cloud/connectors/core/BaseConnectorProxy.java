@@ -92,13 +92,13 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
                 this.configuration,
                 ConfigProperties.getString("GenericConnector.2"), String.class,
                 null);
-        CallbackCompletion<Void> result;
-        
+
+        final CallbackCompletion<Void> result;
         this.channel.register(session);
         if ((driverEndpoint != null) && (driverIdentity != null)) {
             ((ZeroMqChannel) this.channel).connect(driverEndpoint);
             this.channel.connect(driverIdentity, session, initMessage, this);
-            result= CallbackCompletion.createOutcome();
+            result = CallbackCompletion.createOutcome();
         } else {
             final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture
                     .create(Void.class);
@@ -122,7 +122,7 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
                 }
             };
             this.environment.resolveChannel(driverTarget,resolverCallbacks);
-            result=future.completion;
+            result = future.completion;
         }
         return result;
     }
