@@ -96,9 +96,6 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
     private ComponentController component;
     private final ComponentEnvironment componentEnvironment;
     private final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> pendingReferences;
-    private final ComponentIdentifier amqpGroup;
-    private final ComponentIdentifier kvGroup;
-    private final ComponentIdentifier mcGroup;
     private final ComponentIdentifier selfGroup;
     private final List<CloudletManager> cloudletRunners = new ArrayList<CloudletManager>();
     private final ExceptionTracer exceptions;
@@ -116,14 +113,6 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         final IConfiguration configuration = PropertyTypeConfiguration.create(
                 CloudletComponentCallbacks.class.getClassLoader(),
                 "eu/mosaic_cloud/cloudlets/cloudlet-component.properties"); //$NON-NLS-1$
-        this.amqpGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponent.0"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
-        this.kvGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponent.1"), //$NON-NLS-1$
-                String.class, "")); //$NON-NLS-1$
-        this.mcGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
-                ConfigProperties.getString("CloudletComponent.2"), String.class, //$NON-NLS-1$
-                "")); //$NON-NLS-1$
         this.selfGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(configuration,
                 ConfigProperties.getString("CloudletComponent.3"), String.class, "")); //$NON-NLS-1$ //$NON-NLS-2$
         this.status = Status.Created;
@@ -199,22 +188,10 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         final ComponentCallReference callReference = ComponentCallReference.create();
         final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture
                 .create(ComponentCallReply.class);
+        // FIXME
         ComponentIdentifier componentId = null;
         ComponentCallReply reply;
         ChannelData channel = null;
-        switch (type) {
-        case AMQP:
-            componentId = this.amqpGroup;
-            break;
-        case KEY_VALUE:
-            componentId = this.kvGroup;
-            break;
-        case MEMCACHED:
-            componentId = this.mcGroup;
-            break;
-        default:
-            break;
-        }
         this.pendingReferences.put(callReference, replyFuture.trigger);
         this.component.call(componentId, ComponentCallRequest.create(
                 ConfigProperties.getString("CloudletComponent.7"), null, callReference)); //$NON-NLS-1$
