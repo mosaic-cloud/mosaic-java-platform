@@ -155,7 +155,7 @@ public final class MosBasicComponentLauncher
 						}
 						
 						@Override
-						public final String getCallbacksOptions ()
+						public final List<String> getCallbacksOptions ()
 						{
 							return (null);
 						}

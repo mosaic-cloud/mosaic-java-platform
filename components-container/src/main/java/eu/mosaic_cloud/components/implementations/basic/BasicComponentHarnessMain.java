@@ -39,6 +39,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.components.core.ComponentCallbacks;
@@ -136,16 +137,19 @@ public final class BasicComponentHarnessMain
 			callbacksClass = environment.classLoader.loadClass (callbacksClassName);
 			Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (callbacksClass), "invalid callbacks class `%s` (not an instance of `ComponentCallbacks`)", callbacksClass.getName ());
 		}
-		final Map<String, ?> options;
+		final Map<String, Object> options = new HashMap<String, Object> ();
 		{
-			final String optionsData = arguments.getCallbacksOptions ();
-			if (optionsData != null) {
-				environment.transcript.traceDebugging ("parsing configuration `%s`...", optionsData);
-				final Object optionsObject = DefaultJsonCoder.defaultInstance.decodeFromString (optionsData);
-				Preconditions.checkArgument (optionsObject instanceof Map, "invalid configuration `%s` (not a JSON map)", optionsObject);
-				options = (Map<String, ?>) optionsObject;
-			} else
-				options = new HashMap<String, Object> ();
+			final List<String> optionsDatas = arguments.getCallbacksOptions ();
+			if (optionsDatas != null) {
+				for (final String optionsData : optionsDatas) {
+					environment.transcript.traceDebugging ("parsing configuration `%s`...", optionsData);
+					final Object optionsObject = DefaultJsonCoder.defaultInstance.decodeFromString (optionsData);
+					if (optionsObject != null) {
+						Preconditions.checkArgument (optionsObject instanceof Map, "invalid configuration `%s` (not a JSON map)", optionsObject);
+						options.putAll ((Map<String, Object>) optionsObject);
+					}
+				}
+			}
 		}
 		final ComponentCallbacksProvider callbacksProvider = new Provider (callbacksClass, options);
 		environment.transcript.traceInformation ("prepared callbacks provider.");
@@ -327,7 +331,7 @@ public final class BasicComponentHarnessMain
 		public abstract String getCallbacksClass ();
 		
 		@Option (longName = "component-callbacks-configuration", defaultToNull = true)
-		public abstract String getCallbacksOptions ();
+		public abstract List<String> getCallbacksOptions ();
 		
 		@Option (longName = "component-channel-endpoint", defaultToNull = true)
 		public abstract String getChannelEndpoint ();

@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import eu.mosaic_cloud.tools.miscellaneous.BrokenInputStream;
 import eu.mosaic_cloud.tools.miscellaneous.BrokenPrintStream;
@@ -58,6 +60,24 @@ public final class BasicComponentHarnessPreMain
 		finalArguments[1] = callbacksClass;
 		System.arraycopy (arguments, argumentsOffset, finalArguments, 2, arguments.length - argumentsOffset);
 		BasicComponentHarnessPreMain.main (finalArguments);
+	}
+	
+	public static final void main (final String callbacksClass, final String[] prefixArguments, final String[] suffixArguments, final String[] arguments, final int argumentsOffset)
+			throws Throwable
+	{
+		Preconditions.checkNotNull (prefixArguments);
+		Preconditions.checkNotNull (suffixArguments);
+		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
+		Preconditions.checkArgument ((argumentsOffset >= 0) && (argumentsOffset <= arguments.length), "invalid arguments offset");
+		final String[] argumentsTrimmed = new String[arguments.length - argumentsOffset];
+		System.arraycopy (arguments, argumentsOffset, argumentsTrimmed, 0, arguments.length - argumentsOffset);
+		final ArrayList<String> finalArguments = new ArrayList<String> ();
+		finalArguments.add ("--component-callbacks-class");
+		finalArguments.add (callbacksClass);
+		finalArguments.addAll (Arrays.asList (prefixArguments));
+		finalArguments.addAll (Arrays.asList (argumentsTrimmed));
+		finalArguments.addAll (Arrays.asList (suffixArguments));
+		BasicComponentHarnessPreMain.main (finalArguments.toArray (new String [0]));
 	}
 	
 	public static final void main (final String[] arguments)
