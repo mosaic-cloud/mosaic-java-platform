@@ -28,6 +28,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-container</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-callbacks</artifactId>
 			<version>${project.version}</version>
@@ -65,7 +70,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudletPreMain</mainClass>
+									<mainClass>eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerComponentPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>
