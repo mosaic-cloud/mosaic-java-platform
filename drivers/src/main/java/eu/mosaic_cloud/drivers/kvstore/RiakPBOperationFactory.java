@@ -48,6 +48,22 @@ import com.google.protobuf.ByteString;
  */
 public final class RiakPBOperationFactory implements IOperationFactory { // NOPMD
 
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 4:49
+    // PM
+    private final RiakClient riakcl;
+
+    private final String bucket;
+
+    private RiakPBOperationFactory(String riakHost, int port, String bucket) throws IOException {
+        super();
+        this.riakcl = new RiakClient(riakHost, port);
+        this.bucket = bucket;
+    }
+
     /**
      * Creates a new factory.
      * 
@@ -71,21 +87,6 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
             ExceptionTracer.traceIgnored(e);
         }
         return factory;
-    }
-
-    // by
-    // georgiana
-    // on
-    // 10/12/11
-    // 4:49
-    // PM
-    private final RiakClient riakcl;
-    private final String bucket;
-
-    private RiakPBOperationFactory(String riakHost, int port, String bucket) throws IOException {
-        super();
-        this.riakcl = new RiakClient(riakHost, port);
-        this.bucket = bucket;
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {

@@ -46,8 +46,7 @@ import com.google.common.base.Preconditions;
  * @author Georgiana Macariu
  * 
  */
-public abstract class BaseConnectorProxy implements SessionCallbacks,
-        IConnector {
+public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector {
 
     private final IConfiguration configuration;
     protected MosaicLogger logger;
@@ -80,20 +79,14 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
         this.pendingRequests = new ResponseHandlerMap();
     }
 
-    protected CallbackCompletion<Void> connect(
-            final SessionSpecification session, final Message initMessage) {
-        final String driverEndpoint = ConfigUtils.resolveParameter(
-                this.configuration,
-                ConfigProperties.getString("GenericConnector.0"), String.class,
-                null);
-        final String driverIdentity = ConfigUtils.resolveParameter(
-                this.configuration,
-                ConfigProperties.getString("GenericConnector.1"), String.class,
-                null);
-        final String driverTarget = ConfigUtils.resolveParameter(
-                this.configuration,
-                ConfigProperties.getString("GenericConnector.2"), String.class,
-                null);
+    protected CallbackCompletion<Void> connect(final SessionSpecification session,
+            final Message initMessage) {
+        final String driverEndpoint = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("GenericConnector.0"), String.class, null);
+        final String driverIdentity = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("GenericConnector.1"), String.class, null);
+        final String driverTarget = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("GenericConnector.2"), String.class, null);
 
         final CallbackCompletion<Void> result;
         this.channel.register(session);
@@ -104,29 +97,27 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
         } else {
             final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture
                     .create(Void.class);
-            ResolverCallbacks resolverCallbacks=new ResolverCallbacks() {
+            final ResolverCallbacks resolverCallbacks = new ResolverCallbacks() {
 
                 @Override
-                public CallbackCompletion<Void> resolved(
-                        ChannelResolver resolver, String target,
+                public CallbackCompletion<Void> resolved(ChannelResolver resolver, String target,
                         String peer, String endpoint) {
-                    Preconditions.checkState(driverTarget
-                            .equals(target));
+                    Preconditions.checkState(driverTarget.equals(target));
                     Preconditions.checkState(peer != null);
                     Preconditions.checkState(endpoint != null);
-                    // FIXME: The connection operation should be done by the channel resolver.
-                    ((ZeroMqChannel) BaseConnectorProxy.this.channel)
-                            .connect(endpoint);
-                    BaseConnectorProxy.this.channel.connect(peer,
-                            session, initMessage,
+                    // FIXME: The connection operation should be done by the
+                    // channel resolver.
+                    ((ZeroMqChannel) BaseConnectorProxy.this.channel).connect(endpoint);
+                    BaseConnectorProxy.this.channel.connect(peer, session, initMessage,
                             BaseConnectorProxy.this);
-                    // FIXME: Calling `connect` is not enough; the connection is successfull only
+                    // FIXME: Calling `connect` is not enough; the connection is
+                    // successfull only
                     // after the call of `created(Session)` was done.
                     future.trigger.triggerSucceeded(null);
                     return CallbackCompletion.createOutcome();
                 }
             };
-            this.environment.resolveChannel(driverTarget,resolverCallbacks);
+            this.environment.resolveChannel(driverTarget, resolverCallbacks);
             result = future.completion;
         }
         return result;
@@ -159,10 +150,13 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
     }
 
     protected CallbackCompletion<Void> disconnect(final Message finalMessage) {
-        // FIXME: The disconnection should push the termination also to the interoperability layer.
-        // Currently the driver side has no ideea that the connector was disconnected except if
+        // FIXME: The disconnection should push the termination also to the
+        // interoperability layer.
+        // Currently the driver side has no ideea that the connector was
+        // disconnected except if
         // the `finalMessage` contains such information.
-        // FIXME: The `finalMessage` should always exist and should always be an "terminal" one.
+        // FIXME: The `finalMessage` should always exist and should always be an
+        // "terminal" one.
         if (finalMessage != null) {
             this.send(finalMessage);
         }
@@ -178,15 +172,13 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
      *            the exception
      */
     @Override
-    public CallbackCompletion<Void> failed(final Session session,
-            final Throwable exception) {
+    public CallbackCompletion<Void> failed(final Session session, final Throwable exception) {
         Preconditions.checkState(this.session == session);
         return CallbackCompletion.createOutcome();
     }
 
     protected CompletionToken generateToken() {
-        final CompletionToken.Builder tokenBuilder = CompletionToken
-                .newBuilder();
+        final CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
         tokenBuilder.setMessageId(UUID.randomUUID().toString());
         tokenBuilder.setClientId(this.identifier);
         return tokenBuilder.build();
@@ -210,10 +202,8 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
     protected abstract void processResponse(Message message);
 
     @Override
-    public CallbackCompletion<Void> received(final Session session,
-            final Message message) {
-        this.logger.debug("ConnectorProxy - Received "
-                + message.specification.toString() + "...");
+    public CallbackCompletion<Void> received(final Session session, final Message message) {
+        this.logger.debug("ConnectorProxy - Received " + message.specification.toString() + "...");
         this.processResponse(message);
         return CallbackCompletion.createOutcome();
     }
@@ -227,7 +217,8 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
      *            the request
      */
     protected void send(final Message request) {
-        // FIXME: Currently this is a hack to avoid a race condition introduced by the `connect` code above.
+        // FIXME: Currently this is a hack to avoid a race condition introduced
+        // by the `connect` code above.
         // For now we just busy-wait until the session object is available
         while (this.session == null) {
             Thread.yield();
@@ -235,15 +226,13 @@ public abstract class BaseConnectorProxy implements SessionCallbacks,
         this.session.send(request);
     }
 
-    protected <O extends Object> CallbackCompletion<O> sendRequest(
-            final Message message, final CompletionToken token,
-            final Class<O> outcomeClass) {
+    protected <O extends Object> CallbackCompletion<O> sendRequest(final Message message,
+            final CompletionToken token, final Class<O> outcomeClass) {
         final CallbackCompletionDeferredFuture<O> future = CallbackCompletionDeferredFuture
                 .create(outcomeClass);
         this.pendingRequests.register(token.getMessageId(), future);
-        this.logger.debug("ConnectorProxy - Sending "
-                + message.specification.toString() + " request ["
-                + token.getMessageId() + "]...");
+        this.logger.debug("ConnectorProxy - Sending " + message.specification.toString()
+                + " request [" + token.getMessageId() + "]...");
         this.send(message);
         return future.completion;
     }

@@ -55,14 +55,15 @@ public class RedisDriverTest {
     private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
     private static final String MOSAIC_REDIS_PORT = "mosaic.tests.resources.redis.port";
 
+    private AbstractKeyValueDriver wrapper;
+
+    private static String keyPrefix;
+    private BasicThreadingContext threadingContext;
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
     }
-
-    private AbstractKeyValueDriver wrapper;
-    private static String keyPrefix;
-    private BasicThreadingContext threadingContext;
 
     @Before
     public void setUp() throws Exception {

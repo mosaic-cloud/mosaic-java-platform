@@ -189,7 +189,7 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
         final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture
                 .create(ComponentCallReply.class);
         // FIXME
-        ComponentIdentifier componentId = null;
+        final ComponentIdentifier componentId = null;
         ComponentCallReply reply;
         ChannelData channel = null;
         this.pendingReferences.put(callReference, replyFuture.trigger);
@@ -245,11 +245,11 @@ public final class CloudletComponentCallbacks implements ComponentCallbacks, Cal
             this.status = Status.Ready;
             CloudletComponentCallbacks.logger
                     .info("Container component callback registered to group " + this.selfGroup); //$NON-NLS-1$
-            final String properties = this.componentEnvironment.supplementary.get("descriptor", String.class, null);
+            final String properties = this.componentEnvironment.supplementary.get("descriptor",
+                    String.class, null);
             if (properties != null) {
                 final ClassLoader loader = this.componentEnvironment.classLoader;
-                final List<CloudletManager> containers = startCloudlet(loader,
-                        properties);
+                final List<CloudletManager> containers = startCloudlet(loader, properties);
                 if (containers != null) {
                     this.cloudletRunners.addAll(containers);
                 }

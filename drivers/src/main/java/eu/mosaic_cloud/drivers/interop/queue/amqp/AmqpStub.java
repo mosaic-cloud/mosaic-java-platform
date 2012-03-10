@@ -228,6 +228,24 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
     private static AmqpStub stub;
 
     /**
+     * Creates a new stub for the AMQP driver.
+     * 
+     * @param config
+     *            the configuration data for the stub and driver
+     * @param transmitter
+     *            the transmitter object which will send responses to requests
+     *            submitted to this stub
+     * @param driver
+     *            the driver used for processing requests submitted to this stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    private AmqpStub(IConfiguration config, ResponseTransmitter transmitter,
+            IResourceDriver driver, ZeroMqChannel commChannel) {
+        super(config, transmitter, driver, commChannel);
+    }
+
+    /**
      * Returns a stub for the AMQP driver.
      * 
      * @param config
@@ -293,24 +311,6 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
                     "AMQP", amqpServerUser, amqpServerPasswd); //$NON-NLS-1$
         }
         return cData;
-    }
-
-    /**
-     * Creates a new stub for the AMQP driver.
-     * 
-     * @param config
-     *            the configuration data for the stub and driver
-     * @param transmitter
-     *            the transmitter object which will send responses to requests
-     *            submitted to this stub
-     * @param driver
-     *            the driver used for processing requests submitted to this stub
-     * @param commChannel
-     *            the channel for communicating with connectors
-     */
-    private AmqpStub(IConfiguration config, ResponseTransmitter transmitter,
-            IResourceDriver driver, ZeroMqChannel commChannel) {
-        super(config, transmitter, driver, commChannel);
     }
 
     @Override

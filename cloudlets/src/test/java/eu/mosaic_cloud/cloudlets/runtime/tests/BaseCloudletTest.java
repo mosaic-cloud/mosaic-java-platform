@@ -66,6 +66,10 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         public Transcript transcript;
     }
 
+    protected Cloudlet<?> cloudlet;
+
+    protected Scenario scenario;
+
     protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario(
             final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario,
             final String configuration,
@@ -129,9 +133,6 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         Assert.assertTrue(scenario.reactor.destroy(scenario.poolTimeout));
         Assert.assertTrue(scenario.threading.destroy(scenario.poolTimeout));
     }
-
-    protected Cloudlet<?> cloudlet;
-    protected Scenario scenario;
 
     protected void await(final CallbackCompletion<?> completion) {
         Assert.assertTrue(completion.await(this.scenario.poolTimeout));

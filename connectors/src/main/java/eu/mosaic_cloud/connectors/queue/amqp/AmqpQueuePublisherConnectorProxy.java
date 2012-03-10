@@ -35,8 +35,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
-        AmqpQueueConnectorProxy<TMessage> implements
-        IAmqpQueuePublisherConnector<TMessage> {
+        AmqpQueueConnectorProxy<TMessage> implements IAmqpQueuePublisherConnector<TMessage> {
 
     private final boolean definePassive;
     private final String exchange;
@@ -46,32 +45,13 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
     private final String identity;
     private final String publishRoutingKey;
 
-    public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
-            final IConfiguration configuration,
-            final ConnectorEnvironment environment,
-            final Class<Message> messageClass,
-            final DataEncoder<Message> messageEncoder) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy
-                .create(configuration, environment);
-        final IConfiguration subConfiguration = configuration
-                .spliceConfiguration(ConfigurationIdentifier
-                        .resolveRelative("publisher"));
-        final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
-                rawProxy, subConfiguration, messageClass, messageEncoder);
-        return proxy;
-    }
-
-    private AmqpQueuePublisherConnectorProxy(
-            final AmqpQueueRawConnectorProxy rawProxy,
-            final IConfiguration configuration,
-            final Class<TMessage> messageClass,
+    private AmqpQueuePublisherConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
+            final IConfiguration configuration, final Class<TMessage> messageClass,
             final DataEncoder<TMessage> messageEncoder) {
         super(rawProxy, configuration, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
-        this.exchange = ConfigUtils
-                .resolveParameter(
-                        configuration,
-                        ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
+        this.exchange = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
         this.exchangeType = ConfigUtils
                 .resolveParameter(
                         configuration,
@@ -84,14 +64,24 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
                 .resolveParameter(
                         configuration,
                         ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
-        this.publishRoutingKey = ConfigUtils
-                .resolveParameter(
-                        configuration,
-                        ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
+        this.publishRoutingKey = ConfigUtils.resolveParameter(configuration,
+                ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
         this.definePassive = ConfigUtils
                 .resolveParameter(
                         configuration,
                         ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
+    }
+
+    public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
+            final IConfiguration configuration, final ConnectorEnvironment environment,
+            final Class<Message> messageClass, final DataEncoder<Message> messageEncoder) {
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
+                configuration, environment);
+        final IConfiguration subConfiguration = configuration
+                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+        final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
+                rawProxy, subConfiguration, messageClass, messageEncoder);
+        return proxy;
     }
 
     @Override
@@ -101,12 +91,12 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        // FIXME: We should wait for `initialize` to succeed or fail, and then continue.
+        // FIXME: We should wait for `initialize` to succeed or fail, and then
+        // continue.
         this.raw.initialize();
         // FIXME: If this operation fail we should continue with `destroy`.
-        return this.raw.declareExchange(this.exchange, this.exchangeType,
-                this.exchangeDurable, this.exchangeAutoDelete,
-                this.definePassive);
+        return this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
+                this.exchangeAutoDelete, this.definePassive);
     }
 
     @Override
@@ -116,14 +106,12 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
         try {
             data = this.messageEncoder.encode(message);
         } catch (final EncodingException exception) {
-            FallbackExceptionTracer.defaultInstance
-                    .traceDeferredException(exception);
+            FallbackExceptionTracer.defaultInstance.traceDeferredException(exception);
             result = CallbackCompletion.createFailure(exception);
         }
         if (result == null) {
-            final AmqpOutboundMessage outbound = new AmqpOutboundMessage(
-                    this.exchange, this.publishRoutingKey, data, false, false,
-                    false, null);
+            final AmqpOutboundMessage outbound = new AmqpOutboundMessage(this.exchange,
+                    this.publishRoutingKey, data, false, false, false, null);
             result = this.raw.publish(outbound);
         }
         return result;

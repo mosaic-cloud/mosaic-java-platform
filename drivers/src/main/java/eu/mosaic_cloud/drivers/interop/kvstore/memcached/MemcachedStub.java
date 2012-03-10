@@ -71,6 +71,24 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
     private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub>();
 
     /**
+     * Creates a new stub for the Memcached driver.
+     * 
+     * @param config
+     *            the configuration data for the stub and driver
+     * @param transmitter
+     *            the transmitter object which will send responses to requests
+     *            submitted to this stub
+     * @param driver
+     *            the driver used for processing requests submitted to this stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    public MemcachedStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
+            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
+        super(config, transmitter, driver, commChannel);
+    }
+
+    /**
      * Returns a stub for the Memcached driver.
      * 
      * @param config
@@ -129,24 +147,6 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
             stub = null;
         }
         return stub;
-    }
-
-    /**
-     * Creates a new stub for the Memcached driver.
-     * 
-     * @param config
-     *            the configuration data for the stub and driver
-     * @param transmitter
-     *            the transmitter object which will send responses to requests
-     *            submitted to this stub
-     * @param driver
-     *            the driver used for processing requests submitted to this stub
-     * @param commChannel
-     *            the channel for communicating with connectors
-     */
-    public MemcachedStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
-            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
-        super(config, transmitter, driver, commChannel);
     }
 
     @Override

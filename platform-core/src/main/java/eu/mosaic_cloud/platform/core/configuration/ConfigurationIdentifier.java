@@ -39,6 +39,22 @@ public final class ConfigurationIdentifier {
     private static final IdentityHashMap<String, ConfigurationIdentifier> IDENTIFIERS = new IdentityHashMap<String, ConfigurationIdentifier>();
 
     /**
+     * Indicates if this identifier is absolute
+     */
+    private final boolean absolute;
+
+    /**
+     * The string identifier.
+     */
+    private final String identifier;
+
+    private ConfigurationIdentifier(final boolean absolute, final String identifier) {
+        super();
+        this.absolute = absolute;
+        this.identifier = identifier;
+    }
+
+    /**
      * Builds the {@link ConfigurationIdentifier} object of a configuration
      * parameter.
      * 
@@ -133,21 +149,6 @@ public final class ConfigurationIdentifier {
      */
     public static ConfigurationIdentifier resolveRelative(final String specification) {
         return ConfigurationIdentifier.resolve(null, specification);
-    }
-
-    /**
-     * Indicates if this identifier is absolute
-     */
-    private final boolean absolute;
-    /**
-     * The string identifier.
-     */
-    private final String identifier;
-
-    private ConfigurationIdentifier(final boolean absolute, final String identifier) {
-        super();
-        this.absolute = absolute;
-        this.identifier = identifier;
     }
 
     /*

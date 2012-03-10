@@ -32,18 +32,12 @@ public final class KeyValuePayloads {
                 implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequestOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
-            }
-
             private int bitField0_;
+
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
+
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
             // required string key = 2;
             private java.lang.Object key_ = "";
@@ -57,6 +51,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
             }
 
             @Override
@@ -364,31 +366,34 @@ public final class KeyValuePayloads {
 
         private static final DeleteRequest defaultInstance;
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
         private int bitField0_;
+
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
         // required string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
+
+        private java.lang.Object key_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new DeleteRequest(true);
+            DeleteRequest.defaultInstance.initFields();
+        }
+
+        private DeleteRequest(boolean noInit) {
+        }
+
+        // Use DeleteRequest.newBuilder() to construct.
+        private DeleteRequest(Builder builder) {
+            super(builder);
+        }
 
         public static DeleteRequest getDefaultInstance() {
             return DeleteRequest.defaultInstance;
@@ -396,6 +401,25 @@ public final class KeyValuePayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_DeleteRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseDelimitedFrom(
@@ -410,38 +434,28 @@ public final class KeyValuePayloads {
             }
         }
 
-        private java.lang.Object key_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new DeleteRequest(true);
-            DeleteRequest.defaultInstance.initFields();
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
-
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest parseFrom(
@@ -466,14 +480,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private DeleteRequest(boolean noInit) {
-        }
-
-        // Use DeleteRequest.newBuilder() to construct.
-        private DeleteRequest(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -638,18 +644,12 @@ public final class KeyValuePayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReplyOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
-            }
-
             private int bitField0_;
+
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
+
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
             // repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
             private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_ = java.util.Collections
@@ -665,6 +665,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
             }
 
             public Builder addAllResults(
@@ -1173,29 +1181,34 @@ public final class KeyValuePayloads {
 
         private static final GetReply defaultInstance;
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-            return newBuilder().mergeFrom(input).buildParsed();
-        }
-
         private int bitField0_;
+
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
         // repeated .mosaic_cloud.idl.kvstore.KVEntry results = 2;
         public static final int RESULTS_FIELD_NUMBER = 2;
+
+        private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new GetReply(true);
+            GetReply.defaultInstance.initFields();
+        }
+
+        private GetReply(boolean noInit) {
+        }
+
+        // Use GetReply.newBuilder() to construct.
+        private GetReply(Builder builder) {
+            super(builder);
+        }
 
         public static GetReply getDefaultInstance() {
             return GetReply.defaultInstance;
@@ -1203,6 +1216,25 @@ public final class KeyValuePayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetReply_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseDelimitedFrom(
@@ -1218,44 +1250,32 @@ public final class KeyValuePayloads {
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
-        private java.util.List<eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry> results_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new GetReply(true);
-            GetReply.defaultInstance.initFields();
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
+                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+            return newBuilder().mergeFrom(input).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply parseFrom(
@@ -1275,14 +1295,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private GetReply(boolean noInit) {
-        }
-
-        // Use GetReply.newBuilder() to construct.
-        private GetReply(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -1452,18 +1464,12 @@ public final class KeyValuePayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequestOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
-            }
-
             private int bitField0_;
+
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
+
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
             // repeated string key = 2;
             private com.google.protobuf.LazyStringList key_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -1477,6 +1483,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
             }
 
             public Builder addAllKey(java.lang.Iterable<String> values) {
@@ -1811,31 +1825,34 @@ public final class KeyValuePayloads {
 
         private static final GetRequest defaultInstance;
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
         private int bitField0_;
+
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
         // repeated string key = 2;
         public static final int KEY_FIELD_NUMBER = 2;
+
+        private com.google.protobuf.LazyStringList key_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new GetRequest(true);
+            GetRequest.defaultInstance.initFields();
+        }
+
+        private GetRequest(boolean noInit) {
+        }
+
+        // Use GetRequest.newBuilder() to construct.
+        private GetRequest(Builder builder) {
+            super(builder);
+        }
 
         public static GetRequest getDefaultInstance() {
             return GetRequest.defaultInstance;
@@ -1843,6 +1860,25 @@ public final class KeyValuePayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_GetRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseDelimitedFrom(
@@ -1857,38 +1893,28 @@ public final class KeyValuePayloads {
             }
         }
 
-        private com.google.protobuf.LazyStringList key_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new GetRequest(true);
-            GetRequest.defaultInstance.initFields();
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
-
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest parseFrom(
@@ -1913,14 +1939,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private GetRequest(boolean noInit) {
-        }
-
-        // Use GetRequest.newBuilder() to construct.
-        private GetRequest(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -2072,18 +2090,12 @@ public final class KeyValuePayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequestOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
-            }
-
             private int bitField0_;
+
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
+
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
             // required string bucket = 2;
             private java.lang.Object bucket_ = "";
@@ -2097,6 +2109,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
             }
 
             @Override
@@ -2404,31 +2424,34 @@ public final class KeyValuePayloads {
 
         private static final InitRequest defaultInstance;
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
         private int bitField0_;
+
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
         // required string bucket = 2;
         public static final int BUCKET_FIELD_NUMBER = 2;
+
+        private java.lang.Object bucket_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new InitRequest(true);
+            InitRequest.defaultInstance.initFields();
+        }
+
+        private InitRequest(boolean noInit) {
+        }
+
+        // Use InitRequest.newBuilder() to construct.
+        private InitRequest(Builder builder) {
+            super(builder);
+        }
 
         public static InitRequest getDefaultInstance() {
             return InitRequest.defaultInstance;
@@ -2436,6 +2459,25 @@ public final class KeyValuePayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_InitRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseDelimitedFrom(
@@ -2450,38 +2492,28 @@ public final class KeyValuePayloads {
             }
         }
 
-        private java.lang.Object bucket_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new InitRequest(true);
-            InitRequest.defaultInstance.initFields();
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
-
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest parseFrom(
@@ -2506,14 +2538,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private InitRequest(boolean noInit) {
-        }
-
-        // Use InitRequest.newBuilder() to construct.
-        private InitRequest(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -2678,17 +2702,11 @@ public final class KeyValuePayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntryOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
-            }
-
             private int bitField0_;
+
             // required string key = 1;
             private java.lang.Object key_ = "";
+
             // required bytes value = 2;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -2701,6 +2719,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
             }
 
             @Override
@@ -2921,30 +2947,34 @@ public final class KeyValuePayloads {
 
         private static final KVEntry defaultInstance;
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-                com.google.protobuf.ByteString data)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
-        }
-
         private int bitField0_;
+
         // required string key = 1;
         public static final int KEY_FIELD_NUMBER = 1;
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
 
         private java.lang.Object key_;
         // required bytes value = 2;
         public static final int VALUE_FIELD_NUMBER = 2;
+
+        private com.google.protobuf.ByteString value_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new KVEntry(true);
+            KVEntry.defaultInstance.initFields();
+        }
+
+        private KVEntry(boolean noInit) {
+        }
+
+        // Use KVEntry.newBuilder() to construct.
+        private KVEntry(Builder builder) {
+            super(builder);
+        }
 
         public static KVEntry getDefaultInstance() {
             return KVEntry.defaultInstance;
@@ -2952,6 +2982,25 @@ public final class KeyValuePayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_KVEntry_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseDelimitedFrom(
@@ -2966,31 +3015,20 @@ public final class KeyValuePayloads {
             }
         }
 
-        private com.google.protobuf.ByteString value_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new KVEntry(true);
-            KVEntry.defaultInstance.initFields();
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
@@ -3023,14 +3061,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private KVEntry(boolean noInit) {
-        }
-
-        // Use KVEntry.newBuilder() to construct.
-        private KVEntry(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -3183,18 +3213,12 @@ public final class KeyValuePayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReplyOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
-            }
-
             private int bitField0_;
+
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
+
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
             // repeated string keys = 2;
             private com.google.protobuf.LazyStringList keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -3208,6 +3232,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
             }
 
             public Builder addAllKeys(java.lang.Iterable<String> values) {
@@ -3542,31 +3574,34 @@ public final class KeyValuePayloads {
 
         private static final ListReply defaultInstance;
 
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply prototype) {
-            return newBuilder().mergeFrom(prototype);
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
         private int bitField0_;
+
         // required .mosaic_cloud.idl.common.CompletionToken token = 1;
         public static final int TOKEN_FIELD_NUMBER = 1;
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
 
         private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
         // repeated string keys = 2;
         public static final int KEYS_FIELD_NUMBER = 2;
+
+        private com.google.protobuf.LazyStringList keys_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new ListReply(true);
+            ListReply.defaultInstance.initFields();
+        }
+
+        private ListReply(boolean noInit) {
+        }
+
+        // Use ListReply.newBuilder() to construct.
+        private ListReply(Builder builder) {
+            super(builder);
+        }
 
         public static ListReply getDefaultInstance() {
             return ListReply.defaultInstance;
@@ -3574,6 +3609,25 @@ public final class KeyValuePayloads {
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListReply_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseDelimitedFrom(
@@ -3588,38 +3642,28 @@ public final class KeyValuePayloads {
             }
         }
 
-        private com.google.protobuf.LazyStringList keys_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new ListReply(true);
-            ListReply.defaultInstance.initFields();
-        }
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
-
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
                 com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply parseFrom(
@@ -3644,14 +3688,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private ListReply(boolean noInit) {
-        }
-
-        // Use ListReply.newBuilder() to construct.
-        private ListReply(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -3803,18 +3839,12 @@ public final class KeyValuePayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequestOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
-            }
-
             private int bitField0_;
+
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
+
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
 
             // Construct using
@@ -3826,6 +3856,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
             }
 
             @Override
@@ -4076,12 +4114,56 @@ public final class KeyValuePayloads {
 
         private static final ListRequest defaultInstance;
 
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new ListRequest(true);
+            ListRequest.defaultInstance.initFields();
+        }
+
+        private ListRequest(boolean noInit) {
+        }
+
+        // Use ListRequest.newBuilder() to construct.
+        private ListRequest(Builder builder) {
+            super(builder);
+        }
+
         public static ListRequest getDefaultInstance() {
             return ListRequest.defaultInstance;
         }
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_ListRequest_descriptor;
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(
+                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseDelimitedFrom(
@@ -4096,47 +4178,15 @@ public final class KeyValuePayloads {
             }
         }
 
-        private int bitField0_;
-        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
-        public static final int TOKEN_FIELD_NUMBER = 1;
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static Builder newBuilder(
-                eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest prototype) {
-            return newBuilder().mergeFrom(prototype);
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
+                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
                 byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
-        }
-
-        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new ListRequest(true);
-            ListRequest.defaultInstance.initFields();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest parseFrom(
@@ -4174,14 +4224,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private ListRequest(boolean noInit) {
-        }
-
-        // Use ListRequest.newBuilder() to construct.
-        private ListRequest(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -4298,18 +4340,12 @@ public final class KeyValuePayloads {
                 com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequestOrBuilder {
 
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
-            }
-
             private int bitField0_;
+
             // required .mosaic_cloud.idl.common.CompletionToken token = 1;
             private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                     .getDefaultInstance();
+
             private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
             // required string key = 2;
             private java.lang.Object key_ = "";
@@ -4327,6 +4363,14 @@ public final class KeyValuePayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
+            }
+
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
             }
 
             @Override
@@ -4716,43 +4760,70 @@ public final class KeyValuePayloads {
 
         private static final SetRequest defaultInstance;
 
+        private int bitField0_;
+
+        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
+        public static final int TOKEN_FIELD_NUMBER = 1;
+
+        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+        // required string key = 2;
+        public static final int KEY_FIELD_NUMBER = 2;
+
+        private java.lang.Object key_;
+
+        // optional int32 exp_time = 3 [default = 0];
+        public static final int EXP_TIME_FIELD_NUMBER = 3;
+
+        private int expTime_;
+        // required bytes value = 4;
+        public static final int VALUE_FIELD_NUMBER = 4;
+
+        private com.google.protobuf.ByteString value_;
+
+        private byte memoizedIsInitialized = -1;
+        private int memoizedSerializedSize = -1;
+
+        private static final long serialVersionUID = 0L;
+
+        static {
+            defaultInstance = new SetRequest(true);
+            SetRequest.defaultInstance.initFields();
+        }
+
+        private SetRequest(boolean noInit) {
+        }
+
+        // Use SetRequest.newBuilder() to construct.
+        private SetRequest(Builder builder) {
+            super(builder);
+        }
+
         public static SetRequest getDefaultInstance() {
             return SetRequest.defaultInstance;
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
         }
 
-        private int bitField0_;
-        // required .mosaic_cloud.idl.common.CompletionToken token = 1;
-        public static final int TOKEN_FIELD_NUMBER = 1;
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
 
         public static Builder newBuilder(
                 eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest prototype) {
             return newBuilder().mergeFrom(prototype);
         }
 
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseDelimitedFrom(
+                java.io.InputStream input) throws java.io.IOException {
+            final Builder builder = newBuilder();
+            if (builder.mergeDelimitedFrom(input)) {
+                return builder.buildParsed();
+            } else {
+                return null;
+            }
         }
-
-        private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
-        // required string key = 2;
-        public static final int KEY_FIELD_NUMBER = 2;
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.internal_static_mosaic_cloud_idl_kvstore_SetRequest_descriptor;
-        }
-
-        private java.lang.Object key_;
-        // optional int32 exp_time = 3 [default = 0];
-        public static final int EXP_TIME_FIELD_NUMBER = 3;
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseDelimitedFrom(
                 java.io.InputStream input,
@@ -4766,27 +4837,15 @@ public final class KeyValuePayloads {
             }
         }
 
-        private int expTime_;
-        // required bytes value = 4;
-        public static final int VALUE_FIELD_NUMBER = 4;
-
-        public static Builder newBuilder() {
-            return Builder.create();
-        }
-
-        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            final Builder builder = newBuilder();
-            if (builder.mergeDelimitedFrom(input)) {
-                return builder.buildParsed();
-            } else {
-                return null;
-            }
-        }
-
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
                 byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
+        }
+
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
@@ -4795,13 +4854,11 @@ public final class KeyValuePayloads {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
-        private com.google.protobuf.ByteString value_;
-        private byte memoizedIsInitialized = -1;
-        private int memoizedSerializedSize = -1;
-        private static final long serialVersionUID = 0L;
-        static {
-            defaultInstance = new SetRequest(true);
-            SetRequest.defaultInstance.initFields();
+        public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest parseFrom(
@@ -4826,14 +4883,6 @@ public final class KeyValuePayloads {
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
-        }
-
-        private SetRequest(boolean noInit) {
-        }
-
-        // Use SetRequest.newBuilder() to construct.
-        private SetRequest(Builder builder) {
-            super(builder);
         }
 
         @Override
@@ -5156,14 +5205,14 @@ public final class KeyValuePayloads {
                     eu.mosaic_cloud.platform.interop.idl.IdlCommon.getDescriptor(), }, assigner);
     }
 
+    // @@protoc_insertion_point(outer_class_scope)
+    private KeyValuePayloads() {
+    }
+
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return KeyValuePayloads.descriptor;
     }
 
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {
-    }
-
-    // @@protoc_insertion_point(outer_class_scope)
-    private KeyValuePayloads() {
     }
 }

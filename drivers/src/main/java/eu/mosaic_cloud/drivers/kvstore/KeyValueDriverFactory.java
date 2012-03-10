@@ -54,6 +54,9 @@ public final class KeyValueDriverFactory {
         }
     }
 
+    private KeyValueDriverFactory() {
+    }
+
     /**
      * Creates a driver of requested type with the specified configuration.
      * 
@@ -96,8 +99,5 @@ public final class KeyValueDriverFactory {
             }
         }
         return driver;
-    }
-
-    private KeyValueDriverFactory() {
     }
 }

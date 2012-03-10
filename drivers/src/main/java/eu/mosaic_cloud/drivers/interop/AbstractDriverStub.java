@@ -45,33 +45,10 @@ import eu.mosaic_cloud.tools.miscellaneous.Monitor;
  */
 public abstract class AbstractDriverStub implements SessionCallbacks {
 
-    protected static int decDriverReference(AbstractDriverStub stub) {
-        synchronized (AbstractDriverStub.MONITOR) {
-            Integer ref = AbstractDriverStub.references.get(stub);
-            if (ref == null) {
-                ref = 0; // NOPMD by georgiana on 10/12/11 3:15 PM
-            }
-            ref--;
-            if (ref == 0) {
-                AbstractDriverStub.references.remove(stub);
-            }
-            return ref;
-        }
-    }
-
-    protected static void incDriverReference(AbstractDriverStub stub) {
-        synchronized (AbstractDriverStub.MONITOR) {
-            Integer ref = AbstractDriverStub.references.get(stub);
-            if (ref == null) {
-                ref = 0; // NOPMD by georgiana on 10/12/11 3:14 PM
-            }
-            ref++;
-            AbstractDriverStub.references.put(stub, ref);
-        }
-    }
-
     protected IConfiguration configuration;
+
     protected MosaicLogger logger;
+
     private final ResponseTransmitter transmitter;
     private final IResourceDriver driver;
     private final List<Session> sessions;
@@ -101,6 +78,31 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
         this.commChannel = commChannel;
         this.transmitter = transmitter;
         this.driver = driver;
+    }
+
+    protected static int decDriverReference(AbstractDriverStub stub) {
+        synchronized (AbstractDriverStub.MONITOR) {
+            Integer ref = AbstractDriverStub.references.get(stub);
+            if (ref == null) {
+                ref = 0; // NOPMD by georgiana on 10/12/11 3:15 PM
+            }
+            ref--;
+            if (ref == 0) {
+                AbstractDriverStub.references.remove(stub);
+            }
+            return ref;
+        }
+    }
+
+    protected static void incDriverReference(AbstractDriverStub stub) {
+        synchronized (AbstractDriverStub.MONITOR) {
+            Integer ref = AbstractDriverStub.references.get(stub);
+            if (ref == null) {
+                ref = 0; // NOPMD by georgiana on 10/12/11 3:14 PM
+            }
+            ref++;
+            AbstractDriverStub.references.put(stub, ref);
+        }
     }
 
     @Override

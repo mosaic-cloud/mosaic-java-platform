@@ -29,20 +29,16 @@ public class AmqpQueuePublisherConnector<TMessage> extends
         AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<TMessage>> implements
         IAmqpQueuePublisherConnector<TMessage> {
 
-    public static <M> AmqpQueuePublisherConnector<M> create(
-            final IConfiguration configuration,
-            final ConnectorEnvironment environment,
-            final Class<M> messageClass,
-            final DataEncoder<M> messageEncoder) {
-        final AmqpQueuePublisherConnectorProxy<M> proxy = AmqpQueuePublisherConnectorProxy
-                .create(configuration, environment, messageClass,
-                        messageEncoder);
-        return new AmqpQueuePublisherConnector<M>(proxy);
+    protected AmqpQueuePublisherConnector(final AmqpQueuePublisherConnectorProxy<TMessage> proxy) {
+        super(proxy);
     }
 
-    protected AmqpQueuePublisherConnector(
-            final AmqpQueuePublisherConnectorProxy<TMessage> proxy) {
-        super(proxy);
+    public static <M> AmqpQueuePublisherConnector<M> create(final IConfiguration configuration,
+            final ConnectorEnvironment environment, final Class<M> messageClass,
+            final DataEncoder<M> messageEncoder) {
+        final AmqpQueuePublisherConnectorProxy<M> proxy = AmqpQueuePublisherConnectorProxy.create(
+                configuration, environment, messageClass, messageEncoder);
+        return new AmqpQueuePublisherConnector<M>(proxy);
     }
 
     @Override

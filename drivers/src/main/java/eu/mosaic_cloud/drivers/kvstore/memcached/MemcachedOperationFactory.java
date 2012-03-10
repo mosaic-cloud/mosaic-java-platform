@@ -52,6 +52,30 @@ import net.spy.memcached.MemcachedClient;
  */
 public final class MemcachedOperationFactory implements IOperationFactory { // NOPMD
 
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 4:57
+    // PM
+    private final MemcachedClient mcClient;
+
+    private MemcachedOperationFactory(List<?> servers, String user, String password, String bucket,
+            boolean useBucket) throws IOException {
+        super();
+        if (useBucket) {
+            @SuppressWarnings("unchecked")
+            final List<URI> nodes = (List<URI>) servers;
+            this.mcClient = new CouchbaseClient(nodes, bucket, user, password);
+        } else {
+            @SuppressWarnings("unchecked")
+            final List<URI> nodes = (List<URI>) servers;
+            final CouchbaseConnectionFactory factory = new CouchbaseConnectionFactory(nodes,
+                    "default", "");
+            this.mcClient = new CouchbaseClient(factory);
+        }
+    }
+
     /**
      * Creates a new factory.
      * 
@@ -82,30 +106,6 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
             ExceptionTracer.traceIgnored(e);
         }
         return null;
-    }
-
-    // by
-    // georgiana
-    // on
-    // 10/12/11
-    // 4:57
-    // PM
-    private final MemcachedClient mcClient;
-
-    private MemcachedOperationFactory(List<?> servers, String user, String password, String bucket,
-            boolean useBucket) throws IOException {
-        super();
-        if (useBucket) {
-            @SuppressWarnings("unchecked")
-            final List<URI> nodes = (List<URI>) servers;
-            this.mcClient = new CouchbaseClient(nodes, bucket, user, password);
-        } else {
-            @SuppressWarnings("unchecked")
-            final List<URI> nodes = (List<URI>) servers;
-            final CouchbaseConnectionFactory factory = new CouchbaseConnectionFactory(nodes,
-                    "default", "");
-            this.mcClient = new CouchbaseClient(factory);
-        }
     }
 
     private IOperation<?> buildAddOperation(final Object... parameters) {

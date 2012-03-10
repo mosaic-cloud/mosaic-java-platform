@@ -51,98 +51,91 @@ public class BaseScenario {
     private ConnectorEnvironment environment;
     private TranscriptExceptionTracer exceptions;
     private QueueingExceptionTracer exceptionsQueue;
-    private long poolTimeout = 1000;
+    private final long poolTimeout = 1000;
     private BasicThreadingContext threading;
     private Transcript transcript;
 
-    public BaseScenario(
-            final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner,
+    public BaseScenario(final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner,
             final String configuration) {
-        this.configuration = PropertyTypeConfiguration.create(
-                owner.getClassLoader(), configuration);
+        this.configuration = PropertyTypeConfiguration
+                .create(owner.getClassLoader(), configuration);
 
-        transcript = Transcript.create(owner);
-        exceptionsQueue = QueueingExceptionTracer
-                .create(NullExceptionTracer.defaultInstance);
-        exceptions = TranscriptExceptionTracer.create(transcript,
-                exceptionsQueue);
+        this.transcript = Transcript.create(owner);
+        this.exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
+        this.exceptions = TranscriptExceptionTracer.create(this.transcript, this.exceptionsQueue);
 
         // create threading context for connector and driver
-        threading = BasicThreadingContext.create(owner, exceptions,
-                exceptions.catcher);
-        threading.initialize();
+        this.threading = BasicThreadingContext.create(owner, this.exceptions,
+                this.exceptions.catcher);
+        this.threading.initialize();
 
         // create callback reactor
-        callbacks = BasicCallbackReactor.create(threading, exceptions);
-        callbacks.initialize();
+        this.callbacks = BasicCallbackReactor.create(this.threading, this.exceptions);
+        this.callbacks.initialize();
 
         // set-up communication channel with the driver
-        final String driverIdentity = ConfigUtils.resolveParameter(
-                this.configuration, "interop.driver.identifier", String.class,
-                "");
-        final String driverEndpoint = ConfigUtils
-                .resolveParameter(this.configuration,
-                        "interop.channel.address", String.class, "");
-        connectorChannel = ZeroMqChannel.create(
-                BaseConnectorTest.connectorIdentity, threading, exceptions);
-        driverChannel = ZeroMqChannel.create(driverIdentity, threading,
-                exceptions);
-        driverChannel.accept(driverEndpoint);
-        channelFactory = new ChannelFactory() {
+        final String driverIdentity = ConfigUtils.resolveParameter(this.configuration,
+                "interop.driver.identifier", String.class, "");
+        final String driverEndpoint = ConfigUtils.resolveParameter(this.configuration,
+                "interop.channel.address", String.class, "");
+        this.connectorChannel = ZeroMqChannel.create(BaseConnectorTest.connectorIdentity,
+                this.threading, this.exceptions);
+        this.driverChannel = ZeroMqChannel.create(driverIdentity, this.threading, this.exceptions);
+        this.driverChannel.accept(driverEndpoint);
+        this.channelFactory = new ChannelFactory() {
 
             @Override
             public final Channel create() {
-                return connectorChannel;
+                return BaseScenario.this.connectorChannel;
             }
         };
-        channelResolver = new ChannelResolver() {
+        this.channelResolver = new ChannelResolver() {
 
             @Override
             public final void resolve(String target, ResolverCallbacks callbacks) {
                 Assert.assertEquals(driverIdentity, target);
-                callbacks
-                        .resolved(this, target, driverIdentity, driverEndpoint);
+                callbacks.resolved(this, target, driverIdentity, driverEndpoint);
             }
         };
-        environment = ConnectorEnvironment.create(callbacks, threading,
-                exceptions, channelFactory, channelResolver);
+        this.environment = ConnectorEnvironment.create(this.callbacks, this.threading,
+                this.exceptions, this.channelFactory, this.channelResolver);
 
-        driverChannel.register(KeyValueSession.DRIVER);
+        this.driverChannel.register(KeyValueSession.DRIVER);
     }
 
     public void destroy() {
-        Assert.assertTrue(driverChannel.terminate(poolTimeout));
-        Assert.assertTrue(connectorChannel.terminate(poolTimeout));
-        Assert.assertTrue(callbacks.destroy(poolTimeout));
-        Assert.assertTrue(threading.destroy(poolTimeout));
-        Assert.assertNull(exceptionsQueue.queue.poll());
+        Assert.assertTrue(this.driverChannel.terminate(this.poolTimeout));
+        Assert.assertTrue(this.connectorChannel.terminate(this.poolTimeout));
+        Assert.assertTrue(this.callbacks.destroy(this.poolTimeout));
+        Assert.assertTrue(this.threading.destroy(this.poolTimeout));
+        Assert.assertNull(this.exceptionsQueue.queue.poll());
     }
 
     public ChannelResolver getChannelResolver() {
-        return channelResolver;
-    }
-
-    public void registerDriverRole(SessionSpecification sessionRole) {
-        driverChannel.register(sessionRole);
-    }
-
-    public long getPoolTimeout() {
-        return poolTimeout;
+        return this.channelResolver;
     }
 
     public IConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    public ConnectorEnvironment getEnvironment() {
-        return environment;
-    }
-
-    public BasicThreadingContext getThreading() {
-        return threading;
+        return this.configuration;
     }
 
     public ZeroMqChannel getDriverChannel() {
-        return driverChannel;
+        return this.driverChannel;
+    }
+
+    public ConnectorEnvironment getEnvironment() {
+        return this.environment;
+    }
+
+    public long getPoolTimeout() {
+        return this.poolTimeout;
+    }
+
+    public BasicThreadingContext getThreading() {
+        return this.threading;
+    }
+
+    public void registerDriverRole(SessionSpecification sessionRole) {
+        this.driverChannel.register(sessionRole);
     }
 }

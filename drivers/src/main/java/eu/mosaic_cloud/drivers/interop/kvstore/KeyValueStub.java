@@ -137,6 +137,26 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 
     private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub>();
 
+    private Class<? extends AbstractKeyValueDriver> driverClass;
+
+    /**
+     * Creates a new stub for the key-value store driver.
+     * 
+     * @param config
+     *            the configuration data for the stub and driver
+     * @param transmitter
+     *            the transmitter object which will send responses to requests
+     *            submitted to this stub
+     * @param driver
+     *            the driver used for processing requests submitted to this stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    public KeyValueStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
+            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
+        super(config, transmitter, driver, commChannel);
+    }
+
     /**
      * Returns a stub for the key-value store driver.
      * 
@@ -237,26 +257,6 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             cData = new DriverConnectionData(resourceHost, resourcePort, driver, user, passwd);
         }
         return cData;
-    }
-
-    private Class<? extends AbstractKeyValueDriver> driverClass;
-
-    /**
-     * Creates a new stub for the key-value store driver.
-     * 
-     * @param config
-     *            the configuration data for the stub and driver
-     * @param transmitter
-     *            the transmitter object which will send responses to requests
-     *            submitted to this stub
-     * @param driver
-     *            the driver used for processing requests submitted to this stub
-     * @param commChannel
-     *            the channel for communicating with connectors
-     */
-    public KeyValueStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
-            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
-        super(config, transmitter, driver, commChannel);
     }
 
     @Override

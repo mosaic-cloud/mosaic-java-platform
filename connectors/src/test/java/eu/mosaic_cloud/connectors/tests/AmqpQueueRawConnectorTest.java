@@ -39,12 +39,11 @@ public class AmqpQueueRawConnectorTest extends
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        final BaseScenario scenario = new BaseScenario(
-                AmqpQueueRawConnectorTest.class,
+        final BaseScenario scenario = new BaseScenario(AmqpQueueRawConnectorTest.class,
                 "amqp-queue-driver-test.properties");
         BaseConnectorTest.setUpScenario(AmqpQueueRawConnectorTest.class);
         scenario.registerDriverRole(AmqpSession.DRIVER);
-        driverStub = AmqpStub.createDetached(scenario.getConfiguration(),
+        BaseConnectorTest.driverStub = AmqpStub.createDetached(scenario.getConfiguration(),
                 scenario.getDriverChannel(), scenario.getThreading());
         AmqpQueueRawConnectorTest.scenario_ = scenario;
     }
@@ -58,8 +57,7 @@ public class AmqpQueueRawConnectorTest extends
     @Before
     public void setUp() {
         this.scenario = AmqpQueueRawConnectorTest.scenario_;
-        this.connector = AmqpQueueRawConnector.create(
-                this.scenario.getConfiguration(),
+        this.connector = AmqpQueueRawConnector.create(this.scenario.getConfiguration(),
                 this.scenario.getEnvironment());
     }
 
@@ -72,30 +70,27 @@ public class AmqpQueueRawConnectorTest extends
     }
 
     protected void testBindQueue() {
-        IConfiguration configuration = this.scenario.getConfiguration();
+        final IConfiguration configuration = this.scenario.getConfiguration();
         final String exchange = ConfigUtils.resolveParameter(configuration,
                 "publisher.amqp.exchange", String.class, "");
         final String routingKey = ConfigUtils.resolveParameter(configuration,
                 "publisher.amqp.routing_key", String.class, "");
-        final String queue = ConfigUtils.resolveParameter(configuration,
-                "consumer.amqp.queue", String.class, "");
-        Assert.assertTrue(this.awaitSuccess(this.connector.bindQueue(exchange,
-                queue, routingKey)));
+        final String queue = ConfigUtils.resolveParameter(configuration, "consumer.amqp.queue",
+                String.class, "");
+        Assert.assertTrue(this.awaitSuccess(this.connector.bindQueue(exchange, queue, routingKey)));
     }
 
     protected void testDeclareExchange() {
-        final String exchange = ConfigUtils.resolveParameter(
-                this.scenario.getConfiguration(), "publisher.amqp.exchange",
-                String.class, "");
-        Assert.assertTrue(this.awaitSuccess(this.connector.declareExchange(
-                exchange, AmqpExchangeType.DIRECT, false, false, false)));
+        final String exchange = ConfigUtils.resolveParameter(this.scenario.getConfiguration(),
+                "publisher.amqp.exchange", String.class, "");
+        Assert.assertTrue(this.awaitSuccess(this.connector.declareExchange(exchange,
+                AmqpExchangeType.DIRECT, false, false, false)));
     }
 
     protected void testDeclareQueue() {
-        final String queue = ConfigUtils.resolveParameter(
-                this.scenario.getConfiguration(), "consumer.amqp.queue",
-                String.class, "");
-        Assert.assertTrue(this.awaitSuccess(this.connector.declareQueue(queue,
-                true, false, true, false)));
+        final String queue = ConfigUtils.resolveParameter(this.scenario.getConfiguration(),
+                "consumer.amqp.queue", String.class, "");
+        Assert.assertTrue(this.awaitSuccess(this.connector.declareQueue(queue, true, false, true,
+                false)));
     }
 }

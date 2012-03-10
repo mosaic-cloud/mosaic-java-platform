@@ -36,27 +36,10 @@ import com.google.common.base.Preconditions;
 
 public final class CloudletEnvironment {
 
-    public static final CloudletEnvironment create(final IConfiguration configuration,
-            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
-            final ClassLoader classLoader, final IConnectorsFactory connectors,
-            final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions) {
-        return (new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
-                classLoader, connectors, reactor, threading, exceptions,
-                new HashMap<String, Object>()));
-    }
-
-    public static final CloudletEnvironment create(final IConfiguration configuration,
-            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
-            final ClassLoader classLoader, final IConnectorsFactory connectors,
-            final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
-        return (new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
-                classLoader, connectors, reactor, threading, exceptions, supplementary));
-    }
-
     public final ClassLoader classLoader;
+
     public final Class<?> cloudletCallbackClass;
+
     public final Class<?> cloudletContextClass;
     public final IConfiguration configuration;
     public final IConnectorsFactory connectors;
@@ -96,5 +79,24 @@ public final class CloudletEnvironment {
                         exceptions.trace(ExceptionResolution.Ignored, exception);
                     }
                 });
+    }
+
+    public static final CloudletEnvironment create(final IConfiguration configuration,
+            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
+            final ClassLoader classLoader, final IConnectorsFactory connectors,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions) {
+        return (new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
+                classLoader, connectors, reactor, threading, exceptions,
+                new HashMap<String, Object>()));
+    }
+
+    public static final CloudletEnvironment create(final IConfiguration configuration,
+            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
+            final ClassLoader classLoader, final IConnectorsFactory connectors,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
+        return (new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
+                classLoader, connectors, reactor, threading, exceptions, supplementary));
     }
 }

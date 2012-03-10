@@ -63,6 +63,9 @@ public final class SerDesUtils {
         SerDesUtils.objectMapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
     }
 
+    private SerDesUtils() {
+    }
+
     /**
      * Converts an array of bytes corresponding to a JSON object back to its
      * constituent Java Bean object. The input array is assumed to have been
@@ -132,8 +135,5 @@ public final class SerDesUtils {
             stream.close();
         }
         return object;
-    }
-
-    private SerDesUtils() {
     }
 }

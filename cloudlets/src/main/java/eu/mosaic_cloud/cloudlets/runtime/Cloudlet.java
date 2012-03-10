@@ -571,12 +571,8 @@ public final class Cloudlet<Context extends Object> extends Object {
         }
     }
 
-    public static final <Context extends Object> Cloudlet<Context> create(
-            final CloudletEnvironment environment) {
-        return (new Cloudlet<Context>(environment));
-    }
-
     final ICloudletCallback<Context> callbacksDelegate;
+
     final CallbacksHandler callbacksHandler;
     final ICloudletCallback<Context> callbacksProxy;
     final ClassLoader classLoader;
@@ -652,6 +648,11 @@ public final class Cloudlet<Context extends Object> extends Object {
             this.connectorsFactoryDelegate = DefaultConnectorsFactory.create(this.controllerProxy,
                     this.environment.connectors, this.threading, this.exceptions);
         }
+    }
+
+    public static final <Context extends Object> Cloudlet<Context> create(
+            final CloudletEnvironment environment) {
+        return (new Cloudlet<Context>(environment));
     }
 
     public final boolean await() {

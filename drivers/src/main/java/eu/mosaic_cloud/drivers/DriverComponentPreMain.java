@@ -26,18 +26,17 @@ import com.google.common.base.Preconditions;
 
 public final class DriverComponentPreMain extends Object {
 
-    public static final void main(final String[] arguments) throws Throwable {
-        Preconditions.checkArgument ((arguments != null) && (arguments.length >= 1),
-                "invalid arguments: expected `<driver-type> ...`");
-        final String callbacksClass = DriverComponentType.valueOf(arguments[0].toUpperCase())
-                .getCallbackClass();
-        Preconditions
-                .checkNotNull(callbacksClass, "invalid driver type; expected: `amqp` or `kv`");
-        BasicComponentHarnessPreMain.main(callbacksClass, arguments, 1);
-    }
-
     private DriverComponentPreMain() {
         super();
         throw (new UnsupportedOperationException());
+    }
+
+    public static final void main(final String[] arguments) throws Throwable {
+        Preconditions.checkArgument((arguments != null) && (arguments.length >= 1),
+                "invalid arguments: expected `<driver-type> ...`");
+        final String callbacksClass = DriverComponentType.valueOf(arguments[0].toUpperCase())
+                .getCallbackClass();
+        Preconditions.checkNotNull(callbacksClass, "invalid driver type; expected: `amqp` or `kv`");
+        BasicComponentHarnessPreMain.main(callbacksClass, arguments, 1);
     }
 }

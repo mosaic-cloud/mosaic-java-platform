@@ -51,6 +51,11 @@ public class AmqpDriverTest {
     private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
     private static IConfiguration configuration;
 
+    private AmqpDriver wrapper;
+
+    private final String clientId = UUID.randomUUID().toString();
+    private BasicThreadingContext threadingContext;
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         AmqpDriverTest.configuration = PropertyTypeConfiguration.create();
@@ -72,10 +77,6 @@ public class AmqpDriverTest {
         AmqpDriverTest.configuration.addParameter("publisher.amqp.immediate", true);
         AmqpDriverTest.configuration.addParameter("publisher.amqp.durable", false);
     }
-
-    private AmqpDriver wrapper;
-    private final String clientId = UUID.randomUUID().toString();
-    private BasicThreadingContext threadingContext;
 
     @Before
     public void setUp() throws IOException {

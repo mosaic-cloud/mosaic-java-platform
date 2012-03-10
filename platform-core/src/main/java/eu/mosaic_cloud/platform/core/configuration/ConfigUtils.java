@@ -28,6 +28,9 @@ package eu.mosaic_cloud.platform.core.configuration;
  */
 public final class ConfigUtils {
 
+    private ConfigUtils() {
+    }
+
     /**
      * Resolves a configuration parameter given its relative specification.
      * 
@@ -67,8 +70,5 @@ public final class ConfigUtils {
             }
         }
         return retValue;
-    }
-
-    private ConfigUtils() {
     }
 }

@@ -46,43 +46,41 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
-public class DefaultConnectorsFactory extends BaseConnectorsFactory implements
-        IConnectorsFactory {
+public class DefaultConnectorsFactory extends BaseConnectorsFactory implements IConnectorsFactory {
 
-    public static final DefaultConnectorsFactory create(
-            final ICloudletController<?> cloudlet,
+    protected DefaultConnectorsFactory(
+            final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate) {
+        super(delegate);
+    }
+
+    public static final DefaultConnectorsFactory create(final ICloudletController<?> cloudlet,
             final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate,
             final ThreadingContext threading, final ExceptionTracer exceptions) {
-        final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(
-                delegate);
+        final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(delegate);
         DefaultConnectorsFactory.initialize(factory, cloudlet);
         return (factory);
     }
 
-    protected static final void initialize(
-            final DefaultConnectorsFactory factory,
+    protected static final void initialize(final DefaultConnectorsFactory factory,
             final ICloudletController<?> cloudlet) {
         Preconditions.checkNotNull(factory);
         Preconditions.checkNotNull(cloudlet);
-        factory.registerFactory(IKvStoreConnectorFactory.class,
-                new IKvStoreConnectorFactory() {
+        factory.registerFactory(IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory() {
 
-                    @Override
-                    public <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create(
-                            final IConfiguration configuration,
-                            final Class<Value> valueClass,
-                            final DataEncoder<Value> valueEncoder,
-                            final IKvStoreConnectorCallback<Context, Value, Extra> callback,
-                            final Context callbackContext) {
-                        final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> backingConnector = (eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>) factory
-                                .getConnectorFactory(
-                                        eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory.class)
-                                .create(configuration, valueClass, valueEncoder);
-                        return (new GenericKvStoreConnector<Context, Value, Extra>(
-                                cloudlet, backingConnector, configuration,
-                                callback, callbackContext));
-                    }
-                });
+            @Override
+            public <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create(
+                    final IConfiguration configuration, final Class<Value> valueClass,
+                    final DataEncoder<Value> valueEncoder,
+                    final IKvStoreConnectorCallback<Context, Value, Extra> callback,
+                    final Context callbackContext) {
+                final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> backingConnector = (eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>) factory
+                        .getConnectorFactory(
+                                eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory.class)
+                        .create(configuration, valueClass, valueEncoder);
+                return (new GenericKvStoreConnector<Context, Value, Extra>(cloudlet,
+                        backingConnector, configuration, callback, callbackContext));
+            }
+        });
         factory.registerFactory(IMemcacheKvStoreConnectorFactory.class,
                 new IMemcacheKvStoreConnectorFactory() {
 
@@ -97,9 +95,8 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory implements
                                 .getConnectorFactory(
                                         eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnectorFactory.class)
                                 .create(configuration, valueClass, valueEncoder);
-                        return (new MemcacheKvStoreConnector<Context, Value, Extra>(
-                                cloudlet, backingConnector, configuration,
-                                callback, callbackContext));
+                        return (new MemcacheKvStoreConnector<Context, Value, Extra>(cloudlet,
+                                backingConnector, configuration, callback, callbackContext));
                     }
                 });
         factory.registerFactory(IAmqpQueueConsumerConnectorFactory.class,
@@ -116,11 +113,11 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory implements
                         final eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConsumerConnector<Message> backingConnector = (eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConsumerConnector<Message>) factory
                                 .getConnectorFactory(
                                         eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory.class)
-                                .create(configuration, messageClass,
-                                        messageEncoder, backingCallback);
-                        return (new AmqpQueueConsumerConnector<Context, Message, Extra>(
-                                cloudlet, backingConnector, configuration,
-                                callback, callbackContext, backingCallback));
+                                .create(configuration, messageClass, messageEncoder,
+                                        backingCallback);
+                        return (new AmqpQueueConsumerConnector<Context, Message, Extra>(cloudlet,
+                                backingConnector, configuration, callback, callbackContext,
+                                backingCallback));
                     }
                 });
         factory.registerFactory(IAmqpQueuePublisherConnectorFactory.class,
@@ -136,17 +133,10 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory implements
                         final eu.mosaic_cloud.connectors.queue.amqp.AmqpQueuePublisherConnector<Message> backingConnector = (eu.mosaic_cloud.connectors.queue.amqp.AmqpQueuePublisherConnector<Message>) factory
                                 .getConnectorFactory(
                                         eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory.class)
-                                .create(configuration, messageClass,
-                                        messageEncoder);
-                        return (new AmqpQueuePublisherConnector<Context, Message, Extra>(
-                                cloudlet, backingConnector, configuration,
-                                callback, callbackContext));
+                                .create(configuration, messageClass, messageEncoder);
+                        return (new AmqpQueuePublisherConnector<Context, Message, Extra>(cloudlet,
+                                backingConnector, configuration, callback, callbackContext));
                     }
                 });
-    }
-
-    protected DefaultConnectorsFactory(
-            final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate) {
-        super(delegate);
     }
 }

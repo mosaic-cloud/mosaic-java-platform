@@ -24,17 +24,18 @@ import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPre
 
 public final class IndexerComponentPreMain extends Object {
 
-    public static final void main(final String[] arguments) throws Throwable {
-        BasicComponentHarnessPreMain
-                .main("eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks",
-                        new String [] {}, new String [] {
-                                "--component-callbacks-configuration",
-                                String.format ("{\"%s\":\"%s\"}", "descriptor", "indexer-cloudlet.properties")},
-                        arguments, 0);
-    }
-
     private IndexerComponentPreMain() {
         super();
         throw (new UnsupportedOperationException());
+    }
+
+    public static final void main(final String[] arguments) throws Throwable {
+        BasicComponentHarnessPreMain.main(
+                "eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks",
+                new String[] {},
+                new String[] {
+                        "--component-callbacks-configuration",
+                        String.format("{\"%s\":\"%s\"}", "descriptor",
+                                "indexer-cloudlet.properties") }, arguments, 0);
     }
 }

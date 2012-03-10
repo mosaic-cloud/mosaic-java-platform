@@ -26,14 +26,14 @@ import com.google.common.base.Preconditions;
 
 public final class DriverComponentLauncher {
 
+    private DriverComponentLauncher() {
+        super();
+        throw (new UnsupportedOperationException());
+    }
+
     public static void main(final String[] arguments) throws Throwable {
         arguments[0] = DriverComponentType.valueOf(arguments[0].toUpperCase()).getCallbackClass();
         Preconditions.checkNotNull(arguments[0], "invalid arguments; expected: `<amqp | kv> ...`");
         MosBasicComponentLauncher.main(arguments);
-    }
-
-    private DriverComponentLauncher() {
-        super();
-        throw (new UnsupportedOperationException());
     }
 }

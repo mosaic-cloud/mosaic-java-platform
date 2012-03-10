@@ -42,26 +42,6 @@ import redis.clients.util.SafeEncoder;
  */
 public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 
-    /**
-     * Creates a new factory.
-     * 
-     * @param host
-     *            the hostname of the Redis server
-     * @param port
-     *            the port for the Redis server
-     * @param user
-     *            the username for connecting to the server
-     * @param passwd
-     *            the password for connecting to the serve
-     * @param bucket
-     *            the bucket where all operations are applied
-     * @return the factory
-     */
-    public static RedisOperationFactory getFactory(String host, int port, String passwd,
-            String bucket) {
-        return new RedisOperationFactory(host, port, passwd, bucket);
-    }
-
     // by
     // georgiana
     // on
@@ -81,6 +61,26 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
             this.redisClient.select(iBucket);
         }
         this.redisClient.connect();
+    }
+
+    /**
+     * Creates a new factory.
+     * 
+     * @param host
+     *            the hostname of the Redis server
+     * @param port
+     *            the port for the Redis server
+     * @param user
+     *            the username for connecting to the server
+     * @param passwd
+     *            the password for connecting to the serve
+     * @param bucket
+     *            the bucket where all operations are applied
+     * @return the factory
+     */
+    public static RedisOperationFactory getFactory(String host, int port, String passwd,
+            String bucket) {
+        return new RedisOperationFactory(host, port, passwd, bucket);
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {

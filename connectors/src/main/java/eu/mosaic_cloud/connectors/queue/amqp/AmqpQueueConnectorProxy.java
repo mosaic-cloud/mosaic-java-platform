@@ -25,8 +25,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 import com.google.common.base.Preconditions;
 
-public abstract class AmqpQueueConnectorProxy<TMessage> implements
-        IAmqpQueueConnector {
+public abstract class AmqpQueueConnectorProxy<TMessage> implements IAmqpQueueConnector {
 
     protected final IConfiguration config;
     protected final Class<TMessage> messageClass;

@@ -66,6 +66,5 @@ public interface IAmqpQueueRawConsumerCallback extends Callbacks {
      * @param signalMessage
      *            the signal message
      */
-    CallbackCompletion<Void> handleShutdownSignal(String consumerTag,
-            String message);
+    CallbackCompletion<Void> handleShutdownSignal(String consumerTag, String message);
 }

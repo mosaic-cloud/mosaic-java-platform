@@ -23,7 +23,6 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
-
 public interface IAmqpQueueConsumerCallback<TMessage> extends Callbacks {
 
     /**
@@ -32,6 +31,5 @@ public interface IAmqpQueueConsumerCallback<TMessage> extends Callbacks {
      * @param message
      *            the message and all its properties
      */
-    CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery,
-            TMessage message);
+    CallbackCompletion<Void> consume(IAmqpQueueDeliveryToken delivery, TMessage message);
 }

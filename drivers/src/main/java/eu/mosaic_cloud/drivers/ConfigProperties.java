@@ -33,6 +33,9 @@ public final class ConfigProperties {
     public static final boolean inDebugging = java.lang.management.ManagementFactory
             .getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 
+    private ConfigProperties() {
+    }
+
     public static String getString(String key) {
         String retString;
         try {
@@ -42,8 +45,5 @@ public final class ConfigProperties {
             retString = '!' + key + '!';
         }
         return retString;
-    }
-
-    private ConfigProperties() {
     }
 }

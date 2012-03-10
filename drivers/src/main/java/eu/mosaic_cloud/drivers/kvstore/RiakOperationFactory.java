@@ -45,6 +45,28 @@ import com.basho.riak.client.bucket.Bucket;
  */
 public final class RiakOperationFactory implements IOperationFactory { // NOPMD
 
+    // by
+    // georgiana
+    // on
+    // 10/12/11
+    // 4:46
+    // PM
+    private final IRiakClient riakcl;
+
+    private final Bucket bucket;
+
+    private RiakOperationFactory(String riakHost, int riakPort, String bucket, boolean restCl)
+            throws RiakException {
+        super();
+        if (restCl == true) {
+            final String address = "http://" + riakHost + ":" + riakPort + "/riak";
+            this.riakcl = RiakFactory.httpClient(address);
+        } else {
+            this.riakcl = RiakFactory.pbcClient(riakHost, riakPort);
+        }
+        this.bucket = this.riakcl.fetchBucket(bucket).execute();
+    }
+
     /**
      * Creates a new factory.
      * 
@@ -60,27 +82,6 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
     public static RiakOperationFactory getFactory(String riakHost, int port, String bucket,
             boolean restCl) throws RiakException {
         return new RiakOperationFactory(riakHost, port, bucket, restCl);
-    }
-
-    // by
-    // georgiana
-    // on
-    // 10/12/11
-    // 4:46
-    // PM
-    private final IRiakClient riakcl;
-    private final Bucket bucket;
-
-    private RiakOperationFactory(String riakHost, int riakPort, String bucket, boolean restCl)
-            throws RiakException {
-        super();
-        if (restCl == true) {
-            final String address = "http://" + riakHost + ":" + riakPort + "/riak";
-            this.riakcl = RiakFactory.httpClient(address);
-        } else {
-            this.riakcl = RiakFactory.pbcClient(riakHost, riakPort);
-        }
-        this.bucket = this.riakcl.fetchBucket(bucket).execute();
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {
