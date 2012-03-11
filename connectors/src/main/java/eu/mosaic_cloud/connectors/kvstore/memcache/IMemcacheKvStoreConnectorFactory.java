@@ -21,12 +21,11 @@
 package eu.mosaic_cloud.connectors.kvstore.memcache;
 
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 public interface IMemcacheKvStoreConnectorFactory extends
         IConnectorFactory<IMemcacheKvStoreConnector<?>> {
 
-    <TValue> IMemcacheKvStoreConnector<TValue> create(IConfiguration configuration,
-            Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
+    <TValue> IMemcacheKvStoreConnector<TValue> create(Class<TValue> valueClass,
+            DataEncoder<TValue> valueEncoder);
 }

@@ -22,26 +22,45 @@ package eu.mosaic_cloud.connectors.tests;
 
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 
-@Ignore
 public class RedisKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
+
+    private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
+    private static final String MOSAIC_REDIS_PORT = "mosaic.tests.resources.redis.port";
 
     private static Scenario scenario_;
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        final Scenario scenario = new Scenario(RedisKvStoreConnectorTest.class,
-                "redis-kv-store-driver-test.properties");
+        final IConfiguration configuration = PropertyTypeConfiguration.create();
+
+        // configuration.addParameter("interop.channel.address", "inproc://");
+        configuration.addParameter("interop.channel.address", "tcp://127.0.0.1:31030");
+        configuration.addParameter("interop.driver.identifier", "driver.redis.1");
+
+        final String host = System.getProperty(RedisKvStoreConnectorTest.MOSAIC_REDIS_HOST,
+                "127.0.0.1");
+        configuration.addParameter("kvstore.host", host);
+        final Integer port = Integer.valueOf(System.getProperty(
+                RedisKvStoreConnectorTest.MOSAIC_REDIS_PORT, "6379"));
+        configuration.addParameter("kvstore.port", port);
+        configuration.addParameter("kvstore.driver_name", "REDIS");
+        configuration.addParameter("kvstore.driver_threads", 1);
+        configuration.addParameter("kvstore.bucket", "12");
+
         BaseConnectorTest.setUpScenario(RedisKvStoreConnectorTest.class);
+        final Scenario scenario = new Scenario(RedisKvStoreConnectorTest.class, configuration);
+
         scenario.registerDriverRole(KeyValueSession.DRIVER);
-        BaseConnectorTest.driverStub = KeyValueStub.createDetached(scenario.getConfiguration(),
+        BaseConnectorTest.driverStub = KeyValueStub.createDetached(configuration,
                 scenario.getThreading(), scenario.getDriverChannel());
         RedisKvStoreConnectorTest.scenario_ = scenario;
     }
@@ -54,7 +73,7 @@ public class RedisKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = RedisKvStoreConnectorTest.scenario_;
-        this.connector = GenericKvStoreConnector.create(this.scenario.getConfiguration(),
-                this.scenario.getEnvironment(), new PojoDataEncoder<String>(String.class));
+        this.connector = GenericKvStoreConnector.create(this.scenario.getEnvironment(),
+                new PojoDataEncoder<String>(String.class));
     }
 }

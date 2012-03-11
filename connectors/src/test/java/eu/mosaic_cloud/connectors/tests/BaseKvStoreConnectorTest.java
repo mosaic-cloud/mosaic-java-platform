@@ -23,6 +23,7 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
         public String keyPrefix = UUID.randomUUID().toString();
 
         public <C extends BaseKvStoreConnector<String, ?>> Scenario(
-                Class<? extends BaseKvStoreConnectorTest<C>> owner, String configuration) {
+                Class<? extends BaseKvStoreConnectorTest<C>> owner, IConfiguration configuration) {
             super(owner, configuration);
         }
     }

@@ -21,10 +21,9 @@
 package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.connectors.queue.IQueueConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 
 public interface IAmqpQueueRawConnectorFactory extends
         IQueueConnectorFactory<IAmqpQueueRawConnector> {
 
-    IAmqpQueueRawConnector create(IConfiguration configuration);
+    IAmqpQueueRawConnector create();
 }

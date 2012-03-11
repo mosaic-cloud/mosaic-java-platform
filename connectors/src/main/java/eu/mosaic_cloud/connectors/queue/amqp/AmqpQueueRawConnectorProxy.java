@@ -26,7 +26,6 @@ import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.core.ResponseHandlerMap;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
@@ -64,9 +63,8 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     private final ResponseHandlerMap consumerMessages;
     private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
 
-    protected AmqpQueueRawConnectorProxy(final IConfiguration config,
-            final ConnectorEnvironment environment) {
-        super(config, environment);
+    protected AmqpQueueRawConnectorProxy(final ConnectorEnvironment environment) {
+        super(environment);
         this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
         this.consumerMessages = new ResponseHandlerMap();
     }
@@ -74,18 +72,12 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     /**
      * Returns a proxy for AMQP queuing systems.
      * 
-     * @param configuration
-     *            the configurations required to initialize the proxy
-     * @param driverIdentity
-     *            the identifier of the driver to which request will be sent
-     * @param channel
-     *            the channel on which to communicate with the driver
+     * @param environment
+     *            the execution environment of a connector
      * @return the proxy
      */
-    public static AmqpQueueRawConnectorProxy create(final IConfiguration configuration,
-            final ConnectorEnvironment environment) {
-        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(configuration,
-                environment);
+    public static AmqpQueueRawConnectorProxy create(final ConnectorEnvironment environment) {
+        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(environment);
         return proxy;
     }
 

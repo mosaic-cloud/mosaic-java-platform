@@ -24,9 +24,6 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
@@ -46,41 +43,37 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
     private final String publishRoutingKey;
 
     private AmqpQueuePublisherConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
-            final IConfiguration configuration, final Class<TMessage> messageClass,
+            final ConnectorEnvironment environment, final Class<TMessage> messageClass,
             final DataEncoder<TMessage> messageEncoder) {
-        super(rawProxy, configuration, messageClass, messageEncoder);
+        super(rawProxy, environment, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
-        this.exchange = ConfigUtils.resolveParameter(configuration,
+        this.exchange = environment.getConfigParameter(
                 ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
-        this.exchangeType = ConfigUtils
-                .resolveParameter(
-                        configuration,
+        this.exchangeType = environment
+                .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
-        this.exchangeDurable = ConfigUtils
-                .resolveParameter(
-                        configuration,
+        this.exchangeDurable = environment
+                .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.exchangeAutoDelete = ConfigUtils
-                .resolveParameter(
-                        configuration,
+        this.exchangeAutoDelete = environment
+                .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
-        this.publishRoutingKey = ConfigUtils.resolveParameter(configuration,
+        this.publishRoutingKey = environment.getConfigParameter(
                 ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
-        this.definePassive = ConfigUtils
-                .resolveParameter(
-                        configuration,
+        this.definePassive = environment
+                .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
     }
 
     public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final Class<Message> messageClass, final DataEncoder<Message> messageEncoder) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(
-                configuration, environment);
-        final IConfiguration subConfiguration = configuration
-                .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+            final ConnectorEnvironment environment, final Class<Message> messageClass,
+            final DataEncoder<Message> messageEncoder) {
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(environment);
+        // FIXME the splice below will be done when creating the environment
+        // final IConfiguration subConfiguration = configuration
+        // .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
         final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
-                rawProxy, subConfiguration, messageClass, messageEncoder);
+                rawProxy, environment, messageClass, messageEncoder);
         return proxy;
     }
 

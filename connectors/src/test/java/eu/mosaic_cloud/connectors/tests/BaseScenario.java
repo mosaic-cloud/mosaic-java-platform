@@ -29,7 +29,6 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
@@ -43,22 +42,24 @@ import org.junit.Assert;
 public class BaseScenario {
 
     private BasicCallbackReactor callbacks;
-    private ChannelFactory channelFactory;
-    private ChannelResolver channelResolver;
+
     private IConfiguration configuration;
+    private ConnectorEnvironment environment;
+
+    private ChannelResolver channelResolver;
     private ZeroMqChannel connectorChannel;
     private ZeroMqChannel driverChannel;
-    private ConnectorEnvironment environment;
+
     private TranscriptExceptionTracer exceptions;
     private QueueingExceptionTracer exceptionsQueue;
-    private final long poolTimeout = 1000;
-    private BasicThreadingContext threading;
     private Transcript transcript;
 
+    private final long poolTimeout = 1000;
+    private BasicThreadingContext threading;
+
     public BaseScenario(final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner,
-            final String configuration) {
-        this.configuration = PropertyTypeConfiguration
-                .create(owner.getClassLoader(), configuration);
+            final IConfiguration configuration) {
+        this.configuration = configuration;
 
         this.transcript = Transcript.create(owner);
         this.exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
@@ -82,8 +83,10 @@ public class BaseScenario {
                 this.threading, this.exceptions);
         this.driverChannel = ZeroMqChannel.create(driverIdentity, this.threading, this.exceptions);
         this.driverChannel.accept(driverEndpoint);
-        this.channelFactory = new ChannelFactory() {
 
+        final ChannelFactory channelFactory = new ChannelFactory() {
+
+            @SuppressWarnings("synthetic-access")
             @Override
             public final Channel create() {
                 return BaseScenario.this.connectorChannel;
@@ -97,8 +100,8 @@ public class BaseScenario {
                 callbacks.resolved(this, target, driverIdentity, driverEndpoint);
             }
         };
-        this.environment = ConnectorEnvironment.create(this.callbacks, this.threading,
-                this.exceptions, this.channelFactory, this.channelResolver);
+        this.environment = ConnectorEnvironment.create(configuration, this.callbacks,
+                this.threading, this.exceptions, channelFactory, this.channelResolver);
 
         this.driverChannel.register(KeyValueSession.DRIVER);
     }
@@ -109,10 +112,6 @@ public class BaseScenario {
         Assert.assertTrue(this.callbacks.destroy(this.poolTimeout));
         Assert.assertTrue(this.threading.destroy(this.poolTimeout));
         Assert.assertNull(this.exceptionsQueue.queue.poll());
-    }
-
-    public ChannelResolver getChannelResolver() {
-        return this.channelResolver;
     }
 
     public IConfiguration getConfiguration() {

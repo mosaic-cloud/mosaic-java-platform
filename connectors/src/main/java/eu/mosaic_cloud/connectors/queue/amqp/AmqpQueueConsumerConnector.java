@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -33,11 +32,11 @@ public class AmqpQueueConsumerConnector<TMessage> extends
         super(proxy);
     }
 
-    public static <M> AmqpQueueConsumerConnector<M> create(final IConfiguration configuration,
-            final ConnectorEnvironment environment, final Class<M> messageClass,
-            final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback) {
+    public static <M> AmqpQueueConsumerConnector<M> create(final ConnectorEnvironment environment,
+            final Class<M> messageClass, final DataEncoder<M> messageEncoder,
+            final IAmqpQueueConsumerCallback<M> callback) {
         final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy.create(
-                configuration, environment, messageClass, messageEncoder, callback);
+                environment, messageClass, messageEncoder, callback);
         return new AmqpQueueConsumerConnector<M>(proxy);
     }
 

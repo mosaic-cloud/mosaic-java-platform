@@ -28,6 +28,8 @@ import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -36,28 +38,44 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * This class represents the execution environment of a connector.
+ * 
+ * @author Ciprian Craciun, Georgiana Macariu
+ * 
+ */
 public final class ConnectorEnvironment {
 
     private final ChannelFactory channelFactory;
     private final ChannelResolver channelResolver;
+
     private final ExceptionTracer exceptions;
-    private final CallbackReactor reactor;
-    private final SupplementaryEnvironment supplementary;
     private final ThreadingContext threading;
 
-    private ConnectorEnvironment(final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
-            final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
+    private final CallbackReactor reactor;
+    private final SupplementaryEnvironment supplementary;
+
+    private final IConfiguration configuration;
+
+    private ConnectorEnvironment(final IConfiguration configuration, final CallbackReactor reactor,
+            final ThreadingContext threading, final ExceptionTracer exceptions,
+            final ChannelFactory channelFactory, final ChannelResolver channelResolver,
+            final Map<String, Object> supplementary) {
         super();
-        Preconditions.checkNotNull(reactor);
+        Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(threading);
         Preconditions.checkNotNull(exceptions);
         Preconditions.checkNotNull(channelFactory);
         Preconditions.checkNotNull(channelResolver);
         Preconditions.checkNotNull(supplementary);
-        this.reactor = reactor;
+
+        this.configuration = configuration;
+
         this.threading = threading;
         this.exceptions = exceptions;
+
+        this.reactor = reactor;
+
         this.channelFactory = channelFactory;
         this.channelResolver = channelResolver;
         this.supplementary = SupplementaryEnvironment.create(supplementary,
@@ -70,23 +88,30 @@ public final class ConnectorEnvironment {
                 });
     }
 
-    public static final ConnectorEnvironment create(final CallbackReactor reactor,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
-        return (new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
-                channelResolver, new HashMap<String, Object>()));
+    public static final ConnectorEnvironment create(final IConfiguration configuration,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
+            final ChannelResolver channelResolver) {
+        return (new ConnectorEnvironment(configuration, reactor, threading, exceptions,
+                channelFactory, channelResolver, new HashMap<String, Object>()));
     }
 
-    public static final ConnectorEnvironment create(final CallbackReactor reactor,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory, final ChannelResolver channelResolver,
-            final Map<String, Object> supplementary) {
-        return (new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
-                channelResolver, supplementary));
+    public static final ConnectorEnvironment create(final IConfiguration configuration,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
+            final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
+        return (new ConnectorEnvironment(configuration, reactor, threading, exceptions,
+                channelFactory, channelResolver, supplementary));
     }
 
     public Channel getCommunicationChannel() {
         return this.channelFactory.create();
+    }
+
+    public <T extends Object> T getConfigParameter(String identifier, Class<T> valueClass,
+            T defaultValue) {
+        return ConfigUtils.resolveParameter(this.configuration, identifier, valueClass,
+                defaultValue);
     }
 
     public void resolveChannel(final String driverTarget, final ResolverCallbacks resolverCallbacks) {

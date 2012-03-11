@@ -22,6 +22,8 @@ package eu.mosaic_cloud.connectors.tests;
 
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
@@ -31,15 +33,33 @@ import org.junit.BeforeClass;
 public class RiakKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<GenericKvStoreConnector<String>> {
 
+    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
+    private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
     private static Scenario scenario_;
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        final Scenario scenario = new Scenario(RiakKvStoreConnectorTest.class,
-                "riak-http-kv-store-driver-test.properties");
+        final IConfiguration configuration = PropertyTypeConfiguration.create();
+
+        // configuration.addParameter("interop.channel.address", "inproc://");
+        configuration.addParameter("interop.channel.address", "tcp://127.0.0.1:31031");
+        configuration.addParameter("interop.driver.identifier", "driver.kv.1");
+
+        final String host = System.getProperty(RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST,
+                "127.0.0.1");
+        configuration.addParameter("kvstore.host", host);
+        final int port = Integer.parseInt(System.getProperty(
+                RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT, "8098"));
+        configuration.addParameter("kvstore.port", port);
+        configuration.addParameter("kvstore.driver_name", "RIAKREST");
+        configuration.addParameter("kvstore.driver_threads", 2);
+        configuration.addParameter("kvstore.bucket", "10");
+
         BaseConnectorTest.setUpScenario(RiakKvStoreConnectorTest.class);
+        final Scenario scenario = new Scenario(RiakKvStoreConnectorTest.class, configuration);
+
         scenario.registerDriverRole(KeyValueSession.DRIVER);
-        BaseConnectorTest.driverStub = KeyValueStub.createDetached(scenario.getConfiguration(),
+        BaseConnectorTest.driverStub = KeyValueStub.createDetached(configuration,
                 scenario.getThreading(), scenario.getDriverChannel());
         RiakKvStoreConnectorTest.scenario_ = scenario;
     }
@@ -52,7 +72,7 @@ public class RiakKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = RiakKvStoreConnectorTest.scenario_;
-        this.connector = GenericKvStoreConnector.create(this.scenario.getConfiguration(),
-                this.scenario.getEnvironment(), new PojoDataEncoder<String>(String.class));
+        this.connector = GenericKvStoreConnector.create(this.scenario.getEnvironment(),
+                new PojoDataEncoder<String>(String.class));
     }
 }

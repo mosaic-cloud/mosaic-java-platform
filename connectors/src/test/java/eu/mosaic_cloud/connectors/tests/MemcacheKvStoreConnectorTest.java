@@ -25,6 +25,8 @@ import java.util.Map;
 
 import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
 import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
+import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
@@ -32,23 +34,41 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class MemcacheKvStoreConnectorTest extends
         BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String>> {
 
+    private static final String MOSAIC_MEMCACHED_PORT = "mosaic.tests.resources.memcached.port";
+    private static final String MOSAIC_MEMCACHED_HOST = "mosaic.tests.resources.memcached.host";
     private static Scenario scenario_;
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        final Scenario scenario = new Scenario(MemcacheKvStoreConnectorTest.class,
-                "memcache-kv-store-driver-test.properties");
+        final IConfiguration configuration = PropertyTypeConfiguration.create();
+
+        // configuration.addParameter("interop.channel.address", "inproc://");
+        configuration.addParameter("interop.channel.address", "tcp://127.0.0.1:31029");
+        configuration.addParameter("interop.driver.identifier", "driver.memcached.1");
+
+        final String host = System.getProperty(MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_HOST,
+                "127.0.0.1");
+        configuration.addParameter("memcached.host_1", host);
+        final int port = Integer.parseInt(System.getProperty(
+                MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_PORT, "8091"));
+        configuration.addParameter("memcached.port_1", port);
+        configuration.addParameter("kvstore.driver_name", "MEMCACHED");
+        configuration.addParameter("kvstore.driver_threads", 2);
+        configuration.addParameter("kvstore.bucket", "test");
+        configuration.addParameter("kvstore.user", "test");
+        configuration.addParameter("kvstore.passwd", "test");
+
         BaseConnectorTest.setUpScenario(MemcacheKvStoreConnectorTest.class);
+        final Scenario scenario = new Scenario(MemcacheKvStoreConnectorTest.class, configuration);
+
         scenario.registerDriverRole(KeyValueSession.DRIVER);
         scenario.registerDriverRole(MemcachedSession.DRIVER);
-        BaseConnectorTest.driverStub = MemcachedStub.createDetached(scenario.getConfiguration(),
+        BaseConnectorTest.driverStub = MemcachedStub.createDetached(configuration,
                 scenario.getDriverChannel(), scenario.getThreading());
         MemcacheKvStoreConnectorTest.scenario_ = scenario;
     }
@@ -61,8 +81,8 @@ public class MemcacheKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = MemcacheKvStoreConnectorTest.scenario_;
-        this.connector = MemcacheKvStoreConnector.create(this.scenario.getConfiguration(),
-                this.scenario.getEnvironment(), new PojoDataEncoder<String>(String.class));
+        this.connector = MemcacheKvStoreConnector.create(this.scenario.getEnvironment(),
+                new PojoDataEncoder<String>(String.class));
     }
 
     @Override

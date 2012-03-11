@@ -26,7 +26,6 @@ import java.util.List;
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
@@ -63,9 +62,9 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends B
 
     protected DataEncoder<TValue> encoder;
 
-    protected BaseKvStoreConnectorProxy(final IConfiguration configuration,
-            final ConnectorEnvironment environment, final DataEncoder<TValue> encoder) {
-        super(configuration, environment);
+    protected BaseKvStoreConnectorProxy(final ConnectorEnvironment environment,
+            final DataEncoder<TValue> encoder) {
+        super(environment);
         this.encoder = encoder;
     }
 

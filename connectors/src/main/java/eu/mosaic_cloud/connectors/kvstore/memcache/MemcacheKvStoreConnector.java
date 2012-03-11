@@ -25,7 +25,6 @@ import java.util.Map;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -48,10 +47,8 @@ public class MemcacheKvStoreConnector<TValue extends Object> extends
     /**
      * Creates the connector.
      * 
-     * @param config
-     *            the configuration parameters required by the connector. This
-     *            should also include configuration settings for the
-     *            corresponding driver.
+     * @param environment
+     *            the execution environment of a connector
      * @param encoder
      *            encoder used for serializing and deserializing data stored in
      *            the key-value store
@@ -59,9 +56,8 @@ public class MemcacheKvStoreConnector<TValue extends Object> extends
      * @throws Throwable
      */
     public static <T extends Object> MemcacheKvStoreConnector<T> create(
-            final IConfiguration config, final ConnectorEnvironment environment,
-            final DataEncoder<T> encoder) {
-        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(config,
+            final ConnectorEnvironment environment, final DataEncoder<T> encoder) {
+        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(
                 environment, encoder);
         return new MemcacheKvStoreConnector<T>(proxy);
     }

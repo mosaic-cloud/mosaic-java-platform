@@ -59,8 +59,10 @@ public class AmqpDriverTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         AmqpDriverTest.configuration = PropertyTypeConfiguration.create();
+
         AmqpDriverTest.configuration.addParameter("interop.channel.address", "inproc://");
         AmqpDriverTest.configuration.addParameter("interop.driver.identifier", "driver.amqp.1");
+
         final String host = System.getProperty(AmqpDriverTest.MOSAIC_AMQP_HOST, "127.0.0.1");
         AmqpDriverTest.configuration.addParameter("amqp.host", host);
         final int port = Integer.parseInt(System.getProperty(AmqpDriverTest.MOSAIC_AMQP_PORT,

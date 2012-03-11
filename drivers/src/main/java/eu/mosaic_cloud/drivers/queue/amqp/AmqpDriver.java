@@ -23,7 +23,6 @@ package eu.mosaic_cloud.drivers.queue.amqp;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 
 import eu.mosaic_cloud.drivers.AbstractResourceDriver;
 import eu.mosaic_cloud.drivers.ConfigProperties;
@@ -37,7 +36,6 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
-import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.rabbitmq.client.AMQP;
@@ -270,7 +268,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
     private final ReturnCallback returnCallback;
     private final ShutdownListener shutdownListener;
     protected final ConcurrentHashMap<String, IAmqpConsumer> consumers;
-    private final ExecutorService executor;
 
     /**
      * Creates a new driver.
@@ -288,8 +285,6 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
         this.returnCallback = new ReturnCallback();
         this.shutdownListener = new ConnectionShutdownListener();
         this.consumers = new ConcurrentHashMap<String, IAmqpConsumer>();
-        this.executor = threading.createFixedThreadPool(
-                ThreadConfiguration.create(this, "operations", true), 1);
     }
 
     /**

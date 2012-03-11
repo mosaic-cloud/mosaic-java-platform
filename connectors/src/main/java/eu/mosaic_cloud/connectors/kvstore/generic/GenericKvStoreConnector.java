@@ -22,7 +22,6 @@ package eu.mosaic_cloud.connectors.kvstore.generic;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 /**
@@ -42,20 +41,18 @@ public class GenericKvStoreConnector<TValue extends Object> extends
     /**
      * Creates the connector.
      * 
-     * @param configuration
-     *            the configuration parameters required by the connector. This
-     *            should also include configuration settings for the
-     *            corresponding driver.
+     * @param environment
+     *            the execution environment of a connector
      * @param encoder
      *            encoder used for serializing and deserializing data stored in
      *            the key-value store
      * @param threading
      * @return the connector
      */
-    public static <T> GenericKvStoreConnector<T> create(final IConfiguration configuration,
-            final ConnectorEnvironment environment, final DataEncoder<T> encoder) {
+    public static <T> GenericKvStoreConnector<T> create(final ConnectorEnvironment environment,
+            final DataEncoder<T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create(
-                configuration, environment, encoder);
+                environment, encoder);
         return new GenericKvStoreConnector<T>(proxy);
     }
 }

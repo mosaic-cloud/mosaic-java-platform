@@ -22,7 +22,6 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -44,17 +43,13 @@ public class AmqpQueueRawConnector extends BaseConnector<AmqpQueueRawConnectorPr
      * Returns an AMQP connector. For AMQP it should always return a new
      * connector.
      * 
-     * @param configuration
-     *            the configuration parameters required by the connector. This
-     *            should also include configuration settings for the
-     *            corresponding driver.
+     * @param environment
+     *            the execution environment of a connector
      * @return the connector
      * @throws Throwable
      */
-    public static AmqpQueueRawConnector create(final IConfiguration configuration,
-            final ConnectorEnvironment environment) {
-        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(configuration,
-                environment);
+    public static AmqpQueueRawConnector create(final ConnectorEnvironment environment) {
+        final AmqpQueueRawConnectorProxy proxy = AmqpQueueRawConnectorProxy.create(environment);
         return new AmqpQueueRawConnector(proxy);
     }
 

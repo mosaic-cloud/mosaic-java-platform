@@ -29,8 +29,6 @@ import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -59,32 +57,25 @@ import com.google.protobuf.ByteString;
 public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
         BaseKvStoreConnectorProxy<TValue> implements IMemcacheKvStoreConnector<TValue> {
 
-    protected MemcacheKvStoreConnectorProxy(final IConfiguration configuration,
-            final ConnectorEnvironment environment, final DataEncoder<TValue> encoder) {
-        super(configuration, environment, encoder);
+    protected MemcacheKvStoreConnectorProxy(final ConnectorEnvironment environment,
+            final DataEncoder<TValue> encoder) {
+        super(environment, encoder);
     }
 
     /**
      * Returns a proxy for key-value distributed storage systems.
      * 
-     * @param bucket
-     *            the name of the bucket where the connector will operate
-     * @param configuration
-     *            the configurations required to initialize the proxy
-     * @param driverIdentity
-     *            the identifier of the driver to which request will be sent
-     * @param channel
-     *            the channel on which to communicate with the driver
+     * @param environment
+     *            the execution environment of a connector
      * @param encoder
      *            encoder used for serializing and deserializing data stored in
      *            the key-value store
      * @return the proxy
      */
     public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(
-            final IConfiguration configuration, final ConnectorEnvironment environment,
-            final DataEncoder<T> encoder) {
+            final ConnectorEnvironment environment, final DataEncoder<T> encoder) {
         final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T>(
-                configuration, environment, encoder);
+                environment, encoder);
         return proxy;
     }
 
@@ -157,7 +148,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        final String bucket = ConfigUtils.resolveParameter(this.getConfiguration(),
+        final String bucket = super.environment.getConfigParameter(
                 ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());
