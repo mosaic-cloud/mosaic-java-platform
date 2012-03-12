@@ -74,16 +74,17 @@ public final class SupplementaryEnvironment
 	{
 		final Object cached = this.cache.get (key);
 		if (cached != null)
-			return (cached);
+			return ((cached != SupplementaryEnvironment.cacheNullValue) ? cached : null);
 		final Object value;
 		try {
 			value = this.delegate.get (key);
 		} catch (final Throwable exception) {
 			this.handleException (exception);
+			this.cache.putIfAbsent ((String) key, SupplementaryEnvironment.cacheNullValue);
 			return (null);
 		}
-		this.cache.putIfAbsent ((String) key, value);
-		return (this.cache.get (key));
+		this.cache.putIfAbsent ((String) key, (value != null) ? value : SupplementaryEnvironment.cacheNullValue);
+		return (this.get (key));
 	}
 	
 	public final <Value> Value get (final String key, final Class<Value> valueClass, final Value valueDefault)
@@ -158,4 +159,5 @@ public final class SupplementaryEnvironment
 	private final ConcurrentHashMap<String, Object> cache;
 	private final UncaughtExceptionHandler catcher;
 	private final Map<String, Object> delegate;
+	private static final Object cacheNullValue = new Object ();
 }
