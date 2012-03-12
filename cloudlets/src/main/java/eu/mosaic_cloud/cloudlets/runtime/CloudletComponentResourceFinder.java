@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
+
 import eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks.ResourceType;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
@@ -27,58 +28,57 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.tools.ChannelData;
 
+
 /**
  * Finder for resource drivers.
  * 
  * @author Georgiana Macariu
  * 
  */
-public class CloudletComponentResourceFinder {
-
-    private static CloudletComponentResourceFinder finder;
-    private static MosaicLogger logger = MosaicLogger
-            .createLogger(CloudletComponentResourceFinder.class);
-
-    private CloudletComponentResourceFinder() {
-    }
-
-    /**
-     * Returns a finder object.
-     * 
-     * @return the finder object
-     */
-    public static CloudletComponentResourceFinder getResourceFinder() {
-        if (CloudletComponentResourceFinder.finder == null) {
-            CloudletComponentResourceFinder.finder = new CloudletComponentResourceFinder();
-        }
-        return CloudletComponentResourceFinder.finder;
-    }
-
-    /**
-     * Starts an asynchronous driver lookup. When the result from the mOSAIC
-     * platform arrives the provided callback will be invoked.
-     * 
-     * @param type
-     *            the type of resource to find
-     * @param callback
-     *            the callback to be called when the resource is found
-     */
-    public boolean findResource(ResourceType type, IConfiguration configuration) {
-        ChannelData channel = null;
-        boolean found = false;
-        channel = CloudletComponentCallbacks.callbacks.findDriver(type);
-        CloudletComponentResourceFinder.logger.trace("ResourceFinder - found resource " + channel);
-        if (channel != null) {
-            final String prefix = (configuration.getRootIdentifier().getIdentifier() + ".")
-                    .substring(1).replace('/', '.');
-            final ConfigurationIdentifier id1 = ConfigurationIdentifier.resolveRelative(prefix
-                    + ConfigProperties.getString("ContainerComponentCallbacks.6"));
-            final ConfigurationIdentifier id2 = ConfigurationIdentifier.resolveRelative(prefix
-                    + ConfigProperties.getString("ContainerComponentCallbacks.5"));
-            configuration.addParameter(id1, channel.getChannelIdentifier());
-            configuration.addParameter(id2, channel.getChannelEndpoint());
-            found = true;
-        }
-        return found;
-    }
+public class CloudletComponentResourceFinder
+{
+	private CloudletComponentResourceFinder ()
+	{}
+	
+	/**
+	 * Starts an asynchronous driver lookup. When the result from the mOSAIC
+	 * platform arrives the provided callback will be invoked.
+	 * 
+	 * @param type
+	 *            the type of resource to find
+	 * @param callback
+	 *            the callback to be called when the resource is found
+	 */
+	public boolean findResource (final ResourceType type, final IConfiguration configuration)
+	{
+		ChannelData channel = null;
+		boolean found = false;
+		channel = CloudletComponentCallbacks.callbacks.findDriver (type);
+		CloudletComponentResourceFinder.logger.trace ("ResourceFinder - found resource " + channel);
+		if (channel != null) {
+			final String prefix = (configuration.getRootIdentifier ().getIdentifier () + ".").substring (1).replace ('/', '.');
+			final ConfigurationIdentifier id1 = ConfigurationIdentifier.resolveRelative (prefix + ConfigProperties.getString ("ContainerComponentCallbacks.6"));
+			final ConfigurationIdentifier id2 = ConfigurationIdentifier.resolveRelative (prefix + ConfigProperties.getString ("ContainerComponentCallbacks.5"));
+			configuration.addParameter (id1, channel.getChannelIdentifier ());
+			configuration.addParameter (id2, channel.getChannelEndpoint ());
+			found = true;
+		}
+		return found;
+	}
+	
+	/**
+	 * Returns a finder object.
+	 * 
+	 * @return the finder object
+	 */
+	public static CloudletComponentResourceFinder getResourceFinder ()
+	{
+		if (CloudletComponentResourceFinder.finder == null) {
+			CloudletComponentResourceFinder.finder = new CloudletComponentResourceFinder ();
+		}
+		return CloudletComponentResourceFinder.finder;
+	}
+	
+	private static CloudletComponentResourceFinder finder;
+	private static MosaicLogger logger = MosaicLogger.createLogger (CloudletComponentResourceFinder.class);
 }
