@@ -20,6 +20,8 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
+import java.util.UUID;
+
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
@@ -79,7 +81,8 @@ public class BaseScenario {
                 "interop.driver.identifier", String.class, "");
         final String driverEndpoint = ConfigUtils.resolveParameter(this.configuration,
                 "interop.channel.address", String.class, "");
-        this.connectorChannel = ZeroMqChannel.create(BaseConnectorTest.connectorIdentity,
+        this.connectorChannel = ZeroMqChannel.create(
+                UUID.randomUUID().toString(),
                 this.threading, this.exceptions);
         this.driverChannel = ZeroMqChannel.create(driverIdentity, this.threading, this.exceptions);
         this.driverChannel.accept(driverEndpoint);

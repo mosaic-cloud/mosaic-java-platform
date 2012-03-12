@@ -20,8 +20,6 @@
 
 package eu.mosaic_cloud.connectors.tests;
 
-import java.util.UUID;
-
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
@@ -37,18 +35,14 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
 
     protected static MosaicLogger logger;
     protected static AbstractDriverStub driverStub;
-    protected static String connectorIdentity;
     protected TScenario scenario;
     protected TConnector connector;
 
-    protected static <TScenario extends BaseScenario> void setUpScenario(
-            final Class<? extends BaseConnectorTest<?, TScenario>> owner) {
+    static {
         // create configuration
         BasicThreadingSecurityManager.initialize();
-        BaseConnectorTest.connectorIdentity = UUID.randomUUID().toString();
-
         // initialize logging system
-        BaseConnectorTest.logger = MosaicLogger.createLogger(owner);
+        BaseConnectorTest.logger = MosaicLogger.createLogger(BaseConnectorTest.class);
     }
 
     protected static void tearDownScenario(final BaseScenario scenario) {

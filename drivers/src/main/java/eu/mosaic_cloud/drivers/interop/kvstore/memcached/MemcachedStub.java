@@ -118,7 +118,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
                     sLogger.trace("MemcachedStub: use existing stub.");
                     incDriverReference(stub);
                 }
-            } catch (final IOException e) {
+            } catch (final Exception e) {
                 ExceptionTracer.traceDeferred(e);
                 final ConnectionException e1 = new ConnectionException(
                         "The Memcached proxy cannot connect to the driver: " + e.getMessage(), e);
@@ -139,7 +139,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
             stub = new MemcachedStub(config, transmitter, driver, channel);
             channel.accept(KeyValueSession.DRIVER, stub);
             channel.accept(MemcachedSession.DRIVER, stub);
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             ExceptionTracer.traceDeferred(e);
             final ConnectionException e1 = new ConnectionException(
                     "The Memcached proxy cannot connect to the driver: " + e.getMessage(), e);

@@ -53,15 +53,15 @@ import org.junit.Test;
 public class RedisDriverTest {
 
     private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
+    private static final String MOSAIC_REDIS_HOST_DEFAULT = "127.0.0.1";
     private static final String MOSAIC_REDIS_PORT = "mosaic.tests.resources.redis.port";
-
+    private static final String MOSAIC_REDIS_PORT_DEFAULT = "6379";
     private AbstractKeyValueDriver wrapper;
-
     private static String keyPrefix;
     private BasicThreadingContext threadingContext;
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
         RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
     }
 
@@ -75,15 +75,19 @@ public class RedisDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
-        final IConfiguration configuration = PropertyTypeConfiguration.create();
-        final String host = System.getProperty(RedisDriverTest.MOSAIC_REDIS_HOST, "127.0.0.1");
-        configuration.addParameter("kvstore.host", host);
+
+        final String host = System.getProperty(RedisDriverTest.MOSAIC_REDIS_HOST,
+                RedisDriverTest.MOSAIC_REDIS_HOST_DEFAULT);
         final Integer port = Integer.valueOf(System.getProperty(RedisDriverTest.MOSAIC_REDIS_PORT,
-                "6379"));
+                RedisDriverTest.MOSAIC_REDIS_PORT_DEFAULT));
+
+        final IConfiguration configuration = PropertyTypeConfiguration.create();
+        configuration.addParameter("kvstore.host", host);
         configuration.addParameter("kvstore.port", port);
         configuration.addParameter("kvstore.driver_name", "REDIS");
         configuration.addParameter("kvstore.driver_threads", 1);
-        configuration.addParameter("kvstore.bucket", "12");
+        configuration.addParameter("kvstore.bucket", "999");
+
         this.wrapper = RedisDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
     }

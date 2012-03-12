@@ -49,19 +49,21 @@ import org.junit.Test;
 
 public class RiakRestDriverTest {
 
-    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
     private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
+    private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
+    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
+    private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
     private AbstractKeyValueDriver wrapper;
     private BasicThreadingContext threadingContext;
     private static String keyPrefix;
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
         RiakRestDriverTest.keyPrefix = UUID.randomUUID().toString();
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         final Transcript transcript = Transcript.create(this);
         final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer
                 .create(NullExceptionTracer.defaultInstance);
@@ -70,21 +72,25 @@ public class RiakRestDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
+
+        final String host = System.getProperty(RiakRestDriverTest.MOSAIC_RIAK_HOST,
+                RiakRestDriverTest.MOSAIC_RIAK_HOST_DEFAULT);
+        final Integer port = Integer.valueOf(System.getProperty(RiakRestDriverTest.MOSAIC_RIAK_PORT,
+                RiakRestDriverTest.MOSAIC_RIAK_PORT_DEFAULT));
+
         final IConfiguration configuration = PropertyTypeConfiguration.create();
-        final String host = System.getProperty(RiakRestDriverTest.MOSAIC_RIAK_HOST, "127.0.0.1");
         configuration.addParameter("kvstore.host", host);
-        final int port = Integer.parseInt(System.getProperty(RiakRestDriverTest.MOSAIC_RIAK_PORT,
-                "8098"));
         configuration.addParameter("kvstore.port", port);
         configuration.addParameter("kvstore.driver_name", "RIAKREST");
-        configuration.addParameter("kvstore.driver_threads", 2);
-        configuration.addParameter("kvstore.bucket", "10");
+        configuration.addParameter("kvstore.driver_threads", 1);
+        configuration.addParameter("kvstore.bucket", "tests");
+
         this.wrapper = RiakRestDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(RiakRestDriverTest.keyPrefix, "test");
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         this.wrapper.unregisterClient(RiakRestDriverTest.keyPrefix);
         this.wrapper.destroy();
         this.threadingContext.destroy();

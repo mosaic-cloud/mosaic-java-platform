@@ -107,15 +107,42 @@ public abstract class BaseCloudletTest extends
             scenario.driversChannel.accept(scenario.driversEndpoint);
         }
         {
-            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create(
-                    this.getClass().getClassLoader(), "amqp-queue-driver-test.properties");
+            final String host = System.getProperty(BaseCloudletTest.MOSAIC_AMQP_HOST,
+                    BaseCloudletTest.MOSAIC_AMQP_HOST_DEFAULT);
+            final Integer port = Integer.valueOf(System.getProperty(BaseCloudletTest.MOSAIC_AMQP_PORT,
+                    BaseCloudletTest.MOSAIC_AMQP_PORT_DEFAULT));
+            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create();
+            driverConfiguration.addParameter("interop.channel.address", scenario.driversEndpoint);
+            driverConfiguration.addParameter("interop.driver.identifier", scenario.driversIdentity);
+            driverConfiguration.addParameter("amqp.host", host);
+            driverConfiguration.addParameter("amqp.port", port);
+            driverConfiguration.addParameter("amqp.driver_threads", Integer.valueOf(1));
+            driverConfiguration.addParameter("consumer.amqp.queue", "tests.queue");
+            driverConfiguration.addParameter("consumer.amqp.consumer_id", "tests.consumer");
+            driverConfiguration.addParameter("consumer.amqp.auto_ack", Boolean.FALSE);
+            driverConfiguration.addParameter("consumer.amqp.exclusive", Boolean.FALSE);
+            driverConfiguration.addParameter("publisher.amqp.exchange", "tests.exchange");
+            driverConfiguration.addParameter("publisher.amqp.routing_key", "tests.routing-key");
+            driverConfiguration.addParameter("publisher.amqp.manadatory", Boolean.TRUE);
+            driverConfiguration.addParameter("publisher.amqp.immediate", Boolean.FALSE);
+            driverConfiguration.addParameter("publisher.amqp.durable", Boolean.FALSE);
             scenario.driversChannel.register(AmqpSession.DRIVER);
             scenario.amqpDriverStub = AmqpStub.createDetached(driverConfiguration,
                     scenario.driversChannel, scenario.threading);
         }
         {
-            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create(
-                    this.getClass().getClassLoader(), "riak-http-kv-store-driver-test.properties");
+            final String host = System.getProperty(BaseCloudletTest.MOSAIC_RIAK_HOST,
+                    BaseCloudletTest.MOSAIC_RIAK_HOST_DEFAULT);
+            final Integer port = Integer.valueOf(System.getProperty(BaseCloudletTest.MOSAIC_RIAK_PORT,
+                    BaseCloudletTest.MOSAIC_RIAK_PORT_DEFAULT));
+            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create();
+            driverConfiguration.addParameter("interop.channel.address", scenario.driversEndpoint);
+            driverConfiguration.addParameter("interop.driver.identifier", scenario.driversIdentity);
+            driverConfiguration.addParameter("kvstore.host", host);
+            driverConfiguration.addParameter("kvstore.port", port);
+            driverConfiguration.addParameter("kvstore.driver_name", "RIAKREST");
+            driverConfiguration.addParameter("kvstore.driver_threads", Integer.valueOf(1));
+            driverConfiguration.addParameter("kvstore.bucket", "tests");
             scenario.driversChannel.register(KeyValueSession.DRIVER);
             scenario.kvDriverStub = KeyValueStub.createDetached(driverConfiguration,
                     scenario.threading, scenario.driversChannel);
@@ -153,4 +180,13 @@ public abstract class BaseCloudletTest extends
         Assert.assertTrue(this.cloudlet.await(this.scenario.poolTimeout));
         this.cloudlet = null;
     }
+
+    private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
+    private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
+    private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
+    private static final String MOSAIC_AMQP_PORT_DEFAULT = "21688";
+    private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
+    private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
+    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
+    private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
 }

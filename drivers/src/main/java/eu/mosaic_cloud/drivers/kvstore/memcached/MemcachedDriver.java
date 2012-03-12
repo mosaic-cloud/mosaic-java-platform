@@ -98,8 +98,7 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
      * @return the driver
      * @throws IOException
      */
-    public static MemcachedDriver create(IConfiguration config, ThreadingContext threading)
-            throws IOException {
+    public static MemcachedDriver create(IConfiguration config, ThreadingContext threading) {
         final List<URI> nodesURI = new ArrayList<URI>(10); // NOPMD by georgiana
                                                            // on
                                                            // 10/12/11 12:51 PM

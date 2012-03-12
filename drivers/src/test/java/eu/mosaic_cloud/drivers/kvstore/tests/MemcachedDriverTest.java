@@ -46,23 +46,27 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class MemcachedDriverTest {
 
-    private static final String MOSAIC_MEMCACHED_PORT = "mosaic.tests.resources.memcached.port";
     private static final String MOSAIC_MEMCACHED_HOST = "mosaic.tests.resources.memcached.host";
+    private static final String MOSAIC_MEMCACHED_HOST_DEFAULT = "127.0.0.1";
+    private static final String MOSAIC_MEMCACHED_PORT = "mosaic.tests.resources.memcached.port";
+    private static final String MOSAIC_MEMCACHED_PORT_DEFAULT = "8091";
     private BasicThreadingContext threadingContext;
     private MemcachedDriver wrapper;
     private static String keyPrefix;
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
         MemcachedDriverTest.keyPrefix = UUID.randomUUID().toString();
     }
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         final Transcript transcript = Transcript.create(this);
         final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer
                 .create(NullExceptionTracer.defaultInstance);
@@ -71,24 +75,27 @@ public class MemcachedDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
-        final IConfiguration configuration = PropertyTypeConfiguration.create();
+
         final String host = System.getProperty(MemcachedDriverTest.MOSAIC_MEMCACHED_HOST,
-                "127.0.0.1");
+                MemcachedDriverTest.MOSAIC_MEMCACHED_HOST_DEFAULT);
+        final Integer port = Integer.valueOf(System.getProperty(MemcachedDriverTest.MOSAIC_MEMCACHED_PORT,
+                MemcachedDriverTest.MOSAIC_MEMCACHED_PORT_DEFAULT));
+
+        final IConfiguration configuration = PropertyTypeConfiguration.create();
         configuration.addParameter("memcached.host_1", host);
-        final int port = Integer.parseInt(System.getProperty(
-                MemcachedDriverTest.MOSAIC_MEMCACHED_PORT, "8091"));
         configuration.addParameter("memcached.port_1", port);
         configuration.addParameter("kvstore.driver_name", "MEMCACHED");
-        configuration.addParameter("kvstore.driver_threads", 2);
+        configuration.addParameter("kvstore.driver_threads", 1);
         configuration.addParameter("kvstore.bucket", "test");
         configuration.addParameter("kvstore.user", "test");
         configuration.addParameter("kvstore.passwd", "test");
+
         this.wrapper = MemcachedDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(MemcachedDriverTest.keyPrefix, "test");
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         this.wrapper.unregisterClient(MemcachedDriverTest.keyPrefix);
         this.wrapper.destroy();
         this.threadingContext.destroy();

@@ -76,8 +76,7 @@ public final class RiakRestDriver extends AbstractKeyValueDriver {
      * @return the driver
      * @throws IOException
      */
-    public static RiakRestDriver create(IConfiguration config, ThreadingContext threading)
-            throws IOException {
+    public static RiakRestDriver create(IConfiguration config, ThreadingContext threading) {
         int port, noThreads;
         final String host = ConfigUtils.resolveParameter(config,
                 ConfigProperties.getString("KVStoreDriver.0"), //$NON-NLS-1$

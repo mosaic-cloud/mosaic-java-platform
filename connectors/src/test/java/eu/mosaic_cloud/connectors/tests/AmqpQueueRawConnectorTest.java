@@ -37,41 +37,45 @@ import org.junit.BeforeClass;
 public class AmqpQueueRawConnectorTest extends
         BaseConnectorTest<AmqpQueueRawConnector, BaseScenario> {
 
-    private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
     private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
+    private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
+    private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
+    private static final String MOSAIC_AMQP_PORT_DEFAULT = "21688";
     private static BaseScenario scenario_;
 
     @BeforeClass
     public static void setUpBeforeClass() {
+
+        final String host = System.getProperty(
+                AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST,
+                AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST_DEFAULT);
+        final Integer port = Integer.valueOf(System.getProperty(
+                AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT,
+                AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT_DEFAULT));
+
         final IConfiguration configuration = PropertyTypeConfiguration.create();
-
-        // configuration.addParameter("interop.channel.address", "inproc://");
-        configuration.addParameter("interop.channel.address", "tcp://127.0.0.1:31028");
-        configuration.addParameter("interop.driver.identifier", "driver.amqp.1");
-
-        final String host = System.getProperty(AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST,
-                "127.0.0.1");
+        configuration.addParameter("interop.channel.address", "inproc://f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
+        configuration.addParameter("interop.driver.identifier", "f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
         configuration.addParameter("amqp.host", host);
-        final int port = Integer.parseInt(System.getProperty(
-                AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT, "5672"));
         configuration.addParameter("amqp.port", port);
-        configuration.addParameter("amqp.driver_threads", 10);
-        configuration.addParameter("consumer.amqp.queue", "queue-x");
-        configuration.addParameter("consumer.amqp.consumer_id", "consumer-x");
+        configuration.addParameter("amqp.driver_threads", 1);
+        configuration.addParameter("consumer.amqp.queue", "tests.queue");
+        configuration.addParameter("consumer.amqp.consumer_id", "tests.consumer");
         configuration.addParameter("consumer.amqp.auto_ack", true);
-        configuration.addParameter("consumer.amqp.exclusive", false);
-        configuration.addParameter("publisher.amqp.exchange", "exchange-x");
-        configuration.addParameter("publisher.amqp.routing_key", "rk-x");
+        configuration.addParameter("consumer.amqp.exclusive", true);
+        configuration.addParameter("publisher.amqp.exchange", "tests.exchange");
+        configuration.addParameter("publisher.amqp.routing_key", "tests.routing-key");
+        configuration.addParameter("publisher.amqp.manadatory", true);
         configuration.addParameter("publisher.amqp.immediate", true);
         configuration.addParameter("publisher.amqp.durable", false);
 
-        BaseConnectorTest.setUpScenario(AmqpQueueRawConnectorTest.class);
         final BaseScenario scenario = new BaseScenario(AmqpQueueRawConnectorTest.class,
                 configuration);
 
         scenario.registerDriverRole(AmqpSession.DRIVER);
         BaseConnectorTest.driverStub = AmqpStub.createDetached(configuration,
                 scenario.getDriverChannel(), scenario.getThreading());
+
         AmqpQueueRawConnectorTest.scenario_ = scenario;
     }
 

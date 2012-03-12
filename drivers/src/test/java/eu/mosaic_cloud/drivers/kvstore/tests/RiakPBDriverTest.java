@@ -49,14 +49,16 @@ import org.junit.Test;
 
 public class RiakPBDriverTest {
 
-    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakpb.port";
     private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
+    private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
+    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakpb.port";
+    private static final String MOSAIC_RIAK_PORT_DEFAULT = "22652";
     private RiakPBDriver wrapper;
     private BasicThreadingContext threadingContext;
     private static String keyPrefix;
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
         RiakPBDriverTest.keyPrefix = UUID.randomUUID().toString();
     }
 
@@ -70,21 +72,25 @@ public class RiakPBDriverTest {
         BasicThreadingSecurityManager.initialize();
         this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
         this.threadingContext.initialize();
+
+        final String host = System.getProperty(RiakPBDriverTest.MOSAIC_RIAK_HOST,
+                RiakPBDriverTest.MOSAIC_RIAK_HOST_DEFAULT);
+        final Integer port = Integer.valueOf(System.getProperty(RiakPBDriverTest.MOSAIC_RIAK_PORT,
+                RiakPBDriverTest.MOSAIC_RIAK_PORT_DEFAULT));
+
         final IConfiguration configuration = PropertyTypeConfiguration.create();
-        final String host = System.getProperty(RiakPBDriverTest.MOSAIC_RIAK_HOST, "127.0.0.1");
         configuration.addParameter("kvstore.host", host);
-        final int port = Integer.parseInt(System.getProperty(RiakPBDriverTest.MOSAIC_RIAK_PORT,
-                "8087"));
         configuration.addParameter("kvstore.port", port);
         configuration.addParameter("kvstore.driver_name", "RIAKPB");
-        configuration.addParameter("kvstore.driver_threads", 2);
-        configuration.addParameter("kvstore.bucket", "10");
+        configuration.addParameter("kvstore.driver_threads", 1);
+        configuration.addParameter("kvstore.bucket", "tests");
+
         this.wrapper = RiakPBDriver.create(configuration, this.threadingContext);
         this.wrapper.registerClient(RiakPBDriverTest.keyPrefix, "test");
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         this.wrapper.unregisterClient(RiakPBDriverTest.keyPrefix);
         this.wrapper.destroy();
         this.threadingContext.destroy();
