@@ -22,7 +22,7 @@ package eu.mosaic_cloud.connectors.kvstore.generic;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
@@ -43,15 +43,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public final class GenericKvStoreConnectorProxy<TValue extends Object> extends
         BaseKvStoreConnectorProxy<TValue> {
 
-    protected GenericKvStoreConnectorProxy(final ConnectorEnvironment environment,
+    protected GenericKvStoreConnectorProxy(final ConnectorConfiguration configuration,
             final DataEncoder<TValue> encoder) {
-        super(environment, encoder);
+        super(configuration, encoder);
     }
 
     /**
      * Returns a proxy for key-value distributed storage systems.
      * 
-     * @param environment
+     * @param configuration
      *            the execution environment of a connector
      * @param encoder
      *            encoder used for serializing and deserializing data stored in
@@ -59,15 +59,15 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object> extends
      * @return the proxy
      */
     public static <T extends Object> GenericKvStoreConnectorProxy<T> create(
-            final ConnectorEnvironment environment, final DataEncoder<T> encoder) {
+            final ConnectorConfiguration configuration, final DataEncoder<T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T>(
-                environment, encoder);
+                configuration, encoder);
         return proxy;
     }
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        final String bucket = super.environment.getConfigParameter(
+        final String bucket = super.configuration.getConfigParameter(
                 ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());

@@ -27,7 +27,7 @@ import java.util.Map;
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
@@ -57,15 +57,15 @@ import com.google.protobuf.ByteString;
 public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
         BaseKvStoreConnectorProxy<TValue> implements IMemcacheKvStoreConnector<TValue> {
 
-    protected MemcacheKvStoreConnectorProxy(final ConnectorEnvironment environment,
+    protected MemcacheKvStoreConnectorProxy(final ConnectorConfiguration configuration,
             final DataEncoder<TValue> encoder) {
-        super(environment, encoder);
+        super(configuration, encoder);
     }
 
     /**
      * Returns a proxy for key-value distributed storage systems.
      * 
-     * @param environment
+     * @param configuration
      *            the execution environment of a connector
      * @param encoder
      *            encoder used for serializing and deserializing data stored in
@@ -73,9 +73,9 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
      * @return the proxy
      */
     public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(
-            final ConnectorEnvironment environment, final DataEncoder<T> encoder) {
+            final ConnectorConfiguration configuration, final DataEncoder<T> encoder) {
         final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T>(
-                environment, encoder);
+                configuration, encoder);
         return proxy;
     }
 
@@ -148,7 +148,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
 
     @Override
     public CallbackCompletion<Void> initialize() {
-        final String bucket = super.environment.getConfigParameter(
+        final String bucket = super.configuration.getConfigParameter(
                 ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());

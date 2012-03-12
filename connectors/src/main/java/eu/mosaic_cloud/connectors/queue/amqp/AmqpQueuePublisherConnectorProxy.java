@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
@@ -43,37 +43,37 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
     private final String publishRoutingKey;
 
     private AmqpQueuePublisherConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
-            final ConnectorEnvironment environment, final Class<TMessage> messageClass,
+            final ConnectorConfiguration configuration, final Class<TMessage> messageClass,
             final DataEncoder<TMessage> messageEncoder) {
-        super(rawProxy, environment, messageClass, messageEncoder);
+        super(rawProxy, configuration, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
-        this.exchange = environment.getConfigParameter(
+        this.exchange = configuration.getConfigParameter(
                 ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
-        this.exchangeType = environment
+        this.exchangeType = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
-        this.exchangeDurable = environment
+        this.exchangeDurable = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.exchangeAutoDelete = environment
+        this.exchangeAutoDelete = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
-        this.publishRoutingKey = environment.getConfigParameter(
+        this.publishRoutingKey = configuration.getConfigParameter(
                 ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
-        this.definePassive = environment
+        this.definePassive = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
     }
 
     public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
-            final ConnectorEnvironment environment, final Class<Message> messageClass,
+            final ConnectorConfiguration configuration, final Class<Message> messageClass,
             final DataEncoder<Message> messageEncoder) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(environment);
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(configuration);
         // FIXME the splice below will be done when creating the environment
         // final IConfiguration subConfiguration = configuration
         // .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
         final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message>(
-                rawProxy, environment, messageClass, messageEncoder);
+                rawProxy, configuration, messageClass, messageEncoder);
         return proxy;
     }
 

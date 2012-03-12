@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -81,7 +82,9 @@ public class MemcacheKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = MemcacheKvStoreConnectorTest.scenario_;
-        this.connector = MemcacheKvStoreConnector.create(this.scenario.getEnvironment(),
+        final ConnectorConfiguration configuration = ConnectorConfiguration.create(
+                this.scenario.getConfiguration(), this.scenario.getEnvironment());
+        this.connector = MemcacheKvStoreConnector.create(configuration,
                 new PojoDataEncoder<String>(String.class));
     }
 

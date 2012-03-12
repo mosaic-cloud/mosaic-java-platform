@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
@@ -107,49 +107,49 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
     private final boolean queueExclusive;
 
     private AmqpQueueConsumerConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
-            final ConnectorEnvironment environment, final Class<TMessage> messageClass,
+            final ConnectorConfiguration configuration, final Class<TMessage> messageClass,
             final DataEncoder<TMessage> messageEncoder,
             final IAmqpQueueConsumerCallback<TMessage> callback) {
-        super(rawProxy, environment, messageClass, messageEncoder);
+        super(rawProxy, configuration, messageClass, messageEncoder);
         this.identity = UUID.randomUUID().toString();
-        this.exchange = environment.getConfigParameter(
+        this.exchange = configuration.getConfigParameter(
                 ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
-        this.exchangeType = environment
+        this.exchangeType = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
-        this.exchangeDurable = environment
+        this.exchangeDurable = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.exchangeAutoDelete = environment
+        this.exchangeAutoDelete = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
-        this.queue = environment.getConfigParameter(
+        this.queue = configuration.getConfigParameter(
                 ConfigProperties.getString("AmqpQueueConnector.2"), String.class, this.identity); //$NON-NLS-1$ 
-        this.queueExclusive = environment
+        this.queueExclusive = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.6"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
         this.queueAutoDelete = this.exchangeAutoDelete;
         this.queueDurable = this.exchangeDurable;
-        this.bindingRoutingKey = environment.getConfigParameter(
+        this.bindingRoutingKey = configuration.getConfigParameter(
                 ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
-        this.consumerAutoAck = environment
+        this.consumerAutoAck = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.10"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.definePassive = environment
+        this.definePassive = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
         this.callback = new AmqpConsumerCallback(callback);
     }
 
     public static <M> AmqpQueueConsumerConnectorProxy<M> create(
-            final ConnectorEnvironment environment, final Class<M> messageClass,
+            final ConnectorConfiguration configuration, final Class<M> messageClass,
             final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(environment);
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(configuration);
         // FIXME the splice below will be done when creating the environment
         // final IConfiguration subConfiguration = configuration
         // .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
         final AmqpQueueConsumerConnectorProxy<M> proxy = new AmqpQueueConsumerConnectorProxy<M>(
-                rawProxy, environment, messageClass, messageEncoder, callback);
+                rawProxy, configuration, messageClass, messageEncoder, callback);
         return proxy;
     }
 

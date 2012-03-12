@@ -20,28 +20,28 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 import com.google.common.base.Preconditions;
 
 public abstract class AmqpQueueConnectorProxy<TMessage> implements IAmqpQueueConnector {
 
-    protected final ConnectorEnvironment environment;
+    protected final ConnectorConfiguration configuration;
     protected final Class<TMessage> messageClass;
     protected final DataEncoder<TMessage> messageEncoder;
     protected final AmqpQueueRawConnectorProxy raw;
 
     protected AmqpQueueConnectorProxy(final AmqpQueueRawConnectorProxy raw,
-            final ConnectorEnvironment environment, final Class<TMessage> messageClass,
+            final ConnectorConfiguration configuration, final Class<TMessage> messageClass,
             final DataEncoder<TMessage> messageEncoder) {
         super();
         Preconditions.checkNotNull(raw);
-        Preconditions.checkNotNull(environment);
+        Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(messageClass);
         Preconditions.checkNotNull(messageEncoder);
         this.raw = raw;
-        this.environment = environment;
+        this.configuration = configuration;
         this.messageClass = messageClass;
         this.messageEncoder = messageEncoder;
     }

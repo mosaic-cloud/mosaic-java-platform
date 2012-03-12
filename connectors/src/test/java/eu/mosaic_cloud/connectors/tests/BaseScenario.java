@@ -100,7 +100,7 @@ public class BaseScenario {
                 callbacks.resolved(this, target, driverIdentity, driverEndpoint);
             }
         };
-        this.environment = ConnectorEnvironment.create(configuration, this.callbacks,
+        this.environment = ConnectorEnvironment.create(this.callbacks,
                 this.threading, this.exceptions, channelFactory, this.channelResolver);
 
         this.driverChannel.register(KeyValueSession.DRIVER);

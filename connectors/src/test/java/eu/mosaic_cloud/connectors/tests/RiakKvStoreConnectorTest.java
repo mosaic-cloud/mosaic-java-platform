@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.connectors.tests;
 
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
@@ -72,7 +73,9 @@ public class RiakKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = RiakKvStoreConnectorTest.scenario_;
-        this.connector = GenericKvStoreConnector.create(this.scenario.getEnvironment(),
+        final ConnectorConfiguration configuration = ConnectorConfiguration.create(
+                this.scenario.getConfiguration(), this.scenario.getEnvironment());
+        this.connector = GenericKvStoreConnector.create(configuration,
                 new PojoDataEncoder<String>(String.class));
     }
 }

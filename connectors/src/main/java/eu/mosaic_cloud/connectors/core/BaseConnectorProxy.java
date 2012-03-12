@@ -22,7 +22,7 @@ package eu.mosaic_cloud.connectors.core;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.Message;
@@ -49,7 +49,7 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
     protected MosaicLogger logger;
     protected final ResponseHandlerMap pendingRequests;
     private final Channel channel;
-    protected final ConnectorEnvironment environment;
+    protected final ConnectorConfiguration configuration;
     private final String identifier;
     private Session session;
 
@@ -59,13 +59,13 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      * @param channel
      *            the channel on which to communicate with the driver
      */
-    protected BaseConnectorProxy(final ConnectorEnvironment environment) {
+    protected BaseConnectorProxy(final ConnectorConfiguration configuration) {
         super();
-        Preconditions.checkNotNull(environment);
-        this.environment = environment;
+        Preconditions.checkNotNull(configuration);
+        this.configuration = configuration;
         // FIXME: the channel acquisition should be made as part of the channel
         // endpoint resolution
-        this.channel = this.environment.getCommunicationChannel();
+        this.channel = this.configuration.getCommunicationChannel();
         this.logger = MosaicLogger.createLogger(this);
         this.identifier = UUID.randomUUID().toString();
         this.pendingRequests = new ResponseHandlerMap();
@@ -73,11 +73,11 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
 
     protected CallbackCompletion<Void> connect(final SessionSpecification session,
             final Message initMessage) {
-        final String driverEndpoint = this.environment.getConfigParameter(
+        final String driverEndpoint = this.configuration.getConfigParameter(
                 ConfigProperties.getString("GenericConnector.0"), String.class, null);
-        final String driverIdentity = this.environment.getConfigParameter(
+        final String driverIdentity = this.configuration.getConfigParameter(
                 ConfigProperties.getString("GenericConnector.1"), String.class, null);
-        final String driverTarget = this.environment.getConfigParameter(
+        final String driverTarget = this.configuration.getConfigParameter(
                 ConfigProperties.getString("GenericConnector.2"), String.class, null);
 
         final CallbackCompletion<Void> result;
@@ -109,7 +109,7 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
                     return CallbackCompletion.createOutcome();
                 }
             };
-            this.environment.resolveChannel(driverTarget, resolverCallbacks);
+            this.configuration.resolveChannel(driverTarget, resolverCallbacks);
             result = future.completion;
         }
         return result;

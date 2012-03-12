@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.core.ResponseHandlerMap;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
@@ -63,8 +63,8 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     private final ResponseHandlerMap consumerMessages;
     private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
 
-    protected AmqpQueueRawConnectorProxy(final ConnectorEnvironment environment) {
-        super(environment);
+    protected AmqpQueueRawConnectorProxy(final ConnectorConfiguration configuration) {
+        super(configuration);
         this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback>();
         this.consumerMessages = new ResponseHandlerMap();
     }
@@ -72,12 +72,12 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy impleme
     /**
      * Returns a proxy for AMQP queuing systems.
      * 
-     * @param environment
+     * @param configuration
      *            the execution environment of a connector
      * @return the proxy
      */
-    public static AmqpQueueRawConnectorProxy create(final ConnectorEnvironment environment) {
-        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(environment);
+    public static AmqpQueueRawConnectorProxy create(final ConnectorConfiguration configuration) {
+        final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy(configuration);
         return proxy;
     }
 
