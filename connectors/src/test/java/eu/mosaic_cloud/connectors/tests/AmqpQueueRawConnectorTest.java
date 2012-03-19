@@ -46,16 +46,17 @@ public class AmqpQueueRawConnectorTest extends
     @BeforeClass
     public static void setUpBeforeClass() {
 
-        final String host = System.getProperty(
-                AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST,
+        final String host = System.getProperty(AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST,
                 AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST_DEFAULT);
         final Integer port = Integer.valueOf(System.getProperty(
                 AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT,
                 AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT_DEFAULT));
 
         final IConfiguration configuration = PropertyTypeConfiguration.create();
-        configuration.addParameter("interop.channel.address", "inproc://f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
-        configuration.addParameter("interop.driver.identifier", "f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
+        configuration.addParameter("interop.channel.address",
+                "inproc://f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
+        configuration.addParameter("interop.driver.identifier",
+                "f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
         configuration.addParameter("amqp.host", host);
         configuration.addParameter("amqp.port", port);
         configuration.addParameter("amqp.driver_threads", 1);

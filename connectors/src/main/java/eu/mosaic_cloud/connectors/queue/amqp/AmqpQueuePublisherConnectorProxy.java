@@ -68,7 +68,8 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage> extends
     public static <Message> AmqpQueuePublisherConnectorProxy<Message> create(
             final ConnectorConfiguration configuration, final Class<Message> messageClass,
             final DataEncoder<Message> messageEncoder) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(configuration);
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy
+                .create(configuration);
         // FIXME the splice below will be done when creating the environment
         // final IConfiguration subConfiguration = configuration
         // .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));

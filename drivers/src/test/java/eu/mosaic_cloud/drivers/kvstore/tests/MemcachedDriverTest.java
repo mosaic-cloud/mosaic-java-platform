@@ -78,7 +78,8 @@ public class MemcachedDriverTest {
 
         final String host = System.getProperty(MemcachedDriverTest.MOSAIC_MEMCACHED_HOST,
                 MemcachedDriverTest.MOSAIC_MEMCACHED_HOST_DEFAULT);
-        final Integer port = Integer.valueOf(System.getProperty(MemcachedDriverTest.MOSAIC_MEMCACHED_PORT,
+        final Integer port = Integer.valueOf(System.getProperty(
+                MemcachedDriverTest.MOSAIC_MEMCACHED_PORT,
                 MemcachedDriverTest.MOSAIC_MEMCACHED_PORT_DEFAULT));
 
         final IConfiguration configuration = PropertyTypeConfiguration.create();

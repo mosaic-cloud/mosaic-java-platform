@@ -20,7 +20,6 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
-
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,55 +34,70 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
+public final class CloudletEnvironment {
 
-public final class CloudletEnvironment
-{
-	private CloudletEnvironment (final IConfiguration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final IConnectorsFactory connectors, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
-	{
-		super ();
-		Preconditions.checkNotNull (configuration);
-		Preconditions.checkNotNull (cloudletCallbackClass);
-		Preconditions.checkNotNull (cloudletContextClass);
-		Preconditions.checkNotNull (classLoader);
-		Preconditions.checkNotNull (connectors);
-		Preconditions.checkNotNull (reactor);
-		Preconditions.checkNotNull (threading);
-		Preconditions.checkNotNull (exceptions);
-		Preconditions.checkNotNull (supplementary);
-		this.configuration = configuration;
-		this.cloudletCallbackClass = cloudletCallbackClass;
-		this.cloudletContextClass = cloudletContextClass;
-		this.classLoader = classLoader;
-		this.connectors = connectors;
-		this.reactor = reactor;
-		this.threading = threading;
-		this.exceptions = exceptions;
-		this.supplementary = SupplementaryEnvironment.create (supplementary, new UncaughtExceptionHandler () {
-			@Override
-			public void uncaughtException (final Thread thread, final Throwable exception)
-			{
-				exceptions.trace (ExceptionResolution.Ignored, exception);
-			}
-		});
-	}
-	
-	public static final CloudletEnvironment create (final IConfiguration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final IConnectorsFactory connectors, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new CloudletEnvironment (configuration, cloudletCallbackClass, cloudletContextClass, classLoader, connectors, reactor, threading, exceptions, new HashMap<String, Object> ()));
-	}
-	
-	public static final CloudletEnvironment create (final IConfiguration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final IConnectorsFactory connectors, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
-	{
-		return (new CloudletEnvironment (configuration, cloudletCallbackClass, cloudletContextClass, classLoader, connectors, reactor, threading, exceptions, supplementary));
-	}
-	
-	public final ClassLoader classLoader;
-	public final Class<?> cloudletCallbackClass;
-	public final Class<?> cloudletContextClass;
-	public final IConfiguration configuration;
-	public final IConnectorsFactory connectors;
-	public final ExceptionTracer exceptions;
-	public final CallbackReactor reactor;
-	public final SupplementaryEnvironment supplementary;
-	public final ThreadingContext threading;
+    public final ClassLoader classLoader;
+
+    public final Class<?> cloudletCallbackClass;
+
+    public final Class<?> cloudletContextClass;
+
+    public final IConfiguration configuration;
+    public final IConnectorsFactory connectors;
+    public final ExceptionTracer exceptions;
+    public final CallbackReactor reactor;
+    public final SupplementaryEnvironment supplementary;
+    public final ThreadingContext threading;
+
+    private CloudletEnvironment(final IConfiguration configuration,
+            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
+            final ClassLoader classLoader, final IConnectorsFactory connectors,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
+        super();
+        Preconditions.checkNotNull(configuration);
+        Preconditions.checkNotNull(cloudletCallbackClass);
+        Preconditions.checkNotNull(cloudletContextClass);
+        Preconditions.checkNotNull(classLoader);
+        Preconditions.checkNotNull(connectors);
+        Preconditions.checkNotNull(reactor);
+        Preconditions.checkNotNull(threading);
+        Preconditions.checkNotNull(exceptions);
+        Preconditions.checkNotNull(supplementary);
+        this.configuration = configuration;
+        this.cloudletCallbackClass = cloudletCallbackClass;
+        this.cloudletContextClass = cloudletContextClass;
+        this.classLoader = classLoader;
+        this.connectors = connectors;
+        this.reactor = reactor;
+        this.threading = threading;
+        this.exceptions = exceptions;
+        this.supplementary = SupplementaryEnvironment.create(supplementary,
+                new UncaughtExceptionHandler() {
+
+                    @Override
+                    public void uncaughtException(final Thread thread, final Throwable exception) {
+                        exceptions.trace(ExceptionResolution.Ignored, exception);
+                    }
+                });
+    }
+
+    public static final CloudletEnvironment create(final IConfiguration configuration,
+            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
+            final ClassLoader classLoader, final IConnectorsFactory connectors,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions) {
+        return (new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
+                classLoader, connectors, reactor, threading, exceptions,
+                new HashMap<String, Object>()));
+    }
+
+    public static final CloudletEnvironment create(final IConfiguration configuration,
+            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
+            final ClassLoader classLoader, final IConnectorsFactory connectors,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
+        return (new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
+                classLoader, connectors, reactor, threading, exceptions, supplementary));
+    }
 }

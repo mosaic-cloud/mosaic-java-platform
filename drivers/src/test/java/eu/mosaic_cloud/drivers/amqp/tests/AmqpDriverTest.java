@@ -73,7 +73,8 @@ public class AmqpDriverTest {
         AmqpDriverTest.configuration.addParameter("consumer.amqp.auto_ack", true);
         AmqpDriverTest.configuration.addParameter("consumer.amqp.exclusive", true);
         AmqpDriverTest.configuration.addParameter("publisher.amqp.exchange", "tests.exchange");
-        AmqpDriverTest.configuration.addParameter("publisher.amqp.routing_key", "tests.routing-key");
+        AmqpDriverTest.configuration
+                .addParameter("publisher.amqp.routing_key", "tests.routing-key");
         AmqpDriverTest.configuration.addParameter("publisher.amqp.manadatory", true);
         AmqpDriverTest.configuration.addParameter("publisher.amqp.immediate", true);
         AmqpDriverTest.configuration.addParameter("publisher.amqp.durable", false);

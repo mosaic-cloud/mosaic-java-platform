@@ -32,8 +32,9 @@ public class AmqpQueuePublisherConnector<TMessage> extends
         super(proxy);
     }
 
-    public static <M> AmqpQueuePublisherConnector<M> create(final ConnectorConfiguration configuration,
-            final Class<M> messageClass, final DataEncoder<M> messageEncoder) {
+    public static <M> AmqpQueuePublisherConnector<M> create(
+            final ConnectorConfiguration configuration, final Class<M> messageClass,
+            final DataEncoder<M> messageEncoder) {
         final AmqpQueuePublisherConnectorProxy<M> proxy = AmqpQueuePublisherConnectorProxy.create(
                 configuration, messageClass, messageEncoder);
         return new AmqpQueuePublisherConnector<M>(proxy);

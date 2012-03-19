@@ -20,21 +20,18 @@
 
 package eu.mosaic_cloud.cloudlets.runtime;
 
-
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
+public final class CloudletComponentLauncher {
 
-public final class CloudletComponentLauncher
-{
-	private CloudletComponentLauncher ()
-	{
-		super ();
-		throw (new UnsupportedOperationException ());
-	}
-	
-	public static void main (final String[] arguments)
-			throws Throwable
-	{
-		MosBasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
-	}
+    private CloudletComponentLauncher() {
+        super();
+        throw (new UnsupportedOperationException());
+    }
+
+    public static void main(final String[] arguments) throws Throwable {
+        MosBasicComponentLauncher.main(
+                CloudletComponentLauncher.class.getName().replace("Launcher", "Callbacks"),
+                arguments);
+    }
 }

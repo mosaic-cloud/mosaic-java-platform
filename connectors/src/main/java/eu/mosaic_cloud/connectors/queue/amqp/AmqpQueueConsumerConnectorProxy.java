@@ -144,7 +144,8 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
     public static <M> AmqpQueueConsumerConnectorProxy<M> create(
             final ConnectorConfiguration configuration, final Class<M> messageClass,
             final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback) {
-        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create(configuration);
+        final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy
+                .create(configuration);
         // FIXME the splice below will be done when creating the environment
         // final IConfiguration subConfiguration = configuration
         // .spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
