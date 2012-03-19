@@ -16,5 +16,6 @@
 		<module>components-core</module>
 		<module>components-launcher</module>
 		<module>components-tools</module>
+		<module>components-jetty</module>
 	</modules>
 </project>
