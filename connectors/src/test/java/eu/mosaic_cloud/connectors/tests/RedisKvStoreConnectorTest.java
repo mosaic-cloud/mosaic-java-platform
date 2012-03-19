@@ -60,7 +60,7 @@ public class RedisKvStoreConnectorTest extends
         configuration.addParameter("kvstore.port", port);
         configuration.addParameter("kvstore.driver_name", "REDIS");
         configuration.addParameter("kvstore.driver_threads", 1);
-        configuration.addParameter("kvstore.bucket", "999");
+        configuration.addParameter("kvstore.bucket", "10");
 
         final Scenario scenario = new Scenario(RedisKvStoreConnectorTest.class, configuration);
 
