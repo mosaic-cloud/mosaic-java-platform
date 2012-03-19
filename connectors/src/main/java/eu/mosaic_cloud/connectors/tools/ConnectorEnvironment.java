@@ -70,19 +70,19 @@ public final class ConnectorEnvironment {
                 });
     }
 
-    public static final ConnectorEnvironment create(final CallbackReactor reactor,
+    public static ConnectorEnvironment create(final CallbackReactor reactor,
             final ThreadingContext threading, final ExceptionTracer exceptions,
             final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
-        return (new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
-                channelResolver, new HashMap<String, Object>()));
+        return new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
+                channelResolver, new HashMap<String, Object>());
     }
 
-    public static final ConnectorEnvironment create(final CallbackReactor reactor,
+    public static ConnectorEnvironment create(final CallbackReactor reactor,
             final ThreadingContext threading, final ExceptionTracer exceptions,
             final ChannelFactory channelFactory, final ChannelResolver channelResolver,
             final Map<String, Object> supplementary) {
-        return (new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
-                channelResolver, supplementary));
+        return new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
+                channelResolver, supplementary);
     }
 
     public Channel getCommunicationChannel() {

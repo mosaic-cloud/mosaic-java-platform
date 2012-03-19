@@ -10,8 +10,15 @@ import com.google.common.base.Preconditions;
 
 public final class ConnectorConfiguration {
 
+    /**
+     * Configuration settings private to a single connector.
+     */
     private final IConfiguration configuration;
 
+    /**
+     * Configuration settings which can be applied to one or more connectors
+     * (shared).
+     */
     private final ConnectorEnvironment environment;
 
     private ConnectorConfiguration(final IConfiguration configuration,
@@ -23,9 +30,9 @@ public final class ConnectorConfiguration {
         this.environment = environment;
     }
 
-    public static final ConnectorConfiguration create(final IConfiguration configuration,
+    public static ConnectorConfiguration create(final IConfiguration configuration,
             final ConnectorEnvironment environment) {
-        return (new ConnectorConfiguration(configuration, environment));
+        return new ConnectorConfiguration(configuration, environment);
     }
 
     public Channel getCommunicationChannel() {

@@ -20,8 +20,6 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
-import java.util.UUID;
-
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
@@ -97,10 +95,9 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
     private final boolean consumerAutoAck;
     private final boolean definePassive;
     private final String exchange;
-    private final boolean exchangeAutoDelete;
+    private final boolean exchangeAutoDelete; // NOPMD 
     private final boolean exchangeDurable;
     private final AmqpExchangeType exchangeType;
-    private final String identity;
     private final String queue;
     private final boolean queueAutoDelete;
     private final boolean queueDurable;
@@ -111,9 +108,8 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
             final DataEncoder<TMessage> messageEncoder,
             final IAmqpQueueConsumerCallback<TMessage> callback) {
         super(rawProxy, configuration, messageClass, messageEncoder);
-        this.identity = UUID.randomUUID().toString();
         this.exchange = configuration.getConfigParameter(
-                ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.identity); //$NON-NLS-1$ 
+                ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
         this.exchangeType = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
@@ -124,14 +120,14 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
         this.queue = configuration.getConfigParameter(
-                ConfigProperties.getString("AmqpQueueConnector.2"), String.class, this.identity); //$NON-NLS-1$ 
+                ConfigProperties.getString("AmqpQueueConnector.2"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
         this.queueExclusive = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.6"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
         this.queueAutoDelete = this.exchangeAutoDelete;
         this.queueDurable = this.exchangeDurable;
         this.bindingRoutingKey = configuration.getConfigParameter(
-                ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.identity); //$NON-NLS-1$ 
+                ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
         this.consumerAutoAck = configuration
                 .getConfigParameter(
                         ConfigProperties.getString("AmqpQueueConnector.10"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
@@ -163,7 +159,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
     public CallbackCompletion<Void> destroy() {
         // FIXME: We should wait for `cancel` to succeed or fail, and then
         // continue.
-        this.raw.cancel(this.identity);
+        this.raw.cancel(this.raw.getIdentifier());
         return this.raw.destroy();
     }
 
@@ -179,7 +175,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
         this.raw.declareQueue(this.queue, this.queueExclusive, this.queueDurable,
                 this.queueAutoDelete, this.definePassive);
         this.raw.bindQueue(this.exchange, this.queue, this.bindingRoutingKey);
-        return this.raw.consume(this.queue, this.identity, this.queueExclusive,
+        return this.raw.consume(this.queue, this.raw.getIdentifier(), this.queueExclusive,
                 this.consumerAutoAck, this.callback);
     }
 }

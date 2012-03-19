@@ -44,7 +44,7 @@ import com.google.common.base.Preconditions;
  * @author Georgiana Macariu
  * 
  */
-public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector {
+public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector { // NOPMD
 
     protected MosaicLogger logger;
     protected final ResponseHandlerMap pendingRequests;
@@ -80,9 +80,9 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         final String driverTarget = this.configuration.getConfigParameter(
                 ConfigProperties.getString("GenericConnector.2"), String.class, null);
 
-        final CallbackCompletion<Void> result;
+        CallbackCompletion<Void> result;
         this.channel.register(session);
-        if ((driverEndpoint != null) && (driverIdentity != null)) {
+        if ((driverEndpoint != null) && (driverIdentity != null)) { // NOPMD
             ((ZeroMqChannel) this.channel).connect(driverEndpoint);
             this.channel.connect(driverIdentity, session, initMessage, this);
             result = CallbackCompletion.createOutcome();
@@ -91,9 +91,10 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
                     .create(Void.class);
             final ResolverCallbacks resolverCallbacks = new ResolverCallbacks() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> resolved(ChannelResolver resolver, String target,
-                        String peer, String endpoint) {
+                public CallbackCompletion<Void> resolved(final ChannelResolver resolver,
+                        final String target, final String peer, final String endpoint) {
                     Preconditions.checkState(driverTarget.equals(target));
                     Preconditions.checkState(peer != null);
                     Preconditions.checkState(endpoint != null);
@@ -219,4 +220,9 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         this.send(message);
         return future.completion;
     }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
 }

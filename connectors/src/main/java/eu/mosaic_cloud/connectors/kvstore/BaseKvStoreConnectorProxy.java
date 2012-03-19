@@ -110,55 +110,46 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends B
         case OK: {
             final IdlCommon.Ok okPayload = (Ok) message.payload;
             final CompletionToken token = okPayload.getToken();
-            this.logger.debug("KvStoreConnectorProxy - Received "
-                    + message.specification.toString() + " response [" + token.getMessageId()
-                    + "]...");
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...", // NOPMD 
+                    message.specification.toString(), token.getMessageId());
             this.pendingRequests.succeed(token.getMessageId(), Boolean.TRUE);
         }
             break;
         case NOK: {
             final IdlCommon.NotOk nokPayload = (NotOk) message.payload;
             final CompletionToken token = nokPayload.getToken();
-            this.logger.debug("KvStoreConnectorProxy - Received "
-                    + message.specification.toString() + " response [" + token.getMessageId()
-                    + "]...");
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
+                    message.specification.toString(), token.getMessageId());
             this.pendingRequests.succeed(token.getMessageId(), Boolean.FALSE);
         }
             break;
         case ERROR: {
             final IdlCommon.Error errorPayload = (Error) message.payload;
             final CompletionToken token = errorPayload.getToken();
-            this.logger.debug("KvStoreConnectorProxy - Received "
-                    + message.specification.toString() + " response [" + token.getMessageId()
-                    + "]...");
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
+                    message.specification.toString(), token.getMessageId());
             this.pendingRequests.fail(token.getMessageId(),
-                    new Exception(errorPayload.getErrorMessage())); // NOPMD by
-                                                                    // georgiana
-                                                                    // on
-                                                                    // 2/20/12
-                                                                    // 4:48 PM
+                    new Exception(errorPayload.getErrorMessage()));
         }
             break;
         case LIST_REPLY: {
             final KeyValuePayloads.ListReply listPayload = (ListReply) message.payload;
             final CompletionToken token = listPayload.getToken();
-            this.logger.debug("KvStoreConnectorProxy - Received "
-                    + message.specification.toString() + " response [" + token.getMessageId()
-                    + "]...");
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
+                    message.specification.toString(), token.getMessageId());
             this.pendingRequests.succeed(token.getMessageId(), listPayload.getKeysList());
         }
             break;
         case GET_REPLY: {
             final KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
             final CompletionToken token = getPayload.getToken();
-            this.logger.debug("KvStoreConnectorProxy - Received "
-                    + message.specification.toString() + " response [" + token.getMessageId()
-                    + "]...");
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
+                    message.specification.toString(), token.getMessageId());
             final List<KVEntry> resultEntries = getPayload.getResultsList();
-            TValue value = null; // NOPMD by georgiana on 2/20/12 5:02 PM
+            TValue value = null; // NOPMD 
             if (!resultEntries.isEmpty()) {
                 try {
-                    value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray());
+                    value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD 
                 } catch (final EncodingException exception) {
                     this.pendingRequests.fail(token.getMessageId(), exception);
                     return;
@@ -194,12 +185,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends B
             requestBuilder.setExpTime(exp);
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(KeyValueMessage.SET_REQUEST, requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class); // NOPMD
-                                                                      // by
-                                                                      // georgiana
-                                                                      // on
-                                                                      // 2/20/12
-                                                                      // 5:02 PM
+            result = this.sendRequest(message, token, Boolean.class); // NOPMD 
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }

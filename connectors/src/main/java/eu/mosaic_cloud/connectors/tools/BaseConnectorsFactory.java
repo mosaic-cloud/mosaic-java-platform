@@ -31,9 +31,9 @@ import com.google.common.base.Preconditions;
 
 public abstract class BaseConnectorsFactory extends Object implements IConnectorsFactory {
 
-    final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> factories;
-    final IConnectorsFactory delegate;
-    final Monitor monitor;
+    protected final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> factories;
+    protected final IConnectorsFactory delegate;
+    protected final Monitor monitor;
 
     protected BaseConnectorsFactory(final IConnectorsFactory delegate) {
         super();
@@ -45,21 +45,11 @@ public abstract class BaseConnectorsFactory extends Object implements IConnector
     @Override
     public <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory(
             final Class<Factory> factoryClass) {
-        {
-            final Factory factory = factoryClass.cast(this.factories.get(factoryClass));
-            if (factory != null) {
-                return (factory);
-            }
+        Factory factory = factoryClass.cast(this.factories.get(factoryClass));
+        if (factory == null && this.delegate != null) {
+            factory = this.delegate.getConnectorFactory(factoryClass);
         }
-        {
-            if (this.delegate != null) {
-                final Factory factory = this.delegate.getConnectorFactory(factoryClass);
-                if (factory != null) {
-                    return (factory);
-                }
-            }
-        }
-        return (null);
+        return factory;
     }
 
     protected final <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> void registerFactory(

@@ -42,7 +42,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 import com.google.common.base.Preconditions;
 
-public class DefaultConnectorsFactory extends BaseConnectorsFactory {
+public class DefaultConnectorsFactory extends BaseConnectorsFactory { // NOPMD 
 
     protected DefaultConnectorsFactory(final IConnectorsFactory delegate) {
         super(delegate);
@@ -52,7 +52,7 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory {
             final ConnectorEnvironment environment) {
         final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(delegate);
         DefaultConnectorsFactory.initialize(factory, environment);
-        return (factory);
+        return factory;
     }
 
     protected static final void initialize(final DefaultConnectorsFactory factory,
@@ -64,8 +64,8 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory {
             @Override
             public <TValue> IKvStoreConnector<TValue> create(final IConfiguration configuration,
                     final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder) {
-                return (GenericKvStoreConnector.create(
-                        ConnectorConfiguration.create(configuration, environment), valueEncoder));
+                return GenericKvStoreConnector.create(
+                        ConnectorConfiguration.create(configuration, environment), valueEncoder);
             }
         });
         factory.registerFactory(IMemcacheKvStoreConnectorFactory.class,
@@ -75,9 +75,9 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory {
                     public <TValue> IMemcacheKvStoreConnector<TValue> create(
                             final IConfiguration configuration, final Class<TValue> valueClass,
                             final DataEncoder<TValue> valueEncoder) {
-                        return (MemcacheKvStoreConnector.create(
+                        return MemcacheKvStoreConnector.create(
                                 ConnectorConfiguration.create(configuration, environment),
-                                valueEncoder));
+                                valueEncoder);
                     }
                 });
         factory.registerFactory(IAmqpQueueRawConnectorFactory.class,
@@ -85,8 +85,8 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory {
 
                     @Override
                     public IAmqpQueueRawConnector create(final IConfiguration configuration) {
-                        return (AmqpQueueRawConnector.create(ConnectorConfiguration.create(
-                                configuration, environment)));
+                        return AmqpQueueRawConnector.create(ConnectorConfiguration.create(
+                                configuration, environment));
                     }
                 });
         factory.registerFactory(IAmqpQueueConsumerConnectorFactory.class,
@@ -97,9 +97,9 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory {
                             final IConfiguration configuration, final Class<TMessage> messageClass,
                             final DataEncoder<TMessage> messageEncoder,
                             final IAmqpQueueConsumerCallback<TMessage> callback) {
-                        return (AmqpQueueConsumerConnector.create(
+                        return AmqpQueueConsumerConnector.create(
                                 ConnectorConfiguration.create(configuration, environment),
-                                messageClass, messageEncoder, callback));
+                                messageClass, messageEncoder, callback);
                     }
                 });
         factory.registerFactory(IAmqpQueuePublisherConnectorFactory.class,
@@ -109,9 +109,9 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory {
                     public <TMessage> IAmqpQueuePublisherConnector<TMessage> create(
                             final IConfiguration configuration, final Class<TMessage> messageClass,
                             final DataEncoder<TMessage> messageEncoder) {
-                        return (AmqpQueuePublisherConnector.create(
+                        return AmqpQueuePublisherConnector.create(
                                 ConnectorConfiguration.create(configuration, environment),
-                                messageClass, messageEncoder));
+                                messageClass, messageEncoder);
                     }
                 });
     }

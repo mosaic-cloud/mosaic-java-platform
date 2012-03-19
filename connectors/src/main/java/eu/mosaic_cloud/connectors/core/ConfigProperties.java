@@ -30,7 +30,7 @@ public final class ConfigProperties {
     private static final String BUNDLE_NAME = "eu.mosaic_cloud.connectors.config"; //$NON-NLS-1$
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
             .getBundle(ConfigProperties.BUNDLE_NAME);
-    public static final boolean inDebugging = java.lang.management.ManagementFactory
+    public static final boolean IN_DEBUGGING = java.lang.management.ManagementFactory
             .getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
 
     private ConfigProperties() {
@@ -38,11 +38,7 @@ public final class ConfigProperties {
 
     public static String getString(final String key) {
         try {
-            return ConfigProperties.RESOURCE_BUNDLE.getString(key); // NOPMD by
-                                                                    // georgiana
-                                                                    // on
-                                                                    // 10/13/11
-                                                                    // 10:05 AM
+            return ConfigProperties.RESOURCE_BUNDLE.getString(key); // NOPMD 
         } catch (final MissingResourceException e) {
             ExceptionTracer.traceIgnored(e);
             return '!' + key + '!';
