@@ -35,6 +35,6 @@ public final class AbacusComponentLauncher
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		MosBasicComponentLauncher.main (AbacusComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
+		MosBasicComponentLauncher.main (AbacusComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments, AbacusComponentLauncher.class.getClassLoader ());
 	}
 }

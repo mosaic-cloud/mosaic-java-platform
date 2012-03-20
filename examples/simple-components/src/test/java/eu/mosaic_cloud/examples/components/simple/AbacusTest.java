@@ -83,7 +83,7 @@ public class AbacusTest
 		final ComponentCallbacks clientComponentCallbacksProxy = reactor.createProxy (ComponentCallbacks.class);
 		Assert.assertTrue (serverComponentController.bind (serverComponentCallbacksProxy, serverChannel.getController ()).await (AbacusTest.defaultPollTimeout));
 		Assert.assertTrue (clientComponentController.bind (clientComponentCallbacksProxy, clientChannel.getController ()).await (AbacusTest.defaultPollTimeout));
-		final AbacusComponentCallbacks serverComponentCallbacks = new AbacusComponentCallbacks (ComponentEnvironment.create (ComponentIdentifier.standalone, serverComponentController, this.getClass ().getClassLoader (), reactor, threading, exceptions));
+		final AbacusComponentCallbacks serverComponentCallbacks = new AbacusComponentCallbacks (ComponentEnvironment.create (ComponentIdentifier.standalone, this.getClass ().getClassLoader (), reactor, threading, exceptions));
 		final QueueingComponentCallbacks clientComponentCallbacks = QueueingComponentCallbacks.create (clientComponentController, exceptions);
 		final CallbackIsolate serverComponentCallbacksIsolate = reactor.createIsolate ();
 		final CallbackIsolate clientComponentCallbacksIsolate = reactor.createIsolate ();
