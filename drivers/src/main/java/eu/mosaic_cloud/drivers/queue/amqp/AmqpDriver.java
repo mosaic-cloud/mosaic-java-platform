@@ -229,6 +229,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
                     @Override
                     public void run() {
                         consumeCallback.handleShutdown(consumer, signal.getMessage());
+                        executor.shutdown();
                     }
                 };
                 AmqpDriver.this.executor.execute(task);
@@ -574,7 +575,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
                 this.logger.error("AMQP cannot close connection with server."); //$NON-NLS-1$
             }
         }
-        this.executor.shutdown();
+        // FIXME: moved shutdown from here to `handleShutdownSignal` (is it ok?)
+        // this.executor.shutdown();
         this.logger.trace("AmqpDriver destroyed."); //$NON-NLS-1$
     }
 
