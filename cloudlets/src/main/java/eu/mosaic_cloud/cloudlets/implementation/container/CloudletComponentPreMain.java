@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.container;
 
 
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
@@ -36,6 +36,6 @@ public final class CloudletComponentPreMain
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments, 0);
+		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), arguments, 0);
 	}
 }

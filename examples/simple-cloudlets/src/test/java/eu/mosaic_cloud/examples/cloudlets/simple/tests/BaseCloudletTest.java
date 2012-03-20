@@ -23,7 +23,7 @@ package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
-import eu.mosaic_cloud.cloudlets.runtime.Cloudlet;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.Cloudlet;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.kvstore.KeyValueStub;
 import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;

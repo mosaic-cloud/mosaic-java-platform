@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.cloudlet;
 
 
 import java.lang.reflect.InvocationHandler;
@@ -33,9 +33,9 @@ import eu.mosaic_cloud.cloudlets.core.CloudletState;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmCallbackCompletionTransaction;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmState;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmTransition;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmCallbackCompletionTransaction;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmState;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmTransition;
 import eu.mosaic_cloud.cloudlets.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
@@ -82,37 +82,48 @@ public final class Cloudlet<Context extends Object>
 			this.classLoader = this.environment.classLoader;
 			this.configuration = this.environment.configuration;
 		}
-		{
-			Context controllerContext;
-			ICloudletCallback<Context> controllerCallbacksDelegate;
-			try {
-				controllerContext = (Context) this.environment.cloudletContextClass.newInstance ();
-			} catch (final ReflectiveOperationException exception) {
-				controllerContext = null;
-				this.handleInternalFailure (null, new Error ());
+		try {
+			{
+				Context controllerContext;
+				ICloudletCallback<Context> controllerCallbacksDelegate;
+				try {
+					controllerContext = (Context) this.environment.cloudletContextClass.newInstance ();
+				} catch (final ReflectiveOperationException exception) {
+					controllerContext = null;
+					this.handleInternalFailure (null, new Error ());
+				}
+				try {
+					controllerCallbacksDelegate = (ICloudletCallback<Context>) this.environment.cloudletCallbackClass.newInstance ();
+				} catch (final ReflectiveOperationException exception) {
+					controllerCallbacksDelegate = null;
+					this.handleInternalFailure (null, new Error ());
+				}
+				this.controllerHandler = new ControllerHandler ();
+				this.callbacksHandler = new CallbacksHandler ();
+				this.callbacksDelegate = controllerCallbacksDelegate;
+				this.controllerContext = controllerContext;
+				this.genericCallbacksHandler = new GenericCallbacksHandler ();
+				this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
 			}
-			try {
-				controllerCallbacksDelegate = (ICloudletCallback<Context>) this.environment.cloudletCallbackClass.newInstance ();
-			} catch (final ReflectiveOperationException exception) {
-				controllerCallbacksDelegate = null;
-				this.handleInternalFailure (null, new Error ());
+			{
+				this.isolate = this.reactor.createIsolate ();
+				this.controllerProxy = this.reactor.createProxy (ICloudletController.class);
+				this.callbacksProxy = this.reactor.createProxy (ICloudletCallback.class);
+				this.genericCallbacksProxies = new ConcurrentHashMap<CallbackProxy, Callbacks> ();
 			}
-			this.controllerHandler = new ControllerHandler ();
-			this.callbacksHandler = new CallbacksHandler ();
-			this.callbacksDelegate = controllerCallbacksDelegate;
-			this.controllerContext = controllerContext;
-			this.genericCallbacksHandler = new GenericCallbacksHandler ();
-			this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
-		}
-		{
-			this.isolate = this.reactor.createIsolate ();
-			this.controllerProxy = this.reactor.createProxy (ICloudletController.class);
-			this.callbacksProxy = this.reactor.createProxy (ICloudletCallback.class);
-			this.genericCallbacksProxies = new ConcurrentHashMap<CallbackProxy, Callbacks> ();
-		}
-		{
-			this.connectorsFactory = new ConnectorsFactory ();
-			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.environment.connectors, this.threading, this.exceptions);
+			{
+				this.connectorsFactory = new ConnectorsFactory ();
+				this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.environment.connectors, this.threading, this.exceptions);
+			}
+			{
+				this.fsm.execute (FsmTransition.CreateCompleted, FsmState.Created);
+			}
+		} catch (final CaughtException.Wrapper wrapper) {
+			this.handleInternalFailure (null, wrapper.exception);
+			throw (wrapper);
+		} catch (final Throwable exception) {
+			this.handleInternalFailure (null, exception);
+			throw (new DeferredException (exception).wrap ());
 		}
 	}
 	
@@ -155,7 +166,7 @@ public final class Cloudlet<Context extends Object>
 	final <Callback extends ICallback<?>> Callback createGenericCallbacksProxy (final Class<Callback> callbacksClass, final Callback callbacksDelegate)
 	{
 		{
-			// FIXME
+			// FIXME: the same callback should be allowed to be used twice
 			final Callback callbackProxy = callbacksClass.cast (this.genericCallbacksDelegates.get (callbacksDelegate));
 			if (callbackProxy != null) {
 				return (callbackProxy);
@@ -168,6 +179,50 @@ public final class Cloudlet<Context extends Object>
 			this.genericCallbacksProxies.put ((CallbackProxy) callbacksProxy, callbacksDelegate);
 			this.reactor.assignHandler (callbacksProxy, this.genericCallbacksHandler, this.isolate);
 			return (callbacksProxy);
+		}
+	}
+	
+	final void handleCleanup (final boolean gracefully)
+	{
+		if ((this.controllerProxy != null) && !gracefully) {
+			try {
+				this.reactor.destroyProxy (this.controllerProxy);
+			} catch (final Throwable exception) {
+				this.exceptions.traceIgnoredException (exception);
+			}
+		}
+		if ((this.callbacksProxy != null) && !gracefully) {
+			try {
+				this.reactor.destroyProxy (this.callbacksProxy);
+			} catch (final Throwable exception) {
+				this.exceptions.traceIgnoredException (exception);
+			}
+		}
+		if ((this.genericCallbacksProxies != null) && !gracefully) {
+			for (final CallbackProxy genericCallbacksProxy : this.genericCallbacksProxies.keySet ()) {
+				try {
+					this.reactor.destroyProxy (genericCallbacksProxy);
+				} catch (final Throwable exception) {
+					this.exceptions.traceIgnoredException (exception);
+				}
+			}
+		}
+		if (this.isolate != null) {
+			try {
+				this.reactor.destroyIsolate (this.isolate);
+			} catch (final Throwable exception) {
+				this.exceptions.traceIgnoredException (exception);
+			}
+		}
+		if (this.initializeFuture != null) {
+			Preconditions.checkState (this.destroyFuture == null);
+			this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (this.failures));
+			this.initializeFuture = null;
+		}
+		if (this.destroyFuture != null) {
+			Preconditions.checkState (this.initializeFuture == null);
+			this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (this.failures.queue));
+			this.destroyFuture = null;
 		}
 	}
 	
@@ -196,22 +251,7 @@ public final class Cloudlet<Context extends Object>
 				if (Cloudlet.this.fsm.hasState (FsmState.Failed)) {
 					return (StateAndOutput.create (FsmState.Failed, null));
 				}
-				Cloudlet.this.reactor.destroyProxy (Cloudlet.this.controllerProxy);
-				Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
-				for (final CallbackProxy genericCallbacksProxy : Cloudlet.this.genericCallbacksProxies.keySet ()) {
-					Cloudlet.this.reactor.destroyProxy (genericCallbacksProxy);
-				}
-				Cloudlet.this.reactor.destroyIsolate (Cloudlet.this.isolate);
-				if (Cloudlet.this.initializeFuture != null) {
-					Preconditions.checkState (Cloudlet.this.destroyFuture == null);
-					Cloudlet.this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
-					Cloudlet.this.initializeFuture = null;
-				}
-				if (Cloudlet.this.destroyFuture != null) {
-					Preconditions.checkState (Cloudlet.this.initializeFuture == null);
-					Cloudlet.this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures.queue));
-					Cloudlet.this.destroyFuture = null;
-				}
+				Cloudlet.this.handleCleanup (false);
 				return (StateAndOutput.create (FsmState.Failed, null));
 			}
 		}.trigger ();
@@ -567,7 +607,7 @@ public final class Cloudlet<Context extends Object>
 				@Override
 				protected StateAndOutput<FsmState, Void> execute ()
 				{
-					Cloudlet.this.reactor.assignHandler (Cloudlet.this.callbacksProxy, Cloudlet.this.callbacksHandler, isolate);
+					Cloudlet.this.reactor.assignHandler (Cloudlet.this.callbacksProxy, Cloudlet.this.callbacksHandler, Cloudlet.this.isolate);
 					return (StateAndOutput.create (FsmState.CallbacksRegisterPending, null));
 				}
 			}.trigger ();
@@ -584,14 +624,12 @@ public final class Cloudlet<Context extends Object>
 					if (Cloudlet.this.failures.queue.isEmpty ()) {
 						Cloudlet.this.destroyFuture.trigger.triggerSucceeded (null);
 						Cloudlet.this.destroyFuture = null;
-						// FIXME
-						Cloudlet.this.reactor.destroyIsolate (Cloudlet.this.isolate);
+						Cloudlet.this.handleCleanup (true);
 						return (StateAndOutput.create (FsmState.Destroyed, null));
 					} else {
 						Cloudlet.this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
 						Cloudlet.this.destroyFuture = null;
-						// FIXME
-						Cloudlet.this.reactor.destroyIsolate (Cloudlet.this.isolate);
+						Cloudlet.this.handleCleanup (true);
 						return (StateAndOutput.create (FsmState.Failed, null));
 					}
 				}

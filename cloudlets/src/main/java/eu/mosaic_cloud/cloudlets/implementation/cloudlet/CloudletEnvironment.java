@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.cloudlet;
 
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -62,7 +62,7 @@ public final class CloudletEnvironment
 			@Override
 			public void uncaughtException (final Thread thread, final Throwable exception)
 			{
-				exceptions.trace (ExceptionResolution.Ignored, exception);
+				CloudletEnvironment.this.exceptions.trace (ExceptionResolution.Ignored, exception);
 			}
 		});
 	}

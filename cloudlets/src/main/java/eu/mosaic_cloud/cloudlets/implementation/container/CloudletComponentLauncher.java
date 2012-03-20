@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.container;
 
 
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
@@ -35,6 +35,6 @@ public final class CloudletComponentLauncher
 	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		MosBasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
+		MosBasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "$ComponentCallbacksProvider"), arguments, CloudletComponentLauncher.class.getClassLoader ());
 	}
 }

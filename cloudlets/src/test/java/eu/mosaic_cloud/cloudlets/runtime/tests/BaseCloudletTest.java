@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.cloudlets.runtime.tests;
 
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
-import eu.mosaic_cloud.cloudlets.runtime.Cloudlet;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletEnvironment;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.Cloudlet;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletEnvironment;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;

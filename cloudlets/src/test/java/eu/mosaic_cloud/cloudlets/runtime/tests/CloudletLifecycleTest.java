@@ -22,7 +22,7 @@ package eu.mosaic_cloud.cloudlets.runtime.tests;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
-import eu.mosaic_cloud.cloudlets.runtime.Cloudlet;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.Cloudlet;
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
