@@ -137,7 +137,7 @@ public final class PropertyTypeConfiguration implements IConfiguration {
                 ExceptionTracer.traceIgnored(exception);
             }
         } else {
-            throw (new IllegalArgumentException());
+            throw (new IllegalArgumentException("resource not found"));
         }
         return configuration;
     }
