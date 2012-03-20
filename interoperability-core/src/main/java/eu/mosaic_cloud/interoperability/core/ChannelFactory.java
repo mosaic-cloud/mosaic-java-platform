@@ -21,7 +21,14 @@
 package eu.mosaic_cloud.interoperability.core;
 
 
+import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+
+
 public interface ChannelFactory
+		extends
+			Callbacks
 {
+	@CallbackPassthrough
 	public abstract Channel create ();
 }
