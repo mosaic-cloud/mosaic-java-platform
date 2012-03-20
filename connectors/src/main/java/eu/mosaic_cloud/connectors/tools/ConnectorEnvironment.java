@@ -45,30 +45,9 @@ public final class ConnectorEnvironment {
     private final SupplementaryEnvironment supplementary;
     private final ThreadingContext threading;
 
-    public static final ConnectorEnvironment create(
-            final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory,
-            final ChannelResolver channelResolver) {
-        return (new ConnectorEnvironment(reactor, threading, exceptions,
-                channelFactory, channelResolver, new HashMap<String, Object>()));
-    }
-
-    public static final ConnectorEnvironment create(
-            final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory,
-            final ChannelResolver channelResolver,
-            final Map<String, Object> supplementary) {
-        return (new ConnectorEnvironment(reactor, threading, exceptions,
-                channelFactory, channelResolver, supplementary));
-    }
-
-    private ConnectorEnvironment(final CallbackReactor reactor,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory,
-            final ChannelResolver channelResolver,
-            final Map<String, Object> supplementary) {
+    private ConnectorEnvironment(final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
+            final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
         super();
         Preconditions.checkNotNull(reactor);
         Preconditions.checkNotNull(threading);
@@ -92,12 +71,26 @@ public final class ConnectorEnvironment {
                 });
     }
 
+    public static ConnectorEnvironment create(final CallbackReactor reactor,
+            final ThreadingContext threading, final ExceptionTracer exceptions,
+            final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+        return new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
+                channelResolver, new HashMap<String, Object>());
+    }
+
+    public static ConnectorEnvironment create(final CallbackReactor reactor,
+            final ThreadingContext threading, final ExceptionTracer exceptions,
+            final ChannelFactory channelFactory, final ChannelResolver channelResolver,
+            final Map<String, Object> supplementary) {
+        return new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
+                channelResolver, supplementary);
+    }
+
     public Channel getCommunicationChannel() {
         return this.channelFactory.create();
     }
 
-    public void resolveChannel(final String driverTarget,
-            final ResolverCallbacks resolverCallbacks) {
+    public void resolveChannel(final String driverTarget, final ResolverCallbacks resolverCallbacks) {
         this.channelResolver.resolve(driverTarget, resolverCallbacks);
     }
 }

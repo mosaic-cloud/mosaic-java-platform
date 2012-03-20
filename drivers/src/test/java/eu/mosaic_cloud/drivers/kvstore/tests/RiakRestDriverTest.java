@@ -75,8 +75,8 @@ public class RiakRestDriverTest {
 
         final String host = System.getProperty(RiakRestDriverTest.MOSAIC_RIAK_HOST,
                 RiakRestDriverTest.MOSAIC_RIAK_HOST_DEFAULT);
-        final Integer port = Integer.valueOf(System.getProperty(RiakRestDriverTest.MOSAIC_RIAK_PORT,
-                RiakRestDriverTest.MOSAIC_RIAK_PORT_DEFAULT));
+        final Integer port = Integer.valueOf(System.getProperty(
+                RiakRestDriverTest.MOSAIC_RIAK_PORT, RiakRestDriverTest.MOSAIC_RIAK_PORT_DEFAULT));
 
         final IConfiguration configuration = PropertyTypeConfiguration.create();
         configuration.addParameter("kvstore.host", host);

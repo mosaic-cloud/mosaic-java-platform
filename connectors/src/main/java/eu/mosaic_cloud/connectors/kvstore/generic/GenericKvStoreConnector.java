@@ -25,14 +25,14 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 /**
- * Connector for key-value distributed storage systems .
+ * Connector for key-value distributed storage systems.
  * 
  * @author Georgiana Macariu
  * @param <TValue>
  *            type of stored data
  */
 public class GenericKvStoreConnector<TValue extends Object> extends
-        BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>> {
+        BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>> { // NOPMD 
 
     protected GenericKvStoreConnector(final GenericKvStoreConnectorProxy<TValue> proxy) {
         super(proxy);

@@ -32,9 +32,9 @@ public class AmqpQueueConsumerConnector<TMessage> extends
         super(proxy);
     }
 
-    public static <M> AmqpQueueConsumerConnector<M> create(final ConnectorConfiguration configuration,
-            final Class<M> messageClass, final DataEncoder<M> messageEncoder,
-            final IAmqpQueueConsumerCallback<M> callback) {
+    public static <M> AmqpQueueConsumerConnector<M> create(
+            final ConnectorConfiguration configuration, final Class<M> messageClass,
+            final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback) {
         final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy.create(
                 configuration, messageClass, messageEncoder, callback);
         return new AmqpQueueConsumerConnector<M>(proxy);

@@ -20,8 +20,7 @@
 
 package eu.mosaic_cloud.platform.core.log;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 /**
  * Logger used in the platform.
@@ -31,10 +30,10 @@ import org.slf4j.LoggerFactory;
  */
 public final class MosaicLogger {
 
-    private final Logger logger; // NOPMD by georgiana on 9/27/11 7:14 PM
+    private final Transcript logger;
 
     private MosaicLogger(Class<?> owner) {
-        this.logger = LoggerFactory.getLogger(owner);
+        this.logger = Transcript.create(owner);
     }
 
     /**
@@ -45,10 +44,7 @@ public final class MosaicLogger {
      * 
      * @return the logger
      */
-    public static MosaicLogger createLogger(Class<?> owner) { // NOPMD by
-                                                              // georgiana
-        // on 9/27/11 7:15
-        // PM
+    public static MosaicLogger createLogger(Class<?> owner) { // NOPMD
         return new MosaicLogger(owner);
     }
 
@@ -61,9 +57,6 @@ public final class MosaicLogger {
      * @return the logger
      */
     public static MosaicLogger createLogger(Object owner) { // NOPMD by
-                                                            // georgiana
-        // on 9/27/11 7:15
-        // PM
         return new MosaicLogger(owner.getClass());
     }
 
@@ -74,9 +67,18 @@ public final class MosaicLogger {
      *            the message
      */
     public void debug(final String message) {
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug(message);
-        }
+        this.logger.traceDebugging(message);
+    }
+
+    /**
+     * Logs a debug message.
+     * 
+     * @param format
+     *            the message format
+     * @param tokens
+     */
+    public void debug(final String format, final Object... tokens) {
+        this.logger.traceDebugging(format, tokens);
     }
 
     /**
@@ -86,9 +88,18 @@ public final class MosaicLogger {
      *            the message
      */
     public void error(final String message) {
-        if (this.logger.isErrorEnabled()) {
-            this.logger.error(message);
-        }
+        this.logger.traceError(message);
+    }
+
+    /**
+     * Logs an error message.
+     * 
+     * @param format
+     *            the message format
+     * @param tokens
+     */
+    public void error(final String format, final Object... tokens) {
+        this.logger.traceError(format, tokens);
     }
 
     /**
@@ -98,9 +109,18 @@ public final class MosaicLogger {
      *            the message
      */
     public void info(final String message) {
-        if (this.logger.isInfoEnabled()) {
-            this.logger.info(message);
-        }
+        this.logger.traceInformation(message);
+    }
+
+    /**
+     * Logs a info message.
+     * 
+     * @param format
+     *            the message format
+     * @param tokens
+     */
+    public void info(final String format, final Object... tokens) {
+        this.logger.traceInformation(format, tokens);
     }
 
     /**
@@ -110,15 +130,18 @@ public final class MosaicLogger {
      *            the message
      */
     public void trace(final String message) {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(message);
-        }
+        this.logger.traceInformation(message);
     }
 
-    public void trace(String message, Throwable exception) {
-        if (this.logger.isTraceEnabled()) {
-            this.logger.trace(message);
-        }
+    /**
+     * Logs a trace message.
+     * 
+     * @param format
+     *            the message format
+     * @param tokens
+     */
+    public void trace(final String format, final Object... tokens) {
+        this.logger.traceInformation(format, tokens);
     }
 
     /**
@@ -128,14 +151,18 @@ public final class MosaicLogger {
      *            the message
      */
     public void warn(final String message) {
-        if (this.logger.isWarnEnabled()) {
-            this.logger.warn(message);
-        }
+        this.logger.traceWarning(message);
     }
 
-    public void warn(String message, Throwable exception) {
-        if (this.logger.isWarnEnabled()) {
-            this.logger.warn(message);
-        }
+    /**
+     * Logs a warning message.
+     * 
+     * @param format
+     *            the message format
+     * @param tokens
+     */
+    public void warn(final String format, final Object... tokens) {
+        this.logger.traceWarning(format, tokens);
     }
+
 }

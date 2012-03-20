@@ -62,12 +62,7 @@ public class ResponseHandlerMap {
     public void cancelAll() {
         synchronized (this.futures) {
             for (final CallbackCompletionDeferredFuture<?> future : this.futures.values()) {
-                future.trigger.triggerFailed(new CallbackCanceled()); // NOPMD
-                                                                      // by
-                                                                      // georgiana
-                                                                      // on
-                                                                      // 2/20/12
-                                                                      // 4:21 PM
+                future.trigger.triggerFailed(new CallbackCanceled()); // NOPMD 
             }
             this.futures.clear();
         }

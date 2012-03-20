@@ -93,7 +93,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
             requestBuilder.setExpTime(exp);
             final Message message = new Message(MemcachedMessage.ADD_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
+            result = this.sendRequest(message, token, Boolean.class); 
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -113,7 +113,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.APPEND_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
+            result = this.sendRequest(message, token, Boolean.class); 
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -133,7 +133,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.CAS_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
+            result = this.sendRequest(message, token, Boolean.class); 
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -170,7 +170,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.PREPEND_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
+            result = this.sendRequest(message, token, Boolean.class); 
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
@@ -221,7 +221,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
             final Message message = new Message(MemcachedMessage.REPLACE_REQUEST,
                     requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
+            result = this.sendRequest(message, token, Boolean.class); 
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
         }
