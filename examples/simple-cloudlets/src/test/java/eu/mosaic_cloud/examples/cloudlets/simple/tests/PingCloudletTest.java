@@ -22,6 +22,9 @@ package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
 import eu.mosaic_cloud.examples.cloudlets.simple.PingCloudlet;
 
+import org.junit.Ignore;
+
+@Ignore
 public class PingCloudletTest extends BaseCloudletTest {
 
     @Override
