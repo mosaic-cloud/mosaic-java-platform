@@ -135,23 +135,18 @@ public final class BasicComponentHarnessMain
 			Preconditions.checkNotNull (callbacksClassName, "missing callbacks class...");
 			environment.transcript.traceDebugging ("resolving callbacks class `%s`...", callbacksClassName);
 			callbacksClass = environment.classLoader.loadClass (callbacksClassName);
-			Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (callbacksClass), "invalid callbacks class `%s` (not an instance of `ComponentCallbacks`)", callbacksClass.getName ());
+			Preconditions.checkArgument (ComponentCallbacks.class.isAssignableFrom (callbacksClass) ^ ComponentCallbacksProvider.class.isAssignableFrom (callbacksClass), "invalid callbacks class `%s` (not an instance of `ComponentCallbacks` or `ComponentCallbacksProvider`)", callbacksClass.getName ());
 		}
-		final Map<String, Object> options = new HashMap<String, Object> ();
-		{
-			final List<String> optionsDatas = arguments.getCallbacksOptions ();
-			if (optionsDatas != null) {
-				for (final String optionsData : optionsDatas) {
-					environment.transcript.traceDebugging ("parsing configuration `%s`...", optionsData);
-					final Object optionsObject = DefaultJsonCoder.defaultInstance.decodeFromString (optionsData);
-					if (optionsObject != null) {
-						Preconditions.checkArgument (optionsObject instanceof Map, "invalid configuration `%s` (not a JSON map)", optionsObject);
-						options.putAll ((Map<String, Object>) optionsObject);
-					}
-				}
+		final ComponentCallbacksProvider callbacksProvider;
+		if (ComponentCallbacks.class.isAssignableFrom (callbacksClass))
+			callbacksProvider = new Provider (callbacksClass);
+		else
+			try {
+				callbacksProvider = (ComponentCallbacksProvider) callbacksClass.newInstance ();
+			} catch (final Exception exception) {
+				environment.exceptions.trace (ExceptionResolution.Deferred, exception);
+				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while instantiating)", callbacksClass.getName ()), exception));
 			}
-		}
-		final ComponentCallbacksProvider callbacksProvider = new Provider (callbacksClass, options);
 		environment.transcript.traceInformation ("prepared callbacks provider.");
 		return (callbacksProvider);
 	}
@@ -167,11 +162,11 @@ public final class BasicComponentHarnessMain
 			environment.transcript.traceDebugging ("creating stdio streams...");
 			inputStream = BasicComponentHarnessPreMain.stdin;
 			outputStream = BasicComponentHarnessPreMain.stdout;
-		} else {
+		} else if ((endpoint != null) && endpoint.startsWith ("tcp:")) {
 			environment.transcript.traceDebugging ("creating socket streams (forwarding to `%s`)...", endpoint);
 			final String[] endpointParts = endpoint.split (":");
-			Preconditions.checkArgument (endpointParts.length == 2);
-			final InetSocketAddress channelAddress = new InetSocketAddress (endpointParts[0], Integer.parseInt (endpointParts[1]));
+			Preconditions.checkArgument (endpointParts.length == 3);
+			final InetSocketAddress channelAddress = new InetSocketAddress (endpointParts[1], Integer.parseInt (endpointParts[2]));
 			final Socket channelConnection;
 			final ServerSocket channelAcceptor = new ServerSocket ();
 			environment.transcript.traceDebugging ("listening socket...");
@@ -183,7 +178,8 @@ public final class BasicComponentHarnessMain
 			inputStream = channelConnection.getInputStream ();
 			outputStream = channelConnection.getOutputStream ();
 			environment.transcript.traceDebugging ("accepted socket.");
-		}
+		} else
+			throw (new IllegalArgumentException ());
 		environment.transcript.traceDebugging ("creating pipes...");
 		final Pipe inputPipe = Pipe.open ();
 		final Pipe outputPipe = Pipe.open ();
@@ -242,7 +238,8 @@ public final class BasicComponentHarnessMain
 		component.initialize ();
 		environment.transcript.traceDebugging ("creating callbacks...");
 		final ComponentController componentController = component.getController ();
-		final ComponentCallbacks componentCallbacks = callbacksProvider.provide (ComponentEnvironment.create (environment.identifier, componentController, BasicComponentHarnessMain.class.getClassLoader (), environment.reactor, environment.threading, environment.exceptions));
+		final ComponentEnvironment componentEnvironment = ComponentEnvironment.create (environment.identifier, BasicComponentHarnessMain.class.getClassLoader (), environment.reactor, environment.threading, environment.exceptions, environment.options);
+		final ComponentCallbacks componentCallbacks = callbacksProvider.provide (componentEnvironment);
 		environment.transcript.traceDebugging ("binding callbacks...");
 		componentController.bind (componentCallbacks, channel.getController ());
 		environment.transcript.traceInformation ("prepared component.");
@@ -274,6 +271,23 @@ public final class BasicComponentHarnessMain
 				identifier = ComponentIdentifier.standalone;
 			}
 		}
+		final Map<String, Object> options = new HashMap<String, Object> ();
+		{
+			final List<String> optionsDatas = arguments.getCallbacksOptions ();
+			if (optionsDatas != null) {
+				for (final String optionsData : optionsDatas) {
+					transcript.traceDebugging ("parsing configuration `%s`...", optionsData);
+					final Object optionsObject = DefaultJsonCoder.defaultInstance.decodeFromString (optionsData);
+					if (optionsObject != null) {
+						Preconditions.checkArgument (optionsObject instanceof Map, "invalid configuration `%s` (not a JSON map)", optionsObject);
+						for (final Map.Entry<String, Object> option : ((Map<String, Object>) optionsObject).entrySet ()) {
+							transcript.traceDebugging ("defining configuration `%s` = `%s`...", option.getKey (), option.getValue ());
+							options.put (option.getKey (), option.getValue ());
+						}
+					}
+				}
+			}
+		}
 		final ClassLoader classLoader;
 		if (classLoader_ == null)
 			classLoader = BasicComponentHarnessMain.prepareClassLoader (arguments, transcript, exceptions);
@@ -295,7 +309,7 @@ public final class BasicComponentHarnessMain
 			transcript.traceDebugging ("initializing callbacks reactor....");
 			reactor.initialize ();
 		}
-		final Environment environment = new Environment (identifier, classLoader, reactor, threading, transcript, exceptions);
+		final Environment environment = new Environment (identifier, classLoader, reactor, threading, transcript, exceptions, options);
 		return (environment);
 	}
 	
@@ -348,7 +362,7 @@ public final class BasicComponentHarnessMain
 	
 	public static final class Environment
 	{
-		public Environment (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final Transcript transcript, final ExceptionTracer exceptions)
+		public Environment (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final Transcript transcript, final ExceptionTracer exceptions, final Map<String, Object> options)
 		{
 			super ();
 			Preconditions.checkNotNull (identifier);
@@ -357,17 +371,20 @@ public final class BasicComponentHarnessMain
 			Preconditions.checkNotNull (threading);
 			Preconditions.checkNotNull (transcript);
 			Preconditions.checkNotNull (exceptions);
+			Preconditions.checkNotNull (options);
 			this.identifier = identifier;
 			this.classLoader = classLoader;
 			this.reactor = reactor;
 			this.threading = threading;
 			this.transcript = transcript;
 			this.exceptions = exceptions;
+			this.options = options;
 		}
 		
 		public final ClassLoader classLoader;
 		public final ExceptionTracer exceptions;
 		public final ComponentIdentifier identifier;
+		public final Map<String, Object> options;
 		public final CallbackReactor reactor;
 		public final ThreadingContext threading;
 		public final Transcript transcript;
@@ -468,13 +485,11 @@ public final class BasicComponentHarnessMain
 			implements
 				ComponentCallbacksProvider
 	{
-		Provider (final Class<?> clasz, final Map<String, ?> options)
+		Provider (final Class<?> clasz)
 		{
 			super ();
 			Preconditions.checkNotNull (clasz);
-			Preconditions.checkNotNull (options);
 			this.clasz = clasz;
-			this.options = options;
 		}
 		
 		@Override
@@ -538,6 +553,5 @@ public final class BasicComponentHarnessMain
 		}
 		
 		private final Class<?> clasz;
-		private final Map<String, ?> options;
 	}
 }

@@ -37,18 +37,16 @@ import com.google.common.base.Preconditions;
 public final class ComponentEnvironment
 		extends Object
 {
-	private ComponentEnvironment (final ComponentIdentifier identifier, final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
+	private ComponentEnvironment (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
 	{
 		super ();
 		Preconditions.checkNotNull (identifier);
-		Preconditions.checkNotNull (component);
 		Preconditions.checkNotNull (classLoader);
 		Preconditions.checkNotNull (reactor);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
 		Preconditions.checkNotNull (supplementary);
 		this.identifier = identifier;
-		this.component = component;
 		this.classLoader = classLoader;
 		this.reactor = reactor;
 		this.threading = threading;
@@ -57,23 +55,22 @@ public final class ComponentEnvironment
 			@Override
 			public void uncaughtException (final Thread thread, final Throwable exception)
 			{
-				exceptions.trace (ExceptionResolution.Ignored, exception);
+				ComponentEnvironment.this.exceptions.trace (ExceptionResolution.Ignored, exception);
 			}
 		});
 	}
 	
-	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
 	{
-		return (new ComponentEnvironment (identifier, component, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
+		return (new ComponentEnvironment (identifier, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
 	}
 	
-	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ComponentController component, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> environment)
+	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
 	{
-		return (new ComponentEnvironment (identifier, component, classLoader, reactor, threading, exceptions, environment));
+		return (new ComponentEnvironment (identifier, classLoader, reactor, threading, exceptions, supplementary));
 	}
 	
 	public final ClassLoader classLoader;
-	public final ComponentController component;
 	public final ExceptionTracer exceptions;
 	public final ComponentIdentifier identifier;
 	public final CallbackReactor reactor;

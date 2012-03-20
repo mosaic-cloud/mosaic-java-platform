@@ -77,7 +77,7 @@ public final class BasicComponentHarnessPreMain
 		finalArguments.addAll (Arrays.asList (prefixArguments));
 		finalArguments.addAll (Arrays.asList (argumentsTrimmed));
 		finalArguments.addAll (Arrays.asList (suffixArguments));
-		BasicComponentHarnessPreMain.main (finalArguments.toArray (new String [0]));
+		BasicComponentHarnessPreMain.main (finalArguments.toArray (new String[0]));
 	}
 	
 	public static final void main (final String[] arguments)
