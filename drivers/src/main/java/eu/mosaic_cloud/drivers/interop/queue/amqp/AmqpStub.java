@@ -258,16 +258,18 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             ThreadingContext threading) {
         final MosaicLogger sLogger = MosaicLogger.createLogger(AmqpStub.class);
         synchronized (AbstractDriverStub.MONITOR) {
-            if (AmqpStub.stub == null) {
+            AmqpStub stub = AmqpStub.stub;
+            if (stub == null) {
                 final AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
                 final AmqpDriver driver = AmqpDriver.create(config, threading);
-                AmqpStub.stub = new AmqpStub(config, transmitter, driver, channel);
-                incDriverReference(AmqpStub.stub);
+                stub = new AmqpStub(config, transmitter, driver, channel);
+                AmqpStub.stub = stub;
+                incDriverReference(stub);
                 channel.accept(AmqpSession.DRIVER, AmqpStub.stub);
                 sLogger.trace("AmqpStub: created new stub."); //$NON-NLS-1$
             } else {
                 sLogger.trace("AmqpStub: use existing stub."); //$NON-NLS-1$
-                incDriverReference(AmqpStub.stub);
+                incDriverReference(stub);
             }
         }
         return AmqpStub.stub;
@@ -280,6 +282,7 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             final AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
             final AmqpDriver driver = AmqpDriver.create(config, threading);
             final AmqpStub stub = new AmqpStub(config, transmitter, driver, channel);
+            incDriverReference(stub);
             channel.accept(AmqpSession.DRIVER, stub);
             sLogger.trace("AmqpStub: created new stub."); //$NON-NLS-1$
             return stub;
@@ -316,7 +319,12 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
     @Override
     public synchronized void destroy() {
         synchronized (AbstractDriverStub.MONITOR) {
-            decDriverReference(this);
+            final int ref = decDriverReference(this);
+            if ((ref == 0)) {
+                if (AmqpStub.stub == this) {
+                    AmqpStub.stub = null;
+                }
+            }
         }
         super.destroy();
     }

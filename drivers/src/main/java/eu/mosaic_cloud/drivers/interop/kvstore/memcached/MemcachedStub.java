@@ -137,6 +137,7 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
             final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
             final MemcachedDriver driver = MemcachedDriver.create(config, threading);
             stub = new MemcachedStub(config, transmitter, driver, channel);
+            incDriverReference(stub);
             channel.accept(KeyValueSession.DRIVER, stub);
             channel.accept(MemcachedSession.DRIVER, stub);
         } catch (final Exception e) {

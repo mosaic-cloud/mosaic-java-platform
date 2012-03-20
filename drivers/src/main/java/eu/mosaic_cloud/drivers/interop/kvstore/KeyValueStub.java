@@ -217,6 +217,7 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             stub = new KeyValueStub(config, transmitter, driver, channel);
             stub.driverClass = KeyValueDriverFactory.DriverType.valueOf(
                     driverName.toUpperCase(Locale.ENGLISH)).getDriverClass();
+            incDriverReference(stub);
             channel.accept(KeyValueSession.DRIVER, stub);
         } catch (final DriverNotFoundException e) {
             ExceptionTracer.traceDeferred(e);
