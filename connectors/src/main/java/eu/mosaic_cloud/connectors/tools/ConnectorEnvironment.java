@@ -83,11 +83,10 @@ public final class ConnectorEnvironment {
         this.channelResolver = channelResolver;
         this.supplementary = SupplementaryEnvironment.create(supplementary,
                 new UncaughtExceptionHandler() {
-
                     @Override
                     public void uncaughtException(final Thread thread,
                             final Throwable exception) {
-                        exceptions
+                        ConnectorEnvironment.this.exceptions
                                 .trace(ExceptionResolution.Ignored, exception);
                     }
                 });
