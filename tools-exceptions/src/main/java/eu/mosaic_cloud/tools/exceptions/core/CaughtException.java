@@ -154,7 +154,7 @@ public abstract class CaughtException
 	{
 		Wrapper (final CaughtException exception)
 		{
-			super ();
+			super (exception);
 			this.exception = exception;
 		}
 		
