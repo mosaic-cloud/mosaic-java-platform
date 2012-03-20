@@ -36,6 +36,6 @@ public final class JettyComponentLauncher
 	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		MosBasicComponentLauncher.main (JettyComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
+		MosBasicComponentLauncher.main (JettyComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments, JettyComponentLauncher.class.getClassLoader ());
 	}
 }
