@@ -350,7 +350,7 @@ public final class CloudletComponent
 		@Override
 		public final void unregisteredCallbacks (final Callbacks proxy)
 		{
-			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.RegisterCompleted) {
+			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.UnregisterCompleted) {
 				@Override
 				protected StateAndOutput<FsmState, Void> execute ()
 				{

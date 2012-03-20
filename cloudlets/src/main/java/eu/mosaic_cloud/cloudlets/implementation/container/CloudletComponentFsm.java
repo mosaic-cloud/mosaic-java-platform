@@ -45,8 +45,7 @@ final class CloudletComponentFsm
 		this.defineTransition (FsmTransition.CreateCompleted, FsmState.CreatePending, FsmState.RegisterPending2);
 		this.defineTransition (FsmTransition.RegisterCompleted, new FsmState[] {FsmState.RegisterPending2, FsmState.RegisterPending1}, new FsmState[] {FsmState.RegisterPending1, FsmState.InitializePending});
 		this.defineTransition (FsmTransition.InitializeCompleted, FsmState.InitializePending, FsmState.Active);
-		this.defineTransition (FsmTransition.ExternalDestroy, FsmState.Active, FsmState.DestroyPending);
-		this.defineTransition (FsmTransition.DestroyCompleted, FsmState.DestroyPending, FsmState.UnregisterPending2);
+		this.defineTransition (FsmTransition.ExternalDestroy, FsmState.Active, FsmState.UnregisterPending2);
 		this.defineTransition (FsmTransition.UnregisterCompleted, new FsmState[] {FsmState.UnregisterPending2, FsmState.UnregisterPending1}, new FsmState[] {FsmState.UnregisterPending1, FsmState.Destroyed});
 		this.defineTransition (FsmTransition.InternalFailure, FsmState.values (), new FsmState[] {FsmState.Failed});
 		this.initialize (FsmState.CreatePending);
@@ -258,7 +257,6 @@ final class CloudletComponentFsm
 		Active,
 		CreatePending,
 		Destroyed,
-		DestroyPending,
 		Failed,
 		InitializePending,
 		RegisterPending1,
@@ -298,7 +296,6 @@ final class CloudletComponentFsm
 				StateMachine.Transition
 	{
 		CreateCompleted,
-		DestroyCompleted,
 		ExternalDestroy,
 		InitializeCompleted,
 		InternalFailure,
