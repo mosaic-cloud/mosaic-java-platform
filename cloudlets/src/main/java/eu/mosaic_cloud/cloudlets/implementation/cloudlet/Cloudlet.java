@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.cloudlet;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -32,9 +32,9 @@ import eu.mosaic_cloud.cloudlets.core.CloudletState;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmCallbackCompletionTransaction;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmState;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmTransition;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmCallbackCompletionTransaction;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmState;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmTransition;
 import eu.mosaic_cloud.cloudlets.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;

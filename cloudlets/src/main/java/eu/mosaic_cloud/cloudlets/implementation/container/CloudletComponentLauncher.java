@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.container;
 
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 

@@ -18,11 +18,11 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.cloudlet;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletState;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmState;
-import eu.mosaic_cloud.cloudlets.runtime.CloudletFsm.FsmTransition;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmState;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmTransition;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;

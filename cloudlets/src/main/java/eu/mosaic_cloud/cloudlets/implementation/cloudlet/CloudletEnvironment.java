@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.cloudlet;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;

@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.cloudlet;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime;
+package eu.mosaic_cloud.cloudlets.implementation.container;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.cloudlets.core.CloudletException;
+import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletManager;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
