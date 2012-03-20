@@ -373,7 +373,6 @@ public final class CloudletComponent
 				@Override
 				protected CallbackCompletion<Void> execute ()
 				{
-					Preconditions.checkArgument (component == CloudletComponent.this.componentControllerProxy);
 					// FIXME: log the situation
 					final ComponentCallReply reply = ComponentCallReply.create (false, "unsupported call", request.reference);
 					CloudletComponent.this.componentControllerProxy.callReturn (reply);
@@ -389,7 +388,6 @@ public final class CloudletComponent
 				@Override
 				protected CallbackCompletion<Void> execute ()
 				{
-					Preconditions.checkArgument (component == CloudletComponent.this.componentControllerProxy);
 					final Trigger<ComponentCallReply> trigger = CloudletComponent.this.componentPendingOutboundCalls.remove (reply.reference);
 					if (trigger != null) {
 						trigger.triggerSucceeded (reply);
@@ -408,7 +406,6 @@ public final class CloudletComponent
 				@Override
 				protected CallbackCompletion<Void> execute ()
 				{
-					Preconditions.checkArgument (component == CloudletComponent.this.componentControllerProxy);
 					// FIXME: log the situation
 					return (CallbackCompletion.createOutcome ());
 				}
@@ -418,7 +415,6 @@ public final class CloudletComponent
 		@Override
 		public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception)
 		{
-			Preconditions.checkState (component == CloudletComponent.this.componentControllerProxy);
 			CloudletComponent.this.handleInternalFailure (null, exception);
 			return (CallbackCompletion.createOutcome ());
 		}
@@ -464,7 +460,6 @@ public final class CloudletComponent
 				@Override
 				protected CallbackCompletion<Void> execute ()
 				{
-					Preconditions.checkArgument (component == CloudletComponent.this.componentControllerProxy);
 					// FIXME: log the situation
 					return (CallbackCompletion.createOutcome ());
 				}
