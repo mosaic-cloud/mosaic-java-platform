@@ -625,7 +625,6 @@ public final class Threading
 		Preconditions.checkNotNull (context);
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkNotNull (runnable);
-		Preconditions.checkNotNull (runnable);
 		Runtime.getRuntime ().addShutdownHook (context.createThread (ThreadConfiguration.create (owner, name, true), runnable));
 	}
 	
