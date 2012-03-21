@@ -259,13 +259,8 @@ public final class CloudletComponent
 		public final Channel create ()
 		{
 			// FIXME: This should be done in `Active` state
-			return (CloudletComponent.this.fsm.new FsmAccess<Void, Channel> () {
-				@Override
-				protected final Channel execute (final Void input)
-				{
-					return (CloudletComponent.this.channel);
-				}
-			}.trigger (null));
+			// FIXME: This should be done in an `FsmAccess`
+			return (CloudletComponent.this.channel);
 		}
 		
 		@Override
@@ -293,58 +288,52 @@ public final class CloudletComponent
 			Preconditions.checkNotNull (target);
 			Preconditions.checkNotNull (callbacks);
 			// FIXME: This should be done in `Active` state
-			CloudletComponent.this.fsm.new FsmVoidAccess () {
+			// FIXME: This should be done in an `FsmAccess`
+			final ComponentIdentifier identifier = ComponentIdentifier.resolve (target);
+			final String operation = ConfigProperties.getString ("CloudletComponent.7");
+			final ComponentCallReference reference = ComponentCallReference.create ();
+			final ComponentCallRequest request = ComponentCallRequest.create (operation, null, reference);
+			final DeferredFuture<ComponentCallReply> future = DeferredFuture.create (ComponentCallReply.class);
+			CloudletComponent.this.componentControllerProxy.call (identifier, request);
+			CloudletComponent.this.componentPendingOutboundCalls.put (reference, future.trigger);
+			CloudletComponent.this.fsm.new FsmFutureCompletionAccess<ComponentCallReply> () {
 				@Override
-				protected final Void execute ()
+				protected Void execute (final Future<ComponentCallReply> future1)
 				{
-					final ComponentIdentifier identifier = ComponentIdentifier.resolve (target);
-					final String operation = ConfigProperties.getString ("CloudletComponent.7");
-					final ComponentCallReference reference = ComponentCallReference.create ();
-					final ComponentCallRequest request = ComponentCallRequest.create (operation, null, reference);
-					final DeferredFuture<ComponentCallReply> future = DeferredFuture.create (ComponentCallReply.class);
-					CloudletComponent.this.componentControllerProxy.call (identifier, request);
-					CloudletComponent.this.componentPendingOutboundCalls.put (reference, future.trigger);
-					CloudletComponent.this.fsm.new FsmFutureCompletionAccess<ComponentCallReply> () {
-						@Override
-						protected Void execute (final Future<ComponentCallReply> future1)
-						{
-							Preconditions.checkState (future == future1);
-							final ComponentCallReply reply;
-							try {
-								reply = future.get ();
-							} catch (final Throwable exception) {
-								CloudletComponent.this.exceptions.traceHandledException (exception);
-								// FIXME: should call callbacks with failure
-								return (null);
-							}
-							if (!reply.ok) {
-								// FIXME: should call callbacks with failure
-								return (null);
-							}
-							final String peerIdentifierKey = ConfigProperties.getString ("CloudletComponent.13");
-							final String peerEndpointKey = ConfigProperties.getString ("CloudletComponent.12");
-							final String peerIdentifier;
-							final String peerEndpoint;
-							try {
-								peerIdentifier = (String) ((Map<String, Object>) reply.outputsOrError).get (peerIdentifierKey);
-								peerEndpoint = (String) ((Map<String, Object>) reply.outputsOrError).get (peerEndpointKey);
-							} catch (final Throwable exception) {
-								CloudletComponent.this.exceptions.traceHandledException (exception);
-								// FIXME: should call callbacks with failure
-								return (null);
-							}
-							try {
-								callbacks.resolved (CloudletComponent.this.channelFactoryProxy, target, peerIdentifier, peerEndpoint);
-							} catch (final Throwable exception) {
-								CloudletComponent.this.exceptions.traceHandledException (exception);
-								return (null);
-							}
-							return (null);
-						}
-					}.observe (future);
+					Preconditions.checkState (future == future1);
+					final ComponentCallReply reply;
+					try {
+						reply = future.get ();
+					} catch (final Throwable exception) {
+						CloudletComponent.this.exceptions.traceHandledException (exception);
+						// FIXME: should call callbacks with failure
+						return (null);
+					}
+					if (!reply.ok) {
+						// FIXME: should call callbacks with failure
+						return (null);
+					}
+					final String peerIdentifierKey = ConfigProperties.getString ("CloudletComponent.13");
+					final String peerEndpointKey = ConfigProperties.getString ("CloudletComponent.12");
+					final String peerIdentifier;
+					final String peerEndpoint;
+					try {
+						peerIdentifier = (String) ((Map<String, Object>) reply.outputsOrError).get (peerIdentifierKey);
+						peerEndpoint = (String) ((Map<String, Object>) reply.outputsOrError).get (peerEndpointKey);
+					} catch (final Throwable exception) {
+						CloudletComponent.this.exceptions.traceHandledException (exception);
+						// FIXME: should call callbacks with failure
+						return (null);
+					}
+					try {
+						callbacks.resolved (CloudletComponent.this.channelFactoryProxy, target, peerIdentifier, peerEndpoint);
+					} catch (final Throwable exception) {
+						CloudletComponent.this.exceptions.traceHandledException (exception);
+						return (null);
+					}
 					return (null);
 				}
-			}.trigger ();
+			}.observe (future);
 		}
 		
 		@Override
