@@ -38,14 +38,14 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.basho.riak</groupId>
-			<artifactId>riak-client</artifactId>
-			<version>${versions.dependencies.riak}</version>
-		</dependency>
-		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
 			<version>${versions.dependencies.rome}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${versions.dependencies.json}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
