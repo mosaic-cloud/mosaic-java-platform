@@ -31,7 +31,7 @@ public final class IndexerComponentPreMain extends Object {
 
     public static final void main(final String[] arguments) throws Throwable {
         BasicComponentHarnessPreMain.main(
-                "eu.mosaic_cloud.cloudlets.runtime.CloudletComponentCallbacks",
+                "eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponent$ComponentCallbacksProvider",
                 new String[] {},
                 new String[] {
                         "--component-callbacks-configuration",
