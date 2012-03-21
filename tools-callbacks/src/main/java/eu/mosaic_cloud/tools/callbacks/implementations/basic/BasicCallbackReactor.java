@@ -210,6 +210,7 @@ public final class BasicCallbackReactor
 					this.reactor.exceptions.traceHandledException (exception);
 					throw (exception.getCause ());
 				}
+			// FIXME
 			synchronized (this.monitor) {
 				this.reactor.transcript.traceDebugging ("invocking (triggered) for proxy `%{object:identity}` the method `%{method}` with arguments `%{array}`...", this.proxy, method, arguments);
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
