@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
+import java.io.File;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -63,12 +64,19 @@ public final class JettyComponentCallbacks
 		super ();
 		this.monitor = Monitor.create (this);
 		synchronized (this.monitor) {
-			this.threading = context.threading;
+			this.context = context;
+			this.threading = this.context.threading;
 			this.transcript = Transcript.create (this);
-			this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
+			this.exceptions = TranscriptExceptionTracer.create (this.transcript, this.context.exceptions);
 			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, DeferredFuture.Trigger<ComponentCallReply>> ();
 			this.status = Status.WaitingRegistered;
-			JettyComponentContext.selfIdentifier = context.identifier;
+			JettyComponentContext.selfIdentifier = this.context.identifier;
+			JettyComponentContext.applicationWar = new File (this.context.supplementary.get ("war", String.class, "embedded"));
+			Preconditions.checkArgument (JettyComponentContext.applicationWar != null, "missing `war` configuration...");
+			if (!"embedded".equals (JettyComponentContext.applicationWar.getPath ())) {
+				Preconditions.checkArgument (JettyComponentContext.applicationWar.isFile (), "invalid `war` file; (does not exist)");
+				Preconditions.checkArgument (JettyComponentContext.applicationWar.canRead (), "invalid `war` file; (can not read)");
+			}
 			JettyComponentContext.callbacks = this;
 			JettyComponent.create ();
 		}
@@ -280,12 +288,15 @@ public final class JettyComponentCallbacks
 			jettyProperties.setProperty ("queue", JettyComponentContext.httpgRequestsQueue);
 			if (JettyComponentContext.httpgRequestsAutodeclare)
 				jettyProperties.setProperty ("auto-declare", "true");
-			jettyProperties.setProperty ("webapp", JettyComponentContext.applicationWar.getAbsolutePath ());
+			if (!"embedded".equals (JettyComponentContext.applicationWar.getPath ()))
+				jettyProperties.setProperty ("webapp", JettyComponentContext.applicationWar.getAbsolutePath ());
+			else
+				jettyProperties.setProperty ("webapp", "embedded");
 			jettyProperties.setProperty ("tmp", JettyComponentContext.applicationTemporary.getAbsolutePath ());
 			jettyProperties.setProperty ("app-context", JettyComponentContext.applicationContextPath);
 			jettyProperties.setProperty ("tmp", JettyComponentContext.applicationTemporary.getAbsolutePath ());
 			final Server jettyServer;
-			jettyServer = ServerCommandLine.createServer (jettyProperties);
+			jettyServer = ServerCommandLine.createServer (jettyProperties, this.context.classLoader);
 			this.jettyServer = jettyServer;
 			this.jettyThread = Threading.createAndStartDaemonThread (this.threading, jettyServer, "jetty", new Runnable () {
 				@Override
@@ -318,6 +329,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	private ComponentController component;
+	private ComponentEnvironment context;
 	private final TranscriptExceptionTracer exceptions;
 	private Server jettyServer;
 	private Thread jettyThread;

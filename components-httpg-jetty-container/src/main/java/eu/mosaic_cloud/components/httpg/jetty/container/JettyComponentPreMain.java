@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
-import java.io.File;
-
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
 import com.google.common.base.Preconditions;
@@ -40,11 +38,7 @@ public final class JettyComponentPreMain
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		Preconditions.checkArgument (arguments != null && arguments.length >= 1, "invalid arguments: expected `<application-war> ...`");
-		JettyComponentContext.applicationWar = new File (arguments[0]);
-		Preconditions.checkArgument (JettyComponentContext.applicationWar != null, "missing `war` configuration...");
-		Preconditions.checkArgument (JettyComponentContext.applicationWar.isFile (), "invalid `war` file; (does not exist)");
-		Preconditions.checkArgument (JettyComponentContext.applicationWar.canRead (), "invalid `war` file; (can not read)");
-		BasicComponentHarnessPreMain.main (JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments, 1);
+		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 1), "invalid arguments: expected `<application-war> ...`");
+		BasicComponentHarnessPreMain.main (JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), new String[] {}, new String[] {"--component-callbacks-configuration", String.format ("{\"%s\":\"%s\"}", "war", arguments[1])}, arguments, 1);
 	}
 }

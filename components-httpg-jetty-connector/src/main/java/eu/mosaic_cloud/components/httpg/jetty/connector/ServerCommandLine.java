@@ -23,6 +23,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.cli.CommandLine;
@@ -146,7 +150,7 @@ public class ServerCommandLine {
 		return props;
 	}
 
-	public static Server createServer(Properties props) {
+	public static Server createServer(Properties props, final ClassLoader loader) {
 		Server jettyServer = new Server();
 		String userName = props.getProperty("username");
 		String userPassword = props.getProperty("password");
@@ -187,8 +191,25 @@ public class ServerCommandLine {
 			if ((tmp != null) && (!tmp.isEmpty()))
 				webapp.setTempDirectory(new File(tmp));
 			webapp.setContextPath(ctxPath);
-			webapp.setWar(webAppDir);
-			webapp.setParentLoaderPriority(true);
+			if (!"embedded".equals (webAppDir))
+				webapp.setWar(webAppDir);
+			else {
+				StringBuilder classPath = new StringBuilder();
+				try {
+					Enumeration<URL> resources = loader.getResources("");
+					while (resources.hasMoreElements()) {
+						if (classPath.length() > 0)
+							classPath.append(';');
+						classPath.append(resources.nextElement().toString());
+					}
+				} catch (final Throwable exception) {
+					throw (new Error(exception));
+				}
+				webapp.setResourceBase(loader.getResource("WEB-INF/web.xml").toString().replaceAll("WEB-INF/web.xml$", ""));
+				webapp.setExtraClasspath(classPath.toString());
+				webapp.setClassLoader(loader);
+			}
+			webapp.setParentLoaderPriority(false);
 			webapp.addServlet(DefaultServlet.class, "/");
 			webapp.setInitParameter("dirAllowed", "false");
 			webapp.setInitParameter("welcomeServlets", "true");
@@ -205,7 +226,7 @@ public class ServerCommandLine {
 
 	public static void main(String[] args) throws Exception {
 		Properties props = getConfig(args);
-		Server server = createServer(props);
+		Server server = createServer(props, ServerCommandLine.class.getClassLoader());
 		server.start();
 		server.join ();
 	}
