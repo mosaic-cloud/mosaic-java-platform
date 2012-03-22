@@ -192,22 +192,28 @@ public class ServerCommandLine {
 			if (!"embedded".equals (webAppDir))
 				webapp.setWar(webAppDir);
 			else {
-				StringBuilder classPath = new StringBuilder();
-				try {
-					Enumeration<URL> resources = loader.getResources("");
-					while (resources.hasMoreElements()) {
-						if (classPath.length() > 0)
+				String resourceBase = loader.getResource("WEB-INF/web.xml").toString().replaceAll("/WEB-INF/web.xml$", "");
+				if (!resourceBase.matches("^jar:file:[^;]+!$")) {
+					// System.err.println("using embedded " + resourceBase);
+					StringBuilder classPath = new StringBuilder();
+					try {
+						Enumeration<URL> resources = loader.getResources("");
+						while (resources.hasMoreElements()) {
+							classPath.append(resources.nextElement().toString());
 							classPath.append(';');
-						classPath.append(resources.nextElement().toString());
+						}
+					} catch (final Throwable exception) {
+						throw (new Error(exception));
 					}
-				} catch (final Throwable exception) {
-					throw (new Error(exception));
+					webapp.setResourceBase(resourceBase);
+					webapp.setExtraClasspath(classPath.toString());
+					webapp.setClassLoader(loader);
+				} else {
+					// System.err.println("using jar " + resourceBase);
+					webapp.setWar(resourceBase.substring("jar:file:".length(), resourceBase.length() - 1));
 				}
-				webapp.setResourceBase(loader.getResource("WEB-INF/web.xml").toString().replaceAll("WEB-INF/web.xml$", ""));
-				webapp.setExtraClasspath(classPath.toString());
-				webapp.setClassLoader(loader);
 			}
-			webapp.setParentLoaderPriority(false);
+			webapp.setParentLoaderPriority(true);
 			webapp.addServlet(DefaultServlet.class, "/");
 			webapp.setInitParameter("dirAllowed", "false");
 			webapp.setInitParameter("welcomeServlets", "true");
