@@ -45,6 +45,7 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>${versions.dependencies.servlet-mortbay}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	
