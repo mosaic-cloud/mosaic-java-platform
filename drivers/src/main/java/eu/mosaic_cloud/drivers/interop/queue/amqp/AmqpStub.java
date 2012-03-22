@@ -163,7 +163,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
         public void handleShutdown(String consumerTag, String errorMessage) {
             final AmqpResponseTransmitter transmitter = AmqpStub.this
                     .getResponseTransmitter(AmqpResponseTransmitter.class);
-            transmitter.sendShutdownSignal(this.session, consumerTag, errorMessage);
+            transmitter.sendShutdownSignal(this.session, consumerTag,
+                    errorMessage);
         }
     }
 
@@ -175,7 +176,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
      * 
      */
     @SuppressWarnings("rawtypes")
-    final class DriverOperationFinishedHandler implements IOperationCompletionHandler {
+    final class DriverOperationFinishedHandler implements
+            IOperationCompletionHandler {
 
         private IResult<?> result;
         private AmqpOperations operation;
@@ -185,11 +187,13 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
         private final AmqpResponseTransmitter transmitter;
         private final Session session;
 
-        public DriverOperationFinishedHandler(CompletionToken complToken, Session session) {
+        public DriverOperationFinishedHandler(CompletionToken complToken,
+                Session session) {
             this.complToken = complToken;
             this.signal = new CountDownLatch(1);
             this.driver = AmqpStub.this.getDriver(AmqpDriver.class);
-            this.transmitter = AmqpStub.this.getResponseTransmitter(AmqpResponseTransmitter.class);
+            this.transmitter = AmqpStub.this
+                    .getResponseTransmitter(AmqpResponseTransmitter.class);
             this.session = session;
         }
 
@@ -202,8 +206,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             }
             this.driver.removePendingOperation(this.result);
             // NOTE: result is error
-            this.transmitter.sendResponse(this.session, this.complToken, this.operation,
-                    error.getMessage(), true);
+            this.transmitter.sendResponse(this.session, this.complToken,
+                    this.operation, error.getMessage(), true);
         }
 
         @Override
@@ -214,8 +218,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
                 ExceptionTracer.traceIgnored(e);
             }
             this.driver.removePendingOperation(this.result);
-            this.transmitter.sendResponse(this.session, this.complToken, this.operation, response,
-                    false);
+            this.transmitter.sendResponse(this.session, this.complToken,
+                    this.operation, response, false);
         }
 
         public void setDetails(AmqpOperations operation, IResult<?> result) {
@@ -226,24 +230,6 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
     }
 
     private static AmqpStub stub;
-
-    /**
-     * Creates a new stub for the AMQP driver.
-     * 
-     * @param config
-     *            the configuration data for the stub and driver
-     * @param transmitter
-     *            the transmitter object which will send responses to requests
-     *            submitted to this stub
-     * @param driver
-     *            the driver used for processing requests submitted to this stub
-     * @param commChannel
-     *            the channel for communicating with connectors
-     */
-    private AmqpStub(IConfiguration config, ResponseTransmitter transmitter,
-            IResourceDriver driver, ZeroMqChannel commChannel) {
-        super(config, transmitter, driver, commChannel);
-    }
 
     /**
      * Returns a stub for the AMQP driver.
@@ -275,13 +261,14 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
         return AmqpStub.stub;
     }
 
-    public static AmqpStub createDetached(IConfiguration config, ZeroMqChannel channel,
-            ThreadingContext threading) {
+    public static AmqpStub createDetached(IConfiguration config,
+            ZeroMqChannel channel, ThreadingContext threading) {
         final MosaicLogger sLogger = MosaicLogger.createLogger(AmqpStub.class);
         synchronized (AbstractDriverStub.MONITOR) {
             final AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter();
             final AmqpDriver driver = AmqpDriver.create(config, threading);
-            final AmqpStub stub = new AmqpStub(config, transmitter, driver, channel);
+            final AmqpStub stub = new AmqpStub(config, transmitter, driver,
+                    channel);
             incDriverReference(stub);
             channel.accept(AmqpSession.DRIVER, stub);
             sLogger.trace("AmqpStub: created new stub."); //$NON-NLS-1$
@@ -296,14 +283,19 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
      *            the configuration data
      * @return resource connection data
      */
-    protected static DriverConnectionData readConnectionData(IConfiguration config) {
-        final String resourceHost = ConfigUtils.resolveParameter(config, "", String.class, //$NON-NLS-1$
+    protected static DriverConnectionData readConnectionData(
+            IConfiguration config) {
+        final String resourceHost = ConfigUtils.resolveParameter(config,
+                "", String.class, //$NON-NLS-1$
                 ConnectionFactory.DEFAULT_HOST);
-        final int resourcePort = ConfigUtils.resolveParameter(config, "", Integer.class, //$NON-NLS-1$
+        final int resourcePort = ConfigUtils.resolveParameter(config,
+                "", Integer.class, //$NON-NLS-1$
                 ConnectionFactory.DEFAULT_AMQP_PORT);
-        final String amqpServerUser = ConfigUtils.resolveParameter(config, "", String.class, //$NON-NLS-1$
+        final String amqpServerUser = ConfigUtils.resolveParameter(config,
+                "", String.class, //$NON-NLS-1$
                 ConnectionFactory.DEFAULT_USER);
-        final String amqpServerPasswd = ConfigUtils.resolveParameter(config, "", String.class, //$NON-NLS-1$
+        final String amqpServerPasswd = ConfigUtils.resolveParameter(config,
+                "", String.class, //$NON-NLS-1$
                 ConnectionFactory.DEFAULT_PASS);
         DriverConnectionData cData;
         if (amqpServerUser.equals(ConnectionFactory.DEFAULT_USER)
@@ -314,6 +306,24 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
                     "AMQP", amqpServerUser, amqpServerPasswd); //$NON-NLS-1$
         }
         return cData;
+    }
+
+    /**
+     * Creates a new stub for the AMQP driver.
+     * 
+     * @param config
+     *            the configuration data for the stub and driver
+     * @param transmitter
+     *            the transmitter object which will send responses to requests
+     *            submitted to this stub
+     * @param driver
+     *            the driver used for processing requests submitted to this stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    private AmqpStub(IConfiguration config, ResponseTransmitter transmitter,
+            IResourceDriver driver, ZeroMqChannel commChannel) {
+        super(config, transmitter, driver, commChannel);
     }
 
     @Override
@@ -337,7 +347,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
                                                                     // 10/12/11
                                                                     // 3:31 PM
             throws IOException, ClassNotFoundException {
-        Preconditions.checkArgument(message.specification instanceof AmqpMessage);
+        Preconditions
+                .checkArgument(message.specification instanceof AmqpMessage);
         final AmqpMessage amqpMessage = (AmqpMessage) message.specification;
         CompletionToken token;
         IResult<Boolean> resultBool;
@@ -371,13 +382,14 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             durable = declExchange.getDurable();
             autoDelete = declExchange.getAutoDelete();
             passive = declExchange.getPassive();
-            this.logger.trace("AmqpStub - Received request for DECLARE EXCHANGE ");//$NON-NLS-1$
+            this.logger
+                    .trace("AmqpStub - Received request for DECLARE EXCHANGE ");//$NON-NLS-1$
             // NOTE: execute operation
             final DriverOperationFinishedHandler exchHandler = new DriverOperationFinishedHandler(
                     token, session);
             resultBool = driver.declareExchange(token.getClientId(), exchange,
-                    AmqpExchangeType.valueOf(type.toString().toUpperCase()), durable, autoDelete,
-                    passive, exchHandler);
+                    AmqpExchangeType.valueOf(type.toString().toUpperCase()),
+                    durable, autoDelete, passive, exchHandler);
             exchHandler.setDetails(AmqpOperations.DECLARE_EXCHANGE, resultBool);
             break;
         case DECL_QUEUE_REQUEST:
@@ -392,8 +404,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             // NOTE: execute operation
             final DriverOperationFinishedHandler queueHandler = new DriverOperationFinishedHandler(
                     token, session);
-            resultBool = driver.declareQueue(token.getClientId(), queue, exclusive, durable,
-                    autoDelete, passive, queueHandler);
+            resultBool = driver.declareQueue(token.getClientId(), queue,
+                    exclusive, durable, autoDelete, passive, queueHandler);
             queueHandler.setDetails(AmqpOperations.DECLARE_QUEUE, resultBool);
             break;
         case BIND_QUEUE_REQUEST:
@@ -406,8 +418,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             // NOTE: execute operation
             final DriverOperationFinishedHandler bindHandler = new DriverOperationFinishedHandler(
                     token, session);
-            resultBool = driver.bindQueue(token.getClientId(), exchange, queue, routingKey,
-                    bindHandler);
+            resultBool = driver.bindQueue(token.getClientId(), exchange, queue,
+                    routingKey, bindHandler);
             bindHandler.setDetails(AmqpOperations.BIND_QUEUE, resultBool);
             break;
         case PUBLISH_REQUEST:
@@ -427,14 +439,16 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             if (publish.hasReplyTo()) {
                 replyTo = publish.getReplyTo();
             }
-            final AmqpOutboundMessage mssg = new AmqpOutboundMessage(exchange, routingKey,
-                    dataBytes, mandatory, immediate, durable, replyTo, null,
-                    publish.getContentType(), correlationId, null);
+            final AmqpOutboundMessage mssg = new AmqpOutboundMessage(exchange,
+                    routingKey, dataBytes, mandatory, immediate, durable,
+                    replyTo, null, publish.getContentType(), correlationId,
+                    null);
             this.logger.trace("AmqpStub - Received request for PUBLISH"); //$NON-NLS-1$
             // NOTE: execute operation
             final DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler(
                     token, session);
-            resultBool = driver.basicPublish(token.getClientId(), mssg, pubHandler);
+            resultBool = driver.basicPublish(token.getClientId(), mssg,
+                    pubHandler);
             pubHandler.setDetails(AmqpOperations.PUBLISH, resultBool);
             break;
         case CONSUME_REQUEST:
@@ -449,8 +463,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             final DriverOperationFinishedHandler consHandler = new DriverOperationFinishedHandler(
                     token, session);
             final IAmqpConsumer consumeCallback = new ConsumerHandler(session);
-            resultString = driver.basicConsume(queue, consumer, exclusive, autoAck,
-                    consumeCallback, consHandler);
+            resultString = driver.basicConsume(queue, consumer, exclusive,
+                    autoAck, consumeCallback, consHandler);
             consHandler.setDetails(AmqpOperations.CONSUME, resultString);
             break;
         case GET_REQUEST:
@@ -462,7 +476,8 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             // NOTE: execute operation
             final DriverOperationFinishedHandler getHandler = new DriverOperationFinishedHandler(
                     token, session);
-            resultBool = driver.basicGet(token.getClientId(), queue, autoAck, getHandler);
+            resultBool = driver.basicGet(token.getClientId(), queue, autoAck,
+                    getHandler);
             getHandler.setDetails(AmqpOperations.GET, resultBool);
             break;
         case CANCEL_REQUEST:
@@ -485,14 +500,17 @@ public class AmqpStub extends AbstractDriverStub { // NOPMD by georgiana on
             // NOTE: execute operation
             final DriverOperationFinishedHandler ackHandler = new DriverOperationFinishedHandler(
                     token, session);
-            resultBool = driver.basicAck(token.getClientId(), delivery, multiple, ackHandler);
+            resultBool = driver.basicAck(token.getClientId(), delivery,
+                    multiple, ackHandler);
             ackHandler.setDetails(AmqpOperations.ACK, resultBool);
             break;
         default:
             final DriverOperationFinishedHandler errHandler = new DriverOperationFinishedHandler(
                     null, session);
-            driver.handleUnsupportedOperationError(amqpMessage.toString(), errHandler);
-            this.logger.error("Unknown amqp message: " + amqpMessage.toString()); //$NON-NLS-1$
+            driver.handleUnsupportedOperationError(amqpMessage.toString(),
+                    errHandler);
+            this.logger
+                    .error("Unknown amqp message: " + amqpMessage.toString()); //$NON-NLS-1$
             break;
         }
     }

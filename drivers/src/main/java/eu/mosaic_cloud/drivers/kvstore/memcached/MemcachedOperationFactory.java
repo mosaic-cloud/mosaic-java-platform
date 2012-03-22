@@ -60,22 +60,6 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
     // PM
     private final MemcachedClient mcClient;
 
-    private MemcachedOperationFactory(List<?> servers, String user, String password, String bucket,
-            boolean useBucket) throws IOException {
-        super();
-        if (useBucket) {
-            @SuppressWarnings("unchecked")
-            final List<URI> nodes = (List<URI>) servers;
-            this.mcClient = new CouchbaseClient(nodes, bucket, user, password);
-        } else {
-            @SuppressWarnings("unchecked")
-            final List<URI> nodes = (List<URI>) servers;
-            final CouchbaseConnectionFactory factory = new CouchbaseConnectionFactory(nodes,
-                    "default", "");
-            this.mcClient = new CouchbaseClient(factory);
-        }
-    }
-
     /**
      * Creates a new factory.
      * 
@@ -91,8 +75,8 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
      *            whether to connect to the specified bucket or to the default
      * @return the factory
      */
-    public static MemcachedOperationFactory getFactory(List<?> hosts, String user, String password,
-            String bucket, boolean useBucket) {
+    public static MemcachedOperationFactory getFactory(List<?> hosts,
+            String user, String password, String bucket, boolean useBucket) {
         try {
             return new MemcachedOperationFactory(hosts, user, password, bucket, // NOPMD
                                                                                 // by
@@ -108,16 +92,34 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         return null;
     }
 
+    private MemcachedOperationFactory(List<?> servers, String user,
+            String password, String bucket, boolean useBucket)
+            throws IOException {
+        super();
+        if (useBucket) {
+            @SuppressWarnings("unchecked")
+            final List<URI> nodes = (List<URI>) servers;
+            this.mcClient = new CouchbaseClient(nodes, bucket, user, password);
+        } else {
+            @SuppressWarnings("unchecked")
+            final List<URI> nodes = (List<URI>) servers;
+            final CouchbaseConnectionFactory factory = new CouchbaseConnectionFactory(
+                    nodes, "default", "");
+            this.mcClient = new CouchbaseClient(factory);
+        }
+    }
+
     private IOperation<?> buildAddOperation(final Object... parameters) {
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws ExecutionException, InterruptedException {
+            public Boolean call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 final int exp = (Integer) parameters[1];
                 final byte[] data = (byte[]) parameters[2];
-                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.add(key,
-                        exp, data);
+                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+                        .add(key, exp, data);
                 return opResult.get();
             }
         });
@@ -127,12 +129,14 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws ExecutionException, InterruptedException {
+            public Boolean call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 final byte[] data = (byte[]) parameters[1];
-                final long cas = MemcachedOperationFactory.this.mcClient.gets(key).getCas();
-                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.append(
-                        cas, key, data);
+                final long cas = MemcachedOperationFactory.this.mcClient.gets(
+                        key).getCas();
+                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+                        .append(cas, key, data);
                 return opResult.get();
             }
         });
@@ -142,10 +146,12 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws ExecutionException, InterruptedException {
+            public Boolean call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 final byte[] data = (byte[]) parameters[1];
-                final long cas = MemcachedOperationFactory.this.mcClient.gets(key).getCas();
+                final long cas = MemcachedOperationFactory.this.mcClient.gets(
+                        key).getCas();
                 final Future<CASResponse> opResult = MemcachedOperationFactory.this.mcClient
                         .asyncCAS(key, cas, data);
                 return (opResult.get() == CASResponse.OK);
@@ -157,7 +163,8 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws ExecutionException, InterruptedException {
+            public Boolean call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
                         .delete(key);
@@ -167,27 +174,32 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
     }
 
     private IOperation<?> buildGetBulkOperation(final Object... parameters) {
-        return new GenericOperation<Map<String, byte[]>>(new Callable<Map<String, byte[]>>() {
+        return new GenericOperation<Map<String, byte[]>>(
+                new Callable<Map<String, byte[]>>() {
 
-            @Override
-            public Map<String, byte[]> call() throws ExecutionException, InterruptedException {
-                final String[] keys = (String[]) parameters;
-                final Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient
-                        .asyncGetBulk(keys);
-                final Map<String, byte[]> result = new HashMap<String, byte[]>();
-                for (final Map.Entry<String, Object> entry : opResult.get().entrySet()) {
-                    result.put(entry.getKey(), (byte[]) entry.getValue());
-                }
-                return result;
-            }
-        });
+                    @Override
+                    public Map<String, byte[]> call()
+                            throws ExecutionException, InterruptedException {
+                        final String[] keys = (String[]) parameters;
+                        final Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient
+                                .asyncGetBulk(keys);
+                        final Map<String, byte[]> result = new HashMap<String, byte[]>();
+                        for (final Map.Entry<String, Object> entry : opResult
+                                .get().entrySet()) {
+                            result.put(entry.getKey(),
+                                    (byte[]) entry.getValue());
+                        }
+                        return result;
+                    }
+                });
     }
 
     private IOperation<?> buildGetOperation(final Object... parameters) {
         return new GenericOperation<byte[]>(new Callable<byte[]>() {
 
             @Override
-            public byte[] call() throws ExecutionException, InterruptedException {
+            public byte[] call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 final Future<Object> opResult = MemcachedOperationFactory.this.mcClient
                         .asyncGet(key);
@@ -200,12 +212,14 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws ExecutionException, InterruptedException {
+            public Boolean call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 final byte[] data = (byte[]) parameters[1];
-                final long cas = MemcachedOperationFactory.this.mcClient.gets(key).getCas();
-                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.prepend(
-                        cas, key, data);
+                final long cas = MemcachedOperationFactory.this.mcClient.gets(
+                        key).getCas();
+                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+                        .prepend(cas, key, data);
                 return opResult.get();
             }
         });
@@ -215,12 +229,13 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws ExecutionException, InterruptedException {
+            public Boolean call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 final int exp = (Integer) parameters[1];
                 final byte[] data = (byte[]) parameters[2];
-                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.replace(
-                        key, exp, data);
+                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+                        .replace(key, exp, data);
                 return opResult.get();
             }
         });
@@ -230,7 +245,8 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws ExecutionException, InterruptedException {
+            public Boolean call() throws ExecutionException,
+                    InterruptedException {
                 final String key = (String) parameters[0];
                 int exp;
                 byte[] data;
@@ -241,8 +257,8 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
                     exp = 0;
                     data = (byte[]) parameters[1];
                 }
-                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.set(key,
-                        exp, data);
+                final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient
+                        .set(key, exp, data);
                 return opResult.get();
             }
         });
@@ -279,9 +295,10 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
                         // 4:56
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + type.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: " + type.toString());
                         }
                     });
         }
@@ -324,9 +341,11 @@ public final class MemcachedOperationFactory implements IOperationFactory { // N
                         // 4:56
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + mType.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: "
+                                            + mType.toString());
                         }
                     });
         }

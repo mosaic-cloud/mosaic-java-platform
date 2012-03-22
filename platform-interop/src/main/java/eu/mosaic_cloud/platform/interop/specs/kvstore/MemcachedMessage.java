@@ -36,7 +36,8 @@ import com.google.protobuf.GeneratedMessage;
  * 
  */
 public enum MemcachedMessage implements MessageSpecification {
-    APPEND_REQUEST(MessageType.Exchange, MemcachedPayloads.AppendRequest.class), PREPEND_REQUEST(
+    APPEND_REQUEST(MessageType.Exchange, MemcachedPayloads.AppendRequest.class),
+    PREPEND_REQUEST(
             MessageType.Exchange,
             MemcachedPayloads.PrependRequest.class), ADD_REQUEST(
             MessageType.Exchange,

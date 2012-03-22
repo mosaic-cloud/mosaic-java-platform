@@ -38,24 +38,28 @@ public class DefaultConnectorCallback<C> extends DefaultCallback<C> implements
     @Override
     public CallbackCompletion<Void> destroyFailed(final C context,
             final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Resource Destroy Failed", false, false);
+        return this.handleUnhandledCallback(arguments,
+                "Resource Destroy Failed", false, false);
     }
 
     @Override
     public CallbackCompletion<Void> destroySucceeded(final C context,
             final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments,
+                "Resource Destroy Succeeded", true, false);
     }
 
     @Override
     public CallbackCompletion<Void> initializeFailed(final C context,
             final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Resource Initialize Failed", false, true);
+        return this.handleUnhandledCallback(arguments,
+                "Resource Initialize Failed", false, true);
     }
 
     @Override
     public CallbackCompletion<Void> initializeSucceeded(final C context,
             final CallbackArguments<C> arguments) {
-        return this.handleUnhandledCallback(arguments, "Resource Initialize Succeeded", true, true);
+        return this.handleUnhandledCallback(arguments,
+                "Resource Initialize Succeeded", true, true);
     }
 }

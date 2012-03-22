@@ -33,7 +33,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of the consumed data
  */
-public interface IAmqpQueueConsumerConnector<Context, Message, Extra> extends
+public interface IAmqpQueueConsumerConnector<Context, Message, Extra>
+        extends
         IAmqpQueueConnector<Context>,
         eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> {
 
@@ -43,5 +44,6 @@ public interface IAmqpQueueConsumerConnector<Context, Message, Extra> extends
      * @param message
      *            the message to acknowledge
      */
-    CallbackCompletion<Void> acknowledge(IAmqpQueueDeliveryToken delivery, Extra extra);
+    CallbackCompletion<Void> acknowledge(IAmqpQueueDeliveryToken delivery,
+            Extra extra);
 }

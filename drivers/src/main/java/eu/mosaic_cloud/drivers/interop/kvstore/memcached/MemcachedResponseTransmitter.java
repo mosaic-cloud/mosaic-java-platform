@@ -59,8 +59,9 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
                                                                        // PM
             KeyValueOperations operation, Object result, boolean isError) {
         Message message;
-        this.logger.trace("MemcachedTransmitter: send response for " + operation + " request "
-                + token.getMessageId() + " client id " + token.getClientId());
+        this.logger.trace("MemcachedTransmitter: send response for "
+                + operation + " request " + token.getMessageId()
+                + " client id " + token.getClientId());
         if (isError) {
             // NOTE: create error message
             final Builder errorPayload = IdlCommon.Error.newBuilder();
@@ -86,7 +87,8 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
                                                                                   // 3:02
                                                                                   // PM
                 } else {
-                    final NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder();
+                    final NotOk.Builder nokPayload = IdlCommon.NotOk
+                            .newBuilder();
                     nokPayload.setToken(token);
                     message = new Message(KeyValueMessage.NOK, // NOPMD by
                                                                // georgiana on
@@ -96,13 +98,15 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
                 }
                 break;
             case GET_BULK:
-                final GetReply.Builder getPayload = KeyValuePayloads.GetReply.newBuilder();
+                final GetReply.Builder getPayload = KeyValuePayloads.GetReply
+                        .newBuilder();
                 getPayload.setToken(token);
                 @SuppressWarnings("unchecked")
                 final Map<String, byte[]> resMap = (Map<String, byte[]>) result;
                 final List<KVEntry> getResults = new ArrayList<KVEntry>();
                 for (final Map.Entry<String, byte[]> entry : resMap.entrySet()) {
-                    final KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry.newBuilder();
+                    final KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry
+                            .newBuilder();
                     kvEntry.setKey(entry.getKey());
                     if (entry.getValue() == null) {
                         kvEntry.setValue(ByteString.EMPTY);
@@ -112,7 +116,8 @@ public class MemcachedResponseTransmitter extends KeyValueResponseTransmitter {
                     getResults.add(kvEntry.build());
                 }
                 getPayload.addAllResults(getResults);
-                message = new Message(KeyValueMessage.GET_REPLY, getPayload.build());
+                message = new Message(KeyValueMessage.GET_REPLY,
+                        getPayload.build());
                 break;
             default:
                 message = super.buildKeyValueResponse(operation, token, result);

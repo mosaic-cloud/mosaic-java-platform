@@ -71,6 +71,76 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
     private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub>();
 
     /**
+     * Returns a stub for the Memcached driver.
+     * 
+     * @param config
+     *            the configuration data for the stub and driver
+     * @param channel
+     *            the channel used by the driver for receiving requests
+     * @return the Memcached driver stub
+     */
+    public static MemcachedStub create(IConfiguration config,
+            ZeroMqChannel channel, ThreadingContext threading) {
+        final DriverConnectionData cData = KeyValueStub
+                .readConnectionData(config);
+        final MosaicLogger sLogger = MosaicLogger
+                .createLogger(MemcachedStub.class);
+        MemcachedStub stub;
+        synchronized (AbstractDriverStub.MONITOR) {
+            stub = MemcachedStub.stubs.get(cData);
+            try {
+                if (stub == null) {
+                    sLogger.trace("MemcachedStub: create new stub.");
+                    final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
+                    final MemcachedDriver driver = MemcachedDriver.create(
+                            config, threading);
+                    stub = new MemcachedStub(config, transmitter, driver,
+                            channel);
+                    MemcachedStub.stubs.put(cData, stub);
+                    incDriverReference(stub);
+                    channel.accept(KeyValueSession.DRIVER, stub);
+                    channel.accept(MemcachedSession.DRIVER, stub);
+                } else {
+                    sLogger.trace("MemcachedStub: use existing stub.");
+                    incDriverReference(stub);
+                }
+            } catch (final Exception e) {
+                ExceptionTracer.traceDeferred(e);
+                final ConnectionException e1 = new ConnectionException(
+                        "The Memcached proxy cannot connect to the driver: "
+                                + e.getMessage(), e);
+                ExceptionTracer.traceIgnored(e1);
+            }
+        }
+        return stub;
+    }
+
+    public static MemcachedStub createDetached(IConfiguration config,
+            ZeroMqChannel channel, ThreadingContext threading) {
+        final MosaicLogger sLogger = MosaicLogger
+                .createLogger(MemcachedStub.class);
+        MemcachedStub stub;
+        try {
+            sLogger.trace("MemcachedStub: create new stub.");
+            final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
+            final MemcachedDriver driver = MemcachedDriver.create(config,
+                    threading);
+            stub = new MemcachedStub(config, transmitter, driver, channel);
+            incDriverReference(stub);
+            channel.accept(KeyValueSession.DRIVER, stub);
+            channel.accept(MemcachedSession.DRIVER, stub);
+        } catch (final Exception e) {
+            ExceptionTracer.traceDeferred(e);
+            final ConnectionException e1 = new ConnectionException(
+                    "The Memcached proxy cannot connect to the driver: "
+                            + e.getMessage(), e);
+            ExceptionTracer.traceIgnored(e1);
+            stub = null;
+        }
+        return stub;
+    }
+
+    /**
      * Creates a new stub for the Memcached driver.
      * 
      * @param config
@@ -83,71 +153,10 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
      * @param commChannel
      *            the channel for communicating with connectors
      */
-    public MemcachedStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
+    public MemcachedStub(IConfiguration config,
+            KeyValueResponseTransmitter transmitter,
             AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
         super(config, transmitter, driver, commChannel);
-    }
-
-    /**
-     * Returns a stub for the Memcached driver.
-     * 
-     * @param config
-     *            the configuration data for the stub and driver
-     * @param channel
-     *            the channel used by the driver for receiving requests
-     * @return the Memcached driver stub
-     */
-    public static MemcachedStub create(IConfiguration config, ZeroMqChannel channel,
-            ThreadingContext threading) {
-        final DriverConnectionData cData = KeyValueStub.readConnectionData(config);
-        final MosaicLogger sLogger = MosaicLogger.createLogger(MemcachedStub.class);
-        MemcachedStub stub;
-        synchronized (AbstractDriverStub.MONITOR) {
-            stub = MemcachedStub.stubs.get(cData);
-            try {
-                if (stub == null) {
-                    sLogger.trace("MemcachedStub: create new stub.");
-                    final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
-                    final MemcachedDriver driver = MemcachedDriver.create(config, threading);
-                    stub = new MemcachedStub(config, transmitter, driver, channel);
-                    MemcachedStub.stubs.put(cData, stub);
-                    incDriverReference(stub);
-                    channel.accept(KeyValueSession.DRIVER, stub);
-                    channel.accept(MemcachedSession.DRIVER, stub);
-                } else {
-                    sLogger.trace("MemcachedStub: use existing stub.");
-                    incDriverReference(stub);
-                }
-            } catch (final Exception e) {
-                ExceptionTracer.traceDeferred(e);
-                final ConnectionException e1 = new ConnectionException(
-                        "The Memcached proxy cannot connect to the driver: " + e.getMessage(), e);
-                ExceptionTracer.traceIgnored(e1);
-            }
-        }
-        return stub;
-    }
-
-    public static MemcachedStub createDetached(IConfiguration config, ZeroMqChannel channel,
-            ThreadingContext threading) {
-        final MosaicLogger sLogger = MosaicLogger.createLogger(MemcachedStub.class);
-        MemcachedStub stub;
-        try {
-            sLogger.trace("MemcachedStub: create new stub.");
-            final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter();
-            final MemcachedDriver driver = MemcachedDriver.create(config, threading);
-            stub = new MemcachedStub(config, transmitter, driver, channel);
-            incDriverReference(stub);
-            channel.accept(KeyValueSession.DRIVER, stub);
-            channel.accept(MemcachedSession.DRIVER, stub);
-        } catch (final Exception e) {
-            ExceptionTracer.traceDeferred(e);
-            final ConnectionException e1 = new ConnectionException(
-                    "The Memcached proxy cannot connect to the driver: " + e.getMessage(), e);
-            ExceptionTracer.traceIgnored(e1);
-            stub = null;
-        }
-        return stub;
     }
 
     @Override
@@ -171,8 +180,9 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
                                                                     // 10/12/11
                                                                     // 2:55 PM
             throws IOException, ClassNotFoundException {
-        Preconditions.checkArgument((message.specification instanceof KeyValueMessage)
-                || (message.specification instanceof MemcachedMessage));
+        Preconditions
+                .checkArgument((message.specification instanceof KeyValueMessage)
+                        || (message.specification instanceof MemcachedMessage));
         byte[] data;
         CompletionToken token;
         String key;
@@ -202,14 +212,16 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
                 if (setRequest.hasExpTime()) {
                     token = setRequest.getToken();
                     key = setRequest.getKey();
-                    this.logger.trace(mssgPrefix + " SET key: " + key + " - request id: "
-                            + token.getMessageId() + " client id: " + token.getClientId());
+                    this.logger.trace(mssgPrefix + " SET key: " + key
+                            + " - request id: " + token.getMessageId()
+                            + " client id: " + token.getClientId());
                     exp = setRequest.getExpTime();
                     data = setRequest.getValue().toByteArray();
-                    callback = new DriverOperationFinishedHandler(token, session,
-                            MemcachedDriver.class, MemcachedResponseTransmitter.class);
-                    resultStore = driver.invokeSetOperation(token.getClientId(), key, exp, data,
-                            callback);
+                    callback = new DriverOperationFinishedHandler(token,
+                            session, MemcachedDriver.class,
+                            MemcachedResponseTransmitter.class);
+                    resultStore = driver.invokeSetOperation(
+                            token.getClientId(), key, exp, data, callback);
                     callback.setDetails(KeyValueOperations.SET, resultStore);
                     handle = true;
                 }
@@ -217,18 +229,22 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
                 final KeyValuePayloads.GetRequest getRequest = (GetRequest) message.payload;
                 if (getRequest.getKeyCount() > 1) {
                     token = getRequest.getToken();
-                    this.logger.trace(mssgPrefix + "GET_BULK " + " - request id: "
-                            + token.getMessageId() + " client id: " + token.getClientId());
-                    callback = new DriverOperationFinishedHandler(token, session,
-                            MemcachedDriver.class, MemcachedResponseTransmitter.class);
-                    final IResult<Map<String, byte[]>> resultGet = driver.invokeGetBulkOperation(
-                            token.getClientId(), getRequest.getKeyList(), callback);
+                    this.logger.trace(mssgPrefix + "GET_BULK "
+                            + " - request id: " + token.getMessageId()
+                            + " client id: " + token.getClientId());
+                    callback = new DriverOperationFinishedHandler(token,
+                            session, MemcachedDriver.class,
+                            MemcachedResponseTransmitter.class);
+                    final IResult<Map<String, byte[]>> resultGet = driver
+                            .invokeGetBulkOperation(token.getClientId(),
+                                    getRequest.getKeyList(), callback);
                     callback.setDetails(KeyValueOperations.GET_BULK, resultGet);
                     handle = true;
                 }
             }
             if (!handle) {
-                handleKVOperation(message, session, driver, MemcachedResponseTransmitter.class);
+                handleKVOperation(message, session, driver,
+                        MemcachedResponseTransmitter.class);
             }
             return;
         }
@@ -238,75 +254,81 @@ public class MemcachedStub extends KeyValueStub { // NOPMD by georgiana on
             final MemcachedPayloads.AddRequest addRequest = (AddRequest) message.payload;
             token = addRequest.getToken();
             key = addRequest.getKey();
-            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId()); // NOPMD by georgiana on 10/12/11
-                                            // 2:56 PM
+            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId()); // NOPMD by
+                                                             // georgiana on
+                                                             // 10/12/11
+                                                             // 2:56 PM
             exp = addRequest.getExpTime();
             data = addRequest.getValue().toByteArray();
-            callback = new DriverOperationFinishedHandler(token, session, MemcachedDriver.class,
-                    MemcachedResponseTransmitter.class);
-            resultStore = driver.invokeAddOperation(token.getClientId(), key, exp, data, callback);
+            callback = new DriverOperationFinishedHandler(token, session,
+                    MemcachedDriver.class, MemcachedResponseTransmitter.class);
+            resultStore = driver.invokeAddOperation(token.getClientId(), key,
+                    exp, data, callback);
             callback.setDetails(KeyValueOperations.ADD, resultStore);
             break;
         case APPEND_REQUEST:
             final MemcachedPayloads.AppendRequest appendRequest = (AppendRequest) message.payload;
             token = appendRequest.getToken();
             key = appendRequest.getKey();
-            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId());
+            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId());
             exp = appendRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
                                               // 2:54 PM
             data = appendRequest.getValue().toByteArray();
-            callback = new DriverOperationFinishedHandler(token, session, MemcachedDriver.class,
-                    MemcachedResponseTransmitter.class);
-            resultStore = driver.invokeAppendOperation(token.getClientId(), key, data, callback);
+            callback = new DriverOperationFinishedHandler(token, session,
+                    MemcachedDriver.class, MemcachedResponseTransmitter.class);
+            resultStore = driver.invokeAppendOperation(token.getClientId(),
+                    key, data, callback);
             callback.setDetails(KeyValueOperations.APPEND, resultStore);
             break;
         case PREPEND_REQUEST:
             final MemcachedPayloads.PrependRequest prependRequest = (PrependRequest) message.payload;
             token = prependRequest.getToken();
             key = prependRequest.getKey();
-            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId());
+            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId());
             exp = prependRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
                                                // 2:55 PM
             data = prependRequest.getValue().toByteArray();
-            callback = new DriverOperationFinishedHandler(token, session, MemcachedDriver.class,
-                    MemcachedResponseTransmitter.class);
-            resultStore = driver.invokePrependOperation(token.getClientId(), key, data, callback);
+            callback = new DriverOperationFinishedHandler(token, session,
+                    MemcachedDriver.class, MemcachedResponseTransmitter.class);
+            resultStore = driver.invokePrependOperation(token.getClientId(),
+                    key, data, callback);
             callback.setDetails(KeyValueOperations.PREPEND, resultStore);
             break;
         case REPLACE_REQUEST:
             final MemcachedPayloads.ReplaceRequest replaceRequest = (ReplaceRequest) message.payload;
             token = replaceRequest.getToken();
             key = replaceRequest.getKey();
-            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId());
+            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId());
             exp = replaceRequest.getExpTime();
             data = replaceRequest.getValue().toByteArray();
-            callback = new DriverOperationFinishedHandler(token, session, MemcachedDriver.class,
-                    MemcachedResponseTransmitter.class);
-            resultStore = driver.invokeReplaceOperation(token.getClientId(), key, exp, data,
-                    callback);
+            callback = new DriverOperationFinishedHandler(token, session,
+                    MemcachedDriver.class, MemcachedResponseTransmitter.class);
+            resultStore = driver.invokeReplaceOperation(token.getClientId(),
+                    key, exp, data, callback);
             callback.setDetails(KeyValueOperations.REPLACE, resultStore);
             break;
         case CAS_REQUEST:
             final MemcachedPayloads.CasRequest casRequest = (CasRequest) message.payload;
             token = casRequest.getToken();
             key = casRequest.getKey();
-            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId());
+            this.logger.trace(mssgPrefix + mcMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId());
             exp = casRequest.getExpTime(); // NOPMD by georgiana on 10/12/11
                                            // 2:55 PM
             data = casRequest.getValue().toByteArray();
-            callback = new DriverOperationFinishedHandler(token, session, MemcachedDriver.class,
-                    MemcachedResponseTransmitter.class);
-            resultStore = driver.invokeCASOperation(token.getClientId(), key, data, callback);
+            callback = new DriverOperationFinishedHandler(token, session,
+                    MemcachedDriver.class, MemcachedResponseTransmitter.class);
+            resultStore = driver.invokeCASOperation(token.getClientId(), key,
+                    data, callback);
             callback.setDetails(KeyValueOperations.CAS, resultStore);
             break;
         default:

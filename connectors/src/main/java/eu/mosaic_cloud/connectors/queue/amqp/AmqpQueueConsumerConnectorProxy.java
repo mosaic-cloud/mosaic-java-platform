@@ -30,13 +30,16 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
-        AmqpQueueConnectorProxy<TMessage> implements IAmqpQueueConsumerConnector<TMessage> {
+        AmqpQueueConnectorProxy<TMessage> implements
+        IAmqpQueueConsumerConnector<TMessage> {
 
-    protected class AmqpConsumerCallback implements IAmqpQueueRawConsumerCallback {
+    protected class AmqpConsumerCallback implements
+            IAmqpQueueRawConsumerCallback {
 
         protected final IAmqpQueueConsumerCallback<TMessage> delegate;
 
-        protected AmqpConsumerCallback(final IAmqpQueueConsumerCallback<TMessage> delegate) {
+        protected AmqpConsumerCallback(
+                final IAmqpQueueConsumerCallback<TMessage> delegate) {
             super();
             this.delegate = delegate;
         }
@@ -52,15 +55,18 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
         }
 
         @Override
-        public CallbackCompletion<Void> handleDelivery(final AmqpInboundMessage inbound) {
-            final DeliveryToken delivery = new DeliveryToken(inbound.getDelivery());
+        public CallbackCompletion<Void> handleDelivery(
+                final AmqpInboundMessage inbound) {
+            final DeliveryToken delivery = new DeliveryToken(
+                    inbound.getDelivery());
             TMessage message = null;
             CallbackCompletion<Void> result = null;
             try {
-                message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode(inbound
-                        .getData());
+                message = AmqpQueueConsumerConnectorProxy.this.messageEncoder
+                        .decode(inbound.getData());
             } catch (final EncodingException exception) {
-                FallbackExceptionTracer.defaultInstance.traceDeferredException(exception);
+                FallbackExceptionTracer.defaultInstance
+                        .traceDeferredException(exception);
                 result = CallbackCompletion.createFailure(exception);
             }
             if (result == null) {
@@ -70,8 +76,8 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
         }
 
         @Override
-        public CallbackCompletion<Void> handleShutdownSignal(final String consumerTag,
-                final String message) {
+        public CallbackCompletion<Void> handleShutdownSignal(
+                final String consumerTag, final String message) {
             return CallbackCompletion.createOutcome();
         }
     }
@@ -95,7 +101,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
     private final boolean consumerAutoAck;
     private final boolean definePassive;
     private final String exchange;
-    private final boolean exchangeAutoDelete; // NOPMD 
+    private final boolean exchangeAutoDelete; // NOPMD
     private final boolean exchangeDurable;
     private final AmqpExchangeType exchangeType;
     private final String queue;
@@ -103,43 +109,10 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
     private final boolean queueDurable;
     private final boolean queueExclusive;
 
-    private AmqpQueueConsumerConnectorProxy(final AmqpQueueRawConnectorProxy rawProxy,
-            final ConnectorConfiguration configuration, final Class<TMessage> messageClass,
-            final DataEncoder<TMessage> messageEncoder,
-            final IAmqpQueueConsumerCallback<TMessage> callback) {
-        super(rawProxy, configuration, messageClass, messageEncoder);
-        this.exchange = configuration.getConfigParameter(
-                ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
-        this.exchangeType = configuration
-                .getConfigParameter(
-                        ConfigProperties.getString("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
-        this.exchangeDurable = configuration
-                .getConfigParameter(
-                        ConfigProperties.getString("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.exchangeAutoDelete = configuration
-                .getConfigParameter(
-                        ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
-        this.queue = configuration.getConfigParameter(
-                ConfigProperties.getString("AmqpQueueConnector.2"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
-        this.queueExclusive = configuration
-                .getConfigParameter(
-                        ConfigProperties.getString("AmqpQueueConnector.6"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.queueAutoDelete = this.exchangeAutoDelete;
-        this.queueDurable = this.exchangeDurable;
-        this.bindingRoutingKey = configuration.getConfigParameter(
-                ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
-        this.consumerAutoAck = configuration
-                .getConfigParameter(
-                        ConfigProperties.getString("AmqpQueueConnector.10"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.definePassive = configuration
-                .getConfigParameter(
-                        ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
-        this.callback = new AmqpConsumerCallback(callback);
-    }
-
     public static <M> AmqpQueueConsumerConnectorProxy<M> create(
-            final ConnectorConfiguration configuration, final Class<M> messageClass,
-            final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback) {
+            final ConnectorConfiguration configuration,
+            final Class<M> messageClass, final DataEncoder<M> messageEncoder,
+            final IAmqpQueueConsumerCallback<M> callback) {
         final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy
                 .create(configuration);
         // FIXME the splice below will be done when creating the environment
@@ -150,8 +123,48 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
         return proxy;
     }
 
+    private AmqpQueueConsumerConnectorProxy(
+            final AmqpQueueRawConnectorProxy rawProxy,
+            final ConnectorConfiguration configuration,
+            final Class<TMessage> messageClass,
+            final DataEncoder<TMessage> messageEncoder,
+            final IAmqpQueueConsumerCallback<TMessage> callback) {
+        super(rawProxy, configuration, messageClass, messageEncoder);
+        this.exchange = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.0"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
+        this.exchangeType = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
+        this.exchangeDurable = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
+        this.exchangeAutoDelete = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue(); //$NON-NLS-1$
+        this.queue = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.2"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
+        this.queueExclusive = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.6"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
+        this.queueAutoDelete = this.exchangeAutoDelete;
+        this.queueDurable = this.exchangeDurable;
+        this.bindingRoutingKey = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.1"), String.class, this.raw.getIdentifier()); //$NON-NLS-1$ 
+        this.consumerAutoAck = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.10"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
+        this.definePassive = configuration
+                .getConfigParameter(
+                        ConfigProperties.getString("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue(); //$NON-NLS-1$ 
+        this.callback = new AmqpConsumerCallback(callback);
+    }
+
     @Override
-    public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery) {
+    public CallbackCompletion<Void> acknowledge(
+            final IAmqpQueueDeliveryToken delivery) {
         return this.raw.ack(((DeliveryToken) delivery).getToken(), false);
     }
 
@@ -170,12 +183,13 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage> extends
         this.raw.initialize();
         // FIXME: If any of these operations fail we should continue with
         // `destroy`.
-        this.raw.declareExchange(this.exchange, this.exchangeType, this.exchangeDurable,
-                this.exchangeAutoDelete, this.definePassive);
-        this.raw.declareQueue(this.queue, this.queueExclusive, this.queueDurable,
-                this.queueAutoDelete, this.definePassive);
+        this.raw.declareExchange(this.exchange, this.exchangeType,
+                this.exchangeDurable, this.exchangeAutoDelete,
+                this.definePassive);
+        this.raw.declareQueue(this.queue, this.queueExclusive,
+                this.queueDurable, this.queueAutoDelete, this.definePassive);
         this.raw.bindQueue(this.exchange, this.queue, this.bindingRoutingKey);
-        return this.raw.consume(this.queue, this.raw.getIdentifier(), this.queueExclusive,
-                this.consumerAutoAck, this.callback);
+        return this.raw.consume(this.queue, this.raw.getIdentifier(),
+                this.queueExclusive, this.consumerAutoAck, this.callback);
     }
 }

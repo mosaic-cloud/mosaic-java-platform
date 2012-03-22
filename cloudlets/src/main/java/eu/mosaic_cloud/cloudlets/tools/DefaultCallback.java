@@ -73,7 +73,8 @@ public class DefaultCallback<C> implements ICallback<C> {
      */
     protected void traceUnhandledCallback(final CallbackArguments<C> arguments,
             final String callbackType, final boolean positive) {
-        this.logger.info("unhandled cloudlet callback: `" + this.getClass().getName() + "`@`"
-                + callbackType + "` " + (positive ? "Succeeded" : "Failed"));
+        this.logger.info("unhandled cloudlet callback: `"
+                + this.getClass().getName() + "`@`" + callbackType + "` "
+                + (positive ? "Succeeded" : "Failed"));
     }
 }

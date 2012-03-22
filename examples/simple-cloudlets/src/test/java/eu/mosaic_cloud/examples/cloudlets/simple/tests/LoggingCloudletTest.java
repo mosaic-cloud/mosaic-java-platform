@@ -30,6 +30,7 @@ public class LoggingCloudletTest extends BaseCloudletTest {
     @Override
     public void setUp() {
         this.setUp(LoggingCloudlet.LifeCycleHandler.class,
-                LoggingCloudlet.LoggingCloudletContext.class, "logging-cloudlet.properties");
+                LoggingCloudlet.LoggingCloudletContext.class,
+                "logging-cloudlet.properties");
     }
 }

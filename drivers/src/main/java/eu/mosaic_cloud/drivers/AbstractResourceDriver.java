@@ -53,8 +53,10 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
      */
     protected AbstractResourceDriver(ThreadingContext threading, int noThreads) {
         this.pendingResults = new ArrayList<IResult<?>>();
-        this.executor = threading.createFixedThreadPool(
-                ThreadConfiguration.create(this, "operations", true), noThreads);
+        this.executor = threading
+                .createFixedThreadPool(
+                        ThreadConfiguration.create(this, "operations", true),
+                        noThreads);
         this.logger = MosaicLogger.createLogger(this);
     }
 
@@ -108,8 +110,9 @@ public abstract class AbstractResourceDriver implements IResourceDriver {
 
             @Override
             public void run() {
-                final Exception error = new UnsupportedOperationException("Operation " + opName
-                        + " is not supported by this driver.");
+                final Exception error = new UnsupportedOperationException(
+                        "Operation " + opName
+                                + " is not supported by this driver.");
                 handler.onFailure(error);
             }
         };

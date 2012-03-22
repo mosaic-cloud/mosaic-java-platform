@@ -34,8 +34,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Message>
  *            the type of published data
  */
-public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> extends
-        IAmqpQueueConnectorCallback<Context> {
+public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra>
+        extends IAmqpQueueConnectorCallback<Context> {
 
     /**
      * Called when the publisher receives notification that the message

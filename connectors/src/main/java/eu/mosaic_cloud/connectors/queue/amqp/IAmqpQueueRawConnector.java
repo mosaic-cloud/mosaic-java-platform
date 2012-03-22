@@ -53,8 +53,8 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      * @return a handle to be used in order to know when and how the operation
      *         completes
      */
-    CallbackCompletion<Void> bindQueue(final String exchange, final String queue,
-            final String routingKey);
+    CallbackCompletion<Void> bindQueue(final String exchange,
+            final String queue, final String routingKey);
 
     /**
      * Cancels a consumer.
@@ -109,8 +109,9 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      * @return a handle to be used in order to know when and how the operation
      *         completes
      */
-    CallbackCompletion<Void> declareExchange(final String name, final AmqpExchangeType type,
-            final boolean durable, final boolean autoDelete, final boolean passive);
+    CallbackCompletion<Void> declareExchange(final String name,
+            final AmqpExchangeType type, final boolean durable,
+            final boolean autoDelete, final boolean passive);
 
     /**
      * Declare a queue.
@@ -132,8 +133,9 @@ public interface IAmqpQueueRawConnector extends IQueueConnector {
      * @return a handle to be used in order to know when and how the operation
      *         completes
      */
-    CallbackCompletion<Void> declareQueue(final String queue, final boolean exclusive,
-            final boolean durable, final boolean autoDelete, final boolean passive);
+    CallbackCompletion<Void> declareQueue(final String queue,
+            final boolean exclusive, final boolean durable,
+            final boolean autoDelete, final boolean passive);
 
     /**
      * Retrieve a message from a queue.

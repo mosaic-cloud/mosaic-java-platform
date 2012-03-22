@@ -47,7 +47,8 @@ import com.google.common.util.concurrent.Atomics;
  * @param <T>
  *            The type of the actual result of the operation.
  */
-public class EventDrivenOperation<T> implements IOperation<T>, IOperationCompletionHandler<T> {
+public class EventDrivenOperation<T> implements IOperation<T>,
+        IOperationCompletionHandler<T> {
 
     private CountDownLatch doneSignal;
     private AtomicReference<T> result;
@@ -61,7 +62,8 @@ public class EventDrivenOperation<T> implements IOperation<T>, IOperationComplet
      * @param complHandlers
      *            handlers to be called when the operation completes
      */
-    public EventDrivenOperation(final List<IOperationCompletionHandler<T>> complHandlers) {
+    public EventDrivenOperation(
+            final List<IOperationCompletionHandler<T>> complHandlers) {
         super();
         this.doneSignal = new CountDownLatch(1);
         this.result = Atomics.newReference(null);
@@ -81,7 +83,8 @@ public class EventDrivenOperation<T> implements IOperation<T>, IOperationComplet
      *            completion handlers. This can be used for controlling how the
      *            completion handlers are executed
      */
-    public EventDrivenOperation(final List<IOperationCompletionHandler<T>> complHandlers,
+    public EventDrivenOperation(
+            final List<IOperationCompletionHandler<T>> complHandlers,
             final CompletionInvocationHandler<T> invocationHandler) {
         this(complHandlers);
         if (invocationHandler != null) {
@@ -92,15 +95,15 @@ public class EventDrivenOperation<T> implements IOperation<T>, IOperationComplet
                 final CompletionInvocationHandler<T> iHandler = invocationHandler
                         .createHandler(handler);
                 final IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy
-                        .newProxyInstance(Threading.getCurrentThread().getContextClassLoader(),
-                                new Class[] {
-                                    IOperationCompletionHandler.class }, // NOPMD
-                                                                         // by
-                                                                         // georgiana
-                                                                         // on
-                                                                         // 10/12/11
-                                                                         // 5:01
-                                                                         // PM
+                        .newProxyInstance(Threading.getCurrentThread()
+                                .getContextClassLoader(), new Class[] {
+                            IOperationCompletionHandler.class }, // NOPMD
+                                                                 // by
+                                                                 // georgiana
+                                                                 // on
+                                                                 // 10/12/11
+                                                                 // 5:01
+                                                                 // PM
                                 iHandler);
                 this.completionHandlers.add(proxy);
             }
@@ -119,8 +122,8 @@ public class EventDrivenOperation<T> implements IOperation<T>, IOperationComplet
     }
 
     @Override
-    public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
-            TimeoutException {
+    public T get(long timeout, TimeUnit unit) throws InterruptedException,
+            ExecutionException, TimeoutException {
         this.doneSignal.await(timeout, unit);
         return this.result.get();
     }
@@ -146,7 +149,8 @@ public class EventDrivenOperation<T> implements IOperation<T>, IOperationComplet
     @Override
     public void onFailure(Throwable error) {
         if (!this.exception.compareAndSet(null, error)) {
-            ExceptionTracer.traceIgnored(new ResultSetException("Operation result cannot be set."));
+            ExceptionTracer.traceIgnored(new ResultSetException(
+                    "Operation result cannot be set."));
         }
         this.doneSignal.countDown();
     }
@@ -154,7 +158,8 @@ public class EventDrivenOperation<T> implements IOperation<T>, IOperationComplet
     @Override
     public void onSuccess(T response) {
         if (!this.result.compareAndSet(null, response)) {
-            ExceptionTracer.traceIgnored(new ResultSetException("Operation result cannot be set."));
+            ExceptionTracer.traceIgnored(new ResultSetException(
+                    "Operation result cannot be set."));
         }
         this.doneSignal.countDown();
     }

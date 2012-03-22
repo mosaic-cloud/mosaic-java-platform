@@ -30,5 +30,6 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnectorCallback;
  * @param <Context>
  *            the type of the cloudlet context
  */
-public interface IAmqpQueueConnectorCallback<Context> extends IQueueConnectorCallback<Context> {
+public interface IAmqpQueueConnectorCallback<Context> extends
+        IQueueConnectorCallback<Context> {
 }

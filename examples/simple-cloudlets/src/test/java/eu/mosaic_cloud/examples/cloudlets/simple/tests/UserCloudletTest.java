@@ -29,7 +29,8 @@ public class UserCloudletTest extends BaseCloudletTest {
 
     @Override
     public void setUp() {
-        this.setUp(UserCloudlet.LifeCycleHandler.class, UserCloudlet.UserCloudletContext.class,
+        this.setUp(UserCloudlet.LifeCycleHandler.class,
+                UserCloudlet.UserCloudletContext.class,
                 "user-cloudlet.properties");
     }
 }

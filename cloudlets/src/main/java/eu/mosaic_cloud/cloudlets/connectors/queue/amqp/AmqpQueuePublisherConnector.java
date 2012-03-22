@@ -48,25 +48,31 @@ public class AmqpQueuePublisherConnector<Context, Message, Extra>
     }
 
     @Override
-    public CallbackCompletion<Void> publish(final Message message, final Extra extra) {
-        final CallbackCompletion<Void> completion = this.connector.publish(message);
+    public CallbackCompletion<Void> publish(final Message message,
+            final Extra extra) {
+        final CallbackCompletion<Void> completion = this.connector
+                .publish(message);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
                     if (completion.getException() != null) {
-                        return AmqpQueuePublisherConnector.this.callback.publishFailed(
-                                AmqpQueuePublisherConnector.this.context,
-                                new GenericCallbackCompletionArguments<Context, Extra>(
-                                        AmqpQueuePublisherConnector.this.cloudlet, completion
-                                                .getException()));
+                        return AmqpQueuePublisherConnector.this.callback
+                                .publishFailed(
+                                        AmqpQueuePublisherConnector.this.context,
+                                        new GenericCallbackCompletionArguments<Context, Extra>(
+                                                AmqpQueuePublisherConnector.this.cloudlet,
+                                                completion.getException()));
                     }
-                    return AmqpQueuePublisherConnector.this.callback.publishSucceeded(
-                            AmqpQueuePublisherConnector.this.context,
-                            new GenericCallbackCompletionArguments<Context, Extra>(
-                                    AmqpQueuePublisherConnector.this.cloudlet, extra));
+                    return AmqpQueuePublisherConnector.this.callback
+                            .publishSucceeded(
+                                    AmqpQueuePublisherConnector.this.context,
+                                    new GenericCallbackCompletionArguments<Context, Extra>(
+                                            AmqpQueuePublisherConnector.this.cloudlet,
+                                            extra));
                 }
             });
         }

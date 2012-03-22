@@ -50,8 +50,8 @@ import com.google.common.base.Preconditions;
  * @author Georgiana Macariu
  * 
  */
-public abstract class AbstractDriverComponentCallbacks implements ComponentCallbacks,
-        CallbackHandler {
+public abstract class AbstractDriverComponentCallbacks implements
+        ComponentCallbacks, CallbackHandler {
 
     protected static enum Status {
         Created, Registered, Terminated, Unregistered, WaitingResourceResolved;
@@ -87,17 +87,20 @@ public abstract class AbstractDriverComponentCallbacks implements ComponentCallb
             String channelEndpointProp, SessionSpecification role) {
         // NOTE: create stub and interop channel
         Preconditions.checkNotNull(this.driverConfiguration);
-        final ZeroMqChannel driverChannel = ZeroMqChannel.create(ConfigUtils.resolveParameter(
-                this.driverConfiguration, channelIdentifierProp, String.class, ""), this.threading,
-                this.exceptions);
+        final ZeroMqChannel driverChannel = ZeroMqChannel.create(ConfigUtils
+                .resolveParameter(this.driverConfiguration,
+                        channelIdentifierProp, String.class, ""),
+                this.threading, this.exceptions);
         driverChannel.register(role);
-        driverChannel.accept(ConfigUtils.resolveParameter(this.driverConfiguration,
-                channelEndpointProp, String.class, ""));
+        driverChannel.accept(ConfigUtils
+                .resolveParameter(this.driverConfiguration,
+                        channelEndpointProp, String.class, ""));
         return driverChannel;
     }
 
     @Override
-    public CallbackCompletion<Void> failed(ComponentController component, Throwable exception) {
+    public CallbackCompletion<Void> failed(ComponentController component,
+            Throwable exception) {
         Preconditions.checkState(this.component == component);
         Preconditions.checkState((this.status != Status.Terminated)
                 && (this.status != Status.Unregistered));
@@ -120,7 +123,8 @@ public abstract class AbstractDriverComponentCallbacks implements ComponentCallb
     }
 
     @Override
-    public final void registeredCallbacks(Callbacks trigger, CallbackIsolate isolate) {
+    public final void registeredCallbacks(Callbacks trigger,
+            CallbackIsolate isolate) {
     }
 
     protected void setDriverConfiguration(IConfiguration driverConfiguration) {

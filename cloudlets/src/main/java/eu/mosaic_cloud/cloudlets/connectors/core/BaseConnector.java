@@ -40,8 +40,9 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
     protected final Context context;
     protected final MosaicLogger logger;
 
-    protected BaseConnector(final ICloudletController<?> cloudlet, final Connector connector,
-            final IConfiguration configuration, final Callback callback, final Context context) {
+    protected BaseConnector(final ICloudletController<?> cloudlet,
+            final Connector connector, final IConfiguration configuration,
+            final Callback callback, final Context context) {
         super();
         Preconditions.checkNotNull(cloudlet);
         Preconditions.checkNotNull(connector);
@@ -61,15 +62,19 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
                     if (completion.getException() != null) {
                         return BaseConnector.this.callback.destroyFailed(
-                                BaseConnector.this.context, new CallbackArguments<Context>(
+                                BaseConnector.this.context,
+                                new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.destroySucceeded(BaseConnector.this.context,
-                            new CallbackArguments<Context>(BaseConnector.this.cloudlet));
+                    return BaseConnector.this.callback.destroySucceeded(
+                            BaseConnector.this.context,
+                            new CallbackArguments<Context>(
+                                    BaseConnector.this.cloudlet));
                 }
             });
         }
@@ -83,15 +88,18 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
                     assert (completion_ == completion);
                     if (completion.getException() != null) {
                         return BaseConnector.this.callback.initializeFailed(
-                                BaseConnector.this.context, new CallbackArguments<Context>(
+                                BaseConnector.this.context,
+                                new CallbackArguments<Context>(
                                         BaseConnector.this.cloudlet));
                     }
                     return BaseConnector.this.callback.initializeSucceeded(
-                            BaseConnector.this.context, new CallbackArguments<Context>(
+                            BaseConnector.this.context,
+                            new CallbackArguments<Context>(
                                     BaseConnector.this.cloudlet));
                 }
             });

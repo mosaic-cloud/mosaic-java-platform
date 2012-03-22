@@ -34,8 +34,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of consumed data
  * 
  */
-public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> extends
-        IAmqpQueueConnectorCallback<Context> {
+public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra>
+        extends IAmqpQueueConnectorCallback<Context> {
 
     /**
      * Handles unsuccessful message acknowledge events.

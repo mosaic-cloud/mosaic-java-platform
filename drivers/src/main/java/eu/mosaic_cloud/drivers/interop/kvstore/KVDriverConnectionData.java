@@ -45,7 +45,8 @@ public class KVDriverConnectionData extends DriverConnectionData {
      * @param bucket
      *            bucket name
      */
-    public KVDriverConnectionData(String host, int port, String driverName, String bucket) {
+    public KVDriverConnectionData(String host, int port, String driverName,
+            String bucket) {
         super(host, port, driverName);
         this.bucket = bucket;
     }
@@ -66,8 +67,8 @@ public class KVDriverConnectionData extends DriverConnectionData {
      * @param bucket
      *            bucket name
      */
-    public KVDriverConnectionData(String host, int port, String driverName, String user,
-            String password, String bucket) {
+    public KVDriverConnectionData(String host, int port, String driverName,
+            String user, String password, String bucket) {
         super(host, port, driverName, user, password);
         this.bucket = bucket;
     }
@@ -80,7 +81,8 @@ public class KVDriverConnectionData extends DriverConnectionData {
             if (!isEqual) {
                 final KVDriverConnectionData other = (KVDriverConnectionData) obj;
                 isEqual = ((this.bucket == null) && (other.bucket != null))
-                        || ((this.bucket != null) && (!this.bucket.equals(other.bucket)));
+                        || ((this.bucket != null) && (!this.bucket
+                                .equals(other.bucket)));
             }
             isEqual ^= true;
         }
@@ -95,7 +97,8 @@ public class KVDriverConnectionData extends DriverConnectionData {
     public int hashCode() {
         final int prime = 31; // NOPMD by georgiana on 10/12/11 2:19 PM
         int result = super.hashCode(); // NOPMD by georgiana on 10/12/11 2:19 PM
-        result = (prime * result) + ((this.bucket == null) ? 0 : this.bucket.hashCode());
+        result = (prime * result)
+                + ((this.bucket == null) ? 0 : this.bucket.hashCode());
         return result;
     }
 }

@@ -30,6 +30,7 @@ public class ConsumerCloudletTest extends BaseCloudletTest {
     @Override
     public void setUp() {
         this.setUp(ConsumerCloudlet.LifeCycleHandler.class,
-                ConsumerCloudlet.ConsumerCloudletContext.class, "consumer-cloudlet.properties");
+                ConsumerCloudlet.ConsumerCloudletContext.class,
+                "consumer-cloudlet.properties");
     }
 }

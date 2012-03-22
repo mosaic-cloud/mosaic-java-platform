@@ -60,7 +60,8 @@ public class MemcacheKvStoreConnector<C, D, E>
     public MemcacheKvStoreConnector(
             final ICloudletController<?> cloudlet,
             final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<D> connector,
-            final IConfiguration config, final IMemcacheKvStoreConnectorCallback<C, D, E> callback,
+            final IConfiguration config,
+            final IMemcacheKvStoreConnectorCallback<C, D, E> callback,
             final C context) {
         super(cloudlet, connector, config, callback, context);
         // FIXME
@@ -68,27 +69,33 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> add(final String key, final D value, final int exp,
-            final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.add(key, exp, value);
+    public CallbackCompletion<Boolean> add(final String key, final D value,
+            final int exp, final E extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.add(key,
+                exp, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
                     assert (aCompletion == completion);
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.addSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .addSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.addFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .addFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, (D) completion
+                                                        .getException(), extra));
                     }
                     return resultCompletion;
                 }
@@ -98,7 +105,8 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> add(final String key, final int exp, final D data) {
+    public CallbackCompletion<Boolean> add(final String key, final int exp,
+            final D data) {
         return this.add(key, data, exp, null);
     }
 
@@ -108,26 +116,33 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> append(final String key, final D value, final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.append(key, value);
+    public CallbackCompletion<Boolean> append(final String key, final D value,
+            final E extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.append(
+                key, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
                     assert (aCompletion == completion);
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.appendSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .appendSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.appendFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .appendFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, (D) completion
+                                                        .getException(), extra));
                     }
                     return resultCompletion;
                 }
@@ -142,26 +157,33 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> cas(final String key, final D value, final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.cas(key, value);
+    public CallbackCompletion<Boolean> cas(final String key, final D value,
+            final E extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.cas(key,
+                value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
                     assert (aCompletion == completion);
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.casSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .casSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.casFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .casFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, (D) completion
+                                                        .getException(), extra));
                     }
                     return resultCompletion;
                 }
@@ -176,27 +198,35 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Map<String, D>> getBulk(final List<String> keys, final E extra) {
-        final CallbackCompletion<Map<String, D>> completion = this.connector.getBulk(keys);
+    public CallbackCompletion<Map<String, D>> getBulk(final List<String> keys,
+            final E extra) {
+        final CallbackCompletion<Map<String, D>> completion = this.connector
+                .getBulk(keys);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
                     assert (aCompletion == completion);
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.getBulkSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, Map<String, D>, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, keys, completion
-                                                .getOutcome(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .getBulkSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, Map<String, D>, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                keys, completion.getOutcome(),
+                                                extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.getBulkFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, Map<String, D>, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, keys,
-                                        (Map<String, D>) completion.getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .getBulkFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, Map<String, D>, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                keys,
+                                                (Map<String, D>) completion
+                                                        .getException(), extra));
                     }
                     return resultCompletion;
                 }
@@ -211,56 +241,33 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> prepend(final String key, final D value, final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.prepend(key, value);
-        if (this.callback != null) {
-            completion.observe(new CallbackCompletionObserver() {
-
-                @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
-                    CallbackCompletion<Void> resultCompletion;
-                    if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.prependSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
-                    } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.prependFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
-                    }
-                    return resultCompletion;
-                }
-            });
-        }
-        return completion;
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> replace(final String key, final D value, final int exp,
+    public CallbackCompletion<Boolean> prepend(final String key, final D value,
             final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.replace(key, exp, value);
+        final CallbackCompletion<Boolean> completion = this.connector.prepend(
+                key, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
                     assert (aCompletion == completion);
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.replaceSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .prependSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.replaceFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .prependFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, (D) completion
+                                                        .getException(), extra));
                     }
                     return resultCompletion;
                 }
@@ -270,32 +277,75 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> replace(final String key, final int exp, final D data) {
+    public CallbackCompletion<Boolean> replace(final String key, final D value,
+            final int exp, final E extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.replace(
+                key, exp, value);
+        if (this.callback != null) {
+            completion.observe(new CallbackCompletionObserver() {
+
+                @Override
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion);
+                    CallbackCompletion<Void> resultCompletion;
+                    if (completion.getException() == null) {
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .replaceSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
+                    } else {
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .replaceFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, (D) completion
+                                                        .getException(), extra));
+                    }
+                    return resultCompletion;
+                }
+            });
+        }
+        return completion;
+    }
+
+    @Override
+    public CallbackCompletion<Boolean> replace(final String key, final int exp,
+            final D data) {
         return this.replace(key, data, exp, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final D value, final int exp,
-            final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.set(key, exp, value);
+    public CallbackCompletion<Boolean> set(final String key, final D value,
+            final int exp, final E extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.set(key,
+                exp, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
                     assert (aCompletion == completion);
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() != null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.setSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .setSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.setFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .setFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<C, D, E>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, (D) completion
+                                                        .getException(), extra));
                     }
                     return resultCompletion;
                 }
@@ -305,7 +355,8 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final int exp, final D data) {
+    public CallbackCompletion<Boolean> set(final String key, final int exp,
+            final D data) {
         return this.set(key, data, exp, null);
     }
 }

@@ -48,7 +48,8 @@ public class AmqpQueueConsumeCallbackArguments<Context, Message, Extra> extends
      * @param message
      *            information about the consume request
      */
-    public AmqpQueueConsumeCallbackArguments(final ICloudletController<?> cloudlet,
+    public AmqpQueueConsumeCallbackArguments(
+            final ICloudletController<?> cloudlet,
             final IAmqpQueueDeliveryToken delivery, final Message message) {
         super(cloudlet);
         this.message = message;

@@ -55,18 +55,6 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
 
     private final Bucket bucket;
 
-    private RiakOperationFactory(String riakHost, int riakPort, String bucket, boolean restCl)
-            throws RiakException {
-        super();
-        if (restCl == true) {
-            final String address = "http://" + riakHost + ":" + riakPort + "/riak";
-            this.riakcl = RiakFactory.httpClient(address);
-        } else {
-            this.riakcl = RiakFactory.pbcClient(riakHost, riakPort);
-        }
-        this.bucket = this.riakcl.fetchBucket(bucket).execute();
-    }
-
     /**
      * Creates a new factory.
      * 
@@ -79,9 +67,22 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
      * @return the factory
      * @throws RiakException
      */
-    public static RiakOperationFactory getFactory(String riakHost, int port, String bucket,
-            boolean restCl) throws RiakException {
+    public static RiakOperationFactory getFactory(String riakHost, int port,
+            String bucket, boolean restCl) throws RiakException {
         return new RiakOperationFactory(riakHost, port, bucket, restCl);
+    }
+
+    private RiakOperationFactory(String riakHost, int riakPort, String bucket,
+            boolean restCl) throws RiakException {
+        super();
+        if (restCl == true) {
+            final String address = "http://" + riakHost + ":" + riakPort
+                    + "/riak";
+            this.riakcl = RiakFactory.httpClient(address);
+        } else {
+            this.riakcl = RiakFactory.pbcClient(riakHost, riakPort);
+        }
+        this.bucket = this.riakcl.fetchBucket(bucket).execute();
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {
@@ -108,7 +109,8 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
             public byte[] call() {
                 final String key = (String) parameters[0];
                 try {
-                    final IRiakObject res = RiakOperationFactory.this.bucket.fetch(key).execute();
+                    final IRiakObject res = RiakOperationFactory.this.bucket
+                            .fetch(key).execute();
                     return res.getValue();
                 } catch (final RiakException e) {
                     e.printStackTrace();
@@ -147,7 +149,8 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
                 final String key = (String) parameters[0];
                 final byte[] dataBytes = (byte[]) parameters[1];
                 try {
-                    RiakOperationFactory.this.bucket.store(key, dataBytes).execute();
+                    RiakOperationFactory.this.bucket.store(key, dataBytes)
+                            .execute();
                     return true;
                 } catch (final RiakException e) {
                     e.printStackTrace();
@@ -180,9 +183,10 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
                         // 4:46
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + type.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: " + type.toString());
                         }
                     });
         }
@@ -216,9 +220,11 @@ public final class RiakOperationFactory implements IOperationFactory { // NOPMD
                         new Callable<Object>() {
 
                             @Override
-                            public Object call() throws UnsupportedOperationException {
-                                throw new UnsupportedOperationException("Unsupported operation: "
-                                        + mType.toString());
+                            public Object call()
+                                    throws UnsupportedOperationException {
+                                throw new UnsupportedOperationException(
+                                        "Unsupported operation: "
+                                                + mType.toString());
                             }
                         });
             }

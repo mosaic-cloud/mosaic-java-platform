@@ -98,7 +98,8 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
             }
             break;
         case LIST:
-            final ListReply.Builder listPayload = KeyValuePayloads.ListReply.newBuilder();
+            final ListReply.Builder listPayload = KeyValuePayloads.ListReply
+                    .newBuilder();
             listPayload.setToken(token);
             @SuppressWarnings("unchecked")
             final List<String> resList = (List<String>) result;
@@ -110,13 +111,15 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
                     listPayload.build());
             break;
         case GET:
-            final GetReply.Builder getPayload = KeyValuePayloads.GetReply.newBuilder();
+            final GetReply.Builder getPayload = KeyValuePayloads.GetReply
+                    .newBuilder();
             getPayload.setToken(token);
             @SuppressWarnings("unchecked")
             final Map<String, byte[]> resMap = (Map<String, byte[]>) result;
             final List<KVEntry> getResults = new ArrayList<KVEntry>();
             for (final Map.Entry<String, byte[]> entry : resMap.entrySet()) {
-                final KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry.newBuilder();
+                final KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry
+                        .newBuilder();
                 kvEntry.setKey(entry.getKey());
                 if (entry.getValue() == null) {
                     kvEntry.setValue(ByteString.EMPTY);
@@ -137,8 +140,9 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
     protected void packAndSend(Session session, CompletionToken token,
             KeyValueOperations operation, Object result, boolean isError) {
         Message message;
-        this.logger.trace("KeyValueResponseTransmitter: send response for " + operation
-                + " request " + token.getMessageId() + " client id " + token.getClientId());
+        this.logger.trace("KeyValueResponseTransmitter: send response for "
+                + operation + " request " + token.getMessageId()
+                + " client id " + token.getClientId());
         if (isError) {
             // NOTE: create error message
             final Error.Builder errorPayload = IdlCommon.Error.newBuilder();
@@ -166,8 +170,9 @@ public class KeyValueResponseTransmitter extends ResponseTransmitter {
      * @param isError
      *            <code>true</code> if the result is actual an error
      */
-    public void sendResponse(Session session, CompletionToken token, IOperationType operation,
-            Object result, boolean isError) {
-        packAndSend(session, token, (KeyValueOperations) operation, result, isError);
+    public void sendResponse(Session session, CompletionToken token,
+            IOperationType operation, Object result, boolean isError) {
+        packAndSend(session, token, (KeyValueOperations) operation, result,
+                isError);
     }
 }

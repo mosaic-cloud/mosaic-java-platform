@@ -45,22 +45,6 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
     private final int riakPort;
 
     /**
-     * Creates a new Riak driver.
-     * 
-     * @param noThreads
-     *            number of threads to be used for serving requests
-     * @param riakHost
-     *            the hostname of the Riak server
-     * @param riakPort
-     *            the port for the Riak server
-     */
-    private RiakPBDriver(ThreadingContext threading, int noThreads, String riakHost, int riakPort) {
-        super(threading, noThreads);
-        this.riakHost = riakHost;
-        this.riakPort = riakPort;
-    }
-
-    /**
      * Returns a Riak driver.
      * 
      * @param config
@@ -78,26 +62,48 @@ public final class RiakPBDriver extends AbstractKeyValueDriver {
      * @throws IOException
      * @throws ConnectionException
      */
-    public static RiakPBDriver create(IConfiguration config, ThreadingContext threading)
-            throws IOException, ConnectionException {
+    public static RiakPBDriver create(IConfiguration config,
+            ThreadingContext threading) throws IOException, ConnectionException {
         int port, noThreads;
         final String host = ConfigUtils.resolveParameter(config,
                 ConfigProperties.getString("KVStoreDriver.0"), //$NON-NLS-1$
                 String.class, ""); //$NON-NLS-1$
-        port = ConfigUtils.resolveParameter(config, ConfigProperties.getString("KVStoreDriver.1"), //$NON-NLS-1$
+        port = ConfigUtils.resolveParameter(config,
+                ConfigProperties.getString("KVStoreDriver.1"), //$NON-NLS-1$
                 Integer.class, 0);
-        noThreads = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-        final MosaicLogger sLogger = MosaicLogger.createLogger(RiakPBDriver.class);
+        noThreads = ConfigUtils
+                .resolveParameter(
+                        config,
+                        ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
+        final MosaicLogger sLogger = MosaicLogger
+                .createLogger(RiakPBDriver.class);
         sLogger.trace("Created Riak PB driver for host " + host + ":" + port);
         return new RiakPBDriver(threading, noThreads, host, port);
+    }
+
+    /**
+     * Creates a new Riak driver.
+     * 
+     * @param noThreads
+     *            number of threads to be used for serving requests
+     * @param riakHost
+     *            the hostname of the Riak server
+     * @param riakPort
+     *            the port for the Riak server
+     */
+    private RiakPBDriver(ThreadingContext threading, int noThreads,
+            String riakHost, int riakPort) {
+        super(threading, noThreads);
+        this.riakHost = riakHost;
+        this.riakPort = riakPort;
     }
 
     @Override
     protected IOperationFactory createOperationFactory(Object... params) {
         final String bucket = params[0].toString();
         IOperationFactory opFactory;
-        opFactory = RiakPBOperationFactory.getFactory(this.riakHost, this.riakPort, bucket);
+        opFactory = RiakPBOperationFactory.getFactory(this.riakHost,
+                this.riakPort, bucket);
         return opFactory;
     }
 

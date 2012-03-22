@@ -37,11 +37,12 @@ import com.google.protobuf.GeneratedMessage;
  * 
  */
 public enum AmqpMessage implements MessageSpecification {
-    ABORTED(MessageType.Termination, null), ACCESS(MessageType.Initiation, null), ERROR(
-            MessageType.Exchange,
-            IdlCommon.Error.class), OK(MessageType.Exchange, IdlCommon.Ok.class), NOK(
-            MessageType.Exchange,
-            IdlCommon.NotOk.class), DECL_EXCHANGE_REQUEST(
+    ABORTED(MessageType.Termination, null),
+    ACCESS(MessageType.Initiation, null),
+    ERROR(MessageType.Exchange, IdlCommon.Error.class),
+    OK(MessageType.Exchange, IdlCommon.Ok.class),
+    NOK(MessageType.Exchange, IdlCommon.NotOk.class),
+    DECL_EXCHANGE_REQUEST(
             MessageType.Exchange,
             AmqpPayloads.DeclareExchangeRequest.class), DECL_QUEUE_REQUEST(
             MessageType.Exchange,

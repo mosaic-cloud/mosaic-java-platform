@@ -32,13 +32,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
 
-public class ItemsKVCallback extends
+public class ItemsKVCallback
+        extends
         DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
     private static final String BUCKET_NAME = "feed-items";
 
     @Override
-    public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
+    public CallbackCompletion<Void> destroySucceeded(
+            IndexerCloudletContext context,
             CallbackArguments<IndexerCloudletContext> arguments) {
         context.itemsStore = null;
         return ICallback.SUCCESS;
@@ -47,7 +49,8 @@ public class ItemsKVCallback extends
     private void handleError(
             KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
         final String key = arguments.getKey();
-        this.logger.warn("failed fetch (" + ItemsKVCallback.BUCKET_NAME + "," + key + ")");
+        this.logger.warn("failed fetch (" + ItemsKVCallback.BUCKET_NAME + ","
+                + key + ")");
         final Map<String, String> errorMssg = new HashMap<String, String>(4);
         errorMssg.put("reason", "unexpected key-value store error");
         errorMssg.put("message", arguments.getValue().toString());
@@ -57,7 +60,8 @@ public class ItemsKVCallback extends
     }
 
     @Override
-    public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
+    public CallbackCompletion<Void> setFailed(
+            IndexerCloudletContext context,
             KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
         handleError(arguments);
         return ICallback.SUCCESS;

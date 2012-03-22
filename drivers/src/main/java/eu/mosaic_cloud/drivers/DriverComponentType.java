@@ -27,8 +27,8 @@ package eu.mosaic_cloud.drivers;
  * 
  */
 public enum DriverComponentType {
-    AMQP("eu.mosaic_cloud.drivers.queue.amqp.AmqpDriverComponentCallbacks"), KV(
-            "eu.mosaic_cloud.drivers.kvstore.KVDriverComponentCallbacks");
+    AMQP("eu.mosaic_cloud.drivers.queue.amqp.AmqpDriverComponentCallbacks"),
+    KV("eu.mosaic_cloud.drivers.kvstore.KVDriverComponentCallbacks");
 
     private final String callbackClass;
 

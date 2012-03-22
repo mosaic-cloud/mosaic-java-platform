@@ -65,8 +65,8 @@ public class DriverConnectionData {
      * @param password
      *            password for connecting to resource
      */
-    public DriverConnectionData(String host, int port, String driverName, String user,
-            String password) {
+    public DriverConnectionData(String host, int port, String driverName,
+            String user, String password) {
         this(host, port, driverName);
         this.user = user;
         this.password = password;
@@ -81,7 +81,8 @@ public class DriverConnectionData {
             isEqual = (obj == null)
                     || (getClass() != obj.getClass())
                     || ((this.driverName == null) && (other.driverName != null))
-                    || ((this.driverName != null) && (!this.driverName.equals(other.driverName)))
+                    || ((this.driverName != null) && (!this.driverName
+                            .equals(other.driverName)))
                     || ((this.host == null) && (other.host != null))
                     || ((this.host != null) && (!this.host.equals(other.host)))
                     || ((this.password == null) && (other.password != null))
@@ -119,11 +120,15 @@ public class DriverConnectionData {
     public int hashCode() { // NOPMD by georgiana on 10/12/11 3:11 PM
         final int prime = 31; // NOPMD by georgiana on 10/12/11 3:09 PM
         int result = 1; // NOPMD by georgiana on 10/12/11 3:11 PM
-        result = (prime * result) + ((this.driverName == null) ? 0 : this.driverName.hashCode());
-        result = (prime * result) + ((this.host == null) ? 0 : this.host.hashCode());
-        result = (prime * result) + ((this.password == null) ? 0 : this.password.hashCode());
+        result = (prime * result)
+                + ((this.driverName == null) ? 0 : this.driverName.hashCode());
+        result = (prime * result)
+                + ((this.host == null) ? 0 : this.host.hashCode());
+        result = (prime * result)
+                + ((this.password == null) ? 0 : this.password.hashCode());
         result = (prime * result) + this.port;
-        result = (prime * result) + ((this.user == null) ? 0 : this.user.hashCode());
+        result = (prime * result)
+                + ((this.user == null) ? 0 : this.user.hashCode());
         return result;
     }
 }

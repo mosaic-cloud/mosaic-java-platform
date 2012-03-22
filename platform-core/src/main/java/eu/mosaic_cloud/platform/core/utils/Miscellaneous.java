@@ -28,9 +28,6 @@ package eu.mosaic_cloud.platform.core.utils;
  */
 public final class Miscellaneous {
 
-    private Miscellaneous() {
-    }
-
     /**
      * Casts an object to a specified type.
      * 
@@ -42,7 +39,11 @@ public final class Miscellaneous {
      *            the object to cast
      * @return the casted object
      */
-    public static <T> T cast(final Class<T> classToCast, final Object valueToCast) {
+    public static <T> T cast(final Class<T> classToCast,
+            final Object valueToCast) {
         return classToCast.cast(valueToCast);
+    }
+
+    private Miscellaneous() {
     }
 }

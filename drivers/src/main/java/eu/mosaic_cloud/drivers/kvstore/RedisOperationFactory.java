@@ -50,19 +50,6 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
     // PM
     private final Jedis redisClient;
 
-    private RedisOperationFactory(String host, int port, String passwd, String bucket) {
-        super();
-        this.redisClient = new Jedis(host, port, 0);
-        if (!"".equals(passwd)) { //$NON-NLS-1$
-            this.redisClient.auth(passwd);
-        }
-        final int iBucket = Integer.parseInt(bucket);
-        if (iBucket > -1) {
-            this.redisClient.select(iBucket);
-        }
-        this.redisClient.connect();
-    }
-
     /**
      * Creates a new factory.
      * 
@@ -78,9 +65,23 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
      *            the bucket where all operations are applied
      * @return the factory
      */
-    public static RedisOperationFactory getFactory(String host, int port, String passwd,
-            String bucket) {
+    public static RedisOperationFactory getFactory(String host, int port,
+            String passwd, String bucket) {
         return new RedisOperationFactory(host, port, passwd, bucket);
+    }
+
+    private RedisOperationFactory(String host, int port, String passwd,
+            String bucket) {
+        super();
+        this.redisClient = new Jedis(host, port, 0);
+        if (!"".equals(passwd)) { //$NON-NLS-1$
+            this.redisClient.auth(passwd);
+        }
+        final int iBucket = Integer.parseInt(bucket);
+        if (iBucket > -1) {
+            this.redisClient.select(iBucket);
+        }
+        this.redisClient.connect();
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {
@@ -88,8 +89,10 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 
             @Override
             public Boolean call() {
-                final byte[] keyBytes = SafeEncoder.encode((String) parameters[0]);
-                final long opResult = RedisOperationFactory.this.redisClient.del(keyBytes);
+                final byte[] keyBytes = SafeEncoder
+                        .encode((String) parameters[0]);
+                final long opResult = RedisOperationFactory.this.redisClient
+                        .del(keyBytes);
                 if (opResult == 0) {
                     return false;
                 }
@@ -103,8 +106,10 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 
             @Override
             public byte[] call() {
-                final byte[] keyBytes = SafeEncoder.encode((String) parameters[0]);
-                final byte[] result = RedisOperationFactory.this.redisClient.get(keyBytes);
+                final byte[] keyBytes = SafeEncoder
+                        .encode((String) parameters[0]);
+                final byte[] result = RedisOperationFactory.this.redisClient
+                        .get(keyBytes);
                 return result;
             }
         });
@@ -115,7 +120,8 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 
             @Override
             public List<String> call() {
-                final Set<String> opResult = RedisOperationFactory.this.redisClient.keys("*");
+                final Set<String> opResult = RedisOperationFactory.this.redisClient
+                        .keys("*");
                 final List<String> result = new ArrayList<String>();
                 for (final String key : opResult) {
                     result.add(key);
@@ -130,9 +136,11 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
 
             @Override
             public Boolean call() {
-                final byte[] keyBytes = SafeEncoder.encode((String) parameters[0]);
+                final byte[] keyBytes = SafeEncoder
+                        .encode((String) parameters[0]);
                 final byte[] dataBytes = (byte[]) parameters[1];
-                String opResult = RedisOperationFactory.this.redisClient.set(keyBytes, dataBytes);
+                String opResult = RedisOperationFactory.this.redisClient.set(
+                        keyBytes, dataBytes);
                 opResult = opResult.trim();
                 if (opResult.equalsIgnoreCase("OK")) {
                     return true;
@@ -155,7 +163,8 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
      * .platform.core.IOperationType, java.lang.Object[])
      */
     @Override
-    public IOperation<?> getOperation(final IOperationType type, Object... parameters) {
+    public IOperation<?> getOperation(final IOperationType type,
+            Object... parameters) {
         IOperation<?> operation;
         if (!(type instanceof KeyValueOperations)) {
             return new GenericOperation<Object>(new Callable<Object>() { // NOPMD
@@ -167,9 +176,10 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
                         // 12:59
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + type.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: " + type.toString());
                         }
                     });
         }
@@ -197,9 +207,11 @@ public final class RedisOperationFactory implements IOperationFactory { // NOPMD
                         // 1:03
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + mType.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: "
+                                            + mType.toString());
                         }
                     });
         }

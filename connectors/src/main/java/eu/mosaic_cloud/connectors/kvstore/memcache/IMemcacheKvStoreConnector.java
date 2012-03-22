@@ -33,7 +33,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TValue>
  *            type of stored data
  */
-public interface IMemcacheKvStoreConnector<TValue extends Object> extends IKvStoreConnector<TValue> {
+public interface IMemcacheKvStoreConnector<TValue extends Object> extends
+        IKvStoreConnector<TValue> {
 
     /**
      * Stores specified data, but only if the server *doesn't* already hold data

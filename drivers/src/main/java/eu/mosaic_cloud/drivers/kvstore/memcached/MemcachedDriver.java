@@ -61,26 +61,6 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
     private final String password;
 
     /**
-     * Creates a new memcached driver.
-     * 
-     * @param noThreads
-     *            number of threads to be used for serving requests
-     * @param hosts
-     *            the hostname and port of the Memcached servers
-     * @param user
-     *            the username for connecting to the server
-     * @param passwd
-     *            the password for connecting to the server
-     */
-    private MemcachedDriver(ThreadingContext threading, int noThreads, List<?> hosts, String user,
-            String password) {
-        super(threading, noThreads);
-        this.hosts = hosts;
-        this.username = user;
-        this.password = password;
-    }
-
-    /**
      * Returns a Memcached driver.
      * 
      * @param config
@@ -98,7 +78,8 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
      * @return the driver
      * @throws IOException
      */
-    public static MemcachedDriver create(IConfiguration config, ThreadingContext threading) {
+    public static MemcachedDriver create(IConfiguration config,
+            ThreadingContext threading) {
         final List<URI> nodesURI = new ArrayList<URI>(10); // NOPMD by georgiana
                                                            // on
                                                            // 10/12/11 12:51 PM
@@ -114,8 +95,10 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
         MemcachedDriver driver;
         while (true) {
             noNodes++;
-            final String host = ConfigUtils.resolveParameter(config,
-                    ConfigProperties.getString("MemcachedDriver.0") + noNodes, String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+            final String host = ConfigUtils
+                    .resolveParameter(
+                            config,
+                            ConfigProperties.getString("MemcachedDriver.0") + noNodes, String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
             if ("".equals(host)) { //$NON-NLS-1$
                 noNodes--; // NOPMD by georgiana on 10/12/11 10:08 AM
                 break;
@@ -141,22 +124,48 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
                 ExceptionTracer.traceIgnored(e);
             }
         }
-        noThreads = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
+        noThreads = ConfigUtils
+                .resolveParameter(
+                        config,
+                        ConfigProperties.getString("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
         final String user = ConfigUtils.resolveParameter(config,
                 ConfigProperties.getString("KVStoreDriver.5"), //$NON-NLS-1$
                 String.class, ""); //$NON-NLS-1$
-        final String passwd = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("KVStoreDriver.4"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-        driver = new MemcachedDriver(threading, noThreads, nodesURI, user, passwd);
+        final String passwd = ConfigUtils
+                .resolveParameter(
+                        config,
+                        ConfigProperties.getString("KVStoreDriver.4"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+        driver = new MemcachedDriver(threading, noThreads, nodesURI, user,
+                passwd);
         return driver;
+    }
+
+    /**
+     * Creates a new memcached driver.
+     * 
+     * @param noThreads
+     *            number of threads to be used for serving requests
+     * @param hosts
+     *            the hostname and port of the Memcached servers
+     * @param user
+     *            the username for connecting to the server
+     * @param passwd
+     *            the password for connecting to the server
+     */
+    private MemcachedDriver(ThreadingContext threading, int noThreads,
+            List<?> hosts, String user, String password) {
+        super(threading, noThreads);
+        this.hosts = hosts;
+        this.username = user;
+        this.password = password;
     }
 
     @Override
     protected IOperationFactory createOperationFactory(Object... params) {
         final String bucket = params[0].toString();
-        final IOperationFactory opFactory = MemcachedOperationFactory.getFactory(this.hosts,
-                this.username, this.password, bucket, MemcachedDriver.USE_BUCKET);
+        final IOperationFactory opFactory = MemcachedOperationFactory
+                .getFactory(this.hosts, this.username, this.password, bucket,
+                        MemcachedDriver.USE_BUCKET);
         return opFactory;
     }
 
@@ -170,73 +179,78 @@ public final class MemcachedDriver extends AbstractKeyValueDriver { // NOPMD by
         this.logger.trace("MemcachedDriver destroyed."); //$NON-NLS-1$
     }
 
-    public IResult<Boolean> invokeAddOperation(String clientId, String key, int exp, byte[] data,
+    public IResult<Boolean> invokeAddOperation(String clientId, String key,
+            int exp, byte[] data,
             IOperationCompletionHandler<Boolean> complHandler) {
         @SuppressWarnings("unchecked")
         final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super
-                .getOperationFactory(clientId, MemcachedOperationFactory.class).getOperation(
-                        KeyValueOperations.ADD, key, exp, data);
+                .getOperationFactory(clientId, MemcachedOperationFactory.class)
+                .getOperation(KeyValueOperations.ADD, key, exp, data);
         return startOperation(operation, complHandler);
     }
 
-    public IResult<Boolean> invokeAppendOperation(String clientId, String key, byte[] data,
-            IOperationCompletionHandler<Boolean> complHandler) {
+    public IResult<Boolean> invokeAppendOperation(String clientId, String key,
+            byte[] data, IOperationCompletionHandler<Boolean> complHandler) {
         @SuppressWarnings("unchecked")
         final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super
-                .getOperationFactory(clientId, MemcachedOperationFactory.class).getOperation(
-                        KeyValueOperations.APPEND, key, data);
+                .getOperationFactory(clientId, MemcachedOperationFactory.class)
+                .getOperation(KeyValueOperations.APPEND, key, data);
         return startOperation(operation, complHandler);
     }
 
-    public IResult<Boolean> invokeCASOperation(String clientId, String key, byte[] data,
-            IOperationCompletionHandler<Boolean> complHandler) {
+    public IResult<Boolean> invokeCASOperation(String clientId, String key,
+            byte[] data, IOperationCompletionHandler<Boolean> complHandler) {
         @SuppressWarnings("unchecked")
         final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super
-                .getOperationFactory(clientId, MemcachedOperationFactory.class).getOperation(
-                        KeyValueOperations.CAS, key, data);
+                .getOperationFactory(clientId, MemcachedOperationFactory.class)
+                .getOperation(KeyValueOperations.CAS, key, data);
         return startOperation(operation, complHandler);
     }
 
-    public IResult<Map<String, byte[]>> invokeGetBulkOperation(String clientId, List<String> keys,
+    public IResult<Map<String, byte[]>> invokeGetBulkOperation(String clientId,
+            List<String> keys,
             IOperationCompletionHandler<Map<String, byte[]>> complHandler) {
         final String[] aKeys = keys.toArray(new String[keys.size()]);
         @SuppressWarnings("unchecked")
         final GenericOperation<Map<String, byte[]>> operation = (GenericOperation<Map<String, byte[]>>) super
-                .getOperationFactory(clientId, MemcachedOperationFactory.class).getOperation(
-                        KeyValueOperations.GET_BULK, (Object[]) aKeys);
+                .getOperationFactory(clientId, MemcachedOperationFactory.class)
+                .getOperation(KeyValueOperations.GET_BULK, (Object[]) aKeys);
         return startOperation(operation, complHandler);
     }
 
-    public IResult<Boolean> invokePrependOperation(String clientId, String key, byte[] data,
-            IOperationCompletionHandler<Boolean> complHandler) {
-        @SuppressWarnings("unchecked")
-        final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super
-                .getOperationFactory(clientId, MemcachedOperationFactory.class).getOperation(
-                        KeyValueOperations.PREPEND, key, data);
-        return startOperation(operation, complHandler);
-    }
-
-    public IResult<Boolean> invokeReplaceOperation(String clientId, String key, int exp,
+    public IResult<Boolean> invokePrependOperation(String clientId, String key,
             byte[] data, IOperationCompletionHandler<Boolean> complHandler) {
         @SuppressWarnings("unchecked")
         final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super
-                .getOperationFactory(clientId, MemcachedOperationFactory.class).getOperation(
-                        KeyValueOperations.REPLACE, key, exp, data);
+                .getOperationFactory(clientId, MemcachedOperationFactory.class)
+                .getOperation(KeyValueOperations.PREPEND, key, data);
         return startOperation(operation, complHandler);
     }
 
-    public IResult<Boolean> invokeSetOperation(String clientId, String key, int exp, byte[] data,
+    public IResult<Boolean> invokeReplaceOperation(String clientId, String key,
+            int exp, byte[] data,
             IOperationCompletionHandler<Boolean> complHandler) {
         @SuppressWarnings("unchecked")
         final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super
-                .getOperationFactory(clientId, MemcachedOperationFactory.class).getOperation(
-                        KeyValueOperations.SET, key, exp, data);
+                .getOperationFactory(clientId, MemcachedOperationFactory.class)
+                .getOperation(KeyValueOperations.REPLACE, key, exp, data);
+        return startOperation(operation, complHandler);
+    }
+
+    public IResult<Boolean> invokeSetOperation(String clientId, String key,
+            int exp, byte[] data,
+            IOperationCompletionHandler<Boolean> complHandler) {
+        @SuppressWarnings("unchecked")
+        final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super
+                .getOperationFactory(clientId, MemcachedOperationFactory.class)
+                .getOperation(KeyValueOperations.SET, key, exp, data);
         return startOperation(operation, complHandler);
     }
 
     @SuppressWarnings({
             "rawtypes", "unchecked" })
-    private <T extends Object> IResult<T> startOperation(GenericOperation<T> operation,
+    private <T extends Object> IResult<T> startOperation(
+            GenericOperation<T> operation,
             IOperationCompletionHandler complHandler) {
         final IResult<T> iResult = new GenericResult<T>(operation);
         operation.setHandler(complHandler);

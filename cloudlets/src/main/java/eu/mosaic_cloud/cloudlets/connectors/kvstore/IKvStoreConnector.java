@@ -33,7 +33,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Context>
  *            the type of the context of the cloudlet
  */
-public interface IKvStoreConnector<Context, Value, Extra> extends IConnector<Context>,
+public interface IKvStoreConnector<Context, Value, Extra> extends
+        IConnector<Context>,
         eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<Value> {
 
     /**

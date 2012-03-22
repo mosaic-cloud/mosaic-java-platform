@@ -53,32 +53,9 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
     private final IResourceDriver driver;
     private final List<Session> sessions;
     private final ZeroMqChannel commChannel;
-    protected static final Object MONITOR = Monitor.create(AbstractDriverStub.class);
+    protected static final Object MONITOR = Monitor
+            .create(AbstractDriverStub.class);
     private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer>();
-
-    /**
-     * Builds a driver stub.
-     * 
-     * @param config
-     *            configuration data for the driver and its stub
-     * @param transmitter
-     *            the transmitter which will serialize and send responses back
-     *            to the connector
-     * @param driver
-     *            the driver which will handle requests received by the stub
-     * @param commChannel
-     *            the channel for communicating with connectors
-     */
-    protected AbstractDriverStub(IConfiguration config, ResponseTransmitter transmitter,
-            IResourceDriver driver, ZeroMqChannel commChannel) {
-        super();
-        this.configuration = config;
-        this.logger = MosaicLogger.createLogger(this);
-        this.sessions = new ArrayList<Session>();
-        this.commChannel = commChannel;
-        this.transmitter = transmitter;
-        this.driver = driver;
-    }
 
     protected static int decDriverReference(AbstractDriverStub stub) {
         synchronized (AbstractDriverStub.MONITOR) {
@@ -103,6 +80,31 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
             ref++;
             AbstractDriverStub.references.put(stub, ref);
         }
+    }
+
+    /**
+     * Builds a driver stub.
+     * 
+     * @param config
+     *            configuration data for the driver and its stub
+     * @param transmitter
+     *            the transmitter which will serialize and send responses back
+     *            to the connector
+     * @param driver
+     *            the driver which will handle requests received by the stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    protected AbstractDriverStub(IConfiguration config,
+            ResponseTransmitter transmitter, IResourceDriver driver,
+            ZeroMqChannel commChannel) {
+        super();
+        this.configuration = config;
+        this.logger = MosaicLogger.createLogger(this);
+        this.sessions = new ArrayList<Session>();
+        this.commChannel = commChannel;
+        this.transmitter = transmitter;
+        this.driver = driver;
     }
 
     @Override
@@ -161,7 +163,8 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
      *            the class object of the transmitter
      * @return the transmitter
      */
-    protected <T extends ResponseTransmitter> T getResponseTransmitter(Class<T> transClass) {
+    protected <T extends ResponseTransmitter> T getResponseTransmitter(
+            Class<T> transClass) {
         return transClass.cast(this.transmitter);
     }
 
@@ -188,6 +191,6 @@ public abstract class AbstractDriverStub implements SessionCallbacks {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected abstract void startOperation(Message message, Session session) throws IOException,
-            ClassNotFoundException;
+    protected abstract void startOperation(Message message, Session session)
+            throws IOException, ClassNotFoundException;
 }

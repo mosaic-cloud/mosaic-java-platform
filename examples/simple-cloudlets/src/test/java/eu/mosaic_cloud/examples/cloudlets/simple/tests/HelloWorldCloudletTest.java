@@ -27,6 +27,7 @@ public class HelloWorldCloudletTest extends BaseCloudletTest {
     @Override
     public void setUp() {
         this.setUp(HelloWorldCloudlet.LifeCycleHandler.class,
-                HelloWorldCloudlet.HelloCloudletContext.class, "hello-cloudlet.properties");
+                HelloWorldCloudlet.HelloCloudletContext.class,
+                "hello-cloudlet.properties");
     }
 }

@@ -38,10 +38,8 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public final class KeyValueDriverFactory {
 
     public enum DriverType {
-        REDIS(RedisDriver.class),
-        MEMCACHED(MemcachedDriver.class),
-        RIAKREST(RiakRestDriver.class),
-        RIAKPB(RiakPBDriver.class);
+        REDIS(RedisDriver.class), MEMCACHED(MemcachedDriver.class), RIAKREST(
+                RiakRestDriver.class), RIAKPB(RiakPBDriver.class);
 
         private final Class<? extends AbstractKeyValueDriver> driverClass;
 
@@ -52,9 +50,6 @@ public final class KeyValueDriverFactory {
         public Class<? extends AbstractKeyValueDriver> getDriverClass() {
             return this.driverClass;
         }
-    }
-
-    private KeyValueDriverFactory() {
     }
 
     /**
@@ -70,8 +65,9 @@ public final class KeyValueDriverFactory {
      * @throws ConnectorNotFoundException
      *             if driver cannot be instantiated for any reason
      */
-    public static AbstractKeyValueDriver createDriver(String driverName, IConfiguration config,
-            ThreadingContext threadingContext) throws DriverNotFoundException {
+    public static AbstractKeyValueDriver createDriver(String driverName,
+            IConfiguration config, ThreadingContext threadingContext)
+            throws DriverNotFoundException {
         DriverType type = null;
         AbstractKeyValueDriver driver = null;
         for (final DriverType t : DriverType.values()) {
@@ -83,21 +79,25 @@ public final class KeyValueDriverFactory {
         if (type != null) {
             try {
                 final Class<?> driverClass = type.getDriverClass();
-                final Method createMethod = driverClass.getMethod("create", IConfiguration.class,
-                        ThreadingContext.class);
+                final Method createMethod = driverClass.getMethod("create",
+                        IConfiguration.class, ThreadingContext.class);
                 try {
-                    driver = (AbstractKeyValueDriver) createMethod.invoke(null, config,
-                            threadingContext);
+                    driver = (AbstractKeyValueDriver) createMethod.invoke(null,
+                            config, threadingContext);
                 } catch (final InvocationTargetException exception) {
                     ExceptionTracer.traceHandled(exception);
                     throw exception.getCause();
                 }
             } catch (final Throwable e) {
                 ExceptionTracer.traceIgnored(e);
-                final DriverNotFoundException exception = new DriverNotFoundException(e);
+                final DriverNotFoundException exception = new DriverNotFoundException(
+                        e);
                 throw exception;
             }
         }
         return driver;
+    }
+
+    private KeyValueDriverFactory() {
     }
 }

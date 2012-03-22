@@ -42,7 +42,8 @@ public interface IConnectorCallback<Context> extends ICallback<Context> {
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> destroyFailed(Context context, CallbackArguments<Context> arguments);
+    CallbackCompletion<Void> destroyFailed(Context context,
+            CallbackArguments<Context> arguments);
 
     /**
      * Called when resource accessor destruction succeeded.
@@ -52,7 +53,8 @@ public interface IConnectorCallback<Context> extends ICallback<Context> {
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> destroySucceeded(Context context, CallbackArguments<Context> arguments);
+    CallbackCompletion<Void> destroySucceeded(Context context,
+            CallbackArguments<Context> arguments);
 
     /**
      * Called when resource accessor initialization failed.
@@ -62,7 +64,8 @@ public interface IConnectorCallback<Context> extends ICallback<Context> {
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> initializeFailed(Context context, CallbackArguments<Context> arguments);
+    CallbackCompletion<Void> initializeFailed(Context context,
+            CallbackArguments<Context> arguments);
 
     /**
      * Called when resource accessor initialization succeeded.

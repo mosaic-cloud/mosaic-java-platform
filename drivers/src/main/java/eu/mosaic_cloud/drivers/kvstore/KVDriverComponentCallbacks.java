@@ -55,7 +55,8 @@ import com.google.common.base.Preconditions;
  * @author Georgiana Macariu
  * 
  */
-public final class KVDriverComponentCallbacks extends AbstractDriverComponentCallbacks {
+public final class KVDriverComponentCallbacks extends
+        AbstractDriverComponentCallbacks {
 
     private String driverName;
 
@@ -69,15 +70,18 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
                     .create(KVDriverComponentCallbacks.class
                             .getResourceAsStream("driver-component.properties"));
             setDriverConfiguration(configuration);
-            this.resourceGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(
+            this.resourceGroup = ComponentIdentifier.resolve(ConfigUtils
+                    .resolveParameter(getDriverConfiguration(),
+                            ConfigProperties
+                                    .getString("KVDriverComponentCallbacks.0"), //$NON-NLS-1$
+                            String.class, "")); //$NON-NLS-1$
+            this.selfGroup = ComponentIdentifier.resolve(ConfigUtils
+                    .resolveParameter(getDriverConfiguration(),
+                            ConfigProperties
+                                    .getString("KVDriverComponentCallbacks.1"), //$NON-NLS-1$
+                            String.class, "")); //$NON-NLS-1$
+            this.driverName = ConfigUtils.resolveParameter(
                     getDriverConfiguration(),
-                    ConfigProperties.getString("KVDriverComponentCallbacks.0"), //$NON-NLS-1$
-                    String.class, "")); //$NON-NLS-1$
-            this.selfGroup = ComponentIdentifier.resolve(ConfigUtils.resolveParameter(
-                    getDriverConfiguration(),
-                    ConfigProperties.getString("KVDriverComponentCallbacks.1"), //$NON-NLS-1$
-                    String.class, "")); //$NON-NLS-1$
-            this.driverName = ConfigUtils.resolveParameter(getDriverConfiguration(),
                     ConfigProperties.getString("KVStoreDriver.6"), //$NON-NLS-1$
                     String.class, ""); //$NON-NLS-1$
             this.status = Status.Created;
@@ -90,13 +94,15 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
     public CallbackCompletion<Void> called(ComponentController component,
             ComponentCallRequest request) {
         Preconditions.checkState(this.component == component);
-        Preconditions.checkState((this.status != KVDriverComponentCallbacks.Status.Terminated)
-                && (this.status != KVDriverComponentCallbacks.Status.Unregistered));
+        Preconditions
+                .checkState((this.status != KVDriverComponentCallbacks.Status.Terminated)
+                        && (this.status != KVDriverComponentCallbacks.Status.Unregistered));
         if (this.status == KVDriverComponentCallbacks.Status.Registered) {
-            if (request.operation
-                    .equals(ConfigProperties.getString("KVDriverComponentCallbacks.5"))) { //$NON-NLS-1$
-                String channelEndpoint = ConfigUtils.resolveParameter(getDriverConfiguration(),
-                        ConfigProperties.getString("KVDriverComponentCallbacks.3"), //$NON-NLS-1$
+            if (request.operation.equals(ConfigProperties
+                    .getString("KVDriverComponentCallbacks.5"))) { //$NON-NLS-1$
+                String channelEndpoint = ConfigUtils.resolveParameter(
+                        getDriverConfiguration(), ConfigProperties
+                                .getString("KVDriverComponentCallbacks.3"), //$NON-NLS-1$
                         String.class, "");
                 // FIXME
                 try {
@@ -104,20 +110,22 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
                         channelEndpoint = channelEndpoint.replace("0.0.0.0",
                                 System.getenv("mosaic_node_ip"));
                     } else {
-                        channelEndpoint = channelEndpoint.replace("0.0.0.0", InetAddress
-                                .getLocalHost().getHostAddress());
+                        channelEndpoint = channelEndpoint.replace("0.0.0.0",
+                                InetAddress.getLocalHost().getHostAddress());
                     }
                 } catch (final UnknownHostException e) {
                     ExceptionTracer.traceIgnored(e);
                 }
-                final String channelId = ConfigUtils.resolveParameter(getDriverConfiguration(),
-                        ConfigProperties.getString("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
+                final String channelId = ConfigUtils.resolveParameter(
+                        getDriverConfiguration(), ConfigProperties
+                                .getString("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
                         String.class, "");
                 final Map<String, String> outcome = new HashMap<String, String>();
                 outcome.put("channelEndpoint", channelEndpoint);
                 outcome.put("channelIdentifier", channelId);
-                final ComponentCallReply reply = ComponentCallReply.create(true, outcome,
-                        ByteBuffer.allocate(0), request.reference);
+                final ComponentCallReply reply = ComponentCallReply.create(
+                        true, outcome, ByteBuffer.allocate(0),
+                        request.reference);
                 component.callReturn(reply);
             } else {
                 throw new UnsupportedOperationException();
@@ -139,7 +147,8 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
                 Integer port;
                 try {
                     Preconditions.checkArgument(reply.ok);
-                    Preconditions.checkArgument(reply.outputsOrError instanceof Map);
+                    Preconditions
+                            .checkArgument(reply.outputsOrError instanceof Map);
                     final Map<?, ?> outputs = (Map<?, ?>) reply.outputsOrError;
                     this.logger.trace("Resource search returned " + outputs);
                     ipAddress = (String) outputs.get("ip"); //$NON-NLS-1$
@@ -148,9 +157,11 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
                     Preconditions.checkArgument(port != null);
                 } catch (final IllegalArgumentException exception) {
                     this.terminate();
-                    ExceptionTracer.traceDeferred(exception,
-                            "failed resolving Riak broker endpoint: `%s`; terminating!", //$NON-NLS-1$
-                            reply.outputsOrError);
+                    ExceptionTracer
+                            .traceDeferred(
+                                    exception,
+                                    "failed resolving Riak broker endpoint: `%s`; terminating!", //$NON-NLS-1$
+                                    reply.outputsOrError);
                     throw new IllegalStateException(exception);
                 }
                 this.logger.trace("Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
@@ -159,7 +170,8 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
                 if (this.selfGroup != null) {
                     this.pendingReference = ComponentCallReference.create();
                     this.status = Status.Unregistered;
-                    this.component.register(this.selfGroup, this.pendingReference);
+                    this.component.register(this.selfGroup,
+                            this.pendingReference);
                 }
             } else {
                 throw new IllegalStateException();
@@ -184,12 +196,17 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
         Preconditions.checkState(this.component == null);
         Preconditions.checkState(this.status == Status.Created);
         this.component = component;
-        final ComponentCallReference callReference = ComponentCallReference.create();
+        final ComponentCallReference callReference = ComponentCallReference
+                .create();
         String operation;
-        if (this.driverName.equalsIgnoreCase(KeyValueDriverFactory.DriverType.RIAKPB.toString())) {
-            operation = ConfigProperties.getString("KVDriverComponentCallbacks.2");//$NON-NLS-1$
+        if (this.driverName
+                .equalsIgnoreCase(KeyValueDriverFactory.DriverType.RIAKPB
+                        .toString())) {
+            operation = ConfigProperties
+                    .getString("KVDriverComponentCallbacks.2");//$NON-NLS-1$
         } else {
-            operation = ConfigProperties.getString("KVDriverComponentCallbacks.6");//$NON-NLS-1$
+            operation = ConfigProperties
+                    .getString("KVDriverComponentCallbacks.6");//$NON-NLS-1$
         }
         this.component.call(this.resourceGroup,
                 ComponentCallRequest.create(operation, null, callReference));
@@ -200,12 +217,14 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
     }
 
     @Override
-    public CallbackCompletion<Void> registerReturned(ComponentController component,
-            ComponentCallReference reference, boolean success) {
+    public CallbackCompletion<Void> registerReturned(
+            ComponentController component, ComponentCallReference reference,
+            boolean success) {
         Preconditions.checkState(this.component == component);
         if (this.pendingReference == reference) {
             if (!success) {
-                final Exception e = new Exception("failed registering to group; terminating!"); //$NON-NLS-1$
+                final Exception e = new Exception(
+                        "failed registering to group; terminating!"); //$NON-NLS-1$
                 ExceptionTracer.traceDeferred(e);
                 this.component.terminate();
                 throw (new IllegalStateException(e));
@@ -218,8 +237,8 @@ public final class KVDriverComponentCallbacks extends AbstractDriverComponentCal
                     ConfigProperties.getString("KVDriverComponentCallbacks.4"),
                     ConfigProperties.getString("KVDriverComponentCallbacks.3"),
                     KeyValueSession.DRIVER);
-            this.stub = KeyValueStub
-                    .create(getDriverConfiguration(), this.threading, driverChannel);
+            this.stub = KeyValueStub.create(getDriverConfiguration(),
+                    this.threading, driverChannel);
         } else {
             throw new IllegalStateException();
         }

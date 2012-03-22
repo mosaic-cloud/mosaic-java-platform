@@ -58,12 +58,6 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
 
     private final String bucket;
 
-    private RiakPBOperationFactory(String riakHost, int port, String bucket) throws IOException {
-        super();
-        this.riakcl = new RiakClient(riakHost, port);
-        this.bucket = bucket;
-    }
-
     /**
      * Creates a new factory.
      * 
@@ -75,18 +69,27 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
      *            the bucket associated with the connection
      * @return the factory
      */
-    public static RiakPBOperationFactory getFactory(String riakHost, int port, String bucket) {
+    public static RiakPBOperationFactory getFactory(String riakHost, int port,
+            String bucket) {
         RiakPBOperationFactory factory = null; // NOPMD by georgiana on 10/12/11
                                                // 4:49 PM
         try {
             factory = new RiakPBOperationFactory(riakHost, port, bucket);
-            final MosaicLogger sLogger = MosaicLogger.createLogger(RiakRestOperationFactory.class);
-            sLogger.trace("Created Riak PB factory for " + riakHost + ":" + port + " bucket "
-                    + bucket);
+            final MosaicLogger sLogger = MosaicLogger
+                    .createLogger(RiakRestOperationFactory.class);
+            sLogger.trace("Created Riak PB factory for " + riakHost + ":"
+                    + port + " bucket " + bucket);
         } catch (final IOException e) {
             ExceptionTracer.traceIgnored(e);
         }
         return factory;
+    }
+
+    private RiakPBOperationFactory(String riakHost, int port, String bucket)
+            throws IOException {
+        super();
+        this.riakcl = new RiakClient(riakHost, port);
+        this.bucket = bucket;
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {
@@ -95,7 +98,8 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
             @Override
             public Boolean call() throws IOException {
                 final String key = (String) parameters[0];
-                RiakPBOperationFactory.this.riakcl.delete(RiakPBOperationFactory.this.bucket, key);
+                RiakPBOperationFactory.this.riakcl.delete(
+                        RiakPBOperationFactory.this.bucket, key);
                 return true;
             }
         });
@@ -108,8 +112,8 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
             public byte[] call() throws IOException {
                 byte[] result = null;
                 final String key = (String) parameters[0];
-                final RiakObject[] riakobj = RiakPBOperationFactory.this.riakcl.fetch(
-                        RiakPBOperationFactory.this.bucket, key);
+                final RiakObject[] riakobj = RiakPBOperationFactory.this.riakcl
+                        .fetch(RiakPBOperationFactory.this.bucket, key);
                 if (riakobj.length == 1) {
                     result = riakobj[0].getValue().toByteArray();
                 }
@@ -146,7 +150,8 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
                 final ByteString bucketBS = ByteString
                         .copyFromUtf8(RiakPBOperationFactory.this.bucket);
                 final ByteString dataBS = ByteString.copyFrom(dataBytes);
-                final RiakObject riakobj = new RiakObject(bucketBS, keyBS, dataBS);
+                final RiakObject riakobj = new RiakObject(bucketBS, keyBS,
+                        dataBS);
                 RiakPBOperationFactory.this.riakcl.store(riakobj);
                 return true;
             }
@@ -176,9 +181,10 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
                         // 4:49
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + type.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: " + type.toString());
                         }
                     });
         }
@@ -212,9 +218,11 @@ public final class RiakPBOperationFactory implements IOperationFactory { // NOPM
                         new Callable<Object>() {
 
                             @Override
-                            public Object call() throws UnsupportedOperationException {
-                                throw new UnsupportedOperationException("Unsupported operation: "
-                                        + mType.toString());
+                            public Object call()
+                                    throws UnsupportedOperationException {
+                                throw new UnsupportedOperationException(
+                                        "Unsupported operation: "
+                                                + mType.toString());
                             }
                         });
             }

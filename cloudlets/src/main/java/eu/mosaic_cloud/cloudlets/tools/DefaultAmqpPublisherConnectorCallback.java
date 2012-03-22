@@ -41,12 +41,14 @@ public class DefaultAmqpPublisherConnectorCallback<C, D, E> extends
     @Override
     public CallbackCompletion<Void> publishFailed(final C context,
             final GenericCallbackCompletionArguments<C, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Publish Failed", false, false);
+        return this.handleUnhandledCallback(arguments, "Publish Failed", false,
+                false);
     }
 
     @Override
     public CallbackCompletion<Void> publishSucceeded(final C context,
             final GenericCallbackCompletionArguments<C, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Publish Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments, "Publish Succeeded",
+                true, false);
     }
 }

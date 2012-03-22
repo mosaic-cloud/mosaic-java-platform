@@ -58,7 +58,8 @@ public class StoreUtils {
             final MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(string.getBytes(), 0, string.length());
             final BigInteger i = new BigInteger(1, md5.digest());
-            final String timelineKey = String.format("%1$032X", i).toLowerCase();
+            final String timelineKey = String.format("%1$032X", i)
+                    .toLowerCase();
             return timelineKey;
         } catch (final Exception e) {
             throw new IllegalStateException();

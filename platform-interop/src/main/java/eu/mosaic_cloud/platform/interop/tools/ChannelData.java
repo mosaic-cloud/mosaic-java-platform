@@ -80,9 +80,11 @@ public class ChannelData {
         final int prime = 31; // NOPMD by georgiana on 9/27/11 7:58 PM
         int result = 1; // NOPMD by georgiana on 9/27/11 7:58 PM
         result = (prime * result)
-                + ((this.channelEndpoint == null) ? 0 : this.channelEndpoint.hashCode());
+                + ((this.channelEndpoint == null) ? 0 : this.channelEndpoint
+                        .hashCode());
         result = (prime * result)
-                + ((this.channelIdentifier == null) ? 0 : this.channelIdentifier.hashCode());
+                + ((this.channelIdentifier == null) ? 0
+                        : this.channelIdentifier.hashCode());
         return result;
     }
 

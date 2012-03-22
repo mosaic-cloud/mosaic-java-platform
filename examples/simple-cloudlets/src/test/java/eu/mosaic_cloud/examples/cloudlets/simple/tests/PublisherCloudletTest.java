@@ -27,6 +27,7 @@ public class PublisherCloudletTest extends BaseCloudletTest {
     @Override
     public void setUp() {
         this.setUp(PublisherCloudlet.LifeCycleHandler.class,
-                PublisherCloudlet.PublisherCloudletContext.class, "publisher-cloudlet.properties");
+                PublisherCloudlet.PublisherCloudletContext.class,
+                "publisher-cloudlet.properties");
     }
 }

@@ -34,7 +34,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <Context>
  *            the type of the context of the cloudlet
  */
-public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
+public interface IMemcacheKvStoreConnector<Context, Value, Extra>
+        extends
         IKvStoreConnector<Context, Value, Extra>,
         eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector<Value> {
 
@@ -60,7 +61,8 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> add(String key, Value value, int exp, Extra extra);
+    CallbackCompletion<Boolean> add(String key, Value value, int exp,
+            Extra extra);
 
     /**
      * Adds specified data to an existing key after existing data.
@@ -98,7 +100,8 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Map<String, Value>> getBulk(List<String> keys, Extra extra);
+    CallbackCompletion<Map<String, Value>> getBulk(List<String> keys,
+            Extra extra);
 
     /**
      * Adds specified data to an existing key before existing data.
@@ -135,7 +138,8 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> replace(String key, Value value, int exp, Extra extra);
+    CallbackCompletion<Boolean> replace(String key, Value value, int exp,
+            Extra extra);
 
     /**
      * Stores the given data and associates it with the specified key.
@@ -158,5 +162,6 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> set(String key, Value value, int exp, Extra extra);
+    CallbackCompletion<Boolean> set(String key, Value value, int exp,
+            Extra extra);
 }

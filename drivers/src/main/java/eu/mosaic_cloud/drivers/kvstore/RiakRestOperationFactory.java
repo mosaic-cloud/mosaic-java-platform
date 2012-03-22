@@ -57,13 +57,6 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
 
     private final String bucket;
 
-    private RiakRestOperationFactory(String riakHost, int riakPort, String bucket) {
-        super();
-        final String address = "http://" + riakHost + ":" + riakPort + "/riak";
-        this.riakcl = new RiakClient(address);
-        this.bucket = bucket;
-    }
-
     /**
      * Creates a new factory.
      * 
@@ -75,8 +68,17 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
      *            the bucket associated with the connection
      * @return the factory
      */
-    public static RiakRestOperationFactory getFactory(String riakHost, int port, String bucket) {
+    public static RiakRestOperationFactory getFactory(String riakHost,
+            int port, String bucket) {
         return new RiakRestOperationFactory(riakHost, port, bucket);
+    }
+
+    private RiakRestOperationFactory(String riakHost, int riakPort,
+            String bucket) {
+        super();
+        final String address = "http://" + riakHost + ":" + riakPort + "/riak";
+        this.riakcl = new RiakClient(address);
+        this.bucket = bucket;
     }
 
     private IOperation<?> buildDeleteOperation(final Object... parameters) {
@@ -85,8 +87,8 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
             @Override
             public Boolean call() {
                 final String key = (String) parameters[0];
-                final HttpResponse res = RiakRestOperationFactory.this.riakcl.delete(
-                        RiakRestOperationFactory.this.bucket, key);
+                final HttpResponse res = RiakRestOperationFactory.this.riakcl
+                        .delete(RiakRestOperationFactory.this.bucket, key);
                 if (res.getStatusCode() == 404) {
                     return false;
                 }
@@ -101,8 +103,8 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
             @Override
             public byte[] call() {
                 final String key = (String) parameters[0];
-                final FetchResponse res = RiakRestOperationFactory.this.riakcl.fetch(
-                        RiakRestOperationFactory.this.bucket, key);
+                final FetchResponse res = RiakRestOperationFactory.this.riakcl
+                        .fetch(RiakRestOperationFactory.this.bucket, key);
                 if (res.hasObject()) {
                     final RiakObject riakobj = res.getObject();
                     return riakobj.getValueAsBytes();
@@ -139,9 +141,10 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
             public Boolean call() {
                 final String key = (String) parameters[0];
                 final byte[] dataBytes = (byte[]) parameters[1];
-                final RiakObject riakobj = new RiakObject(RiakRestOperationFactory.this.bucket,
-                        key, dataBytes);
-                final StoreResponse response = RiakRestOperationFactory.this.riakcl.store(riakobj);
+                final RiakObject riakobj = new RiakObject(
+                        RiakRestOperationFactory.this.bucket, key, dataBytes);
+                final StoreResponse response = RiakRestOperationFactory.this.riakcl
+                        .store(riakobj);
                 if (response.isSuccess()) {
                     return true;
                 }
@@ -172,9 +175,10 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
                         // 4:46
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + type.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: " + type.toString());
                         }
                     });
         }
@@ -207,9 +211,11 @@ public final class RiakRestOperationFactory implements IOperationFactory { // NO
                         new Callable<Object>() {
 
                             @Override
-                            public Object call() throws UnsupportedOperationException {
-                                throw new UnsupportedOperationException("Unsupported operation: "
-                                        + mType.toString());
+                            public Object call()
+                                    throws UnsupportedOperationException {
+                                throw new UnsupportedOperationException(
+                                        "Unsupported operation: "
+                                                + mType.toString());
                             }
                         });
             }

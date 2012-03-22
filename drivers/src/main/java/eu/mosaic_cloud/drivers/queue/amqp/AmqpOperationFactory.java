@@ -66,7 +66,8 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                 final long delivery = (Long) parameters[0];
                 final boolean multiple = (Boolean) parameters[1];
                 final String consumer = (String) parameters[2];
-                final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel(consumer);
+                final Channel channel = AmqpOperationFactory.this.amqpDriver
+                        .getChannel(consumer);
                 if (channel != null) {
                     try {
                         channel.basicAck(delivery, multiple);
@@ -94,8 +95,8 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                     final Channel channel = AmqpOperationFactory.this.amqpDriver
                             .getChannel(clientId);
                     if (channel != null) {
-                        final AMQP.Queue.BindOk outcome = channel.queueBind(queue, exchange,
-                                routingKey, null);
+                        final AMQP.Queue.BindOk outcome = channel.queueBind(
+                                queue, exchange, routingKey, null);
                         succeeded = (outcome != null);
                     }
                 } catch (final IOException e) {
@@ -113,7 +114,8 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
             public Boolean call() {
                 boolean succeeded = false;
                 final String consumer = (String) parameters[0];
-                final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel(consumer);
+                final Channel channel = AmqpOperationFactory.this.amqpDriver
+                        .getChannel(consumer);
                 if (channel != null) {
                     try {
                         channel.basicCancel(consumer);
@@ -138,12 +140,21 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                 final boolean autoAck = (Boolean) parameters[3];
                 final IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[4];
                 String consumerTag;
-                final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel(consumer);
+                final Channel channel = AmqpOperationFactory.this.amqpDriver
+                        .getChannel(consumer);
                 if (channel != null) {
-                    AmqpOperationFactory.this.amqpDriver.consumers.put(consumer, consumeCallback);
+                    AmqpOperationFactory.this.amqpDriver.consumers.put(
+                            consumer, consumeCallback);
                     channel.basicQos(8192);
-                    consumerTag = channel.basicConsume(queue, autoAck, consumer, true, exclusive,
-                            null, AmqpOperationFactory.this.amqpDriver.new ConsumerCallback());
+                    consumerTag = channel
+                            .basicConsume(
+                                    queue,
+                                    autoAck,
+                                    consumer,
+                                    true,
+                                    exclusive,
+                                    null,
+                                    AmqpOperationFactory.this.amqpDriver.new ConsumerCallback());
                     if (!consumer.equals(consumerTag)) {
                         final MosaicLogger sLogger = MosaicLogger
                                 .createLogger(AmqpOperationFactory.class);
@@ -156,7 +167,8 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
         });
     }
 
-    private IOperation<?> buildDeclareExchangeOperation(final Object... parameters) {
+    private IOperation<?> buildDeclareExchangeOperation(
+            final Object... parameters) {
         return new GenericOperation<Boolean>(new Callable<Boolean>() {
 
             @Override
@@ -168,14 +180,15 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                 final boolean passive = (Boolean) parameters[4];
                 final AmqpExchangeType eType = (AmqpExchangeType) parameters[1];
                 final String clientId = (String) parameters[5];
-                final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel(clientId);
+                final Channel channel = AmqpOperationFactory.this.amqpDriver
+                        .getChannel(clientId);
                 if (channel != null) {
                     AMQP.Exchange.DeclareOk outcome = null;
                     if (passive) {
                         outcome = channel.exchangeDeclarePassive(exchange);
                     } else {
-                        outcome = channel.exchangeDeclare(exchange, eType.getAmqpName(), durable,
-                                autoDelete, null);
+                        outcome = channel.exchangeDeclare(exchange,
+                                eType.getAmqpName(), durable, autoDelete, null);
                     }
                     succeeded = (outcome != null);
                 }
@@ -196,13 +209,15 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                 final boolean autoDelete = (Boolean) parameters[3];
                 final boolean passive = (Boolean) parameters[4];
                 final String clientId = (String) parameters[5];
-                final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel(clientId);
+                final Channel channel = AmqpOperationFactory.this.amqpDriver
+                        .getChannel(clientId);
                 if (channel != null) {
                     AMQP.Queue.DeclareOk outcome = null;
                     if (passive) {
                         outcome = channel.queueDeclarePassive(queue);
                     } else {
-                        outcome = channel.queueDeclare(queue, durable, exclusive, autoDelete, null);
+                        outcome = channel.queueDeclare(queue, durable,
+                                exclusive, autoDelete, null);
                     }
                     succeeded = (outcome != null);
                 }
@@ -212,36 +227,47 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
     }
 
     private IOperation<?> buildGetOperation(final Object... parameters) {
-        return new GenericOperation<AmqpInboundMessage>(new Callable<AmqpInboundMessage>() {
+        return new GenericOperation<AmqpInboundMessage>(
+                new Callable<AmqpInboundMessage>() {
 
-            @Override
-            public AmqpInboundMessage call() {
-                AmqpInboundMessage message = null;
-                final String queue = (String) parameters[0];
-                final boolean autoAck = (Boolean) parameters[1];
-                final String clientId = (String) parameters[2];
-                final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel(clientId);
-                if (channel != null) {
-                    GetResponse outcome = null;
-                    try {
-                        outcome = channel.basicGet(queue, autoAck);
-                        if (outcome != null) {
-                            final Envelope envelope = outcome.getEnvelope();
-                            final AMQP.BasicProperties properties = outcome.getProps();
-                            message = new AmqpInboundMessage(null, envelope.getDeliveryTag(),
-                                    envelope.getExchange(), envelope.getRoutingKey(),
-                                    outcome.getBody(), properties.getDeliveryMode() == 2 ? true
-                                            : false, properties.getReplyTo(),
-                                    properties.getContentEncoding(), properties.getContentType(),
-                                    properties.getCorrelationId(), properties.getMessageId());
+                    @Override
+                    public AmqpInboundMessage call() {
+                        AmqpInboundMessage message = null;
+                        final String queue = (String) parameters[0];
+                        final boolean autoAck = (Boolean) parameters[1];
+                        final String clientId = (String) parameters[2];
+                        final Channel channel = AmqpOperationFactory.this.amqpDriver
+                                .getChannel(clientId);
+                        if (channel != null) {
+                            GetResponse outcome = null;
+                            try {
+                                outcome = channel.basicGet(queue, autoAck);
+                                if (outcome != null) {
+                                    final Envelope envelope = outcome
+                                            .getEnvelope();
+                                    final AMQP.BasicProperties properties = outcome
+                                            .getProps();
+                                    message = new AmqpInboundMessage(
+                                            null,
+                                            envelope.getDeliveryTag(),
+                                            envelope.getExchange(),
+                                            envelope.getRoutingKey(),
+                                            outcome.getBody(),
+                                            properties.getDeliveryMode() == 2 ? true
+                                                    : false, properties
+                                                    .getReplyTo(), properties
+                                                    .getContentEncoding(),
+                                            properties.getContentType(),
+                                            properties.getCorrelationId(),
+                                            properties.getMessageId());
+                                }
+                            } catch (final IOException e) {
+                                ExceptionTracer.traceIgnored(e);
+                            }
                         }
-                    } catch (final IOException e) {
-                        ExceptionTracer.traceIgnored(e);
+                        return message;
                     }
-                }
-                return message;
-            }
-        });
+                });
     }
 
     private IOperation<?> buildPublishOperation(final Object... parameters) {
@@ -252,15 +278,19 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                 boolean succeeded = false;
                 final AmqpOutboundMessage message = (AmqpOutboundMessage) parameters[0];
                 final String clientId = (String) parameters[1];
-                final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel(clientId);
+                final Channel channel = AmqpOperationFactory.this.amqpDriver
+                        .getChannel(clientId);
                 if (channel != null) {
                     final AMQP.BasicProperties properties = new AMQP.BasicProperties(
-                            message.getContentType(), message.getContentEncoding(), null,
-                            message.isDurable() ? 2 : 1, 0, message.getCorrelation(),
-                            message.getCallback(), null, message.getIdentifier(), null, null, null,
+                            message.getContentType(), message
+                                    .getContentEncoding(), null, message
+                                    .isDurable() ? 2 : 1, 0, message
+                                    .getCorrelation(), message.getCallback(),
+                            null, message.getIdentifier(), null, null, null,
                             null, null);
-                    channel.basicPublish(message.getExchange(), message.getRoutingKey(),
-                            properties, message.getData());
+                    channel.basicPublish(message.getExchange(),
+                            message.getRoutingKey(), properties,
+                            message.getData());
                     succeeded = true;
                 }
                 return succeeded;
@@ -298,9 +328,10 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                         // 4:13
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + type.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: " + type.toString());
                         }
                     });
         }
@@ -340,9 +371,11 @@ final class AmqpOperationFactory implements IOperationFactory { // NOPMD by
                         // 4:14
                         // PM
                         @Override
-                        public Object call() throws UnsupportedOperationException {
-                            throw new UnsupportedOperationException("Unsupported operation: "
-                                    + mType.toString());
+                        public Object call()
+                                throws UnsupportedOperationException {
+                            throw new UnsupportedOperationException(
+                                    "Unsupported operation: "
+                                            + mType.toString());
                         }
                     });
         }

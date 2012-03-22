@@ -32,11 +32,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
  *            type of stored data
  */
 public class GenericKvStoreConnector<TValue extends Object> extends
-        BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>> { // NOPMD 
-
-    protected GenericKvStoreConnector(final GenericKvStoreConnectorProxy<TValue> proxy) {
-        super(proxy);
-    }
+        BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>> { // NOPMD
 
     /**
      * Creates the connector.
@@ -49,10 +45,16 @@ public class GenericKvStoreConnector<TValue extends Object> extends
      * @param threading
      * @return the connector
      */
-    public static <T> GenericKvStoreConnector<T> create(final ConnectorConfiguration configuration,
+    public static <T> GenericKvStoreConnector<T> create(
+            final ConnectorConfiguration configuration,
             final DataEncoder<T> encoder) {
-        final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create(
-                configuration, encoder);
+        final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy
+                .create(configuration, encoder);
         return new GenericKvStoreConnector<T>(proxy);
+    }
+
+    protected GenericKvStoreConnector(
+            final GenericKvStoreConnectorProxy<TValue> proxy) {
+        super(proxy);
     }
 }

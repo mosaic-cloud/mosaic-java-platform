@@ -63,8 +63,8 @@ public class EventDrivenResult<T> implements IResult<T> {
     }
 
     @Override
-    public T getResult(long timeout, TimeUnit unit) throws InterruptedException,
-            ExecutionException, TimeoutException {
+    public T getResult(long timeout, TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException {
         return this.operation.get(timeout, unit);
     }
 

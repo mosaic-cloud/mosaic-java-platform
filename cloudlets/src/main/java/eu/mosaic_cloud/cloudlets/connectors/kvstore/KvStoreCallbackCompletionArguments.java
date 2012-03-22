@@ -56,8 +56,8 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet, List<String> keys,
-            Value value, Extra extra) {
+    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet,
+            List<String> keys, Value value, Extra extra) {
         super(cloudlet);
         this.keys = keys;
         this.value = value;
@@ -77,8 +77,8 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet, String key,
-            Value value, Extra extra) {
+    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet,
+            String key, Value value, Extra extra) {
         super(cloudlet);
         this.keys = Arrays.asList(key);
         this.value = value;

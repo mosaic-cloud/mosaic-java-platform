@@ -45,7 +45,8 @@ public class GenericCallbackCompletionArguments<Context, Result> extends
      * @param result
      *            the result of the operation
      */
-    public GenericCallbackCompletionArguments(ICloudletController<?> cloudlet, Result result) {
+    public GenericCallbackCompletionArguments(ICloudletController<?> cloudlet,
+            Result result) {
         super(cloudlet);
         this.result = result;
     }
@@ -58,7 +59,8 @@ public class GenericCallbackCompletionArguments<Context, Result> extends
      * @param error
      *            the exception thrown by the operation
      */
-    public GenericCallbackCompletionArguments(ICloudletController<?> cloudlet, Throwable error) {
+    public GenericCallbackCompletionArguments(ICloudletController<?> cloudlet,
+            Throwable error) {
         super(cloudlet, error);
         this.result = null;
     }

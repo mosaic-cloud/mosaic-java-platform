@@ -53,7 +53,8 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
         public BucketData(String bucket) {
             this.bucketName = bucket;
             this.noClients = new AtomicInteger(0);
-            this.opFactory = AbstractKeyValueDriver.this.createOperationFactory(bucket);
+            this.opFactory = AbstractKeyValueDriver.this
+                    .createOperationFactory(bucket);
         }
 
         private void destroy() {
@@ -76,12 +77,14 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
         this.clientBucketMap = new HashMap<String, BucketData>();
     }
 
-    protected abstract IOperationFactory createOperationFactory(Object... params);
+    protected abstract IOperationFactory createOperationFactory(
+            Object... params);
 
     @Override
     public synchronized void destroy() {
         super.destroy();
-        for (final Map.Entry<String, BucketData> bucket : this.bucketFactories.entrySet()) {
+        for (final Map.Entry<String, BucketData> bucket : this.bucketFactories
+                .entrySet()) {
             bucket.getValue().destroy();
         }
         this.clientBucketMap.clear();
@@ -114,8 +117,8 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
      *            the class object of the factory
      * @return the operation factory
      */
-    protected <T extends IOperationFactory> T getOperationFactory(String clientId,
-            Class<T> factClass) {
+    protected <T extends IOperationFactory> T getOperationFactory(
+            String clientId, Class<T> factClass) {
         T factory = null; // NOPMD by georgiana on 10/12/11 12:55 PM
         final BucketData bucket = this.clientBucketMap.get(clientId);
         if (bucket != null) {
@@ -151,8 +154,8 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
         return startOperation(operation, complHandler);
     }
 
-    public IResult<Boolean> invokeSetOperation(String clientId, String key, byte[] data,
-            IOperationCompletionHandler<Boolean> complHandler) {
+    public IResult<Boolean> invokeSetOperation(String clientId, String key,
+            byte[] data, IOperationCompletionHandler<Boolean> complHandler) {
         final IOperationFactory opFactory = getOperationFactory(clientId);
         @SuppressWarnings("unchecked")
         final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) opFactory
@@ -169,7 +172,8 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
      *            the bucket used by the client
      */
     public synchronized void registerClient(String clientId, String bucket) {
-        Preconditions.checkArgument(!this.clientBucketMap.containsKey(clientId));
+        Preconditions
+                .checkArgument(!this.clientBucketMap.containsKey(clientId));
         BucketData bucketData = this.bucketFactories.get(bucket);
         if (bucketData == null) {
             bucketData = new BucketData(bucket);
@@ -178,12 +182,14 @@ public abstract class AbstractKeyValueDriver extends AbstractResourceDriver {
             this.logger.trace("Create new client for bucket " + bucket);
         }
         this.clientBucketMap.put(clientId, bucketData);
-        this.logger.trace("Registered client " + clientId + " for bucket " + bucket);
+        this.logger.trace("Registered client " + clientId + " for bucket "
+                + bucket);
     }
 
     @SuppressWarnings({
             "rawtypes", "unchecked" })
-    private <T extends Object> IResult<T> startOperation(GenericOperation<T> operation,
+    private <T extends Object> IResult<T> startOperation(
+            GenericOperation<T> operation,
             IOperationCompletionHandler complHandler) {
         final IResult<T> iResult = new GenericResult<T>(operation);
         operation.setHandler(complHandler);

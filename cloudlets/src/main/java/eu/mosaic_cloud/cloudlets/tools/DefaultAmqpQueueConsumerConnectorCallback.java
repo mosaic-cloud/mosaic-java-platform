@@ -42,13 +42,15 @@ public class DefaultAmqpQueueConsumerConnectorCallback<C, D, E> extends
     @Override
     public CallbackCompletion<Void> acknowledgeFailed(final C context,
             final GenericCallbackCompletionArguments<C, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Acknowledge Failed", false, false);
+        return this.handleUnhandledCallback(arguments, "Acknowledge Failed",
+                false, false);
     }
 
     @Override
     public CallbackCompletion<Void> acknowledgeSucceeded(final C context,
             final GenericCallbackCompletionArguments<C, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Acknowledge Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments, "Acknowledge Succeeded",
+                true, false);
     }
 
     @Override

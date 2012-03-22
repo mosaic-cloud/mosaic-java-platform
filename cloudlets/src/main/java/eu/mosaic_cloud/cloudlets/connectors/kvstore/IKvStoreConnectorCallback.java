@@ -94,7 +94,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> listFailed(Context context,
+    CallbackCompletion<Void> listFailed(
+            Context context,
             KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
 
     /**
@@ -106,7 +107,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> listSucceeded(Context context,
+    CallbackCompletion<Void> listSucceeded(
+            Context context,
             KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
 
     /**

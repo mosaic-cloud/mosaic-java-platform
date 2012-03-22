@@ -35,8 +35,8 @@ import com.google.common.base.Preconditions;
  * @param <TProxy>
  *            the type of the associated proxy
  */
-public abstract class BaseConnector<TProxy extends BaseConnectorProxy> implements IConnector,
-        CallbackProxy {
+public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
+        implements IConnector, CallbackProxy {
 
     protected final MosaicLogger logger;
     protected final TProxy proxy;

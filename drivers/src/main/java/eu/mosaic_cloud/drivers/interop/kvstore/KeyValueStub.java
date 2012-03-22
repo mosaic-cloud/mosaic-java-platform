@@ -76,7 +76,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
      * 
      */
     @SuppressWarnings("rawtypes")
-    protected class DriverOperationFinishedHandler implements IOperationCompletionHandler {
+    protected class DriverOperationFinishedHandler implements
+            IOperationCompletionHandler {
 
         private IResult<?> result;
         private KeyValueOperations operation;
@@ -86,13 +87,15 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
         private final KeyValueResponseTransmitter transmitter;
         private final Session session;
 
-        public DriverOperationFinishedHandler(CompletionToken complToken, Session session,
+        public DriverOperationFinishedHandler(CompletionToken complToken,
+                Session session,
                 Class<? extends AbstractKeyValueDriver> driverClass,
                 Class<? extends KeyValueResponseTransmitter> transmitterClass) {
             this.complToken = complToken;
             this.signal = new CountDownLatch(1);
             this.driver = KeyValueStub.this.getDriver(driverClass);
-            this.transmitter = KeyValueStub.this.getResponseTransmitter(transmitterClass);
+            this.transmitter = KeyValueStub.this
+                    .getResponseTransmitter(transmitterClass);
             this.session = session;
         }
 
@@ -105,8 +108,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             }
             this.driver.removePendingOperation(this.result);
             // NOTE: result is error
-            this.transmitter.sendResponse(this.session, this.complToken, this.operation,
-                    error.getMessage(), true);
+            this.transmitter.sendResponse(this.session, this.complToken,
+                    this.operation, error.getMessage(), true);
         }
 
         @Override
@@ -120,11 +123,11 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             if (this.operation.equals(KeyValueOperations.GET)) {
                 final Map<String, Object> resMap = new HashMap<String, Object>();
                 resMap.put("dummy", response); //$NON-NLS-1$
-                this.transmitter.sendResponse(this.session, this.complToken, this.operation,
-                        resMap, false);
+                this.transmitter.sendResponse(this.session, this.complToken,
+                        this.operation, resMap, false);
             } else {
-                this.transmitter.sendResponse(this.session, this.complToken, this.operation,
-                        response, false);
+                this.transmitter.sendResponse(this.session, this.complToken,
+                        this.operation, response, false);
             }
         }
 
@@ -140,24 +143,6 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
     private Class<? extends AbstractKeyValueDriver> driverClass;
 
     /**
-     * Creates a new stub for the key-value store driver.
-     * 
-     * @param config
-     *            the configuration data for the stub and driver
-     * @param transmitter
-     *            the transmitter object which will send responses to requests
-     *            submitted to this stub
-     * @param driver
-     *            the driver used for processing requests submitted to this stub
-     * @param commChannel
-     *            the channel for communicating with connectors
-     */
-    public KeyValueStub(IConfiguration config, KeyValueResponseTransmitter transmitter,
-            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
-        super(config, transmitter, driver, commChannel);
-    }
-
-    /**
      * Returns a stub for the key-value store driver.
      * 
      * @param config
@@ -168,10 +153,12 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
      *            the channel used by the driver for receiving requests
      * @return the driver stub
      */
-    public static KeyValueStub create(IConfiguration config, ThreadingContext threadingContext,
-            ZeroMqChannel channel) {
-        final DriverConnectionData cData = KeyValueStub.readConnectionData(config);
-        final MosaicLogger sLogger = MosaicLogger.createLogger(KeyValueStub.class);
+    public static KeyValueStub create(IConfiguration config,
+            ThreadingContext threadingContext, ZeroMqChannel channel) {
+        final DriverConnectionData cData = KeyValueStub
+                .readConnectionData(config);
+        final MosaicLogger sLogger = MosaicLogger
+                .createLogger(KeyValueStub.class);
         KeyValueStub stub;
         synchronized (AbstractDriverStub.MONITOR) {
             stub = KeyValueStub.stubs.get(cData);
@@ -179,13 +166,18 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
                 if (stub == null) {
                     sLogger.trace("KeyValueStub: create new stub."); //$NON-NLS-1$
                     final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter();
-                    final String driverName = ConfigUtils.resolveParameter(config,
-                            ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-                    final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver(
-                            driverName, config, threadingContext);
-                    stub = new KeyValueStub(config, transmitter, driver, channel);
-                    stub.driverClass = KeyValueDriverFactory.DriverType.valueOf(
-                            driverName.toUpperCase(Locale.ENGLISH)).getDriverClass();
+                    final String driverName = ConfigUtils
+                            .resolveParameter(
+                                    config,
+                                    ConfigProperties
+                                            .getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+                    final AbstractKeyValueDriver driver = KeyValueDriverFactory
+                            .createDriver(driverName, config, threadingContext);
+                    stub = new KeyValueStub(config, transmitter, driver,
+                            channel);
+                    stub.driverClass = KeyValueDriverFactory.DriverType
+                            .valueOf(driverName.toUpperCase(Locale.ENGLISH))
+                            .getDriverClass();
                     KeyValueStub.stubs.put(cData, stub);
                     incDriverReference(stub);
                     channel.accept(KeyValueSession.DRIVER, stub);
@@ -196,7 +188,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             } catch (final DriverNotFoundException e) {
                 ExceptionTracer.traceDeferred(e);
                 final ConnectionException e1 = new ConnectionException(
-                        "The required key-value driver cannot be provided: " + e.getMessage(), e);
+                        "The required key-value driver cannot be provided: "
+                                + e.getMessage(), e);
                 ExceptionTracer.traceIgnored(e1);
             }
         }
@@ -205,15 +198,18 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
 
     public static KeyValueStub createDetached(IConfiguration config,
             ThreadingContext threadingContext, ZeroMqChannel channel) {
-        final MosaicLogger sLogger = MosaicLogger.createLogger(KeyValueStub.class);
+        final MosaicLogger sLogger = MosaicLogger
+                .createLogger(KeyValueStub.class);
         KeyValueStub stub;
         try {
             sLogger.trace("KeyValueStub: create new stub."); //$NON-NLS-1$
             final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter();
-            final String driverName = ConfigUtils.resolveParameter(config,
-                    ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-            final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver(driverName,
-                    config, threadingContext);
+            final String driverName = ConfigUtils
+                    .resolveParameter(
+                            config,
+                            ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+            final AbstractKeyValueDriver driver = KeyValueDriverFactory
+                    .createDriver(driverName, config, threadingContext);
             stub = new KeyValueStub(config, transmitter, driver, channel);
             stub.driverClass = KeyValueDriverFactory.DriverType.valueOf(
                     driverName.toUpperCase(Locale.ENGLISH)).getDriverClass();
@@ -222,7 +218,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
         } catch (final DriverNotFoundException e) {
             ExceptionTracer.traceDeferred(e);
             final ConnectionException e1 = new ConnectionException(
-                    "The required key-value driver cannot be provided: " + e.getMessage(), e);
+                    "The required key-value driver cannot be provided: "
+                            + e.getMessage(), e);
             ExceptionTracer.traceIgnored(e1);
             stub = null;
         }
@@ -236,15 +233,18 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
      *            the configuration data
      * @return resource connection data
      */
-    protected static DriverConnectionData readConnectionData(IConfiguration config) {
+    protected static DriverConnectionData readConnectionData(
+            IConfiguration config) {
         final String resourceHost = ConfigUtils.resolveParameter(config,
                 ConfigProperties.getString("KVStoreDriver.0"), String.class, //$NON-NLS-1$
                 "localhost"); //$NON-NLS-1$
         final int resourcePort = ConfigUtils.resolveParameter(config,
                 ConfigProperties.getString("KVStoreDriver.1"), Integer.class, //$NON-NLS-1$
                 0);
-        final String driver = ConfigUtils.resolveParameter(config,
-                ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+        final String driver = ConfigUtils
+                .resolveParameter(
+                        config,
+                        ConfigProperties.getString("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
         final String user = ConfigUtils.resolveParameter(config,
                 ConfigProperties.getString("KVStoreDriver.5"), String.class, //$NON-NLS-1$
                 ""); //$NON-NLS-1$
@@ -255,9 +255,29 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
         if ("".equals(user) && "".equals(passwd)) {
             cData = new DriverConnectionData(resourceHost, resourcePort, driver);
         } else {
-            cData = new DriverConnectionData(resourceHost, resourcePort, driver, user, passwd);
+            cData = new DriverConnectionData(resourceHost, resourcePort,
+                    driver, user, passwd);
         }
         return cData;
+    }
+
+    /**
+     * Creates a new stub for the key-value store driver.
+     * 
+     * @param config
+     *            the configuration data for the stub and driver
+     * @param transmitter
+     *            the transmitter object which will send responses to requests
+     *            submitted to this stub
+     * @param driver
+     *            the driver used for processing requests submitted to this stub
+     * @param commChannel
+     *            the channel for communicating with connectors
+     */
+    public KeyValueStub(IConfiguration config,
+            KeyValueResponseTransmitter transmitter,
+            AbstractKeyValueDriver driver, ZeroMqChannel commChannel) {
+        super(config, transmitter, driver, commChannel);
     }
 
     @Override
@@ -290,8 +310,8 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
     @SuppressWarnings("unchecked")
     protected void handleKVOperation(Message message, Session session,
             AbstractKeyValueDriver driver,
-            Class<? extends KeyValueResponseTransmitter> transmitterClass) throws IOException,
-            ClassNotFoundException {
+            Class<? extends KeyValueResponseTransmitter> transmitterClass)
+            throws IOException, ClassNotFoundException {
         byte[] data;
         boolean unknownMessage = false; // NOPMD by georgiana on 9/30/11 2:36 PM
         final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
@@ -323,14 +343,14 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             token = setRequest.getToken();
             key = setRequest.getKey();
             data = setRequest.getValue().toByteArray();
-            this.logger.trace(messagePrefix + kvMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId());
+            this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId());
             // NOTE: execute operation
             final DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler(
                     token, session, driver.getClass(), transmitterClass);
-            final IResult<Boolean> resultSet = driver.invokeSetOperation(token.getClientId(), key,
-                    data, setCallback);
+            final IResult<Boolean> resultSet = driver.invokeSetOperation(
+                    token.getClientId(), key, data, setCallback);
             setCallback.setDetails(KeyValueOperations.SET, resultSet);
             break;
         case GET_REQUEST:
@@ -341,40 +361,43 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             if (getRequest.getKeyCount() != 1) {
                 // NOTE: error - the simple driver can handle only single-key
                 // get
-                this.logger.error("Basic driver can handle only single-key GET.");
-                driver.handleUnsupportedOperationError(kvMessage.toString(), getCallback);
+                this.logger
+                        .error("Basic driver can handle only single-key GET.");
+                driver.handleUnsupportedOperationError(kvMessage.toString(),
+                        getCallback);
                 break;
             }
             key = getRequest.getKey(0);
-            this.logger.trace(messagePrefix + kvMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId());
-            final IResult<byte[]> resultGet = driver.invokeGetOperation(token.getClientId(), key,
-                    getCallback);
+            this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId());
+            final IResult<byte[]> resultGet = driver.invokeGetOperation(
+                    token.getClientId(), key, getCallback);
             getCallback.setDetails(KeyValueOperations.GET, resultGet);
             break;
         case DELETE_REQUEST:
             final KeyValuePayloads.DeleteRequest delRequest = (DeleteRequest) message.payload;
             token = delRequest.getToken();
             key = delRequest.getKey();
-            this.logger.trace(messagePrefix + kvMessage.toString() + " key: " + key
-                    + " - request id: " + token.getMessageId() + " client id: "
-                    + token.getClientId());
+            this.logger.trace(messagePrefix + kvMessage.toString() + " key: "
+                    + key + " - request id: " + token.getMessageId()
+                    + " client id: " + token.getClientId());
             final DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler(
                     token, session, driver.getClass(), transmitterClass);
-            final IResult<Boolean> resultDelete = driver.invokeDeleteOperation(token.getClientId(),
-                    key, delCallback);
+            final IResult<Boolean> resultDelete = driver.invokeDeleteOperation(
+                    token.getClientId(), key, delCallback);
             delCallback.setDetails(KeyValueOperations.DELETE, resultDelete);
             break;
         case LIST_REQUEST:
             final KeyValuePayloads.ListRequest listRequest = (ListRequest) message.payload;
             token = listRequest.getToken();
-            this.logger.trace(messagePrefix + kvMessage.toString() + " - request id: "
-                    + token.getMessageId() + " client id: " + token.getClientId());
+            this.logger.trace(messagePrefix + kvMessage.toString()
+                    + " - request id: " + token.getMessageId() + " client id: "
+                    + token.getClientId());
             final DriverOperationFinishedHandler listCallback = new DriverOperationFinishedHandler(
                     token, session, driver.getClass(), transmitterClass);
-            final IResult<List<String>> resultList = driver.invokeListOperation(
-                    token.getClientId(), listCallback);
+            final IResult<List<String>> resultList = driver
+                    .invokeListOperation(token.getClientId(), listCallback);
             listCallback.setDetails(KeyValueOperations.LIST, resultList);
             break;
         case ERROR:
@@ -397,15 +420,18 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
             break;
         }
         if (unknownMessage) {
-            handleUnknownMessage(session, driver, kvMessage.toString(), token, transmitterClass);
+            handleUnknownMessage(session, driver, kvMessage.toString(), token,
+                    transmitterClass);
         }
     }
 
-    protected void handleUnknownMessage(Session session, AbstractKeyValueDriver driver,
-            String messageType, CompletionToken token,
+    protected void handleUnknownMessage(Session session,
+            AbstractKeyValueDriver driver, String messageType,
+            CompletionToken token,
             Class<? extends KeyValueResponseTransmitter> transmitterClass) {
-        this.logger.error("Unexpected message type: " + messageType + " - request id: "
-                + token.getMessageId() + " client id: " + token.getClientId());
+        this.logger.error("Unexpected message type: " + messageType
+                + " - request id: " + token.getMessageId() + " client id: "
+                + token.getClientId());
         // NOTE: create callback
         final DriverOperationFinishedHandler failCallback = new DriverOperationFinishedHandler(
                 token, session, driver.getClass(), transmitterClass);
@@ -413,10 +439,12 @@ public class KeyValueStub extends AbstractDriverStub { // NOPMD
     }
 
     @Override
-    protected void startOperation(Message message, Session session) throws IOException,
-            ClassNotFoundException {
-        Preconditions.checkArgument(message.specification instanceof KeyValueMessage);
+    protected void startOperation(Message message, Session session)
+            throws IOException, ClassNotFoundException {
+        Preconditions
+                .checkArgument(message.specification instanceof KeyValueMessage);
         final AbstractKeyValueDriver driver = super.getDriver(this.driverClass);
-        handleKVOperation(message, session, driver, KeyValueResponseTransmitter.class);
+        handleKVOperation(message, session, driver,
+                KeyValueResponseTransmitter.class);
     }
 }

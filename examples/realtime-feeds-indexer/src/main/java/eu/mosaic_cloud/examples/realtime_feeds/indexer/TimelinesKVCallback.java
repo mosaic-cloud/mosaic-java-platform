@@ -33,13 +33,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
 
-public class TimelinesKVCallback extends
+public class TimelinesKVCallback
+        extends
         DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID> {
 
     private static final String BUCKET_NAME = "feed-timelines";
 
     @Override
-    public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
+    public CallbackCompletion<Void> destroySucceeded(
+            IndexerCloudletContext context,
             CallbackArguments<IndexerCloudletContext> arguments) {
         context.timelinesStore = null;
         return ICallback.SUCCESS;
@@ -48,7 +50,8 @@ public class TimelinesKVCallback extends
     private void handleError(
             KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
         final String key = arguments.getKey();
-        this.logger.warn("failed fetch (" + TimelinesKVCallback.BUCKET_NAME + "," + key + ")");
+        this.logger.warn("failed fetch (" + TimelinesKVCallback.BUCKET_NAME
+                + "," + key + ")");
         final Map<String, String> errorMssg = new HashMap<String, String>(4);
         errorMssg.put("reason", "unexpected key-value store error");
         errorMssg.put("message", arguments.getValue().toString());
@@ -58,14 +61,16 @@ public class TimelinesKVCallback extends
     }
 
     @Override
-    public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
+    public CallbackCompletion<Void> setFailed(
+            IndexerCloudletContext context,
             KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
         handleError(arguments);
         return ICallback.SUCCESS;
     }
 
     @Override
-    public CallbackCompletion<Void> setSucceeded(IndexerCloudletContext context,
+    public CallbackCompletion<Void> setSucceeded(
+            IndexerCloudletContext context,
             KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
         IndexWorkflow.updateFeedMetadata(arguments.getExtra());
         return ICallback.SUCCESS;

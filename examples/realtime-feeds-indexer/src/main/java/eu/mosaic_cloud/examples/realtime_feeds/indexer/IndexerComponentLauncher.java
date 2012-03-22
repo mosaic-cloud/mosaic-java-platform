@@ -20,27 +20,26 @@
 
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
-
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
 import com.google.common.base.Preconditions;
 
+public final class IndexerComponentLauncher {
 
-public final class IndexerComponentLauncher
-{
-	private IndexerComponentLauncher ()
-	{
-		super ();
-		throw (new UnsupportedOperationException ());
-	}
-	
-	public static void main (final String[] arguments)
-			throws Throwable
-	{
-		Preconditions.checkNotNull (arguments);
-		final String[] finalArguments = new String[arguments.length + 1];
-		System.arraycopy (arguments, 0, finalArguments, 0, arguments.length);
-		finalArguments[finalArguments.length + 1] = String.format ("{\"%s\":\"%s\"}", "descriptor", "indexer-cloudlet.properties");
-		MosBasicComponentLauncher.main ("eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponent$ComponentCallbacksProvider", finalArguments, IndexerComponentLauncher.class.getClassLoader ());
-	}
+    public static void main(final String[] arguments) throws Throwable {
+        Preconditions.checkNotNull(arguments);
+        final String[] finalArguments = new String[arguments.length + 1];
+        System.arraycopy(arguments, 0, finalArguments, 0, arguments.length);
+        finalArguments[finalArguments.length + 1] = String.format(
+                "{\"%s\":\"%s\"}", "descriptor", "indexer-cloudlet.properties");
+        MosBasicComponentLauncher
+                .main("eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponent$ComponentCallbacksProvider",
+                        finalArguments,
+                        IndexerComponentLauncher.class.getClassLoader());
+    }
+
+    private IndexerComponentLauncher() {
+        super();
+        throw (new UnsupportedOperationException());
+    }
 }

@@ -34,54 +34,65 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <C>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultKvStoreConnectorCallback<C, D, E> extends DefaultConnectorCallback<C> implements
+public class DefaultKvStoreConnectorCallback<C, D, E> extends
+        DefaultConnectorCallback<C> implements
         IKvStoreConnectorCallback<C, D, E> {
 
     @Override
     public CallbackCompletion<Void> deleteFailed(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Delete Failed", false, false);
+        return this.handleUnhandledCallback(arguments, "Delete Failed", false,
+                false);
     }
 
     @Override
     public CallbackCompletion<Void> deleteSucceeded(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Delete Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments, "Delete Succeeded",
+                true, false);
     }
 
     @Override
     public CallbackCompletion<Void> getFailed(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Get Failed", false, false);
+        return this.handleUnhandledCallback(arguments, "Get Failed", false,
+                false);
     }
 
     @Override
     public CallbackCompletion<Void> getSucceeded(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Get Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments, "Get Succeeded", true,
+                false);
     }
 
     @Override
-    public CallbackCompletion<Void> listFailed(final C context,
+    public CallbackCompletion<Void> listFailed(
+            final C context,
             final KvStoreCallbackCompletionArguments<C, List<String>, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Failed", false, false);
+        return this.handleUnhandledCallback(arguments, "Set Failed", false,
+                false);
     }
 
     @Override
-    public CallbackCompletion<Void> listSucceeded(final C context,
+    public CallbackCompletion<Void> listSucceeded(
+            final C context,
             final KvStoreCallbackCompletionArguments<C, List<String>, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments, "Set Succeeded", true,
+                false);
     }
 
     @Override
     public CallbackCompletion<Void> setFailed(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Failed", false, false);
+        return this.handleUnhandledCallback(arguments, "Set Failed", false,
+                false);
     }
 
     @Override
     public CallbackCompletion<Void> setSucceeded(final C context,
             final KvStoreCallbackCompletionArguments<C, D, E> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments, "Set Succeeded", true,
+                false);
     }
 }

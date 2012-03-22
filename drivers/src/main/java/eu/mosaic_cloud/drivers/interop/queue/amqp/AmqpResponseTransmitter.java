@@ -62,7 +62,8 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
         final AmqpPayloads.ServerCancelRequest.Builder cancelPayload = ServerCancelRequest
                 .newBuilder();
         cancelPayload.setConsumerTag(consumerTag);
-        final Message message = new Message(AmqpMessage.SERVER_CANCEL, cancelPayload.build());
+        final Message message = new Message(AmqpMessage.SERVER_CANCEL,
+                cancelPayload.build());
         publishResponse(session, message);
         this.logger.trace("AmqpResponseTransmitter - Sent CANCEL message");
     }
@@ -76,9 +77,11 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
      *            the tag of the consumer
      */
     public void sendCancelOk(Session session, String consumerTag) {
-        final AmqpPayloads.CancelOkMessage.Builder cancelPayload = CancelOkMessage.newBuilder();
+        final AmqpPayloads.CancelOkMessage.Builder cancelPayload = CancelOkMessage
+                .newBuilder();
         cancelPayload.setConsumerTag(consumerTag);
-        final Message message = new Message(AmqpMessage.CANCEL_OK, cancelPayload.build());
+        final Message message = new Message(AmqpMessage.CANCEL_OK,
+                cancelPayload.build());
         // NOTE: send response
         publishResponse(session, message);
         this.logger.trace("AmqpResponseTransmitter - Sent CANCEL ok message");
@@ -93,12 +96,15 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
      *            the tag of the consumer
      */
     public void sendConsumeOk(Session session, String consumerTag) {
-        final AmqpPayloads.ConsumeOkMessage.Builder consumePayload = ConsumeOkMessage.newBuilder();
+        final AmqpPayloads.ConsumeOkMessage.Builder consumePayload = ConsumeOkMessage
+                .newBuilder();
         consumePayload.setConsumerTag(consumerTag);
-        final Message message = new Message(AmqpMessage.CONSUME_OK, consumePayload.build());
+        final Message message = new Message(AmqpMessage.CONSUME_OK,
+                consumePayload.build());
         publishResponse(session, message);
-        this.logger.trace("AmqpResponseTransmitter - Sent CONSUME Ok callback for consumer "
-                + consumerTag + ".");
+        this.logger
+                .trace("AmqpResponseTransmitter - Sent CONSUME Ok callback for consumer "
+                        + consumerTag + ".");
     }
 
     /**
@@ -110,7 +116,8 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
      *            the message contents and properties
      */
     public void sendDelivery(Session session, AmqpInboundMessage message) {
-        final AmqpPayloads.DeliveryMessage.Builder deliveryPayload = DeliveryMessage.newBuilder();
+        final AmqpPayloads.DeliveryMessage.Builder deliveryPayload = DeliveryMessage
+                .newBuilder();
         deliveryPayload.setConsumerTag(message.getConsumer());
         deliveryPayload.setDeliveryTag(message.getDelivery());
         deliveryPayload.setExchange(message.getExchange());
@@ -126,7 +133,8 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
         if (message.getCorrelation() != null) {
             deliveryPayload.setCorrelationId(message.getCorrelation());
         }
-        final Message mssg = new Message(AmqpMessage.DELIVERY, deliveryPayload.build());
+        final Message mssg = new Message(AmqpMessage.DELIVERY,
+                deliveryPayload.build());
         // NOTE: send response
         publishResponse(session, mssg);
         this.logger.trace("AmqpResponseTransmitter - Delivered message");
@@ -147,8 +155,8 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
      * @param isError
      *            <code>true</code> if the result is actual an error
      */
-    public void sendResponse(Session session, CompletionToken token, AmqpOperations operation,
-            Object result, boolean isError) {
+    public void sendResponse(Session session, CompletionToken token,
+            AmqpOperations operation, Object result, boolean isError) {
         Message message = null; // NOPMD by georgiana on 10/12/11 3:34 PM
         if (isError) {
             // NOTE: create error message
@@ -171,16 +179,19 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
                     okPayload.setToken(token);
                     message = new Message(AmqpMessage.OK, okPayload.build());
                 } else {
-                    final NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder();
+                    final NotOk.Builder nokPayload = IdlCommon.NotOk
+                            .newBuilder();
                     nokPayload.setToken(token);
                     message = new Message(AmqpMessage.NOK, nokPayload.build());
                 }
                 break;
             case CONSUME:
-                final ConsumeReply.Builder consumePayload = AmqpPayloads.ConsumeReply.newBuilder();
+                final ConsumeReply.Builder consumePayload = AmqpPayloads.ConsumeReply
+                        .newBuilder();
                 consumePayload.setToken(token);
                 consumePayload.setConsumerTag((String) result);
-                message = new Message(AmqpMessage.CONSUME_REPLY, consumePayload.build());
+                message = new Message(AmqpMessage.CONSUME_REPLY,
+                        consumePayload.build());
                 break;
             default:
                 break;
@@ -188,8 +199,9 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
         }
         // NOTE: send response
         publishResponse(session, message);
-        this.logger.trace("AmqpResponseTransmitter: sent response for " + operation + " request "
-                + token.getMessageId() + " client id " + token.getClientId());
+        this.logger.trace("AmqpResponseTransmitter: sent response for "
+                + operation + " request " + token.getMessageId()
+                + " client id " + token.getClientId());
     }
 
     /**
@@ -202,11 +214,14 @@ public class AmqpResponseTransmitter extends ResponseTransmitter {
      * @param errorMessage
      *            a message about the shutdown cause
      */
-    public void sendShutdownSignal(Session session, String consumerTag, String errorMessage) {
-        final AmqpPayloads.ShutdownMessage.Builder downPayload = ShutdownMessage.newBuilder();
+    public void sendShutdownSignal(Session session, String consumerTag,
+            String errorMessage) {
+        final AmqpPayloads.ShutdownMessage.Builder downPayload = ShutdownMessage
+                .newBuilder();
         downPayload.setConsumerTag(consumerTag);
         downPayload.setMessage(errorMessage);
-        final Message message = new Message(AmqpMessage.SHUTDOWN, downPayload.build());
+        final Message message = new Message(AmqpMessage.SHUTDOWN,
+                downPayload.build());
         // NOTE: send response
         publishResponse(session, message);
         this.logger.trace("AmqpResponseTransmitter - Sent Shutdown message");

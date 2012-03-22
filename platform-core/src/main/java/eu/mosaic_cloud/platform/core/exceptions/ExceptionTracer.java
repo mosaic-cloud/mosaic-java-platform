@@ -30,6 +30,39 @@ public final class ExceptionTracer {
     private final TranscriptExceptionTracer transcriptTracer;
     private static final ExceptionTracer DEFAULT_INSTANCE = new ExceptionTracer();
 
+    public static void traceDeferred(Throwable exception) {
+        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Deferred,
+                exception, null);
+    }
+
+    public static void traceDeferred(Throwable exception, final String format,
+            final Object... tokens) {
+        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Deferred,
+                exception, format, tokens);
+    }
+
+    public static void traceHandled(Throwable exception) {
+        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Handled,
+                exception, null);
+    }
+
+    public static void traceHandled(Throwable exception, String format,
+            Object... tokens) {
+        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Handled,
+                exception, format, tokens);
+    }
+
+    public static void traceIgnored(Throwable exception) {
+        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored,
+                exception, null);
+    }
+
+    public static void traceIgnored(Throwable exception, final String format,
+            final Object... tokens) {
+        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored,
+                exception, format, tokens);
+    }
+
     public ExceptionTracer() {
         super();
         final Transcript transcript = Transcript.create(this);
@@ -37,36 +70,8 @@ public final class ExceptionTracer {
                 FallbackExceptionTracer.defaultInstance);
     }
 
-    public static void traceDeferred(Throwable exception) {
-        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Deferred, exception, null);
-    }
-
-    public static void traceDeferred(Throwable exception, final String format,
-            final Object... tokens) {
-        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Deferred, exception, format,
-                tokens);
-    }
-
-    public static void traceHandled(Throwable exception) {
-        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Handled, exception, null);
-    }
-
-    public static void traceHandled(Throwable exception, String format, Object... tokens) {
-        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Handled, exception, format,
-                tokens);
-    }
-
-    public static void traceIgnored(Throwable exception) {
-        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored, exception, null);
-    }
-
-    public static void traceIgnored(Throwable exception, final String format,
-            final Object... tokens) {
-        ExceptionTracer.DEFAULT_INSTANCE.trace(ExceptionResolution.Ignored, exception, format,
-                tokens);
-    }
-
-    public void trace(ExceptionResolution resolution, Throwable exception, String message_) {
+    public void trace(ExceptionResolution resolution, Throwable exception,
+            String message_) {
         final String message = message_ == null ? "encountered exception" // NOPMD
                                                                           // by
                                                                           // georgiana
@@ -90,8 +95,8 @@ public final class ExceptionTracer {
         }
     }
 
-    public void trace(ExceptionResolution resolution, Throwable exception, String format,
-            Object... tokens) {
+    public void trace(ExceptionResolution resolution, Throwable exception,
+            String format, Object... tokens) {
         this.trace(resolution, exception, String.format(format, tokens));
     }
 }

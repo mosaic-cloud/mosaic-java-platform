@@ -28,7 +28,8 @@ public interface IMemcacheKvStoreConnectorFactory extends
         IConnectorFactory<IMemcacheKvStoreConnector<?, ?, ?>> {
 
     <Context, Value, Extra> IMemcacheKvStoreConnector<Context, Value, Extra> create(
-            IConfiguration configuration, Class<Value> valueClass, DataEncoder<Value> valueEncoder,
+            IConfiguration configuration, Class<Value> valueClass,
+            DataEncoder<Value> valueEncoder,
             IMemcacheKvStoreConnectorCallback<Context, Value, Extra> callback,
             Context callbackContext);
 }
