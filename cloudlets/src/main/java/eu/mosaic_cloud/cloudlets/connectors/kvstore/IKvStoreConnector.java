@@ -30,12 +30,18 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            the type of the context of the cloudlet
+ * @param <TValue>
+ *            the type of the values exchanged with the key-value store using
+ *            this connector
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public interface IKvStoreConnector<Context, Value, Extra> extends
-        IConnector<Context>,
-        eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<Value> {
+public interface IKvStoreConnector<TContext, TValue, TExtra> extends
+        IConnector<TContext>,
+        eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue> {
 
     /**
      * Deletes the given key.
@@ -46,7 +52,7 @@ public interface IKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> delete(String key, Extra extra);
+    CallbackCompletion<Boolean> delete(String key, TExtra extra);
 
     /**
      * Gets data associated with a single key.
@@ -57,16 +63,16 @@ public interface IKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Value> get(String key, Extra extra);
+    CallbackCompletion<TValue> get(String key, TExtra extra);
 
     /**
-     * Lists the keys in the bucket associated with the accessor.
+     * Lists the keys in the bucket associated with the connector.
      * 
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<List<String>> list(Extra extra);
+    CallbackCompletion<List<String>> list(TExtra extra);
 
     /**
      * Stores the given data and associates it with the specified key.
@@ -79,5 +85,5 @@ public interface IKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> set(String key, Value value, Extra extra);
+    CallbackCompletion<Boolean> set(String key, TValue value, TExtra extra);
 }

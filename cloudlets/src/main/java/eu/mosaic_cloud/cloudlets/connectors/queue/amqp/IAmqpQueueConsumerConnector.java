@@ -28,22 +28,26 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
- *            the type of the context of the cloudlet using this accessor
- * @param <Message>
+ * @param <TContext>
+ *            the type of the context of the cloudlet using this connector
+ * @param <TMessage>
  *            the type of the consumed data
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public interface IAmqpQueueConsumerConnector<Context, Message, Extra>
+public interface IAmqpQueueConsumerConnector<TContext, TMessage, TExtra>
         extends
-        IAmqpQueueConnector<Context>,
-        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> {
+        IAmqpQueueConnector<TContext>,
+        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage> {
 
     /**
      * Acknowledges a message.
      * 
-     * @param message
-     *            the message to acknowledge
+     * @param delivery
+     *            the delivery token in the received message
+     * @param extra
      */
     CallbackCompletion<Void> acknowledge(IAmqpQueueDeliveryToken delivery,
-            Extra extra);
+            TExtra extra);
 }

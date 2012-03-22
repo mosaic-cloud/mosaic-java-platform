@@ -36,15 +36,16 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
     public static final class Callback<Message> implements
             IAmqpQueueConsumerCallback<Message> {
 
-        AmqpQueueConsumerConnector<?, Message, ?> connector = null;
+        private AmqpQueueConsumerConnector<?, Message, ?> connector = null; // NOPMD 
 
         @Override
-        public final CallbackCompletion<Void> consume(
-                IAmqpQueueDeliveryToken delivery, Message message) {
+        public CallbackCompletion<Void> consume(
+                final IAmqpQueueDeliveryToken delivery, final Message message) {
             return this.connector.consume(delivery, message);
         }
     }
 
+    @SuppressWarnings("synthetic-access")
     public AmqpQueueConsumerConnector(
             final ICloudletController<?> cloudlet,
             final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> connector,
@@ -71,24 +72,28 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
                 public CallbackCompletion<Void> completed(
                         final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
-                    if (completion.getException() != null) {
-                        return AmqpQueueConsumerConnector.this.callback
+                    assert (completion_ == completion); // NOPMD
+                    CallbackCompletion<Void> result;
+                    if (completion.getException() == null) {
+                        result = AmqpQueueConsumerConnector.this.callback
+                                .acknowledgeSucceeded(
+                                        AmqpQueueConsumerConnector.this.context,
+                                        new GenericCallbackCompletionArguments<Context, Extra>(
+                                                AmqpQueueConsumerConnector.this.cloudlet,
+                                                extra));
+                    } else {
+                        result = AmqpQueueConsumerConnector.this.callback
                                 .acknowledgeFailed(
                                         AmqpQueueConsumerConnector.this.context,
                                         new GenericCallbackCompletionArguments<Context, Extra>(
                                                 AmqpQueueConsumerConnector.this.cloudlet,
                                                 completion.getException()));
                     }
-                    return AmqpQueueConsumerConnector.this.callback
-                            .acknowledgeSucceeded(
-                                    AmqpQueueConsumerConnector.this.context,
-                                    new GenericCallbackCompletionArguments<Context, Extra>(
-                                            AmqpQueueConsumerConnector.this.cloudlet,
-                                            extra));
+                    return result;
                 }
             });
         }
@@ -96,14 +101,18 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
     }
 
     protected CallbackCompletion<Void> consume(
-            IAmqpQueueDeliveryToken delivery, Message message) {
-        if (this.callback != null) {
-            return this.callback
+            final IAmqpQueueDeliveryToken delivery, final Message message) {
+        CallbackCompletion<Void> result;
+        if (this.callback == null) {
+            result = CallbackCompletion
+                    .createFailure(new IllegalStateException());
+        } else {
+            result = this.callback
                     .consume(
                             this.context,
                             new AmqpQueueConsumeCallbackArguments<Context, Message, Extra>(
                                     this.cloudlet, delivery, message));
         }
-        return CallbackCompletion.createFailure(new IllegalStateException());
+        return result;
     }
 }

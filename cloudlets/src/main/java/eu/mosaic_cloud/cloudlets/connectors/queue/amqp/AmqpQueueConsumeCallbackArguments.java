@@ -29,16 +29,19 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueDeliveryToken;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            the context of the cloudlet
- * @param <Message>
+ * @param <TMessage>
  *            the type of the consumed data
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public class AmqpQueueConsumeCallbackArguments<Context, Message, Extra> extends
-        CallbackArguments<Context> {
+public class AmqpQueueConsumeCallbackArguments<TContext, TMessage, TExtra>
+        extends CallbackArguments<TContext> {
 
     private final IAmqpQueueDeliveryToken delivery;
-    private final Message message;
+    private final TMessage message;
 
     /**
      * Creates a new callback argument.
@@ -50,7 +53,7 @@ public class AmqpQueueConsumeCallbackArguments<Context, Message, Extra> extends
      */
     public AmqpQueueConsumeCallbackArguments(
             final ICloudletController<?> cloudlet,
-            final IAmqpQueueDeliveryToken delivery, final Message message) {
+            final IAmqpQueueDeliveryToken delivery, final TMessage message) {
         super(cloudlet);
         this.message = message;
         this.delivery = delivery;
@@ -65,7 +68,7 @@ public class AmqpQueueConsumeCallbackArguments<Context, Message, Extra> extends
      * 
      * @return information about the consume request
      */
-    public Message getMessage() {
+    public TMessage getMessage() {
         return this.message;
     }
 }

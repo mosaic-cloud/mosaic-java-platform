@@ -33,11 +33,17 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <TContext>
  *            the type of the cloudlet context
+ * @param <TValue>
+ *            the type of the values exchanged with the key-value store using
+ *            this connector
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
-        IKvStoreConnectorCallback<C, D, E> {
+public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
+        extends IKvStoreConnectorCallback<TContext, TValue, TExtra> {
 
     /**
      * Called when the add operation completed unsuccessfully. The error can be
@@ -48,8 +54,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> addFailed(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> addFailed(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the add operation completed successfully.
@@ -59,8 +66,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> addSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> addSucceeded(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the append operation completed unsuccessfully. The error can
@@ -71,8 +79,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> appendFailed(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> appendFailed(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the append operation completed successfully.
@@ -82,8 +91,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> appendSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> appendSucceeded(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the cas operation completed unsuccessfully. The error can be
@@ -94,8 +104,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> casFailed(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> casFailed(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the cas operation completed successfully.
@@ -105,8 +116,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> casSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> casSucceeded(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the getBulk operation completed unsuccessfully. The error can
@@ -117,8 +129,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getBulkFailed(C context,
-            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
+    CallbackCompletion<Void> getBulkFailed(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, Map<String, TValue>, TExtra> arguments);
 
     /**
      * Called when the getBulk operation completed successfully. The result of
@@ -129,8 +142,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getBulkSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, Map<String, D>, E> arguments);
+    CallbackCompletion<Void> getBulkSucceeded(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, Map<String, TValue>, TExtra> arguments);
 
     /**
      * Called when the prepend operation completed unsuccessfully. The error can
@@ -141,8 +155,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> prependFailed(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> prependFailed(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the prepend operation completed successfully.
@@ -152,8 +167,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> prependSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> prependSucceeded(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the replace operation completed unsuccessfully. The error can
@@ -164,8 +180,9 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> replaceFailed(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> replaceFailed(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 
     /**
      * Called when the replace operation completed successfully.
@@ -175,6 +192,7 @@ public interface IMemcacheKvStoreConnectorCallback<C, D, E> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> replaceSucceeded(C context,
-            KvStoreCallbackCompletionArguments<C, D, E> arguments);
+    CallbackCompletion<Void> replaceSucceeded(
+            TContext context,
+            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
 }

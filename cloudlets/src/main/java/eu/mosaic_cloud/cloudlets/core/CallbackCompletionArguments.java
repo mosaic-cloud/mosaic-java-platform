@@ -40,8 +40,6 @@ public class CallbackCompletionArguments<Context> extends
      * 
      * @param cloudlet
      *            the cloudlet controller
-     * @param result
-     *            the result of the operation
      */
     public CallbackCompletionArguments(ICloudletController<?> cloudlet) {
         super(cloudlet);

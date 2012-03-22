@@ -21,13 +21,13 @@
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
 /**
- * Interface for all resource accessors used by cloudlets.
+ * Interface for all resource connectors used by cloudlets.
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            the type of the cloudlet context
  */
-public interface IConnector<Context> extends
+public interface IConnector<TContext> extends
         eu.mosaic_cloud.connectors.core.IConnector {
 }

@@ -24,12 +24,28 @@ import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
+/**
+ * Factory for creating key-value store connectors.
+ * 
+ * @author Ciprian Craciun
+ * 
+ */
 public interface IKvStoreConnectorFactory extends
         IConnectorFactory<IKvStoreConnector<?, ?, ?>> {
 
-    <Context, Value, Extra> IKvStoreConnector<Context, Value, Extra> create(
-            IConfiguration configuration, Class<Value> valueClass,
-            DataEncoder<Value> valueEncoder,
-            IKvStoreConnectorCallback<Context, Value, Extra> callback,
-            Context callbackContext);
+    /**
+     * Creates a key-value store connector.
+     * 
+     * @param configuration
+     * @param valueClass
+     * @param valueEncoder
+     * @param callback
+     * @param callbackContext
+     * @return
+     */
+    <TContext, TValue, TExtra> IKvStoreConnector<TContext, TValue, TExtra> create(
+            IConfiguration configuration, Class<TValue> valueClass,
+            DataEncoder<TValue> valueEncoder,
+            IKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
+            TContext callbackContext);
 }

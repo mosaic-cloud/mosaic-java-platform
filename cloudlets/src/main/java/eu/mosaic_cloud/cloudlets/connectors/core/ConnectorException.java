@@ -48,7 +48,7 @@ public class ConnectorException extends Exception {
      *            the detail message. The detail message is saved for later
      *            retrieval by the {@link Throwable#getMessage()} method
      */
-    public ConnectorException(String message) {
+    public ConnectorException(final String message) {
         super(message);
     }
 
@@ -66,7 +66,7 @@ public class ConnectorException extends Exception {
      *            permitted, and indicates that the cause is nonexistent or
      *            unknown.)
      */
-    public ConnectorException(String message, Throwable cause) {
+    public ConnectorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -82,7 +82,7 @@ public class ConnectorException extends Exception {
      *            permitted, and indicates that the cause is nonexistent or
      *            unknown.)
      */
-    public ConnectorException(Throwable cause) {
+    public ConnectorException(final Throwable cause) {
         super(cause);
     }
 }
