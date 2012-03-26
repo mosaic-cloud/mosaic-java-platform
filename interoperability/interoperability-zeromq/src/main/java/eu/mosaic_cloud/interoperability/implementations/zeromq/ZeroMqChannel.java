@@ -408,26 +408,36 @@ public final class ZeroMqChannel
 	
 	private final void scheduleDispatcher (final Session session)
 	{
-		if (!session.dispatchers.isEmpty () && session.idle.tryAcquire ())
-			try {
-				session.executor.get ().execute (session.dispatchers.poll ());
-			} catch (final Error exception) {
-				this.exceptions.traceDeferredException (exception, "error encountered while scheduling dispatcher; rethrowing!");
+		if (!session.dispatchers.isEmpty () && session.idle.tryAcquire ()) {
+			final Dispatcher dispatcher = session.dispatchers.poll ();
+			if (dispatcher != null)
+				try {
+					session.executor.get ().execute (dispatcher);
+				} catch (final Error exception) {
+					this.exceptions.traceDeferredException (exception, "error encountered while scheduling dispatcher; rethrowing!");
+					session.idle.release ();
+					throw (exception);
+				}
+			else
 				session.idle.release ();
-				throw (exception);
-			}
+		}
 	}
 	
 	private final void scheduleHandler ()
 	{
-		if ((this.handlers.size () > 0) && this.idle.tryAcquire ())
-			try {
-				this.executor.execute (this.handlers.poll ());
-			} catch (final Error exception) {
-				this.exceptions.traceDeferredException (exception, "error encountered while scheduling handler; rethrowing!");
+		if (!this.handlers.isEmpty () && this.idle.tryAcquire ()) {
+			final Handler handler = this.handlers.poll ();
+			if (handler != null)
+				try {
+					this.executor.execute (handler);
+				} catch (final Error exception) {
+					this.exceptions.traceDeferredException (exception, "error encountered while scheduling handler; rethrowing!");
+					this.idle.release ();
+					throw (exception);
+				}
+			else
 				this.idle.release ();
-				throw (exception);
-			}
+		}
 	}
 	
 	private final TranscriptExceptionTracer exceptions;
