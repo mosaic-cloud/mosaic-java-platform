@@ -49,6 +49,27 @@ public class KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>
     private final TExtra extra;
 
     /**
+     * Creates a new argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param keys
+     *            the keys used in the operation
+     * @param error
+     *            the exception thrown by the operation
+     * @param extra
+     *            some application specific object
+     */
+    public KvStoreCallbackCompletionArguments(
+            final ICloudletController<?> cloudlet, final List<String> keys,
+            final Throwable error, final TExtra extra) {
+        super(cloudlet, error);
+        this.keys = keys;
+        this.value = null; // NOPMD
+        this.extra = extra;
+    }
+
+    /**
      * Creates a new argument for the callbacks of operations using more than
      * one key.
      * 
@@ -67,28 +88,6 @@ public class KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>
             final TValue value, final TExtra extra) {
         super(cloudlet);
         this.keys = keys;
-        this.value = value;
-        this.extra = extra;
-    }
-
-    /**
-     * Creates a new argument.
-     * 
-     * @param cloudlet
-     *            the cloudlet
-     * @param key
-     *            the key used in the operation
-     * @param value
-     *            the value associated with the key (if this callback is used
-     *            for failed operations this value should contain the error)
-     * @param extra
-     *            some application specific object
-     */
-    public KvStoreCallbackCompletionArguments(
-            final ICloudletController<?> cloudlet, final String key,
-            final TValue value, final TExtra extra) {
-        super(cloudlet);
-        this.keys = Arrays.asList(key);
         this.value = value;
         this.extra = extra;
     }
@@ -138,19 +137,20 @@ public class KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>
      * 
      * @param cloudlet
      *            the cloudlet
-     * @param keys
-     *            the keys used in the operation
-     * @param error
-     *            the exception thrown by the operation
+     * @param key
+     *            the key used in the operation
+     * @param value
+     *            the value associated with the key (if this callback is used
+     *            for failed operations this value should contain the error)
      * @param extra
      *            some application specific object
      */
     public KvStoreCallbackCompletionArguments(
-            final ICloudletController<?> cloudlet, final List<String> keys,
-            final Throwable error, final TExtra extra) {
-        super(cloudlet, error);
-        this.keys = keys;
-        this.value = null; // NOPMD
+            final ICloudletController<?> cloudlet, final String key,
+            final TValue value, final TExtra extra) {
+        super(cloudlet);
+        this.keys = Arrays.asList(key);
+        this.value = value;
         this.extra = extra;
     }
 

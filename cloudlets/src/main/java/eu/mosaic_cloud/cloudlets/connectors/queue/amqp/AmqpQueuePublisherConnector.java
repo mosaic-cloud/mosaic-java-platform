@@ -59,7 +59,7 @@ public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
                 @Override
                 public CallbackCompletion<Void> completed(
                         final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD 
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return AmqpQueuePublisherConnector.this.callback
                                 .publishFailed(

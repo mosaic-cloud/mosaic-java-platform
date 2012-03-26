@@ -44,7 +44,7 @@ import com.google.common.base.Preconditions;
  * @param <TContext>
  *            cloudlet context
  */
-public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object> // NOPMD 
+public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object> // NOPMD
         implements IConnector<TContext>, CallbackProxy {
 
     protected final TCallback callback;
@@ -104,7 +104,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
                 @Override
                 public CallbackCompletion<Void> completed(
                         final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD 
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseConnector.this.callback.initializeFailed(
                                 BaseConnector.this.context,

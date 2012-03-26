@@ -28,7 +28,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
-public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra> // NOPMD 
+public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra> // NOPMD
         extends BaseConnector<TConnector, TCallback, TContext> implements
         IKvStoreConnector<TContext, TValue, TExtra> {
 
@@ -40,7 +40,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 
     @Override
     public CallbackCompletion<Boolean> delete(final String key) {
-        return this.delete(key, null); 
+        return this.delete(key, null);
     }
 
     @Override
@@ -51,11 +51,12 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
-                @SuppressWarnings("synthetic-access") // NOPMD 
+                @SuppressWarnings("synthetic-access")
+                // NOPMD
                 @Override
                 public CallbackCompletion<Void> completed(
                         final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD 
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseKvStoreConnector.this.callback
                                 .deleteFailed(
@@ -92,7 +93,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                 @Override
                 public CallbackCompletion<Void> completed(
                         final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD 
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseKvStoreConnector.this.callback
                                 .getFailed(
@@ -130,7 +131,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                 @Override
                 public CallbackCompletion<Void> completed(
                         final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD 
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseKvStoreConnector.this.callback
                                 .listFailed(
@@ -170,7 +171,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                 @Override
                 public CallbackCompletion<Void> completed(
                         final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD 
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseKvStoreConnector.this.callback
                                 .setFailed(

@@ -36,7 +36,7 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
     public static final class Callback<Message> implements
             IAmqpQueueConsumerCallback<Message> {
 
-        private AmqpQueueConsumerConnector<?, Message, ?> connector = null; // NOPMD 
+        private AmqpQueueConsumerConnector<?, Message, ?> connector = null; // NOPMD
 
         @Override
         public CallbackCompletion<Void> consume(
