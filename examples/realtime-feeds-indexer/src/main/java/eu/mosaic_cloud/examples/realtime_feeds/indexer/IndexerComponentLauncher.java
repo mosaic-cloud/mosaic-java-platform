@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-examples-realtime-feeds-indexer
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%

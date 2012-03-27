@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-drivers
+ * mosaic-drivers-core
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
