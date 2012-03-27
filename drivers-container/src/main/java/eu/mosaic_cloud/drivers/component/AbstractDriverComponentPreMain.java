@@ -30,6 +30,6 @@ public final class AbstractDriverComponentPreMain extends Object {
     }
 
     public static final void main(final String callbacks, final String[] arguments) throws Throwable {
-        BasicComponentHarnessPreMain.main(callbacks, arguments, 1);
+        BasicComponentHarnessPreMain.main(callbacks, arguments, 0);
     }
 }

@@ -1,6 +1,6 @@
 #!/dev/null
 
-_identifier="${1:-000000009bd607dfc15147519d8cb1daf64e932d}"
+_identifier="000000009bd607dfc15147519d8cb1daf64e932d"
 if test "${#}" -ge 1 ; then
 	for _argument in "${@}" ; do
 		if test -z "${_identifier}" ; then
