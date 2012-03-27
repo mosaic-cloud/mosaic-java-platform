@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>eu.mosaic_cloud.drivers</groupId>
+		<artifactId>drivers-parent</artifactId>
+		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
+		<relativePath>../../drivers-parent</relativePath>
+	</parent>
+	
+	<artifactId>drivers-stubs-redis</artifactId>
+	<name>mosaic-drivers-stubs-redis</name>
+	
+	<dependencies>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-stubs-kv-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>platform-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>platform-core</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-threading</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-transcript</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-exceptions</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${versions.dependencies.redis}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${versions.dependencies.junit}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${versions.plugins.assembly}</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>eu.mosaic_cloud.drivers.DriverComponentPreMain</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<properties>
+		<license.licenseName>apache_v2</license.licenseName>
+		<_maven_pom_package>mosaic-components-java-driver-container</_maven_pom_package>
+	</properties>
+	
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+</project>

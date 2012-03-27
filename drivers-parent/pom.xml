@@ -19,8 +19,14 @@
 	
 	<modules>
 		<module>../drivers-core</module>
-		<module>../drivers-stubs</module>
+		<module>../drivers-container</module>
+		<module>../drivers-stubs/amqp</module>
+		<module>../drivers-stubs/kv-common</module>
+		<module>../drivers-stubs/riak</module>
+		<module>../drivers-stubs/redis</module>
+		<module>../drivers-stubs/memcache</module>
 	</modules>
+	
 	
 	<properties>
 		<license.licenseName>apache_v2</license.licenseName>

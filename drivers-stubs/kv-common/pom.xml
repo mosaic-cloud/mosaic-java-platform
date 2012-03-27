@@ -2,20 +2,30 @@
 
 <project
 			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+				xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>eu.mosaic_cloud.examples</groupId>
-		<artifactId>examples-parent</artifactId>
+		<groupId>eu.mosaic_cloud.drivers</groupId>
+		<artifactId>drivers-parent</artifactId>
 		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
-		<relativePath>../parent</relativePath>
+		<relativePath>../../drivers-parent</relativePath>
 	</parent>
 	
-	<artifactId>examples-simple-cloudlets</artifactId>
-	<name>mosaic-examples-simple-cloudlets</name>
+	<artifactId>drivers-stubs-kv-common</artifactId>
+	<name>mosaic-drivers-stubs-kv-common</name>
 	
 	<dependencies>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-container</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-core</artifactId>
@@ -25,42 +35,6 @@
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-interop</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>cloudlets</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>cloudlets</artifactId>
-			<version>${project.version}</version>
-			<classifier>tests</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.drivers</groupId>
-			<artifactId>drivers-core</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.drivers</groupId>
-			<artifactId>drivers-stubs-amqp</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.drivers</groupId>
-			<artifactId>drivers-stubs-kv-common</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.drivers</groupId>
-			<artifactId>drivers-stubs-riak</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.interoperability</groupId>
@@ -73,8 +47,18 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-callbacks</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-threading</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -83,10 +67,9 @@
 			<version>${versions.dependencies.guava}</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${versions.dependencies.junit}</version>
-			<scope>test</scope>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${versions.dependencies.protobuf}</version>
 		</dependency>
 	</dependencies>
 	
@@ -96,14 +79,19 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>${versions.plugins.assembly}</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>eu.mosaic_cloud.drivers.DriverComponentPreMain</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 				<executions>
 					<execution>
 						<phase>package</phase>
-						<configuration>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
-						</configuration>
 						<goals>
 							<goal>single</goal>
 						</goals>
@@ -115,6 +103,7 @@
 	
 	<properties>
 		<license.licenseName>apache_v2</license.licenseName>
+		<_maven_pom_package>mosaic-components-java-driver-container</_maven_pom_package>
 	</properties>
 	
 	<licenses>

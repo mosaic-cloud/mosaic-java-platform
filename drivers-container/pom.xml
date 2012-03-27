@@ -12,10 +12,15 @@
 		<relativePath>../drivers-parent</relativePath>
 	</parent>
 	
-	<artifactId>drivers-core</artifactId>
-	<name>mosaic-drivers-core</name>
+	<artifactId>drivers-container</artifactId>
+	<name>mosaic-drivers-container</name>
 	
 	<dependencies>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-core</artifactId>
@@ -32,6 +37,21 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-container</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-launcher</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-callbacks</artifactId>
 			<version>${project.version}</version>
@@ -43,8 +63,13 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-miscellaneous</artifactId>
+			<artifactId>tools-exceptions</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${versions.dependencies.guava}</version>
 		</dependency>
 	</dependencies>
 	
