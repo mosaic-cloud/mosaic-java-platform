@@ -83,7 +83,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.drivers.DriverComponentPreMain</mainClass>
+							<mainClass>eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentPreMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -100,7 +100,7 @@
 	</build>
 	
 	<properties>
-		<_maven_pom_package>mosaic-components-java-driver-container</_maven_pom_package>
+		<_maven_pom_package>mosaic-components-java-driver-riak</_maven_pom_package>
 	</properties>
 	
 </project>

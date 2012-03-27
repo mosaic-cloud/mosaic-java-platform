@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.drivers.kvstore.memcached.MemcachedDriver;
+import eu.mosaic_cloud.drivers.kvstore.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;

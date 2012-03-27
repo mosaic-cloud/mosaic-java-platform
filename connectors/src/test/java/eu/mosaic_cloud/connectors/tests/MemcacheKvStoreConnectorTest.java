@@ -25,7 +25,7 @@ import java.util.Map;
 
 import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
-import eu.mosaic_cloud.drivers.interop.kvstore.memcached.MemcachedStub;
+import eu.mosaic_cloud.drivers.kvstore.interop.MemcachedStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;

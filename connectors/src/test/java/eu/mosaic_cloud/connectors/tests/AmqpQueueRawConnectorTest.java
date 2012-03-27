@@ -22,7 +22,7 @@ package eu.mosaic_cloud.connectors.tests;
 
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
-import eu.mosaic_cloud.drivers.interop.queue.amqp.AmqpStub;
+import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;

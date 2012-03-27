@@ -113,7 +113,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>eu.mosaic_cloud.drivers.DriverComponentPreMain</mainClass>
+							<mainClass>eu.mosaic_cloud.drivers.queue.amqp.component.AmqpDriverComponentPreMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -130,7 +130,7 @@
 	</build>
 	
 	<properties>
-		<_maven_pom_package>mosaic-components-java-driver-container</_maven_pom_package>
+		<_maven_pom_package>mosaic-components-java-driver-amqp</_maven_pom_package>
 	</properties>
 	
 </project>
