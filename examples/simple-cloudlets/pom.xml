@@ -39,14 +39,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>drivers</artifactId>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-stubs</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>drivers</artifactId>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-stubs</artifactId>
 			<version>${project.version}</version>
 			<classifier>tests</classifier>
 			<scope>test</scope>

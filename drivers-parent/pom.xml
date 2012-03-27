@@ -6,23 +6,20 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>eu.mosaic_cloud</groupId>
-		<artifactId>parent</artifactId>
+		<groupId>eu.mosaic_cloud.platform</groupId>
+		<artifactId>platform-parent</artifactId>
 		<version>0.4.2_mosaic_dev-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../platform-parent</relativePath>
 	</parent>
 	
-	<groupId>eu.mosaic_cloud.platform</groupId>
-	<artifactId>platform-parent</artifactId>
+	<groupId>eu.mosaic_cloud.drivers</groupId>
+	<artifactId>drivers-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-platform-parent</name>
+	<name>mosaic-drivers-parent</name>
 	
 	<modules>
-		<module>../cloudlets</module>
-		<module>../connectors</module>
-		<module>../platform-core</module>
-		<module>../platform-interop</module>
-		<module>../drivers-parent</module>
+		<module>../drivers-core</module>
+		<module>../drivers-stubs</module>
 	</modules>
 	
 	<properties>
