@@ -101,17 +101,4 @@
 		</plugins>
 	</build>
 	
-	<properties>
-		<license.licenseName>apache_v2</license.licenseName>
-		<_maven_pom_package>mosaic-components-java-driver-container</_maven_pom_package>
-	</properties>
-	
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	
 </project>

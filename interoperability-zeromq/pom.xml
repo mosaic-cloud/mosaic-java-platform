@@ -59,16 +59,4 @@
 		</dependency>
 	</dependencies>
 	
-	<properties>
-		<license.licenseName>apache_v2</license.licenseName>
-	</properties>
-	
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	
 </project>

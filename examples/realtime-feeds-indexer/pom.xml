@@ -95,16 +95,7 @@
 	
 	<properties>
 		<versions.dependencies.rome>1.0</versions.dependencies.rome>
-		<license.licenseName>apache_v2</license.licenseName>
 		<_maven_pom_package>mosaic-examples-realtime-feeds-indexer-java</_maven_pom_package>
 	</properties>
-	
-	<licenses>
-		<license>
-			<name>Apache 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
 	
 </project>
