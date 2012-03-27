@@ -17,6 +17,18 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-core</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-core</artifactId>
 			<version>${project.version}</version>
@@ -76,11 +88,6 @@
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-exceptions</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-miscellaneous</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

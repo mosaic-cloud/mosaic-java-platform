@@ -40,6 +40,12 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-core</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
 			<artifactId>drivers-stubs</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
