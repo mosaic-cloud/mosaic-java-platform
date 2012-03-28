@@ -42,10 +42,10 @@ import com.google.common.base.Preconditions;
  *            resource life-cycle callback class defined by the developer of the
  *            cloudlet
  * @param <TContext>
- *            cloudlet context
+ *            cloudlet callback context
  */
 public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object> // NOPMD
-        implements IConnector<TContext>, CallbackProxy {
+        implements IConnector, CallbackProxy {
 
     protected final TCallback callback;
     protected final ICloudletController<?> cloudlet;
@@ -82,12 +82,11 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
                     if (completion.getException() != null) {
                         return BaseConnector.this.callback.destroyFailed(
                                 BaseConnector.this.context,
-                                new CallbackArguments<TContext>(
+                                new CallbackArguments(
                                         BaseConnector.this.cloudlet));
                     }
                     return BaseConnector.this.callback.destroySucceeded(
-                            BaseConnector.this.context,
-                            new CallbackArguments<TContext>(
+                            BaseConnector.this.context, new CallbackArguments(
                                     BaseConnector.this.cloudlet));
                 }
             });
@@ -108,12 +107,11 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
                     if (completion.getException() != null) {
                         return BaseConnector.this.callback.initializeFailed(
                                 BaseConnector.this.context,
-                                new CallbackArguments<TContext>(
+                                new CallbackArguments(
                                         BaseConnector.this.cloudlet));
                     }
                     return BaseConnector.this.callback.initializeSucceeded(
-                            BaseConnector.this.context,
-                            new CallbackArguments<TContext>(
+                            BaseConnector.this.context, new CallbackArguments(
                                     BaseConnector.this.cloudlet));
                 }
             });

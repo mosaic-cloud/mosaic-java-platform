@@ -28,10 +28,10 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
-public class AmqpQueueConsumerConnector<Context, Message, Extra>
+public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
         extends
-        BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message>, IAmqpQueueConsumerConnectorCallback<Context, Message, Extra>, Context>
-        implements IAmqpQueueConsumerConnector<Context, Message, Extra> {
+        BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage>, IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>, TContext>
+        implements IAmqpQueueConsumerConnector<TMessage, TExtra> {
 
     public static final class Callback<Message> implements
             IAmqpQueueConsumerCallback<Message> {
@@ -48,10 +48,10 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
     @SuppressWarnings("synthetic-access")
     public AmqpQueueConsumerConnector(
             final ICloudletController<?> cloudlet,
-            final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> connector,
+            final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage> connector,
             final IConfiguration configuration,
-            final IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> callback,
-            final Context context, final Callback<Message> backingCallback) {
+            final IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback,
+            final TContext context, final Callback<TMessage> backingCallback) {
         super(cloudlet, connector, configuration, callback, context);
         backingCallback.connector = this;
         // FIXME
@@ -66,7 +66,7 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
 
     @Override
     public CallbackCompletion<Void> acknowledge(
-            final IAmqpQueueDeliveryToken delivery, final Extra extra) {
+            final IAmqpQueueDeliveryToken delivery, final TExtra extra) {
         final CallbackCompletion<Void> completion = this.connector
                 .acknowledge(delivery);
         if (this.callback != null) {
@@ -82,14 +82,14 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
                         result = AmqpQueueConsumerConnector.this.callback
                                 .acknowledgeSucceeded(
                                         AmqpQueueConsumerConnector.this.context,
-                                        new GenericCallbackCompletionArguments<Context, Extra>(
+                                        new GenericCallbackCompletionArguments<TExtra>(
                                                 AmqpQueueConsumerConnector.this.cloudlet,
                                                 extra));
                     } else {
                         result = AmqpQueueConsumerConnector.this.callback
                                 .acknowledgeFailed(
                                         AmqpQueueConsumerConnector.this.context,
-                                        new GenericCallbackCompletionArguments<Context, Extra>(
+                                        new GenericCallbackCompletionArguments<TExtra>(
                                                 AmqpQueueConsumerConnector.this.cloudlet,
                                                 completion.getException()));
                     }
@@ -101,17 +101,15 @@ public class AmqpQueueConsumerConnector<Context, Message, Extra>
     }
 
     protected CallbackCompletion<Void> consume(
-            final IAmqpQueueDeliveryToken delivery, final Message message) {
+            final IAmqpQueueDeliveryToken delivery, final TMessage message) {
         CallbackCompletion<Void> result;
         if (this.callback == null) {
             result = CallbackCompletion
                     .createFailure(new IllegalStateException());
         } else {
-            result = this.callback
-                    .consume(
-                            this.context,
-                            new AmqpQueueConsumeCallbackArguments<Context, Message, Extra>(
-                                    this.cloudlet, delivery, message));
+            result = this.callback.consume(this.context,
+                    new AmqpQueueConsumeCallbackArguments<TMessage, TExtra>(
+                            this.cloudlet, delivery, message));
         }
         return result;
     }

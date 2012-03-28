@@ -25,9 +25,6 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
  * 
  * @author Georgiana Macariu
  * 
- * @param <TContext>
- *            the type of the cloudlet context
  */
-public interface IConnector<TContext> extends
-        eu.mosaic_cloud.connectors.core.IConnector {
+public interface IConnector extends eu.mosaic_cloud.connectors.core.IConnector {
 }

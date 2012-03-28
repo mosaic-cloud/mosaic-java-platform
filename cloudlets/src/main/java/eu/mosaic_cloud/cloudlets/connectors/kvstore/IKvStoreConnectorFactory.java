@@ -31,7 +31,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
  * 
  */
 public interface IKvStoreConnectorFactory extends
-        IConnectorFactory<IKvStoreConnector<?, ?, ?>> {
+        IConnectorFactory<IKvStoreConnector<?, ?>> {
 
     /**
      * Creates a key-value store connector.
@@ -43,7 +43,7 @@ public interface IKvStoreConnectorFactory extends
      * @param callbackContext
      * @return
      */
-    <TContext, TValue, TExtra> IKvStoreConnector<TContext, TValue, TExtra> create(
+    <TContext, TValue, TExtra> IKvStoreConnector<TValue, TExtra> create(
             IConfiguration configuration, Class<TValue> valueClass,
             DataEncoder<TValue> valueEncoder,
             IKvStoreConnectorCallback<TContext, TValue, TExtra> callback,

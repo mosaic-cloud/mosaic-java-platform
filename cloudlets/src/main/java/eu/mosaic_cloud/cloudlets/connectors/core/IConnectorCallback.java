@@ -44,7 +44,7 @@ public interface IConnectorCallback<TContext> extends ICallback<TContext> {
      * @return nothing
      */
     CallbackCompletion<Void> destroyFailed(TContext context,
-            CallbackArguments<TContext> arguments);
+            CallbackArguments arguments);
 
     /**
      * Called when resource connector destruction succeeded.
@@ -56,7 +56,7 @@ public interface IConnectorCallback<TContext> extends ICallback<TContext> {
      * @return nothing
      */
     CallbackCompletion<Void> destroySucceeded(TContext context,
-            CallbackArguments<TContext> arguments);
+            CallbackArguments arguments);
 
     /**
      * Called when resource connector initialization failed.
@@ -68,7 +68,7 @@ public interface IConnectorCallback<TContext> extends ICallback<TContext> {
      * @return nothing
      */
     CallbackCompletion<Void> initializeFailed(TContext context,
-            CallbackArguments<TContext> arguments);
+            CallbackArguments arguments);
 
     /**
      * Called when resource connector initialization succeeded.
@@ -80,5 +80,5 @@ public interface IConnectorCallback<TContext> extends ICallback<TContext> {
      * @return nothing
      */
     CallbackCompletion<Void> initializeSucceeded(TContext context,
-            CallbackArguments<TContext> arguments);
+            CallbackArguments arguments);
 }

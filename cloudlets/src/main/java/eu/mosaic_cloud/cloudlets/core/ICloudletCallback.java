@@ -28,13 +28,13 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            The type of the object encoding the context of the cloudlet.
  */
-public interface ICloudletCallback<Context> extends ICallback<Context> {
+public interface ICloudletCallback<TContext> extends ICallback<TContext> {
 
     /**
-     * Destrozs the user cloudlet.
+     * Destroys the user cloudlet.
      * 
      * @param context
      *            the context of the cloudlet
@@ -42,8 +42,8 @@ public interface ICloudletCallback<Context> extends ICallback<Context> {
      *            here, this argument just gives access to the cloudlet
      *            controller
      */
-    CallbackCompletion<Void> destroy(Context context,
-            CloudletCallbackArguments<Context> arguments);
+    CallbackCompletion<Void> destroy(TContext context,
+            CloudletCallbackArguments<TContext> arguments);
 
     /**
      * Operation called after the cloudlet is unsuccessfully destroyed.
@@ -54,8 +54,8 @@ public interface ICloudletCallback<Context> extends ICallback<Context> {
      *            here, this argument just gives access to the cloudlet
      *            controller
      */
-    CallbackCompletion<Void> destroyFailed(Context context,
-            CloudletCallbackCompletionArguments<Context> arguments);
+    CallbackCompletion<Void> destroyFailed(TContext context,
+            CloudletCallbackCompletionArguments<TContext> arguments);
 
     /**
      * Operation called after the cloudlet is successfully destroyed.
@@ -66,8 +66,8 @@ public interface ICloudletCallback<Context> extends ICallback<Context> {
      *            here, this argument just gives access to the cloudlet
      *            controller
      */
-    CallbackCompletion<Void> destroySucceeded(Context context,
-            CloudletCallbackCompletionArguments<Context> arguments);
+    CallbackCompletion<Void> destroySucceeded(TContext context,
+            CloudletCallbackCompletionArguments<TContext> arguments);
 
     /**
      * Initializes the user cloudlet.
@@ -78,8 +78,8 @@ public interface ICloudletCallback<Context> extends ICallback<Context> {
      *            here, this argument just gives access to the cloudlet
      *            controller
      */
-    CallbackCompletion<Void> initialize(Context context,
-            CloudletCallbackArguments<Context> arguments);
+    CallbackCompletion<Void> initialize(TContext context,
+            CloudletCallbackArguments<TContext> arguments);
 
     /**
      * Operation called after the cloudlet is unsuccessfully initialized.
@@ -90,8 +90,8 @@ public interface ICloudletCallback<Context> extends ICallback<Context> {
      *            here, this argument just gives access to the cloudlet
      *            controller
      */
-    CallbackCompletion<Void> initializeFailed(Context context,
-            CloudletCallbackCompletionArguments<Context> arguments);
+    CallbackCompletion<Void> initializeFailed(TContext context,
+            CloudletCallbackCompletionArguments<TContext> arguments);
 
     /**
      * Operation called after the cloudlet is successfully initialized.
@@ -102,6 +102,6 @@ public interface ICloudletCallback<Context> extends ICallback<Context> {
      *            here, this argument just gives access to the cloudlet
      *            controller
      */
-    CallbackCompletion<Void> initializeSucceeded(Context context,
-            CloudletCallbackCompletionArguments<Context> arguments);
+    CallbackCompletion<Void> initializeSucceeded(TContext context,
+            CloudletCallbackCompletionArguments<TContext> arguments);
 }

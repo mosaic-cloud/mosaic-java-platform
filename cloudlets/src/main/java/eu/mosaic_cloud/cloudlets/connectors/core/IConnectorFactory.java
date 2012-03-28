@@ -29,6 +29,6 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
  * @param <TConnector>
  *            the type of the connector created by this factory
  */
-public interface IConnectorFactory<TConnector extends IConnector<?>> extends
+public interface IConnectorFactory<TConnector extends IConnector> extends
         eu.mosaic_cloud.connectors.core.IConnectorFactory<TConnector> {
 }

@@ -22,6 +22,11 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnectorCallback;
 
-public abstract class DefaultQueueConnectorCallback<C> extends
-        DefaultConnectorCallback<C> implements IQueueConnectorCallback<C> {
+public class DefaultQueueConnectorCallback<TContext> extends
+        DefaultConnectorCallback<TContext> implements
+        IQueueConnectorCallback<TContext> {
+
+    protected DefaultQueueConnectorCallback() {
+        super();
+    }
 }

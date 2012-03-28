@@ -25,22 +25,24 @@ import java.util.ResourceBundle;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
-public class ConfigProperties {
+public final class ConfigProperties {
 
     private static final String BUNDLE_NAME = "eu.mosaic_cloud.cloudlets.config"; //$NON-NLS-1$
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
             .getBundle(ConfigProperties.BUNDLE_NAME);
-    public static final boolean inDebugging = java.lang.management.ManagementFactory
+    public static final boolean IN_DEBUGGING = java.lang.management.ManagementFactory
             .getRuntimeMXBean().getInputArguments().toString()
             .indexOf("-agentlib:jdwp") > 0;
 
     public static String getString(final String key) {
+        String value;
         try {
-            return ConfigProperties.RESOURCE_BUNDLE.getString(key);
+            value = ConfigProperties.RESOURCE_BUNDLE.getString(key);
         } catch (final MissingResourceException e) {
             ExceptionTracer.traceIgnored(e);
-            return '!' + key + '!';
+            value = '!' + key + '!';
         }
+        return value;
     }
 
     private ConfigProperties() {

@@ -39,7 +39,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
  */
 public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector, TCallback extends IAmqpQueueConnectorCallback<TContext>, TContext> // NOPMD
         extends BaseConnector<TConnector, TCallback, TContext> implements
-        IAmqpQueueConnector<TContext> {
+        IAmqpQueueConnector {
 
     protected BaseAmqpQueueConnector(final ICloudletController<?> cloudlet,
             final TConnector connector, final IConfiguration configuration,

@@ -31,11 +31,11 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
  * 
  */
 public interface IMemcacheKvStoreConnectorFactory extends
-        IConnectorFactory<IMemcacheKvStoreConnector<?, ?, ?>> {
+        IConnectorFactory<IMemcacheKvStoreConnector< ?, ?>> {
 
-    <Context, Value, Extra> IMemcacheKvStoreConnector<Context, Value, Extra> create(
-            IConfiguration configuration, Class<Value> valueClass,
-            DataEncoder<Value> valueEncoder,
-            IMemcacheKvStoreConnectorCallback<Context, Value, Extra> callback,
-            Context callbackContext);
+    <TContext, TValue, TExtra> IMemcacheKvStoreConnector< TValue, TExtra> create(
+            IConfiguration configuration, Class<TValue> valueClass,
+            DataEncoder<TValue> valueEncoder,
+            IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
+            TContext callbackContext);
 }

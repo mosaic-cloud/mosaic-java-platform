@@ -29,7 +29,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
         extends
         BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage>, IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>, TContext>
-        implements IAmqpQueuePublisherConnector<TContext, TMessage, TExtra> {
+        implements IAmqpQueuePublisherConnector<TMessage, TExtra> {
 
     public AmqpQueuePublisherConnector(
             final ICloudletController<?> cloudlet,
@@ -64,14 +64,14 @@ public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
                         return AmqpQueuePublisherConnector.this.callback
                                 .publishFailed(
                                         AmqpQueuePublisherConnector.this.context,
-                                        new GenericCallbackCompletionArguments<TContext, TExtra>(
+                                        new GenericCallbackCompletionArguments<TExtra>(
                                                 AmqpQueuePublisherConnector.this.cloudlet,
                                                 completion.getException()));
                     }
                     return AmqpQueuePublisherConnector.this.callback
                             .publishSucceeded(
                                     AmqpQueuePublisherConnector.this.context,
-                                    new GenericCallbackCompletionArguments<TContext, TExtra>(
+                                    new GenericCallbackCompletionArguments<TExtra>(
                                             AmqpQueuePublisherConnector.this.cloudlet,
                                             extra));
                 }

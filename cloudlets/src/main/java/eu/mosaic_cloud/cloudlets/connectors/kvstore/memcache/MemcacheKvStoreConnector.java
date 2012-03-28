@@ -48,7 +48,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
         extends
         BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue>, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
-        implements IMemcacheKvStoreConnector<TContext, TValue, TExtra> { // NOPMD
+        implements IMemcacheKvStoreConnector<TValue, TExtra> { // NOPMD
 
     /**
      * Creates a new connector.
@@ -94,14 +94,14 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .addSucceeded(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, value, extra));
                     } else {
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .addFailed(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -137,14 +137,14 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .appendSucceeded(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, value, extra));
                     } else {
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .appendFailed(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -179,14 +179,14 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .casSucceeded(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, value, extra));
                     } else {
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .casFailed(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -222,7 +222,7 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .getBulkSucceeded(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, Map<String, TValue>, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 keys, completion.getOutcome(),
                                                 extra));
@@ -230,7 +230,7 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .getBulkFailed(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, Map<String, TValue>, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 keys,
                                                 completion.getException(),
@@ -267,14 +267,14 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .prependSucceeded(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, value, extra));
                     } else {
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .prependFailed(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -310,14 +310,14 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .replaceSucceeded(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, value, extra));
                     } else {
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .replaceFailed(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -353,14 +353,14 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .setSucceeded(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, value, extra));
                     } else {
                         resultCompletion = MemcacheKvStoreConnector.this.callback
                                 .setFailed(
                                         MemcacheKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 MemcacheKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));

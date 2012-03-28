@@ -41,8 +41,8 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>
-        extends CallbackCompletionArguments<TContext> {
+public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
+        CallbackCompletionArguments {
 
     private final List<String> keys;
     private final TValue value;

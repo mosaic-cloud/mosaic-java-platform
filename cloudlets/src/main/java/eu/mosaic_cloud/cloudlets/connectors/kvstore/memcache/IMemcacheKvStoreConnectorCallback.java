@@ -54,9 +54,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> addFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> addFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the add operation completed successfully.
@@ -66,9 +65,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> addSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> addSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the append operation completed unsuccessfully. The error can
@@ -79,9 +77,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> appendFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> appendFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the append operation completed successfully.
@@ -91,9 +88,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> appendSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> appendSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the cas operation completed unsuccessfully. The error can be
@@ -104,9 +100,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> casFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> casFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the cas operation completed successfully.
@@ -116,9 +111,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> casSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> casSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the getBulk operation completed unsuccessfully. The error can
@@ -131,7 +125,7 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      */
     CallbackCompletion<Void> getBulkFailed(
             TContext context,
-            KvStoreCallbackCompletionArguments<TContext, Map<String, TValue>, TExtra> arguments);
+            KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra> arguments);
 
     /**
      * Called when the getBulk operation completed successfully. The result of
@@ -144,7 +138,7 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      */
     CallbackCompletion<Void> getBulkSucceeded(
             TContext context,
-            KvStoreCallbackCompletionArguments<TContext, Map<String, TValue>, TExtra> arguments);
+            KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra> arguments);
 
     /**
      * Called when the prepend operation completed unsuccessfully. The error can
@@ -155,9 +149,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> prependFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> prependFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the prepend operation completed successfully.
@@ -167,9 +160,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> prependSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> prependSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the replace operation completed unsuccessfully. The error can
@@ -180,9 +172,8 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> replaceFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> replaceFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the replace operation completed successfully.
@@ -192,7 +183,6 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> replaceSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> replaceSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 }

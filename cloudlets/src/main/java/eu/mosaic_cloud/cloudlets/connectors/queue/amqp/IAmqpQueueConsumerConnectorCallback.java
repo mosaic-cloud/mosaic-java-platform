@@ -48,7 +48,7 @@ public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
      *            the arguments of the callback
      */
     CallbackCompletion<Void> acknowledgeFailed(TContext context,
-            GenericCallbackCompletionArguments<TContext, TExtra> arguments);
+            GenericCallbackCompletionArguments<TExtra> arguments);
 
     /**
      * Handles successful message acknowledge events.
@@ -59,7 +59,7 @@ public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
      *            the arguments of the callback
      */
     CallbackCompletion<Void> acknowledgeSucceeded(TContext context,
-            GenericCallbackCompletionArguments<TContext, TExtra> arguments);
+            GenericCallbackCompletionArguments<TExtra> arguments);
 
     /**
      * Called when this consumer receives a message. This will deliver the
@@ -70,7 +70,6 @@ public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
      * @param arguments
      *            the arguments of the callback
      */
-    CallbackCompletion<Void> consume(
-            TContext context,
-            AmqpQueueConsumeCallbackArguments<TContext, TMessage, TExtra> arguments);
+    CallbackCompletion<Void> consume(TContext context,
+            AmqpQueueConsumeCallbackArguments<TMessage, TExtra> arguments);
 }

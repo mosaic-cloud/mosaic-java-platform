@@ -28,10 +28,7 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnector;
  * 
  * @author Georgiana Macariu
  * 
- * @param <TContext>
- *            the type of the cloudlet context
  */
-public interface IAmqpQueueConnector<TContext> extends
-        IQueueConnector<TContext>,
+public interface IAmqpQueueConnector extends IQueueConnector,
         eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector {
 }

@@ -30,7 +30,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra> // NOPMD
         extends BaseConnector<TConnector, TCallback, TContext> implements
-        IKvStoreConnector<TContext, TValue, TExtra> {
+        IKvStoreConnector<TValue, TExtra> {
 
     protected BaseKvStoreConnector(final ICloudletController<?> cloudlet,
             final TConnector connector, final IConfiguration config,
@@ -61,7 +61,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                         return BaseKvStoreConnector.this.callback
                                 .deleteFailed(
                                         BaseKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 BaseKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -69,7 +69,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                     return BaseKvStoreConnector.this.callback
                             .deleteSucceeded(
                                     BaseKvStoreConnector.this.context,
-                                    new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                    new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                             BaseKvStoreConnector.this.cloudlet,
                                             key, (TValue) null, extra));
                 }
@@ -98,7 +98,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                         return BaseKvStoreConnector.this.callback
                                 .getFailed(
                                         BaseKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 BaseKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -106,7 +106,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                     return BaseKvStoreConnector.this.callback
                             .getSucceeded(
                                     BaseKvStoreConnector.this.context,
-                                    new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                    new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                             BaseKvStoreConnector.this.cloudlet,
                                             key, completion.getOutcome(), extra));
                 }
@@ -136,7 +136,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                         return BaseKvStoreConnector.this.callback
                                 .listFailed(
                                         BaseKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, List<String>, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<List<String>, TExtra>(
                                                 BaseKvStoreConnector.this.cloudlet,
                                                 (String) null, completion
                                                         .getException(), extra));
@@ -144,7 +144,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                     return BaseKvStoreConnector.this.callback
                             .listSucceeded(
                                     BaseKvStoreConnector.this.context,
-                                    new KvStoreCallbackCompletionArguments<TContext, List<String>, TExtra>(
+                                    new KvStoreCallbackCompletionArguments<List<String>, TExtra>(
                                             BaseKvStoreConnector.this.cloudlet,
                                             (String) null, completion
                                                     .getOutcome(), extra));
@@ -176,7 +176,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                         return BaseKvStoreConnector.this.callback
                                 .setFailed(
                                         BaseKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                                 BaseKvStoreConnector.this.cloudlet,
                                                 key, completion.getException(),
                                                 extra));
@@ -184,7 +184,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
                     return BaseKvStoreConnector.this.callback
                             .setSucceeded(
                                     BaseKvStoreConnector.this.context,
-                                    new KvStoreCallbackCompletionArguments<TContext, TValue, TExtra>(
+                                    new KvStoreCallbackCompletionArguments<TValue, TExtra>(
                                             BaseKvStoreConnector.this.cloudlet,
                                             key, value, extra));
                 }

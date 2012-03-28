@@ -53,9 +53,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> deleteFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> deleteFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the delete operation completed successfully.
@@ -65,9 +64,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> deleteSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> deleteSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the get operation completed unsuccessfully. The error can be
@@ -78,9 +76,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> getFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the get operation completed successfully. The result of the
@@ -91,9 +88,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> getSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the list operation completed unsuccessfully. The error can be
@@ -104,9 +100,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> listFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, List<String>, TExtra> arguments);
+    CallbackCompletion<Void> listFailed(TContext context,
+            KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
 
     /**
      * Called when the list operation completed successfully. The result of the
@@ -117,9 +112,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> listSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, List<String>, TExtra> arguments);
+    CallbackCompletion<Void> listSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
 
     /**
      * Called when the set operation completed unsuccessfully. The error can be
@@ -130,9 +124,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> setFailed(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> setFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the set operation completed successfully.
@@ -142,7 +135,6 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> setSucceeded(
-            TContext context,
-            KvStoreCallbackCompletionArguments<TContext, TValue, TExtra> arguments);
+    CallbackCompletion<Void> setSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 }

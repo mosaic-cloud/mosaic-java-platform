@@ -49,7 +49,7 @@ public class CloudletException extends Exception {
      *            the detail message. The detail message is saved for later
      *            retrieval by the {@link Throwable#getMessage()} method
      */
-    public CloudletException(String message) {
+    public CloudletException(final String message) {
         super(message);
     }
 
@@ -67,7 +67,7 @@ public class CloudletException extends Exception {
      *            permitted, and indicates that the cause is nonexistent or
      *            unknown.)
      */
-    public CloudletException(String message, Throwable cause) {
+    public CloudletException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -83,7 +83,7 @@ public class CloudletException extends Exception {
      *            permitted, and indicates that the cause is nonexistent or
      *            unknown.)
      */
-    public CloudletException(Throwable cause) {
+    public CloudletException(final Throwable cause) {
         super(cause);
     }
 }

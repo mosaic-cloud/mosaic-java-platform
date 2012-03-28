@@ -22,6 +22,6 @@ package eu.mosaic_cloud.cloudlets.connectors.queue;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
 
-public interface IQueueConnectorFactory<TConnector extends IQueueConnector<?>>
+public interface IQueueConnectorFactory<TConnector extends IQueueConnector>
         extends IConnectorFactory<TConnector> {
 }

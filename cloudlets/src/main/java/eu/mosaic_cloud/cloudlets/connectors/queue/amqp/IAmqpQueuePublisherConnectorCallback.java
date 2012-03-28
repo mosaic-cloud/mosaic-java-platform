@@ -51,7 +51,7 @@ public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra
      *            the arguments of the callback
      */
     CallbackCompletion<Void> publishFailed(TContext context,
-            GenericCallbackCompletionArguments<TContext, TExtra> arguments);
+            GenericCallbackCompletionArguments<TExtra> arguments);
 
     /**
      * Called when the publisher receives confirmation that the message
@@ -65,5 +65,5 @@ public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra
      *            the arguments of the callback
      */
     CallbackCompletion<Void> publishSucceeded(TContext context,
-            GenericCallbackCompletionArguments<TContext, TExtra> arguments);
+            GenericCallbackCompletionArguments<TExtra> arguments);
 }

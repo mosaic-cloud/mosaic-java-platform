@@ -29,16 +29,14 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueDeliveryToken;
  * 
  * @author Georgiana Macariu
  * 
- * @param <TContext>
- *            the context of the cloudlet
  * @param <TMessage>
  *            the type of the consumed data
  * @param <TExtra>
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class AmqpQueueConsumeCallbackArguments<TContext, TMessage, TExtra>
-        extends CallbackArguments<TContext> {
+public class AmqpQueueConsumeCallbackArguments<TMessage, TExtra> extends
+        CallbackArguments {
 
     private final IAmqpQueueDeliveryToken delivery;
     private final TMessage message;

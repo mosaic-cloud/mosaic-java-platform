@@ -30,8 +30,6 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <TContext>
- *            the type of the context of the cloudlet
  * @param <TValue>
  *            the type of the values exchanged with the key-value store using
  *            this connector
@@ -39,8 +37,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IKvStoreConnector<TContext, TValue, TExtra> extends
-        IConnector<TContext>,
+public interface IKvStoreConnector<TValue, TExtra> extends IConnector,
         eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue> {
 
     /**
