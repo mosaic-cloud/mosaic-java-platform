@@ -23,6 +23,7 @@ package eu.mosaic_cloud.tools.callbacks.tools;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionBackend;
@@ -35,21 +36,24 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 
 
-public final class CallbackCompletionFutureBackend
+public final class CallbackCompletionFutureBackend<_Outcome_ extends Object>
 		implements
 			CallbackCompletionBackend
 {
-	private CallbackCompletionFutureBackend (final ListenableFuture<?> future, final Executor executor)
+	private CallbackCompletionFutureBackend (final ListenableFuture<_Outcome_> future, final Executor executor)
 	{
 		super ();
 		Preconditions.checkNotNull (future);
+		Preconditions.checkNotNull (executor);
 		this.future = future;
-		this.executor = executor != null ? executor : CallbackCompletionFutureBackend.inlineExecutor;
+		this.executor = executor;
+		this.completion = CallbackCompletion.createDeferred (this);
 	}
 	
 	@Override
 	public final boolean awaitCompletion (final CallbackCompletion<?> completion, final long timeout)
 	{
+		Preconditions.checkArgument (completion == this.completion);
 		final Object outcome = Threading.awaitOrCatch ((ListenableFuture<Object>) this.future, timeout, CallbackCompletionFutureBackend.timeoutMarker, CallbackCompletionFutureBackend.exceptionMarker);
 		if (outcome == CallbackCompletionFutureBackend.timeoutMarker)
 			return (false);
@@ -61,6 +65,7 @@ public final class CallbackCompletionFutureBackend
 	@Override
 	public final Throwable getCompletionException (final CallbackCompletion<?> completion)
 	{
+		Preconditions.checkArgument (completion == this.completion);
 		final Object outcome;
 		try {
 			outcome = Threading.await ((ListenableFuture<Object>) this.future, 0, CallbackCompletionFutureBackend.timeoutMarker);
@@ -75,6 +80,7 @@ public final class CallbackCompletionFutureBackend
 	@Override
 	public final Object getCompletionOutcome (final CallbackCompletion<?> completion)
 	{
+		Preconditions.checkArgument (completion == this.completion);
 		final Object outcome = Threading.awaitOrCatch ((ListenableFuture<Object>) this.future, 0, CallbackCompletionFutureBackend.timeoutMarker, CallbackCompletionFutureBackend.exceptionMarker);
 		if (outcome == CallbackCompletionFutureBackend.timeoutMarker)
 			throw (new IllegalStateException ());
@@ -92,41 +98,48 @@ public final class CallbackCompletionFutureBackend
 	@Override
 	public final void observeCompletion (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer)
 	{
-		Preconditions.checkNotNull (completion);
+		Preconditions.checkArgument (completion == this.completion);
 		Preconditions.checkNotNull (observer);
-		this.future.addListener (new Observer (completion, observer), this.executor);
+		this.future.addListener (new Observer (observer), this.executor);
+	}
+	
+	final void triggerObserver (final CallbackCompletionObserver observer)
+	{
+		CallbackCompletion.triggerObserver (this.completion, observer);
 	}
 	
 	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createCompletion (final ListenableFuture<_Outcome_> future)
 	{
-		return (CallbackCompletion.createDeferred (new CallbackCompletionFutureBackend (future, null)));
+		return (new CallbackCompletionFutureBackend<_Outcome_> (future, CallbackCompletionFutureBackend.inlineExecutor).completion);
 	}
 	
+	public final CallbackCompletion<_Outcome_> completion;
 	private final Executor executor;
-	private final ListenableFuture<?> future;
+	private final ListenableFuture<_Outcome_> future;
 	private static final Object exceptionMarker = new Object ();
 	private static final Executor inlineExecutor = MoreExecutors.sameThreadExecutor ();
 	private static final Object timeoutMarker = new Object ();
 	
-	private static final class Observer
+	private final class Observer
 			extends Object
 			implements
 				Runnable
 	{
-		Observer (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer)
+		Observer (final CallbackCompletionObserver observer)
 		{
 			super ();
-			this.completion = completion;
 			this.observer = observer;
+			this.triggered = new AtomicBoolean (false);
 		}
 		
 		@Override
 		public final void run ()
 		{
-			this.observer.completed (this.completion);
+			Preconditions.checkState (this.triggered.compareAndSet (false, true));
+			CallbackCompletionFutureBackend.this.triggerObserver (this.observer);
 		}
 		
-		private final CallbackCompletion<?> completion;
 		private final CallbackCompletionObserver observer;
+		private final AtomicBoolean triggered;
 	}
 }
