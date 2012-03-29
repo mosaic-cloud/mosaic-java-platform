@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
+import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionAndChainedBackend;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionFutureBackend;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
@@ -148,18 +149,23 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 	
 	public final void observe (final CallbackCompletionObserver observer)
 	{
-		Preconditions.checkNotNull (observer);
-		// FIXME
-		// Preconditions.checkArgument (observer instanceof CallbackProxy);
-		try {
-			if (this.backend != null)
-				this.backend.observeCompletion (this, observer);
-			else
-				observer.completed (this);
-		} catch (final Throwable exception) {
+		if (this.backend != null) {
+			Preconditions.checkNotNull (observer);
 			// FIXME
-			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
-		}
+			// Preconditions.checkArgument (observer instanceof CallbackProxy);
+			try {
+				this.backend.observeCompletion (this, observer);
+			} catch (final Throwable exception) {
+				// FIXME
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			}
+		} else
+			CallbackCompletion.triggerObserver (this, observer);
+	}
+	
+	public static final CallbackCompletion<Void> createAndChained (final CallbackCompletion<?> ... dependents)
+	{
+		return (CallbackCompletionAndChainedBackend.createCompletion (dependents));
 	}
 	
 	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createDeferred (final CallbackCompletionBackend backend)
@@ -225,6 +231,21 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 	public static final CallbackCompletion<String> createOutcome (final String outcome)
 	{
 		return (CallbackCompletion.createOutcome (outcome));
+	}
+	
+	public static final void triggerObserver (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer)
+	{
+		Preconditions.checkNotNull (completion);
+		Preconditions.checkState (completion.isCompleted ());
+		Preconditions.checkNotNull (observer);
+		// FIXME
+		// Preconditions.checkArgument (observer instanceof CallbackProxy);
+		try {
+			observer.completed (completion);
+		} catch (final Throwable exception) {
+			// FIXME
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
+		}
 	}
 	
 	final CallbackCompletionBackend backend;
