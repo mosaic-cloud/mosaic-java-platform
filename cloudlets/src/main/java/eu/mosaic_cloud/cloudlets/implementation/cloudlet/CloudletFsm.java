@@ -34,10 +34,10 @@ import eu.mosaic_cloud.tools.callbacks.tools.StateMachine;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
 
-final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
+final class CloudletFsm extends StateMachine<FsmState, FsmTransition> { // NOPMD
 
-    protected abstract class FsmAccess<Input extends Object, Output extends Object>
-            implements StateMachine.AccessorOperation<Accessor, Input, Output> {
+    protected abstract class FsmAccess<Input extends Object, Output extends Object> implements
+            StateMachine.AccessorOperation<Accessor, Input, Output> {
 
         protected FsmAccess() {
             super();
@@ -45,18 +45,17 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
 
         @Override
         public final Output execute(final Accessor access, final Input input) {
-            return (this.execute(input));
+            return this.execute(input);
         }
 
         protected abstract Output execute(Input input);
 
         protected final Output trigger(final Input input) {
-            return (CloudletFsm.this.execute(this, input));
+            return CloudletFsm.this.execute(this, input);
         }
     }
 
-    protected abstract class FsmCallbackAccess extends
-            FsmAccess<Void, CallbackCompletion<Void>> {
+    protected abstract class FsmCallbackAccess extends FsmAccess<Void, CallbackCompletion<Void>> {
 
         protected FsmCallbackAccess() {
             super();
@@ -66,42 +65,41 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
 
         @Override
         protected final CallbackCompletion<Void> execute(final Void input) {
-            return (this.execute());
+            return this.execute();
         }
 
         protected final CallbackCompletion<Void> trigger() {
-            return (this.trigger(null));
+            return this.trigger(null);
         }
     }
 
     protected abstract class FsmCallbackCompletionTransaction extends
             FsmTransaction<CallbackCompletion<Void>, Void> {
 
-        protected final class Observer extends Object implements
-                CallbackCompletionObserver, CallbackProxy, Runnable {
+        protected final class Observer extends Object implements CallbackCompletionObserver,
+                CallbackProxy, Runnable {
 
-            protected final CallbackCompletion<Void> completion;
+            private final CallbackCompletion<Void> completion;
 
             protected Observer(final CallbackCompletion<Void> completion) {
                 super();
                 this.completion = completion;
             }
 
+            @SuppressWarnings("synthetic-access")
             @Override
-            public final CallbackCompletion<Void> completed(
-                    final CallbackCompletion<?> completion1) {
+            public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion1) {
                 Preconditions.checkState(this.completion == completion1);
-                return (CloudletFsm.this.cloudlet.isolate.enqueue(this));
+                return CloudletFsm.this.cloudlet.enqueueTask(this);
             }
 
             @Override
-            public final void run() {
+            public void run() {
                 FsmCallbackCompletionTransaction.this.trigger(this.completion);
             }
         }
 
-        protected FsmCallbackCompletionTransaction(
-                final FsmTransition transition) {
+        protected FsmCallbackCompletionTransaction(final FsmTransition transition) {
             super(transition);
         }
 
@@ -120,37 +118,36 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
         protected abstract StateAndOutput<FsmState, CallbackCompletion<Void>> execute();
 
         @Override
-        protected final StateAndOutput<FsmState, CallbackCompletion<Void>> execute(
-                final Void input) {
-            return (this.execute());
+        protected final StateAndOutput<FsmState, CallbackCompletion<Void>> execute(final Void input) {
+            return this.execute();
         }
 
         protected final CallbackCompletion<Void> trigger() {
-            return (this.trigger(null));
+            return this.trigger(null);
         }
     }
 
     protected abstract class FsmFutureCompletionAccess<Outcome> extends
             FsmAccess<Future<Outcome>, Void> {
 
-        protected final class Observer extends Object implements Executor,
-                Runnable {
+        protected final class Observer extends Object implements Executor, Runnable {
 
-            protected final Future<Outcome> completion;
+            private final Future<Outcome> completion;
 
             protected Observer(final Future<Outcome> completion) {
                 super();
                 this.completion = completion;
             }
 
+            @SuppressWarnings("synthetic-access")
             @Override
-            public final void execute(final Runnable runnable) {
+            public void execute(final Runnable runnable) {
                 Preconditions.checkArgument(runnable == this);
-                CloudletFsm.this.cloudlet.isolate.enqueue(runnable);
+                CloudletFsm.this.cloudlet.enqueueTask(runnable);
             }
 
             @Override
-            public final void run() {
+            public void run() {
                 FsmFutureCompletionAccess.this.trigger(this.completion);
             }
         }
@@ -168,24 +165,24 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
     protected abstract class FsmFutureCompletionTransaction<Outcome> extends
             FsmTransaction<Future<Outcome>, Void> {
 
-        protected final class Observer extends Object implements Executor,
-                Runnable {
+        protected final class Observer extends Object implements Executor, Runnable {
 
-            protected final Future<Outcome> completion;
+            private final Future<Outcome> completion;
 
             protected Observer(final Future<Outcome> completion) {
                 super();
                 this.completion = completion;
             }
 
+            @SuppressWarnings("synthetic-access")
             @Override
-            public final void execute(final Runnable runnable) {
+            public void execute(final Runnable runnable) {
                 Preconditions.checkArgument(runnable == this);
-                CloudletFsm.this.cloudlet.isolate.enqueue(runnable);
+                CloudletFsm.this.cloudlet.enqueueTask(runnable);
             }
 
             @Override
-            public final void run() {
+            public void run() {
                 FsmFutureCompletionTransaction.this.trigger(this.completion);
             }
         }
@@ -228,8 +225,7 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
         }
     }
 
-    protected abstract class FsmTransaction<Input, Output>
-            implements
+    protected abstract class FsmTransaction<Input, Output> implements
             StateMachine.TransactionOperation<Transaction, FsmState, Input, Output> {
 
         protected final FsmTransition transition;
@@ -242,9 +238,9 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
         protected abstract StateAndOutput<FsmState, Output> execute(Input input);
 
         @Override
-        public final StateAndOutput<FsmState, Output> execute(
-                final Transaction transaction, final Input input) {
-            return (this.execute(input));
+        public final StateAndOutput<FsmState, Output> execute(final Transaction transaction,
+                final Input input) {
+            return this.execute(input);
         }
 
         protected final Output trigger(final Input input) {
@@ -279,16 +275,15 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
 
         @Override
         protected final Void execute(final Void input) {
-            return (this.execute());
+            return this.execute();
         }
 
         protected final Void trigger() {
-            return (this.trigger(null));
+            return this.trigger(null);
         }
     }
 
-    protected abstract class FsmVoidTransaction extends
-            FsmTransaction<Void, Void> {
+    protected abstract class FsmVoidTransaction extends FsmTransaction<Void, Void> {
 
         protected FsmVoidTransaction(final FsmTransition transition) {
             super(transition);
@@ -298,41 +293,38 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
 
         @Override
         protected final StateAndOutput<FsmState, Void> execute(final Void input) {
-            return (this.execute());
+            return this.execute();
         }
 
         protected final Void trigger() {
-            return (this.trigger(null));
+            return this.trigger(null);
         }
     }
 
-    protected final Cloudlet<?> cloudlet;
+    private final Cloudlet<?> cloudlet;
 
     protected CloudletFsm(final Cloudlet<?> cloudlet) {
         super(FsmState.class, FsmTransition.class);
         this.defineStates(FsmState.class);
-        this.defineTransition(FsmTransition.CreateCompleted,
-                FsmState.CreatePending, FsmState.Created);
-        this.defineTransition(FsmTransition.ExternalInitialize,
-                FsmState.Created, FsmState.ControllerRegisterPending);
+        this.defineTransition(FsmTransition.CreateCompleted, FsmState.CreatePending,
+                FsmState.Created);
+        this.defineTransition(FsmTransition.ExternalInitialize, FsmState.Created,
+                FsmState.ControllerRegisterPending);
         this.defineTransition(FsmTransition.ControllerRegisterCompleted,
                 FsmState.ControllerRegisterPending, new FsmState[] {
                         FsmState.CallbacksRegisterPending, FsmState.Failed });
         this.defineTransition(FsmTransition.CallbacksRegisterCompleted,
                 FsmState.CallbacksRegisterPending, new FsmState[] {
-                        FsmState.CallbacksInitializePending,
-                        FsmState.ControllerUnregisterPending });
+                        FsmState.CallbacksInitializePending, FsmState.ControllerUnregisterPending });
         this.defineTransition(FsmTransition.CallbacksInitializeCompleted,
                 FsmState.CallbacksInitializePending, new FsmState[] {
                         FsmState.CallbacksInitializeSucceededPending,
                         FsmState.CallbacksInitializeFailedPending });
-        this.defineTransition(
-                FsmTransition.CallbacksInitializeSucceededCompleted,
+        this.defineTransition(FsmTransition.CallbacksInitializeSucceededCompleted,
                 FsmState.CallbacksInitializeSucceededPending, new FsmState[] {
                         FsmState.Active, FsmState.CallbacksUnregisterPending });
         this.defineTransition(FsmTransition.CallbacksInitializeFailedCompleted,
-                FsmState.CallbacksInitializeFailedPending,
-                FsmState.CallbacksDestroyPending);
+                FsmState.CallbacksInitializeFailedPending, FsmState.CallbacksDestroyPending);
         this.defineTransition(FsmTransition.ExternalDestroy, FsmState.Active,
                 FsmState.CallbacksDestroyPending);
         this.defineTransition(FsmTransition.CallbacksDestroyCompleted,
@@ -340,20 +332,16 @@ final class CloudletFsm extends StateMachine<FsmState, FsmTransition> {
                         FsmState.CallbacksDestroySucceededPending,
                         FsmState.CallbacksDestroyFailedPending });
         this.defineTransition(FsmTransition.CallbacksDestroySucceededCompleted,
-                FsmState.CallbacksDestroySucceededPending,
-                FsmState.CallbacksUnregisterPending);
+                FsmState.CallbacksDestroySucceededPending, FsmState.CallbacksUnregisterPending);
         this.defineTransition(FsmTransition.CallbacksDestroyFailedCompleted,
-                FsmState.CallbacksDestroyFailedPending,
-                FsmState.CallbacksUnregisterPending);
+                FsmState.CallbacksDestroyFailedPending, FsmState.CallbacksUnregisterPending);
         this.defineTransition(FsmTransition.CallbacksUnregisterCompleted,
-                FsmState.CallbacksUnregisterPending,
-                FsmState.ControllerUnregisterPending);
+                FsmState.CallbacksUnregisterPending, FsmState.ControllerUnregisterPending);
         this.defineTransition(FsmTransition.ControllerUnregisterCompleted,
                 FsmState.ControllerUnregisterPending, new FsmState[] {
                         FsmState.Destroyed, FsmState.Failed });
-        this.defineTransition(FsmTransition.InternalFailure, FsmState.values(),
-                new FsmState[] {
-                    FsmState.Failed });
+        this.defineTransition(FsmTransition.InternalFailure, FsmState.values(), new FsmState[] {
+            FsmState.Failed });
         this.initialize(FsmState.CreatePending);
         this.cloudlet = cloudlet;
     }

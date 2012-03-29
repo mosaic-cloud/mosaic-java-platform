@@ -52,42 +52,27 @@ import com.google.common.base.Preconditions;
 public final class CloudletManager {
 
     private final ChannelFactory channelFactory;
-
     private final ChannelResolver channelResolver;
-
-    private final ClassLoader classLoader;
-
-    private final Class<?> cloudletCallbacksClass;
-
-    private final IConfiguration cloudletConfiguration;
-
-    private final Class<?> cloudletContextClass;
-
     private final ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> cloudlets;
-
     private final IConfiguration configuration;
-
     private final TranscriptExceptionTracer exceptions;
 
     private final Monitor monitor = Monitor.create(this);
     private final CallbackReactor reactor;
     private final ThreadingContext threading;
-    private final Transcript transcript;
+    private ClassLoader classLoader;
 
-    public static final CloudletManager create(
-            final IConfiguration configuration, final ClassLoader classLoader,
-            final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory,
-            final ChannelResolver channelResolver) {
-        return (new CloudletManager(configuration, classLoader, reactor,
-                threading, exceptions, channelFactory, channelResolver));
-    }
-
-    private CloudletManager(final IConfiguration configuration,
+    public static final CloudletManager create(final IConfiguration configuration,
             final ClassLoader classLoader, final CallbackReactor reactor,
             final ThreadingContext threading, final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory,
+            final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+        return (new CloudletManager(configuration, classLoader, reactor, threading, exceptions,
+                channelFactory, channelResolver));
+    }
+
+    private CloudletManager(final IConfiguration configuration, final ClassLoader classLoader,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
             final ChannelResolver channelResolver) {
         super();
         Preconditions.checkNotNull(configuration);
@@ -98,40 +83,32 @@ public final class CloudletManager {
         Preconditions.checkNotNull(channelFactory);
         Preconditions.checkNotNull(channelResolver);
         synchronized (this.monitor) {
-            {
-                this.transcript = Transcript.create(this);
-                this.exceptions = TranscriptExceptionTracer.create(
-                        this.transcript, exceptions);
-                this.configuration = configuration;
-                this.classLoader = classLoader;
-                this.reactor = reactor;
-                this.threading = threading;
-                this.channelFactory = channelFactory;
-                this.channelResolver = channelResolver;
-                this.cloudlets = new ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>>();
-            }
-            {
-                this.cloudletConfiguration = this
-                        .resolveCloudletConfiguration();
-                this.cloudletCallbacksClass = this
-                        .resolveCloudletCallbacksClass();
-                this.cloudletContextClass = this.resolveCloudletStateClass();
-            }
+            Transcript transcript = Transcript.create(this);
+            this.exceptions = TranscriptExceptionTracer.create(transcript, exceptions);
+            this.configuration = configuration;
+            this.reactor = reactor;
+            this.threading = threading;
+            this.channelFactory = channelFactory;
+            this.channelResolver = channelResolver;
+            this.cloudlets = new ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>>();
+            this.classLoader = classLoader;
         }
     }
 
     private final Cloudlet<?> createCloudletInstance() {
-        final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment
-                .create(this.reactor, this.threading, this.exceptions,
-                        this.channelFactory, this.channelResolver);
-        final IConnectorsFactory connectorFactory = DefaultConnectorsFactory
-                .create(null, connectorEnvironment);
-        final CloudletEnvironment environment = CloudletEnvironment.create(
-                this.cloudletConfiguration, this.cloudletCallbacksClass,
-                this.cloudletContextClass, this.classLoader, connectorFactory,
+        Class<?> cloudletCallbacksClass = this.resolveCloudletCallbacksClass();
+        Class<?> cloudletContextClass = this.resolveCloudletStateClass();
+        IConfiguration cloudletConfiguration = this.resolveCloudletConfiguration();
+
+        final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create(this.reactor,
+                this.threading, this.exceptions, this.channelFactory, this.channelResolver);
+        final IConnectorsFactory connectorFactory = DefaultConnectorsFactory.create(null,
+                connectorEnvironment);
+        final CloudletEnvironment environment = CloudletEnvironment.create(cloudletConfiguration,
+                cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory,
                 this.reactor, this.threading, this.exceptions);
         final Cloudlet<?> cloudlet = Cloudlet.create(environment);
-        return (cloudlet);
+        return cloudlet;
     }
 
     public final boolean createInstance() {
@@ -139,7 +116,7 @@ public final class CloudletManager {
             final Cloudlet<?> cloudlet = this.createCloudletInstance();
             cloudlet.initialize();
             this.cloudlets.put(cloudlet, cloudlet);
-            return (true);
+            return true;
         }
     }
 
@@ -153,75 +130,62 @@ public final class CloudletManager {
 
     public final boolean destroyInstance() {
         synchronized (this.monitor) {
-            final Iterator<Cloudlet<?>> cloudletIterator = this.cloudlets
-                    .keySet().iterator();
+            final Iterator<Cloudlet<?>> cloudletIterator = this.cloudlets.keySet().iterator();
             if (!cloudletIterator.hasNext()) {
                 return (false);
             }
             final Cloudlet<?> cloudlet = cloudletIterator.next();
             cloudlet.destroy();
             this.cloudlets.remove(cloudlet);
-            return (true);
+            return true;
         }
     }
 
     private final Class<?> resolveCloudletCallbacksClass() {
-        final String className = ConfigUtils
-                .resolveParameter(
-                        this.configuration,
-                        ConfigProperties.getString("CloudletComponent.8"), String.class, null); //$NON-NLS-1$
-        Preconditions.checkNotNull(className,
-                "unknown cloudlet callbacks class");
+        final String className = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("CloudletComponent.8"), String.class, null); //$NON-NLS-1$
+        Preconditions.checkNotNull(className, "unknown cloudlet callbacks class");
         final Class<?> clasz;
         try {
-            clasz = this.classLoader.loadClass(className);
+            clasz = classLoader.loadClass(className);
         } catch (final ReflectiveOperationException exception) {
             this.exceptions.traceHandledException(exception);
             throw (new IllegalArgumentException(
-                    "error encountered while loading cloudlet callbacks class",
-                    exception));
+                    "error encountered while loading cloudlet callbacks class", exception));
         }
-        Preconditions
-                .checkArgument(ICloudletCallback.class.isAssignableFrom(clasz),
-                        "invalid cloudlet callbacks class (must implement `ICloudletCallback`)");
-        return (clasz);
+        Preconditions.checkArgument(ICloudletCallback.class.isAssignableFrom(clasz),
+                "invalid cloudlet callbacks class (must implement `ICloudletCallback`)");
+        return clasz;
     }
 
     private final IConfiguration resolveCloudletConfiguration() {
-        final String configurationDescriptor = ConfigUtils
-                .resolveParameter(
-                        this.configuration,
-                        ConfigProperties.getString("CloudletComponent.10"), String.class, null); //$NON-NLS-1$
+        final String configurationDescriptor = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("CloudletComponent.10"), String.class, null); //$NON-NLS-1$
         Preconditions.checkNotNull(configurationDescriptor,
                 "unknown cloudlet configuration descriptor");
         final IConfiguration configuration;
         try {
-            configuration = PropertyTypeConfiguration.create(this.classLoader,
-                    configurationDescriptor);
+            configuration = PropertyTypeConfiguration.create(classLoader, configurationDescriptor);
         } catch (final Throwable exception) {
             this.exceptions.traceHandledException(exception);
             throw (new IllegalArgumentException(
-                    "error encountered while loading cloudlet configuration",
-                    exception));
+                    "error encountered while loading cloudlet configuration", exception));
         }
-        return (configuration);
+        return configuration;
     }
 
     private final Class<?> resolveCloudletStateClass() {
-        final String className = ConfigUtils
-                .resolveParameter(
-                        this.configuration,
-                        ConfigProperties.getString("CloudletComponent.9"), String.class, null); //$NON-NLS-1$
+        final String className = ConfigUtils.resolveParameter(this.configuration,
+                ConfigProperties.getString("CloudletComponent.9"), String.class, null); //$NON-NLS-1$
         Preconditions.checkNotNull(className, "unknown cloudlet context class");
         final Class<?> clasz;
         try {
-            clasz = this.classLoader.loadClass(className);
+            clasz = classLoader.loadClass(className);
         } catch (final ReflectiveOperationException exception) {
             this.exceptions.traceHandledException(exception);
             throw (new IllegalArgumentException(
-                    "error encountered while loading cloudlet context class",
-                    exception));
+                    "error encountered while loading cloudlet context class", exception));
         }
-        return (clasz);
+        return clasz;
     }
 }
