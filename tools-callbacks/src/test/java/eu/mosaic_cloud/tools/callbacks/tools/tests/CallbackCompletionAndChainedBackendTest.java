@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
-import eu.mosaic_cloud.tools.callbacks.tools.tests.CallbackCompletionFutureBackendTest.Observer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
 
 import org.junit.Assert;
