@@ -141,6 +141,7 @@ public final class ZeroMqChannel
 	@Override
 	public final void register (final SessionSpecification specification)
 	{
+		// FIXME: We shouldn't allow the same specification to be registered twice.
 		Preconditions.checkNotNull (specification);
 		final RoleSpecification selfRole = specification.getSelfRole ();
 		final RoleSpecification peerRole = specification.getPeerRole ();
@@ -160,15 +161,15 @@ public final class ZeroMqChannel
 			coders.add (coder);
 		}
 		synchronized (this.state.monitor) {
-			// FIXME
-			// for (final Coder coder : coders)
-			//	if (this.state.coders.containsKey (coder.key)) {
-			//		this.transcript.traceError ("error encountered while registering coder: already registered; throwing!");
-			//		throw (new IllegalStateException ());
-			//	}
 			for (final Coder coder : coders) {
+				// FIXME: We shouldn't allow a coder to overwrite another one for the same "key".
+				// Currently this is a hack to allow registering the same session twice.
 				if (this.state.coders.containsKey (coder.key))
 					continue;
+				if (this.state.coders.containsKey (coder.key)) {
+					this.transcript.traceError ("error encountered while registering coder: already registered; throwing!");
+					throw (new IllegalArgumentException ());
+				}
 				this.transcript.traceDebugging ("registering coder: `%s` -> %s...", coder.key, coder.coder);
 				this.state.coders.put (coder.key, coder);
 			}

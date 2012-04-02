@@ -47,7 +47,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	protected StateMachine (final Class<_State_> stateClass, final Class<_Transition_> transitionClass, final Transcript transcript, final ExceptionTracer exceptions)
 	{
 		super ();
-		// FIXME
+		// FIXME: Refactor code to wrap the exception handler into a transcript exception handler.
 		this.capsule = new Capsule (stateClass, transitionClass, (transcript != null) ? transcript : Transcript.create (this), (exceptions != null) ? exceptions : FallbackExceptionTracer.defaultInstance);
 		this.transcript = this.capsule.transcript;
 		this.exceptions = this.capsule.exceptions;

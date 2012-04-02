@@ -256,7 +256,8 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
                     properties.getMessageId());
             AmqpDriver.this.logger
                     .trace("AmqpDriver - Received RETURN callback for " + message.getDelivery()); //$NON-NLS-1$
-            // FIXME
+            // FIXME: We should trigger a `publishFailed` callback, but due to the lack of "positive" acknowledgements,
+            // we just ignore this situation. Maybe we should use the RabbitMQ extension for publish acknowledgements.
         }
     }
 
@@ -561,7 +562,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
         if (this.connected) {
             try {
                 for (final Map.Entry<String, Channel> channel : AmqpDriver.this.channels.entrySet()) {
-                    // FIXME
+                    // FIXME: ??? (I don't remember what the problem was...)
                     try {
                         channel.getValue().close();
                     } catch (final AlreadyClosedException e) {

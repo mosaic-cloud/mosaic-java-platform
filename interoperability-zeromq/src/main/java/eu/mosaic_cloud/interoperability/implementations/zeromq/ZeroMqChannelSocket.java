@@ -66,7 +66,7 @@ public final class ZeroMqChannelSocket
 			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
-		// FIXME
+		// FIXME: See the `FIXME` in the `connect` method.
 		if (this.acceptingEndpoints.add (endpoint))
 			this.socket.bind (endpoint);
 		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
@@ -80,7 +80,8 @@ public final class ZeroMqChannelSocket
 			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
-		// FIXME
+		// FIXME: ZeroMQ library asserts and crashes if we connect to the same endpoint twice.
+		// This should be addressed somehow else. (Also this is not thread safe.)
 		if (this.connectedEndpoints.add (endpoint))
 			this.socket.connect (endpoint);
 		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
@@ -127,7 +128,8 @@ public final class ZeroMqChannelSocket
 			else
 				outboundPollIndex = -1;
 			errorPollIndex = poller.register (this.socket, ZMQ.Poller.POLLERR);
-			// FIXME
+			// FIXME: In version 2.x of ZeroMQ the timeout is expressed in microseconds, but in 3.x it is in milliseconds.
+			// Currently we use 2.x, thus the timeout is 5 milliseconds.
 			if (poller.poll (5 * 1000) > 0) {
 				if (((errorPollIndex >= 0) && poller.pollerr (errorPollIndex)) || ((this.socket.getEvents () & ZMQ.Poller.POLLERR) != 0))
 					this.failed ();

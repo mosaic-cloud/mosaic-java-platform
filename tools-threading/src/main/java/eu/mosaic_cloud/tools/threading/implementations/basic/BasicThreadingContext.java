@@ -66,11 +66,7 @@ public final class BasicThreadingContext
 		this.sealed = new AtomicBoolean (false);
 	}
 	
-	/*
-	 * Returned executors should extend `ThreadPoolExecutor` (or the like) and override certain methods for logging
-	 * and error handling.
-	 */
-	// FIXME
+	// FIXME: This method is currently "half" implemented as it doesn't wait for threads not derived from `BasicThread`.
 	@Override
 	public final boolean await ()
 	{
@@ -83,6 +79,7 @@ public final class BasicThreadingContext
 		return (this.threads.await (timeout));
 	}
 	
+	// FIXME: Returned executors should extend `ThreadPoolExecutor` (or the like) and override certain methods for logging and error handling.
 	@Override
 	public final ExecutorService createCachedThreadPool (final ThreadConfiguration configuration)
 	{
@@ -494,7 +491,8 @@ public final class BasicThreadingContext
 			super (group, BasicThreadingContext.buildThreadGroupName (configuration));
 			Preconditions.checkNotNull (group);
 			this.configuration = configuration;
-			// FIXME
+			// FIXME: In the context of thread groups the "daemon" setting has a different meaning than for a thread.
+			// Thus maybe we need a separate "daemon" setting just for groups in the configuration object.
 			// super.setDaemon (this.configuration.daemon);
 			super.setDaemon (false);
 			if (configuration.priority != -1)

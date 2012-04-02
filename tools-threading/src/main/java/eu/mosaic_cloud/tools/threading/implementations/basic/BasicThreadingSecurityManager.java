@@ -49,7 +49,7 @@ public final class BasicThreadingSecurityManager
 		Preconditions.checkNotNull (thread);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
-			// FIXME
+			// FIXME: ??? (I don't remember what the problem was...)
 			if (!context.isManaged (thread))
 				throw (new SecurityException ());
 		}
@@ -62,7 +62,7 @@ public final class BasicThreadingSecurityManager
 		Preconditions.checkNotNull (group);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
-			// FIXME
+			// FIXME: ??? (I don't remember what the problem was...)
 			if (!context.isManaged (group))
 				throw (new SecurityException ());
 		}
@@ -73,7 +73,8 @@ public final class BasicThreadingSecurityManager
 	public final void checkPermission (final Permission permission)
 	{
 		this.checkPermission_ (permission);
-		// FIXME
+		// FIXME: Shouldn't we delegate them? (We should investigate deeper the implications...)
+		// It seems that the default implementation is to "deny" everything, thus we "allow" everything.
 		// super.checkPermission (permission);
 	}
 	
@@ -81,7 +82,8 @@ public final class BasicThreadingSecurityManager
 	public final void checkPermission (final Permission permission, final Object context)
 	{
 		this.checkPermission_ (permission);
-		// FIXME
+		// FIXME: Should we delegate them? (We should investigate deeper the implications...)
+		// It seems that the default implementation is to "allow" everything with a context.
 		super.checkPermission (permission, context);
 	}
 	
@@ -120,7 +122,8 @@ public final class BasicThreadingSecurityManager
 			checkWrite |= true;
 		checkRead |= checkWrite;
 		if (checkRead || checkWrite) {
-			// FIXME
+			// FIXME: We should do something useful with these permissions which impact the behaviour of created threads.
+			// Currently we accept any operation.
 		}
 	}
 	

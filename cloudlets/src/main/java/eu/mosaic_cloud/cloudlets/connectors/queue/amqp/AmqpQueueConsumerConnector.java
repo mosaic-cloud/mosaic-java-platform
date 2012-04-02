@@ -54,7 +54,8 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
             final TContext context, final Callback<TMessage> backingCallback) {
         super(cloudlet, connector, configuration, callback, context);
         backingCallback.connector = this;
-        // FIXME
+        // FIXME: This initialization should be called explicitly by the cloudlet callbacks.
+        // Currently this is a hack to keep compatibility with old code.
         this.initialize();
     }
 

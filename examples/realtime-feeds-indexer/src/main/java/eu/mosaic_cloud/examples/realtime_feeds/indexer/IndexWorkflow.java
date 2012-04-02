@@ -274,7 +274,7 @@ public class IndexWorkflow {
                 .getString("url"));
         IndexWorkflow.logger.trace("indexing " + IndexWorkflow.INDEX_TASK_TYPE
                 + " step 3 (fetching latest meta-data)...");
-        // FIXME
+		// FIXME: ??? (I don't remember what the problem was...)
         this.context.metadataStore.get(feedKey, this.key);
     }
 

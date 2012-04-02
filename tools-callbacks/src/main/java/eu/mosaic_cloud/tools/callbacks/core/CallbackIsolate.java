@@ -32,6 +32,7 @@ public final class CallbackIsolate
 		implements
 			Joinable
 {
+	// FIXME: See the `FIXME` notice at the top of the `CallbackCompletion` class.
 	private CallbackIsolate (final CallbackIsolateBackend backend)
 	{
 		super ();
@@ -51,7 +52,7 @@ public final class CallbackIsolate
 		try {
 			return (this.backend.awaitIsolate (this, timeout));
 		} catch (final Throwable exception) {
-			// FIXME
+			// FIXME: See the `FIXME` notice at the top of the `CallbackCompletion` class.
 			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			return (false);
 		}
@@ -75,7 +76,7 @@ public final class CallbackIsolate
 		try {
 			return (this.backend.enqueueOnIsolate (this, runnable));
 		} catch (final Throwable exception) {
-			// FIXME
+			// FIXME: See the `FIXME` notice at the top of the `CallbackCompletion` class.
 			FallbackExceptionTracer.defaultInstance.traceDeferredException (exception);
 			return (CallbackCompletion.createFailure (exception));
 		}
@@ -86,7 +87,7 @@ public final class CallbackIsolate
 		try {
 			return (this.backend.getReactor ());
 		} catch (final Throwable exception) {
-			// FIXME
+			// FIXME: See the `FIXME` notice at the top of the `CallbackCompletion` class.
 			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			return (null);
 		}

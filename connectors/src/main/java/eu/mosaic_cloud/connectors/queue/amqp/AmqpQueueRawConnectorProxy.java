@@ -231,7 +231,7 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy
             this.logger.debug(
                     "QueueConnectorProxy - Received %s request [%s]...",
                     message.specification.toString(), token.getMessageId());
-            // FIXME
+            // FIXME: ??? (I don't remember what the problem was...)
             this.pendingRequests.fail(token.getMessageId(), new Exception(
                     "operation failed"));
         }
@@ -264,19 +264,20 @@ public final class AmqpQueueRawConnectorProxy extends BaseConnectorProxy
             final IAmqpQueueRawConsumerCallback callback = this.pendingConsumers
                     .remove(consumerId);
             callback.handleCancelOk(consumerId);
-            // FIXME
+            // FIXME: ??? (I don't remember what the problem was...)
             // this.consumerMessages.succeed(consumerId, null);
             // this.consumerMessages.cancel(consumerId);
         }
             break;
         case SERVER_CANCEL: {
-            // FIXME
+            // FIXME: ??? (I don't remember what the problem was...)
             final AmqpPayloads.ServerCancelRequest scancelPayload = (ServerCancelRequest) message.payload;
             final String consumerId = scancelPayload.getConsumerTag();
             this.logger
                     .debug("QueueConnectorProxy - Received SERVER_CANCEL for consumer "
                             + consumerId);
             this.pendingConsumers.remove(consumerId);
+            // FIXME: ??? (I don't remember what the problem was...)
             // callback.handleCancelOk(consumerId);
             this.consumerMessages.cancel(consumerId);
         }
