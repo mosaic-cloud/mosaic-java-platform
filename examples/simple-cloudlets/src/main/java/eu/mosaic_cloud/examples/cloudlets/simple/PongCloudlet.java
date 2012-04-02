@@ -148,7 +148,6 @@ public class PongCloudlet {
             final PongMessage pong = new PongMessage(arguments.getKey(),
                     arguments.getValue());
             context.publisher.publish(pong, null);
-            final ICloudletController<?> cloudlet = arguments.getCloudlet();
             try {
                 context.kvStore.destroy();
             } catch (final Exception e) {

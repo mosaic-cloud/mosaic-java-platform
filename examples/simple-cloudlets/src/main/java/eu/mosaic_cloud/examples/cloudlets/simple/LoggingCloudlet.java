@@ -72,14 +72,12 @@ public class LoggingCloudlet {
             String token = null;
             result.await();
             passOb = result.getOutcome();
-            if (passOb instanceof String) {
-                final String pass = passOb;
-                if (pass.equals(data.password)) {
-                    token = ConfigUtils.resolveParameter(arguments
-                            .getCloudlet().getConfiguration(), "test.token",
-                            String.class, "token");
-                    context.kvStore.set(data.user, token, null);
-                }
+            final String pass = passOb;
+            if (pass.equals(data.password)) {
+                token = ConfigUtils.resolveParameter(arguments.getCloudlet()
+                        .getConfiguration(), "test.token", String.class,
+                        "token");
+                context.kvStore.set(data.user, token, null);
             }
             final AuthenticationToken aToken = new AuthenticationToken(token);
             context.publisher.publish(aToken, null);
@@ -184,7 +182,6 @@ public class LoggingCloudlet {
             this.logger.info("LoggingCloudlet - KeyValue succeeded set no. "
                     + KeyValueCallback.sets);
             if (KeyValueCallback.sets == 2) {
-                final ICloudletController<?> cloudlet = arguments.getCloudlet();
                 try {
                     context.kvStore.destroy();
                 } catch (final Exception e) {
