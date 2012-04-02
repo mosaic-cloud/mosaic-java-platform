@@ -22,6 +22,6 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnectorFactory;
 
-public interface IAmqpQueueConnectorFactory<Connector extends IAmqpQueueConnector<?>> extends
-        IQueueConnectorFactory<Connector> {
+public interface IAmqpQueueConnectorFactory<TConnector extends IAmqpQueueConnector>
+        extends IQueueConnectorFactory<TConnector> {
 }

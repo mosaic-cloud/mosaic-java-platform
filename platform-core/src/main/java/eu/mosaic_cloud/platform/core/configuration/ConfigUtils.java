@@ -28,9 +28,6 @@ package eu.mosaic_cloud.platform.core.configuration;
  */
 public final class ConfigUtils {
 
-    private ConfigUtils() {
-    }
-
     /**
      * Resolves a configuration parameter given its relative specification.
      * 
@@ -47,11 +44,11 @@ public final class ConfigUtils {
      *            the given configuration
      * @return the value of the parameter
      */
-    public static <T extends Object> T resolveParameter(IConfiguration configuration,
-            String identifier, // NOPMD by
-                               // georgiana on
-                               // 9/27/11 1:27
-                               // PM
+    public static <T extends Object> T resolveParameter(
+            IConfiguration configuration, String identifier, // NOPMD by
+                                                             // georgiana on
+                                                             // 9/27/11 1:27
+                                                             // PM
             Class<T> valueClass, T defaultValue) { // NOPMD by georgiana on
                                                    // 9/27/11 1:27 PM
         T retValue;
@@ -60,15 +57,19 @@ public final class ConfigUtils {
         } else {
             if (valueClass.isEnum()) {
                 final String retName = configuration.getParameter(
-                        ConfigurationIdentifier.resolveRelative(identifier), String.class)
-                        .getValue(((Enum<?>) defaultValue).name());
-                retValue = (T) Enum.valueOf((Class) valueClass, retName.toUpperCase());
+                        ConfigurationIdentifier.resolveRelative(identifier),
+                        String.class).getValue(((Enum<?>) defaultValue).name());
+                retValue = (T) Enum.valueOf((Class) valueClass,
+                        retName.toUpperCase());
             } else {
                 retValue = configuration.getParameter(
-                        ConfigurationIdentifier.resolveRelative(identifier), valueClass).getValue(
-                        defaultValue);
+                        ConfigurationIdentifier.resolveRelative(identifier),
+                        valueClass).getValue(defaultValue);
             }
         }
         return retValue;
+    }
+
+    private ConfigUtils() {
     }
 }

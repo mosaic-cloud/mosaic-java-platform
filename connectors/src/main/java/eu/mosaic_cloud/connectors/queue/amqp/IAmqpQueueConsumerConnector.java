@@ -30,7 +30,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TMessage>
  *            the type of the consumed data
  */
-public interface IAmqpQueueConsumerConnector<TMessage> extends IAmqpQueueConnector {
+public interface IAmqpQueueConsumerConnector<TMessage> extends
+        IAmqpQueueConnector {
 
     /**
      * Acknowledges a message.

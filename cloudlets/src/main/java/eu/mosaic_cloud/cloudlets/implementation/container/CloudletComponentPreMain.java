@@ -20,22 +20,18 @@
 
 package eu.mosaic_cloud.cloudlets.implementation.container;
 
-
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
 
+public final class CloudletComponentPreMain extends Object {
 
-public final class CloudletComponentPreMain
-		extends Object
-{
-	private CloudletComponentPreMain ()
-	{
-		super ();
-		throw (new UnsupportedOperationException ());
-	}
-	
-	public static final void main (final String[] arguments)
-			throws Throwable
-	{
-		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), arguments, 0);
-	}
+    public static final void main(final String[] arguments) throws Throwable {
+        BasicComponentHarnessPreMain.main(CloudletComponentPreMain.class
+                .getName().replace("PreMain", "$ComponentCallbacksProvider"),
+                arguments, 0);
+    }
+
+    private CloudletComponentPreMain() {
+        super();
+        throw (new UnsupportedOperationException());
+    }
 }

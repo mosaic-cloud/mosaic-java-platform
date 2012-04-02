@@ -51,7 +51,8 @@ public class MemcacheKvStoreConnectorTest extends
     @BeforeClass
     public static void setUpBeforeClass() {
 
-        final String host = System.getProperty(MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_HOST,
+        final String host = System.getProperty(
+                MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_HOST,
                 MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_HOST_DEFAULT);
         final Integer port = Integer.valueOf(System.getProperty(
                 MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_PORT,
@@ -70,26 +71,30 @@ public class MemcacheKvStoreConnectorTest extends
         configuration.addParameter("kvstore.user", "test");
         configuration.addParameter("kvstore.passwd", "test");
 
-        final Scenario scenario = new Scenario(MemcacheKvStoreConnectorTest.class, configuration);
+        final Scenario scenario = new Scenario(
+                MemcacheKvStoreConnectorTest.class, configuration);
 
         scenario.registerDriverRole(KeyValueSession.DRIVER);
         scenario.registerDriverRole(MemcachedSession.DRIVER);
-        BaseConnectorTest.driverStub = MemcachedStub.createDetached(configuration,
-                scenario.getDriverChannel(), scenario.getThreading());
+        BaseConnectorTest.driverStub = MemcachedStub.createDetached(
+                configuration, scenario.getDriverChannel(),
+                scenario.getThreading());
 
         MemcacheKvStoreConnectorTest.scenario_ = scenario;
     }
 
     @AfterClass
     public static void tearDownAfterClass() {
-        BaseConnectorTest.tearDownScenario(MemcacheKvStoreConnectorTest.scenario_);
+        BaseConnectorTest
+                .tearDownScenario(MemcacheKvStoreConnectorTest.scenario_);
     }
 
     @Override
     public void setUp() {
         this.scenario = MemcacheKvStoreConnectorTest.scenario_;
-        final ConnectorConfiguration configuration = ConnectorConfiguration.create(
-                this.scenario.getConfiguration(), this.scenario.getEnvironment());
+        final ConnectorConfiguration configuration = ConnectorConfiguration
+                .create(this.scenario.getConfiguration(),
+                        this.scenario.getEnvironment());
         this.connector = MemcacheKvStoreConnector.create(configuration,
                 new PojoDataEncoder<String>(String.class));
     }
@@ -111,27 +116,33 @@ public class MemcacheKvStoreConnectorTest extends
     protected void testAdd() {
         final String k1 = this.scenario.keyPrefix + "_key_fantastic";
         final String k2 = this.scenario.keyPrefix + "_key_fabulous";
-        Assert.assertFalse(this.awaitBooleanOutcome(this.connector.add(k1, 30, "wrong")));
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.add(k2, 30, "fabulous")));
+        Assert.assertFalse(this.awaitBooleanOutcome(this.connector.add(k1, 30,
+                "wrong")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.add(k2, 30,
+                "fabulous")));
     }
 
     protected void testAppend() {
         final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.append(k1, " and miraculous")));
-        Assert.assertEquals("fantabulous and miraculous", this.awaitOutcome(this.connector.get(k1)));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.append(k1,
+                " and miraculous")));
+        Assert.assertEquals("fantabulous and miraculous",
+                this.awaitOutcome(this.connector.get(k1)));
     }
 
     protected void testCas() {
         final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.cas(k1, "replaced by dummy")));
-        Assert.assertEquals("replaced by dummy", this.awaitOutcome(this.connector.get(k1)));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.cas(k1,
+                "replaced by dummy")));
+        Assert.assertEquals("replaced by dummy",
+                this.awaitOutcome(this.connector.get(k1)));
     }
 
     protected void testGetBulk() {
         final String k1 = this.scenario.keyPrefix + "_key_fantastic";
         final String k2 = this.scenario.keyPrefix + "_key_famous";
-        final Map<String, String> values = this.awaitOutcome(this.connector.getBulk(Arrays.asList(
-                k1, k2)));
+        final Map<String, String> values = this.awaitOutcome(this.connector
+                .getBulk(Arrays.asList(k1, k2)));
         Assert.assertNotNull(values);
         Assert.assertEquals("fantastic", values.get(k1));
         Assert.assertEquals("famous", values.get(k2));
@@ -144,22 +155,27 @@ public class MemcacheKvStoreConnectorTest extends
 
     protected void testPrepend() {
         final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.prepend(k1, "it is ")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.prepend(k1,
+                "it is ")));
         Assert.assertEquals("it is fantabulous and miraculous",
                 this.awaitOutcome(this.connector.get(k1)));
     }
 
     protected void testReplace() {
         final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.replace(k1, 30, "fantabulous")));
-        Assert.assertEquals("fantabulous", this.awaitOutcome(this.connector.get(k1)));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.replace(k1,
+                30, "fantabulous")));
+        Assert.assertEquals("fantabulous",
+                this.awaitOutcome(this.connector.get(k1)));
     }
 
     @Override
     protected void testSet() {
         final String k1 = this.scenario.keyPrefix + "_key_fantastic";
         final String k2 = this.scenario.keyPrefix + "_key_famous";
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1, 30, "fantastic")));
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2, 30, "famous")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1, 30,
+                "fantastic")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2, 30,
+                "famous")));
     }
 }

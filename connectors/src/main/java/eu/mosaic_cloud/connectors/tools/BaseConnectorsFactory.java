@@ -29,7 +29,8 @@ import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 
 import com.google.common.base.Preconditions;
 
-public abstract class BaseConnectorsFactory extends Object implements IConnectorsFactory {
+public abstract class BaseConnectorsFactory extends Object implements
+        IConnectorsFactory {
 
     protected final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> factories;
     protected final IConnectorsFactory delegate;
@@ -46,7 +47,7 @@ public abstract class BaseConnectorsFactory extends Object implements IConnector
     public <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory(
             final Class<Factory> factoryClass) {
         Factory factory = factoryClass.cast(this.factories.get(factoryClass));
-        if (factory == null && this.delegate != null) {
+        if ((factory == null) && (this.delegate != null)) {
             factory = this.delegate.getConnectorFactory(factoryClass);
         }
         return factory;
@@ -56,7 +57,8 @@ public abstract class BaseConnectorsFactory extends Object implements IConnector
             final Class<Factory> factoryClass, final Factory factory) {
         Preconditions.checkNotNull(factoryClass);
         Preconditions.checkArgument(factoryClass.isInterface());
-        Preconditions.checkArgument(IConnectorFactory.class.isAssignableFrom(factoryClass));
+        Preconditions.checkArgument(IConnectorFactory.class
+                .isAssignableFrom(factoryClass));
         Preconditions.checkNotNull(factory);
         Preconditions.checkArgument(factoryClass.isInstance(factory));
         synchronized (this.monitor) {

@@ -25,21 +25,25 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 
 /**
- * Base accessor class for AMQP queuing systems.
+ * Base connector class for AMQP queuing systems.
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
- *            the type of the context of the cloudlet using the accessor
- * @param <Message>
- *            the type of messages processed by the accessor
+ * @param <TConnector>
+ *            the type of the base connector used by this cloudlet-level
+ *            connector
+ * @param <TCallback>
+ *            the type of the callback class
+ * @param <TContext>
+ *            the type of the context of the cloudlet using the connector
  */
-public abstract class BaseAmqpQueueConnector<Connector extends eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector, Callback extends IAmqpQueueConnectorCallback<Context>, Context>
-        extends BaseConnector<Connector, Callback, Context> implements IAmqpQueueConnector<Context> {
+public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector, TCallback extends IAmqpQueueConnectorCallback<TContext>, TContext> // NOPMD
+        extends BaseConnector<TConnector, TCallback, TContext> implements
+        IAmqpQueueConnector {
 
     protected BaseAmqpQueueConnector(final ICloudletController<?> cloudlet,
-            final Connector connector, final IConfiguration configuration, final Callback callback,
-            final Context context) {
+            final TConnector connector, final IConfiguration configuration,
+            final TCallback callback, final TContext context) {
         super(cloudlet, connector, configuration, callback, context);
     }
 }

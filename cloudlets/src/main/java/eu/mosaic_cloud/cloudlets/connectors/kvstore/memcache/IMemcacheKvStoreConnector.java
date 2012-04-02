@@ -31,12 +31,17 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
- *            the type of the context of the cloudlet
+ * @param <TValue>
+ *            the type of the values exchanged with the key-value store using
+ *            this connector
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
-        IKvStoreConnector<Context, Value, Extra>,
-        eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector<Value> {
+public interface IMemcacheKvStoreConnector<TValue, TExtra>
+        extends
+        IKvStoreConnector<TValue, TExtra>,
+        eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector<TValue> {
 
     /**
      * Stores specified data, but only if the server *doesn't* already hold data
@@ -44,6 +49,8 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      * 
      * @param key
      *            the key to associate with the stored data
+     * @param value
+     *            the data
      * @param exp
      *            the expiration of this object. This is passed along exactly as
      *            given, and will be processed per the memcached protocol
@@ -54,26 +61,25 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            (number of seconds in 30 days); if the number sent by a client
      *            is larger than that, the server will consider it to be real
      *            Unix time value rather than an offset from current time.
-     * @param data
-     *            the data
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> add(String key, Value value, int exp, Extra extra);
+    CallbackCompletion<Boolean> add(String key, TValue value, int exp,
+            TExtra extra);
 
     /**
      * Adds specified data to an existing key after existing data.
      * 
      * @param key
      *            the key associated with the stored data
-     * @param data
+     * @param value
      *            the appended data
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> append(String key, Value value, Extra extra);
+    CallbackCompletion<Boolean> append(String key, TValue value, TExtra extra);
 
     /**
      * Stores specified data but only if no one else has updated since I last
@@ -81,13 +87,13 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      * 
      * @param key
      *            the key associated with the stored data
-     * @param data
+     * @param value
      *            the data
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> cas(String key, Value value, Extra extra);
+    CallbackCompletion<Boolean> cas(String key, TValue value, TExtra extra);
 
     /**
      * Gets data associated with several keys.
@@ -98,20 +104,21 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Map<String, Value>> getBulk(List<String> keys, Extra extra);
+    CallbackCompletion<Map<String, TValue>> getBulk(List<String> keys,
+            TExtra extra);
 
     /**
      * Adds specified data to an existing key before existing data.
      * 
      * @param key
      *            the key associated with the stored data
-     * @param data
+     * @param value
      *            the pre-appended data
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> prepend(String key, Value value, Extra extra);
+    CallbackCompletion<Boolean> prepend(String key, TValue value, TExtra extra);
 
     /**
      * Stores specified data, but only if the server *does* already hold data
@@ -119,6 +126,8 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      * 
      * @param key
      *            the key associated with the stored data
+     * @param value
+     *            the data
      * @param exp
      *            the expiration of this object. This is passed along exactly as
      *            given, and will be processed per the memcached protocol
@@ -129,19 +138,20 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            (number of seconds in 30 days); if the number sent by a client
      *            is larger than that, the server will consider it to be real
      *            Unix time value rather than an offset from current time.
-     * @param data
-     *            the data
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> replace(String key, Value value, int exp, Extra extra);
+    CallbackCompletion<Boolean> replace(String key, TValue value, int exp,
+            TExtra extra);
 
     /**
      * Stores the given data and associates it with the specified key.
      * 
      * @param key
      *            the key under which this data should be stored
+     * @param value
+     *            the data
      * @param exp
      *            the expiration of this object. This is passed along exactly as
      *            given, and will be processed per the memcached protocol
@@ -152,11 +162,10 @@ public interface IMemcacheKvStoreConnector<Context, Value, Extra> extends
      *            (number of seconds in 30 days); if the number sent by a client
      *            is larger than that, the server will consider it to be real
      *            Unix time value rather than an offset from current time.
-     * @param data
-     *            the data
      * @param extra
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> set(String key, Value value, int exp, Extra extra);
+    CallbackCompletion<Boolean> set(String key, TValue value, int exp,
+            TExtra extra);
 }

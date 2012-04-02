@@ -44,9 +44,11 @@ public class FeedParser {
         this.input.setPreserveWireFeed(true);
     }
 
-    public Timeline parseFeed(byte[] xmlEntry) throws IOException, FeedException {
+    public Timeline parseFeed(byte[] xmlEntry) throws IOException,
+            FeedException {
         // NOTE: Load the feed, regardless of RSS or Atom type
-        final XmlReader reader = new XmlReader(new ByteArrayInputStream(xmlEntry));
+        final XmlReader reader = new XmlReader(new ByteArrayInputStream(
+                xmlEntry));
         final SyndFeed feed = this.input.build(reader);
         // NOTE: check feed type, only ATOM is accepted
         Feed atomFeed = null;
@@ -55,8 +57,8 @@ public class FeedParser {
         } else {
             throw new FeedException("Only ATOM feeds can be parsed.");
         }
-        final Timeline timeline = new Timeline(atomFeed.getId(), feed.getLink(), atomFeed
-                .getUpdated().getTime());
+        final Timeline timeline = new Timeline(atomFeed.getId(),
+                feed.getLink(), atomFeed.getUpdated().getTime());
         final List<SyndEntry> entries = feed.getEntries();
         for (final SyndEntry entry : entries) {
             String authorName = null;
@@ -79,8 +81,9 @@ public class FeedParser {
             }
             final String title = entry.getTitleEx().getValue();
             final String titleType = entry.getTitleEx().getType();
-            final Timeline.Entry tEntry = timeline.addEntry(entry.getUri(), title, titleType,
-                    content, contentType, entry.getUpdatedDate().getTime(), authorName,
+            final Timeline.Entry tEntry = timeline.addEntry(entry.getUri(),
+                    title, titleType, content, contentType, entry
+                            .getUpdatedDate().getTime(), authorName,
                     authorEmail, authorURI);
             final List<SyndLink> links = entry.getLinks();
             for (final SyndLink link : links) {

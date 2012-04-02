@@ -26,47 +26,54 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
-public class AmqpQueuePublisherConnector<Context, Message, Extra>
+public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
         extends
-        BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<Message>, IAmqpQueuePublisherConnectorCallback<Context, Message, Extra>, Context>
-        implements IAmqpQueuePublisherConnector<Context, Message, Extra> {
+        BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage>, IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>, TContext>
+        implements IAmqpQueuePublisherConnector<TMessage, TExtra> {
 
     public AmqpQueuePublisherConnector(
             final ICloudletController<?> cloudlet,
-            final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<Message> connector,
+            final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage> connector,
             final IConfiguration configuration,
-            final IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> callback,
-            final Context context) {
+            final IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback,
+            final TContext context) {
         super(cloudlet, connector, configuration, callback, context);
         // FIXME
         this.initialize();
     }
 
     @Override
-    public CallbackCompletion<Void> publish(final Message message) {
+    public CallbackCompletion<Void> publish(final TMessage message) {
         return this.publish(message, null);
     }
 
     @Override
-    public CallbackCompletion<Void> publish(final Message message, final Extra extra) {
-        final CallbackCompletion<Void> completion = this.connector.publish(message);
+    public CallbackCompletion<Void> publish(final TMessage message,
+            final TExtra extra) {
+        final CallbackCompletion<Void> completion = this.connector
+                .publish(message);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
-                        return AmqpQueuePublisherConnector.this.callback.publishFailed(
-                                AmqpQueuePublisherConnector.this.context,
-                                new GenericCallbackCompletionArguments<Context, Extra>(
-                                        AmqpQueuePublisherConnector.this.cloudlet, completion
-                                                .getException()));
+                        return AmqpQueuePublisherConnector.this.callback
+                                .publishFailed(
+                                        AmqpQueuePublisherConnector.this.context,
+                                        new GenericCallbackCompletionArguments<TExtra>(
+                                                AmqpQueuePublisherConnector.this.cloudlet,
+                                                completion.getException()));
                     }
-                    return AmqpQueuePublisherConnector.this.callback.publishSucceeded(
-                            AmqpQueuePublisherConnector.this.context,
-                            new GenericCallbackCompletionArguments<Context, Extra>(
-                                    AmqpQueuePublisherConnector.this.cloudlet, extra));
+                    return AmqpQueuePublisherConnector.this.callback
+                            .publishSucceeded(
+                                    AmqpQueuePublisherConnector.this.context,
+                                    new GenericCallbackCompletionArguments<TExtra>(
+                                            AmqpQueuePublisherConnector.this.cloudlet,
+                                            extra));
                 }
             });
         }

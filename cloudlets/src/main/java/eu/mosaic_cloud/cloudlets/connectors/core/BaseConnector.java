@@ -30,18 +30,33 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
 import com.google.common.base.Preconditions;
 
-public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors.core.IConnector, Callback extends IConnectorCallback<Context>, Context extends Object>
-        implements IConnector<Context>, CallbackProxy {
+/**
+ * Implements the life-cycle operations required by the cloudlet-level
+ * connector. All cloudlet-level connnectors should extend this class.
+ * 
+ * @author Ciprian Craciun, Georgiana Macariu
+ * 
+ * @param <TConnector>
+ *            lower level resource-specific connector
+ * @param <TCallback>
+ *            resource life-cycle callback class defined by the developer of the
+ *            cloudlet
+ * @param <TContext>
+ *            cloudlet callback context
+ */
+public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object> // NOPMD
+        implements IConnector, CallbackProxy {
 
-    protected final Callback callback;
+    protected final TCallback callback;
     protected final ICloudletController<?> cloudlet;
     protected final IConfiguration configuration;
-    protected final Connector connector;
-    protected final Context context;
+    protected final TConnector connector;
+    protected final TContext context;
     protected final MosaicLogger logger;
 
-    protected BaseConnector(final ICloudletController<?> cloudlet, final Connector connector,
-            final IConfiguration configuration, final Callback callback, final Context context) {
+    protected BaseConnector(final ICloudletController<?> cloudlet,
+            final TConnector connector, final IConfiguration configuration,
+            final TCallback callback, final TContext context) {
         super();
         Preconditions.checkNotNull(cloudlet);
         Preconditions.checkNotNull(connector);
@@ -61,19 +76,22 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseConnector.this.callback.destroyFailed(
-                                BaseConnector.this.context, new CallbackArguments<Context>(
+                                BaseConnector.this.context,
+                                new CallbackArguments(
                                         BaseConnector.this.cloudlet));
                     }
-                    return BaseConnector.this.callback.destroySucceeded(BaseConnector.this.context,
-                            new CallbackArguments<Context>(BaseConnector.this.cloudlet));
+                    return BaseConnector.this.callback.destroySucceeded(
+                            BaseConnector.this.context, new CallbackArguments(
+                                    BaseConnector.this.cloudlet));
                 }
             });
         }
-        return (completion);
+        return completion;
     }
 
     @Override
@@ -83,19 +101,21 @@ public abstract class BaseConnector<Connector extends eu.mosaic_cloud.connectors
             completion.observe(new CallbackCompletionObserver() {
 
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseConnector.this.callback.initializeFailed(
-                                BaseConnector.this.context, new CallbackArguments<Context>(
+                                BaseConnector.this.context,
+                                new CallbackArguments(
                                         BaseConnector.this.cloudlet));
                     }
                     return BaseConnector.this.callback.initializeSucceeded(
-                            BaseConnector.this.context, new CallbackArguments<Context>(
+                            BaseConnector.this.context, new CallbackArguments(
                                     BaseConnector.this.cloudlet));
                 }
             });
         }
-        return (completion);
+        return completion;
     }
 }

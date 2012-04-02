@@ -32,15 +32,42 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            the context of the cloudlet
+ * @param <TValue>
+ *            the type of the values exchanged with the key-value store using
+ *            this connector
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
-        CallbackCompletionArguments<Context> {
+public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
+        CallbackCompletionArguments {
 
     private final List<String> keys;
-    private final Value value;
-    private final Extra extra;
+    private final TValue value;
+    private final TExtra extra;
+
+    /**
+     * Creates a new argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param keys
+     *            the keys used in the operation
+     * @param error
+     *            the exception thrown by the operation
+     * @param extra
+     *            some application specific object
+     */
+    public KvStoreCallbackCompletionArguments(
+            final ICloudletController<?> cloudlet, final List<String> keys,
+            final Throwable error, final TExtra extra) {
+        super(cloudlet, error);
+        this.keys = keys;
+        this.value = null; // NOPMD
+        this.extra = extra;
+    }
 
     /**
      * Creates a new argument for the callbacks of operations using more than
@@ -56,11 +83,52 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet, List<String> keys,
-            Value value, Extra extra) {
+    public KvStoreCallbackCompletionArguments(
+            final ICloudletController<?> cloudlet, final List<String> keys,
+            final TValue value, final TExtra extra) {
         super(cloudlet);
         this.keys = keys;
         this.value = value;
+        this.extra = extra;
+    }
+
+    /**
+     * Creates a new argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param key
+     *            the key used in the operation
+     * @param error
+     *            the exception thrown by the operation
+     */
+    public KvStoreCallbackCompletionArguments(
+            final ICloudletController<?> cloudlet, final String key,
+            final Throwable error) {
+        super(cloudlet, error);
+        this.keys = Arrays.asList(key);
+        this.value = null; // NOPMD
+        this.extra = null; // NOPMD
+    }
+
+    /**
+     * Creates a new argument.
+     * 
+     * @param cloudlet
+     *            the cloudlet
+     * @param key
+     *            the key used in the operation
+     * @param error
+     *            the exception thrown by the operation
+     * @param extra
+     *            some application specific object
+     */
+    public KvStoreCallbackCompletionArguments(
+            final ICloudletController<?> cloudlet, final String key,
+            final Throwable error, final TExtra extra) {
+        super(cloudlet, error);
+        this.keys = Arrays.asList(key);
+        this.value = null; // NOPMD
         this.extra = extra;
     }
 
@@ -77,8 +145,9 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(ICloudletController<?> cloudlet, String key,
-            Value value, Extra extra) {
+    public KvStoreCallbackCompletionArguments(
+            final ICloudletController<?> cloudlet, final String key,
+            final TValue value, final TExtra extra) {
         super(cloudlet);
         this.keys = Arrays.asList(key);
         this.value = value;
@@ -89,10 +158,10 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
      * Returns any application specific data used for the key-value store
      * operation.
      * 
-     * @return ny application specific data used for the key-value store
+     * @return any application specific data used for the key-value store
      *         operation
      */
-    public Extra getExtra() {
+    public TExtra getExtra() {
         return this.extra;
     }
 
@@ -119,7 +188,7 @@ public class KvStoreCallbackCompletionArguments<Context, Value, Extra> extends
      * 
      * @return the value field of the argument
      */
-    public Value getValue() {
+    public TValue getValue() {
         return this.value;
     }
 }

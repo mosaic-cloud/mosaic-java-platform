@@ -60,8 +60,8 @@ public class AmqpInboundMessage implements IAmqpMessage {
      * @param contentType
      *            the type of the content
      */
-    public AmqpInboundMessage(String consumer, long delivery, String exchange, String routingKey,
-            byte[] data, boolean durable, String contentType) {
+    public AmqpInboundMessage(String consumer, long delivery, String exchange,
+            String routingKey, byte[] data, boolean durable, String contentType) {
         super();
         this.consumer = consumer;
         this.delivery = delivery;
@@ -111,9 +111,10 @@ public class AmqpInboundMessage implements IAmqpMessage {
      *            to the same Node.
      * 
      */
-    public AmqpInboundMessage(String consumer, long delivery, String exchange, String routingKey,
-            byte[] data, boolean durable, String callback, String contentEncoding,
-            String contentType, String correlation, String identifier) {
+    public AmqpInboundMessage(String consumer, long delivery, String exchange,
+            String routingKey, byte[] data, boolean durable, String callback,
+            String contentEncoding, String contentType, String correlation,
+            String identifier) {
         super();
         this.consumer = consumer;
         this.delivery = delivery;

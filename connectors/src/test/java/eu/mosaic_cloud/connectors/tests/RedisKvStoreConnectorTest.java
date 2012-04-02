@@ -45,7 +45,8 @@ public class RedisKvStoreConnectorTest extends
     @BeforeClass
     public static void setUpBeforeClass() {
 
-        final String host = System.getProperty(RedisKvStoreConnectorTest.MOSAIC_REDIS_HOST,
+        final String host = System.getProperty(
+                RedisKvStoreConnectorTest.MOSAIC_REDIS_HOST,
                 RedisKvStoreConnectorTest.MOSAIC_REDIS_HOST_DEFAULT);
         final Integer port = Integer.valueOf(System.getProperty(
                 RedisKvStoreConnectorTest.MOSAIC_REDIS_PORT,
@@ -62,11 +63,13 @@ public class RedisKvStoreConnectorTest extends
         configuration.addParameter("kvstore.driver_threads", 1);
         configuration.addParameter("kvstore.bucket", "10");
 
-        final Scenario scenario = new Scenario(RedisKvStoreConnectorTest.class, configuration);
+        final Scenario scenario = new Scenario(RedisKvStoreConnectorTest.class,
+                configuration);
 
         scenario.registerDriverRole(KeyValueSession.DRIVER);
-        BaseConnectorTest.driverStub = KeyValueStub.createDetached(configuration,
-                scenario.getThreading(), scenario.getDriverChannel());
+        BaseConnectorTest.driverStub = KeyValueStub.createDetached(
+                configuration, scenario.getThreading(),
+                scenario.getDriverChannel());
 
         RedisKvStoreConnectorTest.scenario_ = scenario;
     }
@@ -79,9 +82,10 @@ public class RedisKvStoreConnectorTest extends
     @Override
     public void setUp() {
         this.scenario = RedisKvStoreConnectorTest.scenario_;
-        final ConnectorConfiguration configuration = ConnectorConfiguration.create(
-                this.scenario.getConfiguration(), this.scenario.getEnvironment());
-        this.connector = GenericKvStoreConnector.create(configuration, new PojoDataEncoder<String>(
-                String.class));
+        final ConnectorConfiguration configuration = ConnectorConfiguration
+                .create(this.scenario.getConfiguration(),
+                        this.scenario.getEnvironment());
+        this.connector = GenericKvStoreConnector.create(configuration,
+                new PojoDataEncoder<String>(String.class));
     }
 }

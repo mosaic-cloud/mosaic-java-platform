@@ -43,10 +43,12 @@ import com.google.common.base.Preconditions;
 
 import junit.framework.Assert;
 
-public abstract class BaseCloudletTest extends
+public abstract class BaseCloudletTest
+        extends
         eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest<BaseCloudletTest.Scenario<?>> {
 
-    public static class Scenario<Context extends Object> extends
+    public static class Scenario<Context extends Object>
+            extends
             eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.BaseScenario<Context> {
 
         public AbstractDriverStub amqpDriverStub;
@@ -57,6 +59,18 @@ public abstract class BaseCloudletTest extends
         public String driversIdentity;
         public AbstractDriverStub kvDriverStub;
     }
+
+    private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
+
+    private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
+
+    private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
+
+    private static final String MOSAIC_AMQP_PORT_DEFAULT = "21688";
+    private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
+    private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
+    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
+    private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
 
     protected <Context> void setUp(
             final Class<? extends ICloudletCallback<Context>> callbacksClass,
@@ -75,7 +89,8 @@ public abstract class BaseCloudletTest extends
         final ChannelResolver connectorsChannelResolver = new ChannelResolver() {
 
             @Override
-            public void resolve(final String target, final ResolverCallbacks callbacks) {
+            public void resolve(final String target,
+                    final ResolverCallbacks callbacks) {
                 Preconditions.checkNotNull(target);
                 Preconditions.checkNotNull(callbacks);
                 Preconditions.checkState(scenario.connectorsChannel != null);
@@ -83,7 +98,8 @@ public abstract class BaseCloudletTest extends
                 if ("a5e40f0b2c041bc694ace68ace08420d40f9cbc0".equals(target)) {
                     callbacks.resolved(this, target, scenario.driversIdentity,
                             scenario.driversEndpoint);
-                } else if ("a3e40f0b2c041bc694ace68ace08420d40f9cbc0".equals(target)) {
+                } else if ("a3e40f0b2c041bc694ace68ace08420d40f9cbc0"
+                        .equals(target)) {
                     callbacks.resolved(this, target, scenario.driversIdentity,
                             scenario.driversEndpoint);
                 } else {
@@ -91,61 +107,87 @@ public abstract class BaseCloudletTest extends
                 }
             }
         };
-        eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.setUpScenario(this.getClass(),
-                scenario, configuration, callbacksClass, contextClass, connectorsChannelFactory,
+        eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.setUpScenario(
+                this.getClass(), scenario, configuration, callbacksClass,
+                contextClass, connectorsChannelFactory,
                 connectorsChannelResolver);
         {
             scenario.connectorsIdentity = UUID.randomUUID().toString();
-            scenario.connectorsChannel = ZeroMqChannel.create(scenario.connectorsIdentity,
-                    scenario.threading, scenario.exceptions);
+            scenario.connectorsChannel = ZeroMqChannel.create(
+                    scenario.connectorsIdentity, scenario.threading,
+                    scenario.exceptions);
         }
         {
             scenario.driversIdentity = UUID.randomUUID().toString();
             scenario.driversEndpoint = "inproc://" + scenario.driversIdentity;
-            scenario.driversChannel = ZeroMqChannel.create(scenario.driversIdentity,
-                    scenario.threading, scenario.exceptions);
+            scenario.driversChannel = ZeroMqChannel.create(
+                    scenario.driversIdentity, scenario.threading,
+                    scenario.exceptions);
             scenario.driversChannel.accept(scenario.driversEndpoint);
         }
         {
-            final String host = System.getProperty(BaseCloudletTest.MOSAIC_AMQP_HOST,
+            final String host = System.getProperty(
+                    BaseCloudletTest.MOSAIC_AMQP_HOST,
                     BaseCloudletTest.MOSAIC_AMQP_HOST_DEFAULT);
-            final Integer port = Integer.valueOf(System.getProperty(BaseCloudletTest.MOSAIC_AMQP_PORT,
+            final Integer port = Integer.valueOf(System.getProperty(
+                    BaseCloudletTest.MOSAIC_AMQP_PORT,
                     BaseCloudletTest.MOSAIC_AMQP_PORT_DEFAULT));
-            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create();
-            driverConfiguration.addParameter("interop.channel.address", scenario.driversEndpoint);
-            driverConfiguration.addParameter("interop.driver.identifier", scenario.driversIdentity);
+            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration
+                    .create();
+            driverConfiguration.addParameter("interop.channel.address",
+                    scenario.driversEndpoint);
+            driverConfiguration.addParameter("interop.driver.identifier",
+                    scenario.driversIdentity);
             driverConfiguration.addParameter("amqp.host", host);
             driverConfiguration.addParameter("amqp.port", port);
-            driverConfiguration.addParameter("amqp.driver_threads", Integer.valueOf(1));
-            driverConfiguration.addParameter("consumer.amqp.queue", "tests.queue");
-            driverConfiguration.addParameter("consumer.amqp.consumer_id", "tests.consumer");
-            driverConfiguration.addParameter("consumer.amqp.auto_ack", Boolean.FALSE);
-            driverConfiguration.addParameter("consumer.amqp.exclusive", Boolean.FALSE);
-            driverConfiguration.addParameter("publisher.amqp.exchange", "tests.exchange");
-            driverConfiguration.addParameter("publisher.amqp.routing_key", "tests.routing-key");
-            driverConfiguration.addParameter("publisher.amqp.manadatory", Boolean.TRUE);
-            driverConfiguration.addParameter("publisher.amqp.immediate", Boolean.FALSE);
-            driverConfiguration.addParameter("publisher.amqp.durable", Boolean.FALSE);
+            driverConfiguration.addParameter("amqp.driver_threads",
+                    Integer.valueOf(1));
+            driverConfiguration.addParameter("consumer.amqp.queue",
+                    "tests.queue");
+            driverConfiguration.addParameter("consumer.amqp.consumer_id",
+                    "tests.consumer");
+            driverConfiguration.addParameter("consumer.amqp.auto_ack",
+                    Boolean.FALSE);
+            driverConfiguration.addParameter("consumer.amqp.exclusive",
+                    Boolean.FALSE);
+            driverConfiguration.addParameter("publisher.amqp.exchange",
+                    "tests.exchange");
+            driverConfiguration.addParameter("publisher.amqp.routing_key",
+                    "tests.routing-key");
+            driverConfiguration.addParameter("publisher.amqp.manadatory",
+                    Boolean.TRUE);
+            driverConfiguration.addParameter("publisher.amqp.immediate",
+                    Boolean.FALSE);
+            driverConfiguration.addParameter("publisher.amqp.durable",
+                    Boolean.FALSE);
             scenario.driversChannel.register(AmqpSession.DRIVER);
-            scenario.amqpDriverStub = AmqpStub.createDetached(driverConfiguration,
-                    scenario.driversChannel, scenario.threading);
+            scenario.amqpDriverStub = AmqpStub.createDetached(
+                    driverConfiguration, scenario.driversChannel,
+                    scenario.threading);
         }
         {
-            final String host = System.getProperty(BaseCloudletTest.MOSAIC_RIAK_HOST,
+            final String host = System.getProperty(
+                    BaseCloudletTest.MOSAIC_RIAK_HOST,
                     BaseCloudletTest.MOSAIC_RIAK_HOST_DEFAULT);
-            final Integer port = Integer.valueOf(System.getProperty(BaseCloudletTest.MOSAIC_RIAK_PORT,
+            final Integer port = Integer.valueOf(System.getProperty(
+                    BaseCloudletTest.MOSAIC_RIAK_PORT,
                     BaseCloudletTest.MOSAIC_RIAK_PORT_DEFAULT));
-            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create();
-            driverConfiguration.addParameter("interop.channel.address", scenario.driversEndpoint);
-            driverConfiguration.addParameter("interop.driver.identifier", scenario.driversIdentity);
+            final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration
+                    .create();
+            driverConfiguration.addParameter("interop.channel.address",
+                    scenario.driversEndpoint);
+            driverConfiguration.addParameter("interop.driver.identifier",
+                    scenario.driversIdentity);
             driverConfiguration.addParameter("kvstore.host", host);
             driverConfiguration.addParameter("kvstore.port", port);
             driverConfiguration.addParameter("kvstore.driver_name", "RIAKREST");
-            driverConfiguration.addParameter("kvstore.driver_threads", Integer.valueOf(1));
+            driverConfiguration.addParameter("kvstore.driver_threads",
+                    Integer.valueOf(1));
             driverConfiguration.addParameter("kvstore.bucket", "tests");
             scenario.driversChannel.register(KeyValueSession.DRIVER);
-            scenario.kvDriverStub = KeyValueStub.createDetached(driverConfiguration,
-                    scenario.threading, scenario.driversChannel);
+            scenario.kvDriverStub = KeyValueStub.createDetached(
+                    driverConfiguration, scenario.threading,
+                    scenario.driversChannel);
         }
         this.cloudlet = Cloudlet.create(this.scenario.environment);
     }
@@ -168,7 +210,8 @@ public abstract class BaseCloudletTest extends
         if (this.cloudlet != null) {
             this.awaitSuccess(this.cloudlet.destroy());
         }
-        eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.tearDownScenario(this.scenario);
+        eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest
+                .tearDownScenario(this.scenario);
         this.cloudlet = null;
         this.scenario = null;
     }
@@ -180,13 +223,4 @@ public abstract class BaseCloudletTest extends
         Assert.assertTrue(this.cloudlet.await(this.scenario.poolTimeout));
         this.cloudlet = null;
     }
-
-    private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
-    private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
-    private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
-    private static final String MOSAIC_AMQP_PORT_DEFAULT = "21688";
-    private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
-    private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
-    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
-    private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
 }

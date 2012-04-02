@@ -24,8 +24,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.common.base.Preconditions;
 
-public abstract class AmqpQueueConnector<TProxy extends AmqpQueueConnectorProxy<?>> implements
-        IAmqpQueueConnector {
+public abstract class AmqpQueueConnector<TProxy extends AmqpQueueConnectorProxy<?>>
+        implements IAmqpQueueConnector {
 
     protected final TProxy proxy;
 

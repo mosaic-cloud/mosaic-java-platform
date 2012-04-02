@@ -24,11 +24,18 @@ import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
+/**
+ * Factory for creating memcached key-value store connectors.
+ * 
+ * @author Ciprian Craciun
+ * 
+ */
 public interface IMemcacheKvStoreConnectorFactory extends
-        IConnectorFactory<IMemcacheKvStoreConnector<?, ?, ?>> {
+        IConnectorFactory<IMemcacheKvStoreConnector< ?, ?>> {
 
-    <Context, Value, Extra> IMemcacheKvStoreConnector<Context, Value, Extra> create(
-            IConfiguration configuration, Class<Value> valueClass, DataEncoder<Value> valueEncoder,
-            IMemcacheKvStoreConnectorCallback<Context, Value, Extra> callback,
-            Context callbackContext);
+    <TContext, TValue, TExtra> IMemcacheKvStoreConnector< TValue, TExtra> create(
+            IConfiguration configuration, Class<TValue> valueClass,
+            DataEncoder<TValue> valueEncoder,
+            IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
+            TContext callbackContext);
 }

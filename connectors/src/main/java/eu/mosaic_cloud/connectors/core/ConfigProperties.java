@@ -31,17 +31,18 @@ public final class ConfigProperties {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
             .getBundle(ConfigProperties.BUNDLE_NAME);
     public static final boolean IN_DEBUGGING = java.lang.management.ManagementFactory
-            .getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
-
-    private ConfigProperties() {
-    }
+            .getRuntimeMXBean().getInputArguments().toString()
+            .indexOf("-agentlib:jdwp") > 0;
 
     public static String getString(final String key) {
         try {
-            return ConfigProperties.RESOURCE_BUNDLE.getString(key); // NOPMD 
+            return ConfigProperties.RESOURCE_BUNDLE.getString(key); // NOPMD
         } catch (final MissingResourceException e) {
             ExceptionTracer.traceIgnored(e);
             return '!' + key + '!';
         }
+    }
+
+    private ConfigProperties() {
     }
 }

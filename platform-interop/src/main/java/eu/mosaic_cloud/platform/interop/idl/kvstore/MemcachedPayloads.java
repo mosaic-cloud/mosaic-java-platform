@@ -24,11 +24,12 @@ package eu.mosaic_cloud.platform.interop.idl.kvstore;
 
 public final class MemcachedPayloads {
 
-    public static final class AddRequest extends com.google.protobuf.GeneratedMessage implements
-            AddRequestOrBuilder {
+    public static final class AddRequest extends
+            com.google.protobuf.GeneratedMessage implements AddRequestOrBuilder {
 
         public static final class Builder extends
-                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                com.google.protobuf.GeneratedMessage.Builder<Builder>
+                implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequestOrBuilder {
 
             private int bitField0_;
@@ -45,6 +46,14 @@ public final class MemcachedPayloads {
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AddRequest_descriptor;
+            }
+
             // Construct using
             // eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest.newBuilder()
             private Builder() {
@@ -54,14 +63,6 @@ public final class MemcachedPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AddRequest_descriptor;
             }
 
             @Override
@@ -192,7 +193,8 @@ public final class MemcachedPayloads {
             public String getKey() {
                 final java.lang.Object ref = this.key_;
                 if (!(ref instanceof String)) {
-                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    final String s = ((com.google.protobuf.ByteString) ref)
+                            .toStringUtf8();
                     this.key_ = s;
                     return s;
                 } else {
@@ -290,7 +292,8 @@ public final class MemcachedPayloads {
             }
 
             @Override
-            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
@@ -303,7 +306,8 @@ public final class MemcachedPayloads {
                         onChanged();
                         return this;
                     default: {
-                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                        if (!parseUnknownField(input, unknownFields,
+                                extensionRegistry, tag)) {
                             this.setUnknownFields(unknownFields.build());
                             onChanged();
                             return this;
@@ -378,7 +382,8 @@ public final class MemcachedPayloads {
                             && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                                     .getDefaultInstance())) {
                         this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                                .newBuilder(this.token_).mergeFrom(value)
+                                .buildPartial();
                     } else {
                         this.token_ = value;
                     }
@@ -484,14 +489,6 @@ public final class MemcachedPayloads {
             AddRequest.defaultInstance.initFields();
         }
 
-        private AddRequest(boolean noInit) {
-        }
-
-        // Use AddRequest.newBuilder() to construct.
-        private AddRequest(Builder builder) {
-            super(builder);
-        }
-
         public static AddRequest getDefaultInstance() {
             return AddRequest.defaultInstance;
         }
@@ -532,14 +529,17 @@ public final class MemcachedPayloads {
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest parseFrom(
@@ -552,11 +552,13 @@ public final class MemcachedPayloads {
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
             return newBuilder().mergeFrom(input).buildParsed();
         }
 
@@ -564,7 +566,8 @@ public final class MemcachedPayloads {
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest parseFrom(
@@ -576,7 +579,16 @@ public final class MemcachedPayloads {
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
+        }
+
+        private AddRequest(boolean noInit) {
+        }
+
+        // Use AddRequest.newBuilder() to construct.
+        private AddRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -624,16 +636,20 @@ public final class MemcachedPayloads {
             }
             size = 0;
             if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(1, this.token_);
             }
             if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getKeyBytes());
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        2, getKeyBytes());
             }
             if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-                size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, this.expTime_);
+                size += com.google.protobuf.CodedOutputStream.computeInt32Size(
+                        3, this.expTime_);
             }
             if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(4, this.value_);
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        4, this.value_);
             }
             size += getUnknownFields().getSerializedSize();
             this.memoizedSerializedSize = size;
@@ -736,7 +752,8 @@ public final class MemcachedPayloads {
         }
 
         @java.lang.Override
-        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+        protected java.lang.Object writeReplace()
+                throws java.io.ObjectStreamException {
             return super.writeReplace();
         }
 
@@ -761,7 +778,8 @@ public final class MemcachedPayloads {
         // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.AddRequest)
     }
 
-    public interface AddRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+    public interface AddRequestOrBuilder extends
+            com.google.protobuf.MessageOrBuilder {
 
         int getExpTime();
 
@@ -786,7 +804,8 @@ public final class MemcachedPayloads {
         boolean hasValue();
     }
 
-    public static final class AppendRequest extends com.google.protobuf.GeneratedMessage implements
+    public static final class AppendRequest extends
+            com.google.protobuf.GeneratedMessage implements
             AppendRequestOrBuilder {
 
         public static final class Builder extends
@@ -808,6 +827,14 @@ public final class MemcachedPayloads {
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AppendRequest_descriptor;
+            }
+
             // Construct using
             // eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest.newBuilder()
             private Builder() {
@@ -817,14 +844,6 @@ public final class MemcachedPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AppendRequest_descriptor;
             }
 
             @Override
@@ -955,7 +974,8 @@ public final class MemcachedPayloads {
             public String getKey() {
                 final java.lang.Object ref = this.key_;
                 if (!(ref instanceof String)) {
-                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    final String s = ((com.google.protobuf.ByteString) ref)
+                            .toStringUtf8();
                     this.key_ = s;
                     return s;
                 } else {
@@ -1053,7 +1073,8 @@ public final class MemcachedPayloads {
             }
 
             @Override
-            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
@@ -1066,7 +1087,8 @@ public final class MemcachedPayloads {
                         onChanged();
                         return this;
                     default: {
-                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                        if (!parseUnknownField(input, unknownFields,
+                                extensionRegistry, tag)) {
                             this.setUnknownFields(unknownFields.build());
                             onChanged();
                             return this;
@@ -1141,7 +1163,8 @@ public final class MemcachedPayloads {
                             && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                                     .getDefaultInstance())) {
                         this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                                .newBuilder(this.token_).mergeFrom(value)
+                                .buildPartial();
                     } else {
                         this.token_ = value;
                     }
@@ -1247,14 +1270,6 @@ public final class MemcachedPayloads {
             AppendRequest.defaultInstance.initFields();
         }
 
-        private AppendRequest(boolean noInit) {
-        }
-
-        // Use AppendRequest.newBuilder() to construct.
-        private AppendRequest(Builder builder) {
-            super(builder);
-        }
-
         public static AppendRequest getDefaultInstance() {
             return AppendRequest.defaultInstance;
         }
@@ -1295,14 +1310,17 @@ public final class MemcachedPayloads {
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest parseFrom(
@@ -1315,11 +1333,13 @@ public final class MemcachedPayloads {
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
             return newBuilder().mergeFrom(input).buildParsed();
         }
 
@@ -1327,7 +1347,8 @@ public final class MemcachedPayloads {
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest parseFrom(
@@ -1339,7 +1360,16 @@ public final class MemcachedPayloads {
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
+        }
+
+        private AppendRequest(boolean noInit) {
+        }
+
+        // Use AppendRequest.newBuilder() to construct.
+        private AppendRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -1387,16 +1417,20 @@ public final class MemcachedPayloads {
             }
             size = 0;
             if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(1, this.token_);
             }
             if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getKeyBytes());
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        2, getKeyBytes());
             }
             if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-                size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, this.expTime_);
+                size += com.google.protobuf.CodedOutputStream.computeInt32Size(
+                        3, this.expTime_);
             }
             if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(4, this.value_);
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        4, this.value_);
             }
             size += getUnknownFields().getSerializedSize();
             this.memoizedSerializedSize = size;
@@ -1499,7 +1533,8 @@ public final class MemcachedPayloads {
         }
 
         @java.lang.Override
-        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+        protected java.lang.Object writeReplace()
+                throws java.io.ObjectStreamException {
             return super.writeReplace();
         }
 
@@ -1524,7 +1559,8 @@ public final class MemcachedPayloads {
         // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.AppendRequest)
     }
 
-    public interface AppendRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+    public interface AppendRequestOrBuilder extends
+            com.google.protobuf.MessageOrBuilder {
 
         int getExpTime();
 
@@ -1549,11 +1585,12 @@ public final class MemcachedPayloads {
         boolean hasValue();
     }
 
-    public static final class CasRequest extends com.google.protobuf.GeneratedMessage implements
-            CasRequestOrBuilder {
+    public static final class CasRequest extends
+            com.google.protobuf.GeneratedMessage implements CasRequestOrBuilder {
 
         public static final class Builder extends
-                com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+                com.google.protobuf.GeneratedMessage.Builder<Builder>
+                implements
                 eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequestOrBuilder {
 
             private int bitField0_;
@@ -1570,6 +1607,14 @@ public final class MemcachedPayloads {
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_CasRequest_descriptor;
+            }
+
             // Construct using
             // eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest.newBuilder()
             private Builder() {
@@ -1579,14 +1624,6 @@ public final class MemcachedPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_CasRequest_descriptor;
             }
 
             @Override
@@ -1717,7 +1754,8 @@ public final class MemcachedPayloads {
             public String getKey() {
                 final java.lang.Object ref = this.key_;
                 if (!(ref instanceof String)) {
-                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    final String s = ((com.google.protobuf.ByteString) ref)
+                            .toStringUtf8();
                     this.key_ = s;
                     return s;
                 } else {
@@ -1815,7 +1853,8 @@ public final class MemcachedPayloads {
             }
 
             @Override
-            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
@@ -1828,7 +1867,8 @@ public final class MemcachedPayloads {
                         onChanged();
                         return this;
                     default: {
-                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                        if (!parseUnknownField(input, unknownFields,
+                                extensionRegistry, tag)) {
                             this.setUnknownFields(unknownFields.build());
                             onChanged();
                             return this;
@@ -1903,7 +1943,8 @@ public final class MemcachedPayloads {
                             && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                                     .getDefaultInstance())) {
                         this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                                .newBuilder(this.token_).mergeFrom(value)
+                                .buildPartial();
                     } else {
                         this.token_ = value;
                     }
@@ -2009,14 +2050,6 @@ public final class MemcachedPayloads {
             CasRequest.defaultInstance.initFields();
         }
 
-        private CasRequest(boolean noInit) {
-        }
-
-        // Use CasRequest.newBuilder() to construct.
-        private CasRequest(Builder builder) {
-            super(builder);
-        }
-
         public static CasRequest getDefaultInstance() {
             return CasRequest.defaultInstance;
         }
@@ -2057,14 +2090,17 @@ public final class MemcachedPayloads {
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest parseFrom(
@@ -2077,11 +2113,13 @@ public final class MemcachedPayloads {
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
             return newBuilder().mergeFrom(input).buildParsed();
         }
 
@@ -2089,7 +2127,8 @@ public final class MemcachedPayloads {
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest parseFrom(
@@ -2101,7 +2140,16 @@ public final class MemcachedPayloads {
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
+        }
+
+        private CasRequest(boolean noInit) {
+        }
+
+        // Use CasRequest.newBuilder() to construct.
+        private CasRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -2149,16 +2197,20 @@ public final class MemcachedPayloads {
             }
             size = 0;
             if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(1, this.token_);
             }
             if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getKeyBytes());
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        2, getKeyBytes());
             }
             if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-                size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, this.expTime_);
+                size += com.google.protobuf.CodedOutputStream.computeInt32Size(
+                        3, this.expTime_);
             }
             if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(4, this.value_);
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        4, this.value_);
             }
             size += getUnknownFields().getSerializedSize();
             this.memoizedSerializedSize = size;
@@ -2261,7 +2313,8 @@ public final class MemcachedPayloads {
         }
 
         @java.lang.Override
-        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+        protected java.lang.Object writeReplace()
+                throws java.io.ObjectStreamException {
             return super.writeReplace();
         }
 
@@ -2286,7 +2339,8 @@ public final class MemcachedPayloads {
         // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.CasRequest)
     }
 
-    public interface CasRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+    public interface CasRequestOrBuilder extends
+            com.google.protobuf.MessageOrBuilder {
 
         int getExpTime();
 
@@ -2311,7 +2365,8 @@ public final class MemcachedPayloads {
         boolean hasValue();
     }
 
-    public static final class PrependRequest extends com.google.protobuf.GeneratedMessage implements
+    public static final class PrependRequest extends
+            com.google.protobuf.GeneratedMessage implements
             PrependRequestOrBuilder {
 
         public static final class Builder extends
@@ -2333,6 +2388,14 @@ public final class MemcachedPayloads {
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_PrependRequest_descriptor;
+            }
+
             // Construct using
             // eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest.newBuilder()
             private Builder() {
@@ -2342,14 +2405,6 @@ public final class MemcachedPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_PrependRequest_descriptor;
             }
 
             @Override
@@ -2480,7 +2535,8 @@ public final class MemcachedPayloads {
             public String getKey() {
                 final java.lang.Object ref = this.key_;
                 if (!(ref instanceof String)) {
-                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    final String s = ((com.google.protobuf.ByteString) ref)
+                            .toStringUtf8();
                     this.key_ = s;
                     return s;
                 } else {
@@ -2578,7 +2634,8 @@ public final class MemcachedPayloads {
             }
 
             @Override
-            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
@@ -2591,7 +2648,8 @@ public final class MemcachedPayloads {
                         onChanged();
                         return this;
                     default: {
-                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                        if (!parseUnknownField(input, unknownFields,
+                                extensionRegistry, tag)) {
                             this.setUnknownFields(unknownFields.build());
                             onChanged();
                             return this;
@@ -2666,7 +2724,8 @@ public final class MemcachedPayloads {
                             && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                                     .getDefaultInstance())) {
                         this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                                .newBuilder(this.token_).mergeFrom(value)
+                                .buildPartial();
                     } else {
                         this.token_ = value;
                     }
@@ -2772,14 +2831,6 @@ public final class MemcachedPayloads {
             PrependRequest.defaultInstance.initFields();
         }
 
-        private PrependRequest(boolean noInit) {
-        }
-
-        // Use PrependRequest.newBuilder() to construct.
-        private PrependRequest(Builder builder) {
-            super(builder);
-        }
-
         public static PrependRequest getDefaultInstance() {
             return PrependRequest.defaultInstance;
         }
@@ -2820,14 +2871,17 @@ public final class MemcachedPayloads {
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest parseFrom(
@@ -2840,11 +2894,13 @@ public final class MemcachedPayloads {
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
             return newBuilder().mergeFrom(input).buildParsed();
         }
 
@@ -2852,7 +2908,8 @@ public final class MemcachedPayloads {
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest parseFrom(
@@ -2864,7 +2921,16 @@ public final class MemcachedPayloads {
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
+        }
+
+        private PrependRequest(boolean noInit) {
+        }
+
+        // Use PrependRequest.newBuilder() to construct.
+        private PrependRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -2912,16 +2978,20 @@ public final class MemcachedPayloads {
             }
             size = 0;
             if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(1, this.token_);
             }
             if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getKeyBytes());
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        2, getKeyBytes());
             }
             if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-                size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, this.expTime_);
+                size += com.google.protobuf.CodedOutputStream.computeInt32Size(
+                        3, this.expTime_);
             }
             if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(4, this.value_);
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        4, this.value_);
             }
             size += getUnknownFields().getSerializedSize();
             this.memoizedSerializedSize = size;
@@ -3024,7 +3094,8 @@ public final class MemcachedPayloads {
         }
 
         @java.lang.Override
-        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+        protected java.lang.Object writeReplace()
+                throws java.io.ObjectStreamException {
             return super.writeReplace();
         }
 
@@ -3049,7 +3120,8 @@ public final class MemcachedPayloads {
         // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.PrependRequest)
     }
 
-    public interface PrependRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+    public interface PrependRequestOrBuilder extends
+            com.google.protobuf.MessageOrBuilder {
 
         int getExpTime();
 
@@ -3074,7 +3146,8 @@ public final class MemcachedPayloads {
         boolean hasValue();
     }
 
-    public static final class ReplaceRequest extends com.google.protobuf.GeneratedMessage implements
+    public static final class ReplaceRequest extends
+            com.google.protobuf.GeneratedMessage implements
             ReplaceRequestOrBuilder {
 
         public static final class Builder extends
@@ -3096,6 +3169,14 @@ public final class MemcachedPayloads {
             // required bytes value = 4;
             private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 
+            private static Builder create() {
+                return new Builder();
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_descriptor;
+            }
+
             // Construct using
             // eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest.newBuilder()
             private Builder() {
@@ -3105,14 +3186,6 @@ public final class MemcachedPayloads {
             private Builder(BuilderParent parent) {
                 super(parent);
                 maybeForceBuilderInitialization();
-            }
-
-            private static Builder create() {
-                return new Builder();
-            }
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_descriptor;
             }
 
             @Override
@@ -3243,7 +3316,8 @@ public final class MemcachedPayloads {
             public String getKey() {
                 final java.lang.Object ref = this.key_;
                 if (!(ref instanceof String)) {
-                    final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+                    final String s = ((com.google.protobuf.ByteString) ref)
+                            .toStringUtf8();
                     this.key_ = s;
                     return s;
                 } else {
@@ -3341,7 +3415,8 @@ public final class MemcachedPayloads {
             }
 
             @Override
-            public Builder mergeFrom(com.google.protobuf.CodedInputStream input,
+            public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet
@@ -3354,7 +3429,8 @@ public final class MemcachedPayloads {
                         onChanged();
                         return this;
                     default: {
-                        if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                        if (!parseUnknownField(input, unknownFields,
+                                extensionRegistry, tag)) {
                             this.setUnknownFields(unknownFields.build());
                             onChanged();
                             return this;
@@ -3429,7 +3505,8 @@ public final class MemcachedPayloads {
                             && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
                                     .getDefaultInstance())) {
                         this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken
-                                .newBuilder(this.token_).mergeFrom(value).buildPartial();
+                                .newBuilder(this.token_).mergeFrom(value)
+                                .buildPartial();
                     } else {
                         this.token_ = value;
                     }
@@ -3535,14 +3612,6 @@ public final class MemcachedPayloads {
             ReplaceRequest.defaultInstance.initFields();
         }
 
-        private ReplaceRequest(boolean noInit) {
-        }
-
-        // Use ReplaceRequest.newBuilder() to construct.
-        private ReplaceRequest(Builder builder) {
-            super(builder);
-        }
-
         public static ReplaceRequest getDefaultInstance() {
             return ReplaceRequest.defaultInstance;
         }
@@ -3583,14 +3652,17 @@ public final class MemcachedPayloads {
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest parseFrom(
-                byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
+                byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
             return newBuilder().mergeFrom(data).buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest parseFrom(
-                byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest parseFrom(
@@ -3603,11 +3675,13 @@ public final class MemcachedPayloads {
                 com.google.protobuf.ByteString data,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return newBuilder().mergeFrom(data, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(data, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
             return newBuilder().mergeFrom(input).buildParsed();
         }
 
@@ -3615,7 +3689,8 @@ public final class MemcachedPayloads {
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
         }
 
         public static eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest parseFrom(
@@ -3627,7 +3702,16 @@ public final class MemcachedPayloads {
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+            return newBuilder().mergeFrom(input, extensionRegistry)
+                    .buildParsed();
+        }
+
+        private ReplaceRequest(boolean noInit) {
+        }
+
+        // Use ReplaceRequest.newBuilder() to construct.
+        private ReplaceRequest(Builder builder) {
+            super(builder);
         }
 
         @Override
@@ -3675,16 +3759,20 @@ public final class MemcachedPayloads {
             }
             size = 0;
             if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
-                size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, this.token_);
+                size += com.google.protobuf.CodedOutputStream
+                        .computeMessageSize(1, this.token_);
             }
             if (((this.bitField0_ & 0x00000002) == 0x00000002)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, getKeyBytes());
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        2, getKeyBytes());
             }
             if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-                size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, this.expTime_);
+                size += com.google.protobuf.CodedOutputStream.computeInt32Size(
+                        3, this.expTime_);
             }
             if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-                size += com.google.protobuf.CodedOutputStream.computeBytesSize(4, this.value_);
+                size += com.google.protobuf.CodedOutputStream.computeBytesSize(
+                        4, this.value_);
             }
             size += getUnknownFields().getSerializedSize();
             this.memoizedSerializedSize = size;
@@ -3787,7 +3875,8 @@ public final class MemcachedPayloads {
         }
 
         @java.lang.Override
-        protected java.lang.Object writeReplace() throws java.io.ObjectStreamException {
+        protected java.lang.Object writeReplace()
+                throws java.io.ObjectStreamException {
             return super.writeReplace();
         }
 
@@ -3812,7 +3901,8 @@ public final class MemcachedPayloads {
         // @@protoc_insertion_point(class_scope:mosaic_cloud.idl.kvstore.ReplaceRequest)
     }
 
-    public interface ReplaceRequestOrBuilder extends com.google.protobuf.MessageOrBuilder {
+    public interface ReplaceRequestOrBuilder extends
+            com.google.protobuf.MessageOrBuilder {
 
         int getExpTime();
 
@@ -3917,19 +4007,22 @@ public final class MemcachedPayloads {
                 return null;
             }
         };
-        com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
-                descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {
-                    eu.mosaic_cloud.platform.interop.idl.IdlCommon.getDescriptor(), }, assigner);
-    }
-
-    // @@protoc_insertion_point(outer_class_scope)
-    private MemcachedPayloads() {
+        com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[] {
+                            eu.mosaic_cloud.platform.interop.idl.IdlCommon
+                                    .getDescriptor(), }, assigner);
     }
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return MemcachedPayloads.descriptor;
     }
 
-    public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
+    private MemcachedPayloads() {
     }
 }

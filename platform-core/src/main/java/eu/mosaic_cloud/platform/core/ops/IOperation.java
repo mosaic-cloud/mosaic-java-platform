@@ -69,8 +69,8 @@ public interface IOperation<T> {
      * @throws TimeoutException
      *             if the wait timed out
      */
-    T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
-            TimeoutException;
+    T get(long timeout, TimeUnit unit) throws InterruptedException,
+            ExecutionException, TimeoutException;
 
     /**
      * Returns <code>true</code> if this task was cancelled before it completed

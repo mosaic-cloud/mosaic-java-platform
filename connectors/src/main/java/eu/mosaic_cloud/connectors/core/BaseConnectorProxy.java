@@ -44,7 +44,8 @@ import com.google.common.base.Preconditions;
  * @author Georgiana Macariu
  * 
  */
-public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector { // NOPMD
+public abstract class BaseConnectorProxy implements SessionCallbacks,
+        IConnector { // NOPMD
 
     protected MosaicLogger logger;
     protected final ResponseHandlerMap pendingRequests;
@@ -71,14 +72,17 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         this.pendingRequests = new ResponseHandlerMap();
     }
 
-    protected CallbackCompletion<Void> connect(final SessionSpecification session,
-            final Message initMessage) {
+    protected CallbackCompletion<Void> connect(
+            final SessionSpecification session, final Message initMessage) {
         final String driverEndpoint = this.configuration.getConfigParameter(
-                ConfigProperties.getString("GenericConnector.0"), String.class, null);
+                ConfigProperties.getString("GenericConnector.0"), String.class,
+                null);
         final String driverIdentity = this.configuration.getConfigParameter(
-                ConfigProperties.getString("GenericConnector.1"), String.class, null);
+                ConfigProperties.getString("GenericConnector.1"), String.class,
+                null);
         final String driverTarget = this.configuration.getConfigParameter(
-                ConfigProperties.getString("GenericConnector.2"), String.class, null);
+                ConfigProperties.getString("GenericConnector.2"), String.class,
+                null);
 
         CallbackCompletion<Void> result;
         this.channel.register(session);
@@ -93,16 +97,18 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
 
                 @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> resolved(final ChannelResolver resolver,
-                        final String target, final String peer, final String endpoint) {
+                public CallbackCompletion<Void> resolved(
+                        final ChannelResolver resolver, final String target,
+                        final String peer, final String endpoint) {
                     Preconditions.checkState(driverTarget.equals(target));
                     Preconditions.checkState(peer != null);
                     Preconditions.checkState(endpoint != null);
                     // FIXME: The connection operation should be done by the
                     // channel resolver.
-                    ((ZeroMqChannel) BaseConnectorProxy.this.channel).connect(endpoint);
-                    BaseConnectorProxy.this.channel.connect(peer, session, initMessage,
-                            BaseConnectorProxy.this);
+                    ((ZeroMqChannel) BaseConnectorProxy.this.channel)
+                            .connect(endpoint);
+                    BaseConnectorProxy.this.channel.connect(peer, session,
+                            initMessage, BaseConnectorProxy.this);
                     // FIXME: Calling `connect` is not enough; the connection is
                     // successfull only
                     // after the call of `created(Session)` was done.
@@ -165,16 +171,22 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
      *            the exception
      */
     @Override
-    public CallbackCompletion<Void> failed(final Session session, final Throwable exception) {
+    public CallbackCompletion<Void> failed(final Session session,
+            final Throwable exception) {
         Preconditions.checkState(this.session == session);
         return CallbackCompletion.createOutcome();
     }
 
     protected CompletionToken generateToken() {
-        final CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder();
+        final CompletionToken.Builder tokenBuilder = CompletionToken
+                .newBuilder();
         tokenBuilder.setMessageId(UUID.randomUUID().toString());
         tokenBuilder.setClientId(this.identifier);
         return tokenBuilder.build();
+    }
+
+    public String getIdentifier() {
+        return this.identifier;
     }
 
     /**
@@ -186,8 +198,10 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
     protected abstract void processResponse(Message message);
 
     @Override
-    public CallbackCompletion<Void> received(final Session session, final Message message) {
-        this.logger.debug("ConnectorProxy - Received " + message.specification.toString() + "...");
+    public CallbackCompletion<Void> received(final Session session,
+            final Message message) {
+        this.logger.debug("ConnectorProxy - Received "
+                + message.specification.toString() + "...");
         this.processResponse(message);
         return CallbackCompletion.createOutcome();
     }
@@ -210,19 +224,17 @@ public abstract class BaseConnectorProxy implements SessionCallbacks, IConnector
         this.session.send(request);
     }
 
-    protected <O extends Object> CallbackCompletion<O> sendRequest(final Message message,
-            final CompletionToken token, final Class<O> outcomeClass) {
+    protected <O extends Object> CallbackCompletion<O> sendRequest(
+            final Message message, final CompletionToken token,
+            final Class<O> outcomeClass) {
         final CallbackCompletionDeferredFuture<O> future = CallbackCompletionDeferredFuture
                 .create(outcomeClass);
         this.pendingRequests.register(token.getMessageId(), future);
-        this.logger.debug("ConnectorProxy - Sending " + message.specification.toString()
-                + " request [" + token.getMessageId() + "]...");
+        this.logger.debug("ConnectorProxy - Sending "
+                + message.specification.toString() + " request ["
+                + token.getMessageId() + "]...");
         this.send(message);
         return future.completion;
-    }
-
-    public String getIdentifier() {
-        return identifier;
     }
 
 }

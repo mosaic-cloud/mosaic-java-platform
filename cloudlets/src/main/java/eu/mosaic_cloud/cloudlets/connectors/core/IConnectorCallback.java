@@ -25,53 +25,60 @@ import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 /**
- * Basic interface for resource accessor callback classes.
+ * Basic interface for resource connector callback classes.
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            the type of the cloudlet context
  */
-public interface IConnectorCallback<Context> extends ICallback<Context> {
+public interface IConnectorCallback<TContext> extends ICallback<TContext> {
 
     /**
-     * Called when resource accessor destruction failed.
+     * Called when resource connector destruction failed.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
+     * @return nothing
      */
-    CallbackCompletion<Void> destroyFailed(Context context, CallbackArguments<Context> arguments);
+    CallbackCompletion<Void> destroyFailed(TContext context,
+            CallbackArguments arguments);
 
     /**
-     * Called when resource accessor destruction succeeded.
+     * Called when resource connector destruction succeeded.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
+     * @return nothing
      */
-    CallbackCompletion<Void> destroySucceeded(Context context, CallbackArguments<Context> arguments);
+    CallbackCompletion<Void> destroySucceeded(TContext context,
+            CallbackArguments arguments);
 
     /**
-     * Called when resource accessor initialization failed.
+     * Called when resource connector initialization failed.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
+     * @return nothing
      */
-    CallbackCompletion<Void> initializeFailed(Context context, CallbackArguments<Context> arguments);
+    CallbackCompletion<Void> initializeFailed(TContext context,
+            CallbackArguments arguments);
 
     /**
-     * Called when resource accessor initialization succeeded.
+     * Called when resource connector initialization succeeded.
      * 
      * @param context
      *            cloudlet context
      * @param arguments
      *            callback arguments
+     * @return nothing
      */
-    CallbackCompletion<Void> initializeSucceeded(Context context,
-            CallbackArguments<Context> arguments);
+    CallbackCompletion<Void> initializeSucceeded(TContext context,
+            CallbackArguments arguments);
 }

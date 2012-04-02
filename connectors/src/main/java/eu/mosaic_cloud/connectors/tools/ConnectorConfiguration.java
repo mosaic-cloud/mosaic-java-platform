@@ -40,6 +40,12 @@ public final class ConnectorConfiguration {
      */
     private final ConnectorEnvironment environment;
 
+    public static ConnectorConfiguration create(
+            final IConfiguration configuration,
+            final ConnectorEnvironment environment) {
+        return new ConnectorConfiguration(configuration, environment);
+    }
+
     private ConnectorConfiguration(final IConfiguration configuration,
             final ConnectorEnvironment environment) {
         super();
@@ -49,22 +55,18 @@ public final class ConnectorConfiguration {
         this.environment = environment;
     }
 
-    public static ConnectorConfiguration create(final IConfiguration configuration,
-            final ConnectorEnvironment environment) {
-        return new ConnectorConfiguration(configuration, environment);
-    }
-
     public Channel getCommunicationChannel() {
         return this.environment.getCommunicationChannel();
     }
 
     public <T extends Object> T getConfigParameter(final String identifier,
             final Class<T> valueClass, final T defaultValue) {
-        return ConfigUtils.resolveParameter(this.configuration, identifier, valueClass,
-                defaultValue);
+        return ConfigUtils.resolveParameter(this.configuration, identifier,
+                valueClass, defaultValue);
     }
 
-    public void resolveChannel(final String driverTarget, final ResolverCallbacks resolverCallbacks) {
+    public void resolveChannel(final String driverTarget,
+            final ResolverCallbacks resolverCallbacks) {
         this.environment.resolveChannel(driverTarget, resolverCallbacks);
     }
 }

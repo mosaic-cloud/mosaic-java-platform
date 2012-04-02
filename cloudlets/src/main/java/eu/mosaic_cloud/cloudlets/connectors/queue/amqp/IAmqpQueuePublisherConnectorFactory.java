@@ -23,12 +23,19 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
+/**
+ * Factory for creating amqp queue publisher connectors.
+ * 
+ * @author Ciprian Craciun
+ * 
+ */
 public interface IAmqpQueuePublisherConnectorFactory extends
-        IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?, ?>> {
+        IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?>> {
 
-    <Context, Message, Extra> IAmqpQueuePublisherConnector<Context, Message, Extra> create(
-            IConfiguration configuration, Class<Message> messageClass,
-            DataEncoder<Message> messageEncoder,
-            IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> callback,
-            Context callbackContext);
+    <TContext, TMessage, TExtra> IAmqpQueuePublisherConnector<TMessage, TExtra> create(
+            IConfiguration configuration,
+            Class<TMessage> messageClass,
+            DataEncoder<TMessage> messageEncoder,
+            IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback,
+            TContext callbackContext);
 }

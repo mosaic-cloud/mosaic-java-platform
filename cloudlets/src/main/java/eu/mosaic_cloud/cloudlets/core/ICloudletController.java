@@ -36,7 +36,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * @author Georgiana Macariu
  * 
  */
-public interface ICloudletController<Context> extends Callbacks, IConnectorsFactory {
+public interface ICloudletController<Context> extends Callbacks,
+        IConnectorsFactory {
 
     CallbackCompletion<Void> destroy();
 

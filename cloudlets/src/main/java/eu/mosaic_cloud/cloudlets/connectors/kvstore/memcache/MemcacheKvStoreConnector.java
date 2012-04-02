@@ -36,98 +36,118 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
  * 
  * @author Georgiana Macariu
  * 
- * @param <C>
+ * @param <TContext>
  *            connector callback context type
- * @param <D>
- *            type of data stored in the key-value store
- * @param <E>
- *            type of extra data used for correlation of messages exchanged with
- *            the key-value store (e.g. get - getSucceded)
+ * @param <TValue>
+ *            the type of the values exchanged with the key-value store using
+ *            this connector
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public class MemcacheKvStoreConnector<C, D, E>
+public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
         extends
-        BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<D>, IMemcacheKvStoreConnectorCallback<C, D, E>, C, D, E>
-        implements IMemcacheKvStoreConnector<C, D, E> {
+        BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue>, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+        implements IMemcacheKvStoreConnector<TValue, TExtra> { // NOPMD
 
     /**
-     * Creates a new accessor.
+     * Creates a new connector.
      * 
      * @param config
-     *            configuration data required by the accessor
+     *            configuration data required by the connector
      * @param cloudlet
-     *            the cloudlet controller of the cloudlet using the accessor
+     *            the cloudlet controller of the cloudlet using the connector
      */
     public MemcacheKvStoreConnector(
             final ICloudletController<?> cloudlet,
-            final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<D> connector,
-            final IConfiguration config, final IMemcacheKvStoreConnectorCallback<C, D, E> callback,
-            final C context) {
+            final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue> connector,
+            final IConfiguration config,
+            final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
+            final TContext context) {
         super(cloudlet, connector, config, callback, context);
         // FIXME
         this.initialize();
     }
 
     @Override
-    public CallbackCompletion<Boolean> add(final String key, final D value, final int exp,
-            final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.add(key, exp, value);
-        if (this.callback != null) {
-            completion.observe(new CallbackCompletionObserver() {
-
-                @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
-                    CallbackCompletion<Void> resultCompletion;
-                    if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.addSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
-                    } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.addFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
-                    }
-                    return resultCompletion;
-                }
-            });
-        }
-        return completion;
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> add(final String key, final int exp, final D data) {
+    public CallbackCompletion<Boolean> add(final String key, final int exp,
+            final TValue data) {
         return this.add(key, data, exp, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> append(final String key, final D data) {
+    public CallbackCompletion<Boolean> add(final String key,
+            final TValue value, final int exp, final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.add(key,
+                exp, value);
+        if (this.callback != null) {
+            completion.observe(new CallbackCompletionObserver() {
+
+                @SuppressWarnings("synthetic-access")
+                // NOPMD
+                @Override
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion); // NOPMD
+                    CallbackCompletion<Void> resultCompletion;
+                    if (completion.getException() == null) {
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .addSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
+                    } else {
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .addFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
+                    }
+                    return resultCompletion;
+                }
+            });
+        }
+        return completion;
+    }
+
+    @Override
+    public CallbackCompletion<Boolean> append(final String key,
+            final TValue data) {
         return this.append(key, data, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> append(final String key, final D value, final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.append(key, value);
+    public CallbackCompletion<Boolean> append(final String key,
+            final TValue value, final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.append(
+                key, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion); // NOPMD
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.appendSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .appendSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.appendFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .appendFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
                     }
                     return resultCompletion;
                 }
@@ -137,31 +157,39 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> cas(final String key, final D data) {
+    public CallbackCompletion<Boolean> cas(final String key, final TValue data) {
         return this.cas(key, data, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> cas(final String key, final D value, final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.cas(key, value);
+    public CallbackCompletion<Boolean> cas(final String key,
+            final TValue value, final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.cas(key,
+                value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion); // NOPMD
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.casSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .casSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.casFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .casFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
                     }
                     return resultCompletion;
                 }
@@ -171,32 +199,42 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Map<String, D>> getBulk(final List<String> keys) {
+    public CallbackCompletion<Map<String, TValue>> getBulk(
+            final List<String> keys) {
         return this.getBulk(keys, null);
     }
 
     @Override
-    public CallbackCompletion<Map<String, D>> getBulk(final List<String> keys, final E extra) {
-        final CallbackCompletion<Map<String, D>> completion = this.connector.getBulk(keys);
+    public CallbackCompletion<Map<String, TValue>> getBulk(
+            final List<String> keys, final TExtra extra) {
+        final CallbackCompletion<Map<String, TValue>> completion = this.connector
+                .getBulk(keys);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion); // NOPMD
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.getBulkSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, Map<String, D>, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, keys, completion
-                                                .getOutcome(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .getBulkSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                keys, completion.getOutcome(),
+                                                extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.getBulkFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, Map<String, D>, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, keys,
-                                        (Map<String, D>) completion.getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .getBulkFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                keys,
+                                                completion.getException(),
+                                                extra));
                     }
                     return resultCompletion;
                 }
@@ -206,31 +244,40 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> prepend(final String key, final D data) {
+    public CallbackCompletion<Boolean> prepend(final String key,
+            final TValue data) {
         return this.prepend(key, data, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> prepend(final String key, final D value, final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.prepend(key, value);
+    public CallbackCompletion<Boolean> prepend(final String key,
+            final TValue value, final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.prepend(
+                key, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion); // NOPMD
                     CallbackCompletion<Void> resultCompletion;
                     if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.prependSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .prependSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.prependFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .prependFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
                     }
                     return resultCompletion;
                 }
@@ -240,62 +287,40 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> replace(final String key, final D value, final int exp,
-            final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.replace(key, exp, value);
-        if (this.callback != null) {
-            completion.observe(new CallbackCompletionObserver() {
-
-                @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
-                    CallbackCompletion<Void> resultCompletion;
-                    if (completion.getException() == null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.replaceSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
-                    } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.replaceFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
-                    }
-                    return resultCompletion;
-                }
-            });
-        }
-        return completion;
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> replace(final String key, final int exp, final D data) {
+    public CallbackCompletion<Boolean> replace(final String key, final int exp,
+            final TValue data) {
         return this.replace(key, data, exp, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final D value, final int exp,
-            final E extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.set(key, exp, value);
+    public CallbackCompletion<Boolean> replace(final String key,
+            final TValue value, final int exp, final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.replace(
+                key, exp, value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> aCompletion) {
-                    assert (aCompletion == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion); // NOPMD
                     CallbackCompletion<Void> resultCompletion;
-                    if (completion.getException() != null) {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.setSucceeded(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+                    if (completion.getException() == null) {
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .replaceSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
                     } else {
-                        resultCompletion = MemcacheKvStoreConnector.this.callback.setFailed(
-                                MemcacheKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<C, D, E>(
-                                        MemcacheKvStoreConnector.this.cloudlet, key, (D) completion
-                                                .getException(), extra));
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .replaceFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
                     }
                     return resultCompletion;
                 }
@@ -305,7 +330,45 @@ public class MemcacheKvStoreConnector<C, D, E>
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final int exp, final D data) {
+    public CallbackCompletion<Boolean> set(final String key, final int exp,
+            final TValue data) {
         return this.set(key, data, exp, null);
+    }
+
+    @Override
+    public CallbackCompletion<Boolean> set(final String key,
+            final TValue value, final int exp, final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.set(key,
+                exp, value);
+        if (this.callback != null) {
+            completion.observe(new CallbackCompletionObserver() {
+
+                @SuppressWarnings("synthetic-access")
+                @Override
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> aCompletion) {
+                    assert (aCompletion == completion); // NOPMD
+                    CallbackCompletion<Void> resultCompletion;
+                    if (completion.getException() == null) {
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .setSucceeded(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, value, extra));
+                    } else {
+                        resultCompletion = MemcacheKvStoreConnector.this.callback
+                                .setFailed(
+                                        MemcacheKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                MemcacheKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
+                    }
+                    return resultCompletion;
+                }
+            });
+        }
+        return completion;
     }
 }

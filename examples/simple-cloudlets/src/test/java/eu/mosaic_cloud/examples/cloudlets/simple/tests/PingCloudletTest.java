@@ -29,7 +29,8 @@ public class PingCloudletTest extends BaseCloudletTest {
 
     @Override
     public void setUp() {
-        this.setUp(PingCloudlet.LifeCycleHandler.class, PingCloudlet.PingCloudletContext.class,
+        this.setUp(PingCloudlet.LifeCycleHandler.class,
+                PingCloudlet.PingCloudletContext.class,
                 "ping-cloudlet.properties");
     }
 }

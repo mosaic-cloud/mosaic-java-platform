@@ -28,14 +28,16 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * which need to receive messages from a queue.
  * 
  * @author Georgiana Macariu
- * @param <Context>
+ * @param <TContext>
  *            the type of the cloudlet context
- * @param <Message>
+ * @param <TMessage>
  *            the type of consumed data
- * 
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> extends
-        IAmqpQueueConnectorCallback<Context> {
+public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
+        extends IAmqpQueueConnectorCallback<TContext> {
 
     /**
      * Handles unsuccessful message acknowledge events.
@@ -45,8 +47,8 @@ public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> ex
      * @param arguments
      *            the arguments of the callback
      */
-    CallbackCompletion<Void> acknowledgeFailed(Context context,
-            GenericCallbackCompletionArguments<Context, Extra> arguments);
+    CallbackCompletion<Void> acknowledgeFailed(TContext context,
+            GenericCallbackCompletionArguments<TExtra> arguments);
 
     /**
      * Handles successful message acknowledge events.
@@ -56,8 +58,8 @@ public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> ex
      * @param arguments
      *            the arguments of the callback
      */
-    CallbackCompletion<Void> acknowledgeSucceeded(Context context,
-            GenericCallbackCompletionArguments<Context, Extra> arguments);
+    CallbackCompletion<Void> acknowledgeSucceeded(TContext context,
+            GenericCallbackCompletionArguments<TExtra> arguments);
 
     /**
      * Called when this consumer receives a message. This will deliver the
@@ -68,6 +70,6 @@ public interface IAmqpQueueConsumerConnectorCallback<Context, Message, Extra> ex
      * @param arguments
      *            the arguments of the callback
      */
-    CallbackCompletion<Void> consume(Context context,
-            AmqpQueueConsumeCallbackArguments<Context, Message, Extra> arguments);
+    CallbackCompletion<Void> consume(TContext context,
+            AmqpQueueConsumeCallbackArguments<TMessage, TExtra> arguments);
 }

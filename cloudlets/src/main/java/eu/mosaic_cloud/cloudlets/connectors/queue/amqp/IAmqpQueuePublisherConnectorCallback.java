@@ -29,13 +29,16 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            the type of the cloudlet context
- * @param <Message>
+ * @param <TMessage>
  *            the type of published data
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> extends
-        IAmqpQueueConnectorCallback<Context> {
+public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>
+        extends IAmqpQueueConnectorCallback<TContext> {
 
     /**
      * Called when the publisher receives notification that the message
@@ -47,8 +50,8 @@ public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> e
      * @param arguments
      *            the arguments of the callback
      */
-    CallbackCompletion<Void> publishFailed(Context context,
-            GenericCallbackCompletionArguments<Context, Extra> arguments);
+    CallbackCompletion<Void> publishFailed(TContext context,
+            GenericCallbackCompletionArguments<TExtra> arguments);
 
     /**
      * Called when the publisher receives confirmation that the message
@@ -61,6 +64,6 @@ public interface IAmqpQueuePublisherConnectorCallback<Context, Message, Extra> e
      * @param arguments
      *            the arguments of the callback
      */
-    CallbackCompletion<Void> publishSucceeded(Context context,
-            GenericCallbackCompletionArguments<Context, Extra> arguments);
+    CallbackCompletion<Void> publishSucceeded(TContext context,
+            GenericCallbackCompletionArguments<TExtra> arguments);
 }

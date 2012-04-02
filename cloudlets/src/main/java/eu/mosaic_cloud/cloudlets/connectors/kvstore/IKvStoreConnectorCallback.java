@@ -32,11 +32,17 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
+ * @param <TContext>
  *            the type of the cloudlet context
+ * @param <TValue>
+ *            the type of the values exchanged with the key-value store using
+ *            this connector
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
-        IConnectorCallback<Context> {
+public interface IKvStoreConnectorCallback<TContext, TValue, TExtra> extends
+        IConnectorCallback<TContext> {
 
     /**
      * Called when the delete operation completed unsuccessfully. The error can
@@ -47,8 +53,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> deleteFailed(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+    CallbackCompletion<Void> deleteFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the delete operation completed successfully.
@@ -58,8 +64,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> deleteSucceeded(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+    CallbackCompletion<Void> deleteSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the get operation completed unsuccessfully. The error can be
@@ -70,8 +76,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getFailed(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+    CallbackCompletion<Void> getFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the get operation completed successfully. The result of the
@@ -82,8 +88,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getSucceeded(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+    CallbackCompletion<Void> getSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the list operation completed unsuccessfully. The error can be
@@ -94,8 +100,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> listFailed(Context context,
-            KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
+    CallbackCompletion<Void> listFailed(TContext context,
+            KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
 
     /**
      * Called when the list operation completed successfully. The result of the
@@ -106,8 +112,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> listSucceeded(Context context,
-            KvStoreCallbackCompletionArguments<Context, List<String>, Extra> arguments);
+    CallbackCompletion<Void> listSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
 
     /**
      * Called when the set operation completed unsuccessfully. The error can be
@@ -118,8 +124,8 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> setFailed(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+    CallbackCompletion<Void> setFailed(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 
     /**
      * Called when the set operation completed successfully.
@@ -129,6 +135,6 @@ public interface IKvStoreConnectorCallback<Context, Value, Extra> extends
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> setSucceeded(Context context,
-            KvStoreCallbackCompletionArguments<Context, Value, Extra> arguments);
+    CallbackCompletion<Void> setSucceeded(TContext context,
+            KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 }

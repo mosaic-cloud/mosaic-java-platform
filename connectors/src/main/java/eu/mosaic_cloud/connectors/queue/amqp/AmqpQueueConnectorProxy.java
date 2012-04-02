@@ -25,7 +25,8 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
 import com.google.common.base.Preconditions;
 
-public abstract class AmqpQueueConnectorProxy<TMessage> implements IAmqpQueueConnector {
+public abstract class AmqpQueueConnectorProxy<TMessage> implements
+        IAmqpQueueConnector {
 
     protected final ConnectorConfiguration configuration;
     protected final Class<TMessage> messageClass;
@@ -33,7 +34,8 @@ public abstract class AmqpQueueConnectorProxy<TMessage> implements IAmqpQueueCon
     protected final AmqpQueueRawConnectorProxy raw;
 
     protected AmqpQueueConnectorProxy(final AmqpQueueRawConnectorProxy raw,
-            final ConnectorConfiguration configuration, final Class<TMessage> messageClass,
+            final ConnectorConfiguration configuration,
+            final Class<TMessage> messageClass,
             final DataEncoder<TMessage> messageEncoder) {
         super();
         Preconditions.checkNotNull(raw);

@@ -26,23 +26,30 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 
 /**
- * Generic cloudlet-level accessor for key value storages. Cloudlets will use an
- * object of this type to get access to a key-value storage.
+ * Generic cloudlet-level connector for key value storages. Cloudlets will use
+ * an object of this type to get access to a key-value storage.
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
- *            the type of the context of the cloudlet using the accessor
+ * @param <TContext>
+ *            the type of the context of the cloudlet using the connector
+ * @param <TValue>
+ *            the type of the values exchanged with the key-value store using
+ *            this connector
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used
+ *            correlation
  */
-public class GenericKvStoreConnector<Context, Value, Extra>
+public class GenericKvStoreConnector<TContext, TValue, TExtra>
         extends
-        BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value>, IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra> {
+        BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TValue>, IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra> {
 
     public GenericKvStoreConnector(
             final ICloudletController<?> cloudlet,
-            final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<Value> connector,
+            final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TValue> connector,
             final IConfiguration config,
-            final IKvStoreConnectorCallback<Context, Value, Extra> callback, final Context context) {
+            final IKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
+            final TContext context) {
         super(cloudlet, connector, config, callback, context);
         // FIXME
         this.initialize();

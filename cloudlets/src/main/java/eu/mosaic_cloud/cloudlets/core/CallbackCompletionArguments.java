@@ -27,10 +27,8 @@ package eu.mosaic_cloud.cloudlets.core;
  * 
  * @author Georgiana Macariu
  * 
- * @param <Context>
- *            the type of the context of the cloudlet
  */
-public class CallbackCompletionArguments<Context> extends CallbackArguments<Context> {
+public class CallbackCompletionArguments extends CallbackArguments {
 
     protected Throwable error;
 
@@ -39,12 +37,9 @@ public class CallbackCompletionArguments<Context> extends CallbackArguments<Cont
      * 
      * @param cloudlet
      *            the cloudlet controller
-     * @param result
-     *            the result of the operation
      */
-    public CallbackCompletionArguments(ICloudletController<?> cloudlet) {
+    public CallbackCompletionArguments(final ICloudletController<?> cloudlet) {
         super(cloudlet);
-        this.error = null;
     }
 
     /**
@@ -55,7 +50,8 @@ public class CallbackCompletionArguments<Context> extends CallbackArguments<Cont
      * @param error
      *            the exception thrown by the operation
      */
-    public CallbackCompletionArguments(ICloudletController<?> cloudlet, Throwable error) {
+    public CallbackCompletionArguments(final ICloudletController<?> cloudlet, final
+            Throwable error) {
         super(cloudlet);
         this.error = error;
     }

@@ -28,140 +28,168 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
-public abstract class BaseKvStoreConnector<Connector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<Value>, Callback extends IKvStoreConnectorCallback<Context, Value, Extra>, Context, Value, Extra>
-        extends BaseConnector<Connector, Callback, Context> implements
-        IKvStoreConnector<Context, Value, Extra> {
+public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra> // NOPMD
+        extends BaseConnector<TConnector, TCallback, TContext> implements
+        IKvStoreConnector<TValue, TExtra> {
 
     protected BaseKvStoreConnector(final ICloudletController<?> cloudlet,
-            final Connector connector, final IConfiguration config, final Callback callback,
-            final Context context) {
+            final TConnector connector, final IConfiguration config,
+            final TCallback callback, final TContext context) {
         super(cloudlet, connector, config, callback, context);
     }
 
     @Override
     public CallbackCompletion<Boolean> delete(final String key) {
-        return (this.delete(key, null));
+        return this.delete(key, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> delete(final String key, final Extra extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.delete(key);
+    public CallbackCompletion<Boolean> delete(final String key,
+            final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector
+                .delete(key);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
+                // NOPMD
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
-                        return BaseKvStoreConnector.this.callback.deleteFailed(
-                                BaseKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<Context, Value, Extra>(
-                                        BaseKvStoreConnector.this.cloudlet, key, (Value) completion
-                                                .getException(), extra));
+                        return BaseKvStoreConnector.this.callback
+                                .deleteFailed(
+                                        BaseKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                BaseKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
                     }
-                    return BaseKvStoreConnector.this.callback.deleteSucceeded(
-                            BaseKvStoreConnector.this.context,
-                            new KvStoreCallbackCompletionArguments<Context, Value, Extra>(
-                                    BaseKvStoreConnector.this.cloudlet, key, null, extra));
+                    return BaseKvStoreConnector.this.callback
+                            .deleteSucceeded(
+                                    BaseKvStoreConnector.this.context,
+                                    new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                            BaseKvStoreConnector.this.cloudlet,
+                                            key, (TValue) null, extra));
                 }
             });
         }
-        return (completion);
+        return completion;
     }
 
     @Override
-    public CallbackCompletion<Value> get(final String key) {
-        return (this.get(key, null));
+    public CallbackCompletion<TValue> get(final String key) {
+        return this.get(key, null);
     }
 
     @Override
-    public CallbackCompletion<Value> get(final String key, final Extra extra) {
-        final CallbackCompletion<Value> completion = this.connector.get(key);
+    public CallbackCompletion<TValue> get(final String key, final TExtra extra) {
+        final CallbackCompletion<TValue> completion = this.connector.get(key);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
-                        return BaseKvStoreConnector.this.callback.getFailed(
-                                BaseKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<Context, Value, Extra>(
-                                        BaseKvStoreConnector.this.cloudlet, key, (Value) completion
-                                                .getException(), extra));
+                        return BaseKvStoreConnector.this.callback
+                                .getFailed(
+                                        BaseKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                BaseKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
                     }
-                    return BaseKvStoreConnector.this.callback.getSucceeded(
-                            BaseKvStoreConnector.this.context,
-                            new KvStoreCallbackCompletionArguments<Context, Value, Extra>(
-                                    BaseKvStoreConnector.this.cloudlet, key, completion
-                                            .getOutcome(), extra));
+                    return BaseKvStoreConnector.this.callback
+                            .getSucceeded(
+                                    BaseKvStoreConnector.this.context,
+                                    new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                            BaseKvStoreConnector.this.cloudlet,
+                                            key, completion.getOutcome(), extra));
                 }
             });
         }
-        return (completion);
+        return completion;
     }
 
     @Override
     public CallbackCompletion<List<String>> list() {
-        return (this.list(null));
+        return this.list(null);
     }
 
     @Override
-    public CallbackCompletion<List<String>> list(final Extra extra) {
-        final CallbackCompletion<List<String>> completion = this.connector.list();
+    public CallbackCompletion<List<String>> list(final TExtra extra) {
+        final CallbackCompletion<List<String>> completion = this.connector
+                .list();
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
                         return BaseKvStoreConnector.this.callback
                                 .listFailed(
                                         BaseKvStoreConnector.this.context,
-                                        new KvStoreCallbackCompletionArguments<Context, List<String>, Extra>(
-                                                BaseKvStoreConnector.this.cloudlet, (String) null,
-                                                (List<String>) completion.getException(), extra));
+                                        new KvStoreCallbackCompletionArguments<List<String>, TExtra>(
+                                                BaseKvStoreConnector.this.cloudlet,
+                                                (String) null, completion
+                                                        .getException(), extra));
                     }
-                    return BaseKvStoreConnector.this.callback.listSucceeded(
-                            BaseKvStoreConnector.this.context,
-                            new KvStoreCallbackCompletionArguments<Context, List<String>, Extra>(
-                                    BaseKvStoreConnector.this.cloudlet, (String) null, completion
-                                            .getOutcome(), extra));
+                    return BaseKvStoreConnector.this.callback
+                            .listSucceeded(
+                                    BaseKvStoreConnector.this.context,
+                                    new KvStoreCallbackCompletionArguments<List<String>, TExtra>(
+                                            BaseKvStoreConnector.this.cloudlet,
+                                            (String) null, completion
+                                                    .getOutcome(), extra));
                 }
             });
         }
-        return (completion);
+        return completion;
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final Value value) {
-        return (this.set(key, value, null));
+    public CallbackCompletion<Boolean> set(final String key, final TValue value) {
+        return this.set(key, value, null);
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final Value value, final Extra extra) {
-        final CallbackCompletion<Boolean> completion = this.connector.set(key, value);
+    public CallbackCompletion<Boolean> set(final String key,
+            final TValue value, final TExtra extra) {
+        final CallbackCompletion<Boolean> completion = this.connector.set(key,
+                value);
         if (this.callback != null) {
             completion.observe(new CallbackCompletionObserver() {
 
+                @SuppressWarnings("synthetic-access")
                 @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion);
+                public CallbackCompletion<Void> completed(
+                        final CallbackCompletion<?> completion_) {
+                    assert (completion_ == completion); // NOPMD
                     if (completion.getException() != null) {
-                        return BaseKvStoreConnector.this.callback.setFailed(
-                                BaseKvStoreConnector.this.context,
-                                new KvStoreCallbackCompletionArguments<Context, Value, Extra>(
-                                        BaseKvStoreConnector.this.cloudlet, key, (Value) completion
-                                                .getException(), extra));
+                        return BaseKvStoreConnector.this.callback
+                                .setFailed(
+                                        BaseKvStoreConnector.this.context,
+                                        new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                                BaseKvStoreConnector.this.cloudlet,
+                                                key, completion.getException(),
+                                                extra));
                     }
-                    return BaseKvStoreConnector.this.callback.setSucceeded(
-                            BaseKvStoreConnector.this.context,
-                            new KvStoreCallbackCompletionArguments<Context, Value, Extra>(
-                                    BaseKvStoreConnector.this.cloudlet, key, value, extra));
+                    return BaseKvStoreConnector.this.callback
+                            .setSucceeded(
+                                    BaseKvStoreConnector.this.context,
+                                    new KvStoreCallbackCompletionArguments<TValue, TExtra>(
+                                            BaseKvStoreConnector.this.cloudlet,
+                                            key, value, extra));
                 }
             });
         }
-        return (completion);
+        return completion;
     }
 }

@@ -29,7 +29,8 @@ public class PongCloudletTest extends BaseCloudletTest {
 
     @Override
     public void setUp() {
-        this.setUp(PongCloudlet.LifeCycleHandler.class, PongCloudlet.PongCloudletContext.class,
+        this.setUp(PongCloudlet.LifeCycleHandler.class,
+                PongCloudlet.PongCloudletContext.class,
                 "pong-cloudlet.properties");
     }
 }

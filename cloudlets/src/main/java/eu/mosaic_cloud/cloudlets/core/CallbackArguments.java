@@ -25,13 +25,10 @@ package eu.mosaic_cloud.cloudlets.core;
  * cloudlet controller and operation specific information.
  * 
  * @author Georgiana Macariu
- * 
- * @param <C>
- *            the type of the context of the cloudlet
  */
-public class CallbackArguments<Context> {
+public class CallbackArguments {
 
-    protected ICloudletController<?> cloudlet;
+    protected final ICloudletController<?> cloudlet;
 
     /**
      * Creates a new argument
@@ -39,7 +36,7 @@ public class CallbackArguments<Context> {
      * @param cloudlet
      *            the cloudlet controller
      */
-    public CallbackArguments(ICloudletController<?> cloudlet) {
+    public CallbackArguments(final ICloudletController<?> cloudlet) {
         super();
         this.cloudlet = cloudlet;
     }
