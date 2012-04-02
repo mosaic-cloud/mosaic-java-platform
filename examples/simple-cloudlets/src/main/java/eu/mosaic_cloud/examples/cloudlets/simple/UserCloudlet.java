@@ -49,7 +49,7 @@ public class UserCloudlet {
         @Override
         public CallbackCompletion<Void> acknowledgeSucceeded(
                 UserCloudletContext context,
-                GenericCallbackCompletionArguments<UserCloudletContext, Void> arguments) {
+                GenericCallbackCompletionArguments<Void> arguments) {
             context.consumer.destroy();
             return ICallback.SUCCESS;
         }
@@ -57,7 +57,7 @@ public class UserCloudlet {
         @Override
         public CallbackCompletion<Void> consume(
                 UserCloudletContext context,
-                AmqpQueueConsumeCallbackArguments<UserCloudletContext, AuthenticationToken, Void> arguments) {
+                AmqpQueueConsumeCallbackArguments<AuthenticationToken, Void> arguments) {
             final AuthenticationToken data = arguments.getMessage();
             final String token = data.getToken();
             if (token != null) {
@@ -73,8 +73,7 @@ public class UserCloudlet {
 
         @Override
         public CallbackCompletion<Void> destroySucceeded(
-                UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
+                UserCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("UserCloudlet consumer was destroyed successfully.");
             context.consumerRunning = false;
@@ -87,8 +86,7 @@ public class UserCloudlet {
 
         @Override
         public CallbackCompletion<Void> initializeSucceeded(
-                UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
+                UserCloudletContext context, CallbackArguments arguments) {
             this.logger.info("UserCloudlet consumer initialized successfully.");
             context.consumerRunning = true;
             return ICallback.SUCCESS;
@@ -101,8 +99,7 @@ public class UserCloudlet {
 
         @Override
         public CallbackCompletion<Void> destroySucceeded(
-                UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
+                UserCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("UserCloudlet publisher was destroyed successfully.");
             context.publisherRunning = false;
@@ -115,8 +112,7 @@ public class UserCloudlet {
 
         @Override
         public CallbackCompletion<Void> initializeSucceeded(
-                UserCloudletContext context,
-                CallbackArguments<UserCloudletContext> arguments) {
+                UserCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("UserCloudlet publisher initialized successfully.");
             context.publisherRunning = true;
@@ -134,7 +130,7 @@ public class UserCloudlet {
         @Override
         public CallbackCompletion<Void> publishSucceeded(
                 UserCloudletContext context,
-                GenericCallbackCompletionArguments<UserCloudletContext, Void> arguments) {
+                GenericCallbackCompletionArguments<Void> arguments) {
             context.publisher.destroy();
             return ICallback.SUCCESS;
         }
@@ -194,8 +190,8 @@ public class UserCloudlet {
 
     public static final class UserCloudletContext {
 
-        IAmqpQueueConsumerConnector<UserCloudletContext, AuthenticationToken, Void> consumer;
-        IAmqpQueuePublisherConnector<UserCloudletContext, LoggingData, Void> publisher;
+        IAmqpQueueConsumerConnector<AuthenticationToken, Void> consumer;
+        IAmqpQueuePublisherConnector<LoggingData, Void> publisher;
         boolean publisherRunning = false;
         boolean consumerRunning = false;
     }

@@ -46,7 +46,7 @@ public class ConsumerCloudlet {
         @Override
         public CallbackCompletion<Void> acknowledgeSucceeded(
                 ConsumerCloudletContext context,
-                GenericCallbackCompletionArguments<ConsumerCloudletContext, Void> arguments) {
+                GenericCallbackCompletionArguments<Void> arguments) {
             context.consumer.destroy();
             return ICallback.SUCCESS;
         }
@@ -54,7 +54,7 @@ public class ConsumerCloudlet {
         @Override
         public CallbackCompletion<Void> consume(
                 ConsumerCloudletContext context,
-                AmqpQueueConsumeCallbackArguments<ConsumerCloudletContext, String, Void> arguments) {
+                AmqpQueueConsumeCallbackArguments<String, Void> arguments) {
             final String data = arguments.getMessage();
             this.logger
                     .info("ConsumerCloudlet received logging message for user "
@@ -65,8 +65,7 @@ public class ConsumerCloudlet {
 
         @Override
         public CallbackCompletion<Void> destroySucceeded(
-                ConsumerCloudletContext context,
-                CallbackArguments<ConsumerCloudletContext> arguments) {
+                ConsumerCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("ConsumerCloudlet consumer was destroyed successfully.");
             context.consumer = null;
@@ -76,8 +75,7 @@ public class ConsumerCloudlet {
 
         @Override
         public CallbackCompletion<Void> initializeSucceeded(
-                ConsumerCloudletContext context,
-                CallbackArguments<ConsumerCloudletContext> arguments) {
+                ConsumerCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("ConsumerCloudlet consumer initialized successfully.");
             return ICallback.SUCCESS;
@@ -86,7 +84,7 @@ public class ConsumerCloudlet {
 
     public static final class ConsumerCloudletContext {
 
-        IAmqpQueueConsumerConnector<ConsumerCloudletContext, String, Void> consumer;
+        IAmqpQueueConsumerConnector<String, Void> consumer;
     }
 
     public static final class LifeCycleHandler extends

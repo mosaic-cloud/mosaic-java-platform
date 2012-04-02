@@ -49,15 +49,14 @@ public class SimpleLoggingCloudlet {
         @Override
         public CallbackCompletion<Void> acknowledgeSucceeded(
                 LoggingCloudletContext context,
-                GenericCallbackCompletionArguments<LoggingCloudletContext, Void> arguments) {
+                GenericCallbackCompletionArguments<Void> arguments) {
             context.consumer.destroy();
             return ICallback.SUCCESS;
         }
 
         @Override
-        public CallbackCompletion<Void> consume(
-                LoggingCloudletContext context,
-                AmqpQueueConsumeCallbackArguments<LoggingCloudletContext, LoggingData, Void> arguments) {
+        public CallbackCompletion<Void> consume(LoggingCloudletContext context,
+                AmqpQueueConsumeCallbackArguments<LoggingData, Void> arguments) {
             final LoggingData data = arguments.getMessage();
             this.logger
                     .info("LoggingCloudlet received logging message for user "
@@ -73,8 +72,7 @@ public class SimpleLoggingCloudlet {
 
         @Override
         public CallbackCompletion<Void> destroySucceeded(
-                LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
+                LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet consumer was destroyed successfully.");
             context.consumerRunning = false;
@@ -87,8 +85,7 @@ public class SimpleLoggingCloudlet {
 
         @Override
         public CallbackCompletion<Void> initializeSucceeded(
-                LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
+                LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet consumer initialized successfully.");
             context.consumerRunning = true;
@@ -102,8 +99,7 @@ public class SimpleLoggingCloudlet {
 
         @Override
         public CallbackCompletion<Void> destroySucceeded(
-                LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
+                LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet publisher was destroyed successfully.");
             context.publisherRunning = false;
@@ -116,8 +112,7 @@ public class SimpleLoggingCloudlet {
 
         @Override
         public CallbackCompletion<Void> initializeSucceeded(
-                LoggingCloudletContext context,
-                CallbackArguments<LoggingCloudletContext> arguments) {
+                LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet publisher initialized successfully.");
             context.publisherRunning = true;
@@ -127,7 +122,7 @@ public class SimpleLoggingCloudlet {
         @Override
         public CallbackCompletion<Void> publishSucceeded(
                 LoggingCloudletContext context,
-                GenericCallbackCompletionArguments<LoggingCloudletContext, Void> arguments) {
+                GenericCallbackCompletionArguments<Void> arguments) {
             context.publisher.destroy();
             return ICallback.SUCCESS;
         }
@@ -188,8 +183,8 @@ public class SimpleLoggingCloudlet {
 
     public static final class LoggingCloudletContext {
 
-        IAmqpQueueConsumerConnector<LoggingCloudletContext, LoggingData, Void> consumer;
-        IAmqpQueuePublisherConnector<LoggingCloudletContext, AuthenticationToken, Void> publisher;
+        IAmqpQueueConsumerConnector<LoggingData, Void> consumer;
+        IAmqpQueuePublisherConnector<AuthenticationToken, Void> publisher;
         boolean publisherRunning = false;
         boolean consumerRunning = false;
     }

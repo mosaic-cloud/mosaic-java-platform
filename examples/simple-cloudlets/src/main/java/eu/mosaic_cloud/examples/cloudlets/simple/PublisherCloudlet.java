@@ -43,8 +43,7 @@ public class PublisherCloudlet {
 
         @Override
         public CallbackCompletion<Void> destroySucceeded(
-                PublisherCloudletContext context,
-                CallbackArguments<PublisherCloudletContext> arguments) {
+                PublisherCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("PublisherCloudlet publisher was destroyed successfully.");
             context.publisher = null;
@@ -54,8 +53,7 @@ public class PublisherCloudlet {
 
         @Override
         public CallbackCompletion<Void> initializeSucceeded(
-                PublisherCloudletContext context,
-                CallbackArguments<PublisherCloudletContext> arguments) {
+                PublisherCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("PublisherCloudlet publisher initialized successfully.");
             context.publisher.publish("TEST MESSAGE!", null);
@@ -65,7 +63,7 @@ public class PublisherCloudlet {
         @Override
         public CallbackCompletion<Void> publishSucceeded(
                 PublisherCloudletContext context,
-                GenericCallbackCompletionArguments<PublisherCloudletContext, Void> arguments) {
+                GenericCallbackCompletionArguments<Void> arguments) {
             context.publisher.destroy();
             return ICallback.SUCCESS;
         }
@@ -120,6 +118,6 @@ public class PublisherCloudlet {
 
     public static final class PublisherCloudletContext {
 
-        IAmqpQueuePublisherConnector<PublisherCloudletContext, String, Void> publisher;
+        IAmqpQueuePublisherConnector<String, Void> publisher;
     }
 }
