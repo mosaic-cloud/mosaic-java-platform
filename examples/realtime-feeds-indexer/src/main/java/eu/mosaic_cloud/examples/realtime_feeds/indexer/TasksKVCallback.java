@@ -40,14 +40,13 @@ public class TasksKVCallback
 
     @Override
     public CallbackCompletion<Void> destroySucceeded(
-            IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            IndexerCloudletContext context, CallbackArguments arguments) {
         context.tasksStore = null;
         return ICallback.SUCCESS;
     }
 
     private void handleError(
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, Void> arguments) {
         final String key = arguments.getKey();
         this.logger.warn("failed fetch (" + TasksKVCallback.BUCKET_NAME + ","
                 + key + ")");
@@ -60,9 +59,8 @@ public class TasksKVCallback
     }
 
     @Override
-    public CallbackCompletion<Void> setFailed(
-            IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
+    public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
+            KvStoreCallbackCompletionArguments<JSONObject, Void> arguments) {
         handleError(arguments);
         return ICallback.SUCCESS;
     }

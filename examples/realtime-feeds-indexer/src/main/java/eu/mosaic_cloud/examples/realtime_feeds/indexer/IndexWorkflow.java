@@ -99,7 +99,7 @@ public class IndexWorkflow {
     }
 
     public static void onMetadataStored(
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         getIndexer(arguments.getExtra()).handleMetadataStored(arguments);
     }
 
@@ -249,7 +249,7 @@ public class IndexWorkflow {
     }
 
     private void handleMetadataStored(
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         if (this.indexDone) {
             storeIndexOutcome();
         } else {
@@ -274,7 +274,7 @@ public class IndexWorkflow {
                 .getString("url"));
         IndexWorkflow.logger.trace("indexing " + IndexWorkflow.INDEX_TASK_TYPE
                 + " step 3 (fetching latest meta-data)...");
-		// FIXME: ??? (I don't remember what the problem was...)
+        // FIXME: ??? (I don't remember what the problem was...)
         this.context.metadataStore.get(feedKey, this.key);
     }
 

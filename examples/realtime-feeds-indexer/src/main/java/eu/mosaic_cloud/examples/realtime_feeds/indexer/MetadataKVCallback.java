@@ -55,16 +55,14 @@ public final class MetadataKVCallback
 
     @Override
     public CallbackCompletion<Void> destroySucceeded(
-            IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            IndexerCloudletContext context, CallbackArguments arguments) {
         context.metadataStore = null;
         return ICallback.SUCCESS;
     }
 
     @Override
-    public CallbackCompletion<Void> getFailed(
-            IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+    public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         handleError(arguments);
         return ICallback.SUCCESS;
     }
@@ -72,7 +70,7 @@ public final class MetadataKVCallback
     @Override
     public CallbackCompletion<Void> getSucceeded(
             IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         final String key = arguments.getKey();
         this.logger.trace("succeeded fetch (" + MetadataKVCallback.BUCKET_NAME
                 + "," + key + ")");
@@ -87,7 +85,7 @@ public final class MetadataKVCallback
     }
 
     private void handleError(
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         final String key = arguments.getKey();
         this.logger.warn("failed fetch (" + MetadataKVCallback.BUCKET_NAME
                 + "," + key + ")");
@@ -100,9 +98,8 @@ public final class MetadataKVCallback
     }
 
     @Override
-    public CallbackCompletion<Void> setFailed(
-            IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+    public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         handleError(arguments);
         return ICallback.SUCCESS;
     }
@@ -110,7 +107,7 @@ public final class MetadataKVCallback
     @Override
     public CallbackCompletion<Void> setSucceeded(
             IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         IndexWorkflow.onMetadataStored(arguments);
         return ICallback.SUCCESS;
     }

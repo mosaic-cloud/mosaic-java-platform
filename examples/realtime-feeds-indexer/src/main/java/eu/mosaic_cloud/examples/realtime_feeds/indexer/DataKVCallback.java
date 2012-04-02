@@ -38,16 +38,14 @@ public class DataKVCallback extends
 
     @Override
     public CallbackCompletion<Void> destroySucceeded(
-            IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            IndexerCloudletContext context, CallbackArguments arguments) {
         context.dataStore = null;
         return ICallback.SUCCESS;
     }
 
     @Override
-    public CallbackCompletion<Void> getFailed(
-            IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[], UUID> arguments) {
+    public CallbackCompletion<Void> getFailed(IndexerCloudletContext context,
+            KvStoreCallbackCompletionArguments<byte[], UUID> arguments) {
         final String key = arguments.getKey();
         this.logger.warn("failed fetch (" + DataKVCallback.BUCKET_NAME + ","
                 + key + ")");
@@ -63,7 +61,7 @@ public class DataKVCallback extends
     @Override
     public CallbackCompletion<Void> getSucceeded(
             IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, byte[], UUID> arguments) {
+            KvStoreCallbackCompletionArguments<byte[], UUID> arguments) {
         final String key = arguments.getKey();
         this.logger.trace("succeeded fetch (" + DataKVCallback.BUCKET_NAME
                 + "," + key + ")");

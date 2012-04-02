@@ -30,7 +30,7 @@ public final class BatchConsumerCallback extends QueueConsumerCallback {
     @Override
     public CallbackCompletion<Void> destroySucceeded(
             IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            CallbackArguments arguments) {
         this.logger
                 .info("Batch Index Message consumer was destroyed successfully.");
         context.batchConsumer = null;
@@ -40,7 +40,7 @@ public final class BatchConsumerCallback extends QueueConsumerCallback {
     @Override
     public CallbackCompletion<Void> initializeSucceeded(
             IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            CallbackArguments arguments) {
         // NOTE: if resource initialized successfully then just register as a
         // consumer
         return ICallback.SUCCESS;

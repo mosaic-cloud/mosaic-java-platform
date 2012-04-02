@@ -59,6 +59,7 @@ public class FeedParser {
         }
         final Timeline timeline = new Timeline(atomFeed.getId(),
                 feed.getLink(), atomFeed.getUpdated().getTime());
+        @SuppressWarnings("unchecked")
         final List<SyndEntry> entries = feed.getEntries();
         for (final SyndEntry entry : entries) {
             String authorName = null;
@@ -85,6 +86,7 @@ public class FeedParser {
                     title, titleType, content, contentType, entry
                             .getUpdatedDate().getTime(), authorName,
                     authorEmail, authorURI);
+            @SuppressWarnings("unchecked")
             final List<SyndLink> links = entry.getLinks();
             for (final SyndLink link : links) {
                 tEntry.addLink(link.getRel(), link.getHref());

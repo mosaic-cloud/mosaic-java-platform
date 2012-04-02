@@ -41,14 +41,13 @@ public class TimelinesKVCallback
 
     @Override
     public CallbackCompletion<Void> destroySucceeded(
-            IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            IndexerCloudletContext context, CallbackArguments arguments) {
         context.timelinesStore = null;
         return ICallback.SUCCESS;
     }
 
     private void handleError(
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         final String key = arguments.getKey();
         this.logger.warn("failed fetch (" + TimelinesKVCallback.BUCKET_NAME
                 + "," + key + ")");
@@ -61,9 +60,8 @@ public class TimelinesKVCallback
     }
 
     @Override
-    public CallbackCompletion<Void> setFailed(
-            IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+    public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         handleError(arguments);
         return ICallback.SUCCESS;
     }
@@ -71,7 +69,7 @@ public class TimelinesKVCallback
     @Override
     public CallbackCompletion<Void> setSucceeded(
             IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<IndexerCloudletContext, JSONObject, UUID> arguments) {
+            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         IndexWorkflow.updateFeedMetadata(arguments.getExtra());
         return ICallback.SUCCESS;
     }

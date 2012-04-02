@@ -33,9 +33,8 @@ public class QueueConsumerCallback
         DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
     @Override
-    public CallbackCompletion<Void> consume(
-            IndexerCloudletContext context,
-            AmqpQueueConsumeCallbackArguments<IndexerCloudletContext, JSONObject, Void> arguments) {
+    public CallbackCompletion<Void> consume(IndexerCloudletContext context,
+            AmqpQueueConsumeCallbackArguments<JSONObject, Void> arguments) {
         final JSONObject message = arguments.getMessage();
         IndexWorkflow.indexNewFeed(context, message);
         if (this == context.batchConsumer) {

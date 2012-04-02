@@ -49,7 +49,8 @@ public class StoreUtils {
     }
 
     public static final String generateFeedTimelineKey(String url, int sequence) {
-        final String seq = String.format("%1$08x", sequence).toLowerCase();
+        final String seq = String.format("%1$08x", Integer.valueOf(sequence))
+                .toLowerCase();
         return generateTwoStringKey(url, seq);
     }
 

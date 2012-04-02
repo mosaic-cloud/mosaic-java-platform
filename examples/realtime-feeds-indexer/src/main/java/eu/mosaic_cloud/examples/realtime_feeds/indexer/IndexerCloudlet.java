@@ -44,13 +44,13 @@ public class IndexerCloudlet {
 
     public static final class IndexerCloudletContext {
 
-        IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject, Void> urgentConsumer;
-        IAmqpQueueConsumerConnector<IndexerCloudletContext, JSONObject, Void> batchConsumer;
-        IKvStoreConnector<IndexerCloudletContext, JSONObject, UUID> metadataStore;
-        IKvStoreConnector<IndexerCloudletContext, byte[], UUID> dataStore;
-        IKvStoreConnector<IndexerCloudletContext, JSONObject, Void> timelinesStore;
-        IKvStoreConnector<IndexerCloudletContext, JSONObject, UUID> itemsStore;
-        IKvStoreConnector<IndexerCloudletContext, JSONObject, Void> tasksStore;
+        IAmqpQueueConsumerConnector<JSONObject, Void> urgentConsumer;
+        IAmqpQueueConsumerConnector<JSONObject, Void> batchConsumer;
+        IKvStoreConnector<JSONObject, UUID> metadataStore;
+        IKvStoreConnector<byte[], UUID> dataStore;
+        IKvStoreConnector<JSONObject, Void> timelinesStore;
+        IKvStoreConnector<JSONObject, UUID> itemsStore;
+        IKvStoreConnector<JSONObject, Void> tasksStore;
         IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> urgentConsumerCallback;
         IAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> batchConsumerCallback;
         IKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID> metadataStoreCallback;
@@ -67,8 +67,7 @@ public class IndexerCloudlet {
         public CallbackCompletion<Void> destroy(IndexerCloudletContext context,
                 CloudletCallbackArguments<IndexerCloudletContext> arguments) {
             this.logger.info("Feeds IndexerCloudlet is being destroyed.");
-            final ICloudletController<IndexerCloudletContext> cloudlet = arguments
-                    .getCloudlet();
+            
             if (context.metadataStore != null) {
                 context.metadataStore.destroy();
             }

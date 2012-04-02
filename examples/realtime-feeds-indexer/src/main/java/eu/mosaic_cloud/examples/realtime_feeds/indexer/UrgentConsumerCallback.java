@@ -29,8 +29,7 @@ public final class UrgentConsumerCallback extends QueueConsumerCallback {
 
     @Override
     public CallbackCompletion<Void> destroySucceeded(
-            IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            IndexerCloudletContext context, CallbackArguments arguments) {
         this.logger
                 .info("Urgent Index Message consumer was destroyed successfully.");
         context.urgentConsumer = null;
@@ -39,8 +38,7 @@ public final class UrgentConsumerCallback extends QueueConsumerCallback {
 
     @Override
     public CallbackCompletion<Void> initializeSucceeded(
-            IndexerCloudletContext context,
-            CallbackArguments<IndexerCloudletContext> arguments) {
+            IndexerCloudletContext context, CallbackArguments arguments) {
         // NOTE: if resource initialized successfully then just register as a
         // consumer
         return ICallback.SUCCESS;
