@@ -29,8 +29,6 @@ import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
 import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.drivers.kvstore.MemcachedDriver;
-import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueResponseTransmitter;
-import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;

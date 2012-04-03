@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.drivers.ConfigProperties;
-import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;

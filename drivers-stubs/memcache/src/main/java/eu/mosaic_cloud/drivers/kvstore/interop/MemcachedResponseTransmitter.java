@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
-import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueResponseTransmitter;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
