@@ -65,9 +65,6 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
             final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
             final TContext context) {
         super(cloudlet, connector, config, callback, context);
-        // FIXME: This initialization should be called explicitly by the cloudlet callbacks.
-        // Currently this is a hack to keep compatibility with old code.
-        this.initialize();
     }
 
     @Override

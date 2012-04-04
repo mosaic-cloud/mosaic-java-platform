@@ -38,9 +38,6 @@ public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
             final IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback,
             final TContext context) {
         super(cloudlet, connector, configuration, callback, context);
-        // FIXME: This initialization should be called explicitly by the cloudlet callbacks.
-        // Currently this is a hack to keep compatibility with old code.
-        this.initialize();
     }
 
     @Override
