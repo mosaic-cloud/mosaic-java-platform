@@ -71,10 +71,13 @@ public abstract class BaseCloudletTest
     private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
     private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
     private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
+    protected boolean doRun = true;
 
     protected <Context> void setUp(
             final Class<? extends ICloudletCallback<Context>> callbacksClass,
             final Class<Context> contextClass, final String configuration) {
+    	if (!this.doRun)
+    		return;
         final Scenario<Context> scenario = new Scenario<Context>();
         this.scenario = scenario;
         final ChannelFactory connectorsChannelFactory = new ChannelFactory() {
@@ -195,6 +198,8 @@ public abstract class BaseCloudletTest
     @Override
     @After
     public void tearDown() {
+    	if (!this.doRun)
+    		return;
         if (this.scenario.amqpDriverStub != null) {
             this.scenario.amqpDriverStub.destroy();
         }
@@ -219,6 +224,8 @@ public abstract class BaseCloudletTest
     @Override
     @Test
     public void test() {
+    	if (!this.doRun)
+    		return;
         this.awaitSuccess(this.cloudlet.initialize());
         Assert.assertTrue(this.cloudlet.await(this.scenario.poolTimeout));
         this.cloudlet = null;
