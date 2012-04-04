@@ -47,7 +47,7 @@ public class ConsumerCloudlet {
         public CallbackCompletion<Void> acknowledgeSucceeded(
                 ConsumerCloudletContext context,
                 GenericCallbackCompletionArguments<Void> arguments) {
-            context.consumer.destroy();
+            context.cloudlet.destroy();
             return ICallback.SUCCESS;
         }
 
@@ -68,8 +68,6 @@ public class ConsumerCloudlet {
                 ConsumerCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("ConsumerCloudlet consumer was destroyed successfully.");
-            context.consumer = null;
-            arguments.getCloudlet().destroy();
             return ICallback.SUCCESS;
         }
 
@@ -84,6 +82,7 @@ public class ConsumerCloudlet {
 
     public static final class ConsumerCloudletContext {
 
+    	ICloudletController<ConsumerCloudletContext> cloudlet;
         IAmqpQueueConsumerConnector<String, Void> consumer;
     }
 
@@ -95,7 +94,7 @@ public class ConsumerCloudlet {
                 ConsumerCloudletContext context,
                 CloudletCallbackArguments<ConsumerCloudletContext> arguments) {
             this.logger.info("ConsumerCloudlet is being destroyed.");
-            return ICallback.SUCCESS;
+            return context.consumer.destroy ();
         }
 
         @Override
@@ -111,19 +110,18 @@ public class ConsumerCloudlet {
                 ConsumerCloudletContext context,
                 CloudletCallbackArguments<ConsumerCloudletContext> arguments) {
             this.logger.info("ConsumerCloudlet is being initialized.");
-            final ICloudletController<ConsumerCloudletContext> cloudlet = arguments
-                    .getCloudlet();
-            final IConfiguration configuration = cloudlet.getConfiguration();
+            context.cloudlet = arguments.getCloudlet();
+            final IConfiguration configuration = context.cloudlet.getConfiguration();
             final IConfiguration queueConfiguration = configuration
                     .spliceConfiguration(ConfigurationIdentifier
                             .resolveAbsolute("queue"));
             final DataEncoder<String> encoder = new PojoDataEncoder<String>(
                     String.class);
-            context.consumer = cloudlet.getConnectorFactory(
+            context.consumer = context.cloudlet.getConnectorFactory(
                     IAmqpQueueConsumerConnectorFactory.class).create(
                     queueConfiguration, String.class, encoder,
                     new AmqpConsumerCallback(), context);
-            return ICallback.SUCCESS;
+            return context.consumer.initialize ();
         }
 
         @Override

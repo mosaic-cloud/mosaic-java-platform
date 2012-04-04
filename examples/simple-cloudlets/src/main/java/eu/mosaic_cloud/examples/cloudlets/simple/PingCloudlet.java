@@ -49,7 +49,7 @@ public class PingCloudlet {
         public CallbackCompletion<Void> acknowledgeSucceeded(
                 PingCloudletContext context,
                 GenericCallbackCompletionArguments<Void> arguments) {
-            context.consumer.destroy();
+            context.cloudlet.destroy();
             return ICallback.SUCCESS;
         }
 
@@ -70,10 +70,6 @@ public class PingCloudlet {
                 PingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("Ping Cloudlet consumer was destroyed successfully.");
-            context.consumer = null;
-            if (context.publisher == null) {
-                arguments.getCloudlet().destroy();
-            }
             return ICallback.SUCCESS;
         }
 
@@ -95,10 +91,6 @@ public class PingCloudlet {
                 PingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("Ping Cloudlet publisher was destroyed successfully.");
-            context.publisher = null;
-            if (context.consumer == null) {
-                arguments.getCloudlet().destroy();
-            }
             return ICallback.SUCCESS;
         }
 
@@ -107,16 +99,6 @@ public class PingCloudlet {
                 PingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("Ping Cloudlet publisher initialized successfully.");
-            final PingMessage data = new PingMessage("pingpong");
-            context.publisher.publish(data, null);
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> publishSucceeded(
-                PingCloudletContext context,
-                GenericCallbackCompletionArguments<Void> arguments) {
-            context.publisher.destroy();
             return ICallback.SUCCESS;
         }
     }
@@ -128,7 +110,9 @@ public class PingCloudlet {
         public CallbackCompletion<Void> destroy(PingCloudletContext context,
                 CloudletCallbackArguments<PingCloudletContext> arguments) {
             this.logger.info("Ping Cloudlet is being destroyed.");
-            return ICallback.SUCCESS;
+            return CallbackCompletion.createAndChained (
+            		context.consumer.destroy (),
+            		context.publisher.destroy ());
         }
 
         @Override
@@ -143,23 +127,24 @@ public class PingCloudlet {
         public CallbackCompletion<Void> initialize(PingCloudletContext context,
                 CloudletCallbackArguments<PingCloudletContext> arguments) {
             this.logger.info("Ping Cloudlet is being initialized.");
-            final ICloudletController<PingCloudletContext> cloudlet = arguments
-                    .getCloudlet();
-            final IConfiguration configuration = cloudlet.getConfiguration();
+            context.cloudlet = arguments.getCloudlet();
+            final IConfiguration configuration = context.cloudlet.getConfiguration();
             final IConfiguration queueConfiguration = configuration
                     .spliceConfiguration(ConfigurationIdentifier
                             .resolveAbsolute("queue"));
-            context.consumer = cloudlet.getConnectorFactory(
+            context.consumer = context.cloudlet.getConnectorFactory(
                     IAmqpQueueConsumerConnectorFactory.class).create(
                     queueConfiguration, PongMessage.class,
                     new JsonDataEncoder<PongMessage>(PongMessage.class),
                     new AmqpConsumerCallback(), context);
-            context.publisher = cloudlet.getConnectorFactory(
+            context.publisher = context.cloudlet.getConnectorFactory(
                     IAmqpQueuePublisherConnectorFactory.class).create(
                     queueConfiguration, PingMessage.class,
                     new JsonDataEncoder<PingMessage>(PingMessage.class),
                     new AmqpPublisherCallback(), context);
-            return ICallback.SUCCESS;
+            return CallbackCompletion.createAndChained (
+            		context.consumer.initialize (),
+            		context.publisher.initialize ());
         }
 
         @Override
@@ -167,12 +152,15 @@ public class PingCloudlet {
                 PingCloudletContext context,
                 CloudletCallbackCompletionArguments<PingCloudletContext> arguments) {
             this.logger.info("Ping Cloudlet initialized successfully.");
+            final PingMessage data = new PingMessage("pingpong");
+            context.publisher.publish(data, null);
             return ICallback.SUCCESS;
         }
     }
 
     public static final class PingCloudletContext {
 
+    	ICloudletController<PingCloudletContext> cloudlet;
         IAmqpQueueConsumerConnector<PongMessage, Void> consumer;
         IAmqpQueuePublisherConnector<PingMessage, Void> publisher;
     }

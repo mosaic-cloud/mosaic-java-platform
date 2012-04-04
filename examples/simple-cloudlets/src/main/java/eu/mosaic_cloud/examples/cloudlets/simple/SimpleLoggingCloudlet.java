@@ -28,7 +28,6 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -47,14 +46,6 @@ public class SimpleLoggingCloudlet {
             DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData, Void> {
 
         @Override
-        public CallbackCompletion<Void> acknowledgeSucceeded(
-                LoggingCloudletContext context,
-                GenericCallbackCompletionArguments<Void> arguments) {
-            context.consumer.destroy();
-            return ICallback.SUCCESS;
-        }
-
-        @Override
         public CallbackCompletion<Void> consume(LoggingCloudletContext context,
                 AmqpQueueConsumeCallbackArguments<LoggingData, Void> arguments) {
             final LoggingData data = arguments.getMessage();
@@ -67,6 +58,7 @@ public class SimpleLoggingCloudlet {
             final AuthenticationToken aToken = new AuthenticationToken(token);
             context.publisher.publish(aToken, null);
             context.consumer.acknowledge(arguments.getDelivery());
+            context.cloudlet.destroy ();
             return ICallback.SUCCESS;
         }
 
@@ -75,11 +67,6 @@ public class SimpleLoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet consumer was destroyed successfully.");
-            context.consumerRunning = false;
-            context.consumer = null;
-            if (context.publisher == null) {
-                arguments.getCloudlet().destroy();
-            }
             return ICallback.SUCCESS;
         }
 
@@ -88,7 +75,6 @@ public class SimpleLoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet consumer initialized successfully.");
-            context.consumerRunning = true;
             return ICallback.SUCCESS;
         }
     }
@@ -102,11 +88,6 @@ public class SimpleLoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet publisher was destroyed successfully.");
-            context.publisherRunning = false;
-            context.publisher = null;
-            if (context.consumer == null) {
-                arguments.getCloudlet().destroy();
-            }
             return ICallback.SUCCESS;
         }
 
@@ -115,15 +96,6 @@ public class SimpleLoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet publisher initialized successfully.");
-            context.publisherRunning = true;
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> publishSucceeded(
-                LoggingCloudletContext context,
-                GenericCallbackCompletionArguments<Void> arguments) {
-            context.publisher.destroy();
             return ICallback.SUCCESS;
         }
     }
@@ -135,7 +107,9 @@ public class SimpleLoggingCloudlet {
         public CallbackCompletion<Void> destroy(LoggingCloudletContext context,
                 CloudletCallbackArguments<LoggingCloudletContext> arguments) {
             this.logger.info("LoggingCloudlet is being destroyed.");
-            return ICallback.SUCCESS;
+            return CallbackCompletion.createAndChained (
+            		context.consumer.destroy (),
+            		context.publisher.destroy ());
         }
 
         @Override
@@ -151,25 +125,26 @@ public class SimpleLoggingCloudlet {
                 LoggingCloudletContext context,
                 CloudletCallbackArguments<LoggingCloudletContext> arguments) {
             this.logger.info("LoggingCloudlet is being initialized.");
-            final ICloudletController<LoggingCloudletContext> cloudlet = arguments
-                    .getCloudlet();
-            final IConfiguration configuration = cloudlet.getConfiguration();
+            context.cloudlet = arguments.getCloudlet();
+            final IConfiguration configuration = context.cloudlet.getConfiguration();
             final IConfiguration queueConfiguration = configuration
                     .spliceConfiguration(ConfigurationIdentifier
                             .resolveAbsolute("queue"));
-            context.consumer = cloudlet.getConnectorFactory(
+            context.consumer = context.cloudlet.getConnectorFactory(
                     IAmqpQueueConsumerConnectorFactory.class).create(
                     queueConfiguration, LoggingData.class,
                     new PojoDataEncoder<LoggingData>(LoggingData.class),
                     new AmqpConsumerCallback(), context);
-            context.publisher = cloudlet.getConnectorFactory(
+            context.publisher = context.cloudlet.getConnectorFactory(
                     IAmqpQueuePublisherConnectorFactory.class).create(
                     queueConfiguration,
                     AuthenticationToken.class,
                     new PojoDataEncoder<AuthenticationToken>(
                             AuthenticationToken.class),
                     new AmqpPublisherCallback(), context);
-            return ICallback.SUCCESS;
+            return CallbackCompletion.createAndChained (
+            		context.consumer.initialize (),
+            		context.publisher.initialize ());
         }
 
         @Override
@@ -183,9 +158,8 @@ public class SimpleLoggingCloudlet {
 
     public static final class LoggingCloudletContext {
 
+    	ICloudletController<LoggingCloudletContext> cloudlet;
         IAmqpQueueConsumerConnector<LoggingData, Void> consumer;
         IAmqpQueuePublisherConnector<AuthenticationToken, Void> publisher;
-        boolean publisherRunning = false;
-        boolean consumerRunning = false;
     }
 }

@@ -30,6 +30,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class HelloWorldCloudlet {
 
     public static final class HelloCloudletContext {
+    	
+    	ICloudletController<HelloCloudletContext> cloudlet;
     }
 
     public static final class LifeCycleHandler extends
@@ -55,6 +57,7 @@ public class HelloWorldCloudlet {
                 HelloCloudletContext context,
                 CloudletCallbackArguments<HelloCloudletContext> arguments) {
             this.logger.info("HelloWorld cloudlet is initializing...");
+            context.cloudlet = arguments.getCloudlet();
             return ICallback.SUCCESS;
         }
 
@@ -65,9 +68,7 @@ public class HelloWorldCloudlet {
             this.logger
                     .info("HelloWorld cloudlet was initialized successfully.");
             this.logger.info("Hello world!");
-            final ICloudletController<HelloCloudletContext> cloudlet = arguments
-                    .getCloudlet();
-            cloudlet.destroy();
+            context.cloudlet.destroy();
             return ICallback.SUCCESS;
         }
     }

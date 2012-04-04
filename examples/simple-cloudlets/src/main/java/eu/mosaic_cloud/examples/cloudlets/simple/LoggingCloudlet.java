@@ -22,7 +22,6 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
-import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
@@ -31,7 +30,6 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
@@ -41,7 +39,6 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -50,14 +47,6 @@ public class LoggingCloudlet {
     public static final class AmqpConsumerCallback
             extends
             DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData, Void> {
-
-        @Override
-        public CallbackCompletion<Void> acknowledgeSucceeded(
-                LoggingCloudletContext context,
-                GenericCallbackCompletionArguments<Void> arguments) {
-            context.consumer.destroy();
-            return ICallback.SUCCESS;
-        }
 
         @Override
         public CallbackCompletion<Void> consume(LoggingCloudletContext context,
@@ -82,6 +71,7 @@ public class LoggingCloudlet {
             final AuthenticationToken aToken = new AuthenticationToken(token);
             context.publisher.publish(aToken, null);
             context.consumer.acknowledge(arguments.getDelivery());
+            context.cloudlet.destroy ();
             return ICallback.SUCCESS;
         }
 
@@ -90,11 +80,6 @@ public class LoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet consumer was destroyed successfully.");
-            context.consumerRunning = false;
-            context.consumer = null;
-            if ((context.publisher == null) && (context.kvStore == null)) {
-                arguments.getCloudlet().destroy();
-            }
             return ICallback.SUCCESS;
         }
 
@@ -103,7 +88,6 @@ public class LoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet consumer initialized successfully.");
-            context.consumerRunning = true;
             return ICallback.SUCCESS;
         }
     }
@@ -117,11 +101,6 @@ public class LoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet publisher was destroyed successfully.");
-            context.publisherRunning = false;
-            context.publisher = null;
-            if ((context.consumer == null) && (context.kvStore == null)) {
-                arguments.getCloudlet().destroy();
-            }
             return ICallback.SUCCESS;
         }
 
@@ -130,15 +109,6 @@ public class LoggingCloudlet {
                 LoggingCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("LoggingCloudlet publisher initialized successfully.");
-            context.publisherRunning = true;
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> publishSucceeded(
-                LoggingCloudletContext context,
-                GenericCallbackCompletionArguments<Void> arguments) {
-            context.publisher.destroy();
             return ICallback.SUCCESS;
         }
     }
@@ -147,15 +117,9 @@ public class LoggingCloudlet {
             extends
             DefaultKvStoreConnectorCallback<LoggingCloudletContext, String, Void> {
 
-        private static int sets = 0;
-
         @Override
         public CallbackCompletion<Void> destroySucceeded(
                 LoggingCloudletContext context, CallbackArguments arguments) {
-            context.kvStore = null;
-            if ((context.publisher == null) && (context.consumer == null)) {
-                arguments.getCloudlet().destroy();
-            }
             return ICallback.SUCCESS;
         }
 
@@ -173,26 +137,6 @@ public class LoggingCloudlet {
             context.kvStore.set(user, pass, null);
             return ICallback.SUCCESS;
         }
-
-        @Override
-        public CallbackCompletion<Void> setSucceeded(
-                LoggingCloudletContext context,
-                KvStoreCallbackCompletionArguments<String, Void> arguments) {
-            KeyValueCallback.sets++;
-            this.logger.info("LoggingCloudlet - KeyValue succeeded set no. "
-                    + KeyValueCallback.sets);
-            if (KeyValueCallback.sets == 2) {
-                try {
-                    context.kvStore.destroy();
-                } catch (final Exception e) {
-                    ExceptionTracer.traceIgnored(e);
-                    this.logger
-                            .error("LoggingCloudlet.KeyValueCallback.setSucceeded() - caught exception "
-                                    + e.getClass().getCanonicalName());
-                }
-            }
-            return ICallback.SUCCESS;
-        }
     }
 
     public static final class LifeCycleHandler extends
@@ -202,7 +146,10 @@ public class LoggingCloudlet {
         public CallbackCompletion<Void> destroy(LoggingCloudletContext context,
                 CloudletCallbackArguments<LoggingCloudletContext> arguments) {
             this.logger.info("LoggingCloudlet is being destroyed.");
-            return ICallback.SUCCESS;
+            return CallbackCompletion.createAndChained (
+            		context.kvStore.destroy (),
+            		context.consumer.destroy (),
+            		context.publisher.destroy ());
         }
 
         @Override
@@ -218,32 +165,34 @@ public class LoggingCloudlet {
                 LoggingCloudletContext context,
                 CloudletCallbackArguments<LoggingCloudletContext> arguments) {
             this.logger.info("LoggingCloudlet is being initialized.");
-            final ICloudletController<LoggingCloudletContext> cloudlet = arguments
-                    .getCloudlet();
-            final IConfiguration configuration = cloudlet.getConfiguration();
+            context.cloudlet = arguments.getCloudlet();
+            final IConfiguration configuration = context.cloudlet.getConfiguration();
             final IConfiguration kvConfiguration = configuration
                     .spliceConfiguration(ConfigurationIdentifier
                             .resolveAbsolute("kvstore"));
-            context.kvStore = cloudlet.getConnectorFactory(
+            context.kvStore = context.cloudlet.getConnectorFactory(
                     IKvStoreConnectorFactory.class).create(kvConfiguration,
                     String.class, new PojoDataEncoder<String>(String.class),
                     new KeyValueCallback(), context);
             final IConfiguration queueConfiguration = configuration
                     .spliceConfiguration(ConfigurationIdentifier
                             .resolveAbsolute("queue"));
-            context.consumer = cloudlet.getConnectorFactory(
+            context.consumer = context.cloudlet.getConnectorFactory(
                     IAmqpQueueConsumerConnectorFactory.class).create(
                     queueConfiguration, LoggingData.class,
                     new PojoDataEncoder<LoggingData>(LoggingData.class),
                     new AmqpConsumerCallback(), context);
-            context.publisher = cloudlet.getConnectorFactory(
+            context.publisher = context.cloudlet.getConnectorFactory(
                     IAmqpQueuePublisherConnectorFactory.class).create(
                     queueConfiguration,
                     AuthenticationToken.class,
                     new PojoDataEncoder<AuthenticationToken>(
                             AuthenticationToken.class),
                     new AmqpPublisherCallback(), context);
-            return ICallback.SUCCESS;
+            return CallbackCompletion.createAndChained (
+            		context.kvStore.initialize (),
+            		context.consumer.initialize (),
+            		context.publisher.initialize ());
         }
 
         @Override
@@ -257,10 +206,9 @@ public class LoggingCloudlet {
 
     public static final class LoggingCloudletContext {
 
+    	ICloudletController<LoggingCloudletContext> cloudlet;
         IAmqpQueueConsumerConnector<LoggingData, Void> consumer;
         IAmqpQueuePublisherConnector<AuthenticationToken, Void> publisher;
         IKvStoreConnector<String, Void> kvStore;
-        boolean publisherRunning = false;
-        boolean consumerRunning = false;
     }
 }

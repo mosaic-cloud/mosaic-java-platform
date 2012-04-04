@@ -46,8 +46,6 @@ public class PublisherCloudlet {
                 PublisherCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("PublisherCloudlet publisher was destroyed successfully.");
-            context.publisher = null;
-            arguments.getCloudlet().destroy();
             return ICallback.SUCCESS;
         }
 
@@ -56,7 +54,6 @@ public class PublisherCloudlet {
                 PublisherCloudletContext context, CallbackArguments arguments) {
             this.logger
                     .info("PublisherCloudlet publisher initialized successfully.");
-            context.publisher.publish("TEST MESSAGE!", null);
             return ICallback.SUCCESS;
         }
 
@@ -64,7 +61,7 @@ public class PublisherCloudlet {
         public CallbackCompletion<Void> publishSucceeded(
                 PublisherCloudletContext context,
                 GenericCallbackCompletionArguments<Void> arguments) {
-            context.publisher.destroy();
+            context.cloudlet.destroy ();
             return ICallback.SUCCESS;
         }
     }
@@ -77,7 +74,7 @@ public class PublisherCloudlet {
                 PublisherCloudletContext context,
                 CloudletCallbackArguments<PublisherCloudletContext> arguments) {
             this.logger.info("PublisherCloudlet is being destroyed.");
-            return ICallback.SUCCESS;
+            return context.publisher.destroy ();
         }
 
         @Override
@@ -93,18 +90,17 @@ public class PublisherCloudlet {
                 PublisherCloudletContext context,
                 CloudletCallbackArguments<PublisherCloudletContext> arguments) {
             this.logger.info("PublisherCloudlet is being initialized.");
-            final ICloudletController<PublisherCloudletContext> cloudlet = arguments
-                    .getCloudlet();
-            final IConfiguration configuration = cloudlet.getConfiguration();
+            context.cloudlet = arguments.getCloudlet();
+            final IConfiguration configuration = context.cloudlet.getConfiguration();
             final IConfiguration queueConfiguration = configuration
                     .spliceConfiguration(ConfigurationIdentifier
                             .resolveAbsolute("queue"));
-            context.publisher = cloudlet.getConnectorFactory(
+            context.publisher = context.cloudlet.getConnectorFactory(
                     IAmqpQueuePublisherConnectorFactory.class).create(
                     queueConfiguration, String.class,
                     new PojoDataEncoder<String>(String.class),
                     new AmqpPublisherCallback(), context);
-            return ICallback.SUCCESS;
+            return context.publisher.initialize ();
         }
 
         @Override
@@ -112,12 +108,14 @@ public class PublisherCloudlet {
                 PublisherCloudletContext context,
                 CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments) {
             this.logger.info("PublisherCloudlet initialized successfully.");
+            context.publisher.publish("TEST MESSAGE!", null);
             return ICallback.SUCCESS;
         }
     }
 
     public static final class PublisherCloudletContext {
 
+    	ICloudletController<PublisherCloudletContext> cloudlet;
         IAmqpQueuePublisherConnector<String, Void> publisher;
     }
 }
