@@ -130,7 +130,7 @@ public final class MosaicLogger {
      *            the message
      */
     public void trace(final String message) {
-        this.logger.traceInformation(message);
+        this.logger.traceDebugging(message);
     }
 
     /**
@@ -141,7 +141,7 @@ public final class MosaicLogger {
      * @param tokens
      */
     public void trace(final String format, final Object... tokens) {
-        this.logger.traceInformation(format, tokens);
+        this.logger.traceDebugging(format, tokens);
     }
 
     /**
