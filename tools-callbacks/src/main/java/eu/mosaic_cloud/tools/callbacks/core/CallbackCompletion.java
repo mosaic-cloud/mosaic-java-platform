@@ -172,6 +172,11 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 		return (CallbackCompletionAndChainedBackend.createCompletion (dependents));
 	}
 	
+	public static final CallbackCompletion<Void> createChained (final CallbackCompletion<?> ... dependents)
+	{
+		return (CallbackCompletionAndChainedBackend.createCompletion (dependents));
+	}
+	
 	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createDeferred (final CallbackCompletionBackend backend)
 	{
 		return (new CallbackCompletion<_Outcome_> (backend));
