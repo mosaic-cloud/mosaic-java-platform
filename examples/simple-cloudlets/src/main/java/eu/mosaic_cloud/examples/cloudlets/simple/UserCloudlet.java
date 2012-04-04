@@ -47,82 +47,71 @@ public class UserCloudlet {
             DefaultAmqpQueueConsumerConnectorCallback<UserCloudletContext, AuthenticationToken, Void> {
 
         @Override
-        public CallbackCompletion<Void> acknowledgeSucceeded(
-                UserCloudletContext context,
+        public CallbackCompletion<Void> acknowledgeSucceeded(UserCloudletContext context,
                 GenericCallbackCompletionArguments<Void> arguments) {
             context.cloudlet.destroy();
             return ICallback.SUCCESS;
         }
 
         @Override
-        public CallbackCompletion<Void> consume(
-                UserCloudletContext context,
+        public CallbackCompletion<Void> consume(UserCloudletContext context,
                 AmqpQueueConsumeCallbackArguments<AuthenticationToken, Void> arguments) {
             final AuthenticationToken data = arguments.getMessage();
             final String token = data.getToken();
             if (token != null) {
-                this.logger.info("UserCloudlet received authentication token: "
-                        + token);
+                this.logger.info("UserCloudlet received authentication token: " + token);
             } else {
-                this.logger
-                        .error("UserCloudlet did not receive authentication token.");
+                this.logger.error("UserCloudlet did not receive authentication token.");
             }
             context.consumer.acknowledge(arguments.getDelivery());
             return ICallback.SUCCESS;
         }
 
         @Override
-        public CallbackCompletion<Void> destroySucceeded(
-                UserCloudletContext context, CallbackArguments arguments) {
-            this.logger
-                    .info("UserCloudlet consumer was destroyed successfully.");
+        public CallbackCompletion<Void> destroySucceeded(UserCloudletContext context,
+                CallbackArguments arguments) {
+            this.logger.info("UserCloudlet consumer was destroyed successfully.");
             return ICallback.SUCCESS;
         }
 
         @Override
-        public CallbackCompletion<Void> initializeSucceeded(
-                UserCloudletContext context, CallbackArguments arguments) {
+        public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
+                CallbackArguments arguments) {
             this.logger.info("UserCloudlet consumer initialized successfully.");
             return ICallback.SUCCESS;
         }
     }
 
-    public static final class AmqpPublisherCallback
-            extends
+    public static final class AmqpPublisherCallback extends
             DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData, Void> {
 
         @Override
-        public CallbackCompletion<Void> destroySucceeded(
-                UserCloudletContext context, CallbackArguments arguments) {
-            this.logger
-                    .info("UserCloudlet publisher was destroyed successfully.");
+        public CallbackCompletion<Void> destroySucceeded(UserCloudletContext context,
+                CallbackArguments arguments) {
+            this.logger.info("UserCloudlet publisher was destroyed successfully.");
             return ICallback.SUCCESS;
         }
 
         @Override
-        public CallbackCompletion<Void> initializeSucceeded(
-                UserCloudletContext context, CallbackArguments arguments) {
-            this.logger
-                    .info("UserCloudlet publisher initialized successfully.");
+        public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
+                CallbackArguments arguments) {
+            this.logger.info("UserCloudlet publisher initialized successfully.");
             return ICallback.SUCCESS;
         }
     }
 
-    public static final class LifeCycleHandler extends
-            DefaultCloudletCallback<UserCloudletContext> {
+    public static final class LifeCycleHandler extends DefaultCloudletCallback<UserCloudletContext> {
 
         @Override
         public CallbackCompletion<Void> destroy(UserCloudletContext context,
                 CloudletCallbackArguments<UserCloudletContext> arguments) {
             this.logger.info("UserCloudlet is being destroyed.");
-            return CallbackCompletion.createAndChained (
-            		context.consumer.destroy (),
-            		context.publisher.destroy ());
+            return CallbackCompletion.createAndChained(context.consumer.destroy(),
+                    context.publisher.destroy());
         }
 
         @Override
-        public CallbackCompletion<Void> destroySucceeded(
-                UserCloudletContext context,
+        public CallbackCompletion<Void> destroySucceeded(UserCloudletContext context,
                 CloudletCallbackCompletionArguments<UserCloudletContext> arguments) {
             this.logger.info("UserCloudlet was destroyed successfully.");
             return ICallback.SUCCESS;
@@ -135,36 +124,28 @@ public class UserCloudlet {
             context.cloudlet = arguments.getCloudlet();
             final IConfiguration configuration = context.cloudlet.getConfiguration();
             final IConfiguration queueConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("queue"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("queue"));
             context.consumer = context.cloudlet.getConnectorFactory(
-                    IAmqpQueueConsumerConnectorFactory.class).create(
-                    queueConfiguration,
+                    IAmqpQueueConsumerConnectorFactory.class).create(queueConfiguration,
                     AuthenticationToken.class,
-                    new PojoDataEncoder<AuthenticationToken>(
-                            AuthenticationToken.class),
+                    new PojoDataEncoder<AuthenticationToken>(AuthenticationToken.class),
                     new AmqpConsumerCallback(), context);
             context.publisher = context.cloudlet.getConnectorFactory(
-                    IAmqpQueuePublisherConnectorFactory.class).create(
-                    queueConfiguration, LoggingData.class,
-                    new PojoDataEncoder<LoggingData>(LoggingData.class),
+                    IAmqpQueuePublisherConnectorFactory.class).create(queueConfiguration,
+                    LoggingData.class, new PojoDataEncoder<LoggingData>(LoggingData.class),
                     new AmqpPublisherCallback(), context);
-            return CallbackCompletion.createAndChained (
-            		context.consumer.initialize (),
-            		context.publisher.initialize ());
+            return CallbackCompletion.createAndChained(context.consumer.initialize(),
+                    context.publisher.initialize());
         }
 
         @Override
-        public CallbackCompletion<Void> initializeSucceeded(
-                UserCloudletContext context,
+        public CallbackCompletion<Void> initializeSucceeded(UserCloudletContext context,
                 CloudletCallbackCompletionArguments<UserCloudletContext> arguments) {
             this.logger.info("UserCloudlet initialized successfully.");
-            final String user = ConfigUtils.resolveParameter(arguments
-                    .getCloudlet().getConfiguration(), "test.user",
-                    String.class, "error");
-            final String pass = ConfigUtils.resolveParameter(arguments
-                    .getCloudlet().getConfiguration(), "test.password",
-                    String.class, "");
+            final String user = ConfigUtils.resolveParameter(arguments.getCloudlet()
+                    .getConfiguration(), "test.user", String.class, "error");
+            final String pass = ConfigUtils.resolveParameter(arguments.getCloudlet()
+                    .getConfiguration(), "test.password", String.class, "");
             final LoggingData data = new LoggingData(user, pass);
             context.publisher.publish(data, null);
             return ICallback.SUCCESS;
@@ -173,7 +154,7 @@ public class UserCloudlet {
 
     public static final class UserCloudletContext {
 
-    	ICloudletController<UserCloudletContext> cloudlet;
+        ICloudletController<UserCloudletContext> cloudlet;
         IAmqpQueueConsumerConnector<AuthenticationToken, Void> consumer;
         IAmqpQueuePublisherConnector<LoggingData, Void> publisher;
     }

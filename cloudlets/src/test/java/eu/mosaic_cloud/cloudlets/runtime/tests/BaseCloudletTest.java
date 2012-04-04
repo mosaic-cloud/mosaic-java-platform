@@ -60,8 +60,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         public TranscriptExceptionTracer exceptions;
         public QueueingExceptionTracer exceptionsQueue;
         public MosaicLogger logger;
-        public long poolTimeout = 6 * 1000 * (ConfigProperties.IN_DEBUGGING ? 3600
-                : 1);
+        public long poolTimeout = 6 * 1000 * (ConfigProperties.IN_DEBUGGING ? 3600 : 1);
         public BasicCallbackReactor reactor;
         public BasicThreadingContext threading;
         public Transcript transcript;
@@ -72,8 +71,8 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
     protected Scenario scenario;
 
     protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario(
-            final Class<? extends BaseCloudletTest<?>> owner,
-            final Scenario scenario, final String configuration,
+            final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario,
+            final String configuration,
             final Class<? extends ICloudletCallback<Context>> callbacksClass,
             final Class<Context> contextClass) {
         final ChannelFactory connectorChannelFactory = new ChannelFactory() {
@@ -86,55 +85,48 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         final ChannelResolver connectorChannelResolver = new ChannelResolver() {
 
             @Override
-            public void resolve(final String target,
-                    final ResolverCallbacks callbacks) {
+            public void resolve(final String target, final ResolverCallbacks callbacks) {
                 throw (new UnsupportedOperationException());
             }
         };
-        BaseCloudletTest.setUpScenario(owner, scenario, configuration,
-                callbacksClass, contextClass, connectorChannelFactory,
-                connectorChannelResolver);
+        BaseCloudletTest.setUpScenario(owner, scenario, configuration, callbacksClass,
+                contextClass, connectorChannelFactory, connectorChannelResolver);
     }
 
     protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario(
-            final Class<? extends BaseCloudletTest<?>> owner,
-            final Scenario scenario, final String configuration,
+            final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario,
+            final String configuration,
             final Class<? extends ICloudletCallback<Context>> callbacksClass,
-            final Class<Context> contextClass,
-            final ChannelFactory connectorChannelFactory,
+            final Class<Context> contextClass, final ChannelFactory connectorChannelFactory,
             final ChannelResolver connectorChannelResolver) {
         BasicThreadingSecurityManager.initialize();
         scenario.logger = MosaicLogger.createLogger(owner);
         scenario.transcript = Transcript.create(owner);
         scenario.exceptionsQueue = QueueingExceptionTracer
                 .create(NullExceptionTracer.defaultInstance);
-        scenario.exceptions = TranscriptExceptionTracer.create(
-                scenario.transcript, scenario.exceptionsQueue);
+        scenario.exceptions = TranscriptExceptionTracer.create(scenario.transcript,
+                scenario.exceptionsQueue);
         if (configuration != null) {
-            scenario.configuration = PropertyTypeConfiguration.create(
-                    owner.getClassLoader(), configuration);
+            scenario.configuration = PropertyTypeConfiguration.create(owner.getClassLoader(),
+                    configuration);
         } else {
             scenario.configuration = PropertyTypeConfiguration.create();
         }
-        scenario.threading = BasicThreadingContext.create(owner,
-                scenario.exceptions, scenario.exceptions.catcher);
+        scenario.threading = BasicThreadingContext.create(owner, scenario.exceptions,
+                scenario.exceptions.catcher);
         scenario.threading.initialize();
-        scenario.reactor = BasicCallbackReactor.create(scenario.threading,
-                scenario.exceptions);
+        scenario.reactor = BasicCallbackReactor.create(scenario.threading, scenario.exceptions);
         scenario.reactor.initialize();
         scenario.callbacksClass = callbacksClass;
         scenario.contextClass = contextClass;
-        final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment
-                .create(scenario.reactor, scenario.threading,
-                        scenario.exceptions, connectorChannelFactory,
-                        connectorChannelResolver);
-        scenario.connectors = DefaultConnectorsFactory.create(null,
-                connectorEnvironment);
-        scenario.environment = CloudletEnvironment.create(
-                scenario.configuration, scenario.callbacksClass,
-                scenario.contextClass,
-                scenario.callbacksClass.getClassLoader(), scenario.connectors,
-                scenario.reactor, scenario.threading, scenario.exceptions);
+        final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create(
+                scenario.reactor, scenario.threading, scenario.exceptions, connectorChannelFactory,
+                connectorChannelResolver);
+        scenario.connectors = DefaultConnectorsFactory.create(null, connectorEnvironment);
+        scenario.environment = CloudletEnvironment.create(scenario.configuration,
+                scenario.callbacksClass, scenario.contextClass,
+                scenario.callbacksClass.getClassLoader(), scenario.connectors, scenario.reactor,
+                scenario.threading, scenario.exceptions);
     }
 
     protected static void tearDownScenario(final BaseScenario<?> scenario) {
@@ -146,14 +138,12 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         Assert.assertTrue(completion.await(this.scenario.poolTimeout));
     }
 
-    protected boolean awaitBooleanOutcome(
-            final CallbackCompletion<Boolean> completion) {
+    protected boolean awaitBooleanOutcome(final CallbackCompletion<Boolean> completion) {
         this.await(completion);
         return this.getBooleanOutcome(completion);
     }
 
-    protected <Outcome> Outcome awaitOutcome(
-            final CallbackCompletion<Outcome> completion) {
+    protected <Outcome> Outcome awaitOutcome(final CallbackCompletion<Outcome> completion) {
         this.await(completion);
         return this.getOutcome(completion);
     }
@@ -165,15 +155,13 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
         return true;
     }
 
-    protected boolean getBooleanOutcome(
-            final CallbackCompletion<Boolean> completion) {
+    protected boolean getBooleanOutcome(final CallbackCompletion<Boolean> completion) {
         final Boolean value = this.getOutcome(completion);
         Assert.assertNotNull(value);
         return value.booleanValue();
     }
 
-    protected <Outcome> Outcome getOutcome(
-            final CallbackCompletion<Outcome> completion) {
+    protected <Outcome> Outcome getOutcome(final CallbackCompletion<Outcome> completion) {
         Assert.assertTrue(completion.isCompleted());
         Assert.assertEquals(null, completion.getException());
         return completion.getOutcome();

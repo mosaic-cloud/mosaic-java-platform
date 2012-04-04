@@ -60,8 +60,10 @@ public final class SerDesUtils {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
     static {
-        SerDesUtils.objectMapper.configure(
-                SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+        SerDesUtils.objectMapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+    }
+
+    private SerDesUtils() {
     }
 
     /**
@@ -77,12 +79,11 @@ public final class SerDesUtils {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    public static <T extends Object> T jsonToObject(byte[] bytes,
-            Class<T> valueClass) throws IOException, ClassNotFoundException {
+    public static <T extends Object> T jsonToObject(byte[] bytes, Class<T> valueClass)
+            throws IOException, ClassNotFoundException {
         T object = null;
         if (bytes.length > 0) {
-            object = SerDesUtils.objectMapper.readValue(bytes, 0, bytes.length,
-                    valueClass);
+            object = SerDesUtils.objectMapper.readValue(bytes, 0, bytes.length, valueClass);
         }
         return object;
     }
@@ -111,8 +112,7 @@ public final class SerDesUtils {
      * @return the associated byte array.
      */
     public static byte[] toJsonBytes(Object object) throws IOException {
-        final byte[] bytes = SerDesUtils.objectMapper
-                .writeValueAsString(object).getBytes();
+        final byte[] bytes = SerDesUtils.objectMapper.writeValueAsString(object).getBytes();
         return bytes;
     }
 
@@ -126,18 +126,14 @@ public final class SerDesUtils {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    public static Object toObject(byte[] bytes) throws IOException,
-            ClassNotFoundException {
+    public static Object toObject(byte[] bytes) throws IOException, ClassNotFoundException {
         Object object = null;
         if (bytes.length > 0) {
-            final ObjectInputStream stream = new SpecialObjectInputStream(
-                    new ByteArrayInputStream(bytes));
+            final ObjectInputStream stream = new SpecialObjectInputStream(new ByteArrayInputStream(
+                    bytes));
             object = stream.readObject();
             stream.close();
         }
         return object;
-    }
-
-    private SerDesUtils() {
     }
 }

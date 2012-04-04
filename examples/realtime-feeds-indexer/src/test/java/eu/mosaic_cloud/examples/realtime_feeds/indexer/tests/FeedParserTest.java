@@ -48,8 +48,7 @@ public class FeedParserTest {
         String line;
         byte[] bytes = null;
         try {
-            streamReader = new InputStreamReader(
-                    (new URL(feedsUrl)).openStream());
+            streamReader = new InputStreamReader((new URL(feedsUrl)).openStream());
             reader = new BufferedReader(streamReader);
             while ((line = reader.readLine()) != null) {
                 builder.append(line);

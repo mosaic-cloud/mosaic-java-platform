@@ -28,23 +28,20 @@ public class AmqpQueueConsumerConnector<TMessage> extends
         AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>> implements
         IAmqpQueueConsumerConnector<TMessage> {
 
-    public static <M> AmqpQueueConsumerConnector<M> create(
-            final ConnectorConfiguration configuration,
-            final Class<M> messageClass, final DataEncoder<M> messageEncoder,
-            final IAmqpQueueConsumerCallback<M> callback) {
-        final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy
-                .create(configuration, messageClass, messageEncoder, callback);
-        return new AmqpQueueConsumerConnector<M>(proxy);
-    }
-
-    protected AmqpQueueConsumerConnector(
-            final AmqpQueueConsumerConnectorProxy<TMessage> proxy) {
+    protected AmqpQueueConsumerConnector(final AmqpQueueConsumerConnectorProxy<TMessage> proxy) {
         super(proxy);
     }
 
+    public static <M> AmqpQueueConsumerConnector<M> create(
+            final ConnectorConfiguration configuration, final Class<M> messageClass,
+            final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback) {
+        final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy.create(
+                configuration, messageClass, messageEncoder, callback);
+        return new AmqpQueueConsumerConnector<M>(proxy);
+    }
+
     @Override
-    public CallbackCompletion<Void> acknowledge(
-            final IAmqpQueueDeliveryToken delivery) {
+    public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery) {
         return this.proxy.acknowledge(delivery);
     }
 }

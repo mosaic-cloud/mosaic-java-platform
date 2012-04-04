@@ -68,94 +68,70 @@ public class IndexerCloudlet {
         public CallbackCompletion<Void> destroy(IndexerCloudletContext context,
                 CloudletCallbackArguments<IndexerCloudletContext> arguments) {
             this.logger.info("Feeds IndexerCloudlet is being destroyed.");
-            return CallbackCompletion.createAndChained (
-            		context.metadataStore.destroy (),
-            		context.dataStore.destroy (),
-            		context.timelinesStore.destroy (),
-            		context.itemsStore.destroy (),
-            		context.tasksStore.destroy (),
-            		context.urgentConsumer.destroy (),
-            		context.batchConsumer.destroy ());
+            return CallbackCompletion.createAndChained(context.metadataStore.destroy(),
+                    context.dataStore.destroy(), context.timelinesStore.destroy(),
+                    context.itemsStore.destroy(), context.tasksStore.destroy(),
+                    context.urgentConsumer.destroy(), context.batchConsumer.destroy());
         }
 
         @Override
-        public CallbackCompletion<Void> initialize(
-                IndexerCloudletContext context,
+        public CallbackCompletion<Void> initialize(IndexerCloudletContext context,
                 CloudletCallbackArguments<IndexerCloudletContext> arguments) {
             this.logger.info("FeedIndexerCloudlet is being initialized.");
             context.cloudlet = arguments.getCloudlet();
             final IConfiguration configuration = context.cloudlet.getConfiguration();
             final IConfiguration metadataConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("metadata"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("metadata"));
             final DataEncoder<byte[]> nopEncoder = new NopDataEncoder();
             final DataEncoder<JSONObject> jsonEncoder = new JSONDataEncoder();
             context.metadataStoreCallback = new MetadataKVCallback();
             context.metadataStore = context.cloudlet.getConnectorFactory(
-                    IKvStoreConnectorFactory.class).create(
-                    metadataConfiguration, JSONObject.class, jsonEncoder,
-                    context.metadataStoreCallback, context);
+                    IKvStoreConnectorFactory.class).create(metadataConfiguration, JSONObject.class,
+                    jsonEncoder, context.metadataStoreCallback, context);
             final IConfiguration dataConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("data"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("data"));
             context.dataStoreCallback = new DataKVCallback();
-            context.dataStore = context.cloudlet.getConnectorFactory(
-                    IKvStoreConnectorFactory.class).create(dataConfiguration,
-                    byte[].class, nopEncoder, context.dataStoreCallback,
-                    context);
+            context.dataStore = context.cloudlet
+                    .getConnectorFactory(IKvStoreConnectorFactory.class).create(dataConfiguration,
+                            byte[].class, nopEncoder, context.dataStoreCallback, context);
             final IConfiguration timelinesConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("timelines"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("timelines"));
             context.timelinesStoreCallback = new TimelinesKVCallback();
             context.timelinesStore = context.cloudlet.getConnectorFactory(
-                    IKvStoreConnectorFactory.class).create(
-                    timelinesConfiguration, JSONObject.class, jsonEncoder,
-                    context.itemsStoreCallback, context);
+                    IKvStoreConnectorFactory.class).create(timelinesConfiguration,
+                    JSONObject.class, jsonEncoder, context.itemsStoreCallback, context);
             final IConfiguration itemsConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("items"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("items"));
             context.itemsStoreCallback = new ItemsKVCallback();
             context.itemsStore = context.cloudlet.getConnectorFactory(
-                    IKvStoreConnectorFactory.class).create(itemsConfiguration,
-                    JSONObject.class, jsonEncoder,
-                    context.timelinesStoreCallback, context);
+                    IKvStoreConnectorFactory.class).create(itemsConfiguration, JSONObject.class,
+                    jsonEncoder, context.timelinesStoreCallback, context);
             final IConfiguration tasksConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("tasks"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("tasks"));
             context.tasksStoreCallback = new TasksKVCallback();
             context.tasksStore = context.cloudlet.getConnectorFactory(
-                    IKvStoreConnectorFactory.class).create(tasksConfiguration,
-                    JSONObject.class, jsonEncoder, context.tasksStoreCallback,
-                    context);
+                    IKvStoreConnectorFactory.class).create(tasksConfiguration, JSONObject.class,
+                    jsonEncoder, context.tasksStoreCallback, context);
             final IConfiguration urgentQueueConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("urgent.queue"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("urgent.queue"));
             context.urgentConsumerCallback = new UrgentConsumerCallback();
             context.urgentConsumer = context.cloudlet.getConnectorFactory(
-                    IAmqpQueueConsumerConnectorFactory.class).create(
-                    urgentQueueConfiguration, JSONObject.class, jsonEncoder,
-                    context.urgentConsumerCallback, context);
+                    IAmqpQueueConsumerConnectorFactory.class).create(urgentQueueConfiguration,
+                    JSONObject.class, jsonEncoder, context.urgentConsumerCallback, context);
             final IConfiguration batchQueueConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier
-                            .resolveAbsolute("batch.queue"));
+                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("batch.queue"));
             context.batchConsumerCallback = new BatchConsumerCallback();
             context.batchConsumer = context.cloudlet.getConnectorFactory(
-                    IAmqpQueueConsumerConnectorFactory.class).create(
-                    batchQueueConfiguration, JSONObject.class, jsonEncoder,
-                    context.batchConsumerCallback, context);
-            return CallbackCompletion.createAndChained (
-            		context.metadataStore.initialize (),
-            		context.dataStore.initialize (),
-            		context.timelinesStore.initialize (),
-            		context.itemsStore.initialize (),
-            		context.tasksStore.initialize (),
-            		context.urgentConsumer.initialize (),
-            		context.batchConsumer.initialize ());
+                    IAmqpQueueConsumerConnectorFactory.class).create(batchQueueConfiguration,
+                    JSONObject.class, jsonEncoder, context.batchConsumerCallback, context);
+            return CallbackCompletion.createAndChained(context.metadataStore.initialize(),
+                    context.dataStore.initialize(), context.timelinesStore.initialize(),
+                    context.itemsStore.initialize(), context.tasksStore.initialize(),
+                    context.urgentConsumer.initialize(), context.batchConsumer.initialize());
         }
 
         @Override
-        public CallbackCompletion<Void> initializeSucceeded(
-                IndexerCloudletContext context,
+        public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
                 CloudletCallbackCompletionArguments<IndexerCloudletContext> arguments) {
             this.logger.info("Feeds IndexerCloudlet initialized successfully.");
             return ICallback.SUCCESS;

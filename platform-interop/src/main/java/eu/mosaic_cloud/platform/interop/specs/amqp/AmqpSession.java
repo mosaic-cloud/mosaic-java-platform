@@ -37,9 +37,7 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * 
  */
 public enum AmqpSession implements SessionSpecification {
-    CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(
-            AmqpRole.DRIVER,
-            AmqpRole.CONNECTOR);
+    CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(AmqpRole.DRIVER, AmqpRole.CONNECTOR);
 
     public final AmqpRole selfRole;
     public final AmqpRole peerRole;

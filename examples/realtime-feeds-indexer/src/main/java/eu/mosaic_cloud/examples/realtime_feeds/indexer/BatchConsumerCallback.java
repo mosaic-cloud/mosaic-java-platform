@@ -28,18 +28,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public final class BatchConsumerCallback extends QueueConsumerCallback {
 
     @Override
-    public CallbackCompletion<Void> destroySucceeded(
-            IndexerCloudletContext context,
+    public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
             CallbackArguments arguments) {
-        this.logger
-                .info("Batch Index Message consumer was destroyed successfully.");
+        this.logger.info("Batch Index Message consumer was destroyed successfully.");
         context.batchConsumer = null;
         return ICallback.SUCCESS;
     }
 
     @Override
-    public CallbackCompletion<Void> initializeSucceeded(
-            IndexerCloudletContext context,
+    public CallbackCompletion<Void> initializeSucceeded(IndexerCloudletContext context,
             CallbackArguments arguments) {
         // NOTE: if resource initialized successfully then just register as a
         // consumer

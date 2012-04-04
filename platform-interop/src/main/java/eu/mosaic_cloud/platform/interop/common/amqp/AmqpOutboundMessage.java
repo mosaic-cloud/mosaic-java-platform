@@ -59,11 +59,10 @@ public class AmqpOutboundMessage implements IAmqpMessage {
      *            the RFC-2046 MIME type for the Message content (such as
      *            "text/plain")
      */
-    public AmqpOutboundMessage(String exchange, String routingKey, byte[] data,
-            boolean mandatory, boolean immediate, boolean durable,
-            String contentType) {
-        this(exchange, routingKey, data, mandatory, immediate, durable, null,
-                null, contentType, null, null);
+    public AmqpOutboundMessage(String exchange, String routingKey, byte[] data, boolean mandatory,
+            boolean immediate, boolean durable, String contentType) {
+        this(exchange, routingKey, data, mandatory, immediate, durable, null, null, contentType,
+                null, null);
     }
 
     /**
@@ -101,10 +100,9 @@ public class AmqpOutboundMessage implements IAmqpMessage {
      *            to the same Node.
      * 
      */
-    public AmqpOutboundMessage(String exchange, String routingKey, byte[] data,
-            boolean mandatory, boolean immediate, boolean durable,
-            String callback, String contentEncoding, String contentType,
-            String correlation, String identifier) {
+    public AmqpOutboundMessage(String exchange, String routingKey, byte[] data, boolean mandatory,
+            boolean immediate, boolean durable, String callback, String contentEncoding,
+            String contentType, String correlation, String identifier) {
         super();
         this.callback = callback;
         this.contentEncoding = contentEncoding;

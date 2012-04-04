@@ -43,6 +43,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public final class GenericKvStoreConnectorProxy<TValue extends Object> extends
         BaseKvStoreConnectorProxy<TValue> {
 
+    protected GenericKvStoreConnectorProxy(final ConnectorConfiguration configuration,
+            final DataEncoder<TValue> encoder) {
+        super(configuration, encoder);
+    }
+
     /**
      * Returns a proxy for key-value distributed storage systems.
      * 
@@ -54,28 +59,20 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object> extends
      * @return the proxy
      */
     public static <T extends Object> GenericKvStoreConnectorProxy<T> create(
-            final ConnectorConfiguration configuration,
-            final DataEncoder<T> encoder) {
+            final ConnectorConfiguration configuration, final DataEncoder<T> encoder) {
         final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T>(
                 configuration, encoder);
         return proxy;
     }
 
-    protected GenericKvStoreConnectorProxy(
-            final ConnectorConfiguration configuration,
-            final DataEncoder<TValue> encoder) {
-        super(configuration, encoder);
-    }
-
     @Override
     public CallbackCompletion<Void> initialize() {
         final String bucket = super.configuration.getConfigParameter(
-                ConfigProperties.getString("GenericKvStoreConnector.1"),
-                String.class, "");
+                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
         final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
         requestBuilder.setToken(this.generateToken());
         requestBuilder.setBucket(bucket);
-        return this.connect(KeyValueSession.CONNECTOR, new Message(
-                KeyValueMessage.ACCESS, requestBuilder.build()));
+        return this.connect(KeyValueSession.CONNECTOR, new Message(KeyValueMessage.ACCESS,
+                requestBuilder.build()));
     }
 }

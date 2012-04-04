@@ -33,8 +33,7 @@ public interface IAmqpQueuePublisherConnectorFactory extends
         IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?>> {
 
     <TContext, TMessage, TExtra> IAmqpQueuePublisherConnector<TMessage, TExtra> create(
-            IConfiguration configuration,
-            Class<TMessage> messageClass,
+            IConfiguration configuration, Class<TMessage> messageClass,
             DataEncoder<TMessage> messageEncoder,
             IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback,
             TContext callbackContext);

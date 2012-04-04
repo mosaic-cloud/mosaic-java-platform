@@ -50,8 +50,7 @@ public class CallbackCompletionArguments extends CallbackArguments {
      * @param error
      *            the exception thrown by the operation
      */
-    public CallbackCompletionArguments(final ICloudletController<?> cloudlet, final
-            Throwable error) {
+    public CallbackCompletionArguments(final ICloudletController<?> cloudlet, final Throwable error) {
         super(cloudlet);
         this.error = error;
     }

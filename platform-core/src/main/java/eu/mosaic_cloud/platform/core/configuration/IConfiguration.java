@@ -36,8 +36,7 @@ public interface IConfiguration {
      * @param value
      *            the value of the parameter
      */
-    <T extends Object> void addParameter(
-            final ConfigurationIdentifier identifier, final T value);
+    <T extends Object> void addParameter(final ConfigurationIdentifier identifier, final T value);
 
     /**
      * Adds a parameter to the configuration.

@@ -47,9 +47,8 @@ public class Timeline {
         private final Map<String, String> links;
         private String key;
 
-        public Entry(String id, String title, String titleType, String content,
-                String contentType, long timestamp, String authorName,
-                String authorEmail, String authorURI) {
+        public Entry(String id, String title, String titleType, String content, String contentType,
+                long timestamp, String authorName, String authorEmail, String authorURI) {
             super();
             this.id = id;
             this.title = title;
@@ -73,8 +72,7 @@ public class Timeline {
                 json.put("id", this.id);
                 final JSONArray linksAlt = new JSONArray();
                 final JSONArray linksImg = new JSONArray();
-                for (final Map.Entry<String, String> link : this.links
-                        .entrySet()) {
+                for (final Map.Entry<String, String> link : this.links.entrySet()) {
                     if (link.getKey().equalsIgnoreCase("image")) {
                         linksImg.put(link.getValue());
                     } else if (link.getKey().equalsIgnoreCase("alternate")) {
@@ -161,11 +159,11 @@ public class Timeline {
         this.entries = new ArrayList<Entry>();
     }
 
-    public Entry addEntry(String entryId, String title, String titleType,
-            String content, String contentType, long entryTimestamp,
-            String authorName, String authorEmail, String authorURI) {
-        final Entry entry = new Entry(entryId, title, titleType, content,
-                contentType, entryTimestamp, authorName, authorEmail, authorURI);
+    public Entry addEntry(String entryId, String title, String titleType, String content,
+            String contentType, long entryTimestamp, String authorName, String authorEmail,
+            String authorURI) {
+        final Entry entry = new Entry(entryId, title, titleType, content, contentType,
+                entryTimestamp, authorName, authorEmail, authorURI);
         this.entries.add(entry);
         return entry;
     }

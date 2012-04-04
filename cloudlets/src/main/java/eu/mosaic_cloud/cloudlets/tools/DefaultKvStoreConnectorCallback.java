@@ -47,58 +47,48 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra> extends
     @Override
     public CallbackCompletion<Void> deleteFailed(final TContext context,
             final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Delete Failed", false,
-                false);
+        return this.handleUnhandledCallback(arguments, "Delete Failed", false, false);
     }
 
     @Override
     public CallbackCompletion<Void> deleteSucceeded(final TContext context,
             final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Delete Succeeded",
-                true, false);
+        return this.handleUnhandledCallback(arguments, "Delete Succeeded", true, false);
     }
 
     @Override
     public CallbackCompletion<Void> getFailed(final TContext context,
             final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Get Failed", false,
-                false);
+        return this.handleUnhandledCallback(arguments, "Get Failed", false, false);
     }
 
     @Override
     public CallbackCompletion<Void> getSucceeded(final TContext context,
             final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Get Succeeded", true,
-                false);
+        return this.handleUnhandledCallback(arguments, "Get Succeeded", true, false);
     }
 
     @Override
-    public CallbackCompletion<Void> listFailed(
-            final TContext context,
+    public CallbackCompletion<Void> listFailed(final TContext context,
             final KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Failed", false,
-                false);
+        return this.handleUnhandledCallback(arguments, "Set Failed", false, false);
     }
 
     @Override
-    public CallbackCompletion<Void> listSucceeded(
-            final TContext context,
+    public CallbackCompletion<Void> listSucceeded(final TContext context,
             final KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Succeeded", true,
-                false);
+        return this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
     }
 
     @Override
     public CallbackCompletion<Void> setFailed(final TContext context,
             final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Failed", false,
-                false);
+        return this.handleUnhandledCallback(arguments, "Set Failed", false, false);
     }
 
     @Override
     public CallbackCompletion<Void> setSucceeded(final TContext context,
             final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Set Succeeded", true,
-                false);
+        return this.handleUnhandledCallback(arguments, "Set Succeeded", true, false);
     }
 }

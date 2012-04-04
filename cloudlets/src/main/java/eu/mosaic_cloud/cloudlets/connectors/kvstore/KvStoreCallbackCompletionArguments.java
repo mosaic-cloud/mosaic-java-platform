@@ -41,8 +41,7 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
-        CallbackCompletionArguments {
+public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends CallbackCompletionArguments {
 
     private final List<String> keys;
     private final TValue value;
@@ -60,9 +59,8 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(
-            final ICloudletController<?> cloudlet, final List<String> keys,
-            final Throwable error, final TExtra extra) {
+    public KvStoreCallbackCompletionArguments(final ICloudletController<?> cloudlet,
+            final List<String> keys, final Throwable error, final TExtra extra) {
         super(cloudlet, error);
         this.keys = keys;
         this.value = null; // NOPMD
@@ -83,9 +81,8 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(
-            final ICloudletController<?> cloudlet, final List<String> keys,
-            final TValue value, final TExtra extra) {
+    public KvStoreCallbackCompletionArguments(final ICloudletController<?> cloudlet,
+            final List<String> keys, final TValue value, final TExtra extra) {
         super(cloudlet);
         this.keys = keys;
         this.value = value;
@@ -102,9 +99,8 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
      * @param error
      *            the exception thrown by the operation
      */
-    public KvStoreCallbackCompletionArguments(
-            final ICloudletController<?> cloudlet, final String key,
-            final Throwable error) {
+    public KvStoreCallbackCompletionArguments(final ICloudletController<?> cloudlet,
+            final String key, final Throwable error) {
         super(cloudlet, error);
         this.keys = Arrays.asList(key);
         this.value = null; // NOPMD
@@ -123,9 +119,8 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(
-            final ICloudletController<?> cloudlet, final String key,
-            final Throwable error, final TExtra extra) {
+    public KvStoreCallbackCompletionArguments(final ICloudletController<?> cloudlet,
+            final String key, final Throwable error, final TExtra extra) {
         super(cloudlet, error);
         this.keys = Arrays.asList(key);
         this.value = null; // NOPMD
@@ -145,9 +140,8 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra> extends
      * @param extra
      *            some application specific object
      */
-    public KvStoreCallbackCompletionArguments(
-            final ICloudletController<?> cloudlet, final String key,
-            final TValue value, final TExtra extra) {
+    public KvStoreCallbackCompletionArguments(final ICloudletController<?> cloudlet,
+            final String key, final TValue value, final TExtra extra) {
         super(cloudlet);
         this.keys = Arrays.asList(key);
         this.value = value;

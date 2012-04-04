@@ -36,8 +36,7 @@ public class JsonDataEncoder<T extends Object> implements DataEncoder<T> {
     public T decode(byte[] dataBytes) {
         T object = null;
         try {
-            object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes,
-                    this.dataClass));
+            object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes, this.dataClass));
         } catch (final IOException e) {
             ExceptionTracer.traceIgnored(e);
         } catch (final ClassNotFoundException e) {

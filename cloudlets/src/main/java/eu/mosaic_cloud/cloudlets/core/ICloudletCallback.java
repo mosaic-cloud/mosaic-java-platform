@@ -42,8 +42,7 @@ public interface ICloudletCallback<TContext> extends ICallback<TContext> {
      *            here, this argument just gives access to the cloudlet
      *            controller
      */
-    CallbackCompletion<Void> destroy(TContext context,
-            CloudletCallbackArguments<TContext> arguments);
+    CallbackCompletion<Void> destroy(TContext context, CloudletCallbackArguments<TContext> arguments);
 
     /**
      * Operation called after the cloudlet is unsuccessfully destroyed.

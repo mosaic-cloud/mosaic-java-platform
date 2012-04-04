@@ -42,8 +42,7 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
         // create configuration
         BasicThreadingSecurityManager.initialize();
         // initialize logging system
-        BaseConnectorTest.logger = MosaicLogger
-                .createLogger(BaseConnectorTest.class);
+        BaseConnectorTest.logger = MosaicLogger.createLogger(BaseConnectorTest.class);
     }
 
     protected static void tearDownScenario(final BaseScenario scenario) {
@@ -57,14 +56,12 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
         Assert.assertTrue(completion.await(this.scenario.getPoolTimeout()));
     }
 
-    protected boolean awaitBooleanOutcome(
-            final CallbackCompletion<Boolean> completion) {
+    protected boolean awaitBooleanOutcome(final CallbackCompletion<Boolean> completion) {
         this.await(completion);
         return this.getBooleanOutcome(completion);
     }
 
-    protected <Outcome> Outcome awaitOutcome(
-            final CallbackCompletion<Outcome> completion) {
+    protected <Outcome> Outcome awaitOutcome(final CallbackCompletion<Outcome> completion) {
         this.await(completion);
         return this.getOutcome(completion);
     }
@@ -76,15 +73,13 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
         return true;
     }
 
-    protected boolean getBooleanOutcome(
-            final CallbackCompletion<Boolean> completion) {
+    protected boolean getBooleanOutcome(final CallbackCompletion<Boolean> completion) {
         final Boolean value = this.getOutcome(completion);
         Assert.assertNotNull(value);
         return value.booleanValue();
     }
 
-    protected <Outcome> Outcome getOutcome(
-            final CallbackCompletion<Outcome> completion) {
+    protected <Outcome> Outcome getOutcome(final CallbackCompletion<Outcome> completion) {
         Assert.assertTrue(completion.isCompleted());
         Assert.assertEquals(null, completion.getException());
         return completion.getOutcome();

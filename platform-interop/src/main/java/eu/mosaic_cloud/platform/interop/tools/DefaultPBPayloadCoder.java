@@ -51,8 +51,7 @@ public class DefaultPBPayloadCoder implements PayloadCoder {
      * @param nullAllowed
      *            <code>true</code> if null objects can also be encoded
      */
-    public DefaultPBPayloadCoder(Class<? extends GeneratedMessage> clasz,
-            boolean nullAllowed) {
+    public DefaultPBPayloadCoder(Class<? extends GeneratedMessage> clasz, boolean nullAllowed) {
         super();
         Preconditions.checkNotNull(clasz);
         Preconditions.checkArgument(Serializable.class.isAssignableFrom(clasz));
@@ -62,8 +61,7 @@ public class DefaultPBPayloadCoder implements PayloadCoder {
 
     @Override
     public Object decode(ByteBuffer buffer) throws Throwable {
-        final Method createMethod = this.clasz.getMethod("parseFrom",
-                byte[].class);
+        final Method createMethod = this.clasz.getMethod("parseFrom", byte[].class);
         final Object object;
         try {
             object = createMethod.invoke(null, buffer.array());
@@ -74,8 +72,7 @@ public class DefaultPBPayloadCoder implements PayloadCoder {
             throw new IOException("unexpected null object");
         }
         if (!this.clasz.isInstance(object)) {
-            throw new IOException(String.format(
-                    "unexpected object class: `%s`", object.getClass()));
+            throw new IOException(String.format("unexpected object class: `%s`", object.getClass()));
         }
         return this.clasz.cast(object);
     }

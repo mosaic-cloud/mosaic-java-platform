@@ -62,14 +62,6 @@ public final class CloudletManager {
     private final ThreadingContext threading;
     private ClassLoader classLoader;
 
-    public static final CloudletManager create(final IConfiguration configuration,
-            final ClassLoader classLoader, final CallbackReactor reactor,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
-        return (new CloudletManager(configuration, classLoader, reactor, threading, exceptions,
-                channelFactory, channelResolver));
-    }
-
     private CloudletManager(final IConfiguration configuration, final ClassLoader classLoader,
             final CallbackReactor reactor, final ThreadingContext threading,
             final ExceptionTracer exceptions, final ChannelFactory channelFactory,
@@ -83,7 +75,7 @@ public final class CloudletManager {
         Preconditions.checkNotNull(channelFactory);
         Preconditions.checkNotNull(channelResolver);
         synchronized (this.monitor) {
-            Transcript transcript = Transcript.create(this);
+            final Transcript transcript = Transcript.create(this);
             this.exceptions = TranscriptExceptionTracer.create(transcript, exceptions);
             this.configuration = configuration;
             this.reactor = reactor;
@@ -95,10 +87,18 @@ public final class CloudletManager {
         }
     }
 
+    public static final CloudletManager create(final IConfiguration configuration,
+            final ClassLoader classLoader, final CallbackReactor reactor,
+            final ThreadingContext threading, final ExceptionTracer exceptions,
+            final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+        return (new CloudletManager(configuration, classLoader, reactor, threading, exceptions,
+                channelFactory, channelResolver));
+    }
+
     private final Cloudlet<?> createCloudletInstance() {
-        Class<?> cloudletCallbacksClass = this.resolveCloudletCallbacksClass();
-        Class<?> cloudletContextClass = this.resolveCloudletStateClass();
-        IConfiguration cloudletConfiguration = this.resolveCloudletConfiguration();
+        final Class<?> cloudletCallbacksClass = this.resolveCloudletCallbacksClass();
+        final Class<?> cloudletContextClass = this.resolveCloudletStateClass();
+        final IConfiguration cloudletConfiguration = this.resolveCloudletConfiguration();
 
         final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create(this.reactor,
                 this.threading, this.exceptions, this.channelFactory, this.channelResolver);
@@ -147,7 +147,7 @@ public final class CloudletManager {
         Preconditions.checkNotNull(className, "unknown cloudlet callbacks class");
         final Class<?> clasz;
         try {
-            clasz = classLoader.loadClass(className);
+            clasz = this.classLoader.loadClass(className);
         } catch (final ReflectiveOperationException exception) {
             this.exceptions.traceHandledException(exception);
             throw (new IllegalArgumentException(
@@ -165,7 +165,8 @@ public final class CloudletManager {
                 "unknown cloudlet configuration descriptor");
         final IConfiguration configuration;
         try {
-            configuration = PropertyTypeConfiguration.create(classLoader, configurationDescriptor);
+            configuration = PropertyTypeConfiguration.create(this.classLoader,
+                    configurationDescriptor);
         } catch (final Throwable exception) {
             this.exceptions.traceHandledException(exception);
             throw (new IllegalArgumentException(
@@ -180,7 +181,7 @@ public final class CloudletManager {
         Preconditions.checkNotNull(className, "unknown cloudlet context class");
         final Class<?> clasz;
         try {
-            clasz = classLoader.loadClass(className);
+            clasz = this.classLoader.loadClass(className);
         } catch (final ReflectiveOperationException exception) {
             this.exceptions.traceHandledException(exception);
             throw (new IllegalArgumentException(

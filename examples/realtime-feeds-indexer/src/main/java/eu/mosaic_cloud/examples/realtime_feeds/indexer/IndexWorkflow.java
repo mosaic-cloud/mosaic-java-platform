@@ -42,8 +42,7 @@ public class IndexWorkflow {
 
     private static final String INDEX_TASK_TYPE = "index-data";
     private static Map<UUID, IndexWorkflow> indexers = new HashMap<UUID, IndexWorkflow>();
-    private static MosaicLogger logger = MosaicLogger
-            .createLogger(IndexWorkflow.class);
+    private static MosaicLogger logger = MosaicLogger.createLogger(IndexWorkflow.class);
 
     private UUID key;
 
@@ -65,8 +64,18 @@ public class IndexWorkflow {
     private boolean indexDone = false;
     private JSONObject newTimeline;
 
-    private static final IndexWorkflow createIndexer(
-            IndexerCloudletContext context, JSONObject recvMessage) {
+    private IndexWorkflow(IndexerCloudletContext context, JSONObject recvMessage) {
+        super();
+        this.parser = new FeedParser();
+        this.currentFeedMetaData = new JSONObject();
+        this.newFeedTask = new JSONObject();
+        this.newFeedItems = new JSONArray();
+        this.context = context;
+        this.indexMessage = recvMessage;
+    }
+
+    private static final IndexWorkflow createIndexer(IndexerCloudletContext context,
+            JSONObject recvMessage) {
         final IndexWorkflow aIndexer = new IndexWorkflow(context, recvMessage);
         aIndexer.key = UUID.randomUUID();
         IndexWorkflow.indexers.put(aIndexer.key, aIndexer);
@@ -81,12 +90,9 @@ public class IndexWorkflow {
         return IndexWorkflow.indexers.get(key);
     }
 
-    public static void indexNewFeed(IndexerCloudletContext context,
-            JSONObject recvMessage) {
-        final IndexWorkflow aIndexer = IndexWorkflow.createIndexer(context,
-                recvMessage);
-        IndexWorkflow.logger.trace("New indexer created for message "
-                + aIndexer.indexMessage);
+    public static void indexNewFeed(IndexerCloudletContext context, JSONObject recvMessage) {
+        final IndexWorkflow aIndexer = IndexWorkflow.createIndexer(context, recvMessage);
+        IndexWorkflow.logger.trace("New indexer created for message " + aIndexer.indexMessage);
         aIndexer.fetchLatestFeed();
     }
 
@@ -117,16 +123,6 @@ public class IndexWorkflow {
         getIndexer(extra).handleMetadataUpdate();
     }
 
-    private IndexWorkflow(IndexerCloudletContext context, JSONObject recvMessage) {
-        super();
-        this.parser = new FeedParser();
-        this.currentFeedMetaData = new JSONObject();
-        this.newFeedTask = new JSONObject();
-        this.newFeedItems = new JSONArray();
-        this.context = context;
-        this.indexMessage = recvMessage;
-    }
-
     private void doFeedDiff(JSONObject fetchedData) {
         IndexWorkflow.logger.trace("indexing " + IndexWorkflow.INDEX_TASK_TYPE
                 + " step 4 (diff-ing latest feed)...");
@@ -135,23 +131,19 @@ public class IndexWorkflow {
         int currentSequence;
         try {
             this.previousFeedMetaData = fetchedData;
-            final int previousSequence = this.previousFeedMetaData
-                    .getInt("sequence");
+            final int previousSequence = this.previousFeedMetaData.getInt("sequence");
             long minItemTimestamp = -1;
             try {
-                minItemTimestamp = this.previousFeedMetaData
-                        .getLong("timestamp");
+                minItemTimestamp = this.previousFeedMetaData.getLong("timestamp");
             } catch (final JSONException e) {
             }
             long maxItemTimestamp = -1;
             maxItemTimestamp = minItemTimestamp;
             final List<Timeline.Entry> currentItems = new ArrayList<Timeline.Entry>();
             for (final Timeline.Entry item : this.currentTimeline.getEntries()) {
-                if ((minItemTimestamp == -1)
-                        || (item.getTimestamp() > minItemTimestamp)) {
+                if ((minItemTimestamp == -1) || (item.getTimestamp() > minItemTimestamp)) {
                     currentItems.add(item);
-                    if ((maxItemTimestamp == -1)
-                            || (item.getTimestamp() > maxItemTimestamp)) {
+                    if ((maxItemTimestamp == -1) || (item.getTimestamp() > maxItemTimestamp)) {
                         maxItemTimestamp = item.getTimestamp();
                     }
                 }
@@ -172,8 +164,8 @@ public class IndexWorkflow {
                 this.currentFeedMetaData.put("sequence", currentSequence);
                 // NOTE: setup new timeline
                 this.newTimeline = new JSONObject();
-                final String newTimelineKey = StoreUtils
-                        .generateFeedTimelineKey(currentURL, currentSequence);
+                final String newTimelineKey = StoreUtils.generateFeedTimelineKey(currentURL,
+                        currentSequence);
                 this.newTimeline.put("key", newTimelineKey);
                 this.newTimeline.put("url", currentURL);
                 this.newTimeline.put("feed", currentFeed);
@@ -182,8 +174,7 @@ public class IndexWorkflow {
                 // NOTE: generate keys for new items
                 final JSONArray items = new JSONArray();
                 for (final Timeline.Entry item : currentItems) {
-                    final String itemKey = StoreUtils.generateFeedItemKey(
-                            currentURL, item.getId());
+                    final String itemKey = StoreUtils.generateFeedItemKey(currentURL, item.getId());
                     items.put(itemKey);
                     item.setKey(itemKey);
                     // NOTE: store item
@@ -193,14 +184,12 @@ public class IndexWorkflow {
                     this.context.itemsStore.set(itemKey, json, this.key);
                 }
                 this.newTimeline.put("items", items);
-                this.currentFeedMetaData.put("timelines",
-                        this.newTimeline.getString("key"));
-                IndexWorkflow.logger.trace("Current timeline has  "
-                        + items.length() + " new items.");
+                this.currentFeedMetaData.put("timelines", this.newTimeline.getString("key"));
+                IndexWorkflow.logger.trace("Current timeline has  " + items.length()
+                        + " new items.");
                 JSONArray prevTimelines = null;
                 try {
-                    prevTimelines = this.previousFeedMetaData
-                            .getJSONArray("timelines");
+                    prevTimelines = this.previousFeedMetaData.getJSONArray("timelines");
                 } catch (final JSONException e) {
                 }
                 final JSONArray newMetadataTimelines = new JSONArray();
@@ -211,8 +200,7 @@ public class IndexWorkflow {
                     }
                 }
                 // NOTE: store timeline
-                this.context.timelinesStore.set(newTimelineKey,
-                        this.newTimeline, null);
+                this.context.timelinesStore.set(newTimelineKey, this.newTimeline, null);
             } else {
                 this.currentFeedMetaData = this.previousFeedMetaData;
                 storeIndexOutcome();
@@ -230,11 +218,9 @@ public class IndexWorkflow {
      */
     private void fetchLatestFeed() {
         try {
-            IndexWorkflow.logger.info("indexing "
-                    + this.indexMessage.getString("url")
+            IndexWorkflow.logger.info("indexing " + this.indexMessage.getString("url")
                     + " (from data) step 2 (fetching latest data)...");
-            this.context.dataStore.get(this.indexMessage.getString("data"),
-                    this.key);
+            this.context.dataStore.get(this.indexMessage.getString("data"), this.key);
         } catch (final JSONException e) {
             handleError(e);
         }
@@ -248,8 +234,7 @@ public class IndexWorkflow {
         onIndexError(errorMssg);
     }
 
-    private void handleMetadataStored(
-            KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
+    private void handleMetadataStored(KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments) {
         if (this.indexDone) {
             storeIndexOutcome();
         } else {
@@ -261,8 +246,7 @@ public class IndexWorkflow {
         IndexWorkflow.logger.trace("indexing " + IndexWorkflow.INDEX_TASK_TYPE
                 + " step 5 (updating meta-data)...");
         try {
-            this.context.metadataStore.set(
-                    this.currentFeedMetaData.getString("key"),
+            this.context.metadataStore.set(this.currentFeedMetaData.getString("key"),
                     this.currentFeedMetaData, this.key);
         } catch (final JSONException e) {
             ExceptionTracer.traceDeferred(e);
@@ -270,8 +254,7 @@ public class IndexWorkflow {
     }
 
     private void indexFeed() throws JSONException {
-        final String feedKey = StoreUtils.generateFeedKey(this.indexMessage
-                .getString("url"));
+        final String feedKey = StoreUtils.generateFeedKey(this.indexMessage.getString("url"));
         IndexWorkflow.logger.trace("indexing " + IndexWorkflow.INDEX_TASK_TYPE
                 + " step 3 (fetching latest meta-data)...");
         // FIXME: ??? (I don't remember what the problem was...)
@@ -286,8 +269,7 @@ public class IndexWorkflow {
      */
     private void parseFeed(byte[] fetchedData) {
         try {
-            IndexWorkflow.logger.trace("indexing "
-                    + this.indexMessage.getString("url")
+            IndexWorkflow.logger.trace("indexing " + this.indexMessage.getString("url")
                     + " (from data) step 2 (parsing latest data)...");
             final byte[] data = fetchedData;
             this.currentTimeline = this.parser.parseFeed(data);
@@ -306,8 +288,7 @@ public class IndexWorkflow {
                 + " step 6 (updating index task)...");
         try {
             final String feedTaskKey = StoreUtils.generateFeedTaskKey(
-                    this.indexMessage.getString("url"),
-                    IndexWorkflow.INDEX_TASK_TYPE);
+                    this.indexMessage.getString("url"), IndexWorkflow.INDEX_TASK_TYPE);
             this.newFeedTask.put("key", feedTaskKey);
             this.newFeedTask.put("type", IndexWorkflow.INDEX_TASK_TYPE);
             this.newFeedTask.put("feed", this.currentFeedMetaData.get("key"));

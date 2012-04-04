@@ -35,8 +35,7 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueDeliveryToken;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class AmqpQueueConsumeCallbackArguments<TMessage, TExtra> extends
-        CallbackArguments {
+public class AmqpQueueConsumeCallbackArguments<TMessage, TExtra> extends CallbackArguments {
 
     private final IAmqpQueueDeliveryToken delivery;
     private final TMessage message;
@@ -49,8 +48,7 @@ public class AmqpQueueConsumeCallbackArguments<TMessage, TExtra> extends
      * @param message
      *            information about the consume request
      */
-    public AmqpQueueConsumeCallbackArguments(
-            final ICloudletController<?> cloudlet,
+    public AmqpQueueConsumeCallbackArguments(final ICloudletController<?> cloudlet,
             final IAmqpQueueDeliveryToken delivery, final TMessage message) {
         super(cloudlet);
         this.message = message;

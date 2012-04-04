@@ -39,23 +39,20 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TValue, TExtra>
-        extends DefaultAmqpQueueConnectorCallback<TContext> implements
+public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TValue, TExtra> extends
+        DefaultAmqpQueueConnectorCallback<TContext> implements
         IAmqpQueueConsumerConnectorCallback<TContext, TValue, TExtra> {
 
     @Override
     public CallbackCompletion<Void> acknowledgeFailed(final TContext context,
             final GenericCallbackCompletionArguments<TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Acknowledge Failed",
-                false, false);
+        return this.handleUnhandledCallback(arguments, "Acknowledge Failed", false, false);
     }
 
     @Override
-    public CallbackCompletion<Void> acknowledgeSucceeded(
-            final TContext context,
+    public CallbackCompletion<Void> acknowledgeSucceeded(final TContext context,
             final GenericCallbackCompletionArguments<TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Acknowledge Succeeded",
-                true, false);
+        return this.handleUnhandledCallback(arguments, "Acknowledge Succeeded", true, false);
     }
 
     @Override

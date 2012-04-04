@@ -42,8 +42,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
-        extends IKvStoreConnectorCallback<TContext, TValue, TExtra> {
+public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> extends
+        IKvStoreConnectorCallback<TContext, TValue, TExtra> {
 
     /**
      * Called when the add operation completed unsuccessfully. The error can be
@@ -123,8 +123,7 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getBulkFailed(
-            TContext context,
+    CallbackCompletion<Void> getBulkFailed(TContext context,
             KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra> arguments);
 
     /**
@@ -136,8 +135,7 @@ public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
      * @param arguments
      *            callback arguments
      */
-    CallbackCompletion<Void> getBulkSucceeded(
-            TContext context,
+    CallbackCompletion<Void> getBulkSucceeded(TContext context,
             KvStoreCallbackCompletionArguments<Map<String, TValue>, TExtra> arguments);
 
     /**

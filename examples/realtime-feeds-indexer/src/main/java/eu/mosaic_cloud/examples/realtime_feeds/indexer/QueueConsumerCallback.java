@@ -28,8 +28,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
 
-public class QueueConsumerCallback
-        extends
+public class QueueConsumerCallback extends
         DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
     @Override

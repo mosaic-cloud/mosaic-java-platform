@@ -36,8 +36,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
-        extends IAmqpQueueConnectorCallback<TContext> {
+public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> extends
+        IAmqpQueueConnectorCallback<TContext> {
 
     /**
      * Handles unsuccessful message acknowledge events.

@@ -56,8 +56,7 @@ public class GenericOperation<T> implements IOperation<T> {
             super.run();
             try {
                 GenericOperation.this.cHandlerSet.await();
-                GenericOperation.this.complHandler.onSuccess(GenericTask.super
-                        .get());
+                GenericOperation.this.complHandler.onSuccess(GenericTask.super.get());
             } catch (final InterruptedException e) {
                 ExceptionTracer.traceIgnored(e);
             } catch (final ExecutionException e) {
@@ -114,17 +113,15 @@ public class GenericOperation<T> implements IOperation<T> {
     @Override
     public boolean cancel() {
         boolean cancelled = true; // NOPMD by georgiana on 10/12/11 5:02 PM
-        if ((this.operation != null)
-                && (cancelled = this.operation.cancel(true))) { // NOPMD
-                                                                // by
-                                                                // georgiana
-                                                                // on
-                                                                // 10/12/11
-                                                                // 5:01
-                                                                // PM
+        if ((this.operation != null) && (cancelled = this.operation.cancel(true))) { // NOPMD
+                                                                                     // by
+                                                                                     // georgiana
+                                                                                     // on
+                                                                                     // 10/12/11
+                                                                                     // 5:01
+                                                                                     // PM
             assert getHandler() != null : "Operation callback is NULL.";
-            getHandler().onFailure(
-                    new NullCompletionCallback("Operation callback is NULL."));
+            getHandler().onFailure(new NullCompletionCallback("Operation callback is NULL."));
         }
         return cancelled;
     }
@@ -177,8 +174,8 @@ public class GenericOperation<T> implements IOperation<T> {
      *             if the wait timed out
      */
     @Override
-    public T get(final long timeout, final TimeUnit unit)
-            throws InterruptedException, ExecutionException, TimeoutException {
+    public T get(final long timeout, final TimeUnit unit) throws InterruptedException,
+            ExecutionException, TimeoutException {
         T result = null; // NOPMD by georgiana on 10/12/11 5:02 PM
         if (this.operation != null) {
             try {

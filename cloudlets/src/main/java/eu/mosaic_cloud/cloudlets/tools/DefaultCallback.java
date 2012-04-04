@@ -50,9 +50,8 @@ public class DefaultCallback<TContext> implements ICallback<TContext> {
      * @param couldDestroy
      *            <code>true</code> if cloudlet can be destroyed here
      */
-    protected CallbackCompletion<Void> handleUnhandledCallback(
-            final CallbackArguments arguments, final String callbackType,
-            final boolean positive, final boolean couldDestroy) {
+    protected CallbackCompletion<Void> handleUnhandledCallback(final CallbackArguments arguments,
+            final String callbackType, final boolean positive, final boolean couldDestroy) {
         this.traceUnhandledCallback(arguments, callbackType, positive);
         if (!positive && couldDestroy) {
             arguments.getCloudlet().destroy();
@@ -73,8 +72,7 @@ public class DefaultCallback<TContext> implements ICallback<TContext> {
      */
     protected void traceUnhandledCallback(final CallbackArguments arguments,
             final String callbackType, final boolean positive) {
-        this.logger.info("unhandled cloudlet callback: `%s`@`%s` %s", this
-                .getClass().getName(), callbackType, (positive ? "Succeeded"
-                : "Failed"));
+        this.logger.info("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass().getName(),
+                callbackType, (positive ? "Succeeded" : "Failed"));
     }
 }

@@ -38,8 +38,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IMemcacheKvStoreConnector<TValue, TExtra>
-        extends
+public interface IMemcacheKvStoreConnector<TValue, TExtra> extends
         IKvStoreConnector<TValue, TExtra>,
         eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector<TValue> {
 
@@ -65,8 +64,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> add(String key, TValue value, int exp,
-            TExtra extra);
+    CallbackCompletion<Boolean> add(String key, TValue value, int exp, TExtra extra);
 
     /**
      * Adds specified data to an existing key after existing data.
@@ -104,8 +102,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Map<String, TValue>> getBulk(List<String> keys,
-            TExtra extra);
+    CallbackCompletion<Map<String, TValue>> getBulk(List<String> keys, TExtra extra);
 
     /**
      * Adds specified data to an existing key before existing data.
@@ -142,8 +139,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> replace(String key, TValue value, int exp,
-            TExtra extra);
+    CallbackCompletion<Boolean> replace(String key, TValue value, int exp, TExtra extra);
 
     /**
      * Stores the given data and associates it with the specified key.
@@ -166,6 +162,5 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
      *            some application specific data
      * @return a result handle for the operation
      */
-    CallbackCompletion<Boolean> set(String key, TValue value, int exp,
-            TExtra extra);
+    CallbackCompletion<Boolean> set(String key, TValue value, int exp, TExtra extra);
 }

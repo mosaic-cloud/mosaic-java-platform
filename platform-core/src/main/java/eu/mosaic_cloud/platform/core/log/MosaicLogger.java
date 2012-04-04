@@ -32,6 +32,10 @@ public final class MosaicLogger {
 
     private final Transcript logger;
 
+    private MosaicLogger(Class<?> owner) {
+        this.logger = Transcript.create(owner);
+    }
+
     /**
      * Returns a mOSAIC logger.
      * 
@@ -54,10 +58,6 @@ public final class MosaicLogger {
      */
     public static MosaicLogger createLogger(Object owner) { // NOPMD by
         return new MosaicLogger(owner.getClass());
-    }
-
-    private MosaicLogger(Class<?> owner) {
-        this.logger = Transcript.create(owner);
     }
 
     /**

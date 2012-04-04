@@ -37,8 +37,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of stored data
  */
 public class MemcacheKvStoreConnector<TValue extends Object> extends
-        BaseKvStoreConnector<TValue, MemcacheKvStoreConnectorProxy<TValue>>
-        implements IMemcacheKvStoreConnector<TValue> {
+        BaseKvStoreConnector<TValue, MemcacheKvStoreConnectorProxy<TValue>> implements
+        IMemcacheKvStoreConnector<TValue> {
+
+    protected MemcacheKvStoreConnector(final MemcacheKvStoreConnectorProxy<TValue> proxy) {
+        super(proxy);
+    }
 
     /**
      * Creates the connector.
@@ -52,27 +56,19 @@ public class MemcacheKvStoreConnector<TValue extends Object> extends
      * @throws Throwable
      */
     public static <T extends Object> MemcacheKvStoreConnector<T> create(
-            final ConnectorConfiguration configuration,
-            final DataEncoder<T> encoder) {
-        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy
-                .create(configuration, encoder);
+            final ConnectorConfiguration configuration, final DataEncoder<T> encoder) {
+        final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create(
+                configuration, encoder);
         return new MemcacheKvStoreConnector<T>(proxy);
     }
 
-    protected MemcacheKvStoreConnector(
-            final MemcacheKvStoreConnectorProxy<TValue> proxy) {
-        super(proxy);
-    }
-
     @Override
-    public CallbackCompletion<Boolean> add(final String key, final int exp,
-            final TValue data) {
+    public CallbackCompletion<Boolean> add(final String key, final int exp, final TValue data) {
         return this.proxy.add(key, exp, data);
     }
 
     @Override
-    public CallbackCompletion<Boolean> append(final String key,
-            final TValue data) {
+    public CallbackCompletion<Boolean> append(final String key, final TValue data) {
         return this.proxy.append(key, data);
     }
 
@@ -82,26 +78,22 @@ public class MemcacheKvStoreConnector<TValue extends Object> extends
     }
 
     @Override
-    public CallbackCompletion<Map<String, TValue>> getBulk(
-            final List<String> keys) {
+    public CallbackCompletion<Map<String, TValue>> getBulk(final List<String> keys) {
         return this.proxy.getBulk(keys);
     }
 
     @Override
-    public CallbackCompletion<Boolean> prepend(final String key,
-            final TValue data) {
+    public CallbackCompletion<Boolean> prepend(final String key, final TValue data) {
         return this.proxy.prepend(key, data);
     }
 
     @Override
-    public CallbackCompletion<Boolean> replace(final String key, final int exp,
-            final TValue data) {
+    public CallbackCompletion<Boolean> replace(final String key, final int exp, final TValue data) {
         return this.proxy.replace(key, exp, data);
     }
 
     @Override
-    public CallbackCompletion<Boolean> set(final String key, final int exp,
-            final TValue data) {
+    public CallbackCompletion<Boolean> set(final String key, final int exp, final TValue data) {
         return this.proxy.set(key, exp, data);
     }
 }

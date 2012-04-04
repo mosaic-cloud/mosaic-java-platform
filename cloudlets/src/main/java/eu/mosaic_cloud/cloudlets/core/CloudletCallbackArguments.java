@@ -22,8 +22,7 @@ package eu.mosaic_cloud.cloudlets.core;
 
 public class CloudletCallbackArguments<TContext> extends CallbackArguments {
 
-    public CloudletCallbackArguments(
-            final ICloudletController<TContext> cloudlet) {
+    public CloudletCallbackArguments(final ICloudletController<TContext> cloudlet) {
         super(cloudlet);
     }
 

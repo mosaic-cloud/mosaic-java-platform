@@ -32,34 +32,30 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultConnectorCallback<TContext> extends
-        DefaultCallback<TContext> implements IConnectorCallback<TContext> {
+public class DefaultConnectorCallback<TContext> extends DefaultCallback<TContext> implements
+        IConnectorCallback<TContext> {
 
     @Override
     public CallbackCompletion<Void> destroyFailed(final TContext context,
             final CallbackArguments arguments) {
-        return this.handleUnhandledCallback(arguments,
-                "Resource Destroy Failed", false, false);
+        return this.handleUnhandledCallback(arguments, "Resource Destroy Failed", false, false);
     }
 
     @Override
     public CallbackCompletion<Void> destroySucceeded(final TContext context,
             final CallbackArguments arguments) {
-        return this.handleUnhandledCallback(arguments,
-                "Resource Destroy Succeeded", true, false);
+        return this.handleUnhandledCallback(arguments, "Resource Destroy Succeeded", true, false);
     }
 
     @Override
     public CallbackCompletion<Void> initializeFailed(final TContext context,
             final CallbackArguments arguments) {
-        return this.handleUnhandledCallback(arguments,
-                "Resource Initialize Failed", false, true);
+        return this.handleUnhandledCallback(arguments, "Resource Initialize Failed", false, true);
     }
 
     @Override
     public CallbackCompletion<Void> initializeSucceeded(final TContext context,
             final CallbackArguments arguments) {
-        return this.handleUnhandledCallback(arguments,
-                "Resource Initialize Succeeded", true, true);
+        return this.handleUnhandledCallback(arguments, "Resource Initialize Succeeded", true, true);
     }
 }

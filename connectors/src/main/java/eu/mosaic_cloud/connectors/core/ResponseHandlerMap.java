@@ -61,8 +61,7 @@ public class ResponseHandlerMap {
      */
     public void cancelAll() {
         synchronized (this.futures) {
-            for (final CallbackCompletionDeferredFuture<?> future : this.futures
-                    .values()) {
+            for (final CallbackCompletionDeferredFuture<?> future : this.futures.values()) {
                 future.trigger.triggerFailed(new CallbackCanceled()); // NOPMD
             }
             this.futures.clear();
@@ -92,8 +91,7 @@ public class ResponseHandlerMap {
      */
     public CallbackCompletionDeferredFuture<?> peek(final String request) {
         Preconditions.checkNotNull(request);
-        final CallbackCompletionDeferredFuture<?> future = this.futures
-                .get(request);
+        final CallbackCompletionDeferredFuture<?> future = this.futures.get(request);
         Preconditions.checkState(future != null);
         return future;
     }
@@ -121,11 +119,9 @@ public class ResponseHandlerMap {
      * @param request
      *            the request identifier
      */
-    private CallbackCompletionDeferredFuture<?> removeRequest(
-            final String request) {
+    private CallbackCompletionDeferredFuture<?> removeRequest(final String request) {
         Preconditions.checkNotNull(request);
-        final CallbackCompletionDeferredFuture<?> future = this.futures
-                .remove(request);
+        final CallbackCompletionDeferredFuture<?> future = this.futures.remove(request);
         Preconditions.checkState(future != null);
         return future;
     }
@@ -142,10 +138,8 @@ public class ResponseHandlerMap {
     @SuppressWarnings("unchecked")
     public void succeed(final String request, final Object outcome) {
         Preconditions.checkNotNull(request);
-        final CallbackCompletionDeferredFuture<?> future = this.futures
-                .remove(request);
+        final CallbackCompletionDeferredFuture<?> future = this.futures.remove(request);
         Preconditions.checkState(future != null);
-        ((CallbackCompletionDeferredFuture<Object>) future).trigger
-                .triggerSucceeded(outcome);
+        ((CallbackCompletionDeferredFuture<Object>) future).trigger.triggerSucceeded(outcome);
     }
 }

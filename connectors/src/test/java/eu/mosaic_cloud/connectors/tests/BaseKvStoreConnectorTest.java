@@ -29,16 +29,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreConnector<String, ?>>
-        extends
-        BaseConnectorTest<TConnector, BaseKvStoreConnectorTest.Scenario> {
+        extends BaseConnectorTest<TConnector, BaseKvStoreConnectorTest.Scenario> {
 
     public static class Scenario extends BaseScenario {
 
         public String keyPrefix = UUID.randomUUID().toString();
 
         public <C extends BaseKvStoreConnector<String, ?>> Scenario(
-                Class<? extends BaseKvStoreConnectorTest<C>> owner,
-                IConfiguration configuration) {
+                Class<? extends BaseKvStoreConnectorTest<C>> owner, IConfiguration configuration) {
             super(owner, configuration);
         }
     }
@@ -64,8 +62,7 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 
     protected void testGet() {
         final String k1 = this.scenario.keyPrefix + "_key_fantastic";
-        Assert.assertEquals("fantastic",
-                this.awaitOutcome(this.connector.get(k1)));
+        Assert.assertEquals("fantastic", this.awaitOutcome(this.connector.get(k1)));
     }
 
     protected void testList() {
@@ -75,9 +72,7 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
     protected void testSet() {
         final String k1 = this.scenario.keyPrefix + "_key_fantastic";
         final String k2 = this.scenario.keyPrefix + "_key_famous";
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1,
-                "fantastic")));
-        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2,
-                "famous")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k1, "fantastic")));
+        Assert.assertTrue(this.awaitBooleanOutcome(this.connector.set(k2, "famous")));
     }
 }

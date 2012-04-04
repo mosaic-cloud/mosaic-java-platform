@@ -44,55 +44,49 @@ import com.google.common.base.Preconditions;
 
 public class DefaultConnectorsFactory extends BaseConnectorsFactory { // NOPMD
 
-    public static final DefaultConnectorsFactory create(
-            final IConnectorsFactory delegate,
+    protected DefaultConnectorsFactory(final IConnectorsFactory delegate) {
+        super(delegate);
+    }
+
+    public static final DefaultConnectorsFactory create(final IConnectorsFactory delegate,
             final ConnectorEnvironment environment) {
-        final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(
-                delegate);
+        final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(delegate);
         DefaultConnectorsFactory.initialize(factory, environment);
         return factory;
     }
 
-    protected static final void initialize(
-            final DefaultConnectorsFactory factory,
+    protected static final void initialize(final DefaultConnectorsFactory factory,
             final ConnectorEnvironment environment) {
         Preconditions.checkNotNull(factory);
         Preconditions.checkNotNull(environment);
-        factory.registerFactory(IKvStoreConnectorFactory.class,
-                new IKvStoreConnectorFactory() {
+        factory.registerFactory(IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory() {
 
-                    @Override
-                    public <TValue> IKvStoreConnector<TValue> create(
-                            final IConfiguration configuration,
-                            final Class<TValue> valueClass,
-                            final DataEncoder<TValue> valueEncoder) {
-                        return GenericKvStoreConnector.create(
-                                ConnectorConfiguration.create(configuration,
-                                        environment), valueEncoder);
-                    }
-                });
+            @Override
+            public <TValue> IKvStoreConnector<TValue> create(final IConfiguration configuration,
+                    final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder) {
+                return GenericKvStoreConnector.create(
+                        ConnectorConfiguration.create(configuration, environment), valueEncoder);
+            }
+        });
         factory.registerFactory(IMemcacheKvStoreConnectorFactory.class,
                 new IMemcacheKvStoreConnectorFactory() {
 
                     @Override
                     public <TValue> IMemcacheKvStoreConnector<TValue> create(
-                            final IConfiguration configuration,
-                            final Class<TValue> valueClass,
+                            final IConfiguration configuration, final Class<TValue> valueClass,
                             final DataEncoder<TValue> valueEncoder) {
                         return MemcacheKvStoreConnector.create(
-                                ConnectorConfiguration.create(configuration,
-                                        environment), valueEncoder);
+                                ConnectorConfiguration.create(configuration, environment),
+                                valueEncoder);
                     }
                 });
         factory.registerFactory(IAmqpQueueRawConnectorFactory.class,
                 new IAmqpQueueRawConnectorFactory() {
 
                     @Override
-                    public IAmqpQueueRawConnector create(
-                            final IConfiguration configuration) {
-                        return AmqpQueueRawConnector
-                                .create(ConnectorConfiguration.create(
-                                        configuration, environment));
+                    public IAmqpQueueRawConnector create(final IConfiguration configuration) {
+                        return AmqpQueueRawConnector.create(ConnectorConfiguration.create(
+                                configuration, environment));
                     }
                 });
         factory.registerFactory(IAmqpQueueConsumerConnectorFactory.class,
@@ -100,14 +94,12 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory { // NOPMD
 
                     @Override
                     public <TMessage> IAmqpQueueConsumerConnector<TMessage> create(
-                            final IConfiguration configuration,
-                            final Class<TMessage> messageClass,
+                            final IConfiguration configuration, final Class<TMessage> messageClass,
                             final DataEncoder<TMessage> messageEncoder,
                             final IAmqpQueueConsumerCallback<TMessage> callback) {
                         return AmqpQueueConsumerConnector.create(
-                                ConnectorConfiguration.create(configuration,
-                                        environment), messageClass,
-                                messageEncoder, callback);
+                                ConnectorConfiguration.create(configuration, environment),
+                                messageClass, messageEncoder, callback);
                     }
                 });
         factory.registerFactory(IAmqpQueuePublisherConnectorFactory.class,
@@ -115,18 +107,12 @@ public class DefaultConnectorsFactory extends BaseConnectorsFactory { // NOPMD
 
                     @Override
                     public <TMessage> IAmqpQueuePublisherConnector<TMessage> create(
-                            final IConfiguration configuration,
-                            final Class<TMessage> messageClass,
+                            final IConfiguration configuration, final Class<TMessage> messageClass,
                             final DataEncoder<TMessage> messageEncoder) {
                         return AmqpQueuePublisherConnector.create(
-                                ConnectorConfiguration.create(configuration,
-                                        environment), messageClass,
-                                messageEncoder);
+                                ConnectorConfiguration.create(configuration, environment),
+                                messageClass, messageEncoder);
                     }
                 });
-    }
-
-    protected DefaultConnectorsFactory(final IConnectorsFactory delegate) {
-        super(delegate);
     }
 }

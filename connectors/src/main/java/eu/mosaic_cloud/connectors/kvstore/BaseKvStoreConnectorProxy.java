@@ -57,13 +57,12 @@ import com.google.protobuf.ByteString;
  *            type of stored data
  * 
  */
-public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
-        BaseConnectorProxy implements IKvStoreConnector<TValue> {
+public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends BaseConnectorProxy
+        implements IKvStoreConnector<TValue> {
 
     protected DataEncoder<TValue> encoder;
 
-    protected BaseKvStoreConnectorProxy(
-            final ConnectorConfiguration configuration,
+    protected BaseKvStoreConnectorProxy(final ConnectorConfiguration configuration,
             final DataEncoder<TValue> encoder) {
         super(configuration);
         this.encoder = encoder;
@@ -75,8 +74,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         final DeleteRequest.Builder requestBuilder = DeleteRequest.newBuilder();
         requestBuilder.setToken(token);
         requestBuilder.setKey(key);
-        final Message message = new Message(KeyValueMessage.DELETE_REQUEST,
-                requestBuilder.build());
+        final Message message = new Message(KeyValueMessage.DELETE_REQUEST, requestBuilder.build());
         return this.sendRequest(message, token, Boolean.class);
     }
 
@@ -85,15 +83,13 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         final CompletionToken token = this.generateToken();
         final AbortRequest.Builder requestBuilder = AbortRequest.newBuilder();
         requestBuilder.setToken(token);
-        return this.disconnect(new Message(KeyValueMessage.ABORTED,
-                requestBuilder.build()));
+        return this.disconnect(new Message(KeyValueMessage.ABORTED, requestBuilder.build()));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public CallbackCompletion<TValue> get(final String key) {
-        return this.sendGetMessage(Arrays.asList(key),
-                (Class<TValue>) Object.class);
+        return this.sendGetMessage(Arrays.asList(key), (Class<TValue>) Object.class);
     }
 
     @Override
@@ -102,10 +98,9 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         final CompletionToken token = this.generateToken();
         final ListRequest.Builder requestBuilder = ListRequest.newBuilder();
         requestBuilder.setToken(token);
-        final Message message = new Message(KeyValueMessage.LIST_REQUEST,
-                requestBuilder.build());
-        return (CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this
-                .sendRequest(message, token, List.class));
+        final Message message = new Message(KeyValueMessage.LIST_REQUEST, requestBuilder.build());
+        return (CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest(
+                message, token, List.class));
     }
 
     @Override
@@ -115,8 +110,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         case OK: {
             final IdlCommon.Ok okPayload = (Ok) message.payload;
             final CompletionToken token = okPayload.getToken();
-            this.logger.debug(
-                    "BaseKvStoreConnectorProxy - Received %s response [%s]...", // NOPMD
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...", // NOPMD
                     message.specification.toString(), token.getMessageId());
             this.pendingRequests.succeed(token.getMessageId(), Boolean.TRUE);
         }
@@ -124,8 +118,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         case NOK: {
             final IdlCommon.NotOk nokPayload = (NotOk) message.payload;
             final CompletionToken token = nokPayload.getToken();
-            this.logger.debug(
-                    "BaseKvStoreConnectorProxy - Received %s response [%s]...",
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
                     message.specification.toString(), token.getMessageId());
             this.pendingRequests.succeed(token.getMessageId(), Boolean.FALSE);
         }
@@ -133,35 +126,30 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         case ERROR: {
             final IdlCommon.Error errorPayload = (Error) message.payload;
             final CompletionToken token = errorPayload.getToken();
-            this.logger.debug(
-                    "BaseKvStoreConnectorProxy - Received %s response [%s]...",
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
                     message.specification.toString(), token.getMessageId());
-            this.pendingRequests.fail(token.getMessageId(), new Exception(
-                    errorPayload.getErrorMessage()));
+            this.pendingRequests.fail(token.getMessageId(),
+                    new Exception(errorPayload.getErrorMessage()));
         }
             break;
         case LIST_REPLY: {
             final KeyValuePayloads.ListReply listPayload = (ListReply) message.payload;
             final CompletionToken token = listPayload.getToken();
-            this.logger.debug(
-                    "BaseKvStoreConnectorProxy - Received %s response [%s]...",
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
                     message.specification.toString(), token.getMessageId());
-            this.pendingRequests.succeed(token.getMessageId(),
-                    listPayload.getKeysList());
+            this.pendingRequests.succeed(token.getMessageId(), listPayload.getKeysList());
         }
             break;
         case GET_REPLY: {
             final KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
             final CompletionToken token = getPayload.getToken();
-            this.logger.debug(
-                    "BaseKvStoreConnectorProxy - Received %s response [%s]...",
+            this.logger.debug("BaseKvStoreConnectorProxy - Received %s response [%s]...",
                     message.specification.toString(), token.getMessageId());
             final List<KVEntry> resultEntries = getPayload.getResultsList();
             TValue value = null; // NOPMD
             if (!resultEntries.isEmpty()) {
                 try {
-                    value = this.encoder.decode(resultEntries.get(0).getValue()
-                            .toByteArray()); // NOPMD
+                    value = this.encoder.decode(resultEntries.get(0).getValue().toByteArray()); // NOPMD
                 } catch (final EncodingException exception) {
                     this.pendingRequests.fail(token.getMessageId(), exception);
                     return;
@@ -181,13 +169,12 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         final GetRequest.Builder requestBuilder = GetRequest.newBuilder();
         requestBuilder.setToken(token);
         requestBuilder.addAllKey(keys);
-        final Message message = new Message(KeyValueMessage.GET_REQUEST,
-                requestBuilder.build());
+        final Message message = new Message(KeyValueMessage.GET_REQUEST, requestBuilder.build());
         return this.sendRequest(message, token, outcomeClass);
     }
 
-    protected CallbackCompletion<Boolean> sendSetMessage(final String key,
-            final TValue data, final int exp) {
+    protected CallbackCompletion<Boolean> sendSetMessage(final String key, final TValue data,
+            final int exp) {
         CallbackCompletion<Boolean> result;
         try {
             final byte[] dataBytes = this.encoder.encode(data);
@@ -197,8 +184,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
             requestBuilder.setKey(key);
             requestBuilder.setExpTime(exp);
             requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(KeyValueMessage.SET_REQUEST,
-                    requestBuilder.build());
+            final Message message = new Message(KeyValueMessage.SET_REQUEST, requestBuilder.build());
             result = this.sendRequest(message, token, Boolean.class); // NOPMD
         } catch (final EncodingException exception) {
             result = CallbackCompletion.createFailure(exception);
@@ -206,8 +192,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object> extends
         return result;
     }
 
-    public CallbackCompletion<Boolean> set(final String key, final int exp,
-            final TValue data) {
+    public CallbackCompletion<Boolean> set(final String key, final int exp, final TValue data) {
         return this.sendSetMessage(key, data, exp);
     }
 

@@ -49,25 +49,6 @@ public final class CloudletEnvironment {
     private final SupplementaryEnvironment supplementary;
     private final ThreadingContext threading;
 
-    public static final CloudletEnvironment create(final IConfiguration configuration,
-            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
-            final ClassLoader classLoader, final IConnectorsFactory connectors,
-            final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions) {
-        return new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
-                classLoader, connectors, reactor, threading, exceptions,
-                new HashMap<String, Object>());
-    }
-
-    public static final CloudletEnvironment create(final IConfiguration configuration,
-            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
-            final ClassLoader classLoader, final IConnectorsFactory connectors,
-            final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
-        return new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
-                classLoader, connectors, reactor, threading, exceptions, supplementary);
-    }
-
     private CloudletEnvironment(final IConfiguration configuration,
             final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
             final ClassLoader classLoader, final IConnectorsFactory connectors,
@@ -103,43 +84,58 @@ public final class CloudletEnvironment {
                 });
     }
 
-    public Object createContext() throws InstantiationException, IllegalAccessException {
-        return this.cloudletContextClass.newInstance();
+    public static final CloudletEnvironment create(final IConfiguration configuration,
+            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
+            final ClassLoader classLoader, final IConnectorsFactory connectors,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions) {
+        return new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
+                classLoader, connectors, reactor, threading, exceptions,
+                new HashMap<String, Object>());
+    }
+
+    public static final CloudletEnvironment create(final IConfiguration configuration,
+            final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass,
+            final ClassLoader classLoader, final IConnectorsFactory connectors,
+            final CallbackReactor reactor, final ThreadingContext threading,
+            final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
+        return new CloudletEnvironment(configuration, cloudletCallbackClass, cloudletContextClass,
+                classLoader, connectors, reactor, threading, exceptions, supplementary);
     }
 
     public Object createCloudletCallback() throws InstantiationException, IllegalAccessException {
         return this.cloudletCallbackClass.newInstance();
     }
 
-    public IConnectorsFactory getConnectors() {
-        return connectors;
-    }
-
-    public ThreadingContext getThreading() {
-        return threading;
-    }
-
-    public ClassLoader getClassLoader() {
-        return classLoader;
+    public Object createContext() throws InstantiationException, IllegalAccessException {
+        return this.cloudletContextClass.newInstance();
     }
 
     public TranscriptExceptionTracer createExceptionTracer(Transcript transcript) {
-       return TranscriptExceptionTracer.create(transcript,
-               this.exceptions);
+        return TranscriptExceptionTracer.create(transcript, this.exceptions);
     }
 
-    
+    public ClassLoader getClassLoader() {
+        return this.classLoader;
+    }
+
     public IConfiguration getConfiguration() {
-        return configuration;
+        return this.configuration;
     }
 
-    
+    public IConnectorsFactory getConnectors() {
+        return this.connectors;
+    }
+
     public CallbackReactor getReactor() {
-        return reactor;
+        return this.reactor;
     }
 
-    
     public SupplementaryEnvironment getSupplementary() {
-        return supplementary;
+        return this.supplementary;
+    }
+
+    public ThreadingContext getThreading() {
+        return this.threading;
     }
 }

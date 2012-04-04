@@ -59,16 +59,13 @@ public class BaseScenario {
     private final long poolTimeout = 1000;
     private BasicThreadingContext threading;
 
-    public BaseScenario(
-            final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner,
+    public BaseScenario(final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner,
             final IConfiguration configuration) {
         this.configuration = configuration;
 
         this.transcript = Transcript.create(owner);
-        this.exceptionsQueue = QueueingExceptionTracer
-                .create(NullExceptionTracer.defaultInstance);
-        this.exceptions = TranscriptExceptionTracer.create(this.transcript,
-                this.exceptionsQueue);
+        this.exceptionsQueue = QueueingExceptionTracer.create(NullExceptionTracer.defaultInstance);
+        this.exceptions = TranscriptExceptionTracer.create(this.transcript, this.exceptionsQueue);
 
         // create threading context for connector and driver
         this.threading = BasicThreadingContext.create(owner, this.exceptions,
@@ -76,21 +73,17 @@ public class BaseScenario {
         this.threading.initialize();
 
         // create callback reactor
-        this.callbacks = BasicCallbackReactor.create(this.threading,
-                this.exceptions);
+        this.callbacks = BasicCallbackReactor.create(this.threading, this.exceptions);
         this.callbacks.initialize();
 
         // set-up communication channel with the driver
-        final String driverIdentity = ConfigUtils.resolveParameter(
-                this.configuration, "interop.driver.identifier", String.class,
-                "");
-        final String driverEndpoint = ConfigUtils
-                .resolveParameter(this.configuration,
-                        "interop.channel.address", String.class, "");
-        this.connectorChannel = ZeroMqChannel.create(UUID.randomUUID()
-                .toString(), this.threading, this.exceptions);
-        this.driverChannel = ZeroMqChannel.create(driverIdentity,
-                this.threading, this.exceptions);
+        final String driverIdentity = ConfigUtils.resolveParameter(this.configuration,
+                "interop.driver.identifier", String.class, "");
+        final String driverEndpoint = ConfigUtils.resolveParameter(this.configuration,
+                "interop.channel.address", String.class, "");
+        this.connectorChannel = ZeroMqChannel.create(UUID.randomUUID().toString(), this.threading,
+                this.exceptions);
+        this.driverChannel = ZeroMqChannel.create(driverIdentity, this.threading, this.exceptions);
         this.driverChannel.accept(driverEndpoint);
 
         final ChannelFactory channelFactory = new ChannelFactory() {
@@ -106,13 +99,11 @@ public class BaseScenario {
             @Override
             public final void resolve(String target, ResolverCallbacks callbacks) {
                 Assert.assertEquals(driverIdentity, target);
-                callbacks
-                        .resolved(this, target, driverIdentity, driverEndpoint);
+                callbacks.resolved(this, target, driverIdentity, driverEndpoint);
             }
         };
-        this.environment = ConnectorEnvironment.create(this.callbacks,
-                this.threading, this.exceptions, channelFactory,
-                this.channelResolver);
+        this.environment = ConnectorEnvironment.create(this.callbacks, this.threading,
+                this.exceptions, channelFactory, this.channelResolver);
 
         this.driverChannel.register(KeyValueSession.DRIVER);
     }

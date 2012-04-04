@@ -31,7 +31,6 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnectorCallba
  *            the type of the context of the cloudlet using this callback
  */
 public class DefaultAmqpQueueConnectorCallback<TContext> extends // NOPMD
-        DefaultQueueConnectorCallback<TContext> implements
-        IAmqpQueueConnectorCallback<TContext> {
+        DefaultQueueConnectorCallback<TContext> implements IAmqpQueueConnectorCallback<TContext> {
 
 }

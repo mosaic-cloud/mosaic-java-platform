@@ -23,8 +23,7 @@ package eu.mosaic_cloud.platform.core.tests;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 
-public class TestLoggingHandler<T extends Object> implements
-        IOperationCompletionHandler<T> {
+public class TestLoggingHandler<T extends Object> implements IOperationCompletionHandler<T> {
 
     private String testName = "";
     private final MosaicLogger logger;
@@ -37,13 +36,11 @@ public class TestLoggingHandler<T extends Object> implements
 
     @Override
     public void onFailure(Throwable error) {
-        this.logger.error("Test " + this.testName + " finished with error: "
-                + error.getMessage());
+        this.logger.error("Test " + this.testName + " finished with error: " + error.getMessage());
     }
 
     @Override
     public void onSuccess(T result) {
-        this.logger.trace("Test " + this.testName + " finished with result: "
-                + result);
+        this.logger.trace("Test " + this.testName + " finished with result: " + result);
     }
 }

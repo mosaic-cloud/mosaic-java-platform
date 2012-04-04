@@ -28,8 +28,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * 
  * @author Georgiana Macariu
  */
-public interface ICallback<TContext> extends Callbacks { // NOPMD 
+public interface ICallback<TContext> extends Callbacks { // NOPMD
 
-    public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion // NOPMD 
+    public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion // NOPMD
             .createOutcome();
 }
