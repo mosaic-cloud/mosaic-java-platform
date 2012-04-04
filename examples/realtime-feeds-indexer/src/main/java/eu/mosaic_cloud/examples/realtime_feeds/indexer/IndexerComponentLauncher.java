@@ -30,7 +30,7 @@ public final class IndexerComponentLauncher {
         Preconditions.checkNotNull(arguments);
         final String[] finalArguments = new String[arguments.length + 1];
         System.arraycopy(arguments, 0, finalArguments, 0, arguments.length);
-        finalArguments[finalArguments.length + 1] = String.format(
+        finalArguments[finalArguments.length - 1] = String.format(
                 "{\"%s\":\"%s\"}", "descriptor", "indexer-cloudlet.properties");
         MosBasicComponentLauncher
                 .main("eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponent$ComponentCallbacksProvider",
