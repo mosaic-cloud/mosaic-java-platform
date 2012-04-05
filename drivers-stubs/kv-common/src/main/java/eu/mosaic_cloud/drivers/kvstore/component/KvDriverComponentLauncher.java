@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-drivers-container
+ * mosaic-drivers-stubs-kv-common
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
