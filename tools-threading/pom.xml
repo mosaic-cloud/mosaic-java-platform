@@ -27,6 +27,11 @@
 			<version>${versions.dependencies.guava}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${versions.dependencies.slf4j}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${versions.dependencies.junit}</version>
