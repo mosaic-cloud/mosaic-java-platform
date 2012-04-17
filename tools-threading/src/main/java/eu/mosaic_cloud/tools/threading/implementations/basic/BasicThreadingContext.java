@@ -181,7 +181,11 @@ public final class BasicThreadingContext
 	public final boolean isManaged (final Thread thread)
 	{
 		Preconditions.checkNotNull (thread);
-		return (this.isManaged (thread.getThreadGroup ()));
+		// FIXME: It seems that "terminated" threads have no thread group...
+		final ThreadGroup group = thread.getThreadGroup ();
+		if (group == null)
+			return (false);
+		return (this.isManaged (group));
 	}
 	
 	@Override
