@@ -542,6 +542,7 @@ public final class CloudletComponent extends Object {
                 .get("descriptor", String.class, null); //$NON-NLS-1$
         Preconditions.checkNotNull(configurationDescriptor,
                 "unknown cloudlet component configuration descriptor");
+        this.transcript.traceDebugging("resolving cloudlet configuration: `%s`...", configurationDescriptor);
         final IConfiguration configuration;
         try {
             configuration = PropertyTypeConfiguration.create(this.classLoader,
