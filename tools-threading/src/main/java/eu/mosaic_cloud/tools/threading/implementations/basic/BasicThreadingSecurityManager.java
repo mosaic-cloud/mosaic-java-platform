@@ -55,9 +55,10 @@ public final class BasicThreadingSecurityManager
 		// FIXME: ??? (I don't remember what the problem was...)
 		if (context != null) {
 			// FIXME: do an enforcement, not just logging...
-			// if (!context.isManaged (thread))
-			//	throw (new SecurityException ());
-			this.logger.warn ("thread access check failed for thread: {}; ignoring!", thread);
+			if (!context.isManaged (thread)) {
+				this.logger.warn ("thread access check failed for thread: {}; ignoring!", thread);
+				// throw (new SecurityException ());
+			}
 		}
 		super.checkAccess (thread);
 	}
@@ -70,9 +71,10 @@ public final class BasicThreadingSecurityManager
 		// FIXME: ??? (I don't remember what the problem was...)
 		if (context != null) {
 			// FIXME: do an enforcement, not just logging...
-			// if (!context.isManaged (group))
-			//	throw (new SecurityException ());
-			this.logger.warn ("thread access check failed for thread group: {}; ignoring!", group);
+			if (!context.isManaged (group)) {
+				this.logger.warn ("thread access check failed for thread group: {}; ignoring!", group);
+				// throw (new SecurityException ());
+			}
 		}
 		super.checkAccess (group);
 	}
