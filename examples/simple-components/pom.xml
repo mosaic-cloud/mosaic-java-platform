@@ -87,7 +87,7 @@
 							<goal>single</goal>
 						</goals>
 						<configuration>
-							<finalName>components-examples-abacus-${project.version}</finalName>
+							<finalName>mosaic-examples-abacus-${project.version}</finalName>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>

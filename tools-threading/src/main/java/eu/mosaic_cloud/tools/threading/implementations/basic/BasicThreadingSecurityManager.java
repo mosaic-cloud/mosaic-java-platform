@@ -27,6 +27,9 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.core.ThreadingSecurityManager;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 
 import sun.security.util.SecurityConstants;
@@ -41,6 +44,7 @@ public final class BasicThreadingSecurityManager
 	private BasicThreadingSecurityManager ()
 	{
 		super ();
+		this.logger = LoggerFactory.getLogger (this.getClass ());
 	}
 	
 	@Override
@@ -48,10 +52,13 @@ public final class BasicThreadingSecurityManager
 	{
 		Preconditions.checkNotNull (thread);
 		final ThreadingContext context = Threading.getCurrentContext ();
+		// FIXME: ??? (I don't remember what the problem was...)
 		if (context != null) {
-			// FIXME: ??? (I don't remember what the problem was...)
-			if (!context.isManaged (thread))
-				throw (new SecurityException ());
+			// FIXME: do an enforcement, not just logging...
+			if (!context.isManaged (thread)) {
+				this.logger.warn ("thread access check failed for thread: {}; ignoring!", thread);
+				// throw (new SecurityException ());
+			}
 		}
 		super.checkAccess (thread);
 	}
@@ -61,10 +68,13 @@ public final class BasicThreadingSecurityManager
 	{
 		Preconditions.checkNotNull (group);
 		final ThreadingContext context = Threading.getCurrentContext ();
+		// FIXME: ??? (I don't remember what the problem was...)
 		if (context != null) {
-			// FIXME: ??? (I don't remember what the problem was...)
-			if (!context.isManaged (group))
-				throw (new SecurityException ());
+			// FIXME: do an enforcement, not just logging...
+			if (!context.isManaged (group)) {
+				this.logger.warn ("thread access check failed for thread group: {}; ignoring!", group);
+				// throw (new SecurityException ());
+			}
 		}
 		super.checkAccess (group);
 	}
@@ -150,6 +160,7 @@ public final class BasicThreadingSecurityManager
 		}
 	}
 	
+	private final Logger logger;
 	private static final RuntimePermission permissionGetContextClassLoader = SecurityConstants.GET_CLASSLOADER_PERMISSION;
 	private static final RuntimePermission permissionGetStackTrace = SecurityConstants.GET_STACK_TRACE_PERMISSION;
 	private static final RuntimePermission permissionModifyThreadGroup = SecurityConstants.MODIFY_THREADGROUP_PERMISSION;

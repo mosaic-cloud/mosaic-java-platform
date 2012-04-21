@@ -238,7 +238,7 @@ public final class BasicComponentHarnessMain
 		component.initialize ();
 		environment.transcript.traceDebugging ("creating callbacks...");
 		final ComponentController componentController = component.getController ();
-		final ComponentEnvironment componentEnvironment = ComponentEnvironment.create (environment.identifier, BasicComponentHarnessMain.class.getClassLoader (), environment.reactor, environment.threading, environment.exceptions, environment.options);
+		final ComponentEnvironment componentEnvironment = ComponentEnvironment.create (environment.identifier, environment.classLoader, environment.reactor, environment.threading, environment.exceptions, environment.options);
 		final ComponentCallbacks componentCallbacks = callbacksProvider.provide (componentEnvironment);
 		environment.transcript.traceDebugging ("binding callbacks...");
 		componentController.bind (componentCallbacks, channel.getController ());
