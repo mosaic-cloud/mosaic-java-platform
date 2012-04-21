@@ -30,6 +30,7 @@ public final class KvDriverComponentPreMain extends Object {
     }
 
     public static final void main(final String[] arguments) throws Throwable {
-        AbstractDriverComponentPreMain.main("eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentCallbacks", arguments);
+        AbstractDriverComponentPreMain.main(
+                "eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentCallbacks", arguments);
     }
 }

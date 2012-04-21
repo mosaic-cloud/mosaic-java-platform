@@ -229,7 +229,7 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
                     @Override
                     public void run() {
                         consumeCallback.handleShutdown(consumer, signal.getMessage());
-                        executor.shutdown();
+                        AmqpDriver.this.executor.shutdown();
                     }
                 };
                 AmqpDriver.this.executor.execute(task);
@@ -256,8 +256,10 @@ public class AmqpDriver extends AbstractResourceDriver { // NOPMD by georgiana
                     properties.getMessageId());
             AmqpDriver.this.logger
                     .trace("AmqpDriver - Received RETURN callback for " + message.getDelivery()); //$NON-NLS-1$
-            // FIXME: We should trigger a `publishFailed` callback, but due to the lack of "positive" acknowledgements,
-            // we just ignore this situation. Maybe we should use the RabbitMQ extension for publish acknowledgements.
+            // FIXME: We should trigger a `publishFailed` callback, but due to
+            // the lack of "positive" acknowledgements,
+            // we just ignore this situation. Maybe we should use the RabbitMQ
+            // extension for publish acknowledgements.
         }
     }
 

@@ -29,7 +29,9 @@ public final class AbstractDriverComponentLauncher {
         throw (new UnsupportedOperationException());
     }
 
-    public static final void main(final String callbacks, final String[] arguments) throws Throwable {
-        MosBasicComponentLauncher.main(callbacks, arguments, AbstractDriverComponentCallbacks.class.getClassLoader());
+    public static final void main(final String callbacks, final String[] arguments)
+            throws Throwable {
+        MosBasicComponentLauncher.main(callbacks, arguments,
+                AbstractDriverComponentCallbacks.class.getClassLoader());
     }
 }

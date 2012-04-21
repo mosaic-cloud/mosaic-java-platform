@@ -30,6 +30,8 @@ public final class AmqpDriverComponentPreMain extends Object {
     }
 
     public static final void main(final String[] arguments) throws Throwable {
-        AbstractDriverComponentPreMain.main("eu.mosaic_cloud.drivers.queue.amqp.component.AmqpDriverComponentCallbacks", arguments);
+        AbstractDriverComponentPreMain.main(
+                "eu.mosaic_cloud.drivers.queue.amqp.component.AmqpDriverComponentCallbacks",
+                arguments);
     }
 }

@@ -29,7 +29,8 @@ public final class AbstractDriverComponentPreMain extends Object {
         throw (new UnsupportedOperationException());
     }
 
-    public static final void main(final String callbacks, final String[] arguments) throws Throwable {
+    public static final void main(final String callbacks, final String[] arguments)
+            throws Throwable {
         BasicComponentHarnessPreMain.main(callbacks, arguments, 0);
     }
 }

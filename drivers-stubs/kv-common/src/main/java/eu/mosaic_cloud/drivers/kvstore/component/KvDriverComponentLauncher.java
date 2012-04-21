@@ -30,6 +30,7 @@ public final class KvDriverComponentLauncher {
     }
 
     public static final void main(final String[] arguments) throws Throwable {
-        AbstractDriverComponentLauncher.main("eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentCallbacks", arguments);
+        AbstractDriverComponentLauncher.main(
+                "eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentCallbacks", arguments);
     }
 }

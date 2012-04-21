@@ -93,8 +93,10 @@ public final class AmqpDriverComponentCallbacks extends AbstractDriverComponentC
                 String channelEndpoint = ConfigUtils.resolveParameter(getDriverConfiguration(),
                         ConfigProperties.getString("AmqpDriverComponentCallbacks.3"), //$NON-NLS-1$
                         String.class, "");
-                // FIXME: These parameters should be determined through component "resource acquire" operations.
-                // Also this hack reduces the number of driver instances of the same type to one per VM.
+                // FIXME: These parameters should be determined through
+                // component "resource acquire" operations.
+                // Also this hack reduces the number of driver instances of the
+                // same type to one per VM.
                 try {
                     if (System.getenv("mosaic_node_ip") != null) {
                         channelEndpoint = channelEndpoint.replace("0.0.0.0",

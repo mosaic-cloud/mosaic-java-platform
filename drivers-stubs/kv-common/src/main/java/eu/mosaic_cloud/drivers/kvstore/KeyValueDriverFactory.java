@@ -37,10 +37,10 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public final class KeyValueDriverFactory {
 
     public enum DriverType {
-        REDIS("eu.mosaic_cloud.drivers.kvstore.RedisDriver"),
-        MEMCACHED("eu.mosaic_cloud.drivers.kvstore.MemcachedDriver"),
-        RIAKREST("eu.mosaic_cloud.drivers.kvstore.RiakRestDriver"),
-        RIAKPB("eu.mosaic_cloud.drivers.kvstore.RiakPBDriver");
+        REDIS("eu.mosaic_cloud.drivers.kvstore.RedisDriver"), MEMCACHED(
+                "eu.mosaic_cloud.drivers.kvstore.MemcachedDriver"), RIAKREST(
+                "eu.mosaic_cloud.drivers.kvstore.RiakRestDriver"), RIAKPB(
+                "eu.mosaic_cloud.drivers.kvstore.RiakPBDriver");
 
         private final String driverClassName;
 
@@ -49,14 +49,15 @@ public final class KeyValueDriverFactory {
         }
 
         public Class<? extends AbstractKeyValueDriver> getDriverClass() {
-        	return this.getDriverClass (DriverType.class.getClassLoader());
+            return this.getDriverClass(DriverType.class.getClassLoader());
         }
-        
+
         private Class<? extends AbstractKeyValueDriver> getDriverClass(ClassLoader loader) {
             try {
-                return (Class<? extends AbstractKeyValueDriver>) loader.loadClass(this.driverClassName);
-            } catch (ClassNotFoundException e) {
-            	throw new Error(e);
+                return (Class<? extends AbstractKeyValueDriver>) loader
+                        .loadClass(this.driverClassName);
+            } catch (final ClassNotFoundException e) {
+                throw new Error(e);
             }
         }
     }
