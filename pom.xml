@@ -127,16 +127,16 @@
 						<goals>
 							<goal>format</goal>
 						</goals>
-						<configuration>
-							<compilerSource>${versions.java.source}</compilerSource>
-							<compilerCompliance>${versions.java.source}</compilerCompliance>
-							<compilerTarget>${versions.java.target}</compilerTarget>
-							<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
-							<configFile>mosaic-java-formatter-maven-plugin-default-configuration.xml</configFile>
-							<lineEnding>LF</lineEnding>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<compilerSource>${versions.java.source}</compilerSource>
+					<compilerCompliance>${versions.java.source}</compilerCompliance>
+					<compilerTarget>${versions.java.target}</compilerTarget>
+					<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
+					<configFile>mosaic-java-formatter-maven-plugin-default-configuration.xml</configFile>
+					<lineEnding>LF</lineEnding>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
