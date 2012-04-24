@@ -20,9 +20,11 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+
 
 /**
  * Base connector class for AMQP queuing systems.
@@ -37,12 +39,14 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
  * @param <TContext>
  *            the type of the context of the cloudlet using the connector
  */
-public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector, TCallback extends IAmqpQueueConnectorCallback<TContext>, TContext> // NOPMD
-        extends BaseConnector<TConnector, TCallback, TContext> implements IAmqpQueueConnector {
-
-    protected BaseAmqpQueueConnector(final ICloudletController<?> cloudlet,
-            final TConnector connector, final IConfiguration configuration,
-            final TCallback callback, final TContext context) {
-        super(cloudlet, connector, configuration, callback, context);
-    }
+public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector, TCallback extends IAmqpQueueConnectorCallback<TContext>, TContext>
+		// NOPMD
+		extends BaseConnector<TConnector, TCallback, TContext>
+		implements
+			IAmqpQueueConnector
+{
+	protected BaseAmqpQueueConnector (final ICloudletController<?> cloudlet, final TConnector connector, final IConfiguration configuration, final TCallback callback, final TContext context)
+	{
+		super (cloudlet, connector, configuration, callback, context);
+	}
 }

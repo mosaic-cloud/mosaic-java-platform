@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.drivers.kvstore;
 
+
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+
 
 /**
  * Operations supported by the memcached protocol.
@@ -28,6 +30,18 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * @author Georgiana Macariu
  * 
  */
-public enum MemcachedOperations implements IOperationType {
-    ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK, LIST, GET, SET, DELETE;
+public enum MemcachedOperations
+		implements
+			IOperationType
+{
+	ADD,
+	APPEND,
+	CAS,
+	DELETE,
+	GET,
+	GET_BULK,
+	LIST,
+	PREPEND,
+	REPLACE,
+	SET;
 }

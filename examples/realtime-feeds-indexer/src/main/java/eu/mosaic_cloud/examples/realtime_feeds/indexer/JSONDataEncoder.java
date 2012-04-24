@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -36,37 +37,43 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class JSONDataEncoder implements DataEncoder<JSONObject> {
 
-    @Override
-    public JSONObject decode(byte[] dataBytes) throws EncodingException {
-        if (dataBytes.length == 0) {
-            return null;
-        }
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new ByteArrayInputStream(dataBytes)));
-        final JSONTokener tokener = new JSONTokener(reader);
-        JSONObject object = null;
-        try {
-            object = new JSONObject(tokener);
-        } catch (final JSONException e) {
-            throw new EncodingException("JSON object cannot be deserialized", e);
-        }
-        return object;
-    }
-
-    @Override
-    public byte[] encode(JSONObject data) throws EncodingException {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final Writer writer = new BufferedWriter(new OutputStreamWriter(baos));
-        try {
-            data.write(writer);
-            writer.close();
-        } catch (final JSONException e) {
-            throw new EncodingException("JSON object cannot be serialized", e);
-        } catch (final IOException e) {
-            throw new EncodingException("JSON object cannot be serialized", e);
-        }
-        return baos.toByteArray();
-    }
+public class JSONDataEncoder
+		implements
+			DataEncoder<JSONObject>
+{
+	@Override
+	public JSONObject decode (final byte[] dataBytes)
+			throws EncodingException
+	{
+		if (dataBytes.length == 0) {
+			return null;
+		}
+		final BufferedReader reader = new BufferedReader (new InputStreamReader (new ByteArrayInputStream (dataBytes)));
+		final JSONTokener tokener = new JSONTokener (reader);
+		JSONObject object = null;
+		try {
+			object = new JSONObject (tokener);
+		} catch (final JSONException e) {
+			throw new EncodingException ("JSON object cannot be deserialized", e);
+		}
+		return object;
+	}
+	
+	@Override
+	public byte[] encode (final JSONObject data)
+			throws EncodingException
+	{
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream ();
+		final Writer writer = new BufferedWriter (new OutputStreamWriter (baos));
+		try {
+			data.write (writer);
+			writer.close ();
+		} catch (final JSONException e) {
+			throw new EncodingException ("JSON object cannot be serialized", e);
+		} catch (final IOException e) {
+			throw new EncodingException ("JSON object cannot be serialized", e);
+		}
+		return baos.toByteArray ();
+	}
 }

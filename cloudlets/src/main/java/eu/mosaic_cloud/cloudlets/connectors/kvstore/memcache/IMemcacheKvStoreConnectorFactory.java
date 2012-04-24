@@ -20,9 +20,11 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache;
 
+
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+
 
 /**
  * Factory for creating memcached key-value store connectors.
@@ -30,12 +32,9 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
  * @author Ciprian Craciun
  * 
  */
-public interface IMemcacheKvStoreConnectorFactory extends
-        IConnectorFactory<IMemcacheKvStoreConnector<?, ?>> {
-
-    <TContext, TValue, TExtra> IMemcacheKvStoreConnector<TValue, TExtra> create(
-            IConfiguration configuration, Class<TValue> valueClass,
-            DataEncoder<TValue> valueEncoder,
-            IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
-            TContext callbackContext);
+public interface IMemcacheKvStoreConnectorFactory
+		extends
+			IConnectorFactory<IMemcacheKvStoreConnector<?, ?>>
+{
+	<TContext, TValue, TExtra> IMemcacheKvStoreConnector<TValue, TExtra> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
 }

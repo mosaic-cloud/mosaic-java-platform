@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.connectors.kvstore.generic;
 
+
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
@@ -29,6 +30,7 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Proxy for the driver for key-value distributed storage systems. This is used
@@ -40,39 +42,37 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of stored data
  * 
  */
-public final class GenericKvStoreConnectorProxy<TValue extends Object> extends
-        BaseKvStoreConnectorProxy<TValue> {
-
-    protected GenericKvStoreConnectorProxy(final ConnectorConfiguration configuration,
-            final DataEncoder<TValue> encoder) {
-        super(configuration, encoder);
-    }
-
-    /**
-     * Returns a proxy for key-value distributed storage systems.
-     * 
-     * @param configuration
-     *            the execution environment of a connector
-     * @param encoder
-     *            encoder used for serializing and deserializing data stored in
-     *            the key-value store
-     * @return the proxy
-     */
-    public static <T extends Object> GenericKvStoreConnectorProxy<T> create(
-            final ConnectorConfiguration configuration, final DataEncoder<T> encoder) {
-        final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T>(
-                configuration, encoder);
-        return proxy;
-    }
-
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        final String bucket = super.configuration.getConfigParameter(
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
-        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
-        requestBuilder.setToken(this.generateToken());
-        requestBuilder.setBucket(bucket);
-        return this.connect(KeyValueSession.CONNECTOR, new Message(KeyValueMessage.ACCESS,
-                requestBuilder.build()));
-    }
+public final class GenericKvStoreConnectorProxy<TValue extends Object>
+		extends BaseKvStoreConnectorProxy<TValue>
+{
+	protected GenericKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
+	{
+		super (configuration, encoder);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initialize ()
+	{
+		final String bucket = super.configuration.getConfigParameter (ConfigProperties.getString ("GenericKvStoreConnector.1"), String.class, "");
+		final InitRequest.Builder requestBuilder = InitRequest.newBuilder ();
+		requestBuilder.setToken (this.generateToken ());
+		requestBuilder.setBucket (bucket);
+		return this.connect (KeyValueSession.CONNECTOR, new Message (KeyValueMessage.ACCESS, requestBuilder.build ()));
+	}
+	
+	/**
+	 * Returns a proxy for key-value distributed storage systems.
+	 * 
+	 * @param configuration
+	 *            the execution environment of a connector
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
+	 * @return the proxy
+	 */
+	public static <T extends Object> GenericKvStoreConnectorProxy<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
+	{
+		final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T> (configuration, encoder);
+		return proxy;
+	}
 }

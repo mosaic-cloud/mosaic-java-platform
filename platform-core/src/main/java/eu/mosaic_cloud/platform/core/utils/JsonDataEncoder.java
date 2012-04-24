@@ -20,37 +20,45 @@
 
 package eu.mosaic_cloud.platform.core.utils;
 
+
 import java.io.IOException;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 
-public class JsonDataEncoder<T extends Object> implements DataEncoder<T> {
 
-    private final Class<T> dataClass;;
-
-    public JsonDataEncoder(final Class<T> dataClass) {
-        this.dataClass = dataClass;
-    }
-
-    @Override
-    public T decode(byte[] dataBytes) {
-        T object = null;
-        try {
-            object = this.dataClass.cast(SerDesUtils.jsonToObject(dataBytes, this.dataClass));
-        } catch (final IOException e) {
-            ExceptionTracer.traceIgnored(e);
-        } catch (final ClassNotFoundException e) {
-            ExceptionTracer.traceIgnored(e);
-        }
-        return object;
-    }
-
-    @Override
-    public byte[] encode(final T data) throws EncodingException {
-        try {
-            return SerDesUtils.toJsonBytes(data);
-        } catch (final IOException e) {
-            throw new EncodingException("JSON object cannot be serialized", e);
-        }
-    }
+public class JsonDataEncoder<T extends Object>
+		implements
+			DataEncoder<T>
+{
+	public JsonDataEncoder (final Class<T> dataClass)
+	{
+		this.dataClass = dataClass;
+	};
+	
+	@Override
+	public T decode (final byte[] dataBytes)
+	{
+		T object = null;
+		try {
+			object = this.dataClass.cast (SerDesUtils.jsonToObject (dataBytes, this.dataClass));
+		} catch (final IOException e) {
+			ExceptionTracer.traceIgnored (e);
+		} catch (final ClassNotFoundException e) {
+			ExceptionTracer.traceIgnored (e);
+		}
+		return object;
+	}
+	
+	@Override
+	public byte[] encode (final T data)
+			throws EncodingException
+	{
+		try {
+			return SerDesUtils.toJsonBytes (data);
+		} catch (final IOException e) {
+			throw new EncodingException ("JSON object cannot be serialized", e);
+		}
+	}
+	
+	private final Class<T> dataClass;
 }

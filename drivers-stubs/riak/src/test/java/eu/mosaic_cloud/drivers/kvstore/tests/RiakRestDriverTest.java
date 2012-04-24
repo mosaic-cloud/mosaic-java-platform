@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.drivers.kvstore.tests;
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -47,159 +48,156 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class RiakRestDriverTest {
 
-    private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
-    private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
-    private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
-    private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
-    private AbstractKeyValueDriver wrapper;
-    private BasicThreadingContext threadingContext;
-    private static String keyPrefix;
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        RiakRestDriverTest.keyPrefix = UUID.randomUUID().toString();
-    }
-
-    @Before
-    public void setUp() {
-        final Transcript transcript = Transcript.create(this);
-        final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer
-                .create(NullExceptionTracer.defaultInstance);
-        final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create(transcript,
-                exceptionsQueue);
-        BasicThreadingSecurityManager.initialize();
-        this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
-        this.threadingContext.initialize();
-
-        final String host = System.getProperty(RiakRestDriverTest.MOSAIC_RIAK_HOST,
-                RiakRestDriverTest.MOSAIC_RIAK_HOST_DEFAULT);
-        final Integer port = Integer.valueOf(System.getProperty(
-                RiakRestDriverTest.MOSAIC_RIAK_PORT, RiakRestDriverTest.MOSAIC_RIAK_PORT_DEFAULT));
-
-        final IConfiguration configuration = PropertyTypeConfiguration.create();
-        configuration.addParameter("kvstore.host", host);
-        configuration.addParameter("kvstore.port", port);
-        configuration.addParameter("kvstore.driver_name", "RIAKREST");
-        configuration.addParameter("kvstore.driver_threads", 1);
-        configuration.addParameter("kvstore.bucket", "tests");
-
-        this.wrapper = RiakRestDriver.create(configuration, this.threadingContext);
-        this.wrapper.registerClient(RiakRestDriverTest.keyPrefix, "test");
-    }
-
-    @After
-    public void tearDown() {
-        this.wrapper.unregisterClient(RiakRestDriverTest.keyPrefix);
-        this.wrapper.destroy();
-        this.threadingContext.destroy();
-    }
-
-    public void testConnection() {
-        Assert.assertNotNull(this.wrapper);
-    }
-
-    public void testDelete() {
-        final String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
-        final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
-                "delete 1");
-        final IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(
-                RiakRestDriverTest.keyPrefix, k1, handler1);
-        try {
-            Assert.assertTrue(r1.getResult());
-        } catch (final InterruptedException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        }
-        final IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]>(
-                "check deleted");
-        final IResult<byte[]> r3 = this.wrapper.invokeGetOperation(RiakRestDriverTest.keyPrefix,
-                k1, handler3);
-        try {
-            Assert.assertNull(r3.getResult());
-        } catch (final InterruptedException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        }
-    }
-
-    @Test
-    public void testDriver() throws IOException, ClassNotFoundException {
-        testConnection();
-        testSet();
-        testGet();
-        testList();
-        testDelete();
-    }
-
-    public void testGet() throws IOException, ClassNotFoundException {
-        final String k1 = RiakRestDriverTest.keyPrefix + "_key_famous";
-        final IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]>("get");
-        final IResult<byte[]> r1 = this.wrapper.invokeGetOperation(RiakRestDriverTest.keyPrefix,
-                k1, handler);
-        try {
-            Assert.assertEquals("famous", SerDesUtils.toObject(r1.getResult()).toString());
-        } catch (final InterruptedException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        }
-    }
-
-    public void testList() {
-        final String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
-        final String k2 = RiakRestDriverTest.keyPrefix + "_key_famous";
-        final IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
-                "list");
-        final IResult<List<String>> r1 = this.wrapper.invokeListOperation(
-                RiakRestDriverTest.keyPrefix, handler);
-        try {
-            final List<String> lresult = r1.getResult();
-            Assert.assertNotNull(lresult);
-            Assert.assertTrue(lresult.contains(k1));
-            Assert.assertTrue(lresult.contains(k2));
-        } catch (final InterruptedException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        }
-    }
-
-    public void testSet() throws IOException {
-        final String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
-        final byte[] b1 = SerDesUtils.pojoToBytes("fantastic");
-        final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
-                "set 1");
-        final IResult<Boolean> r1 = this.wrapper.invokeSetOperation(RiakRestDriverTest.keyPrefix,
-                k1, b1, handler1);
-        Assert.assertNotNull(r1);
-        final String k2 = RiakRestDriverTest.keyPrefix + "_key_famous";
-        final byte[] b2 = SerDesUtils.pojoToBytes("famous");
-        final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
-                "set 2");
-        final IResult<Boolean> r2 = this.wrapper.invokeSetOperation(RiakRestDriverTest.keyPrefix,
-                k2, b2, handler2);
-        Assert.assertNotNull(r2);
-        try {
-            Assert.assertTrue(r1.getResult());
-            Assert.assertTrue(r2.getResult());
-        } catch (final InterruptedException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            ExceptionTracer.traceIgnored(e);
-            Assert.fail();
-        }
-    }
+public class RiakRestDriverTest
+{
+	@Before
+	public void setUp ()
+	{
+		final Transcript transcript = Transcript.create (this);
+		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
+		BasicThreadingSecurityManager.initialize ();
+		this.threadingContext = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
+		this.threadingContext.initialize ();
+		final String host = System.getProperty (RiakRestDriverTest.MOSAIC_RIAK_HOST, RiakRestDriverTest.MOSAIC_RIAK_HOST_DEFAULT);
+		final Integer port = Integer.valueOf (System.getProperty (RiakRestDriverTest.MOSAIC_RIAK_PORT, RiakRestDriverTest.MOSAIC_RIAK_PORT_DEFAULT));
+		final IConfiguration configuration = PropertyTypeConfiguration.create ();
+		configuration.addParameter ("kvstore.host", host);
+		configuration.addParameter ("kvstore.port", port);
+		configuration.addParameter ("kvstore.driver_name", "RIAKREST");
+		configuration.addParameter ("kvstore.driver_threads", 1);
+		configuration.addParameter ("kvstore.bucket", "tests");
+		this.wrapper = RiakRestDriver.create (configuration, this.threadingContext);
+		this.wrapper.registerClient (RiakRestDriverTest.keyPrefix, "test");
+	}
+	
+	@After
+	public void tearDown ()
+	{
+		this.wrapper.unregisterClient (RiakRestDriverTest.keyPrefix);
+		this.wrapper.destroy ();
+		this.threadingContext.destroy ();
+	}
+	
+	public void testConnection ()
+	{
+		Assert.assertNotNull (this.wrapper);
+	}
+	
+	public void testDelete ()
+	{
+		final String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
+		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("delete 1");
+		final IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation (RiakRestDriverTest.keyPrefix, k1, handler1);
+		try {
+			Assert.assertTrue (r1.getResult ());
+		} catch (final InterruptedException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		}
+		final IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]> ("check deleted");
+		final IResult<byte[]> r3 = this.wrapper.invokeGetOperation (RiakRestDriverTest.keyPrefix, k1, handler3);
+		try {
+			Assert.assertNull (r3.getResult ());
+		} catch (final InterruptedException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		}
+	}
+	
+	@Test
+	public void testDriver ()
+			throws IOException,
+				ClassNotFoundException
+	{
+		this.testConnection ();
+		this.testSet ();
+		this.testGet ();
+		this.testList ();
+		this.testDelete ();
+	}
+	
+	public void testGet ()
+			throws IOException,
+				ClassNotFoundException
+	{
+		final String k1 = RiakRestDriverTest.keyPrefix + "_key_famous";
+		final IOperationCompletionHandler<byte[]> handler = new TestLoggingHandler<byte[]> ("get");
+		final IResult<byte[]> r1 = this.wrapper.invokeGetOperation (RiakRestDriverTest.keyPrefix, k1, handler);
+		try {
+			Assert.assertEquals ("famous", SerDesUtils.toObject (r1.getResult ()).toString ());
+		} catch (final InterruptedException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		}
+	}
+	
+	public void testList ()
+	{
+		final String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
+		final String k2 = RiakRestDriverTest.keyPrefix + "_key_famous";
+		final IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>> ("list");
+		final IResult<List<String>> r1 = this.wrapper.invokeListOperation (RiakRestDriverTest.keyPrefix, handler);
+		try {
+			final List<String> lresult = r1.getResult ();
+			Assert.assertNotNull (lresult);
+			Assert.assertTrue (lresult.contains (k1));
+			Assert.assertTrue (lresult.contains (k2));
+		} catch (final InterruptedException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		}
+	}
+	
+	public void testSet ()
+			throws IOException
+	{
+		final String k1 = RiakRestDriverTest.keyPrefix + "_key_fantastic";
+		final byte[] b1 = SerDesUtils.pojoToBytes ("fantastic");
+		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("set 1");
+		final IResult<Boolean> r1 = this.wrapper.invokeSetOperation (RiakRestDriverTest.keyPrefix, k1, b1, handler1);
+		Assert.assertNotNull (r1);
+		final String k2 = RiakRestDriverTest.keyPrefix + "_key_famous";
+		final byte[] b2 = SerDesUtils.pojoToBytes ("famous");
+		final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean> ("set 2");
+		final IResult<Boolean> r2 = this.wrapper.invokeSetOperation (RiakRestDriverTest.keyPrefix, k2, b2, handler2);
+		Assert.assertNotNull (r2);
+		try {
+			Assert.assertTrue (r1.getResult ());
+			Assert.assertTrue (r2.getResult ());
+		} catch (final InterruptedException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			ExceptionTracer.traceIgnored (e);
+			Assert.fail ();
+		}
+	}
+	
+	@BeforeClass
+	public static void setUpBeforeClass ()
+	{
+		RiakRestDriverTest.keyPrefix = UUID.randomUUID ().toString ();
+	}
+	
+	private BasicThreadingContext threadingContext;
+	private AbstractKeyValueDriver wrapper;
+	private static String keyPrefix;
+	private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
+	private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
+	private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riakrest.port";
+	private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
 }

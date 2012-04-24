@@ -20,8 +20,10 @@
 
 package eu.mosaic_cloud.platform.interop.specs.amqp;
 
+
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
+
 
 /**
  * Enum of the possible role of the participants in an AMQP session.
@@ -29,22 +31,28 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * @author Georgiana Macariu
  * 
  */
-public enum AmqpRole implements RoleSpecification {
-    CONNECTOR(), DRIVER();
-
-    public final String identifier;
-
-    private AmqpRole() {
-        this.identifier = Identifiers.generate(this);
-    }
-
-    @Override
-    public String getIdentifier() {
-        return this.identifier;
-    }
-
-    @Override
-    public String getQualifiedName() {
-        return (Identifiers.generateName(this));
-    }
+public enum AmqpRole
+		implements
+			RoleSpecification
+{
+	CONNECTOR (),
+	DRIVER ();
+	private AmqpRole ()
+	{
+		this.identifier = Identifiers.generate (this);
+	}
+	
+	@Override
+	public String getIdentifier ()
+	{
+		return this.identifier;
+	}
+	
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
+	
+	public final String identifier;
 }

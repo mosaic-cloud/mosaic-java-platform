@@ -20,10 +20,12 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Default callback class.
@@ -33,46 +35,47 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultCallback<TContext> implements ICallback<TContext> {
-
-    protected MosaicLogger logger = MosaicLogger.createLogger(this);
-
-    /**
-     * Handles any unhandled callback.
-     * 
-     * @param arguments
-     *            the arguments of the callback
-     * @param callbackType
-     *            a string describing the type of callback (e.g. initialize)
-     * @param positive
-     *            <code>true</code> if callback corresponds to successful
-     *            termination of the operation
-     * @param couldDestroy
-     *            <code>true</code> if cloudlet can be destroyed here
-     */
-    protected CallbackCompletion<Void> handleUnhandledCallback(final CallbackArguments arguments,
-            final String callbackType, final boolean positive, final boolean couldDestroy) {
-        this.traceUnhandledCallback(arguments, callbackType, positive);
-        if (!positive && couldDestroy) {
-            arguments.getCloudlet().destroy();
-        }
-        return CallbackCompletion.createOutcome();
-    }
-
-    /**
-     * Traces unhandled callbacks.
-     * 
-     * @param arguments
-     *            the arguments of the callback
-     * @param callbackType
-     *            a string describing the type of callback (e.g. initialize)
-     * @param positive
-     *            <code>true</code> if callback corresponds to successful
-     *            termination of the operation
-     */
-    protected void traceUnhandledCallback(final CallbackArguments arguments,
-            final String callbackType, final boolean positive) {
-        this.logger.info("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass().getName(),
-                callbackType, (positive ? "Succeeded" : "Failed"));
-    }
+public class DefaultCallback<TContext>
+		implements
+			ICallback<TContext>
+{
+	/**
+	 * Handles any unhandled callback.
+	 * 
+	 * @param arguments
+	 *            the arguments of the callback
+	 * @param callbackType
+	 *            a string describing the type of callback (e.g. initialize)
+	 * @param positive
+	 *            <code>true</code> if callback corresponds to successful
+	 *            termination of the operation
+	 * @param couldDestroy
+	 *            <code>true</code> if cloudlet can be destroyed here
+	 */
+	protected CallbackCompletion<Void> handleUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive, final boolean couldDestroy)
+	{
+		this.traceUnhandledCallback (arguments, callbackType, positive);
+		if (!positive && couldDestroy) {
+			arguments.getCloudlet ().destroy ();
+		}
+		return CallbackCompletion.createOutcome ();
+	}
+	
+	/**
+	 * Traces unhandled callbacks.
+	 * 
+	 * @param arguments
+	 *            the arguments of the callback
+	 * @param callbackType
+	 *            a string describing the type of callback (e.g. initialize)
+	 * @param positive
+	 *            <code>true</code> if callback corresponds to successful
+	 *            termination of the operation
+	 */
+	protected void traceUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive)
+	{
+		this.logger.info ("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass ().getName (), callbackType, (positive ? "Succeeded" : "Failed"));
+	}
+	
+	protected MosaicLogger logger = MosaicLogger.createLogger (this);
 }

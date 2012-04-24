@@ -20,9 +20,11 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueDeliveryToken;
+
 
 /**
  * The arguments of the cloudlet callback methods for the consume request.
@@ -35,36 +37,39 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueDeliveryToken;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class AmqpQueueConsumeCallbackArguments<TMessage, TExtra> extends CallbackArguments {
-
-    private final IAmqpQueueDeliveryToken delivery;
-    private final TMessage message;
-
-    /**
-     * Creates a new callback argument.
-     * 
-     * @param cloudlet
-     *            the cloudlet
-     * @param message
-     *            information about the consume request
-     */
-    public AmqpQueueConsumeCallbackArguments(final ICloudletController<?> cloudlet,
-            final IAmqpQueueDeliveryToken delivery, final TMessage message) {
-        super(cloudlet);
-        this.message = message;
-        this.delivery = delivery;
-    }
-
-    public IAmqpQueueDeliveryToken getDelivery() {
-        return this.delivery;
-    }
-
-    /**
-     * Returns information about the consume request.
-     * 
-     * @return information about the consume request
-     */
-    public TMessage getMessage() {
-        return this.message;
-    }
+public class AmqpQueueConsumeCallbackArguments<TMessage, TExtra>
+		extends CallbackArguments
+{
+	/**
+	 * Creates a new callback argument.
+	 * 
+	 * @param cloudlet
+	 *            the cloudlet
+	 * @param message
+	 *            information about the consume request
+	 */
+	public AmqpQueueConsumeCallbackArguments (final ICloudletController<?> cloudlet, final IAmqpQueueDeliveryToken delivery, final TMessage message)
+	{
+		super (cloudlet);
+		this.message = message;
+		this.delivery = delivery;
+	}
+	
+	public IAmqpQueueDeliveryToken getDelivery ()
+	{
+		return this.delivery;
+	}
+	
+	/**
+	 * Returns information about the consume request.
+	 * 
+	 * @return information about the consume request
+	 */
+	public TMessage getMessage ()
+	{
+		return this.message;
+	}
+	
+	private final IAmqpQueueDeliveryToken delivery;
+	private final TMessage message;
 }

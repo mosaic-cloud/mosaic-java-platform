@@ -20,7 +20,6 @@
 
 package eu.mosaic_cloud.examples.realtime_feeds.indexer.tests;
 
-import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,55 +36,59 @@ import com.sun.syndication.io.FeedException;
 
 import junit.framework.Assert;
 
-public class FeedParserTest {
 
-    private FeedParser parser;
-
-    private byte[] readAtom(String feedsUrl) {
-        InputStreamReader streamReader = null;
-        BufferedReader reader = null;
-        final StringBuilder builder = new StringBuilder();
-        String line;
-        byte[] bytes = null;
-        try {
-            streamReader = new InputStreamReader((new URL(feedsUrl)).openStream());
-            reader = new BufferedReader(streamReader);
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-            bytes = builder.toString().getBytes();
-        } catch (final Exception e) {
-            Assert.fail();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Assert.fail();
-                }
-            }
-        }
-        return bytes;
-    }
-
-    @Before
-    public void setUp() {
-        this.parser = new FeedParser();
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    @Test
-    public void test() {
-        final byte[] entry = readAtom("http://search.twitter.com/search.atom?q=%22cloud%22");
-        try {
-            this.parser.parseFeed(entry);
-        } catch (final IOException e) {
-            fail(e.getMessage());
-        } catch (final FeedException e) {
-            fail(e.getMessage());
-        }
-    }
+public class FeedParserTest
+{
+	@Before
+	public void setUp ()
+	{
+		this.parser = new FeedParser ();
+	}
+	
+	@After
+	public void tearDown ()
+	{}
+	
+	@Test
+	public void test ()
+	{
+		final byte[] entry = this.readAtom ("http://search.twitter.com/search.atom?q=%22cloud%22");
+		try {
+			this.parser.parseFeed (entry);
+		} catch (final IOException e) {
+			Assert.fail (e.getMessage ());
+		} catch (final FeedException e) {
+			Assert.fail (e.getMessage ());
+		}
+	}
+	
+	private byte[] readAtom (final String feedsUrl)
+	{
+		InputStreamReader streamReader = null;
+		BufferedReader reader = null;
+		final StringBuilder builder = new StringBuilder ();
+		String line;
+		byte[] bytes = null;
+		try {
+			streamReader = new InputStreamReader ((new URL (feedsUrl)).openStream ());
+			reader = new BufferedReader (streamReader);
+			while ((line = reader.readLine ()) != null) {
+				builder.append (line);
+			}
+			bytes = builder.toString ().getBytes ();
+		} catch (final Exception e) {
+			Assert.fail ();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close ();
+				} catch (final IOException e) {
+					Assert.fail ();
+				}
+			}
+		}
+		return bytes;
+	}
+	
+	private FeedParser parser;
 }

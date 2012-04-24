@@ -20,28 +20,31 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-public class AmqpQueueConsumerConnector<TMessage> extends
-        AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>> implements
-        IAmqpQueueConsumerConnector<TMessage> {
 
-    protected AmqpQueueConsumerConnector(final AmqpQueueConsumerConnectorProxy<TMessage> proxy) {
-        super(proxy);
-    }
-
-    public static <M> AmqpQueueConsumerConnector<M> create(
-            final ConnectorConfiguration configuration, final Class<M> messageClass,
-            final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback) {
-        final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy.create(
-                configuration, messageClass, messageEncoder, callback);
-        return new AmqpQueueConsumerConnector<M>(proxy);
-    }
-
-    @Override
-    public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery) {
-        return this.proxy.acknowledge(delivery);
-    }
+public class AmqpQueueConsumerConnector<TMessage>
+		extends AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>>
+		implements
+			IAmqpQueueConsumerConnector<TMessage>
+{
+	protected AmqpQueueConsumerConnector (final AmqpQueueConsumerConnectorProxy<TMessage> proxy)
+	{
+		super (proxy);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> acknowledge (final IAmqpQueueDeliveryToken delivery)
+	{
+		return this.proxy.acknowledge (delivery);
+	}
+	
+	public static <M> AmqpQueueConsumerConnector<M> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback)
+	{
+		final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy.create (configuration, messageClass, messageEncoder, callback);
+		return new AmqpQueueConsumerConnector<M> (proxy);
+	}
 }

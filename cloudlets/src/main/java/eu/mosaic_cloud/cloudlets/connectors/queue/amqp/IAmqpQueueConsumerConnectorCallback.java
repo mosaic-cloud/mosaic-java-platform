@@ -20,8 +20,10 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for AMQP queue consumers. This will be implemented by cloudlets
@@ -36,40 +38,38 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> extends
-        IAmqpQueueConnectorCallback<TContext> {
-
-    /**
-     * Handles unsuccessful message acknowledge events.
-     * 
-     * @param context
-     *            the context of the cloudlet
-     * @param arguments
-     *            the arguments of the callback
-     */
-    CallbackCompletion<Void> acknowledgeFailed(TContext context,
-            GenericCallbackCompletionArguments<TExtra> arguments);
-
-    /**
-     * Handles successful message acknowledge events.
-     * 
-     * @param context
-     *            the context of the cloudlet
-     * @param arguments
-     *            the arguments of the callback
-     */
-    CallbackCompletion<Void> acknowledgeSucceeded(TContext context,
-            GenericCallbackCompletionArguments<TExtra> arguments);
-
-    /**
-     * Called when this consumer receives a message. This will deliver the
-     * message
-     * 
-     * @param context
-     *            the context of the cloudlet
-     * @param arguments
-     *            the arguments of the callback
-     */
-    CallbackCompletion<Void> consume(TContext context,
-            AmqpQueueConsumeCallbackArguments<TMessage, TExtra> arguments);
+public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
+		extends
+			IAmqpQueueConnectorCallback<TContext>
+{
+	/**
+	 * Handles unsuccessful message acknowledge events.
+	 * 
+	 * @param context
+	 *            the context of the cloudlet
+	 * @param arguments
+	 *            the arguments of the callback
+	 */
+	CallbackCompletion<Void> acknowledgeFailed (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
+	
+	/**
+	 * Handles successful message acknowledge events.
+	 * 
+	 * @param context
+	 *            the context of the cloudlet
+	 * @param arguments
+	 *            the arguments of the callback
+	 */
+	CallbackCompletion<Void> acknowledgeSucceeded (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
+	
+	/**
+	 * Called when this consumer receives a message. This will deliver the
+	 * message
+	 * 
+	 * @param context
+	 *            the context of the cloudlet
+	 * @param arguments
+	 *            the arguments of the callback
+	 */
+	CallbackCompletion<Void> consume (TContext context, AmqpQueueConsumeCallbackArguments<TMessage, TExtra> arguments);
 }

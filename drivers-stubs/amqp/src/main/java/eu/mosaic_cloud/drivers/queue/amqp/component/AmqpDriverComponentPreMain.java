@@ -20,18 +20,22 @@
 
 package eu.mosaic_cloud.drivers.queue.amqp.component;
 
+
 import eu.mosaic_cloud.drivers.component.AbstractDriverComponentPreMain;
 
-public final class AmqpDriverComponentPreMain extends Object {
 
-    private AmqpDriverComponentPreMain() {
-        super();
-        throw (new UnsupportedOperationException());
-    }
-
-    public static final void main(final String[] arguments) throws Throwable {
-        AbstractDriverComponentPreMain.main(
-                "eu.mosaic_cloud.drivers.queue.amqp.component.AmqpDriverComponentCallbacks",
-                arguments);
-    }
+public final class AmqpDriverComponentPreMain
+		extends Object
+{
+	private AmqpDriverComponentPreMain ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static final void main (final String[] arguments)
+			throws Throwable
+	{
+		AbstractDriverComponentPreMain.main ("eu.mosaic_cloud.drivers.queue.amqp.component.AmqpDriverComponentCallbacks", arguments);
+	}
 }

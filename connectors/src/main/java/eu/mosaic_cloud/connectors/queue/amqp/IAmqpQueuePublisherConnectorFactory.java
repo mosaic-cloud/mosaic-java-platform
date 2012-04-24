@@ -20,12 +20,14 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
-public interface IAmqpQueuePublisherConnectorFactory extends
-        IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>> {
 
-    <TMessage> IAmqpQueuePublisherConnector<TMessage> create(IConfiguration configuration,
-            Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder);
+public interface IAmqpQueuePublisherConnectorFactory
+		extends
+			IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>>
+{
+	<TMessage> IAmqpQueuePublisherConnector<TMessage> create (IConfiguration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder);
 }

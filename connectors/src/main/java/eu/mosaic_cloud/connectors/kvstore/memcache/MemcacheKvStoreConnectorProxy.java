@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.connectors.kvstore.memcache;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.protobuf.ByteString;
 
+
 /**
  * Proxy for the driver for key-value distributed storage systems implementing
  * the memcached protocol. This is used by the {@link GenericKvStoreConnector}
@@ -54,177 +56,171 @@ import com.google.protobuf.ByteString;
  *            type of stored data
  * 
  */
-public final class MemcacheKvStoreConnectorProxy<TValue extends Object> extends
-        BaseKvStoreConnectorProxy<TValue> implements IMemcacheKvStoreConnector<TValue> {
-
-    protected MemcacheKvStoreConnectorProxy(final ConnectorConfiguration configuration,
-            final DataEncoder<TValue> encoder) {
-        super(configuration, encoder);
-    }
-
-    /**
-     * Returns a proxy for key-value distributed storage systems.
-     * 
-     * @param configuration
-     *            the execution environment of a connector
-     * @param encoder
-     *            encoder used for serializing and deserializing data stored in
-     *            the key-value store
-     * @return the proxy
-     */
-    public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create(
-            final ConnectorConfiguration configuration, final DataEncoder<T> encoder) {
-        final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T>(
-                configuration, encoder);
-        return proxy;
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> add(final String key, final int exp, final TValue data) {
-        CallbackCompletion<Boolean> result;
-        try {
-            final byte[] dataBytes = this.encoder.encode(data);
-            final CompletionToken token = this.generateToken();
-            final MemcachedPayloads.AddRequest.Builder requestBuilder = MemcachedPayloads.AddRequest
-                    .newBuilder();
-            requestBuilder.setToken(token);
-            requestBuilder.setKey(key);
-            requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            requestBuilder.setExpTime(exp);
-            final Message message = new Message(MemcachedMessage.ADD_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
-        } catch (final EncodingException exception) {
-            result = CallbackCompletion.createFailure(exception);
-        }
-        return result;
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> append(final String key, final TValue data) {
-        CallbackCompletion<Boolean> result;
-        try {
-            final byte[] dataBytes = this.encoder.encode(data);
-            final CompletionToken token = this.generateToken();
-            final MemcachedPayloads.AppendRequest.Builder requestBuilder = MemcachedPayloads.AppendRequest
-                    .newBuilder();
-            requestBuilder.setToken(token);
-            requestBuilder.setKey(key);
-            requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(MemcachedMessage.APPEND_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
-        } catch (final EncodingException exception) {
-            result = CallbackCompletion.createFailure(exception);
-        }
-        return result;
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> cas(final String key, final TValue data) {
-        CallbackCompletion<Boolean> result;
-        try {
-            final byte[] dataBytes = this.encoder.encode(data);
-            final CompletionToken token = this.generateToken();
-            final MemcachedPayloads.CasRequest.Builder requestBuilder = MemcachedPayloads.CasRequest
-                    .newBuilder();
-            requestBuilder.setToken(token);
-            requestBuilder.setKey(key);
-            requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(MemcachedMessage.CAS_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
-        } catch (final EncodingException exception) {
-            result = CallbackCompletion.createFailure(exception);
-        }
-        return result;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public CallbackCompletion<Map<String, TValue>> getBulk(final List<String> keys) {
-        return this.sendGetMessage(keys, (Class<Map<String, TValue>>) ((Class<?>) Map.class));
-    }
-
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        final String bucket = super.configuration.getConfigParameter(
-                ConfigProperties.getString("GenericKvStoreConnector.1"), String.class, "");
-        final InitRequest.Builder requestBuilder = InitRequest.newBuilder();
-        requestBuilder.setToken(this.generateToken());
-        requestBuilder.setBucket(bucket);
-        return this.connect(MemcachedSession.CONNECTOR, new Message(KeyValueMessage.ACCESS,
-                requestBuilder.build()));
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> prepend(final String key, final TValue data) {
-        CallbackCompletion<Boolean> result;
-        try {
-            final byte[] dataBytes = this.encoder.encode(data);
-            final CompletionToken token = this.generateToken();
-            final MemcachedPayloads.PrependRequest.Builder requestBuilder = MemcachedPayloads.PrependRequest
-                    .newBuilder();
-            requestBuilder.setToken(token);
-            requestBuilder.setKey(key);
-            requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(MemcachedMessage.PREPEND_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
-        } catch (final EncodingException exception) {
-            result = CallbackCompletion.createFailure(exception);
-        }
-        return result;
-    }
-
-    @Override
-    protected void processResponse(final Message message) {
-        final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
-        if (kvMessage == KeyValueMessage.GET_REPLY) {
-            final KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
-            final CompletionToken token = getPayload.getToken();
-            this.logger.debug("KvStoreConnectorProxy - Received "
-                    + message.specification.toString() + " response [" + token.getMessageId()
-                    + "]...");
-            if (this.pendingRequests.peek(token.getMessageId()).future.outcomeClass == Map.class) {
-                final List<KVEntry> resultEntries = getPayload.getResultsList();
-                final Map<String, Object> values = new HashMap<String, Object>();
-                for (final KVEntry entry : resultEntries) {
-                    try {
-                        final TValue value = this.encoder.decode(resultEntries.get(0).getValue()
-                                .toByteArray());
-                        values.put(entry.getKey(), value);
-                    } catch (final EncodingException exception) {
-                        this.pendingRequests.fail(token.getMessageId(), exception);
-                        return;
-                    }
-                }
-                this.pendingRequests.succeed(token.getMessageId(), values);
-            }
-            super.processResponse(message);
-        } else {
-            super.processResponse(message);
-        }
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> replace(final String key, final int exp, final TValue data) {
-        CallbackCompletion<Boolean> result;
-        try {
-            final byte[] dataBytes = this.encoder.encode(data);
-            final CompletionToken token = this.generateToken();
-            final MemcachedPayloads.ReplaceRequest.Builder requestBuilder = MemcachedPayloads.ReplaceRequest
-                    .newBuilder();
-            requestBuilder.setToken(token);
-            requestBuilder.setKey(key);
-            requestBuilder.setExpTime(exp);
-            requestBuilder.setValue(ByteString.copyFrom(dataBytes));
-            final Message message = new Message(MemcachedMessage.REPLACE_REQUEST,
-                    requestBuilder.build());
-            result = this.sendRequest(message, token, Boolean.class);
-        } catch (final EncodingException exception) {
-            result = CallbackCompletion.createFailure(exception);
-        }
-        return result;
-    }
+public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
+		extends BaseKvStoreConnectorProxy<TValue>
+		implements
+			IMemcacheKvStoreConnector<TValue>
+{
+	protected MemcacheKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
+	{
+		super (configuration, encoder);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> add (final String key, final int exp, final TValue data)
+	{
+		CallbackCompletion<Boolean> result;
+		try {
+			final byte[] dataBytes = this.encoder.encode (data);
+			final CompletionToken token = this.generateToken ();
+			final MemcachedPayloads.AddRequest.Builder requestBuilder = MemcachedPayloads.AddRequest.newBuilder ();
+			requestBuilder.setToken (token);
+			requestBuilder.setKey (key);
+			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			requestBuilder.setExpTime (exp);
+			final Message message = new Message (MemcachedMessage.ADD_REQUEST, requestBuilder.build ());
+			result = this.sendRequest (message, token, Boolean.class);
+		} catch (final EncodingException exception) {
+			result = CallbackCompletion.createFailure (exception);
+		}
+		return result;
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> append (final String key, final TValue data)
+	{
+		CallbackCompletion<Boolean> result;
+		try {
+			final byte[] dataBytes = this.encoder.encode (data);
+			final CompletionToken token = this.generateToken ();
+			final MemcachedPayloads.AppendRequest.Builder requestBuilder = MemcachedPayloads.AppendRequest.newBuilder ();
+			requestBuilder.setToken (token);
+			requestBuilder.setKey (key);
+			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final Message message = new Message (MemcachedMessage.APPEND_REQUEST, requestBuilder.build ());
+			result = this.sendRequest (message, token, Boolean.class);
+		} catch (final EncodingException exception) {
+			result = CallbackCompletion.createFailure (exception);
+		}
+		return result;
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> cas (final String key, final TValue data)
+	{
+		CallbackCompletion<Boolean> result;
+		try {
+			final byte[] dataBytes = this.encoder.encode (data);
+			final CompletionToken token = this.generateToken ();
+			final MemcachedPayloads.CasRequest.Builder requestBuilder = MemcachedPayloads.CasRequest.newBuilder ();
+			requestBuilder.setToken (token);
+			requestBuilder.setKey (key);
+			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final Message message = new Message (MemcachedMessage.CAS_REQUEST, requestBuilder.build ());
+			result = this.sendRequest (message, token, Boolean.class);
+		} catch (final EncodingException exception) {
+			result = CallbackCompletion.createFailure (exception);
+		}
+		return result;
+	}
+	
+	@Override
+	@SuppressWarnings ("unchecked")
+	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys)
+	{
+		return this.sendGetMessage (keys, (Class<Map<String, TValue>>) ((Class<?>) Map.class));
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initialize ()
+	{
+		final String bucket = super.configuration.getConfigParameter (ConfigProperties.getString ("GenericKvStoreConnector.1"), String.class, "");
+		final InitRequest.Builder requestBuilder = InitRequest.newBuilder ();
+		requestBuilder.setToken (this.generateToken ());
+		requestBuilder.setBucket (bucket);
+		return this.connect (MemcachedSession.CONNECTOR, new Message (KeyValueMessage.ACCESS, requestBuilder.build ()));
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> prepend (final String key, final TValue data)
+	{
+		CallbackCompletion<Boolean> result;
+		try {
+			final byte[] dataBytes = this.encoder.encode (data);
+			final CompletionToken token = this.generateToken ();
+			final MemcachedPayloads.PrependRequest.Builder requestBuilder = MemcachedPayloads.PrependRequest.newBuilder ();
+			requestBuilder.setToken (token);
+			requestBuilder.setKey (key);
+			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final Message message = new Message (MemcachedMessage.PREPEND_REQUEST, requestBuilder.build ());
+			result = this.sendRequest (message, token, Boolean.class);
+		} catch (final EncodingException exception) {
+			result = CallbackCompletion.createFailure (exception);
+		}
+		return result;
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> replace (final String key, final int exp, final TValue data)
+	{
+		CallbackCompletion<Boolean> result;
+		try {
+			final byte[] dataBytes = this.encoder.encode (data);
+			final CompletionToken token = this.generateToken ();
+			final MemcachedPayloads.ReplaceRequest.Builder requestBuilder = MemcachedPayloads.ReplaceRequest.newBuilder ();
+			requestBuilder.setToken (token);
+			requestBuilder.setKey (key);
+			requestBuilder.setExpTime (exp);
+			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final Message message = new Message (MemcachedMessage.REPLACE_REQUEST, requestBuilder.build ());
+			result = this.sendRequest (message, token, Boolean.class);
+		} catch (final EncodingException exception) {
+			result = CallbackCompletion.createFailure (exception);
+		}
+		return result;
+	}
+	
+	@Override
+	protected void processResponse (final Message message)
+	{
+		final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
+		if (kvMessage == KeyValueMessage.GET_REPLY) {
+			final KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
+			final CompletionToken token = getPayload.getToken ();
+			this.logger.debug ("KvStoreConnectorProxy - Received " + message.specification.toString () + " response [" + token.getMessageId () + "]...");
+			if (this.pendingRequests.peek (token.getMessageId ()).future.outcomeClass == Map.class) {
+				final List<KVEntry> resultEntries = getPayload.getResultsList ();
+				final Map<String, Object> values = new HashMap<String, Object> ();
+				for (final KVEntry entry : resultEntries) {
+					try {
+						final TValue value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray ());
+						values.put (entry.getKey (), value);
+					} catch (final EncodingException exception) {
+						this.pendingRequests.fail (token.getMessageId (), exception);
+						return;
+					}
+				}
+				this.pendingRequests.succeed (token.getMessageId (), values);
+			}
+			super.processResponse (message);
+		} else {
+			super.processResponse (message);
+		}
+	}
+	
+	/**
+	 * Returns a proxy for key-value distributed storage systems.
+	 * 
+	 * @param configuration
+	 *            the execution environment of a connector
+	 * @param encoder
+	 *            encoder used for serializing and deserializing data stored in
+	 *            the key-value store
+	 * @return the proxy
+	 */
+	public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
+	{
+		final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T> (configuration, encoder);
+		return proxy;
+	}
 }

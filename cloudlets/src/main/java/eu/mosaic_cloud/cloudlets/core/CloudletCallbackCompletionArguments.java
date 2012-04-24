@@ -20,19 +20,23 @@
 
 package eu.mosaic_cloud.cloudlets.core;
 
-public class CloudletCallbackCompletionArguments<TContext> extends CallbackCompletionArguments {
 
-    public CloudletCallbackCompletionArguments(final ICloudletController<TContext> cloudlet) {
-        super(cloudlet);
-    }
-
-    public CloudletCallbackCompletionArguments(final ICloudletController<TContext> cloudlet,
-            final Throwable error) {
-        super(cloudlet, error);
-    }
-
-    @Override
-    public ICloudletController<TContext> getCloudlet() {
-        return (ICloudletController<TContext>) this.cloudlet;
-    }
+public class CloudletCallbackCompletionArguments<TContext>
+		extends CallbackCompletionArguments
+{
+	public CloudletCallbackCompletionArguments (final ICloudletController<TContext> cloudlet)
+	{
+		super (cloudlet);
+	}
+	
+	public CloudletCallbackCompletionArguments (final ICloudletController<TContext> cloudlet, final Throwable error)
+	{
+		super (cloudlet, error);
+	}
+	
+	@Override
+	public ICloudletController<TContext> getCloudlet ()
+	{
+		return (ICloudletController<TContext>) this.cloudlet;
+	}
 }

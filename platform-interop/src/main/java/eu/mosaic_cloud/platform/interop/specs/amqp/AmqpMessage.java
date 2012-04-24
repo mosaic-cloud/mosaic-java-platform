@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.platform.interop.specs.amqp;
 
+
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
@@ -30,84 +31,78 @@ import eu.mosaic_cloud.platform.interop.tools.DefaultPBPayloadCoder;
 
 import com.google.protobuf.GeneratedMessage;
 
+
 /**
  * Enum containing all possible AMQP connector-driver messages.
  * 
  * @author Georgiana Macariu
  * 
  */
-public enum AmqpMessage implements MessageSpecification {
-    ABORTED(MessageType.Termination, null), ACCESS(MessageType.Initiation, null), ERROR(
-            MessageType.Exchange,
-            IdlCommon.Error.class), OK(MessageType.Exchange, IdlCommon.Ok.class), NOK(
-            MessageType.Exchange,
-            IdlCommon.NotOk.class), DECL_EXCHANGE_REQUEST(
-            MessageType.Exchange,
-            AmqpPayloads.DeclareExchangeRequest.class), DECL_QUEUE_REQUEST(
-            MessageType.Exchange,
-            AmqpPayloads.DeclareQueueRequest.class), BIND_QUEUE_REQUEST(
-            MessageType.Exchange,
-            AmqpPayloads.BindQueueRequest.class), CONSUME_REQUEST(
-            MessageType.Exchange,
-            AmqpPayloads.ConsumeRequest.class), CONSUME_REPLY(
-            MessageType.Exchange,
-            AmqpPayloads.ConsumeReply.class), PUBLISH_REQUEST(
-            MessageType.Exchange,
-            AmqpPayloads.PublishRequest.class), GET_REQUEST(
-            MessageType.Exchange,
-            AmqpPayloads.GetRequest.class), CANCEL_REQUEST(
-            MessageType.Exchange,
-            AmqpPayloads.CancelRequest.class), SERVER_CANCEL(
-            MessageType.Exchange,
-            AmqpPayloads.ServerCancelRequest.class), ACK(
-            MessageType.Exchange,
-            AmqpPayloads.Ack.class), DELIVERY(
-            MessageType.Exchange,
-            AmqpPayloads.DeliveryMessage.class), CONSUME_OK(
-            MessageType.Exchange,
-            AmqpPayloads.ConsumeOkMessage.class), CANCEL_OK(
-            MessageType.Exchange,
-            AmqpPayloads.CancelOkMessage.class), SHUTDOWN(
-            MessageType.Exchange,
-            AmqpPayloads.ShutdownMessage.class);
-
-    public PayloadCoder coder = null;
-    public final String identifier;
-    public final MessageType type;
-
-    /**
-     * Creates a new AMQP message.
-     * 
-     * @param type
-     *            the type of the message (initiation, exchange or termination)
-     * @param clasz
-     *            the class containing the payload of the message
-     */
-    AmqpMessage(MessageType type, Class<? extends GeneratedMessage> clasz) {
-        this.identifier = Identifiers.generate(this);
-        this.type = type;
-        if (clasz != null) {
-            this.coder = new DefaultPBPayloadCoder(clasz, false);
-        }
-    }
-
-    @Override
-    public String getIdentifier() {
-        return this.identifier;
-    }
-
-    @Override
-    public PayloadCoder getPayloadCoder() {
-        return this.coder;
-    }
-
-    @Override
-    public String getQualifiedName() {
-        return (Identifiers.generateName(this));
-    }
-
-    @Override
-    public MessageType getType() {
-        return this.type;
-    }
+public enum AmqpMessage
+		implements
+			MessageSpecification
+{
+	ABORTED (MessageType.Termination, null),
+	ACCESS (MessageType.Initiation, null),
+	ACK (MessageType.Exchange, AmqpPayloads.Ack.class),
+	BIND_QUEUE_REQUEST (MessageType.Exchange, AmqpPayloads.BindQueueRequest.class),
+	CANCEL_OK (MessageType.Exchange, AmqpPayloads.CancelOkMessage.class),
+	CANCEL_REQUEST (MessageType.Exchange, AmqpPayloads.CancelRequest.class),
+	CONSUME_OK (MessageType.Exchange, AmqpPayloads.ConsumeOkMessage.class),
+	CONSUME_REPLY (MessageType.Exchange, AmqpPayloads.ConsumeReply.class),
+	CONSUME_REQUEST (MessageType.Exchange, AmqpPayloads.ConsumeRequest.class),
+	DECL_EXCHANGE_REQUEST (MessageType.Exchange, AmqpPayloads.DeclareExchangeRequest.class),
+	DECL_QUEUE_REQUEST (MessageType.Exchange, AmqpPayloads.DeclareQueueRequest.class),
+	DELIVERY (MessageType.Exchange, AmqpPayloads.DeliveryMessage.class),
+	ERROR (MessageType.Exchange, IdlCommon.Error.class),
+	GET_REQUEST (MessageType.Exchange, AmqpPayloads.GetRequest.class),
+	NOK (MessageType.Exchange, IdlCommon.NotOk.class),
+	OK (MessageType.Exchange, IdlCommon.Ok.class),
+	PUBLISH_REQUEST (MessageType.Exchange, AmqpPayloads.PublishRequest.class),
+	SERVER_CANCEL (MessageType.Exchange, AmqpPayloads.ServerCancelRequest.class),
+	SHUTDOWN (MessageType.Exchange, AmqpPayloads.ShutdownMessage.class);
+	/**
+	 * Creates a new AMQP message.
+	 * 
+	 * @param type
+	 *            the type of the message (initiation, exchange or termination)
+	 * @param clasz
+	 *            the class containing the payload of the message
+	 */
+	AmqpMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
+	{
+		this.identifier = Identifiers.generate (this);
+		this.type = type;
+		if (clasz != null) {
+			this.coder = new DefaultPBPayloadCoder (clasz, false);
+		}
+	}
+	
+	@Override
+	public String getIdentifier ()
+	{
+		return this.identifier;
+	}
+	
+	@Override
+	public PayloadCoder getPayloadCoder ()
+	{
+		return this.coder;
+	}
+	
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
+	
+	@Override
+	public MessageType getType ()
+	{
+		return this.type;
+	}
+	
+	public PayloadCoder coder = null;
+	public final String identifier;
+	public final MessageType type;
 }

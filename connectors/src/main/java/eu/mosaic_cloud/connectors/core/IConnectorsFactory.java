@@ -20,14 +20,14 @@
 
 package eu.mosaic_cloud.connectors.core;
 
+
 /**
  * Interface for the factory of connector factories class.
  * 
  * @author Ciprian Craciun
  * 
  */
-public interface IConnectorsFactory {
-
-    <TConnector extends IConnector, TFactory extends IConnectorFactory<? super TConnector>> TFactory getConnectorFactory(
-            Class<TFactory> factory);
+public interface IConnectorsFactory
+{
+	<TConnector extends IConnector, TFactory extends IConnectorFactory<? super TConnector>> TFactory getConnectorFactory (Class<TFactory> factory);
 }

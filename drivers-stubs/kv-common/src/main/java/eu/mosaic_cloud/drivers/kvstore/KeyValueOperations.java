@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.drivers.kvstore;
 
+
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+
 
 /**
  * Basic operations supported by a key-value stores and memcached protocol.
@@ -28,6 +30,18 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
  * @author Georgiana Macariu
  * 
  */
-public enum KeyValueOperations implements IOperationType {
-    SET, GET, LIST, DELETE, ADD, REPLACE, APPEND, PREPEND, CAS, GET_BULK;
+public enum KeyValueOperations
+		implements
+			IOperationType
+{
+	ADD,
+	APPEND,
+	CAS,
+	DELETE,
+	GET,
+	GET_BULK,
+	LIST,
+	PREPEND,
+	REPLACE,
+	SET;
 }

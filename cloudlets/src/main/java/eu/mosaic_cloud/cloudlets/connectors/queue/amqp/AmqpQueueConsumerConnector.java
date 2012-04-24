@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerCallback;
@@ -28,79 +29,70 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
+
 public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
-        extends
-        BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage>, IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>, TContext>
-        implements IAmqpQueueConsumerConnector<TMessage, TExtra> {
-
-    public static final class Callback<Message> implements IAmqpQueueConsumerCallback<Message> {
-
-        private AmqpQueueConsumerConnector<?, Message, ?> connector = null; // NOPMD
-
-        @Override
-        public CallbackCompletion<Void> consume(final IAmqpQueueDeliveryToken delivery,
-                final Message message) {
-            return this.connector.consume(delivery, message);
-        }
-    }
-
-    @SuppressWarnings("synthetic-access")
-    public AmqpQueueConsumerConnector(
-            final ICloudletController<?> cloudlet,
-            final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage> connector,
-            final IConfiguration configuration,
-            final IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback,
-            final TContext context, final Callback<TMessage> backingCallback) {
-        super(cloudlet, connector, configuration, callback, context);
-        backingCallback.connector = this;
-    }
-
-    @Override
-    public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery) {
-        return this.acknowledge(delivery, null);
-    }
-
-    @Override
-    public CallbackCompletion<Void> acknowledge(final IAmqpQueueDeliveryToken delivery,
-            final TExtra extra) {
-        final CallbackCompletion<Void> completion = this.connector.acknowledge(delivery);
-        if (this.callback != null) {
-            completion.observe(new CallbackCompletionObserver() {
-
-                @SuppressWarnings("synthetic-access")
-                @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD
-                    CallbackCompletion<Void> result;
-                    if (completion.getException() == null) {
-                        result = AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded(
-                                AmqpQueueConsumerConnector.this.context,
-                                new GenericCallbackCompletionArguments<TExtra>(
-                                        AmqpQueueConsumerConnector.this.cloudlet, extra));
-                    } else {
-                        result = AmqpQueueConsumerConnector.this.callback.acknowledgeFailed(
-                                AmqpQueueConsumerConnector.this.context,
-                                new GenericCallbackCompletionArguments<TExtra>(
-                                        AmqpQueueConsumerConnector.this.cloudlet, completion
-                                                .getException()));
-                    }
-                    return result;
-                }
-            });
-        }
-        return completion;
-    }
-
-    protected CallbackCompletion<Void> consume(final IAmqpQueueDeliveryToken delivery,
-            final TMessage message) {
-        CallbackCompletion<Void> result;
-        if (this.callback == null) {
-            result = CallbackCompletion.createFailure(new IllegalStateException());
-        } else {
-            result = this.callback.consume(this.context,
-                    new AmqpQueueConsumeCallbackArguments<TMessage, TExtra>(this.cloudlet,
-                            delivery, message));
-        }
-        return result;
-    }
+		extends BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage>, IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>, TContext>
+		implements
+			IAmqpQueueConsumerConnector<TMessage, TExtra>
+{
+	@SuppressWarnings ("synthetic-access")
+	public AmqpQueueConsumerConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage> connector, final IConfiguration configuration, final IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback)
+	{
+		super (cloudlet, connector, configuration, callback, context);
+		backingCallback.connector = this;
+	}
+	
+	@Override
+	public CallbackCompletion<Void> acknowledge (final IAmqpQueueDeliveryToken delivery)
+	{
+		return this.acknowledge (delivery, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> acknowledge (final IAmqpQueueDeliveryToken delivery, final TExtra extra)
+	{
+		final CallbackCompletion<Void> completion = this.connector.acknowledge (delivery);
+		if (this.callback != null) {
+			completion.observe (new CallbackCompletionObserver () {
+				@SuppressWarnings ("synthetic-access")
+				@Override
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+				{
+					assert (completion_ == completion); // NOPMD
+					CallbackCompletion<Void> result;
+					if (completion.getException () == null) {
+						result = AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded (AmqpQueueConsumerConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueueConsumerConnector.this.cloudlet, extra));
+					} else {
+						result = AmqpQueueConsumerConnector.this.callback.acknowledgeFailed (AmqpQueueConsumerConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueueConsumerConnector.this.cloudlet, completion.getException ()));
+					}
+					return result;
+				}
+			});
+		}
+		return completion;
+	}
+	
+	protected CallbackCompletion<Void> consume (final IAmqpQueueDeliveryToken delivery, final TMessage message)
+	{
+		CallbackCompletion<Void> result;
+		if (this.callback == null) {
+			result = CallbackCompletion.createFailure (new IllegalStateException ());
+		} else {
+			result = this.callback.consume (this.context, new AmqpQueueConsumeCallbackArguments<TMessage, TExtra> (this.cloudlet, delivery, message));
+		}
+		return result;
+	}
+	
+	public static final class Callback<Message>
+			implements
+				IAmqpQueueConsumerCallback<Message>
+	{
+		@Override
+		public CallbackCompletion<Void> consume (final IAmqpQueueDeliveryToken delivery, final Message message)
+		{
+			return this.connector.consume (delivery, message);
+		}
+		
+		private AmqpQueueConsumerConnector<?, Message, ?> connector = null; // NOPMD
+	}
 }

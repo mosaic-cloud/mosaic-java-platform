@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.connectors.core;
 
+
 /**
  * Interface for custom connector factory. For each connector type an
  * implementation of this interface should be implemented.
@@ -29,5 +30,5 @@ package eu.mosaic_cloud.connectors.core;
  * @param <TConnector>
  *            the type of the connector created by this factory
  */
-public interface IConnectorFactory<TConnector extends IConnector> {
-}
+public interface IConnectorFactory<TConnector extends IConnector>
+{}

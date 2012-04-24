@@ -20,11 +20,12 @@
 
 package eu.mosaic_cloud.platform.core.ops;
 
+
 /**
  * Marker interface for operation types enums.
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface IOperationType {
-}
+public interface IOperationType
+{}

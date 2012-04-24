@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
@@ -28,19 +29,20 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
 
-public class QueueConsumerCallback extends
-        DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
-    @Override
-    public CallbackCompletion<Void> consume(IndexerCloudletContext context,
-            AmqpQueueConsumeCallbackArguments<JSONObject, Void> arguments) {
-        final JSONObject message = arguments.getMessage();
-        IndexWorkflow.indexNewFeed(context, message);
-        if (this == context.batchConsumer) {
-            context.batchConsumer.acknowledge(arguments.getDelivery());
-        } else if (this == context.urgentConsumer) {
-            context.urgentConsumer.acknowledge(arguments.getDelivery());
-        }
-        return ICallback.SUCCESS;
-    }
+public class QueueConsumerCallback
+		extends DefaultAmqpQueueConsumerConnectorCallback<IndexerCloudletContext, JSONObject, Void>
+{
+	@Override
+	public CallbackCompletion<Void> consume (final IndexerCloudletContext context, final AmqpQueueConsumeCallbackArguments<JSONObject, Void> arguments)
+	{
+		final JSONObject message = arguments.getMessage ();
+		IndexWorkflow.indexNewFeed (context, message);
+		if (this == context.batchConsumer) {
+			context.batchConsumer.acknowledge (arguments.getDelivery ());
+		} else if (this == context.urgentConsumer) {
+			context.urgentConsumer.acknowledge (arguments.getDelivery ());
+		}
+		return ICallback.SUCCESS;
+	}
 }

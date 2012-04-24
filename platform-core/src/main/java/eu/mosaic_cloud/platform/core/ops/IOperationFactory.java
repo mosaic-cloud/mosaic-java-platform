@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.platform.core.ops;
 
+
 /**
  * Factory class which builds the asynchronous calls for the operations
  * supported by a specific resource. This interface should be implemented for
@@ -28,21 +29,21 @@ package eu.mosaic_cloud.platform.core.ops;
  * @author Georgiana Macariu
  * 
  */
-public interface IOperationFactory {
-
-    /**
-     * Destroys a facory..
-     */
-    void destroy();
-
-    /**
-     * Builds the asynchronous operation.
-     * 
-     * @param type
-     *            the type of the operation
-     * @param parameters
-     *            the parameters of the operation
-     * @return the operation
-     */
-    IOperation<?> getOperation(IOperationType type, Object... parameters);
+public interface IOperationFactory
+{
+	/**
+	 * Destroys a facory..
+	 */
+	void destroy ();
+	
+	/**
+	 * Builds the asynchronous operation.
+	 * 
+	 * @param type
+	 *            the type of the operation
+	 * @param parameters
+	 *            the parameters of the operation
+	 * @return the operation
+	 */
+	IOperation<?> getOperation (IOperationType type, Object ... parameters);
 }

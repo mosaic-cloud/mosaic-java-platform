@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.core;
 
+
 /**
  * Base class for clouldet callback arguments. This will hold a reference to the
  * cloudlet controller but also the result of the operation or the exception
@@ -28,40 +29,44 @@ package eu.mosaic_cloud.cloudlets.core;
  * @author Georgiana Macariu
  * 
  */
-public class CallbackCompletionArguments extends CallbackArguments {
-
-    protected Throwable error;
-
-    /**
-     * Creates the operation callback argument.
-     * 
-     * @param cloudlet
-     *            the cloudlet controller
-     */
-    public CallbackCompletionArguments(final ICloudletController<?> cloudlet) {
-        super(cloudlet);
-    }
-
-    /**
-     * Creates the operation callback argument.
-     * 
-     * @param cloudlet
-     *            the cloudlet controller
-     * @param error
-     *            the exception thrown by the operation
-     */
-    public CallbackCompletionArguments(final ICloudletController<?> cloudlet, final Throwable error) {
-        super(cloudlet);
-        this.error = error;
-    }
-
-    /**
-     * Returns the exception thrown by the operation if it didn't finish with
-     * success.
-     * 
-     * @return the exception thrown by the operation
-     */
-    public Throwable getError() {
-        return this.error;
-    }
+public class CallbackCompletionArguments
+		extends CallbackArguments
+{
+	/**
+	 * Creates the operation callback argument.
+	 * 
+	 * @param cloudlet
+	 *            the cloudlet controller
+	 */
+	public CallbackCompletionArguments (final ICloudletController<?> cloudlet)
+	{
+		super (cloudlet);
+	}
+	
+	/**
+	 * Creates the operation callback argument.
+	 * 
+	 * @param cloudlet
+	 *            the cloudlet controller
+	 * @param error
+	 *            the exception thrown by the operation
+	 */
+	public CallbackCompletionArguments (final ICloudletController<?> cloudlet, final Throwable error)
+	{
+		super (cloudlet);
+		this.error = error;
+	}
+	
+	/**
+	 * Returns the exception thrown by the operation if it didn't finish with
+	 * success.
+	 * 
+	 * @return the exception thrown by the operation
+	 */
+	public Throwable getError ()
+	{
+		return this.error;
+	}
+	
+	protected Throwable error;
 }

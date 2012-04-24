@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.drivers.kvstore;
 
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -28,84 +29,86 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
+
 /**
  * A factory for key-value drivers.
  * 
  * @author Georgiana Macariu
  * 
  */
-public final class KeyValueDriverFactory {
-
-    public enum DriverType {
-        REDIS("eu.mosaic_cloud.drivers.kvstore.RedisDriver"), MEMCACHED(
-                "eu.mosaic_cloud.drivers.kvstore.MemcachedDriver"), RIAKREST(
-                "eu.mosaic_cloud.drivers.kvstore.RiakRestDriver"), RIAKPB(
-                "eu.mosaic_cloud.drivers.kvstore.RiakPBDriver");
-
-        private final String driverClassName;
-
-        DriverType(String canonicalClassName) {
-            this.driverClassName = canonicalClassName;
-        }
-
-        public Class<? extends AbstractKeyValueDriver> getDriverClass() {
-            return this.getDriverClass(DriverType.class.getClassLoader());
-        }
-
-        private Class<? extends AbstractKeyValueDriver> getDriverClass(ClassLoader loader) {
-            try {
-                return (Class<? extends AbstractKeyValueDriver>) loader
-                        .loadClass(this.driverClassName);
-            } catch (final ClassNotFoundException e) {
-                throw new Error(e);
-            }
-        }
-    }
-
-    private KeyValueDriverFactory() {
-    }
-
-    /**
-     * Creates a driver of requested type with the specified configuration.
-     * 
-     * @param driverName
-     *            the name of the driver
-     * @param config
-     *            the configuration for the driver
-     * @param threadingContext
-     *            the context used for creating threads
-     * @return the driver
-     * @throws ConnectorNotFoundException
-     *             if driver cannot be instantiated for any reason
-     */
-    public static AbstractKeyValueDriver createDriver(String driverName, IConfiguration config,
-            ThreadingContext threadingContext) throws DriverNotFoundException {
-        DriverType type = null;
-        AbstractKeyValueDriver driver = null;
-        for (final DriverType t : DriverType.values()) {
-            if (t.name().equalsIgnoreCase(driverName)) {
-                type = t;
-                break;
-            }
-        }
-        if (type != null) {
-            try {
-                final Class<?> driverClass = type.getDriverClass();
-                final Method createMethod = driverClass.getMethod("create", IConfiguration.class,
-                        ThreadingContext.class);
-                try {
-                    driver = (AbstractKeyValueDriver) createMethod.invoke(null, config,
-                            threadingContext);
-                } catch (final InvocationTargetException exception) {
-                    ExceptionTracer.traceHandled(exception);
-                    throw exception.getCause();
-                }
-            } catch (final Throwable e) {
-                ExceptionTracer.traceIgnored(e);
-                final DriverNotFoundException exception = new DriverNotFoundException(e);
-                throw exception;
-            }
-        }
-        return driver;
-    }
+public final class KeyValueDriverFactory
+{
+	private KeyValueDriverFactory ()
+	{}
+	
+	/**
+	 * Creates a driver of requested type with the specified configuration.
+	 * 
+	 * @param driverName
+	 *            the name of the driver
+	 * @param config
+	 *            the configuration for the driver
+	 * @param threadingContext
+	 *            the context used for creating threads
+	 * @return the driver
+	 * @throws ConnectorNotFoundException
+	 *             if driver cannot be instantiated for any reason
+	 */
+	public static AbstractKeyValueDriver createDriver (final String driverName, final IConfiguration config, final ThreadingContext threadingContext)
+			throws DriverNotFoundException
+	{
+		DriverType type = null;
+		AbstractKeyValueDriver driver = null;
+		for (final DriverType t : DriverType.values ()) {
+			if (t.name ().equalsIgnoreCase (driverName)) {
+				type = t;
+				break;
+			}
+		}
+		if (type != null) {
+			try {
+				final Class<?> driverClass = type.getDriverClass ();
+				final Method createMethod = driverClass.getMethod ("create", IConfiguration.class, ThreadingContext.class);
+				try {
+					driver = (AbstractKeyValueDriver) createMethod.invoke (null, config, threadingContext);
+				} catch (final InvocationTargetException exception) {
+					ExceptionTracer.traceHandled (exception);
+					throw exception.getCause ();
+				}
+			} catch (final Throwable e) {
+				ExceptionTracer.traceIgnored (e);
+				final DriverNotFoundException exception = new DriverNotFoundException (e);
+				throw exception;
+			}
+		}
+		return driver;
+	}
+	
+	public enum DriverType
+	{
+		MEMCACHED ("eu.mosaic_cloud.drivers.kvstore.MemcachedDriver"),
+		REDIS ("eu.mosaic_cloud.drivers.kvstore.RedisDriver"),
+		RIAKPB ("eu.mosaic_cloud.drivers.kvstore.RiakPBDriver"),
+		RIAKREST ("eu.mosaic_cloud.drivers.kvstore.RiakRestDriver");
+		DriverType (final String canonicalClassName)
+		{
+			this.driverClassName = canonicalClassName;
+		}
+		
+		public Class<? extends AbstractKeyValueDriver> getDriverClass ()
+		{
+			return this.getDriverClass (DriverType.class.getClassLoader ());
+		}
+		
+		private Class<? extends AbstractKeyValueDriver> getDriverClass (final ClassLoader loader)
+		{
+			try {
+				return (Class<? extends AbstractKeyValueDriver>) loader.loadClass (this.driverClassName);
+			} catch (final ClassNotFoundException e) {
+				throw new Error (e);
+			}
+		}
+		
+		private final String driverClassName;
+	}
 }

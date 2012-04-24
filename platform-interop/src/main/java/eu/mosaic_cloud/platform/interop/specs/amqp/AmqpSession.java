@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.platform.interop.specs.amqp;
 
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,7 @@ import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
+
 /**
  * Defines the AMQP session: the messages that can be exchanged and the roles of
  * the participants.
@@ -36,40 +38,48 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * @author Georgiana Macariu
  * 
  */
-public enum AmqpSession implements SessionSpecification {
-    CONNECTOR(AmqpRole.CONNECTOR, AmqpRole.DRIVER), DRIVER(AmqpRole.DRIVER, AmqpRole.CONNECTOR);
-
-    public final AmqpRole selfRole;
-    public final AmqpRole peerRole;
-    public final List<AmqpMessage> messages;
-
-    private AmqpSession(AmqpRole selfRole, AmqpRole peerRole) {
-        this.selfRole = selfRole;
-        this.peerRole = peerRole;
-        final List<AmqpMessage> messages = new LinkedList<AmqpMessage>();
-        for (final AmqpMessage message : AmqpMessage.values()) {
-            messages.add(message);
-        }
-        this.messages = Collections.unmodifiableList(messages);
-    }
-
-    @Override
-    public Iterable<? extends MessageSpecification> getMessages() {
-        return this.messages;
-    }
-
-    @Override
-    public RoleSpecification getPeerRole() {
-        return this.peerRole;
-    }
-
-    @Override
-    public String getQualifiedName() {
-        return (Identifiers.generateName(this));
-    }
-
-    @Override
-    public RoleSpecification getSelfRole() {
-        return this.selfRole;
-    }
+public enum AmqpSession
+		implements
+			SessionSpecification
+{
+	CONNECTOR (AmqpRole.CONNECTOR, AmqpRole.DRIVER),
+	DRIVER (AmqpRole.DRIVER, AmqpRole.CONNECTOR);
+	private AmqpSession (final AmqpRole selfRole, final AmqpRole peerRole)
+	{
+		this.selfRole = selfRole;
+		this.peerRole = peerRole;
+		final List<AmqpMessage> messages = new LinkedList<AmqpMessage> ();
+		for (final AmqpMessage message : AmqpMessage.values ()) {
+			messages.add (message);
+		}
+		this.messages = Collections.unmodifiableList (messages);
+	}
+	
+	@Override
+	public Iterable<? extends MessageSpecification> getMessages ()
+	{
+		return this.messages;
+	}
+	
+	@Override
+	public RoleSpecification getPeerRole ()
+	{
+		return this.peerRole;
+	}
+	
+	@Override
+	public String getQualifiedName ()
+	{
+		return (Identifiers.generateName (this));
+	}
+	
+	@Override
+	public RoleSpecification getSelfRole ()
+	{
+		return this.selfRole;
+	}
+	
+	public final List<AmqpMessage> messages;
+	public final AmqpRole peerRole;
+	public final AmqpRole selfRole;
 }

@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.core;
 
+
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
@@ -29,6 +30,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
 import com.google.common.base.Preconditions;
+
 
 /**
  * Implements the life-cycle operations required by the cloudlet-level
@@ -44,72 +46,70 @@ import com.google.common.base.Preconditions;
  * @param <TContext>
  *            cloudlet callback context
  */
-public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object> // NOPMD
-        implements IConnector, CallbackProxy {
-
-    protected final TCallback callback;
-    protected final ICloudletController<?> cloudlet;
-    protected final IConfiguration configuration;
-    protected final TConnector connector;
-    protected final TContext context;
-    protected final MosaicLogger logger;
-
-    protected BaseConnector(final ICloudletController<?> cloudlet, final TConnector connector,
-            final IConfiguration configuration, final TCallback callback, final TContext context) {
-        super();
-        Preconditions.checkNotNull(cloudlet);
-        Preconditions.checkNotNull(connector);
-        Preconditions.checkNotNull(configuration);
-        this.cloudlet = cloudlet;
-        this.connector = connector;
-        this.configuration = configuration;
-        this.callback = callback;
-        this.context = context;
-        this.logger = MosaicLogger.createLogger(this);
-    }
-
-    @Override
-    public CallbackCompletion<Void> destroy() {
-        final CallbackCompletion<Void> completion = this.connector.destroy();
-        if (this.callback != null) {
-            completion.observe(new CallbackCompletionObserver() {
-
-                @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD
-                    if (completion.getException() != null) {
-                        return BaseConnector.this.callback.destroyFailed(
-                                BaseConnector.this.context, new CallbackArguments(
-                                        BaseConnector.this.cloudlet));
-                    }
-                    return BaseConnector.this.callback.destroySucceeded(BaseConnector.this.context,
-                            new CallbackArguments(BaseConnector.this.cloudlet));
-                }
-            });
-        }
-        return completion;
-    }
-
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        final CallbackCompletion<Void> completion = this.connector.initialize();
-        if (this.callback != null) {
-            completion.observe(new CallbackCompletionObserver() {
-
-                @Override
-                public CallbackCompletion<Void> completed(final CallbackCompletion<?> completion_) {
-                    assert (completion_ == completion); // NOPMD
-                    if (completion.getException() != null) {
-                        return BaseConnector.this.callback.initializeFailed(
-                                BaseConnector.this.context, new CallbackArguments(
-                                        BaseConnector.this.cloudlet));
-                    }
-                    return BaseConnector.this.callback.initializeSucceeded(
-                            BaseConnector.this.context, new CallbackArguments(
-                                    BaseConnector.this.cloudlet));
-                }
-            });
-        }
-        return completion;
-    }
+public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object>
+		// NOPMD
+		implements
+			IConnector,
+			CallbackProxy
+{
+	protected BaseConnector (final ICloudletController<?> cloudlet, final TConnector connector, final IConfiguration configuration, final TCallback callback, final TContext context)
+	{
+		super ();
+		Preconditions.checkNotNull (cloudlet);
+		Preconditions.checkNotNull (connector);
+		Preconditions.checkNotNull (configuration);
+		this.cloudlet = cloudlet;
+		this.connector = connector;
+		this.configuration = configuration;
+		this.callback = callback;
+		this.context = context;
+		this.logger = MosaicLogger.createLogger (this);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> destroy ()
+	{
+		final CallbackCompletion<Void> completion = this.connector.destroy ();
+		if (this.callback != null) {
+			completion.observe (new CallbackCompletionObserver () {
+				@Override
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+				{
+					assert (completion_ == completion); // NOPMD
+					if (completion.getException () != null) {
+						return BaseConnector.this.callback.destroyFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+					}
+					return BaseConnector.this.callback.destroySucceeded (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+				}
+			});
+		}
+		return completion;
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initialize ()
+	{
+		final CallbackCompletion<Void> completion = this.connector.initialize ();
+		if (this.callback != null) {
+			completion.observe (new CallbackCompletionObserver () {
+				@Override
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+				{
+					assert (completion_ == completion); // NOPMD
+					if (completion.getException () != null) {
+						return BaseConnector.this.callback.initializeFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+					}
+					return BaseConnector.this.callback.initializeSucceeded (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+				}
+			});
+		}
+		return completion;
+	}
+	
+	protected final TCallback callback;
+	protected final ICloudletController<?> cloudlet;
+	protected final IConfiguration configuration;
+	protected final TConnector connector;
+	protected final TContext context;
+	protected final MosaicLogger logger;
 }

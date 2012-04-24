@@ -20,24 +20,31 @@
 
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
+
 import java.io.Serializable;
 
-public final class AuthenticationToken implements Serializable {
 
-    private static final long serialVersionUID = 8212390577294189529L;
-    private final String token;
-
-    public AuthenticationToken(String token) {
-        super();
-        this.token = token;
-    }
-
-    public String getToken() {
-        return this.token;
-    }
-
-    @Override
-    public String toString() {
-        return this.token;
-    }
+public final class AuthenticationToken
+		implements
+			Serializable
+{
+	public AuthenticationToken (final String token)
+	{
+		super ();
+		this.token = token;
+	}
+	
+	public String getToken ()
+	{
+		return this.token;
+	}
+	
+	@Override
+	public String toString ()
+	{
+		return this.token;
+	}
+	
+	private final String token;
+	private static final long serialVersionUID = 8212390577294189529L;
 }

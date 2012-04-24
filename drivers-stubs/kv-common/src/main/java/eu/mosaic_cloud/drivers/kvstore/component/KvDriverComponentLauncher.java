@@ -20,17 +20,21 @@
 
 package eu.mosaic_cloud.drivers.kvstore.component;
 
+
 import eu.mosaic_cloud.drivers.component.AbstractDriverComponentLauncher;
 
-public final class KvDriverComponentLauncher {
 
-    private KvDriverComponentLauncher() {
-        super();
-        throw (new UnsupportedOperationException());
-    }
-
-    public static final void main(final String[] arguments) throws Throwable {
-        AbstractDriverComponentLauncher.main(
-                "eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentCallbacks", arguments);
-    }
+public final class KvDriverComponentLauncher
+{
+	private KvDriverComponentLauncher ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static final void main (final String[] arguments)
+			throws Throwable
+	{
+		AbstractDriverComponentLauncher.main ("eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentCallbacks", arguments);
+	}
 }

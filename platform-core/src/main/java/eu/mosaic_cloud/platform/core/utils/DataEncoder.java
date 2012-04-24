@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.platform.core.utils;
 
+
 /**
  * Interface for defining data specific encoders (serializers) and decode
  * (deserializers).
@@ -30,23 +31,25 @@ package eu.mosaic_cloud.platform.core.utils;
  * @author Georgiana Macariu
  * 
  */
-public interface DataEncoder<T extends Object> {
-
-    /**
-     * Decodes (deserializes) the data.
-     * 
-     * @param dataBytes
-     *            data bytes
-     * @return the decoded object
-     */
-    T decode(byte[] dataBytes) throws EncodingException;
-
-    /**
-     * Encodes (serializes) an object as a stream of bytes.
-     * 
-     * @param data
-     *            the data to serialize
-     * @return the bytes
-     */
-    byte[] encode(T data) throws EncodingException;
+public interface DataEncoder<T extends Object>
+{
+	/**
+	 * Decodes (deserializes) the data.
+	 * 
+	 * @param dataBytes
+	 *            data bytes
+	 * @return the decoded object
+	 */
+	T decode (byte[] dataBytes)
+			throws EncodingException;
+	
+	/**
+	 * Encodes (serializes) an object as a stream of bytes.
+	 * 
+	 * @param data
+	 *            the data to serialize
+	 * @return the bytes
+	 */
+	byte[] encode (T data)
+			throws EncodingException;
 }

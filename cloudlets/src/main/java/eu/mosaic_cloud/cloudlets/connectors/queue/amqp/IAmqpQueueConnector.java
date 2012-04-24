@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnector;
+
 
 /**
  * Interface for registering and using an AMQP resources as a consumer or a
@@ -29,6 +31,8 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnector;
  * @author Georgiana Macariu
  * 
  */
-public interface IAmqpQueueConnector extends IQueueConnector,
-        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector {
-}
+public interface IAmqpQueueConnector
+		extends
+			IQueueConnector,
+			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector
+{}

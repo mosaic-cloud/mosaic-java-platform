@@ -20,8 +20,10 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueDeliveryToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for registering and using for an AMQP resource as a consumer.
@@ -34,15 +36,17 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueueConsumerConnector<TMessage, TExtra> extends IAmqpQueueConnector,
-        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage> {
-
-    /**
-     * Acknowledges a message.
-     * 
-     * @param delivery
-     *            the delivery token in the received message
-     * @param extra
-     */
-    CallbackCompletion<Void> acknowledge(IAmqpQueueDeliveryToken delivery, TExtra extra);
+public interface IAmqpQueueConsumerConnector<TMessage, TExtra>
+		extends
+			IAmqpQueueConnector,
+			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage>
+{
+	/**
+	 * Acknowledges a message.
+	 * 
+	 * @param delivery
+	 *            the delivery token in the received message
+	 * @param extra
+	 */
+	CallbackCompletion<Void> acknowledge (IAmqpQueueDeliveryToken delivery, TExtra extra);
 }

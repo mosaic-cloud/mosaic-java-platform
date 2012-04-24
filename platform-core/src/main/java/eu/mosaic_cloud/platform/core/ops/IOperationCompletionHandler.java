@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.platform.core.ops;
 
+
 /**
  * Interface for handlers to be called when the result of an event-drive
  * asynchronous operation arrives.
@@ -29,24 +30,24 @@ package eu.mosaic_cloud.platform.core.ops;
  * @param <T>
  *            the type of the result of the operation
  */
-public interface IOperationCompletionHandler<T> {
-
-    /**
-     * Handles the erroneous finish of an operation.
-     * 
-     * @param <E>
-     *            the type of the error
-     * @param error
-     *            the error
-     */
-    void onFailure(Throwable error);
-
-    /**
-     * Handles the result of the operation. This shall be called when operation
-     * finishes successfully.
-     * 
-     * @param result
-     *            the result
-     */
-    void onSuccess(T result);
+public interface IOperationCompletionHandler<T>
+{
+	/**
+	 * Handles the erroneous finish of an operation.
+	 * 
+	 * @param <E>
+	 *            the type of the error
+	 * @param error
+	 *            the error
+	 */
+	void onFailure (Throwable error);
+	
+	/**
+	 * Handles the result of the operation. This shall be called when operation
+	 * finishes successfully.
+	 * 
+	 * @param result
+	 *            the result
+	 */
+	void onSuccess (T result);
 }

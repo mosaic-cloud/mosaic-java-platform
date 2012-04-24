@@ -20,27 +20,34 @@
 
 package eu.mosaic_cloud.platform.core.tests;
 
+
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 
-public class TestLoggingHandler<T extends Object> implements IOperationCompletionHandler<T> {
 
-    private String testName = "";
-    private final MosaicLogger logger;
-
-    public TestLoggingHandler(String testName) {
-        super();
-        this.testName = testName;
-        this.logger = MosaicLogger.createLogger(this);
-    }
-
-    @Override
-    public void onFailure(Throwable error) {
-        this.logger.error("Test " + this.testName + " finished with error: " + error.getMessage());
-    }
-
-    @Override
-    public void onSuccess(T result) {
-        this.logger.trace("Test " + this.testName + " finished with result: " + result);
-    }
+public class TestLoggingHandler<T extends Object>
+		implements
+			IOperationCompletionHandler<T>
+{
+	public TestLoggingHandler (final String testName)
+	{
+		super ();
+		this.testName = testName;
+		this.logger = MosaicLogger.createLogger (this);
+	}
+	
+	@Override
+	public void onFailure (final Throwable error)
+	{
+		this.logger.error ("Test " + this.testName + " finished with error: " + error.getMessage ());
+	}
+	
+	@Override
+	public void onSuccess (final T result)
+	{
+		this.logger.trace ("Test " + this.testName + " finished with result: " + result);
+	}
+	
+	private final MosaicLogger logger;
+	private String testName = "";
 }

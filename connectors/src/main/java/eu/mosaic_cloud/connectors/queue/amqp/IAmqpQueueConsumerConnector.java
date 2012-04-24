@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for using for an AMQP resource as a consumer.
@@ -30,13 +32,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TMessage>
  *            the type of the consumed data
  */
-public interface IAmqpQueueConsumerConnector<TMessage> extends IAmqpQueueConnector {
-
-    /**
-     * Acknowledges a message.
-     * 
-     * @param message
-     *            the message to acknowledge
-     */
-    CallbackCompletion<Void> acknowledge(IAmqpQueueDeliveryToken delivery);
+public interface IAmqpQueueConsumerConnector<TMessage>
+		extends
+			IAmqpQueueConnector
+{
+	/**
+	 * Acknowledges a message.
+	 * 
+	 * @param message
+	 *            the message to acknowledge
+	 */
+	CallbackCompletion<Void> acknowledge (IAmqpQueueDeliveryToken delivery);
 }

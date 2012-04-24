@@ -20,11 +20,13 @@
 
 package eu.mosaic_cloud.connectors.core;
 
+
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
 import com.google.common.base.Preconditions;
+
 
 /**
  * Base class for all connectors. Any connector will have an associated proxy.
@@ -35,26 +37,31 @@ import com.google.common.base.Preconditions;
  * @param <TProxy>
  *            the type of the associated proxy
  */
-public abstract class BaseConnector<TProxy extends BaseConnectorProxy> implements IConnector,
-        CallbackProxy {
-
-    protected final MosaicLogger logger;
-    protected final TProxy proxy;
-
-    protected BaseConnector(final TProxy proxy) {
-        super();
-        Preconditions.checkNotNull(proxy);
-        this.proxy = proxy;
-        this.logger = MosaicLogger.createLogger(this);
-    }
-
-    @Override
-    public CallbackCompletion<Void> destroy() {
-        return this.proxy.destroy();
-    }
-
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        return this.proxy.initialize();
-    }
+public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
+		implements
+			IConnector,
+			CallbackProxy
+{
+	protected BaseConnector (final TProxy proxy)
+	{
+		super ();
+		Preconditions.checkNotNull (proxy);
+		this.proxy = proxy;
+		this.logger = MosaicLogger.createLogger (this);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> destroy ()
+	{
+		return this.proxy.destroy ();
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initialize ()
+	{
+		return this.proxy.initialize ();
+	}
+	
+	protected final MosaicLogger logger;
+	protected final TProxy proxy;
 }

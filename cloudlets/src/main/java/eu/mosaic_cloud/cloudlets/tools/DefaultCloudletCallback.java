@@ -20,9 +20,11 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
+
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Default cloudlet callback. This extends the {@link DefaultCallback} and
@@ -33,30 +35,33 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
-public abstract class DefaultCloudletCallback<TContext> extends DefaultCallback<TContext> // NOPMD
-        implements ICloudletCallback<TContext> {
-
-    @Override
-    public CallbackCompletion<Void> destroyFailed(final TContext context,
-            final CloudletCallbackCompletionArguments<TContext> arguments) {
-        return this.handleUnhandledCallback(arguments, "Cloudlet Destroy Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> destroySucceeded(final TContext context,
-            final CloudletCallbackCompletionArguments<TContext> arguments) {
-        return this.handleUnhandledCallback(arguments, "Cloudlet Destroy Succeeded", true, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> initializeFailed(final TContext context,
-            final CloudletCallbackCompletionArguments<TContext> arguments) {
-        return this.handleUnhandledCallback(arguments, "Cloudlet Initialize Failed", false, true);
-    }
-
-    @Override
-    public CallbackCompletion<Void> initializeSucceeded(final TContext context,
-            final CloudletCallbackCompletionArguments<TContext> arguments) {
-        return this.handleUnhandledCallback(arguments, "Cloudlet Initialize Succeeded", true, true);
-    }
+public abstract class DefaultCloudletCallback<TContext>
+		extends DefaultCallback<TContext>
+		// NOPMD
+		implements
+			ICloudletCallback<TContext>
+{
+	@Override
+	public CallbackCompletion<Void> destroyFailed (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Destroy Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> destroySucceeded (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Destroy Succeeded", true, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initializeFailed (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Initialize Failed", false, true);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initializeSucceeded (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cloudlet Initialize Succeeded", true, true);
+	}
 }

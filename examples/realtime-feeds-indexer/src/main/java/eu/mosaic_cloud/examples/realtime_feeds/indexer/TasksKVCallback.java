@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,33 +33,35 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
 
-public class TasksKVCallback extends
-        DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, Void> {
 
-    private static final String BUCKET_NAME = "feed-tasks";
-
-    @Override
-    public CallbackCompletion<Void> destroySucceeded(IndexerCloudletContext context,
-            CallbackArguments arguments) {
-        context.tasksStore = null;
-        return ICallback.SUCCESS;
-    }
-
-    private void handleError(KvStoreCallbackCompletionArguments<JSONObject, Void> arguments) {
-        final String key = arguments.getKey();
-        this.logger.warn("failed fetch (" + TasksKVCallback.BUCKET_NAME + "," + key + ")");
-        final Map<String, String> errorMssg = new HashMap<String, String>(4);
-        errorMssg.put("reason", "unexpected key-value store error");
-        errorMssg.put("message", arguments.getValue().toString());
-        errorMssg.put("bucket", TasksKVCallback.BUCKET_NAME);
-        errorMssg.put("key", key);
-        IndexWorkflow.onIndexError(errorMssg);
-    }
-
-    @Override
-    public CallbackCompletion<Void> setFailed(IndexerCloudletContext context,
-            KvStoreCallbackCompletionArguments<JSONObject, Void> arguments) {
-        handleError(arguments);
-        return ICallback.SUCCESS;
-    }
+public class TasksKVCallback
+		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, Void>
+{
+	@Override
+	public CallbackCompletion<Void> destroySucceeded (final IndexerCloudletContext context, final CallbackArguments arguments)
+	{
+		context.tasksStore = null;
+		return ICallback.SUCCESS;
+	}
+	
+	@Override
+	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, Void> arguments)
+	{
+		this.handleError (arguments);
+		return ICallback.SUCCESS;
+	}
+	
+	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, Void> arguments)
+	{
+		final String key = arguments.getKey ();
+		this.logger.warn ("failed fetch (" + TasksKVCallback.BUCKET_NAME + "," + key + ")");
+		final Map<String, String> errorMssg = new HashMap<String, String> (4);
+		errorMssg.put ("reason", "unexpected key-value store error");
+		errorMssg.put ("message", arguments.getValue ().toString ());
+		errorMssg.put ("bucket", TasksKVCallback.BUCKET_NAME);
+		errorMssg.put ("key", key);
+		IndexWorkflow.onIndexError (errorMssg);
+	}
+	
+	private static final String BUCKET_NAME = "feed-tasks";
 }

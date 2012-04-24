@@ -20,28 +20,34 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.common.base.Preconditions;
 
-public abstract class AmqpQueueConnector<TProxy extends AmqpQueueConnectorProxy<?>> implements
-        IAmqpQueueConnector {
 
-    protected final TProxy proxy;
-
-    protected AmqpQueueConnector(final TProxy proxy) {
-        super();
-        Preconditions.checkNotNull(proxy);
-        this.proxy = proxy;
-    }
-
-    @Override
-    public CallbackCompletion<Void> destroy() {
-        return this.proxy.destroy();
-    }
-
-    @Override
-    public CallbackCompletion<Void> initialize() {
-        return this.proxy.initialize();
-    }
+public abstract class AmqpQueueConnector<TProxy extends AmqpQueueConnectorProxy<?>>
+		implements
+			IAmqpQueueConnector
+{
+	protected AmqpQueueConnector (final TProxy proxy)
+	{
+		super ();
+		Preconditions.checkNotNull (proxy);
+		this.proxy = proxy;
+	}
+	
+	@Override
+	public CallbackCompletion<Void> destroy ()
+	{
+		return this.proxy.destroy ();
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initialize ()
+	{
+		return this.proxy.initialize ();
+	}
+	
+	protected final TProxy proxy;
 }

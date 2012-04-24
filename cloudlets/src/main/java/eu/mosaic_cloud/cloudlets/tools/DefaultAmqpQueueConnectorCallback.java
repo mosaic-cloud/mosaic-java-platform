@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnectorCallback;
+
 
 /**
  * Default AMQP resource accessor callback.
@@ -30,7 +32,9 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConnectorCallba
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultAmqpQueueConnectorCallback<TContext> extends // NOPMD
-        DefaultQueueConnectorCallback<TContext> implements IAmqpQueueConnectorCallback<TContext> {
-
-}
+public class DefaultAmqpQueueConnectorCallback<TContext>
+		extends // NOPMD
+		DefaultQueueConnectorCallback<TContext>
+		implements
+			IAmqpQueueConnectorCallback<TContext>
+{}

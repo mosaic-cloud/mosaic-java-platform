@@ -20,8 +20,12 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
 
-public interface IQueueConnector extends IConnector,
-        eu.mosaic_cloud.connectors.queue.IQueueConnector {
-}
+
+public interface IQueueConnector
+		extends
+			IConnector,
+			eu.mosaic_cloud.connectors.queue.IQueueConnector
+{}

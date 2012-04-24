@@ -20,10 +20,12 @@
 
 package eu.mosaic_cloud.connectors.kvstore;
 
+
 import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Basic key-value store connector. This connector implements only the
@@ -37,29 +39,36 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of connector proxy
  */
 public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends BaseKvStoreConnectorProxy<TValue>>
-        extends BaseConnector<TProxy> implements IKvStoreConnector<TValue> {
-
-    protected BaseKvStoreConnector(final TProxy proxy) {
-        super(proxy);
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> delete(final String key) {
-        return this.proxy.delete(key);
-    }
-
-    @Override
-    public CallbackCompletion<TValue> get(final String key) {
-        return this.proxy.get(key);
-    }
-
-    @Override
-    public CallbackCompletion<List<String>> list() {
-        return this.proxy.list();
-    }
-
-    @Override
-    public CallbackCompletion<Boolean> set(final String key, final TValue data) {
-        return this.proxy.set(key, data);
-    }
+		extends BaseConnector<TProxy>
+		implements
+			IKvStoreConnector<TValue>
+{
+	protected BaseKvStoreConnector (final TProxy proxy)
+	{
+		super (proxy);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> delete (final String key)
+	{
+		return this.proxy.delete (key);
+	}
+	
+	@Override
+	public CallbackCompletion<TValue> get (final String key)
+	{
+		return this.proxy.get (key);
+	}
+	
+	@Override
+	public CallbackCompletion<List<String>> list ()
+	{
+		return this.proxy.list ();
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> set (final String key, final TValue data)
+	{
+		return this.proxy.set (key, data);
+	}
 }

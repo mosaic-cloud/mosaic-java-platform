@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.connectors.queue;
 
+
 import eu.mosaic_cloud.connectors.core.IConnector;
+
 
 /**
  * Interface for working with queueing systems.
@@ -28,5 +30,7 @@ import eu.mosaic_cloud.connectors.core.IConnector;
  * @author Georgiana Macariu
  * 
  */
-public interface IQueueConnector extends IConnector {
-}
+public interface IQueueConnector
+		extends
+			IConnector
+{}

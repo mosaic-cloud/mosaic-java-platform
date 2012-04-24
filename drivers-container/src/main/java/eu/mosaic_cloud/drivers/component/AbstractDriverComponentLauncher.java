@@ -20,18 +20,21 @@
 
 package eu.mosaic_cloud.drivers.component;
 
+
 import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
 
-public final class AbstractDriverComponentLauncher {
 
-    private AbstractDriverComponentLauncher() {
-        super();
-        throw (new UnsupportedOperationException());
-    }
-
-    public static final void main(final String callbacks, final String[] arguments)
-            throws Throwable {
-        MosBasicComponentLauncher.main(callbacks, arguments,
-                AbstractDriverComponentCallbacks.class.getClassLoader());
-    }
+public final class AbstractDriverComponentLauncher
+{
+	private AbstractDriverComponentLauncher ()
+	{
+		super ();
+		throw (new UnsupportedOperationException ());
+	}
+	
+	public static final void main (final String callbacks, final String[] arguments)
+			throws Throwable
+	{
+		MosBasicComponentLauncher.main (callbacks, arguments, AbstractDriverComponentCallbacks.class.getClassLoader ());
+	}
 }

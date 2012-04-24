@@ -17,7 +17,9 @@
  * limitations under the License.
  * #L%
  */
+
 package eu.mosaic_cloud.components.httpg.jetty.connector;
+
 
 import java.io.IOException;
 import java.util.Collections;
@@ -44,133 +46,66 @@ import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
 
 
-public class AmqpConnector extends AbstractConnector {
-	protected final Set<EndPoint> _connections;
-
-	private ConnectionFactory _connectionFactory = null;
-	private Connection _connection = null;
-	private Channel _channel = null;
-	private QueueingConsumer _consumer = null;
-	private String _hostName;
-	private int _port;
-	private String _virtualHost;
-	private String _userName;
-	private String _userPassword;
-	private String _routingKey;
-	private String _exchangeName;
-	private String _inputQueueName;
-	private boolean _autoDeclareQueue;
-
-	public AmqpConnector(String exchangeName, String routingKey,
-			String queueName, String hostName, String userName,
-			String userPassword, int port, String virtualHost, boolean autoDeclareQueue) {
-		_userName = userName;
-		_userPassword = userPassword;
-		_exchangeName = exchangeName;
-		_routingKey = routingKey;
-		_hostName = hostName;
-		_port = port;
-		_virtualHost = virtualHost;
-		_inputQueueName = queueName;
-		_autoDeclareQueue = autoDeclareQueue;
-		_connections = Collections.synchronizedSet (new HashSet<EndPoint>());
+public class AmqpConnector
+		extends AbstractConnector
+{
+	public AmqpConnector (final String exchangeName, final String routingKey, final String queueName, final String hostName, final String userName, final String userPassword, final int port, final String virtualHost, final boolean autoDeclareQueue)
+	{
+		this._userName = userName;
+		this._userPassword = userPassword;
+		this._exchangeName = exchangeName;
+		this._routingKey = routingKey;
+		this._hostName = hostName;
+		this._port = port;
+		this._virtualHost = virtualHost;
+		this._inputQueueName = queueName;
+		this._autoDeclareQueue = autoDeclareQueue;
+		this._connections = Collections.synchronizedSet (new HashSet<EndPoint> ());
 	}
-
+	
 	@Override
-	protected void accept(int acceptorID) throws IOException,
-			InterruptedException {
-		QueueMessage msg = null;
-		QueueingConsumer.Delivery delivery;
-		try {
-			delivery = _consumer.nextDelivery();
-		} catch (ShutdownSignalException e) {
-			Log.warn (e);
-			throw e;
-		}
-		try {
-			msg = MessageHandler.decodeMessage(delivery);
-			msg.set_channel(_channel);
-		} catch (MessageFormatException e) {
-			Log.warn(e);
-			throw new IOException(e);
-		} catch (IOException e) {
-			Log.warn(e);
-			throw e;
-		}
-		ConnectorEndPoint _endPoint = new ConnectorEndPoint(msg);
-		_endPoint.dispatch();
-	}
-
+	public void close ()
+			throws IOException
+	{}
+	
 	@Override
-	public void close() throws IOException {
-		
+	public Object getConnection ()
+	{
+		Log.debug ("getConnection()");
+		return this._consumer;
 	}
-
-	protected org.eclipse.jetty.io.Connection newConnection(EndPoint endp) {
-		return new HttpConnection(this, endp, getServer());
-	}
-
+	
 	@Override
-	public Object getConnection() {
-		Log.debug("getConnection()");
-		return _consumer;
-	}
-
-	@Override
-	public int getLocalPort() {
-
+	public int getLocalPort ()
+	{
 		return 0;
 	}
-
-	private void setupConnection() throws IOException {
-		Log.info("Opening AmqpConnector");
-		if (_connectionFactory == null) {
-			_connectionFactory = new ConnectionFactory();
-			_connectionFactory.setHost(_hostName);
-			_connectionFactory.setPort(_port);
-			_connectionFactory.setVirtualHost(_virtualHost);
-			_connectionFactory.setUsername(_userName);
-			_connectionFactory.setPassword(_userPassword);
-		}
-
-		_connection = _connectionFactory.newConnection();
-
-		_channel = _connection.createChannel();
-
-		if (_autoDeclareQueue) {
-			_channel.exchangeDeclare(_exchangeName, "topic", false);
-			_inputQueueName = _channel.queueDeclare(_inputQueueName, false,
-					false, false, null).getQueue();
-		}
-
-		_channel.queueBind(_inputQueueName, _exchangeName, _routingKey);
-		_consumer = new QueueingConsumer(_channel);
-		_channel.basicConsume(_inputQueueName, true, _consumer);
-
-	}
-
+	
 	@Override
-	public void open() throws IOException {
+	public void open ()
+			throws IOException
+	{
 		while (true) {
 			try {
-				setupConnection();
+				this.setupConnection ();
 				break;
-			} catch (IOException e) {
-				Log.warn(e);
+			} catch (final IOException e) {
+				Log.warn (e);
 				Threading.sleep (1000);
 				continue;
 			}
 		}
-		_connection.addShutdownListener(new ShutdownListener() {
+		this._connection.addShutdownListener (new ShutdownListener () {
 			@Override
-			public void shutdownCompleted(ShutdownSignalException cause) {
-				Log.warn("Connection to RabbitMQ failed!");
+			public void shutdownCompleted (final ShutdownSignalException cause)
+			{
+				Log.warn ("Connection to RabbitMQ failed!");
 				while (true) {
 					try {
-						setupConnection();
+						AmqpConnector.this.setupConnection ();
 						break;
-					} catch (IOException e) {
-						Log.warn(e);
+					} catch (final IOException e) {
+						Log.warn (e);
 						Threading.sleep (1000);
 						continue;
 					}
@@ -178,113 +113,184 @@ public class AmqpConnector extends AbstractConnector {
 			}
 		});
 	}
-
-	protected class ConnectorEndPoint extends ByteArrayEndPoint implements
-			ConnectedEndPoint, Runnable {
-		volatile org.eclipse.jetty.io.Connection _jettyConnection;
-		private QueueMessage _message;
-
-		public ConnectorEndPoint(QueueMessage msg) {
-			super(msg.get_http_request(), 128);
-			_jettyConnection = newConnection(this);
-			set_message(msg);
-
-			setGrowOutput(true);
+	
+	@Override
+	protected void accept (final int acceptorID)
+			throws IOException,
+				InterruptedException
+	{
+		QueueMessage msg = null;
+		QueueingConsumer.Delivery delivery;
+		try {
+			delivery = this._consumer.nextDelivery ();
+		} catch (final ShutdownSignalException e) {
+			Log.warn (e);
+			throw e;
 		}
-
-		public org.eclipse.jetty.io.Connection getConnection() {
-			return _jettyConnection;
+		try {
+			msg = MessageHandler.decodeMessage (delivery);
+			msg.set_channel (this._channel);
+		} catch (final MessageFormatException e) {
+			Log.warn (e);
+			throw new IOException (e);
+		} catch (final IOException e) {
+			Log.warn (e);
+			throw e;
 		}
-
-		private void sendResponse() throws IOException, JSONException {
-			final QueueMessage msg = this.get_message();
-
-			final Channel c = msg.get_channel();
-
-			c.basicPublish(
-					msg.get_callback_exchange(),
-					msg.get_callback_routing_key(),
-					null,
-					MessageHandler.encodeMessage(this.getOut().array(),
-							msg.get_callback_identifier()));
+		final ConnectorEndPoint _endPoint = new ConnectorEndPoint (msg);
+		_endPoint.dispatch ();
+	}
+	
+	protected org.eclipse.jetty.io.Connection newConnection (final EndPoint endp)
+	{
+		return new HttpConnection (this, endp, this.getServer ());
+	}
+	
+	private void setupConnection ()
+			throws IOException
+	{
+		Log.info ("Opening AmqpConnector");
+		if (this._connectionFactory == null) {
+			this._connectionFactory = new ConnectionFactory ();
+			this._connectionFactory.setHost (this._hostName);
+			this._connectionFactory.setPort (this._port);
+			this._connectionFactory.setVirtualHost (this._virtualHost);
+			this._connectionFactory.setUsername (this._userName);
+			this._connectionFactory.setPassword (this._userPassword);
 		}
-
+		this._connection = this._connectionFactory.newConnection ();
+		this._channel = this._connection.createChannel ();
+		if (this._autoDeclareQueue) {
+			this._channel.exchangeDeclare (this._exchangeName, "topic", false);
+			this._inputQueueName = this._channel.queueDeclare (this._inputQueueName, false, false, false, null).getQueue ();
+		}
+		this._channel.queueBind (this._inputQueueName, this._exchangeName, this._routingKey);
+		this._consumer = new QueueingConsumer (this._channel);
+		this._channel.basicConsume (this._inputQueueName, true, this._consumer);
+	}
+	
+	protected final Set<EndPoint> _connections;
+	private final boolean _autoDeclareQueue;
+	private Channel _channel = null;
+	private Connection _connection = null;
+	private ConnectionFactory _connectionFactory = null;
+	private QueueingConsumer _consumer = null;
+	private final String _exchangeName;
+	private final String _hostName;
+	private String _inputQueueName;
+	private final int _port;
+	private final String _routingKey;
+	private final String _userName;
+	private final String _userPassword;
+	private final String _virtualHost;
+	
+	protected class ConnectorEndPoint
+			extends ByteArrayEndPoint
+			implements
+				ConnectedEndPoint,
+				Runnable
+	{
+		public ConnectorEndPoint (final QueueMessage msg)
+		{
+			super (msg.get_http_request (), 128);
+			this._jettyConnection = AmqpConnector.this.newConnection (this);
+			this.set_message (msg);
+			this.setGrowOutput (true);
+		}
+		
 		@Override
-		public void close() throws IOException {
-			if (!_closed) {
+		public void close ()
+				throws IOException
+		{
+			if (!this._closed) {
 				try {
-					sendResponse();
-				} catch (JSONException e) {
+					this.sendResponse ();
+				} catch (final JSONException e) {
 					// FIXME: Handle this...
-					Log.warn(e);
+					Log.warn (e);
 				}
 			}
-			super.close();
+			super.close ();
 		}
-
-		public void setConnection(org.eclipse.jetty.io.Connection connection) {
-			if (_jettyConnection != connection) {
-				connectionUpgraded(_jettyConnection, connection);
+		
+		public void dispatch ()
+				throws IOException
+		{
+			if ((AmqpConnector.this.getThreadPool () == null) || !AmqpConnector.this.getThreadPool ().dispatch (this)) {
+				Log.warn ("dispatch failed for {}", this._jettyConnection);
+				this.close ();
 			}
-			_jettyConnection = connection;
 		}
-
-		public void dispatch() throws IOException {
-			if (getThreadPool() == null || !getThreadPool().dispatch(this)) {
-				Log.warn("dispatch failed for {}", _jettyConnection);
-				close();
-			}
-
+		
+		public QueueMessage get_message ()
+		{
+			return this._message;
 		}
-
+		
 		@Override
-		public void run() {
+		public org.eclipse.jetty.io.Connection getConnection ()
+		{
+			return this._jettyConnection;
+		}
+		
+		@Override
+		public void run ()
+		{
 			try {
-				connectionOpened(getConnection());
-				_connections.add(this);
-
-				while (isStarted() && isOpen()) {
-					if (_jettyConnection.isIdle()) {
-						if (isLowResources()) {
-							setMaxIdleTime(getLowResourcesMaxIdleTime());
+				AmqpConnector.this.connectionOpened (this.getConnection ());
+				AmqpConnector.this._connections.add (this);
+				while (AmqpConnector.this.isStarted () && this.isOpen ()) {
+					if (this._jettyConnection.isIdle ()) {
+						if (AmqpConnector.this.isLowResources ()) {
+							this.setMaxIdleTime (AmqpConnector.this.getLowResourcesMaxIdleTime ());
 						}
 					}
-
-					_jettyConnection = _jettyConnection.handle();
-
+					this._jettyConnection = this._jettyConnection.handle ();
 				}
-
-			} catch (EofException e) {
-				Log.debug("EOF", e);
+			} catch (final EofException e) {
+				Log.debug ("EOF", e);
 				try {
-					close();
-				} catch (IOException e2) {
-					Log.ignore(e2);
+					this.close ();
+				} catch (final IOException e2) {
+					Log.ignore (e2);
 				}
-
-			} catch (Exception e) {
-				Log.warn("handle failed?", e);
+			} catch (final Exception e) {
+				Log.warn ("handle failed?", e);
 				try {
-					close();
-				} catch (IOException e2) {
-					Log.ignore(e2);
+					this.close ();
+				} catch (final IOException e2) {
+					Log.ignore (e2);
 				}
-			}
-
-			finally {
-				connectionClosed(_jettyConnection);
-				_connections.remove(this);
+			} finally {
+				AmqpConnector.this.connectionClosed (this._jettyConnection);
+				AmqpConnector.this._connections.remove (this);
 			}
 		}
-
-		public void set_message(QueueMessage _message) {
+		
+		public void set_message (final QueueMessage _message)
+		{
 			this._message = _message;
 		}
-
-		public QueueMessage get_message() {
-			return _message;
+		
+		@Override
+		public void setConnection (final org.eclipse.jetty.io.Connection connection)
+		{
+			if (this._jettyConnection != connection) {
+				AmqpConnector.this.connectionUpgraded (this._jettyConnection, connection);
+			}
+			this._jettyConnection = connection;
 		}
-
+		
+		private void sendResponse ()
+				throws IOException,
+					JSONException
+		{
+			final QueueMessage msg = this.get_message ();
+			final Channel c = msg.get_channel ();
+			c.basicPublish (msg.get_callback_exchange (), msg.get_callback_routing_key (), null, MessageHandler.encodeMessage (this.getOut ().array (), msg.get_callback_identifier ()));
+		}
+		
+		volatile org.eclipse.jetty.io.Connection _jettyConnection;
+		private QueueMessage _message;
 	}
-
 }

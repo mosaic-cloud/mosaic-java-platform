@@ -20,9 +20,11 @@
 
 package eu.mosaic_cloud.drivers.interop;
 
+
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+
 
 /**
  * Base class for driver response transmitter.
@@ -30,30 +32,33 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
  * @author Georgiana Macariu
  * 
  */
-public class ResponseTransmitter {
-
-    protected MosaicLogger logger;
-
-    public ResponseTransmitter() {
-        this.logger = MosaicLogger.createLogger(this);
-    }
-
-    /**
-     * Destroys the transmitter.
-     */
-    public void destroy() {
-        this.logger.trace("ResponseTransmitter destroyed.");
-    }
-
-    /**
-     * Sends result to the connector's proxy.
-     * 
-     * @param session
-     *            the session to which the message belongs
-     * @param message
-     *            the message
-     */
-    protected void publishResponse(Session session, Message message) {
-        session.send(message);
-    }
+public class ResponseTransmitter
+{
+	public ResponseTransmitter ()
+	{
+		this.logger = MosaicLogger.createLogger (this);
+	}
+	
+	/**
+	 * Destroys the transmitter.
+	 */
+	public void destroy ()
+	{
+		this.logger.trace ("ResponseTransmitter destroyed.");
+	}
+	
+	/**
+	 * Sends result to the connector's proxy.
+	 * 
+	 * @param session
+	 *            the session to which the message belongs
+	 * @param message
+	 *            the message
+	 */
+	protected void publishResponse (final Session session, final Message message)
+	{
+		session.send (message);
+	}
+	
+	protected MosaicLogger logger;
 }

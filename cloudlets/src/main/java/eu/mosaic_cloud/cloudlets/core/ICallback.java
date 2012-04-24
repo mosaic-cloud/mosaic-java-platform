@@ -20,16 +20,20 @@
 
 package eu.mosaic_cloud.cloudlets.core;
 
+
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+
 
 /**
  * Marker interface for cloudlet callbacks.
  * 
  * @author Georgiana Macariu
  */
-public interface ICallback<TContext> extends Callbacks { // NOPMD
-
-    public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion // NOPMD
-            .createOutcome();
+public interface ICallback<TContext>
+		extends
+			Callbacks
+{ // NOPMD
+	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion // NOPMD
+			.createOutcome ();
 }

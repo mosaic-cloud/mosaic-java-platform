@@ -20,11 +20,13 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
+
 import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.IMemcacheKvStoreConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Default memcached key-value storage calback.
@@ -34,79 +36,80 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultMemcacheKvStoreConnectorCallback<TContext, TData, TExtra> extends
-        DefaultKvStoreConnectorCallback<TContext, TData, TExtra> implements
-        IMemcacheKvStoreConnectorCallback<TContext, TData, TExtra> {
-
-    @Override
-    public CallbackCompletion<Void> addFailed(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Add Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> addSucceeded(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Add Succeeded", true, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> appendFailed(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Append Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> appendSucceeded(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Append Succeeded", true, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> casFailed(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Cas Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> casSucceeded(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Cas Succeeded", true, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> getBulkFailed(final TContext context,
-            final KvStoreCallbackCompletionArguments<Map<String, TData>, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "GetBulk Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> getBulkSucceeded(final TContext context,
-            final KvStoreCallbackCompletionArguments<Map<String, TData>, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "GetBulk Succeeded", true, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> prependFailed(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Prepend Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> prependSucceeded(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Prepend Succeeded", true, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> replaceFailed(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Replace Failed", false, false);
-    }
-
-    @Override
-    public CallbackCompletion<Void> replaceSucceeded(final TContext context,
-            final KvStoreCallbackCompletionArguments<TData, TExtra> arguments) {
-        return this.handleUnhandledCallback(arguments, "Replace Succeeded", true, false);
-    }
+public class DefaultMemcacheKvStoreConnectorCallback<TContext, TData, TExtra>
+		extends DefaultKvStoreConnectorCallback<TContext, TData, TExtra>
+		implements
+			IMemcacheKvStoreConnectorCallback<TContext, TData, TExtra>
+{
+	@Override
+	public CallbackCompletion<Void> addFailed (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Add Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> addSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Add Succeeded", true, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> appendFailed (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Append Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> appendSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Append Succeeded", true, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> casFailed (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cas Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> casSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Cas Succeeded", true, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> getBulkFailed (final TContext context, final KvStoreCallbackCompletionArguments<Map<String, TData>, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "GetBulk Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> getBulkSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<Map<String, TData>, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "GetBulk Succeeded", true, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> prependFailed (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Prepend Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> prependSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Prepend Succeeded", true, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> replaceFailed (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Replace Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> replaceSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<TData, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Replace Succeeded", true, false);
+	}
 }

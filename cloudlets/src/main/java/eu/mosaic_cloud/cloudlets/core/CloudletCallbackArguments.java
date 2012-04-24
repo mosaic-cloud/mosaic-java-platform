@@ -20,14 +20,18 @@
 
 package eu.mosaic_cloud.cloudlets.core;
 
-public class CloudletCallbackArguments<TContext> extends CallbackArguments {
 
-    public CloudletCallbackArguments(final ICloudletController<TContext> cloudlet) {
-        super(cloudlet);
-    }
-
-    @Override
-    public ICloudletController<TContext> getCloudlet() {
-        return (ICloudletController<TContext>) this.cloudlet;
-    }
+public class CloudletCallbackArguments<TContext>
+		extends CallbackArguments
+{
+	public CloudletCallbackArguments (final ICloudletController<TContext> cloudlet)
+	{
+		super (cloudlet);
+	}
+	
+	@Override
+	public ICloudletController<TContext> getCloudlet ()
+	{
+		return (ICloudletController<TContext>) this.cloudlet;
+	}
 }

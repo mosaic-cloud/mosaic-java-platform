@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
 
 /**
  * Interface for registering and using for an AMQP resource as a publisher.
@@ -33,15 +35,17 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueuePublisherConnector<TMessage, TExtra> extends IAmqpQueueConnector,
-        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage> {
-
-    /**
-     * Publishes a message to a queue.
-     * 
-     * @param data
-     *            the data to publish
-     * @param extra
-     */
-    CallbackCompletion<Void> publish(TMessage data, TExtra extra);
+public interface IAmqpQueuePublisherConnector<TMessage, TExtra>
+		extends
+			IAmqpQueueConnector,
+			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage>
+{
+	/**
+	 * Publishes a message to a queue.
+	 * 
+	 * @param data
+	 *            the data to publish
+	 * @param extra
+	 */
+	CallbackCompletion<Void> publish (TMessage data, TExtra extra);
 }

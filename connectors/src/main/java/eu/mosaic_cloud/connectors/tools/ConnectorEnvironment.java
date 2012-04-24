@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.connectors.tools;
 
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,61 +37,56 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
-public final class ConnectorEnvironment {
 
-    private final ChannelFactory channelFactory;
-    private final ChannelResolver channelResolver;
-    private final ExceptionTracer exceptions;
-    private final CallbackReactor reactor;
-    private final SupplementaryEnvironment supplementary;
-    private final ThreadingContext threading;
-
-    private ConnectorEnvironment(final CallbackReactor reactor, final ThreadingContext threading,
-            final ExceptionTracer exceptions, final ChannelFactory channelFactory,
-            final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
-        super();
-        Preconditions.checkNotNull(reactor);
-        Preconditions.checkNotNull(threading);
-        Preconditions.checkNotNull(exceptions);
-        Preconditions.checkNotNull(channelFactory);
-        Preconditions.checkNotNull(channelResolver);
-        Preconditions.checkNotNull(supplementary);
-        this.reactor = reactor;
-        this.threading = threading;
-        this.exceptions = exceptions;
-        this.channelFactory = channelFactory;
-        this.channelResolver = channelResolver;
-        this.supplementary = SupplementaryEnvironment.create(supplementary,
-                new UncaughtExceptionHandler() {
-
-                    @Override
-                    public void uncaughtException(final Thread thread, final Throwable exception) {
-                        ConnectorEnvironment.this.exceptions.trace(ExceptionResolution.Ignored,
-                                exception);
-                    }
-                });
-    }
-
-    public static ConnectorEnvironment create(final CallbackReactor reactor,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
-        return new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
-                channelResolver, new HashMap<String, Object>());
-    }
-
-    public static ConnectorEnvironment create(final CallbackReactor reactor,
-            final ThreadingContext threading, final ExceptionTracer exceptions,
-            final ChannelFactory channelFactory, final ChannelResolver channelResolver,
-            final Map<String, Object> supplementary) {
-        return new ConnectorEnvironment(reactor, threading, exceptions, channelFactory,
-                channelResolver, supplementary);
-    }
-
-    public Channel getCommunicationChannel() {
-        return this.channelFactory.create();
-    }
-
-    public void resolveChannel(final String driverTarget, final ResolverCallbacks resolverCallbacks) {
-        this.channelResolver.resolve(driverTarget, resolverCallbacks);
-    }
+public final class ConnectorEnvironment
+{
+	private ConnectorEnvironment (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
+	{
+		super ();
+		Preconditions.checkNotNull (reactor);
+		Preconditions.checkNotNull (threading);
+		Preconditions.checkNotNull (exceptions);
+		Preconditions.checkNotNull (channelFactory);
+		Preconditions.checkNotNull (channelResolver);
+		Preconditions.checkNotNull (supplementary);
+		this.reactor = reactor;
+		this.threading = threading;
+		this.exceptions = exceptions;
+		this.channelFactory = channelFactory;
+		this.channelResolver = channelResolver;
+		this.supplementary = SupplementaryEnvironment.create (supplementary, new UncaughtExceptionHandler () {
+			@Override
+			public void uncaughtException (final Thread thread, final Throwable exception)
+			{
+				ConnectorEnvironment.this.exceptions.trace (ExceptionResolution.Ignored, exception);
+			}
+		});
+	}
+	
+	public Channel getCommunicationChannel ()
+	{
+		return this.channelFactory.create ();
+	}
+	
+	public void resolveChannel (final String driverTarget, final ResolverCallbacks resolverCallbacks)
+	{
+		this.channelResolver.resolve (driverTarget, resolverCallbacks);
+	}
+	
+	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
+	{
+		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, new HashMap<String, Object> ());
+	}
+	
+	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
+	{
+		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, supplementary);
+	}
+	
+	private final ChannelFactory channelFactory;
+	private final ChannelResolver channelResolver;
+	private final ExceptionTracer exceptions;
+	private final CallbackReactor reactor;
+	private final SupplementaryEnvironment supplementary;
+	private final ThreadingContext threading;
 }

@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.core;
 
+
 /**
  * Base class for clouldet callback arguments. This will hold a reference to the
  * cloudlet controller but also the result of the operation or the exception
@@ -30,44 +31,46 @@ package eu.mosaic_cloud.cloudlets.core;
  * @param <TResult>
  *            the type of the result of the operation
  */
-public class GenericCallbackCompletionArguments<TResult> extends CallbackCompletionArguments {
-
-    private final TResult result;
-
-    /**
-     * Creates the operation callback argument.
-     * 
-     * @param cloudlet
-     *            the cloudlet controller
-     * @param error
-     *            the exception thrown by the operation
-     */
-    public GenericCallbackCompletionArguments(final ICloudletController<?> cloudlet,
-            final Throwable error) {
-        super(cloudlet, error);
-        this.result = null; // NOPMD
-    }
-
-    /**
-     * Creates the operation callback argument.
-     * 
-     * @param cloudlet
-     *            the cloudlet controller
-     * @param result
-     *            the result of the operation
-     */
-    public GenericCallbackCompletionArguments(final ICloudletController<?> cloudlet,
-            final TResult result) {
-        super(cloudlet);
-        this.result = result;
-    }
-
-    /**
-     * Returns the result of the operation.
-     * 
-     * @return the result of the operation
-     */
-    public TResult getResult() {
-        return this.result;
-    }
+public class GenericCallbackCompletionArguments<TResult>
+		extends CallbackCompletionArguments
+{
+	/**
+	 * Creates the operation callback argument.
+	 * 
+	 * @param cloudlet
+	 *            the cloudlet controller
+	 * @param error
+	 *            the exception thrown by the operation
+	 */
+	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final Throwable error)
+	{
+		super (cloudlet, error);
+		this.result = null; // NOPMD
+	}
+	
+	/**
+	 * Creates the operation callback argument.
+	 * 
+	 * @param cloudlet
+	 *            the cloudlet controller
+	 * @param result
+	 *            the result of the operation
+	 */
+	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final TResult result)
+	{
+		super (cloudlet);
+		this.result = result;
+	}
+	
+	/**
+	 * Returns the result of the operation.
+	 * 
+	 * @return the result of the operation
+	 */
+	public TResult getResult ()
+	{
+		return this.result;
+	}
+	
+	private final TResult result;
 }
