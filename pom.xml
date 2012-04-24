@@ -118,6 +118,27 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>eu.mosaic_cloud.plugins</groupId>
+				<artifactId>java-formatter-maven-plugin</artifactId>
+				<version>0.1</version>
+				<executions>
+					<execution>
+						<phase>verify${_maven_pom_skip_formatter}</phase>
+						<goals>
+							<goal>format</goal>
+						</goals>
+						<configuration>
+							<compilerSource>${versions.java.source}</compilerSource>
+							<compilerCompliance>${versions.java.source}</compilerCompliance>
+							<compilerTarget>${versions.java.target}</compilerTarget>
+							<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
+							<configFile>mosaic-java-formatter-maven-plugin-default-configuration.xml</configFile>
+							<lineEnding>LF</lineEnding>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>${versions.plugins.antrun}</version>
@@ -249,6 +270,7 @@
 		<_maven_pom_package />
 		<_maven_pom_skip_analyze />
 		<_maven_pom_skip_licenses />
+		<_maven_pom_skip_formatter />
 		
 	</properties>
 	
@@ -261,9 +283,15 @@
 	</licenses>
 	
 	<repositories>
-		<!-- <repository> <id>developers.mosaic-cloud.eu</id> <name>mOSAIC Repository</name> 
-			<layout>default</layout> <url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url> 
-			<snapshots> <enabled>true</enabled> </snapshots> </repository> -->
+		<repository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>mOSAIC Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>files.couchbase.com</id>
 			<name>CouchBase Repository</name>
@@ -274,6 +302,18 @@
 			</snapshots>
 		</repository>
 	</repositories>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>mOSAIC Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 	
 	<scm>
 		<connection>scm:hg:https://bitbucket.org/mosaic/mosaic-java-platform</connection>
