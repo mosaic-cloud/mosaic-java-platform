@@ -45,6 +45,7 @@ public final class SerDesUtils
 	{}
 	
 	static {
+		SerDesUtils.objectMapper = new ObjectMapper ();
 		SerDesUtils.objectMapper.configure (SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 	}
 	
@@ -127,7 +128,7 @@ public final class SerDesUtils
 		return object;
 	}
 	
-	private static ObjectMapper objectMapper = new ObjectMapper ();
+	private static ObjectMapper objectMapper;
 	
 	static class SpecialObjectInputStream
 			extends ObjectInputStream
