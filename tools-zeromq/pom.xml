@@ -30,19 +30,19 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<version>${versions.plugins.license}</version>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>download-licenses</goal>
-							<goal>update-project-license</goal>
-							<goal>update-file-header</goal>
-						</goals>
-						<configuration>
-							<skipUpdateLicense>true</skipUpdateLicense>
-						</configuration>
-					</execution>
-				</executions>
+				<configuration>
+					<skipUpdateLicense>true</skipUpdateLicense>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>eu.mosaic_cloud.plugins</groupId>
+				<artifactId>java-formatter-maven-plugin</artifactId>
+				<version>0.1</version>
+				<configuration>
+					<excludes>
+						<exclude>**</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
