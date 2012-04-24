@@ -386,7 +386,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -671,7 +671,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1099,7 +1099,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1483,7 +1483,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1866,7 +1866,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2155,7 +2155,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2519,7 +2519,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2804,7 +2804,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3148,7 +3148,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3361,7 +3361,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3705,7 +3705,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3994,7 +3994,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -4310,7 +4310,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -4533,7 +4533,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -4928,7 +4928,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -5303,7 +5303,7 @@ public final class KeyValuePayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}

@@ -328,7 +328,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -551,7 +551,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -850,7 +850,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1073,7 +1073,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1428,7 +1428,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1652,7 +1652,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1992,7 +1992,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2277,7 +2277,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2583,7 +2583,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2806,7 +2806,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3105,7 +3105,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3328,7 +3328,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
