@@ -31,7 +31,6 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionWorkflows;
-import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 import com.google.common.base.Preconditions;
 

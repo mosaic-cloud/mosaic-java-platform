@@ -576,7 +576,7 @@ public final class Cloudlet<TContext extends Object>
 		public void destroy (final CallbackCompletionDeferredFuture<Void> future)
 		{
 			// FIXME: There should be a better way to handle external destroys...
-			if (fsm.hasState (FsmState.Destroyed))
+			if (Cloudlet.this.fsm.hasState (FsmState.Destroyed))
 				future.trigger.triggerSucceeded (null);
 			final FsmCallbackCompletionTransaction destroySucceededCompletedTransaction = Cloudlet.this.fsm.new FsmCallbackCompletionTransaction ( // NOPMD
 					FsmTransition.CallbacksDestroySucceededCompleted) {
