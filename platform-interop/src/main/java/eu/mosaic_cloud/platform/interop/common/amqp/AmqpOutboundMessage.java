@@ -40,6 +40,19 @@ public class AmqpOutboundMessage
 	 *            the routing key
 	 * @param data
 	 *            the message body
+	 */
+	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data)
+	{
+		this (exchange, routingKey, data, false, false, false, null, null, null, null, null);
+	}
+	
+	/**
+	 * @param exchange
+	 *            the exchange to publish the message to
+	 * @param routingKey
+	 *            the routing key
+	 * @param data
+	 *            the message body
 	 * @param mandatory
 	 *            <code>true</code> if we are requesting a mandatory publish
 	 * @param immediate
