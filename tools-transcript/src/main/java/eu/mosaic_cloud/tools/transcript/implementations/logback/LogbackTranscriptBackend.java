@@ -148,13 +148,19 @@ public final class LogbackTranscriptBackend
 	public static final LogbackTranscriptBackend create (final Class<?> owner)
 	{
 		Preconditions.checkNotNull (owner);
-		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (owner), ExtendedFormatter.defaultInstance));
+		final String loggerName = owner.getName ();
+		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (loggerName), ExtendedFormatter.defaultInstance));
 	}
 	
-	public static final LogbackTranscriptBackend create (final Object owner)
+	public static final LogbackTranscriptBackend create (final Object owner, final boolean individual)
 	{
 		Preconditions.checkNotNull (owner);
-		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (owner.getClass ()), ExtendedFormatter.defaultInstance));
+		final String loggerName;
+		if (individual)
+			loggerName = String.format ("%s.%08x", owner.getClass ().getName (), Integer.valueOf (System.identityHashCode (owner)));
+		else
+			loggerName = owner.getClass ().getName ();
+		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (loggerName), ExtendedFormatter.defaultInstance));
 	}
 	
 	private final ExtendedFormatter formatter;

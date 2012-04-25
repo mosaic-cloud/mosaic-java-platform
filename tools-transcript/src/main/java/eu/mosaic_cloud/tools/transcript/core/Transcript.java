@@ -138,7 +138,13 @@ public final class Transcript
 	public static final Transcript create (final Object owner)
 	{
 		Preconditions.checkNotNull (owner);
-		return (new Transcript (LogbackTranscriptBackend.create (owner)));
+		return (new Transcript (LogbackTranscriptBackend.create (owner, false)));
+	}
+	
+	public static final Transcript create (final Object owner, final boolean individual)
+	{
+		Preconditions.checkNotNull (owner);
+		return (new Transcript (LogbackTranscriptBackend.create (owner, individual)));
 	}
 	
 	private final TranscriptBackend backend;
