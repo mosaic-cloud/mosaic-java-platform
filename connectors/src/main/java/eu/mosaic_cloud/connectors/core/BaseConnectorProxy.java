@@ -36,6 +36,7 @@ import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import com.google.common.base.Preconditions;
 
@@ -62,12 +63,12 @@ public abstract class BaseConnectorProxy
 		super ();
 		Preconditions.checkNotNull (configuration);
 		this.configuration = configuration;
-		// FIXME: the channel acquisition should be made as part of the channel
-		// endpoint resolution
+		// FIXME: the channel acquisition should be made as part of the channel endpoint resolution
 		this.channel = this.configuration.getCommunicationChannel ();
-		this.logger = MosaicLogger.createLogger (this);
+		this.transcript = Transcript.create (this, true);
+		this.logger = MosaicLogger.createLogger (this.transcript);
 		this.identifier = UUID.randomUUID ().toString ();
-		this.pendingRequests = new ResponseHandlerMap ();
+		this.pendingRequests = new ResponseHandlerMap (this.transcript);
 	}
 	
 	/**
@@ -81,7 +82,8 @@ public abstract class BaseConnectorProxy
 	{
 		Preconditions.checkState (this.session == null);
 		this.session = session;
-		return CallbackCompletion.createOutcome ();
+		this.transcript.traceDebugging ("created the interoperability session `%{object:identity}`...", this.session);
+		return (CallbackCompletion.createOutcome ());
 	}
 	
 	/**
@@ -94,8 +96,9 @@ public abstract class BaseConnectorProxy
 	public CallbackCompletion<Void> destroyed (final Session session)
 	{
 		Preconditions.checkState (this.session == session);
+		this.transcript.traceDebugging ("destroyed the interoperability session `%{object:identity}`...", this.session);
 		this.pendingRequests.cancelAll ();
-		return CallbackCompletion.createOutcome ();
+		return (CallbackCompletion.createOutcome ());
 	}
 	
 	/**
@@ -110,34 +113,42 @@ public abstract class BaseConnectorProxy
 	public CallbackCompletion<Void> failed (final Session session, final Throwable exception)
 	{
 		Preconditions.checkState (this.session == session);
-		return CallbackCompletion.createOutcome ();
+		this.transcript.traceWarning ("failed the interoperability session `%{object:identity}`...", this.session);
+		return (CallbackCompletion.createOutcome ());
 	}
 	
 	public String getIdentifier ()
 	{
-		return this.identifier;
+		return (this.identifier);
 	}
 	
 	@Override
 	public CallbackCompletion<Void> received (final Session session, final Message message)
 	{
-		this.logger.debug ("ConnectorProxy - Received " + message.specification.toString () + "...");
+		Preconditions.checkState (this.session == session);
+		this.transcript.traceDebugging ("received the interoperability message of type `%s`...", message.specification);
 		this.processResponse (message);
-		return CallbackCompletion.createOutcome ();
+		return (CallbackCompletion.createOutcome ());
 	}
 	
 	protected CallbackCompletion<Void> connect (final SessionSpecification session, final Message initMessage)
 	{
+		Preconditions.checkNotNull (session);
+		this.transcript.traceDebugging ("creating and connecting the interoperability session of type `%s`...", session);
 		final String driverEndpoint = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.0"), String.class, null);
 		final String driverIdentity = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.1"), String.class, null);
 		final String driverTarget = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.2"), String.class, null);
 		CallbackCompletion<Void> result;
 		this.channel.register (session);
 		if ((driverEndpoint != null) && (driverIdentity != null)) { // NOPMD
+			this.transcript.traceDebugging ("using the driver endpoint `%s`...", driverEndpoint);
+			this.transcript.traceDebugging ("using the driver identity `%s`...", driverIdentity);
+			// FIXME: The connection operation should be done by the  channel resolver.
 			((ZeroMqChannel) this.channel).connect (driverEndpoint);
 			this.channel.connect (driverIdentity, session, initMessage, this);
 			result = CallbackCompletion.createOutcome ();
 		} else {
+			this.transcript.traceDebugging ("resolving the driver endpoint and identity for target `%s`...", driverTarget);
 			final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create (Void.class);
 			final ResolverCallbacks resolverCallbacks = new ResolverCallbacks () {
 				@SuppressWarnings ("synthetic-access")
@@ -147,36 +158,35 @@ public abstract class BaseConnectorProxy
 					Preconditions.checkState (driverTarget.equals (target));
 					Preconditions.checkState (peer != null);
 					Preconditions.checkState (endpoint != null);
-					// FIXME: The connection operation should be done by the
-					// channel resolver.
+					BaseConnectorProxy.this.transcript.traceDebugging ("resolved the driver endpoint and identity for target `%s` successfully.", driverTarget);
+					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver endpoint `%s`...", driverEndpoint);
+					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver identity `%s`...", driverIdentity);
+					// FIXME: The connection operation should be done by the channel resolver.
+					BaseConnectorProxy.this.transcript.traceDebugging ("registering the interoperability endpoint...");
 					((ZeroMqChannel) BaseConnectorProxy.this.channel).connect (endpoint);
+					BaseConnectorProxy.this.transcript.traceDebugging ("creating the interoperability session...");
 					BaseConnectorProxy.this.channel.connect (peer, session, initMessage, BaseConnectorProxy.this);
-					// FIXME: Calling `connect` is not enough; the connection is
-					// successfull only
-					// after the call of `created(Session)` was done.
+					// FIXME: Calling `connect` is not enough; the connection is successful only after the call of `created(Session)` was done.
 					future.trigger.triggerSucceeded (null);
-					return CallbackCompletion.createOutcome ();
+					return (CallbackCompletion.createOutcome ());
 				}
 			};
 			this.configuration.resolveChannel (driverTarget, resolverCallbacks);
 			result = future.completion;
 		}
-		return result;
+		return (result);
 	}
 	
 	protected CallbackCompletion<Void> disconnect (final Message finalMessage)
 	{
-		// FIXME: The disconnection should push the termination also to the
-		// interoperability layer.
-		// Currently the driver side has no ideea that the connector was
-		// disconnected except if
-		// the `finalMessage` contains such information.
-		// FIXME: The `finalMessage` should always exist and should always be an
-		// "terminal" one.
+		// FIXME: The disconnection should push the termination also to the interoperability layer.
+		// Currently the driver side has no idea that the connector was disconnected except if the `finalMessage` contains such information.
+		// FIXME: The `finalMessage` should always exist and should always be an "terminal" one.
 		if (finalMessage != null) {
-			this.send (finalMessage);
+			this.sendMessage (finalMessage);
 		}
-		return CallbackCompletion.createOutcome ();
+		this.transcript.traceDebugging ("destroying the interoperability session...");
+		return (CallbackCompletion.createOutcome ());
 	}
 	
 	protected CompletionToken generateToken ()
@@ -184,7 +194,7 @@ public abstract class BaseConnectorProxy
 		final CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder ();
 		tokenBuilder.setMessageId (UUID.randomUUID ().toString ());
 		tokenBuilder.setClientId (this.identifier);
-		return tokenBuilder.build ();
+		return (tokenBuilder.build ());
 	}
 	
 	/**
@@ -203,29 +213,39 @@ public abstract class BaseConnectorProxy
 	 * @param request
 	 *            the request
 	 */
-	protected void send (final Message request)
+	protected void sendMessage (final Message message)
 	{
-		// FIXME: Currently this is a hack to avoid a race condition introduced
-		// by the `connect` code above.
+		// FIXME: Currently this is a hack to avoid a race condition introduced by the `connect` code above.
 		// For now we just busy-wait until the session object is available
-		while (this.session == null) {
-			Thread.yield ();
+		if (this.session == null) {
+			this.transcript.traceDebugging ("waiting for the interoperability session...");
+			while (this.session == null) {
+				Thread.yield ();
+			}
 		}
-		this.session.send (request);
+		this.transcript.traceDebugging ("sending the interoperability message of type `%s`...", message.specification);
+		this.session.send (message);
 	}
 	
-	protected <O extends Object> CallbackCompletion<O> sendRequest (final Message message, final CompletionToken token, final Class<O> outcomeClass)
+	protected void sendRequest (final Message message)
 	{
-		final CallbackCompletionDeferredFuture<O> future = CallbackCompletionDeferredFuture.create (outcomeClass);
+		this.transcript.traceDebugging ("sending the asynchronous request with specification `%s`...", message.specification);
+		this.sendMessage (message);
+	}
+	
+	protected <TOutcome extends Object> CallbackCompletion<TOutcome> sendRequest (final Message message, final CompletionToken token, final Class<TOutcome> outcomeClass)
+	{
+		this.transcript.traceDebugging ("registering and sending the pending request with specification `%s` and token `%s`...", message.specification, token.getMessageId ());
+		final CallbackCompletionDeferredFuture<TOutcome> future = CallbackCompletionDeferredFuture.create (outcomeClass);
 		this.pendingRequests.register (token.getMessageId (), future);
-		this.logger.debug ("ConnectorProxy - Sending " + message.specification.toString () + " request [" + token.getMessageId () + "]...");
-		this.send (message);
-		return future.completion;
+		this.sendMessage (message);
+		return (future.completion);
 	}
 	
 	protected final ConnectorConfiguration configuration;
-	protected MosaicLogger logger;
+	protected final MosaicLogger logger;
 	protected final ResponseHandlerMap pendingRequests;
+	protected final Transcript transcript;
 	private final Channel channel;
 	private final String identifier;
 	private Session session;

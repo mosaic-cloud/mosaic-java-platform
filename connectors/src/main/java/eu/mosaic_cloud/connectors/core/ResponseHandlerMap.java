@@ -21,10 +21,12 @@
 package eu.mosaic_cloud.connectors.core;
 
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCanceled;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import com.google.common.base.Preconditions;
 
@@ -36,12 +38,13 @@ import com.google.common.base.Preconditions;
  * @author Georgiana Macariu
  * 
  */
-public class ResponseHandlerMap
+public final class ResponseHandlerMap
 {
-	public ResponseHandlerMap ()
+	public ResponseHandlerMap (final Transcript transcript)
 	{
 		super ();
 		this.futures = new ConcurrentHashMap<String, CallbackCompletionDeferredFuture<?>> ();
+		this.transcript = transcript;
 	}
 	
 	/**
@@ -53,7 +56,10 @@ public class ResponseHandlerMap
 	 */
 	public void cancel (final String request)
 	{
+		Preconditions.checkNotNull (request);
+		this.transcript.traceDebugging ("calceling the pending request `%s`...", request);
 		final CallbackCompletionDeferredFuture<?> future = this.removeRequest (request);
+		Preconditions.checkState (future != null);
 		future.trigger.triggerFailed (new CallbackCanceled ());
 	}
 	
@@ -64,7 +70,11 @@ public class ResponseHandlerMap
 	public void cancelAll ()
 	{
 		synchronized (this.futures) {
-			for (final CallbackCompletionDeferredFuture<?> future : this.futures.values ()) {
+			this.transcript.traceDebugging ("canceling all pending requests...");
+			for (final Map.Entry<String, CallbackCompletionDeferredFuture<?>> entry : this.futures.entrySet ()) {
+				final String request = entry.getKey ();
+				final CallbackCompletionDeferredFuture<?> future = entry.getValue ();
+				this.transcript.traceDebugging ("canceling the pending request `%s`...", request);
 				future.trigger.triggerFailed (new CallbackCanceled ()); // NOPMD
 			}
 			this.futures.clear ();
@@ -82,12 +92,16 @@ public class ResponseHandlerMap
 	 */
 	public void fail (final String request, final Exception exception)
 	{
+		Preconditions.checkNotNull (request);
+		Preconditions.checkNotNull (exception);
+		this.transcript.traceDebugging ("failing the pending request `%s` with exception `%s` (`%s`)...", request, exception.getClass ().getName (), exception.getMessage ());
 		final CallbackCompletionDeferredFuture<?> future = this.removeRequest (request);
+		Preconditions.checkState (future != null);
 		future.trigger.triggerFailed (exception);
 	}
 	
 	/**
-	 * Checks if the map contains an entry for the specified request.
+	 * Checks if the map contains an entry for the specified request. (It throws if no request exists.)
 	 * 
 	 * @param request
 	 *            the request identifier
@@ -102,6 +116,20 @@ public class ResponseHandlerMap
 	}
 	
 	/**
+	 * Checks if the map contains an entry for the specified request. (It returns null if no request exists.)
+	 * 
+	 * @param request
+	 *            the request identifier
+	 * @return the callback future for the request
+	 */
+	public CallbackCompletionDeferredFuture<?> peekMaybe (final String request)
+	{
+		Preconditions.checkNotNull (request);
+		final CallbackCompletionDeferredFuture<?> future = this.futures.get (request);
+		return future;
+	}
+	
+	/**
 	 * Add handler for the response of the request with the given identifier. If
 	 * another handler has been added previously for the request, these handler
 	 * will be replaced.
@@ -111,10 +139,11 @@ public class ResponseHandlerMap
 	 * @param future
 	 *            the handler to set
 	 */
-	public <O extends Object> void register (final String request, final CallbackCompletionDeferredFuture<O> future)
+	public void register (final String request, final CallbackCompletionDeferredFuture<?> future)
 	{
 		Preconditions.checkNotNull (request);
 		Preconditions.checkNotNull (future);
+		this.transcript.traceDebugging ("registering the pending request `%s`...", request);
 		this.futures.put (request, future);
 	}
 	
@@ -131,6 +160,7 @@ public class ResponseHandlerMap
 	public void succeed (final String request, final Object outcome)
 	{
 		Preconditions.checkNotNull (request);
+		this.transcript.traceDebugging ("succeeding the pending request `%s`...", request);
 		final CallbackCompletionDeferredFuture<?> future = this.futures.remove (request);
 		Preconditions.checkState (future != null);
 		((CallbackCompletionDeferredFuture<Object>) future).trigger.triggerSucceeded (outcome);
@@ -151,4 +181,5 @@ public class ResponseHandlerMap
 	}
 	
 	private final ConcurrentHashMap<String, CallbackCompletionDeferredFuture<? extends Object>> futures;
+	private final Transcript transcript;
 }
