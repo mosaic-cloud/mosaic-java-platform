@@ -32,9 +32,9 @@ import eu.mosaic_cloud.tools.transcript.core.Transcript;
  */
 public final class MosaicLogger
 {
-	private MosaicLogger (final Class<?> owner)
+	private MosaicLogger (final Transcript logger)
 	{
-		this.logger = Transcript.create (owner);
+		this.logger = logger;
 	}
 	
 	/**
@@ -162,7 +162,7 @@ public final class MosaicLogger
 	 */
 	public static MosaicLogger createLogger (final Class<?> owner)
 	{ // NOPMD
-		return new MosaicLogger (owner);
+		return MosaicLogger.createLogger (Transcript.create (owner));
 	}
 	
 	/**
@@ -175,7 +175,12 @@ public final class MosaicLogger
 	 */
 	public static MosaicLogger createLogger (final Object owner)
 	{ // NOPMD by
-		return new MosaicLogger (owner.getClass ());
+		return MosaicLogger.createLogger (Transcript.create (owner));
+	}
+	
+	public static MosaicLogger createLogger (final Transcript transcript)
+	{
+		return new MosaicLogger (transcript);
 	}
 	
 	private final Transcript logger;
