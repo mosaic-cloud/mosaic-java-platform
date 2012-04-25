@@ -42,9 +42,9 @@ public class AmqpQueueConsumerConnector<TMessage>
 		return this.proxy.acknowledge (delivery);
 	}
 	
-	public static <M> AmqpQueueConsumerConnector<M> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder, final IAmqpQueueConsumerCallback<M> callback)
+	public static <TMessage> AmqpQueueConsumerConnector<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback)
 	{
-		final AmqpQueueConsumerConnectorProxy<M> proxy = AmqpQueueConsumerConnectorProxy.create (configuration, messageClass, messageEncoder, callback);
-		return new AmqpQueueConsumerConnector<M> (proxy);
+		final AmqpQueueConsumerConnectorProxy<TMessage> proxy = AmqpQueueConsumerConnectorProxy.create (configuration, messageClass, messageEncoder, callback);
+		return new AmqpQueueConsumerConnector<TMessage> (proxy);
 	}
 }

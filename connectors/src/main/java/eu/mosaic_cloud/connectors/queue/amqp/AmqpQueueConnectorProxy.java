@@ -23,6 +23,9 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import com.google.common.base.Preconditions;
 
@@ -42,10 +45,14 @@ public abstract class AmqpQueueConnectorProxy<TMessage>
 		this.configuration = configuration;
 		this.messageClass = messageClass;
 		this.messageEncoder = messageEncoder;
+		this.transcript = Transcript.create (this, true);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);
 	}
 	
 	protected final ConnectorConfiguration configuration;
+	protected final TranscriptExceptionTracer exceptions;
 	protected final Class<TMessage> messageClass;
 	protected final DataEncoder<TMessage> messageEncoder;
 	protected final AmqpQueueRawConnectorProxy raw;
+	protected final Transcript transcript;
 }
