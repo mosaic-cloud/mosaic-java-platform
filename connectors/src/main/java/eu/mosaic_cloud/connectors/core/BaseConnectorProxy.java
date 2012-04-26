@@ -32,11 +32,12 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import com.google.common.base.Preconditions;
 
@@ -65,9 +66,9 @@ public abstract class BaseConnectorProxy
 		this.configuration = configuration;
 		// FIXME: the channel acquisition should be made as part of the channel endpoint resolution
 		this.channel = this.configuration.getCommunicationChannel ();
-		this.transcript = Transcript.create (this, true);
-		this.logger = MosaicLogger.createLogger (this.transcript);
 		this.identifier = UUID.randomUUID ().toString ();
+		this.transcript = Transcript.create (this, true);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);
 		this.pendingRequests = new ResponseHandlerMap (this.transcript);
 	}
 	
@@ -159,8 +160,8 @@ public abstract class BaseConnectorProxy
 					Preconditions.checkState (peer != null);
 					Preconditions.checkState (endpoint != null);
 					BaseConnectorProxy.this.transcript.traceDebugging ("resolved the driver endpoint and identity for target `%s` successfully.", driverTarget);
-					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver endpoint `%s`...", driverEndpoint);
-					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver identity `%s`...", driverIdentity);
+					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver endpoint `%s`...", endpoint);
+					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver identity `%s`...", peer);
 					// FIXME: The connection operation should be done by the channel resolver.
 					BaseConnectorProxy.this.transcript.traceDebugging ("registering the interoperability endpoint...");
 					((ZeroMqChannel) BaseConnectorProxy.this.channel).connect (endpoint);
@@ -243,7 +244,7 @@ public abstract class BaseConnectorProxy
 	}
 	
 	protected final ConnectorConfiguration configuration;
-	protected final MosaicLogger logger;
+	protected final TranscriptExceptionTracer exceptions;
 	protected final ResponseHandlerMap pendingRequests;
 	protected final Transcript transcript;
 	private final Channel channel;

@@ -91,7 +91,6 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 		this.transcript.traceDebugging ("publishing a message to exchange `%s` (of type `%s`) with routing key `%s`...", this.exchange, this.exchangeType, this.publishRoutingKey);
 		byte[] data = null;
 		CallbackCompletion<Void> result = null;
-		this.transcript.traceDebugging ("encoding the message...");
 		try {
 			data = this.messageEncoder.encode (message);
 		} catch (final EncodingException exception) {

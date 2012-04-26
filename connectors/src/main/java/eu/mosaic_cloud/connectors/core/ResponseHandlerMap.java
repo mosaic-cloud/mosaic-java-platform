@@ -90,7 +90,7 @@ public final class ResponseHandlerMap
 	 * @param exception
 	 *            the cause of the request failure
 	 */
-	public void fail (final String request, final Exception exception)
+	public void fail (final String request, final Throwable exception)
 	{
 		Preconditions.checkNotNull (request);
 		Preconditions.checkNotNull (exception);

@@ -271,7 +271,6 @@ public final class AmqpQueueRawConnectorProxy
 				final IdlCommon.NotOk nokPayload = (NotOk) message.payload;
 				final CompletionToken token = nokPayload.getToken ();
 				this.transcript.traceDebugging ("processing the failure (NOK) response for pending request with token `%s`...", token.getMessageId ());
-				// FIXME: ??? (I don't remember what the problem was...)
 				this.pendingRequests.fail (token.getMessageId (), new Exception ("request failed"));
 			}
 				break;

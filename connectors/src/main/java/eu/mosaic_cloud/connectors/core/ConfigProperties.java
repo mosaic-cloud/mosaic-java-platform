@@ -24,7 +24,7 @@ package eu.mosaic_cloud.connectors.core;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
 public final class ConfigProperties
@@ -36,8 +36,8 @@ public final class ConfigProperties
 	{
 		try {
 			return ConfigProperties.RESOURCE_BUNDLE.getString (key); // NOPMD
-		} catch (final MissingResourceException e) {
-			ExceptionTracer.traceIgnored (e);
+		} catch (final MissingResourceException exception) {
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception, "failed resolving the config-property `%s`...", key);
 			return '!' + key + '!';
 		}
 	}

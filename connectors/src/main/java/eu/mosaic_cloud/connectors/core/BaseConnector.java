@@ -47,7 +47,6 @@ public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
 		super ();
 		Preconditions.checkNotNull (proxy);
 		this.proxy = proxy;
-		this.logger = MosaicLogger.createLogger (this);
 	}
 	
 	@Override
@@ -62,6 +61,5 @@ public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
 		return this.proxy.initialize ();
 	}
 	
-	protected final MosaicLogger logger;
 	protected final TProxy proxy;
 }

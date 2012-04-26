@@ -48,16 +48,18 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object>
 	protected GenericKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
 	{
 		super (configuration, encoder);
+		this.bucket = super.configuration.getConfigParameter (ConfigProperties.getString ("GenericKvStoreConnector.1"), String.class, "");
+		this.transcript.traceDebugging ("created generic kv store connector proxy for bucket `%s`.", this.bucket);
 	}
 	
 	@Override
 	public CallbackCompletion<Void> initialize ()
 	{
-		final String bucket = super.configuration.getConfigParameter (ConfigProperties.getString ("GenericKvStoreConnector.1"), String.class, "");
+		this.transcript.traceDebugging ("initializing proxy...");
 		final InitRequest.Builder requestBuilder = InitRequest.newBuilder ();
 		requestBuilder.setToken (this.generateToken ());
-		requestBuilder.setBucket (bucket);
-		return this.connect (KeyValueSession.CONNECTOR, new Message (KeyValueMessage.ACCESS, requestBuilder.build ()));
+		requestBuilder.setBucket (this.bucket);
+		return (this.connect (KeyValueSession.CONNECTOR, new Message (KeyValueMessage.ACCESS, requestBuilder.build ())));
 	}
 	
 	/**
@@ -70,9 +72,11 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object>
 	 *            the key-value store
 	 * @return the proxy
 	 */
-	public static <T extends Object> GenericKvStoreConnectorProxy<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
+	public static <TValue extends Object> GenericKvStoreConnectorProxy<TValue> create (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
 	{
-		final GenericKvStoreConnectorProxy<T> proxy = new GenericKvStoreConnectorProxy<T> (configuration, encoder);
-		return proxy;
+		final GenericKvStoreConnectorProxy<TValue> proxy = new GenericKvStoreConnectorProxy<TValue> (configuration, encoder);
+		return (proxy);
 	}
+	
+	protected final String bucket;
 }

@@ -22,7 +22,9 @@ package eu.mosaic_cloud.connectors.kvstore;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
@@ -74,27 +76,29 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	public CallbackCompletion<Boolean> delete (final String key)
 	{
 		final CompletionToken token = this.generateToken ();
+		this.transcript.traceDebugging ("deleting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
 		final DeleteRequest.Builder requestBuilder = DeleteRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		final Message message = new Message (KeyValueMessage.DELETE_REQUEST, requestBuilder.build ());
-		return this.sendRequest (message, token, Boolean.class);
+		return (this.sendRequest (message, token, Boolean.class));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> destroy ()
 	{
+		this.transcript.traceDebugging ("destroying the proxy...");
 		final CompletionToken token = this.generateToken ();
 		final AbortRequest.Builder requestBuilder = AbortRequest.newBuilder ();
 		requestBuilder.setToken (token);
-		return this.disconnect (new Message (KeyValueMessage.ABORTED, requestBuilder.build ()));
+		return (this.disconnect (new Message (KeyValueMessage.ABORTED, requestBuilder.build ())));
 	}
 	
 	@Override
 	@SuppressWarnings ("unchecked")
 	public CallbackCompletion<TValue> get (final String key)
 	{
-		return this.sendGetMessage (Arrays.asList (key), (Class<TValue>) Object.class);
+		return (this.sendGetRequest (Arrays.asList (key), (Class<TValue>) Object.class));
 	}
 	
 	@Override
@@ -102,21 +106,22 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	public CallbackCompletion<List<String>> list ()
 	{
 		final CompletionToken token = this.generateToken ();
+		this.transcript.traceDebugging ("listing the keys (with request token `%s`)...", token.getMessageId ());
 		final ListRequest.Builder requestBuilder = ListRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		final Message message = new Message (KeyValueMessage.LIST_REQUEST, requestBuilder.build ());
-		return (CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest (message, token, List.class));
+		return ((CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest (message, token, List.class)));
 	}
 	
 	public CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data)
 	{
-		return this.sendSetMessage (key, data, exp);
+		return (this.sendSetRequest (key, data, exp));
 	}
 	
 	@Override
 	public CallbackCompletion<Boolean> set (final String key, final TValue data)
 	{
-		return this.set (key, 0, data);
+		return (this.set (key, 0, data));
 	}
 	
 	@Override
@@ -127,82 +132,111 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 			case OK : {
 				final IdlCommon.Ok okPayload = (Ok) message.payload;
 				final CompletionToken token = okPayload.getToken ();
-				this.logger.debug ("BaseKvStoreConnectorProxy - Received %s response [%s]...", // NOPMD
-						message.specification.toString (), token.getMessageId ());
-				this.pendingRequests.succeed (token.getMessageId (), Boolean.TRUE);
+				this.transcript.traceDebugging ("processing the success (OK) response for pending request with token `%s`...", token.getMessageId ());
+				this.pendingRequests.succeed (token.getMessageId (), null);
 			}
 				break;
 			case NOK : {
 				final IdlCommon.NotOk nokPayload = (NotOk) message.payload;
 				final CompletionToken token = nokPayload.getToken ();
-				this.logger.debug ("BaseKvStoreConnectorProxy - Received %s response [%s]...", message.specification.toString (), token.getMessageId ());
-				this.pendingRequests.succeed (token.getMessageId (), Boolean.FALSE);
+				this.transcript.traceDebugging ("processing the failure (NOK) response for pending request with token `%s`...", token.getMessageId ());
+				this.pendingRequests.fail (token.getMessageId (), new Exception ("request failed"));
 			}
 				break;
 			case ERROR : {
 				final IdlCommon.Error errorPayload = (Error) message.payload;
 				final CompletionToken token = errorPayload.getToken ();
-				this.logger.debug ("BaseKvStoreConnectorProxy - Received %s response [%s]...", message.specification.toString (), token.getMessageId ());
+				this.transcript.traceDebugging ("processing the failure (error) response for pending request with token `%s` with message `%s`...", token.getMessageId (), errorPayload.getErrorMessage ());
 				this.pendingRequests.fail (token.getMessageId (), new Exception (errorPayload.getErrorMessage ()));
 			}
 				break;
 			case LIST_REPLY : {
 				final KeyValuePayloads.ListReply listPayload = (ListReply) message.payload;
 				final CompletionToken token = listPayload.getToken ();
-				this.logger.debug ("BaseKvStoreConnectorProxy - Received %s response [%s]...", message.specification.toString (), token.getMessageId ());
+				this.transcript.traceDebugging ("processing the success (list reply) response for pending request with token `%s`...", token.getMessageId ());
 				this.pendingRequests.succeed (token.getMessageId (), listPayload.getKeysList ());
 			}
 				break;
 			case GET_REPLY : {
 				final KeyValuePayloads.GetReply getPayload = (GetReply) message.payload;
 				final CompletionToken token = getPayload.getToken ();
-				this.logger.debug ("BaseKvStoreConnectorProxy - Received %s response [%s]...", message.specification.toString (), token.getMessageId ());
 				final List<KVEntry> resultEntries = getPayload.getResultsList ();
-				TValue value = null; // NOPMD
-				if (!resultEntries.isEmpty ()) {
-					try {
-						value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray ()); // NOPMD
-					} catch (final EncodingException exception) {
-						this.pendingRequests.fail (token.getMessageId (), exception);
-						return;
+				this.transcript.traceDebugging ("processing the success (get reply) response (with `%d` entries) for pending request with token `%s`...", Integer.valueOf (resultEntries.size ()), token.getMessageId ());
+				final Class<?> outcomeClass = this.pendingRequests.peek (token.getMessageId ()).future.outcomeClass;
+				final Object outcome;
+				if (outcomeClass == Map.class) {
+					final Map<String, TValue> values = new HashMap<String, TValue> ();
+					for (final KVEntry entry : resultEntries) {
+						try {
+							final TValue value = this.encoder.decode (entry.getValue ().toByteArray ());
+							values.put (entry.getKey (), value);
+						} catch (final EncodingException exception) {
+							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
+							this.pendingRequests.fail (token.getMessageId (), exception);
+							break;
+						}
 					}
+					outcome = values;
+				} else if (outcomeClass == Object.class) {
+					final TValue value;
+					if (!resultEntries.isEmpty ()) {
+						try {
+							value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray ());
+						} catch (final EncodingException exception) {
+							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
+							this.pendingRequests.fail (token.getMessageId (), exception);
+							break;
+						}
+					} else
+						value = null;
+					outcome = value;
+				} else {
+					this.pendingRequests.fail (token.getMessageId (), new AssertionError ());
+					break;
 				}
-				this.pendingRequests.succeed (token.getMessageId (), value);
+				this.pendingRequests.succeed (token.getMessageId (), outcome);
 			}
 				break;
-			default:
+			default: {
+				this.transcript.traceWarning ("processing unexpected message of type `%s`; ignoring...", message.specification);
+			}
 				break;
 		}
 	}
 	
-	protected <O> CallbackCompletion<O> sendGetMessage (final List<String> keys, final Class<O> outcomeClass)
+	protected <TOutcome> CallbackCompletion<TOutcome> sendGetRequest (final List<String> keys, final Class<TOutcome> outcomeClass)
 	{
 		final CompletionToken token = this.generateToken ();
+		this.transcript.traceDebugging ("getting the record with key `%s` (and `%d` other keys) (with request token `%s`)...", keys.get (0), Integer.valueOf (keys.size () - 1), token.getMessageId ());
 		final GetRequest.Builder requestBuilder = GetRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.addAllKey (keys);
 		final Message message = new Message (KeyValueMessage.GET_REQUEST, requestBuilder.build ());
-		return this.sendRequest (message, token, outcomeClass);
+		return (this.sendRequest (message, token, outcomeClass));
 	}
 	
-	protected CallbackCompletion<Boolean> sendSetMessage (final String key, final TValue data, final int exp)
+	protected CallbackCompletion<Boolean> sendSetRequest (final String key, final TValue data, final int exp)
 	{
-		CallbackCompletion<Boolean> result;
+		final CompletionToken token = this.generateToken ();
+		this.transcript.traceDebugging ("setting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
+		final SetRequest.Builder requestBuilder = SetRequest.newBuilder ();
+		requestBuilder.setToken (token);
+		requestBuilder.setKey (key);
+		requestBuilder.setExpTime (exp);
+		CallbackCompletion<Boolean> result = null;
 		try {
 			final byte[] dataBytes = this.encoder.encode (data);
-			final CompletionToken token = this.generateToken ();
-			final SetRequest.Builder requestBuilder = SetRequest.newBuilder ();
-			requestBuilder.setToken (token);
-			requestBuilder.setKey (key);
-			requestBuilder.setExpTime (exp);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
-			final Message message = new Message (KeyValueMessage.SET_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class); // NOPMD
 		} catch (final EncodingException exception) {
+			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
 			result = CallbackCompletion.createFailure (exception);
 		}
-		return result;
+		if (result == null) {
+			final Message message = new Message (KeyValueMessage.SET_REQUEST, requestBuilder.build ());
+			result = this.sendRequest (message, token, Boolean.class); // NOPMD
+		}
+		return (result);
 	}
 	
-	protected DataEncoder<TValue> encoder;
+	protected final DataEncoder<TValue> encoder;
 }
