@@ -157,9 +157,9 @@ public final class LogbackTranscriptBackend
 		Preconditions.checkNotNull (owner);
 		final String loggerName;
 		if (individual)
-			loggerName = String.format ("%s.%08x", owner.getClass ().getName (), Integer.valueOf (System.identityHashCode (owner)));
+			loggerName = String.format ("%s.%08x", owner.getClass ().getName ().replace ('$', '.'), Integer.valueOf (System.identityHashCode (owner)));
 		else
-			loggerName = owner.getClass ().getName ();
+			loggerName = owner.getClass ().getName ().replace ('$', '.');
 		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (loggerName), ExtendedFormatter.defaultInstance));
 	}
 	
