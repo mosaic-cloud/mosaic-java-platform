@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.connectors.core;
 
 
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 
