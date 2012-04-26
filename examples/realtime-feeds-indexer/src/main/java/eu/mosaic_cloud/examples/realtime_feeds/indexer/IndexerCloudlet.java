@@ -96,10 +96,10 @@ public class IndexerCloudlet
 			final IConfiguration tasksConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("tasks"));
 			context.tasksStoreCallback = new TasksKVCallback ();
 			context.tasksStore = context.cloudlet.getConnectorFactory (IKvStoreConnectorFactory.class).create (tasksConfiguration, JSONObject.class, jsonEncoder, context.tasksStoreCallback, context);
-			final IConfiguration urgentQueueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("urgent.queue"));
+			final IConfiguration urgentQueueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("urgent"));
 			context.urgentConsumerCallback = new UrgentConsumerCallback ();
 			context.urgentConsumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (urgentQueueConfiguration, JSONObject.class, jsonEncoder, context.urgentConsumerCallback, context);
-			final IConfiguration batchQueueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("batch.queue"));
+			final IConfiguration batchQueueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("batch"));
 			context.batchConsumerCallback = new BatchConsumerCallback ();
 			context.batchConsumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (batchQueueConfiguration, JSONObject.class, jsonEncoder, context.batchConsumerCallback, context);
 			return CallbackCompletion.createAndChained (context.metadataStore.initialize (), context.dataStore.initialize (), context.timelinesStore.initialize (), context.itemsStore.initialize (), context.tasksStore.initialize (), context.urgentConsumer.initialize (), context.batchConsumer.initialize ());

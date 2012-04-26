@@ -52,7 +52,7 @@ public final class AbacusComponentCallbacks
 	public AbacusComponentCallbacks (final ComponentEnvironment context)
 	{
 		super ();
-		this.transcript = Transcript.create (this);
+		this.transcript = Transcript.create (this, true);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
 		this.component = null;
 		this.status = Status.Created;
