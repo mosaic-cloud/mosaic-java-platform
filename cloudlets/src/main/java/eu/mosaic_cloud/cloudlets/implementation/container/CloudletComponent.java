@@ -82,7 +82,7 @@ public final class CloudletComponent
 			this.fsm = new CloudletComponentFsm (this);
 		}
 		{
-			this.transcript = Transcript.create (this);
+			this.transcript = Transcript.create (this, true);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, this.componentEnvironment.exceptions);
 			this.reactor = this.componentEnvironment.reactor;
 			this.threading = this.componentEnvironment.threading;

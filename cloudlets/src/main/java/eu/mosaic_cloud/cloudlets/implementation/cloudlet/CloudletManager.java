@@ -64,7 +64,7 @@ public final class CloudletManager
 		Preconditions.checkNotNull (channelFactory);
 		Preconditions.checkNotNull (channelResolver);
 		synchronized (this.monitor) {
-			final Transcript transcript = Transcript.create (this);
+			final Transcript transcript = Transcript.create (this, true);
 			this.exceptions = TranscriptExceptionTracer.create (transcript, exceptions);
 			this.configuration = configuration;
 			this.reactor = reactor;

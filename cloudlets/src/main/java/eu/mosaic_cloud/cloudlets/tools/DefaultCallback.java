@@ -25,6 +25,7 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 
 /**
@@ -74,8 +75,8 @@ public class DefaultCallback<TContext>
 	 */
 	protected void traceUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive)
 	{
-		this.logger.info ("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass ().getName (), callbackType, (positive ? "Succeeded" : "Failed"));
+		this.logger.debug ("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass ().getName (), callbackType, (positive ? "Succeeded" : "Failed"));
 	}
 	
-	protected MosaicLogger logger = MosaicLogger.createLogger (this);
+	protected MosaicLogger logger = MosaicLogger.createLogger (Transcript.create (this, true));
 }

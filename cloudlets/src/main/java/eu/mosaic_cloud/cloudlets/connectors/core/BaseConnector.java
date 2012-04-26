@@ -24,7 +24,6 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
@@ -63,7 +62,6 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 		this.configuration = configuration;
 		this.callback = callback;
 		this.context = context;
-		this.logger = MosaicLogger.createLogger (this);
 	}
 	
 	@Override
@@ -111,5 +109,4 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 	protected final IConfiguration configuration;
 	protected final TConnector connector;
 	protected final TContext context;
-	protected final MosaicLogger logger;
 }

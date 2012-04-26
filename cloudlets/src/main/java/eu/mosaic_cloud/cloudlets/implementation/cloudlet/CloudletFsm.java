@@ -49,7 +49,7 @@ final class CloudletFsm
 		this.defineTransition (FsmTransition.CallbacksRegisterCompleted, FsmState.CallbacksRegisterPending, new FsmState[] {FsmState.CallbacksInitializePending, FsmState.ControllerUnregisterPending});
 		this.defineTransition (FsmTransition.CallbacksInitializeCompleted, FsmState.CallbacksInitializePending, new FsmState[] {FsmState.CallbacksInitializeSucceededPending, FsmState.CallbacksInitializeFailedPending});
 		this.defineTransition (FsmTransition.CallbacksInitializeSucceededCompleted, FsmState.CallbacksInitializeSucceededPending, new FsmState[] {FsmState.Active, FsmState.CallbacksUnregisterPending});
-		this.defineTransition (FsmTransition.CallbacksInitializeFailedCompleted, FsmState.CallbacksInitializeFailedPending, FsmState.CallbacksDestroyPending);
+		this.defineTransition (FsmTransition.CallbacksInitializeFailedCompleted, FsmState.CallbacksInitializeFailedPending, FsmState.CallbacksUnregisterPending);
 		this.defineTransition (FsmTransition.ExternalDestroy, FsmState.Active, FsmState.CallbacksDestroyPending);
 		this.defineTransition (FsmTransition.CallbacksDestroyCompleted, FsmState.CallbacksDestroyPending, new FsmState[] {FsmState.CallbacksDestroySucceededPending, FsmState.CallbacksDestroyFailedPending});
 		this.defineTransition (FsmTransition.CallbacksDestroySucceededCompleted, FsmState.CallbacksDestroySucceededPending, FsmState.CallbacksUnregisterPending);
