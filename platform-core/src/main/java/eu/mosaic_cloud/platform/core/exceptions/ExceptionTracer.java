@@ -32,8 +32,7 @@ public final class ExceptionTracer
 	public ExceptionTracer ()
 	{
 		super ();
-		final Transcript transcript = Transcript.create (this);
-		this.transcriptTracer = TranscriptExceptionTracer.create (transcript, FallbackExceptionTracer.defaultInstance);
+		this.delegateTracer = TranscriptExceptionTracer.create (Transcript.create (this), FallbackExceptionTracer.defaultInstance);
 	}
 	
 	public void trace (final ExceptionResolution resolution, final Throwable exception, final String message_)
@@ -48,13 +47,13 @@ public final class ExceptionTracer
 				: message_;
 		switch (resolution) {
 			case Handled :
-				this.transcriptTracer.traceHandledException (exception, message);
+				this.delegateTracer.traceHandledException (exception, message);
 				break;
 			case Ignored :
-				this.transcriptTracer.traceIgnoredException (exception, message);
+				this.delegateTracer.traceIgnoredException (exception, message);
 				break;
 			case Deferred :
-				this.transcriptTracer.traceDeferredException (exception, message);
+				this.delegateTracer.traceDeferredException (exception, message);
 				break;
 			default:
 				break;
@@ -96,6 +95,6 @@ public final class ExceptionTracer
 		ExceptionTracer.DEFAULT_INSTANCE.trace (ExceptionResolution.Ignored, exception, format, tokens);
 	}
 	
-	private final TranscriptExceptionTracer transcriptTracer;
+	private final TranscriptExceptionTracer delegateTracer;
 	private static final ExceptionTracer DEFAULT_INSTANCE = new ExceptionTracer ();
 }

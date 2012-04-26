@@ -66,7 +66,7 @@ public final class ZeroMqChannel
 		super ();
 		Preconditions.checkNotNull (self);
 		Preconditions.checkNotNull (threading);
-		this.transcript = Transcript.create (this);
+		this.transcript = Transcript.create (this, true);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.threading = threading;
 		this.selfIdentifier = self;

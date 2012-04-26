@@ -873,7 +873,7 @@ public final class BasicCallbackReactor
 				this.facade = facade;
 				this.reference = this.facade.new Reference ();
 				this.threading = threading;
-				this.transcript = Transcript.create (this.facade);
+				this.transcript = Transcript.create (this.facade, true);
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "isolates", true));
 				this.schedulers = new ConcurrentHashMap<CallbackIsolate, BasicCallbackReactor.Scheduler> ();
@@ -1033,8 +1033,12 @@ public final class BasicCallbackReactor
 			synchronized (this.monitor) {
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
 				final Actor<?> actor = this.actors.get (proxy);
-				Preconditions.checkNotNull (actor);
-				return (actor.triggerDestroy ());
+				// FIXME: We shouldn't fail on multiple destroys for the same actor...
+				if (actor != null) {
+					Preconditions.checkNotNull (actor);
+					return (actor.triggerDestroy ());
+				} else
+					return (CallbackCompletion.createOutcome ());
 			}
 		}
 		

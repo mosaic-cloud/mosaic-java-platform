@@ -51,7 +51,7 @@ public final class ClasspathExporter
 		super ();
 		Preconditions.checkNotNull (address);
 		Preconditions.checkNotNull (loader);
-		this.transcript = Transcript.create (this);
+		this.transcript = Transcript.create (this, true);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.address = address;
 		this.loader = loader;

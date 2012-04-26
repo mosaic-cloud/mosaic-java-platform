@@ -125,7 +125,7 @@ public final class BasicChannel
 			this.monitor = Monitor.create (this.facade);
 			synchronized (this.monitor) {
 				{
-					this.transcript = Transcript.create (this.facade);
+					this.transcript = Transcript.create (this.facade, true);
 					this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 				}
 				{

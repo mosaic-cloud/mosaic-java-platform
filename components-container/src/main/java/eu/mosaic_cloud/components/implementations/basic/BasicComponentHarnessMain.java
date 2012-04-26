@@ -400,7 +400,7 @@ public final class BasicComponentHarnessMain
 		{
 			super ();
 			this.threading = threading;
-			this.transcript = Transcript.create (this);
+			this.transcript = Transcript.create (this, true);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.source = source;
 			this.sink = sink;

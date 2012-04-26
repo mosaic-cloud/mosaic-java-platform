@@ -128,7 +128,7 @@ public final class BasicComponent
 	{
 		Backend (final BasicComponent facade, final CallbackReactor reactor, final ExceptionTracer exceptions)
 		{
-			super (State.class, Transition.class, Transcript.create (facade), exceptions);
+			super (State.class, Transition.class, Transcript.create (facade, true), exceptions);
 			Preconditions.checkNotNull (facade);
 			Preconditions.checkNotNull (reactor);
 			this.facade = facade;

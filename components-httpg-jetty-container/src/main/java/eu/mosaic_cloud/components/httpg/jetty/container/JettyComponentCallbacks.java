@@ -66,7 +66,7 @@ public final class JettyComponentCallbacks
 		synchronized (this.monitor) {
 			this.context = context;
 			this.threading = this.context.threading;
-			this.transcript = Transcript.create (this);
+			this.transcript = Transcript.create (this, true);
 			this.exceptions = TranscriptExceptionTracer.create (this.transcript, this.context.exceptions);
 			this.pendingCallReturnFutures = new IdentityHashMap<ComponentCallReference, DeferredFuture.Trigger<ComponentCallReply>> ();
 			this.status = Status.WaitingRegistered;

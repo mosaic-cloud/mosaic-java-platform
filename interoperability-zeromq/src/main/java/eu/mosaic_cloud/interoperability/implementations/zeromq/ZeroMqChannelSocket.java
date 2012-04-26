@@ -46,7 +46,7 @@ public final class ZeroMqChannelSocket
 		Preconditions.checkNotNull (self);
 		Preconditions.checkNotNull (threading);
 		this.threading = threading;
-		this.transcript = Transcript.create (this);
+		this.transcript = Transcript.create (this, true);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 		this.self = self;
 		this.connectedEndpoints = new HashSet<String> ();
