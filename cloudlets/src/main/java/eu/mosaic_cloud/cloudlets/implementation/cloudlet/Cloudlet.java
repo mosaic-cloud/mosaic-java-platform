@@ -111,11 +111,6 @@ public final class Cloudlet<TContext extends Object>
 		}
 	}
 	
-	public CloudletState getState ()
-	{
-		return this.fsm.getState ().getCloudletState ();
-	}
-	
 	public boolean await ()
 	{
 		return this.await (-1);
@@ -137,6 +132,11 @@ public final class Cloudlet<TContext extends Object>
 			}
 		});
 		return future.completion;
+	}
+	
+	public CloudletState getState ()
+	{
+		return this.fsm.getState ().getCloudletState ();
 	}
 	
 	public CallbackCompletion<Void> initialize ()
@@ -271,7 +271,6 @@ public final class Cloudlet<TContext extends Object>
 	private final ICloudletController<TContext> controllerProxy;
 	private CallbackCompletionDeferredFuture<Void> destroyFuture;
 	private final CloudletEnvironment environment;
-	private final Transcript transcript;
 	private final TranscriptExceptionTracer exceptions;
 	private final QueueingExceptionTracer failures;
 	private final CloudletFsm fsm;
@@ -281,6 +280,7 @@ public final class Cloudlet<TContext extends Object>
 	private CallbackCompletionDeferredFuture<Void> initializeFuture;
 	private final CallbackIsolate isolate;
 	private final CallbackReactor reactor;
+	private final Transcript transcript;
 	
 	final class CallbacksHandler
 			implements

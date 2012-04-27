@@ -126,7 +126,7 @@ public final class CloudletManager
 					case ACTIVE :
 					case INITIALIZING :
 						break;
-					default :
+					default:
 						throw (new AssertionError ()); // NOPMD
 				}
 				// FIXME: this should be done asynchronously and we should check the outcome...
@@ -209,9 +209,9 @@ public final class CloudletManager
 	private final ClassLoader classLoader;
 	private final ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> cloudlets;
 	private final IConfiguration configuration;
-	private final Transcript transcript;
 	private final TranscriptExceptionTracer exceptions;
 	private final Monitor monitor = Monitor.create (this);
 	private final CallbackReactor reactor;
 	private final ThreadingContext threading;
+	private final Transcript transcript;
 }
