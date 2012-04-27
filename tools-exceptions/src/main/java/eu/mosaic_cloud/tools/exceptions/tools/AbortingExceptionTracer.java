@@ -129,7 +129,7 @@ public final class AbortingExceptionTracer
 	private static final Exiter exiter = new Exiter (null);
 	private static final String prefix;
 	
-	private static final class Exiter
+	public static final class Exiter
 			extends Object
 	{
 		public Exiter (final PrintStream transcript)

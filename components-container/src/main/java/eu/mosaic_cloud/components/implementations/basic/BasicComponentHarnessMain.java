@@ -106,6 +106,7 @@ public final class BasicComponentHarnessMain
 		environment.transcript.traceInformation ("joining component...");
 		component.await ();
 		environment.transcript.traceInformation ("joined component.");
+		new AbortingExceptionTracer.Exiter (null).maybeStart ();
 	}
 	
 	public static final void main (final String[] argumentsList)

@@ -99,14 +99,28 @@ public final class CloudletManager
 	{
 		synchronized (this.monitor) {
 			final Iterator<Cloudlet<?>> cloudletIterator = this.cloudlets.keySet ().iterator ();
-			if (!cloudletIterator.hasNext ()) {
-				return (false);
+			while (true) {
+				if (!cloudletIterator.hasNext ()) {
+					return false;
+				}
+				final Cloudlet<?> cloudlet = cloudletIterator.next ();
+				// FIXME: we should have some cloudlet observers to manage this...
+				switch (cloudlet.getState ()) {
+					case DESTROYED :
+					case DESTROYING :
+					case FAILED :
+						continue;
+					case ACTIVE :
+					case INITIALIZING :
+						break;
+					default :
+						throw (new AssertionError ()); // NOPMD
+				}
+				// FIXME: this should be done asynchronously and we should wait for the outcome...
+				cloudlet.destroy ();
+				this.cloudlets.remove (cloudlet);
+				return true;
 			}
-			final Cloudlet<?> cloudlet = cloudletIterator.next ();
-			// FIXME: this should be done asynchronously and we should wait for the outcome...
-			cloudlet.destroy ();
-			this.cloudlets.remove (cloudlet);
-			return true;
 		}
 	}
 	
@@ -167,7 +181,7 @@ public final class CloudletManager
 	
 	public static final CloudletManager create (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
 	{
-		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, channelFactory, channelResolver));
+		return new CloudletManager (configuration, classLoader, reactor, threading, exceptions, channelFactory, channelResolver);
 	}
 	
 	private final ChannelFactory channelFactory;

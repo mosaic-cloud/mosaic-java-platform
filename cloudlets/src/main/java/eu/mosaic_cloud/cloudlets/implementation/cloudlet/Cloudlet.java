@@ -111,6 +111,11 @@ public final class Cloudlet<TContext extends Object>
 		}
 	}
 	
+	public CloudletState getState ()
+	{
+		return this.fsm.getState ().getCloudletState ();
+	}
+	
 	public boolean await ()
 	{
 		return this.await (-1);
