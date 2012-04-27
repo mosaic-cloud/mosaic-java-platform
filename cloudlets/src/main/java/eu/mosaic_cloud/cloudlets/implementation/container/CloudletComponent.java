@@ -217,7 +217,7 @@ public final class CloudletComponent
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration...");
 		final String configurationDescriptor = this.componentEnvironment.supplementary.get ("descriptor", String.class, null); //$NON-NLS-1$
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet component configuration descriptor");
-		this.transcript.traceDebugging ("resolving the cloudlet component configuration: `%s`...", configurationDescriptor);
+		this.transcript.traceDebugging ("resolving the cloudlet component configuration `%s`...", configurationDescriptor);
 		final IConfiguration configuration;
 		try {
 			configuration = PropertyTypeConfiguration.create (this.classLoader, configurationDescriptor);

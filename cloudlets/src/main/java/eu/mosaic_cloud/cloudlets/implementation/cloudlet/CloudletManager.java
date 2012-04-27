@@ -64,8 +64,8 @@ public final class CloudletManager
 		Preconditions.checkNotNull (channelFactory);
 		Preconditions.checkNotNull (channelResolver);
 		synchronized (this.monitor) {
-			final Transcript transcript = Transcript.create (this, true);
-			this.exceptions = TranscriptExceptionTracer.create (transcript, exceptions);
+			this.transcript = Transcript.create (this, true);
+			this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
 			this.configuration = configuration;
 			this.reactor = reactor;
 			this.threading = threading;
@@ -74,20 +74,30 @@ public final class CloudletManager
 			this.cloudlets = new ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> ();
 			this.classLoader = classLoader;
 		}
+		this.transcript.traceDebugging ("created cloudlet manager.");
+		this.transcript.traceDebugging ("using the class-loader `%{object}`...", this.classLoader);
+		this.transcript.traceDebugging ("using the callbacks reactor `%{object}`...", this.reactor);
+		this.transcript.traceDebugging ("using the threading context `%{object}`...", this.threading);
+		this.transcript.traceDebugging ("using the interoperability channel factory `%{object}`...", this.channelFactory);
+		this.transcript.traceDebugging ("using the interoperability channel resolver `%{object}`...", this.channelResolver);
 	}
 	
 	public final boolean createInstance ()
 	{
+		this.transcript.traceDebugging ("creating a new cloudlet...");
 		synchronized (this.monitor) {
 			final Cloudlet<?> cloudlet = this.createCloudletInstance ();
+			// FIXME: this should be done asynchronously and we should check the outcome...
 			cloudlet.initialize ();
 			this.cloudlets.put (cloudlet, cloudlet);
-			return true;
+			this.transcript.traceDebugging ("created the cloudlet `%{object:identity}`.", cloudlet);
+			return (true);
 		}
 	}
 	
 	public final void destroy ()
 	{
+		this.transcript.traceDebugging ("destroying all cloudlets...");
 		synchronized (this.monitor) {
 			while (!this.cloudlets.isEmpty ()) {
 				this.destroyInstance ();
@@ -97,11 +107,13 @@ public final class CloudletManager
 	
 	public final boolean destroyInstance ()
 	{
+		this.transcript.traceDebugging ("destroying a cloudlet...");
 		synchronized (this.monitor) {
 			final Iterator<Cloudlet<?>> cloudletIterator = this.cloudlets.keySet ().iterator ();
 			while (true) {
 				if (!cloudletIterator.hasNext ()) {
-					return false;
+					this.transcript.traceDebugging ("destroying a cloudlet failed: no cloudlet is available; ignoring!");
+					return (false);
 				}
 				final Cloudlet<?> cloudlet = cloudletIterator.next ();
 				// FIXME: we should have some cloudlet observers to manage this...
@@ -109,6 +121,7 @@ public final class CloudletManager
 					case DESTROYED :
 					case DESTROYING :
 					case FAILED :
+						this.cloudlets.remove (cloudlet);
 						continue;
 					case ACTIVE :
 					case INITIALIZING :
@@ -116,10 +129,11 @@ public final class CloudletManager
 					default :
 						throw (new AssertionError ()); // NOPMD
 				}
-				// FIXME: this should be done asynchronously and we should wait for the outcome...
+				// FIXME: this should be done asynchronously and we should check the outcome...
 				cloudlet.destroy ();
 				this.cloudlets.remove (cloudlet);
-				return true;
+				this.transcript.traceDebugging ("destroyed the cloudlet `%{object:identity}`.", cloudlet);
+				return (true);
 			}
 		}
 	}
@@ -133,13 +147,15 @@ public final class CloudletManager
 		final IConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (null, connectorEnvironment);
 		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, this.reactor, this.threading, this.exceptions);
 		final Cloudlet<?> cloudlet = Cloudlet.create (environment);
-		return cloudlet;
+		return (cloudlet);
 	}
 	
 	private final Class<?> resolveCloudletCallbacksClass ()
 	{
+		this.transcript.traceDebugging ("resolving the cloudlet callbacks class name...");
 		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("CloudletComponent.8"), String.class, null); //$NON-NLS-1$
 		Preconditions.checkNotNull (className, "unknown cloudlet callbacks class");
+		this.transcript.traceDebugging ("resolving the cloudlet callbacks class `%s`...", className);
 		final Class<?> clasz;
 		try {
 			clasz = this.classLoader.loadClass (className);
@@ -148,13 +164,15 @@ public final class CloudletManager
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet callbacks class", exception));
 		}
 		Preconditions.checkArgument (ICloudletCallback.class.isAssignableFrom (clasz), "invalid cloudlet callbacks class (must implement `ICloudletCallback`)");
-		return clasz;
+		return (clasz);
 	}
 	
 	private final IConfiguration resolveCloudletConfiguration ()
 	{
+		this.transcript.traceDebugging ("resolving the cloudlet configuration...");
 		final String configurationDescriptor = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("CloudletComponent.10"), String.class, null); //$NON-NLS-1$
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet configuration descriptor");
+		this.transcript.traceDebugging ("resolving the cloudlet configuration `%s`...", configurationDescriptor);
 		final IConfiguration configuration;
 		try {
 			configuration = PropertyTypeConfiguration.create (this.classLoader, configurationDescriptor);
@@ -162,13 +180,15 @@ public final class CloudletManager
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet configuration", exception));
 		}
-		return configuration;
+		return (configuration);
 	}
 	
 	private final Class<?> resolveCloudletStateClass ()
 	{
+		this.transcript.traceDebugging ("resolving the cloudlet state class name...");
 		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("CloudletComponent.9"), String.class, null); //$NON-NLS-1$
 		Preconditions.checkNotNull (className, "unknown cloudlet context class");
+		this.transcript.traceDebugging ("resolving the cloudlet state class `%s`...", className);
 		final Class<?> clasz;
 		try {
 			clasz = this.classLoader.loadClass (className);
@@ -176,19 +196,20 @@ public final class CloudletManager
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet context class", exception));
 		}
-		return clasz;
+		return (clasz);
 	}
 	
 	public static final CloudletManager create (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
 	{
-		return new CloudletManager (configuration, classLoader, reactor, threading, exceptions, channelFactory, channelResolver);
+		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, channelFactory, channelResolver));
 	}
 	
 	private final ChannelFactory channelFactory;
 	private final ChannelResolver channelResolver;
-	private ClassLoader classLoader;
+	private final ClassLoader classLoader;
 	private final ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> cloudlets;
 	private final IConfiguration configuration;
+	private final Transcript transcript;
 	private final TranscriptExceptionTracer exceptions;
 	private final Monitor monitor = Monitor.create (this);
 	private final CallbackReactor reactor;
