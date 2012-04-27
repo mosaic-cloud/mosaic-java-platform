@@ -125,6 +125,7 @@ public final class AbortingExceptionTracer
 	public static final long defaulExitTimeout = 2000;
 	public static final int defaultExitCode = 254;
 	public static final AbortingExceptionTracer defaultInstance = new AbortingExceptionTracer (null);
+	private static boolean debugging = (java.lang.management.ManagementFactory.getRuntimeMXBean ().getInputArguments ().toString ().indexOf ("-agentlib:jdwp") > 0);
 	private static final long defaultExitTimeoutResolution = 100;
 	private static final Exiter exiter = new Exiter (null);
 	private static final String prefix;
@@ -157,6 +158,8 @@ public final class AbortingExceptionTracer
 		
 		public final void maybeStart ()
 		{
+			if (AbortingExceptionTracer.debugging)
+				return;
 			synchronized (this.monitor) {
 				if (!this.exitThread.isAlive ()) {
 					AbortingExceptionTracer.trace ("registering halt thread...", this.transcript);
