@@ -33,6 +33,7 @@
 	</appender>
 	
 	<logger name="eu.mosaic_cloud.cloudlets" level="${logback.levels.mosaic.cloudlets:-}" />
+	<logger name="eu.mosaic_cloud.cloudlets.connectors" level="${logback.levels.mosaic.connectors:-}" />
 	<logger name="eu.mosaic_cloud.connectors" level="${logback.levels.mosaic.connectors:-}" />
 	<logger name="eu.mosaic_cloud.drivers" level="${logback.levels.mosaic.drivers:-}" />
 	<logger name="eu.mosaic_cloud.platform" level="${logback.levels.mosaic.platform:-}" />
