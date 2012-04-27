@@ -163,7 +163,7 @@ public final class ZeroMqChannel
 		synchronized (this.state.monitor) {
 			for (final Coder coder : coders) {
 				// FIXME: We shouldn't allow a coder to overwrite another one for the same "key".
-				// Currently this is a hack to allow registering the same session twice.
+				//-- Currently this is a hack to allow registering the same session twice.
 				if (this.state.coders.containsKey (coder.key))
 					continue;
 				if (this.state.coders.containsKey (coder.key)) {

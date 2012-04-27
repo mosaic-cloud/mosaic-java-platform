@@ -49,7 +49,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 public final class MemcachedDriver
 		extends AbstractKeyValueDriver
-{ // NOPMD by
+{ // NOPMD
 	/**
 	 * Creates a new memcached driver.
 	 * 
@@ -78,7 +78,7 @@ public final class MemcachedDriver
 	public synchronized void destroy ()
 	{
 		super.destroy ();
-		this.logger.trace ("MemcachedDriver destroyed."); //$NON-NLS-1$
+		this.logger.trace ("MemcachedDriver destroyed."); // $NON-NLS-1$
 	}
 	
 	public IResult<Boolean> invokeAddOperation (final String clientId, final String key, final int exp, final byte[] data, final IOperationCompletionHandler<Boolean> complHandler)
@@ -162,50 +162,34 @@ public final class MemcachedDriver
 	 */
 	public static MemcachedDriver create (final IConfiguration config, final ThreadingContext threading)
 	{
-		final List<URI> nodesURI = new ArrayList<URI> (10); // NOPMD by georgiana
-															// on
-															// 10/12/11 12:51 PM
-		int noNodes = 0; // NOPMD by georgiana on 10/12/11 10:07 AM
+		final List<URI> nodesURI = new ArrayList<URI> (10); // NOPMD
+		int noNodes = 0; // NOPMD
 		int port, noThreads;
-		final List<String> hosts = new ArrayList<String> (10); // NOPMD by
-																// georgiana on
-		// 10/12/11 12:51 PM
-		final List<Integer> ports = new ArrayList<Integer> (10); // NOPMD by
-																	// georgiana
-		// on 10/12/11 12:51
-		// PM
+		final List<String> hosts = new ArrayList<String> (10); // NOPMD
+		final List<Integer> ports = new ArrayList<Integer> (10); // NOPMD
 		MemcachedDriver driver;
 		while (true) {
 			noNodes++;
-			final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("MemcachedDriver.0") + noNodes, String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-			if ("".equals (host)) { //$NON-NLS-1$
-				noNodes--; // NOPMD by georgiana on 10/12/11 10:08 AM
+			final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("MemcachedDriver.0") + noNodes, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+			if ("".equals (host)) { // $NON-NLS-1$
+				noNodes--; // NOPMD
 				break;
 			}
-			port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("MemcachedDriver.1") //$NON-NLS-1$
-					+ noNodes, Integer.class, 0);
+			port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("MemcachedDriver.1") + noNodes, Integer.class, 0); // $NON-NLS-1$
 			hosts.add (host);
 			ports.add (port);
 		}
 		for (int index = 0; index < noNodes; index++) {
 			try {
-				final URI address = new URI ("http://" + hosts.get (index) + ":" // NOPMD
-																					// by
-																					// georgiana
-																					// on
-																					// 10/12/11
-																					// 12:50
-																					// PM
-						+ ports.get (index) + "/pools");
+				final URI address = new URI ("http://" + hosts.get (index) + ":" + ports.get (index) + "/pools"); // NOPMD
 				nodesURI.add (address);
 			} catch (final URISyntaxException e) {
 				ExceptionTracer.traceIgnored (e);
 			}
 		}
-		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.5"), //$NON-NLS-1$
-				String.class, ""); //$NON-NLS-1$
-		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$
+		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.5"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 		driver = new MemcachedDriver (threading, noThreads, nodesURI, user, passwd);
 		return driver;
 	}
@@ -213,9 +197,5 @@ public final class MemcachedDriver
 	private final List<?> hosts;
 	private final String password;
 	private final String username;
-	// georgiana
-	// on
-	// 10/12/11
-	// 10:07 AM
 	private final static boolean USE_BUCKET = true;
 }

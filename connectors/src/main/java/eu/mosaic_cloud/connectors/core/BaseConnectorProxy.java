@@ -181,7 +181,7 @@ public abstract class BaseConnectorProxy
 	protected CallbackCompletion<Void> disconnect (final Message finalMessage)
 	{
 		// FIXME: The disconnection should push the termination also to the interoperability layer.
-		// Currently the driver side has no idea that the connector was disconnected except if the `finalMessage` contains such information.
+		//-- Currently the driver side has no idea that the connector was disconnected except if the `finalMessage` contains such information.
 		// FIXME: The `finalMessage` should always exist and should always be an "terminal" one.
 		if (finalMessage != null) {
 			this.sendMessage (finalMessage);
@@ -217,7 +217,7 @@ public abstract class BaseConnectorProxy
 	protected void sendMessage (final Message message)
 	{
 		// FIXME: Currently this is a hack to avoid a race condition introduced by the `connect` code above.
-		// For now we just busy-wait until the session object is available
+		//-- For now we just busy-wait until the session object is available
 		if (this.session == null) {
 			this.transcript.traceDebugging ("waiting for the interoperability session...");
 			while (this.session == null) {

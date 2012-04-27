@@ -64,7 +64,7 @@ public abstract class InterceptingExceptionTracer
 			if (delegate != null)
 				delegate.trace (resolution, exception, message);
 		} catch (final Throwable exception1) {
-			// intentional
+			// NOTE: intentional
 		}
 	}
 	

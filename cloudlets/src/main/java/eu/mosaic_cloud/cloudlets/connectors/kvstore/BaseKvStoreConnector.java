@@ -52,20 +52,18 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	{
 		final CallbackCompletion<Boolean> completion = this.connector.delete (key);
 		if (this.callback != null) {
-			completion.observe (new CallbackCompletionObserver () {
-				@SuppressWarnings ("synthetic-access")
-				// NOPMD
+			completion.observe (new CallbackCompletionObserver () { // NOPMD
+						@SuppressWarnings ("synthetic-access")
 						@Override
-						public
-						CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-				{
-					assert (completion_ == completion); // NOPMD
-					if (completion.getException () != null) {
-						return BaseKvStoreConnector.this.callback.deleteFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
-					}
-					return BaseKvStoreConnector.this.callback.deleteSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, (TValue) null, extra));
-				}
-			});
+						public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
+						{
+							assert (completion_ == completion); // NOPMD
+							if (completion.getException () != null) {
+								return BaseKvStoreConnector.this.callback.deleteFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
+							}
+							return BaseKvStoreConnector.this.callback.deleteSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, (TValue) null, extra));
+						}
+					});
 		}
 		return completion;
 	}

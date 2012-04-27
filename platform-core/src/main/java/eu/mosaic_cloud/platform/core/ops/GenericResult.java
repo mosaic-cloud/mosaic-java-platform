@@ -68,8 +68,7 @@ public class GenericResult<T>
 		if (!done) {
 			// NOTE: try to cancel the operation
 			done = this.operation.cancel ();
-			// NOTE: cancellation may have failed if the operation was
-			// already finished
+			// NOTE: cancellation may have failed if the operation was already finished
 			if (!done) {
 				done = this.operation.isDone ();
 			}

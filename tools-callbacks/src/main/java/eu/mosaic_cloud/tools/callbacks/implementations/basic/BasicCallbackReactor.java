@@ -211,9 +211,9 @@ public final class BasicCallbackReactor
 					throw (exception.getCause ());
 				}
 			// FIXME: This is a VERY BIG HACK... This code should be refactored...
-			// The problem is that those methods annotated with `CallbackPassthrough` should enter the `monitor`,
-			// but the other methods shouldn't acquire the monitor.
-			// The other problem is that the code is very hard to read (too many return points, etc.)
+			//-- The problem is that those methods annotated with `CallbackPassthrough` should enter the `monitor`,
+			//-- but the other methods shouldn't acquire the monitor.
+			//-- The other problem is that the code is very hard to read (too many return points, etc.)
 			synchronized (this.monitor) {
 				this.reactor.transcript.traceDebugging ("invocking (triggered) for proxy `%{object:identity}` the method `%{method}` with arguments `%{array}`...", this.proxy, method, arguments);
 				Preconditions.checkState ((this.status.get () == Status.Active) || (this.status.get () == Status.Destroying));
@@ -987,7 +987,7 @@ public final class BasicCallbackReactor
 			Preconditions.checkNotNull (isolate);
 			Preconditions.checkNotNull (handler);
 			// FIXME: ??? (I don't remember what the problem was...)
-			// Preconditions.checkArgument (Callbacks.class.isInstance (handler));
+			//# Preconditions.checkArgument (Callbacks.class.isInstance (handler));
 			Preconditions.checkArgument (!CallbackProxy.class.isInstance (handler));
 			Preconditions.checkArgument (CallbackHandler.class.isInstance (handler));
 			synchronized (this.monitor) {

@@ -89,14 +89,7 @@ public class EventDrivenOperation<T>
 			this.completionHandlers.clear ();
 			for (final IOperationCompletionHandler<T> handler : cHandlers) {
 				final CompletionInvocationHandler<T> iHandler = invocationHandler.createHandler (handler);
-				final IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy.newProxyInstance (Threading.getCurrentThread ().getContextClassLoader (), new Class[] {IOperationCompletionHandler.class}, // NOPMD
-																																																								// by
-																																																								// georgiana
-																																																								// on
-																																																								// 10/12/11
-																																																								// 5:01
-																																																								// PM
-						iHandler);
+				final IOperationCompletionHandler<T> proxy = (IOperationCompletionHandler<T>) Proxy.newProxyInstance (Threading.getCurrentThread ().getContextClassLoader (), new Class[] {IOperationCompletionHandler.class}, iHandler); // NOPMD
 				this.completionHandlers.add (proxy);
 			}
 		}

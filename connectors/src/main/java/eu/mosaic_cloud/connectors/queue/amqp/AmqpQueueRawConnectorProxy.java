@@ -242,9 +242,9 @@ public final class AmqpQueueRawConnectorProxy
 			requestBuilder.setContentType (contentType);
 		}
 		// FIXME: content encoding is missing...
-		// if (contentEncoding != null) {
-		//	requestBuilder.setContentEncoding (contentEncoding);
-		// }
+		//# if (contentEncoding != null) {
+		//# 	requestBuilder.setContentEncoding (contentEncoding);
+		//# }
 		if (correlation != null) {
 			requestBuilder.setCorrelationId (correlation);
 		}
@@ -314,7 +314,7 @@ public final class AmqpQueueRawConnectorProxy
 			case CONSUME_OK : {
 				final AmqpPayloads.ConsumeOkMessage consumeOkPayload = (ConsumeOkMessage) message.payload;
 				// FIXME: missing token...
-				// final CompletionToken token = cancelOkPayload.getToken ();
+				//# final CompletionToken token = cancelOkPayload.getToken ();
 				final String consumerIdentifier = consumeOkPayload.getConsumerTag ();
 				this.transcript.traceDebugging ("processing the registration for the consumer `%s` for pending request with token `%s`...", consumerIdentifier, null);
 				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.get (consumerIdentifier);
@@ -333,7 +333,7 @@ public final class AmqpQueueRawConnectorProxy
 				final byte[] data = delivery.getData ().toByteArray ();
 				final String contentType = delivery.hasContentType () ? delivery.getContentType () : null;
 				// FIXME: content encoding is missing...
-				// final String contentEncoding = delivery.hasContentEncoding () ? delivery.getContentEncoding () : null;
+				//# final String contentEncoding = delivery.hasContentEncoding () ? delivery.getContentEncoding () : null;
 				final String contentEncoding = null;
 				final String correlation = delivery.hasCorrelationId () ? delivery.getCorrelationId () : null;
 				final String callback = delivery.hasReplyTo () ? delivery.getReplyTo () : null;

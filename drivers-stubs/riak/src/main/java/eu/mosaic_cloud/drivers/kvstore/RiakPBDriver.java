@@ -68,7 +68,7 @@ public final class RiakPBDriver
 	public synchronized void destroy ()
 	{
 		super.destroy ();
-		this.logger.trace ("RiakDriver destroyed."); //$NON-NLS-1$
+		this.logger.trace ("RiakDriver destroyed."); // $NON-NLS-1$
 	}
 	
 	/*
@@ -107,11 +107,9 @@ public final class RiakPBDriver
 				ConnectionException
 	{
 		int port, noThreads;
-		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), //$NON-NLS-1$
-				String.class, ""); //$NON-NLS-1$
-		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), //$NON-NLS-1$
-				Integer.class, 0);
-		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
+		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
+		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$
 		final MosaicLogger sLogger = MosaicLogger.createLogger (RiakPBDriver.class);
 		sLogger.trace ("Created Riak PB driver for host " + host + ":" + port);
 		return new RiakPBDriver (threading, noThreads, host, port);

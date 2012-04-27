@@ -100,9 +100,9 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
 	}
 	
 	static {
-		// create configuration
+		// NOTE: create configuration
 		BasicThreadingSecurityManager.initialize ();
-		// initialize logging system
+		// NOTE: initialize logging system
 		BaseConnectorTest.logger = MosaicLogger.createLogger (BaseConnectorTest.class);
 	}
 	

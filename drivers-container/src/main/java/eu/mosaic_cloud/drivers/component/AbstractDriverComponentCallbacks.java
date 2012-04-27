@@ -80,7 +80,7 @@ public abstract class AbstractDriverComponentCallbacks
 		if (this.stub != null) {
 			this.stub.destroy ();
 		}
-		this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
+		this.component = null; // NOPMD
 		this.status = Status.Terminated;
 		this.exceptions.trace (ExceptionResolution.Ignored, exception);
 		return null;
@@ -111,7 +111,7 @@ public abstract class AbstractDriverComponentCallbacks
 			this.stub.destroy ();
 			this.logger.trace ("Driver callbacks terminated.");
 		}
-		this.component = null; // NOPMD by georgiana on 10/10/11 1:56 PM
+		this.component = null; // NOPMD
 		this.status = Status.Terminated;
 		return null;
 	}

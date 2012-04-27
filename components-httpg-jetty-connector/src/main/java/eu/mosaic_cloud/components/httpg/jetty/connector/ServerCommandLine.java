@@ -86,7 +86,7 @@ public class ServerCommandLine
 			else {
 				final String resourceBase = loader.getResource ("WEB-INF/web.xml").toString ().replaceAll ("/WEB-INF/web.xml$", "");
 				if (!resourceBase.matches ("^jar:file:[^;]+!$")) {
-					// System.err.println("using embedded " + resourceBase);
+					//# System.err.println("using embedded " + resourceBase);
 					final StringBuilder classPath = new StringBuilder ();
 					try {
 						final Enumeration<URL> resources = loader.getResources ("");
@@ -101,7 +101,7 @@ public class ServerCommandLine
 					webapp.setExtraClasspath (classPath.toString ());
 					webapp.setClassLoader (loader);
 				} else {
-					// System.err.println("using jar " + resourceBase);
+					//# System.err.println("using jar " + resourceBase);
 					webapp.setWar (resourceBase.substring ("jar:file:".length (), resourceBase.length () - 1));
 				}
 			}

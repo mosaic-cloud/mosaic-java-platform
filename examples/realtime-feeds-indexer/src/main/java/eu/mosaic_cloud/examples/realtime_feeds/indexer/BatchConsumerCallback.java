@@ -41,8 +41,7 @@ public final class BatchConsumerCallback
 	@Override
 	public CallbackCompletion<Void> initializeSucceeded (final IndexerCloudletContext context, final CallbackArguments arguments)
 	{
-		// NOTE: if resource initialized successfully then just register as a
-		// consumer
+		// NOTE: if resource initialized successfully then just register as a consumer
 		return ICallback.SUCCESS;
 	}
 }

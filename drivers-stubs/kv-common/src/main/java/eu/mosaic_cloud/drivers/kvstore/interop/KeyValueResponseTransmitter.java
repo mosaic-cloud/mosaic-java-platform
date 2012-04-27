@@ -84,16 +84,9 @@ public class KeyValueResponseTransmitter
 	 *            the result of the operation
 	 * @return the message
 	 */
-	protected Message buildKeyValueResponse (final KeyValueOperations operation, // NOPMD
-			// by
-			// georgiana
-			// on
-			// 10/12/11
-			// 2:18
-			// PM
-			final CompletionToken token, final Object result)
+	protected Message buildKeyValueResponse (final KeyValueOperations operation, final CompletionToken token, final Object result) // NOPMD
 	{
-		Message message = null; // NOPMD by georgiana on 10/12/11 2:15 PM
+		Message message = null; // NOPMD
 		switch (operation) {
 			case SET :
 			case DELETE :
@@ -102,22 +95,10 @@ public class KeyValueResponseTransmitter
 					final Ok.Builder okPayload = IdlCommon.Ok.newBuilder ();
 					okPayload.setToken (token);
 					message = new Message (KeyValueMessage.OK, okPayload.build ()); // NOPMD
-																					// by
-																					// georgiana
-																					// on
-																					// 10/12/11
-																					// 2:16
-																					// PM
 				} else {
 					final NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder ();
 					nokPayload.setToken (token);
 					message = new Message (KeyValueMessage.NOK, nokPayload.build ()); // NOPMD
-																						// by
-																						// georgiana
-																						// on
-																						// 10/12/11
-																						// 2:16
-																						// PM
 				}
 				break;
 			case LIST :
@@ -125,11 +106,7 @@ public class KeyValueResponseTransmitter
 				listPayload.setToken (token);
 				@SuppressWarnings ("unchecked") final List<String> resList = (List<String>) result;
 				listPayload.addAllKeys (resList);
-				message = new Message (KeyValueMessage.LIST_REPLY, // NOPMD by
-																	// georgiana on
-																	// 10/12/11 2:16
-																	// PM
-						listPayload.build ());
+				message = new Message (KeyValueMessage.LIST_REPLY, listPayload.build ()); // NOPMD
 				break;
 			case GET :
 				final GetReply.Builder getPayload = KeyValuePayloads.GetReply.newBuilder ();

@@ -60,7 +60,7 @@ import com.rabbitmq.client.ShutdownSignalException;
  */
 public class AmqpDriver
 		extends AbstractResourceDriver
-{ // NOPMD by georgiana
+{ // NOPMD
 	/**
 	 * Creates a new driver.
 	 * 
@@ -279,12 +279,12 @@ public class AmqpDriver
 				this.connected = false;
 			} catch (final IOException e) {
 				ExceptionTracer.traceIgnored (e);
-				this.logger.error ("AMQP cannot close connection with server."); //$NON-NLS-1$
+				this.logger.error ("AMQP cannot close connection with server."); // $NON-NLS-1$
 			}
 		}
 		// FIXME: moved shutdown from here to `handleShutdownSignal` (is it ok?)
-		// this.executor.shutdown();
-		this.logger.trace ("AmqpDriver destroyed."); //$NON-NLS-1$
+		//# this.executor.shutdown();
+		this.logger.trace ("AmqpDriver destroyed."); // $NON-NLS-1$
 	}
 	
 	protected Channel getChannel (final String clientId)
@@ -298,14 +298,10 @@ public class AmqpDriver
 	
 	private synchronized void connectResource ()
 	{
-		final String amqpServerHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.1"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_HOST);
-		final int amqpServerPort = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.2"), //$NON-NLS-1$
-				Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT);
-		final String amqpServerUser = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.3"), String.class, //$NON-NLS-1$
-				ConnectionFactory.DEFAULT_USER);
-		final String amqpVirtualHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.5"), //$NON-NLS-1$
-				String.class, ConnectionFactory.DEFAULT_VHOST);
+		final String amqpServerHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.1"), String.class, ConnectionFactory.DEFAULT_HOST); // $NON-NLS-1$
+		final int amqpServerPort = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.2"), Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT); // $NON-NLS-1$
+		final String amqpServerUser = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.3"), String.class, ConnectionFactory.DEFAULT_USER); // $NON-NLS-1$
+		final String amqpVirtualHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.5"), String.class, ConnectionFactory.DEFAULT_VHOST); // $NON-NLS-1$
 		final ConnectionFactory factory = new ConnectionFactory ();
 		factory.setHost (amqpServerHost);
 		factory.setPort (amqpServerPort);
@@ -313,8 +309,7 @@ public class AmqpDriver
 			factory.setVirtualHost (amqpVirtualHost);
 		}
 		if (!amqpServerUser.isEmpty ()) {
-			final String amqpServerPasswd = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.4"), String.class, //$NON-NLS-1$
-					ConnectionFactory.DEFAULT_PASS);
+			final String amqpServerPasswd = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.4"), String.class, ConnectionFactory.DEFAULT_PASS); // $NON-NLS-1$
 			factory.setUsername (amqpServerUser);
 			factory.setPassword (amqpServerPasswd);
 		}
@@ -326,14 +321,13 @@ public class AmqpDriver
 			this.logger.debug ("AMQP driver connected to " + amqpServerHost + ":" + amqpServerPort);
 		} catch (final IOException e) {
 			ExceptionTracer.traceIgnored (e);
-			this.connection = null; // NOPMD by georgiana on 10/12/11 3:38
-									// PM
+			this.connection = null; // NOPMD
 		}
 	}
 	
 	private synchronized Channel openChannel (final String clientId)
 	{
-		Channel channel = null; // NOPMD by georgiana on 10/12/11 4:21 PM
+		Channel channel = null; // NOPMD
 		try {
 			if (this.connected) {
 				channel = this.connection.createChannel ();
@@ -367,18 +361,12 @@ public class AmqpDriver
 	 */
 	public static AmqpDriver create (final IConfiguration configuration, final ThreadingContext threading)
 	{ // NOPMD
-		// by
-		// georgiana
-		// on
-		// 10/12/11
-		// 4:19
-		// PM
-		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpDriver.0"), Integer.class, 1); //$NON-NLS-1$
+		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpDriver.0"), Integer.class, 1); // $NON-NLS-1$
 		AmqpDriver driver = new AmqpDriver (configuration, threading, noThreads);
 		// NOTE: open connection - moved to the stub
 		driver.connectResource ();
 		if (!driver.connected) {
-			driver = null; // NOPMD by georgiana on 10/12/11 3:38 PM
+			driver = null; // NOPMD
 		}
 		return driver;
 	}
@@ -392,8 +380,6 @@ public class AmqpDriver
 	private final ReturnCallback returnCallback;
 	private final ShutdownListener shutdownListener;
 	
-	// on 10/12/11 4:24
-	// PM
 	/**
 	 * Listener for connection shutdown signals.
 	 * 
@@ -406,10 +392,8 @@ public class AmqpDriver
 	{
 		public ConnectionShutdownListener ()
 		{
-			this.maxReconnectionTries = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.getString ("AmqpDriver.6"), Integer.class, //$NON-NLS-1$
-					ConnectionShutdownListener.DEFAULT_MAX_RECONNECTION_TRIES);
-			this.minReconnectionTime = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.getString ("AmqpDriver.7"), Long.class, //$NON-NLS-1$
-					ConnectionShutdownListener.DEFAULT_MIN_RECONNECTION_TIME);
+			this.maxReconnectionTries = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.getString ("AmqpDriver.6"), Integer.class, ConnectionShutdownListener.DEFAULT_MAX_RECONNECTION_TRIES); // $NON-NLS-1$
+			this.minReconnectionTime = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.getString ("AmqpDriver.7"), Long.class, ConnectionShutdownListener.DEFAULT_MIN_RECONNECTION_TIME); // $NON-NLS-1$
 		}
 		
 		@Override
@@ -419,14 +403,14 @@ public class AmqpDriver
 				if (AmqpDriver.super.isDestroyed ()) {
 					return;
 				}
-				AmqpDriver.this.logger.trace ("AMQP server closed connection with driver. Trying to reconnect..."); //$NON-NLS-1$
+				AmqpDriver.this.logger.trace ("AMQP server closed connection with driver. Trying to reconnect..."); // $NON-NLS-1$
 				AmqpDriver.this.connected = false;
 				int tries = 0;
 				while (!AmqpDriver.this.connected && (tries < this.maxReconnectionTries)) {
 					try {
 						AmqpDriver.this.wait (this.minReconnectionTime);
 						AmqpDriver.this.connectResource ();
-						tries++; // NOPMD by georgiana on 10/12/11 4:23 PM
+						tries++; // NOPMD
 					} catch (final InterruptedException e) {
 						ExceptionTracer.traceIgnored (e);
 						if (AmqpDriver.super.isDestroyed ()) {
@@ -436,7 +420,7 @@ public class AmqpDriver
 					}
 				}
 				if (!AmqpDriver.this.connected && !AmqpDriver.super.isDestroyed ()) {
-					AmqpDriver.this.logger.error ("Could not reconnect to AMQP resource."); //$NON-NLS-1$
+					AmqpDriver.this.logger.error ("Could not reconnect to AMQP resource."); // $NON-NLS-1$
 				}
 			}
 		}
@@ -462,8 +446,7 @@ public class AmqpDriver
 	final class ConsumerCallback
 			implements
 				Consumer
-	{ // NOPMD by georgiana on
-		// 10/12/11 4:24 PM
+	{ // NOPMD
 		ConsumerCallback ()
 		{
 			super ();
@@ -473,8 +456,7 @@ public class AmqpDriver
 		public void handleCancel (final String consumer)
 				throws IOException
 		{
-			AmqpDriver.this.logger.trace ("AmqpDriver - Received CANCEL callback for consumer " + consumer //$NON-NLS-1$
-					+ "."); //$NON-NLS-1$
+			AmqpDriver.this.logger.trace ("AmqpDriver - Received CANCEL callback for consumer " + consumer + "."); // $NON-NLS-1$ $NON-NLS-2$
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers.remove (consumer);
 			if (cancelCallback != null) {
 				final Runnable task = new Runnable () {
@@ -491,8 +473,7 @@ public class AmqpDriver
 		@Override
 		public void handleCancelOk (final String consumer)
 		{
-			AmqpDriver.this.logger.trace ("AmqpDriver - Received CANCEL Ok callback for consumer " + consumer //$NON-NLS-1$
-					+ "."); //$NON-NLS-1$
+			AmqpDriver.this.logger.trace ("AmqpDriver - Received CANCEL Ok callback for consumer " + consumer + "."); // $NON-NLS-1$ $NON-NLS-2$
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers.remove (consumer);
 			AmqpDriver.this.channels.remove (consumer);
 			if (cancelCallback != null) {
@@ -510,11 +491,10 @@ public class AmqpDriver
 		@Override
 		public void handleConsumeOk (final String consumer)
 		{
-			AmqpDriver.this.logger.trace ("AmqpDriver - Received CONSUME Ok callback for consumer " + consumer //$NON-NLS-1$
-					+ "."); //$NON-NLS-1$
+			AmqpDriver.this.logger.trace ("AmqpDriver - Received CONSUME Ok callback for consumer " + consumer + "."); // $NON-NLS-1$ $NON-NLS-2$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers.get (consumer);
 			if (consumeCallback == null) {
-				AmqpDriver.this.logger.error ("AmqpDriver - no callback to handle CONSUME Ok message"); //$NON-NLS-1$
+				AmqpDriver.this.logger.error ("AmqpDriver - no callback to handle CONSUME Ok message"); // $NON-NLS-1$
 			} else {
 				final Runnable task = new Runnable () {
 					@Override
@@ -553,8 +533,7 @@ public class AmqpDriver
 		@Override
 		public void handleShutdownSignal (final String consumer, final ShutdownSignalException signal)
 		{
-			AmqpDriver.this.logger.trace ("AmqpDriver - Received SHUTDOWN callback for consumer " //$NON-NLS-1$
-					+ consumer + "."); //$NON-NLS-1$
+			AmqpDriver.this.logger.trace ("AmqpDriver - Received SHUTDOWN callback for consumer " + consumer + "."); // $NON-NLS-1$ $NON-NLS-2$
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers.remove (consumer);
 			AmqpDriver.this.channels.remove (consumer);
 			if (consumeCallback != null) {
@@ -587,11 +566,9 @@ public class AmqpDriver
 				throws IOException
 		{
 			final AmqpInboundMessage message = new AmqpInboundMessage (null, -1, exchange, routingKey, data, properties.getDeliveryMode () == 2 ? true : false, properties.getReplyTo (), properties.getContentEncoding (), properties.getContentType (), properties.getCorrelationId (), properties.getMessageId ());
-			AmqpDriver.this.logger.trace ("AmqpDriver - Received RETURN callback for " + message.getDelivery ()); //$NON-NLS-1$
-			// FIXME: We should trigger a `publishFailed` callback, but due to
-			// the lack of "positive" acknowledgements,
-			// we just ignore this situation. Maybe we should use the RabbitMQ
-			// extension for publish acknowledgements.
+			AmqpDriver.this.logger.trace ("AmqpDriver - Received RETURN callback for " + message.getDelivery ()); // $NON-NLS-1$
+			// FIXME: We should trigger a `publishFailed` callback, but due to the lack of "positive" acknowledgements,
+			//-- we just ignore this situation. Maybe we should use the RabbitMQ extension for publish acknowledgements.
 		}
 	}
 }

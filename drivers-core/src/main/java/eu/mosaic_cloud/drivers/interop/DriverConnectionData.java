@@ -110,9 +110,9 @@ public class DriverConnectionData
 	
 	@Override
 	public int hashCode ()
-	{ // NOPMD by georgiana on 10/12/11 3:11 PM
-		final int prime = 31; // NOPMD by georgiana on 10/12/11 3:09 PM
-		int result = 1; // NOPMD by georgiana on 10/12/11 3:11 PM
+	{ // NOPMD
+		final int prime = 31; // NOPMD
+		int result = 1; // NOPMD
 		result = (prime * result) + ((this.driverName == null) ? 0 : this.driverName.hashCode ());
 		result = (prime * result) + ((this.host == null) ? 0 : this.host.hashCode ());
 		result = (prime * result) + ((this.password == null) ? 0 : this.password.hashCode ());

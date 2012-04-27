@@ -34,6 +34,5 @@ public interface ICallback<TContext>
 		extends
 			Callbacks
 { // NOPMD
-	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion // NOPMD
-			.createOutcome ();
+	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome (); // NOPMD
 }

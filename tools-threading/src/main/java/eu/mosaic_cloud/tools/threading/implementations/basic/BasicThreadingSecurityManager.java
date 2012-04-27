@@ -57,7 +57,7 @@ public final class BasicThreadingSecurityManager
 			// FIXME: do an enforcement, not just logging...
 			if (!context.isManaged (thread)) {
 				this.logger.warn ("thread access check failed for thread: {}; ignoring!", thread);
-				// throw (new SecurityException ());
+				//# throw (new SecurityException ());
 			}
 		}
 		super.checkAccess (thread);
@@ -73,7 +73,7 @@ public final class BasicThreadingSecurityManager
 			// FIXME: do an enforcement, not just logging...
 			if (!context.isManaged (group)) {
 				this.logger.warn ("thread access check failed for thread group: {}; ignoring!", group);
-				// throw (new SecurityException ());
+				//# throw (new SecurityException ());
 			}
 		}
 		super.checkAccess (group);
@@ -84,8 +84,8 @@ public final class BasicThreadingSecurityManager
 	{
 		this.checkPermission_ (permission);
 		// FIXME: Shouldn't we delegate them? (We should investigate deeper the implications...)
-		// It seems that the default implementation is to "deny" everything, thus we "allow" everything.
-		// super.checkPermission (permission);
+		//-- It seems that the default implementation is to "deny" everything, thus we "allow" everything.
+		//# super.checkPermission (permission);
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public final class BasicThreadingSecurityManager
 	{
 		this.checkPermission_ (permission);
 		// FIXME: Should we delegate them? (We should investigate deeper the implications...)
-		// It seems that the default implementation is to "allow" everything with a context.
+		//-- It seems that the default implementation is to "allow" everything with a context.
 		super.checkPermission (permission, context);
 	}
 	
@@ -133,7 +133,7 @@ public final class BasicThreadingSecurityManager
 		checkRead |= checkWrite;
 		if (checkRead || checkWrite) {
 			// FIXME: We should do something useful with these permissions which impact the behaviour of created threads.
-			// Currently we accept any operation.
+			//-- Currently we accept any operation.
 		}
 	}
 	

@@ -36,8 +36,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 			Joinable
 {
 	// FIXME: On creation the completion should "capture" the "current" exceptions tracer and store it.
-	// Then whenever an exception is encountered, whatever the thread may be, it should be directed to that tracer.
-	// (Or maybe this tracer should be determined at creation through the `backend`.)
+	//-- Then whenever an exception is encountered, whatever the thread may be, it should be directed to that tracer.
+	//-- (Or maybe this tracer should be determined at creation through the `backend`.)
 	private CallbackCompletion (final _Outcome_ outcome)
 	{
 		super ();
@@ -155,8 +155,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 		if (this.backend != null) {
 			Preconditions.checkNotNull (observer);
 			// FIXME: We should enforce that the observer is also a callback proxy.
-			// Currently this is a hack to "ease" the development.
-			// Preconditions.checkArgument (observer instanceof CallbackProxy);
+			//-- Currently this is a hack to "ease" the development.
+			//# Preconditions.checkArgument (observer instanceof CallbackProxy);
 			try {
 				this.backend.observeCompletion (this, observer);
 			} catch (final Throwable exception) {
@@ -248,8 +248,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 		Preconditions.checkState (completion.isCompleted ());
 		Preconditions.checkNotNull (observer);
 		// FIXME: We should enforce that the observer is also a callback proxy.
-		// Currently this is a hack to "ease" the development.
-		// Preconditions.checkArgument (observer instanceof CallbackProxy);
+		//-- Currently this is a hack to "ease" the development.
+		//# Preconditions.checkArgument (observer instanceof CallbackProxy);
 		try {
 			observer.completed (completion);
 		} catch (final Throwable exception) {

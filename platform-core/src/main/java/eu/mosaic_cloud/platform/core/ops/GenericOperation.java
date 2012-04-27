@@ -64,14 +64,8 @@ public class GenericOperation<T>
 	@Override
 	public boolean cancel ()
 	{
-		boolean cancelled = true; // NOPMD by georgiana on 10/12/11 5:02 PM
+		boolean cancelled = true; // NOPMD
 		if ((this.operation != null) && (cancelled = this.operation.cancel (true))) { // NOPMD
-																						// by
-																						// georgiana
-																						// on
-																						// 10/12/11
-																						// 5:01
-																						// PM
 			assert this.getHandler () != null : "Operation callback is NULL.";
 			this.getHandler ().onFailure (new NullCompletionCallback ("Operation callback is NULL."));
 		}
@@ -93,7 +87,7 @@ public class GenericOperation<T>
 			throws InterruptedException,
 				ExecutionException
 	{
-		T result = null; // NOPMD by georgiana on 10/12/11 5:02 PM
+		T result = null; // NOPMD
 		if (this.operation != null) {
 			try {
 				result = this.operation.get ();
@@ -134,7 +128,7 @@ public class GenericOperation<T>
 				ExecutionException,
 				TimeoutException
 	{
-		T result = null; // NOPMD by georgiana on 10/12/11 5:02 PM
+		T result = null; // NOPMD
 		if (this.operation != null) {
 			try {
 				result = this.operation.get (timeout, unit);
@@ -183,7 +177,7 @@ public class GenericOperation<T>
 	@Override
 	public boolean isCancelled ()
 	{
-		boolean cancelled = true; // NOPMD by georgiana on 10/12/11 5:02 PM
+		boolean cancelled = true; // NOPMD
 		if (this.operation != null) {
 			cancelled = this.operation.isCancelled ();
 		}
@@ -200,7 +194,7 @@ public class GenericOperation<T>
 	@Override
 	public boolean isDone ()
 	{
-		boolean done = false; // NOPMD by georgiana on 10/12/11 5:02 PM
+		boolean done = false; // NOPMD
 		if (this.operation != null) {
 			done = this.operation.isDone ();
 		}

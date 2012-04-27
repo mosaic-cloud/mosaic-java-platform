@@ -51,13 +51,13 @@ public class BaseScenario
 		this.transcript = Transcript.create (owner);
 		this.exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, this.exceptionsQueue);
-		// create threading context for connector and driver
+		// NOTE: create threading context for connector and driver
 		this.threading = BasicThreadingContext.create (owner, this.exceptions, this.exceptions.catcher);
 		this.threading.initialize ();
-		// create callback reactor
+		// NOTE: create callback reactor
 		this.callbacks = BasicCallbackReactor.create (this.threading, this.exceptions);
 		this.callbacks.initialize ();
-		// set-up communication channel with the driver
+		// NOTE: set-up communication channel with the driver
 		final String driverIdentity = ConfigUtils.resolveParameter (this.configuration, "interop.driver.identifier", String.class, "");
 		final String driverEndpoint = ConfigUtils.resolveParameter (this.configuration, "interop.channel.address", String.class, "");
 		this.connectorChannel = ZeroMqChannel.create (UUID.randomUUID ().toString (), this.threading, this.exceptions);

@@ -84,7 +84,7 @@ public final class RedisDriver
 	public synchronized void destroy ()
 	{
 		super.destroy ();
-		this.logger.trace ("RedisDriver destroyed."); //$NON-NLS-1$
+		this.logger.trace ("RedisDriver destroyed."); // $NON-NLS-1$
 	}
 	
 	@Override
@@ -115,13 +115,10 @@ public final class RedisDriver
 			throws IOException
 	{
 		int port, noThreads;
-		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), //$NON-NLS-1$
-				String.class, ""); //$NON-NLS-1$
-		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), //$NON-NLS-1$
-				Integer.class, 0);
-		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); //$NON-NLS-1$
-		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), //$NON-NLS-1$
-				String.class, ""); //$NON-NLS-1$
+		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
+		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$
+		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 		return new RedisDriver (threading, noThreads, host, port, passwd);
 	}
 	

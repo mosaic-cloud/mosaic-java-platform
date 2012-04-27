@@ -107,8 +107,8 @@ public final class PropertyTypeConfiguration
 	@Override
 	public int hashCode ()
 	{
-		final int prime = 31; // NOPMD by georgiana on 9/27/11 2:26 PM
-		int result = 1; // NOPMD by georgiana on 9/27/11 2:26 PM
+		final int prime = 31; // NOPMD
+		int result = 1; // NOPMD
 		result = (prime * result) + ((this.properties == null) ? 0 : this.properties.hashCode ());
 		result = (prime * result) + ((this.root == null) ? 0 : this.root.hashCode ());
 		return result;
@@ -198,8 +198,7 @@ public final class PropertyTypeConfiguration
 	public static PropertyTypeConfiguration create (final ClassLoader classLoader, final String resource)
 	{
 		final InputStream stream = classLoader.getResourceAsStream (resource);
-		PropertyTypeConfiguration configuration = null; // NOPMD by georgiana on
-														// 9/27/11 2:26 PM
+		PropertyTypeConfiguration configuration = null; // NOPMD
 		if (stream != null) {
 			final Properties properties = new Properties (System.getProperties ());
 			try {

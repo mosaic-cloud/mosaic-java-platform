@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.interop; // NOPMD by georgiana on 10/12/11 2:55 PM
+package eu.mosaic_cloud.drivers.kvstore.interop; // NOPMD
 
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ import com.google.common.base.Preconditions;
  */
 public class MemcachedStub
 		extends KeyValueStub
-{ // NOPMD by georgiana on
+{ // NOPMD
 	/**
 	 * Creates a new stub for the Memcached driver.
 	 * 
@@ -102,11 +102,7 @@ public class MemcachedStub
 	@Override
 	@SuppressWarnings ("unchecked")
 	protected void startOperation (final Message message, final Session session)
-			// NOPMD by
-			// georgiana
-			// on
-			// 10/12/11
-			// 2:55 PM
+			// NOPMD
 			throws IOException,
 				ClassNotFoundException
 	{
@@ -118,22 +114,10 @@ public class MemcachedStub
 		IResult<Boolean> resultStore;
 		DriverOperationFinishedHandler callback;
 		final MemcachedDriver driver = super.getDriver (MemcachedDriver.class); // NOPMD
-																				// by
-																				// georgiana
-																				// on
-																				// 10/12/11
-																				// 2:54
-																				// PM
 		final String mssgPrefix = "MemcachedStub - Received request for "; // NOPMD
-																			// by
-																			// georgiana
-																			// on
-																			// 10/12/11
-																			// 2:54
-																			// PM
 		if (message.specification instanceof KeyValueMessage) {
 			// NOTE: handle set with exp
-			boolean handle = false; // NOPMD by georgiana on 10/12/11 2:54 PM
+			boolean handle = false; // NOPMD
 			final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
 			if (kvMessage == KeyValueMessage.SET_REQUEST) {
 				final KeyValuePayloads.SetRequest setRequest = (SetRequest) message.payload;
@@ -170,8 +154,7 @@ public class MemcachedStub
 				final MemcachedPayloads.AddRequest addRequest = (AddRequest) message.payload;
 				token = addRequest.getToken ();
 				key = addRequest.getKey ();
-				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ()); // NOPMD by georgiana on 10/12/11
-																																												// 2:56 PM
+				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ()); // NOPMD
 				exp = addRequest.getExpTime ();
 				data = addRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -183,8 +166,7 @@ public class MemcachedStub
 				token = appendRequest.getToken ();
 				key = appendRequest.getKey ();
 				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = appendRequest.getExpTime (); // NOPMD by georgiana on 10/12/11
-													// 2:54 PM
+				exp = appendRequest.getExpTime (); // NOPMD
 				data = appendRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 				resultStore = driver.invokeAppendOperation (token.getClientId (), key, data, callback);
@@ -195,8 +177,7 @@ public class MemcachedStub
 				token = prependRequest.getToken ();
 				key = prependRequest.getKey ();
 				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = prependRequest.getExpTime (); // NOPMD by georgiana on 10/12/11
-													// 2:55 PM
+				exp = prependRequest.getExpTime (); // NOPMD
 				data = prependRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 				resultStore = driver.invokePrependOperation (token.getClientId (), key, data, callback);
@@ -218,8 +199,7 @@ public class MemcachedStub
 				token = casRequest.getToken ();
 				key = casRequest.getKey ();
 				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = casRequest.getExpTime (); // NOPMD by georgiana on 10/12/11
-												// 2:55 PM
+				exp = casRequest.getExpTime (); // NOPMD
 				data = casRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 				resultStore = driver.invokeCASOperation (token.getClientId (), key, data, callback);
@@ -290,6 +270,5 @@ public class MemcachedStub
 		return stub;
 	}
 	
-	// 10/12/11 2:56 PM
 	private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub> ();
 }

@@ -174,7 +174,7 @@ public final class MosaicLogger
 	 * @return the logger
 	 */
 	public static MosaicLogger createLogger (final Object owner)
-	{ // NOPMD by
+	{ // NOPMD
 		return MosaicLogger.createLogger (Transcript.create (owner));
 	}
 	

@@ -44,19 +44,19 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	{
 		super (rawProxy, configuration, messageClass, messageEncoder);
 		final String identifier = this.raw.getIdentifier ();
-		this.exchange = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.0"), String.class, identifier); //$NON-NLS-1$
-		this.exchangeType = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT);//$NON-NLS-1$
-		this.exchangeDurable = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue (); //$NON-NLS-1$
-		this.exchangeAutoDelete = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue (); //$NON-NLS-1$
-		this.queue = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.2"), String.class, identifier); //$NON-NLS-1$
-		this.queueExclusive = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.6"), Boolean.class, Boolean.FALSE).booleanValue (); //$NON-NLS-1$
+		this.exchange = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.0"), String.class, identifier); // $NON-NLS-1$
+		this.exchangeType = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT); // $NON-NLS-1$
+		this.exchangeDurable = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
+		this.exchangeAutoDelete = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue (); // $NON-NLS-1$
+		this.queue = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.2"), String.class, identifier); // $NON-NLS-1$
+		this.queueExclusive = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.6"), Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
 		this.queueAutoDelete = this.exchangeAutoDelete;
 		this.queueDurable = this.exchangeDurable;
-		this.bindingRoutingKey = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.1"), String.class, identifier); //$NON-NLS-1$
+		this.bindingRoutingKey = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.1"), String.class, identifier); // $NON-NLS-1$
 		// FIXME: this should also be made a configurable parameter...
 		this.consumerIdentifier = identifier;
-		this.consumerAutoAck = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.10"), Boolean.class, Boolean.FALSE).booleanValue (); //$NON-NLS-1$
-		this.definePassive = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue (); //$NON-NLS-1$
+		this.consumerAutoAck = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.10"), Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
+		this.definePassive = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
 		this.callback = new AmqpConsumerCallback (callback);
 		this.transcript.traceDebugging ("created the queue consumer connector proxy for queue `%s` bound to exchange `%s` (of type `%s`) with routing key `%s`.", this.queue, this.exchange, this.exchangeType, this.bindingRoutingKey);
 		this.transcript.traceDebugging ("using the underlying raw proxy `%{object:identity}`...", this.raw);
@@ -149,7 +149,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	{
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
 		// FIXME: the splice below will be done when creating the environment
-		// final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
 		final AmqpQueueConsumerConnectorProxy<TMessage> proxy = new AmqpQueueConsumerConnectorProxy<TMessage> (rawProxy, configuration, messageClass, messageEncoder, callback);
 		return (proxy);
 	}

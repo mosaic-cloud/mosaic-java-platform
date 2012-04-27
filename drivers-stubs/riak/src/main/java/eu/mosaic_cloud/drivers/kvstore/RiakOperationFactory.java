@@ -69,22 +69,11 @@ public final class RiakOperationFactory
 	}
 	
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, // NOPMD by
-																	// georgiana
-																	// on
-																	// 10/12/11
-																	// 4:46 PM
-			final Object ... parameters)
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) // NOPMD
 	{
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
 			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						// by
-						// georgiana
-						// on
-						// 10/12/11
-						// 4:46
-						// PM
 						@Override
 						public Object call ()
 								throws UnsupportedOperationException
@@ -97,30 +86,19 @@ public final class RiakOperationFactory
 		try {
 			switch (mType) {
 				case SET :
-					operation = this.buildSetOperation (parameters); // NOPMD by georgiana
-					// on 10/12/11 4:46
-					// PM
+					operation = this.buildSetOperation (parameters); // NOPMD
 					break;
 				case GET :
-					operation = this.buildGetOperation (parameters); // NOPMD by georgiana
-					// on 10/12/11 4:45
-					// PM
+					operation = this.buildGetOperation (parameters); // NOPMD
 					break;
 				case LIST :
-					operation = this.buildListOperation (); // NOPMD by georgiana on
-					// 10/12/11 4:45 PM
+					operation = this.buildListOperation (); // NOPMD
 					break;
 				case DELETE :
-					operation = this.buildDeleteOperation (parameters); // NOPMD by
-					// georgiana on
-					// 10/12/11 4:45
-					// PM
+					operation = this.buildDeleteOperation (parameters); // NOPMD
 					break;
 				default:
-					operation = new GenericOperation<Object> ( // NOPMD by georgiana
-																// on 10/12/11 4:45
-																// PM
-							new Callable<Object> () {
+					operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
 								@Override
 								public Object call ()
 										throws UnsupportedOperationException
@@ -132,19 +110,10 @@ public final class RiakOperationFactory
 		} catch (final Exception e) {
 			ExceptionTracer.traceDeferred (e);
 			operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						// by
-						// georgiana
-						// on
-						// 10/12/11
-						// 4:45
-						// PM
 						@Override
 						public Object call ()
 								throws Exception
-						{ // NOPMD by
-							// georgiana on
-							// 10/12/11 4:46
-							// PM
+						{ // NOPMD
 							throw e;
 						}
 					});
@@ -248,11 +217,5 @@ public final class RiakOperationFactory
 	}
 	
 	private final Bucket bucket;
-	// by
-	// georgiana
-	// on
-	// 10/12/11
-	// 4:46
-	// PM
 	private final IRiakClient riakcl;
 }

@@ -76,23 +76,21 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	{
 		final CallbackCompletion<Boolean> completion = this.connector.add (key, exp, value);
 		if (this.callback != null) {
-			completion.observe (new CallbackCompletionObserver () {
-				@SuppressWarnings ("synthetic-access")
-				// NOPMD
+			completion.observe (new CallbackCompletionObserver () { // NOPMD
+						@SuppressWarnings ("synthetic-access")
 						@Override
-						public
-						CallbackCompletion<Void> completed (final CallbackCompletion<?> aCompletion)
-				{
-					assert (aCompletion == completion); // NOPMD
-					CallbackCompletion<Void> resultCompletion;
-					if (completion.getException () == null) {
-						resultCompletion = MemcacheKvStoreConnector.this.callback.addSucceeded (MemcacheKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
-					} else {
-						resultCompletion = MemcacheKvStoreConnector.this.callback.addFailed (MemcacheKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (MemcacheKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
-					}
-					return resultCompletion;
-				}
-			});
+						public CallbackCompletion<Void> completed (final CallbackCompletion<?> aCompletion)
+						{
+							assert (aCompletion == completion); // NOPMD
+							CallbackCompletion<Void> resultCompletion;
+							if (completion.getException () == null) {
+								resultCompletion = MemcacheKvStoreConnector.this.callback.addSucceeded (MemcacheKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (MemcacheKvStoreConnector.this.cloudlet, key, value, extra));
+							} else {
+								resultCompletion = MemcacheKvStoreConnector.this.callback.addFailed (MemcacheKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (MemcacheKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
+							}
+							return resultCompletion;
+						}
+					});
 		}
 		return completion;
 	}

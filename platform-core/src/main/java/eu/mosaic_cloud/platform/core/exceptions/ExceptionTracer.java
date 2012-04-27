@@ -37,14 +37,7 @@ public final class ExceptionTracer
 	
 	public void trace (final ExceptionResolution resolution, final Throwable exception, final String message_)
 	{
-		final String message = message_ == null ? "encountered exception" // NOPMD
-																			// by
-																			// georgiana
-																			// on
-																			// 9/27/11
-																			// 7:11
-																			// PM
-				: message_;
+		final String message = message_ == null ? "encountered exception" : message_; // NOPMD
 		switch (resolution) {
 			case Handled :
 				this.delegateTracer.traceHandledException (exception, message);

@@ -149,7 +149,7 @@ public abstract class AbstractKeyValueDriver
 	 */
 	protected <T extends IOperationFactory> T getOperationFactory (final String clientId, final Class<T> factClass)
 	{
-		T factory = null; // NOPMD by georgiana on 10/12/11 12:55 PM
+		T factory = null; // NOPMD
 		final BucketData bucket = this.clientBucketMap.get (clientId);
 		if (bucket != null) {
 			factory = factClass.cast (bucket.opFactory);
@@ -164,8 +164,7 @@ public abstract class AbstractKeyValueDriver
 	 */
 	private IOperationFactory getOperationFactory (final String clientId)
 	{
-		IOperationFactory factory = null; // NOPMD by georgiana on 10/12/11
-											// 12:55 PM
+		IOperationFactory factory = null; // NOPMD
 		final BucketData bucket = this.clientBucketMap.get (clientId);
 		if (bucket != null) {
 			factory = bucket.opFactory;

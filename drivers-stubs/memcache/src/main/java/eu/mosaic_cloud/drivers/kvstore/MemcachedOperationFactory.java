@@ -83,23 +83,11 @@ public final class MemcachedOperationFactory
 	 * .platform.core.IOperationType, java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, // NOPMD by
-																	// georgiana
-																	// on
-																	// 10/12/11
-																	// 4:57 PM
-			final Object ... parameters)
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) // NOPMD
 	{
-		IOperation<?> operation = null; // NOPMD by georgiana on 10/12/11 4:56
-										// PM
+		IOperation<?> operation = null; // NOPMD
 		if (!(type instanceof KeyValueOperations)) {
 			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						// by
-						// georgiana
-						// on
-						// 10/12/11
-						// 4:56
-						// PM
 						@Override
 						public Object call ()
 								throws UnsupportedOperationException
@@ -139,12 +127,6 @@ public final class MemcachedOperationFactory
 				break;
 			default:
 				operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-							// by
-							// georgiana
-							// on
-							// 10/12/11
-							// 4:56
-							// PM
 							@Override
 							public Object call ()
 									throws UnsupportedOperationException
@@ -332,25 +314,12 @@ public final class MemcachedOperationFactory
 	public static MemcachedOperationFactory getFactory (final List<?> hosts, final String user, final String password, final String bucket, final boolean useBucket)
 	{
 		try {
-			return new MemcachedOperationFactory (hosts, user, password, bucket, // NOPMD
-																					// by
-																					// georgiana
-																					// on
-																					// 10/12/11
-																					// 4:56
-																					// PM
-					useBucket);
+			return new MemcachedOperationFactory (hosts, user, password, bucket, useBucket); // NOPMD
 		} catch (final IOException e) {
 			ExceptionTracer.traceIgnored (e);
 		}
 		return null;
 	}
 	
-	// by
-	// georgiana
-	// on
-	// 10/12/11
-	// 4:57
-	// PM
 	private final MemcachedClient mcClient;
 }

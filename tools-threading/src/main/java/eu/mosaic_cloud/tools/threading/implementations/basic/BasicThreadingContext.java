@@ -496,8 +496,8 @@ public final class BasicThreadingContext
 			Preconditions.checkNotNull (group);
 			this.configuration = configuration;
 			// FIXME: In the context of thread groups the "daemon" setting has a different meaning than for a thread.
-			// Thus maybe we need a separate "daemon" setting just for groups in the configuration object.
-			// super.setDaemon (this.configuration.daemon);
+			//-- Thus maybe we need a separate "daemon" setting just for groups in the configuration object.
+			//# super.setDaemon (this.configuration.daemon);
 			super.setDaemon (false);
 			if (configuration.priority != -1)
 				this.setMaxPriority (configuration.priority);

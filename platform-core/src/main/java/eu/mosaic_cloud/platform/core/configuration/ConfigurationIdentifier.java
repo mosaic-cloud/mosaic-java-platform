@@ -75,8 +75,8 @@ public final class ConfigurationIdentifier
 	@Override
 	public int hashCode ()
 	{
-		final int prime = 31; // NOPMD by georgiana on 9/27/11 1:47 PM
-		int result = 1; // NOPMD by georgiana on 9/26/11 8:37 PM
+		final int prime = 31; // NOPMD
+		int result = 1; // NOPMD
 		result = (prime * result) + (this.absolute ? 1231 : 1237);
 		result = (prime * result) + ((this.identifier == null) ? 0 : this.identifier.hashCode ());
 		return result;
@@ -182,28 +182,21 @@ public final class ConfigurationIdentifier
 	 */
 	private static ConfigurationIdentifier resolve (final ConfigurationIdentifier reference, final String specification)
 	{
-		boolean isAbsolute = false; // NOPMD by georgiana on 9/26/11 8:34 PM
+		boolean isAbsolute = false; // NOPMD
 		String identifier_;
 		String identifier;
 		ConfigurationIdentifier parameterIdentifier;
 		if (reference == null) {
 			if (specification.charAt (0) == '/') {
-				isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
+				isAbsolute = true; // NOPMD
 			}
 			identifier_ = specification;
 		} else if (reference.absolute) {
-			isAbsolute = true; // NOPMD by georgiana on 9/26/11 8:35 PM
+			isAbsolute = true; // NOPMD
 			if (reference.identifier == null) {
-				identifier_ = "/" + specification; // NOPMD by georgiana on
-													// 9/26/11 8:36 PM
+				identifier_ = "/" + specification; // NOPMD
 			} else {
 				identifier_ = reference.identifier + "/" + specification; // NOPMD
-																			// by
-																			// georgiana
-																			// on
-																			// 9/26/11
-																			// 8:36
-																			// PM
 			}
 			identifier_ = identifier_.replaceAll ("//", "/");
 		} else {

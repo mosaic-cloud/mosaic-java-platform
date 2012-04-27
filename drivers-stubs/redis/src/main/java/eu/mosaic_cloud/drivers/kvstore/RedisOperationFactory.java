@@ -50,7 +50,7 @@ public final class RedisOperationFactory
 	{
 		super ();
 		this.redisClient = new Jedis (host, port, 0);
-		if (!"".equals (passwd)) { //$NON-NLS-1$
+		if (!"".equals (passwd)) { // $NON-NLS-1$
 			this.redisClient.auth (passwd);
 		}
 		final int iBucket = Integer.parseInt (bucket);
@@ -79,12 +79,6 @@ public final class RedisOperationFactory
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
 			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						// by
-						// georgiana
-						// on
-						// 10/12/11
-						// 12:59
-						// PM
 						@Override
 						public Object call ()
 								throws UnsupportedOperationException
@@ -109,12 +103,6 @@ public final class RedisOperationFactory
 				break;
 			default:
 				operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-							// by
-							// georgiana
-							// on
-							// 10/12/11
-							// 1:03
-							// PM
 							@Override
 							public Object call ()
 									throws UnsupportedOperationException
@@ -209,11 +197,5 @@ public final class RedisOperationFactory
 		return new RedisOperationFactory (host, port, passwd, bucket);
 	}
 	
-	// by
-	// georgiana
-	// on
-	// 10/12/11
-	// 1:07
-	// PM
 	private final Jedis redisClient;
 }

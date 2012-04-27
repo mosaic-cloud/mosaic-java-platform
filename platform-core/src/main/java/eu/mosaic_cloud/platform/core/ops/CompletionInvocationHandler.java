@@ -36,10 +36,7 @@ import java.lang.reflect.InvocationHandler;
  */
 public abstract class CompletionInvocationHandler<T>
 		implements
-			// NOPMD by
-			// georgiana on
-			// 10/12/11 5:00
-			// PM
+			// NOPMD
 			InvocationHandler
 {
 	protected CompletionInvocationHandler (final IOperationCompletionHandler<T> handler)

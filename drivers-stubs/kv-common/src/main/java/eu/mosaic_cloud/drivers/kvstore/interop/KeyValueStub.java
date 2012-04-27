@@ -122,17 +122,11 @@ public class KeyValueStub
 				ClassNotFoundException
 	{
 		byte[] data;
-		boolean unknownMessage = false; // NOPMD by georgiana on 9/30/11 2:36 PM
+		boolean unknownMessage = false; // NOPMD
 		final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
-		CompletionToken token = null; // NOPMD by georgiana on 9/30/11 2:37 PM
+		CompletionToken token = null; // NOPMD
 		String key;
 		final String messagePrefix = "KeyValueStub - Received request for "; // NOPMD
-		// by
-		// georgiana
-		// on
-		// 10/12/11
-		// 2:11
-		// PM
 		switch (kvMessage) {
 			case ACCESS :
 				this.logger.trace ("Received initiation message");
@@ -163,8 +157,7 @@ public class KeyValueStub
 				token = getRequest.getToken ();
 				final DriverOperationFinishedHandler getCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
 				if (getRequest.getKeyCount () != 1) {
-					// NOTE: error - the simple driver can handle only single-key
-					// get
+					// NOTE: error - the simple driver can handle only single-key get
 					this.logger.error ("Basic driver can handle only single-key GET.");
 					driver.handleUnsupportedOperationError (kvMessage.toString (), getCallback);
 					break;
@@ -253,9 +246,9 @@ public class KeyValueStub
 			stub = KeyValueStub.stubs.get (cData);
 			try {
 				if (stub == null) {
-					sLogger.trace ("KeyValueStub: create new stub."); //$NON-NLS-1$
+					sLogger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
 					final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
-					final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+					final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 					final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
 					stub = new KeyValueStub (config, transmitter, driver, channel);
 					stub.driverClass = KeyValueDriverFactory.DriverType.valueOf (driverName.toUpperCase (Locale.ENGLISH)).getDriverClass ();
@@ -263,7 +256,7 @@ public class KeyValueStub
 					AbstractDriverStub.incDriverReference (stub);
 					channel.accept (KeyValueSession.DRIVER, stub);
 				} else {
-					sLogger.trace ("KeyValueStub: use existing stub."); //$NON-NLS-1$
+					sLogger.trace ("KeyValueStub: use existing stub."); // $NON-NLS-1$
 					AbstractDriverStub.incDriverReference (stub);
 				}
 			} catch (final DriverNotFoundException e) {
@@ -280,9 +273,9 @@ public class KeyValueStub
 		final MosaicLogger sLogger = MosaicLogger.createLogger (KeyValueStub.class);
 		KeyValueStub stub;
 		try {
-			sLogger.trace ("KeyValueStub: create new stub."); //$NON-NLS-1$
+			sLogger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
 			final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
-			final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
+			final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 			final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
 			stub = new KeyValueStub (config, transmitter, driver, channel);
 			stub.driverClass = KeyValueDriverFactory.DriverType.valueOf (driverName.toUpperCase (Locale.ENGLISH)).getDriverClass ();
@@ -306,15 +299,11 @@ public class KeyValueStub
 	 */
 	protected static DriverConnectionData readConnectionData (final IConfiguration config)
 	{
-		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, //$NON-NLS-1$
-				"localhost"); //$NON-NLS-1$
-		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, //$NON-NLS-1$
-				0);
-		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); //$NON-NLS-1$ //$NON-NLS-2$
-		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.5"), String.class, //$NON-NLS-1$
-				""); //$NON-NLS-1$
-		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, //$NON-NLS-1$
-				""); //$NON-NLS-1$
+		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, "localhost");// $NON-NLS-1$ $NON-NLS-2$
+		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
+		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.5"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 		DriverConnectionData cData;
 		if ("".equals (user) && "".equals (passwd)) {
 			cData = new DriverConnectionData (resourceHost, resourcePort, driver);
@@ -372,7 +361,7 @@ public class KeyValueStub
 			this.driver.removePendingOperation (this.result);
 			if (this.operation.equals (KeyValueOperations.GET)) {
 				final Map<String, Object> resMap = new HashMap<String, Object> ();
-				resMap.put ("dummy", response); //$NON-NLS-1$
+				resMap.put ("dummy", response); // $NON-NLS-1$
 				this.transmitter.sendResponse (this.session, this.complToken, this.operation, resMap, false);
 			} else {
 				this.transmitter.sendResponse (this.session, this.complToken, this.operation, response, false);

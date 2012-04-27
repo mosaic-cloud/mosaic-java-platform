@@ -71,7 +71,7 @@ public class MessageHandler
 		byte[] body = new byte[0];
 		final String body_method = headers.optString ("http-body", "empty");
 		if (body_method.equalsIgnoreCase ("empty")) {} else if (body_method.equalsIgnoreCase ("following")) {
-			final int bodyLength = dis.readInt (); // NOTE: Body Length
+			final int bodyLength = dis.readInt ();
 			if (bodyLength > (message_body.length - metadataLength)) {
 				throw new MessageFormatException ("Expected body length but found garbage");
 			}
@@ -113,7 +113,8 @@ public class MessageHandler
 		int startOfBody = 0;
 		final int end = in.length - 1;
 		while (startOfBody < end) {
-			if (in[startOfBody] == '\n') { // NOTE: Reached an end of line
+			// NOTE: Reached an end of line
+			if (in[startOfBody] == '\n') {
 				if ((startOfBody + 2) < end) {
 					if ((in[startOfBody + 1] == '\r') && (in[startOfBody + 2] == '\n')) {
 						startOfBody = startOfBody + 3;
@@ -147,7 +148,8 @@ public class MessageHandler
 			if (_line == null) {
 				break;
 			}
-			if (_line.length () == 0) { // NOTE: Reached the end of headers
+			// NOTE: Reached the end of headers
+			if (_line.length () == 0) {
 				break;
 			}
 			final String[] header = _line.split (":", 2);

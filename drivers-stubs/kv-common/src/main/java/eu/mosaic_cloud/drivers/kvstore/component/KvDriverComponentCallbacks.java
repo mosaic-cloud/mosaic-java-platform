@@ -70,12 +70,9 @@ public final class KvDriverComponentCallbacks
 		try {
 			final IConfiguration configuration = PropertyTypeConfiguration.create (KvDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
 			this.setDriverConfiguration (configuration);
-			this.resourceGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.0"), //$NON-NLS-1$
-					String.class, "")); //$NON-NLS-1$
-			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.1"), //$NON-NLS-1$
-					String.class, "")); //$NON-NLS-1$
-			this.driverName = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVStoreDriver.6"), //$NON-NLS-1$
-					String.class, ""); //$NON-NLS-1$
+			this.resourceGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.0"), String.class, "")); // $NON-NLS-1$ $NON-NLS-2$
+			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.1"), String.class, "")); // $NON-NLS-1$ $NON-NLS-2$
+			this.driverName = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 			this.status = Status.Created;
 		} catch (final IOException e) {
 			ExceptionTracer.traceIgnored (e);
@@ -88,13 +85,10 @@ public final class KvDriverComponentCallbacks
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkState ((this.status != KvDriverComponentCallbacks.Status.Terminated) && (this.status != KvDriverComponentCallbacks.Status.Unregistered));
 		if (this.status == KvDriverComponentCallbacks.Status.Registered) {
-			if (request.operation.equals (ConfigProperties.getString ("KVDriverComponentCallbacks.5"))) { //$NON-NLS-1$
-				String channelEndpoint = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.3"), //$NON-NLS-1$
-						String.class, "");
-				// FIXME: These parameters should be determined through
-				// component "resource acquire" operations.
-				// Also this hack reduces the number of driver instances of the
-				// same type to one per VM.
+			if (request.operation.equals (ConfigProperties.getString ("KVDriverComponentCallbacks.5"))) { // $NON-NLS-1$
+				String channelEndpoint = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.3"), String.class, ""); // $NON-NLS-1$
+				// FIXME: These parameters should be determined through component "resource acquire" operations.
+				//-- Also this hack reduces the number of driver instances of the same type to one per VM.
 				try {
 					if (System.getenv ("mosaic_node_ip") != null) {
 						channelEndpoint = channelEndpoint.replace ("0.0.0.0", System.getenv ("mosaic_node_ip"));
@@ -104,8 +98,7 @@ public final class KvDriverComponentCallbacks
 				} catch (final UnknownHostException e) {
 					ExceptionTracer.traceIgnored (e);
 				}
-				final String channelId = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.4"), //$NON-NLS-1$
-						String.class, "");
+				final String channelId = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.4"), String.class, ""); // $NON-NLS-1$
 				final Map<String, String> outcome = new HashMap<String, String> ();
 				outcome.put ("channelEndpoint", channelEndpoint);
 				outcome.put ("channelIdentifier", channelId);
@@ -134,18 +127,16 @@ public final class KvDriverComponentCallbacks
 					Preconditions.checkArgument (reply.outputsOrError instanceof Map);
 					final Map<?, ?> outputs = (Map<?, ?>) reply.outputsOrError;
 					this.logger.trace ("Resource search returned " + outputs);
-					ipAddress = (String) outputs.get ("ip"); //$NON-NLS-1$
+					ipAddress = (String) outputs.get ("ip"); // $NON-NLS-1$
 					Preconditions.checkArgument (ipAddress != null);
-					port = (Integer) outputs.get ("port"); //$NON-NLS-1$
+					port = (Integer) outputs.get ("port"); // $NON-NLS-1$
 					Preconditions.checkArgument (port != null);
 				} catch (final IllegalArgumentException exception) {
 					this.terminate ();
-					ExceptionTracer.traceDeferred (exception, "failed resolving Riak broker endpoint: `%s`; terminating!", //$NON-NLS-1$
-							reply.outputsOrError);
+					ExceptionTracer.traceDeferred (exception, "failed resolving Riak broker endpoint: `%s`; terminating!", reply.outputsOrError);
 					throw new IllegalStateException (exception);
 				}
-				this.logger.trace ("Resolved Riak on " + ipAddress + ":" //$NON-NLS-1$ //$NON-NLS-2$
-						+ port);
+				this.logger.trace ("Resolved Riak on " + ipAddress + ":" + port); // $NON-NLS-1$ $NON-NLS-2$
 				this.configureDriver (ipAddress, port.toString ());
 				if (this.selfGroup != null) {
 					this.pendingReference = ComponentCallReference.create ();
@@ -170,9 +161,9 @@ public final class KvDriverComponentCallbacks
 		final ComponentCallReference callReference = ComponentCallReference.create ();
 		String operation;
 		if (this.driverName.equalsIgnoreCase (KeyValueDriverFactory.DriverType.RIAKPB.toString ())) {
-			operation = ConfigProperties.getString ("KVDriverComponentCallbacks.2");//$NON-NLS-1$
+			operation = ConfigProperties.getString ("KVDriverComponentCallbacks.2"); // $NON-NLS-1$
 		} else {
-			operation = ConfigProperties.getString ("KVDriverComponentCallbacks.6");//$NON-NLS-1$
+			operation = ConfigProperties.getString ("KVDriverComponentCallbacks.6"); // $NON-NLS-1$
 		}
 		this.component.call (this.resourceGroup, ComponentCallRequest.create (operation, null, callReference));
 		this.pendingReference = callReference;
@@ -187,12 +178,12 @@ public final class KvDriverComponentCallbacks
 		Preconditions.checkState (this.component == component);
 		if (this.pendingReference == reference) {
 			if (!success) {
-				final Exception e = new Exception ("failed registering to group; terminating!"); //$NON-NLS-1$
+				final Exception e = new Exception ("failed registering to group; terminating!"); // $NON-NLS-1$
 				ExceptionTracer.traceDeferred (e);
 				this.component.terminate ();
 				throw (new IllegalStateException (e));
 			}
-			this.logger.info ("Key Value Store driver callback registered to group " + this.selfGroup); //$NON-NLS-1$
+			this.logger.info ("Key Value Store driver callback registered to group " + this.selfGroup); // $NON-NLS-1$
 			this.status = Status.Registered;
 			// NOTE: create stub and interop channel
 			final ZeroMqChannel driverChannel = this.createDriverChannel (ConfigProperties.getString ("KVDriverComponentCallbacks.4"), ConfigProperties.getString ("KVDriverComponentCallbacks.3"), KeyValueSession.DRIVER);
@@ -205,8 +196,8 @@ public final class KvDriverComponentCallbacks
 	
 	private void configureDriver (final String brokerIp, final String port)
 	{
-		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("KVStoreDriver.0")), brokerIp); //$NON-NLS-1$
-		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("KVStoreDriver.1")), port); //$NON-NLS-1$
+		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("KVStoreDriver.0")), brokerIp); // $NON-NLS-1$
+		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("KVStoreDriver.1")), port); // $NON-NLS-1$
 	}
 	
 	private String driverName;

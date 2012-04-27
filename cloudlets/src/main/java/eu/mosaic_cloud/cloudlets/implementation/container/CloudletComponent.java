@@ -166,8 +166,7 @@ public final class CloudletComponent
 				this.exceptions.traceIgnoredException (exception, "destroying the interoperability channel proxy failed; ignoring!");
 			}
 		}
-		// FIXME: this should be asynchronous and handled as part of the
-		// life-cycle
+		// FIXME: this should be asynchronous and handled as part of the life-cycle
 		if (this.manager != null) {
 			this.transcript.traceDebugging ("destroying the cloudlet manager...");
 			try {
@@ -176,8 +175,7 @@ public final class CloudletComponent
 				this.exceptions.traceIgnoredException (exception, "destroying the cloudlet manager failed; ignoring!");
 			}
 		}
-		// FIXME: this should be asynchronous and handled as part of the
-		// life-cycle
+		// FIXME: this should be asynchronous and handled as part of the life-cycle
 		if (this.channel != null) {
 			this.transcript.traceDebugging ("destroying the interoperability channel...");
 			try {
@@ -215,7 +213,7 @@ public final class CloudletComponent
 	private final IConfiguration resolveConfiguration ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration...");
-		final String configurationDescriptor = this.componentEnvironment.supplementary.get ("descriptor", String.class, null); //$NON-NLS-1$
+		final String configurationDescriptor = this.componentEnvironment.supplementary.get ("descriptor", String.class, null); // $NON-NLS-1$
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet component configuration descriptor");
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration `%s`...", configurationDescriptor);
 		final IConfiguration configuration;
@@ -231,7 +229,7 @@ public final class CloudletComponent
 	private final ComponentIdentifier resolveSelfGroup ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet component self-group...");
-		final String groupName = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("CloudletComponent.3"), String.class, ConfigProperties.getString ("CloudletComponent.14")); //$NON-NLS-1$ 
+		final String groupName = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("CloudletComponent.3"), String.class, ConfigProperties.getString ("CloudletComponent.14")); // $NON-NLS-1$
 		Preconditions.checkNotNull (groupName, "unknown cloudlet component self group");
 		final ComponentIdentifier group = ComponentIdentifier.resolve (groupName);
 		return (group);
@@ -460,8 +458,7 @@ public final class CloudletComponent
 				protected StateAndOutput<FsmState, CallbackCompletion<Void>> execute ()
 				{
 					CloudletComponent.this.reactor.assignDelegate (CloudletComponent.this.componentControllerProxy, component);
-					// FIXME: this should be asynchronous and handled as part of
-					// the life-cycle
+					// FIXME: this should be asynchronous and handled as part of the life-cycle
 					final int count = 1;
 					CloudletComponent.this.transcript.traceDebugging ("creating the cloudlet instances (with count `%d`)...", Integer.valueOf (count));
 					for (int index = 0; index < count; index++) {

@@ -50,7 +50,7 @@ import com.rabbitmq.client.GetResponse;
 final class AmqpOperationFactory
 		implements
 			IOperationFactory
-{ // NOPMD by
+{ // NOPMD
 	AmqpOperationFactory (final AmqpDriver amqpDriver)
 	{
 		super ();
@@ -71,22 +71,11 @@ final class AmqpOperationFactory
 	 * .platform.core.IOperationType , java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, // NOPMD by
-																	// georgiana
-																	// on
-																	// 10/12/11
-																	// 4:13 PM
-			final Object ... parameters)
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) // NOPMD
 	{
 		IOperation<?> operation;
 		if (!(type instanceof AmqpOperations)) {
 			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						// by
-						// georgiana
-						// on
-						// 10/12/11
-						// 4:13
-						// PM
 						@Override
 						public Object call ()
 								throws UnsupportedOperationException
@@ -123,12 +112,6 @@ final class AmqpOperationFactory
 				break;
 			default:
 				operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-							// by
-							// georgiana
-							// on
-							// 10/12/11
-							// 4:14
-							// PM
 							@Override
 							public Object call ()
 									throws UnsupportedOperationException
@@ -347,8 +330,5 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	// georgiana on
-	// 10/12/11 4:13
-	// PM
 	private final AmqpDriver amqpDriver;
 }

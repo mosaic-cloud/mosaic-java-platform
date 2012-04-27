@@ -53,7 +53,7 @@ public enum AmqpOperations
 	{
 		for (final AmqpOperations op : AmqpOperations.COPY_OF_VALUES) {
 			if (op.name ().equalsIgnoreCase (operation)) {
-				return true; // NOPMD by georgiana on 10/12/11 3:35 PM
+				return true; // NOPMD
 			}
 		}
 		return false;

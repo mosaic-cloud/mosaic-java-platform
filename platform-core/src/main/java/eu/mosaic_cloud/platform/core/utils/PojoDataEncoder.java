@@ -38,7 +38,7 @@ public class PojoDataEncoder<T extends Object>
 	@Override
 	public T decode (final byte[] dataBytes)
 	{
-		T object = null; // NOPMD by georgiana on 10/12/11 5:03 PM
+		T object = null; // NOPMD
 		try {
 			object = this.dataClass.cast (SerDesUtils.toObject (dataBytes));
 		} catch (final IOException e) {
