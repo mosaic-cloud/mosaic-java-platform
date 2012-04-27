@@ -69,8 +69,9 @@ public final class Cloudlet<TContext extends Object>
 		super ();
 		Preconditions.checkNotNull (environment);
 		this.environment = environment;
-		this.fsm = new CloudletFsm (this);
-		this.exceptions = this.environment.createExceptionTracer (Transcript.create (this, true));
+		this.transcript = Transcript.create (this, true);
+		this.exceptions = this.environment.createExceptionTracer (this.transcript);
+		this.fsm = new CloudletFsm (this, this.transcript, this.exceptions);
 		this.failures = QueueingExceptionTracer.create (this.exceptions);
 		this.reactor = this.environment.getReactor ();
 		try {
@@ -80,13 +81,13 @@ public final class Cloudlet<TContext extends Object>
 				controllerContext = (TContext) this.environment.createContext ();
 			} catch (final ReflectiveOperationException exception) {
 				controllerContext = null; // NOPMD
-				this.handleInternalFailure (new Error ()); // NOPMD
+				this.handleInternalFailure (null, new Error ()); // NOPMD
 			}
 			try {
 				controllerCallbacksDelegate = (ICloudletCallback<TContext>) this.environment.createCloudletCallback ();
 			} catch (final ReflectiveOperationException exception) {
 				controllerCallbacksDelegate = null; // NOPMD
-				this.handleInternalFailure (new Error ()); // NOPMD
+				this.handleInternalFailure (null, new Error ()); // NOPMD
 			}
 			this.controllerHandler = new ControllerHandler ();
 			this.callbacksHandler = new CallbacksHandler ();
@@ -102,11 +103,11 @@ public final class Cloudlet<TContext extends Object>
 			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.environment.getConnectors (), this.environment.getThreading (), this.exceptions);
 			this.fsm.execute (FsmTransition.CreateCompleted, FsmState.Created);
 		} catch (final CaughtException.Wrapper wrapper) {
-			this.handleInternalFailure (wrapper.exception);
-			throw wrapper;
+			this.handleInternalFailure (null, wrapper.exception);
+			throw (wrapper);
 		} catch (final Throwable exception) { // NOPMD
-			this.handleInternalFailure (exception);
-			throw new DeferredException (exception).wrap ();
+			this.handleInternalFailure (null, exception);
+			throw (new DeferredException (exception).wrap ());
 		}
 	}
 	
@@ -234,13 +235,13 @@ public final class Cloudlet<TContext extends Object>
 		}.trigger ();
 	}
 	
-	private void handleInternalFailure (final Throwable exception)
+	private void handleInternalFailure (final Callbacks proxy, final Throwable exception)
 	{
 		this.fsm.new FsmVoidTransaction (FsmTransition.InternalFailure) {
 			@Override
 			protected StateAndOutput<FsmState, Void> execute ()
 			{
-				Cloudlet.this.failures.traceHandledException (exception);
+				Cloudlet.this.failures.traceHandledException (exception, "failed proxy `%{object:identity}`; aborting!", proxy);
 				if (Cloudlet.this.fsm.hasState (FsmState.Failed)) {
 					return StateAndOutput.create (FsmState.Failed, null);
 				}
@@ -265,6 +266,7 @@ public final class Cloudlet<TContext extends Object>
 	private final ICloudletController<TContext> controllerProxy;
 	private CallbackCompletionDeferredFuture<Void> destroyFuture;
 	private final CloudletEnvironment environment;
+	private final Transcript transcript;
 	private final TranscriptExceptionTracer exceptions;
 	private final QueueingExceptionTracer failures;
 	private final CloudletFsm fsm;
@@ -317,7 +319,7 @@ public final class Cloudlet<TContext extends Object>
 		public void failedCallbacks (final Callbacks proxy, final Throwable exception)
 		{
 			Preconditions.checkState (proxy == Cloudlet.this.callbacksProxy);
-			Cloudlet.this.handleInternalFailure (exception);
+			Cloudlet.this.handleInternalFailure (proxy, exception);
 		}
 		
 		@Override
@@ -490,18 +492,18 @@ public final class Cloudlet<TContext extends Object>
 								return method.invoke (ConnectorFactory.this.factoryDelegate, newArguments);
 							} catch (final InvocationTargetException exception) {
 								Cloudlet.this.exceptions.traceHandledException (exception);
-								throw exception.getCause ();
+								throw (exception.getCause ());
 							}
 						} catch (final CaughtException.Wrapper exception) { // NOPMD
-							throw exception;
+							throw (exception);
 						} catch (final Throwable exception) { // NOPMD
-							throw new DeferredException (exception).wrap ();
+							throw (new DeferredException (exception).wrap ());
 						}
 					}
 				}.trigger (null);
 			} catch (final CaughtException.Wrapper wrapper) {
 				wrapper.exception.trace (Cloudlet.this.exceptions);
-				throw wrapper.exception.caught;
+				throw (wrapper.exception.caught);
 			}
 		}
 		
@@ -550,7 +552,7 @@ public final class Cloudlet<TContext extends Object>
 				}.trigger (null);
 			} catch (final CaughtException.Wrapper exception) {
 				exception.rethrow ();
-				throw new AssertionError (); // NOPMD
+				throw (new AssertionError ()); // NOPMD
 			}
 		}
 		
@@ -644,7 +646,7 @@ public final class Cloudlet<TContext extends Object>
 		public void failedCallbacks (final Callbacks proxy, final Throwable exception)
 		{
 			Preconditions.checkState (proxy == Cloudlet.this.controllerProxy); // NOPMD
-			Cloudlet.this.handleInternalFailure (exception);
+			Cloudlet.this.handleInternalFailure (proxy, exception);
 		}
 		
 		@Override
@@ -748,7 +750,7 @@ public final class Cloudlet<TContext extends Object>
 							return (CallbackCompletion<Void>) (method.invoke (delegate, arguments));
 						} catch (final InvocationTargetException exception) {
 							Cloudlet.this.exceptions.traceHandledException (exception);
-							throw exception.getCause ();
+							throw (exception.getCause ());
 						}
 					} catch (final Throwable exception) { // NOPMD
 						Cloudlet.this.handleDelegateFailure (exception);
@@ -762,7 +764,7 @@ public final class Cloudlet<TContext extends Object>
 		public void failedCallbacks (final Callbacks proxy, final Throwable exception)
 		{
 			Preconditions.checkState (Cloudlet.this.genericCallbacksProxies.containsKey (proxy));
-			Cloudlet.this.handleInternalFailure (exception);
+			Cloudlet.this.handleInternalFailure (proxy, exception);
 		}
 		
 		@Override

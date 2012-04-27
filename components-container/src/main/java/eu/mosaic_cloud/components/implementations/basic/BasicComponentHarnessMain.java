@@ -91,6 +91,7 @@ public final class BasicComponentHarnessMain
 		Preconditions.checkNotNull (arguments);
 		final Environment environment = BasicComponentHarnessMain.prepareEnvironment (arguments, classLoader, threading, transcript, exceptions);
 		BasicComponentHarnessMain.main (environment, arguments);
+		((BasicCallbackReactor) environment.reactor).destroy ();
 	}
 	
 	public static final void main (final Environment environment, final ArgumentsProvider arguments)

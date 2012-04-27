@@ -31,6 +31,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -39,9 +41,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 final class CloudletFsm
 		extends StateMachine<FsmState, FsmTransition>
 { // NOPMD
-	protected CloudletFsm (final Cloudlet<?> cloudlet)
+	protected CloudletFsm (final Cloudlet<?> cloudlet, final Transcript transcript, final ExceptionTracer exceptions)
 	{
-		super (FsmState.class, FsmTransition.class);
+		super (FsmState.class, FsmTransition.class, transcript, exceptions);
 		this.defineStates (FsmState.class);
 		this.defineTransition (FsmTransition.CreateCompleted, FsmState.CreatePending, FsmState.Created);
 		this.defineTransition (FsmTransition.ExternalInitialize, FsmState.Created, FsmState.ControllerRegisterPending);

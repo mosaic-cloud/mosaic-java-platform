@@ -103,6 +103,7 @@ public final class CloudletManager
 				return (false);
 			}
 			final Cloudlet<?> cloudlet = cloudletIterator.next ();
+			// FIXME: this should be done asynchronously and we should wait for the outcome...
 			cloudlet.destroy ();
 			this.cloudlets.remove (cloudlet);
 			return true;

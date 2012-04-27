@@ -56,7 +56,8 @@ public final class BasicComponent
 	BasicComponent (final CallbackReactor callbackReactor, final ExceptionTracer exceptions)
 	{
 		super ();
-		this.backend = new Backend (this, callbackReactor, exceptions);
+		final Transcript transcript = Transcript.create (this, true);
+		this.backend = new Backend (this, callbackReactor, transcript, exceptions);
 	}
 	
 	public final boolean await ()
@@ -126,9 +127,9 @@ public final class BasicComponent
 				ChannelCallbacks,
 				CallbackHandler
 	{
-		Backend (final BasicComponent facade, final CallbackReactor reactor, final ExceptionTracer exceptions)
+		Backend (final BasicComponent facade, final CallbackReactor reactor, final Transcript transcript, final ExceptionTracer exceptions)
 		{
-			super (State.class, Transition.class, Transcript.create (facade, true), exceptions);
+			super (State.class, Transition.class, transcript, exceptions);
 			Preconditions.checkNotNull (facade);
 			Preconditions.checkNotNull (reactor);
 			this.facade = facade;
