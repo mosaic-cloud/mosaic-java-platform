@@ -28,7 +28,6 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
  * @author Georgiana Macariu
  * 
  */
-@SuppressWarnings ("PMD")
 public class AmqpOutboundMessage
 		implements
 			IAmqpMessage

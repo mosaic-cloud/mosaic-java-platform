@@ -53,7 +53,7 @@ public final class RiakOperationFactory
 			throws RiakException
 	{
 		super ();
-		if (restCl == true) {
+		if (restCl) {
 			final String address = "http://" + riakHost + ":" + riakPort + "/riak";
 			this.riakcl = RiakFactory.httpClient (address);
 		} else {
