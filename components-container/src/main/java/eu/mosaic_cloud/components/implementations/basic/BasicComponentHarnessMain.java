@@ -514,6 +514,7 @@ public final class BasicComponentHarnessMain
 			final ComponentCallbacks callbacks;
 			if (provideMethod != null) {
 				final CallbackProxy callbacksProxy;
+				Threading.setDefaultContext (context.threading);
 				try {
 					try {
 						callbacksProxy = (CallbackProxy) provideMethod.invoke (null, context);
@@ -535,8 +536,13 @@ public final class BasicComponentHarnessMain
 				final CallbackHandler callbacksHandler;
 				Threading.setDefaultContext (context.threading);
 				try {
-					callbacksHandler = (CallbackHandler) provideConstructor.newInstance (context);
-				} catch (final Exception exception) {
+					try {
+						callbacksHandler = (CallbackHandler) provideConstructor.newInstance (context);
+					} catch (final InvocationTargetException exception) {
+						context.exceptions.trace (ExceptionResolution.Handled, exception);
+						throw (exception.getCause ());
+					}
+				} catch (final Throwable exception) {
 					context.exceptions.trace (ExceptionResolution.Deferred, exception);
 					throw (new IllegalArgumentException (String.format ("invalid callbacks handler class `%s` (error encountered while instantiating)", this.clasz.getName ()), exception));
 				} finally {
