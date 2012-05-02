@@ -93,13 +93,14 @@ public final class LogbackTranscriptBackend
 	{
 		switch (resolution) {
 			case Handled :
-				return (TranscriptTraceType.Debugging);
+				return (TranscriptTraceType.Trace);
 			case Deferred :
-				return (TranscriptTraceType.Warning);
+				return (TranscriptTraceType.Debugging);
 			case Ignored :
 				return (TranscriptTraceType.Warning);
+			default:
+				throw (new AssertionError ());
 		}
-		return (TranscriptTraceType.Error);
 	}
 	
 	private final void trace (final TranscriptTraceType type, final String format, final Object[] tokens, final Throwable exception)
@@ -140,6 +141,15 @@ public final class LogbackTranscriptBackend
 						this.logger.debug (message, exception);
 					else
 						this.logger.debug (message);
+				}
+				break;
+			case Trace :
+				if (this.logger.isTraceEnabled ()) {
+					final String message = this.format (format, tokens);
+					if (exception != null)
+						this.logger.trace (message, exception);
+					else
+						this.logger.trace (message);
 				}
 				break;
 		}

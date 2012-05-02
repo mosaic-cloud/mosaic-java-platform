@@ -26,5 +26,6 @@ public enum TranscriptTraceType
 	Debugging (),
 	Error (),
 	Information (),
+	Trace (),
 	Warning ();
 }
