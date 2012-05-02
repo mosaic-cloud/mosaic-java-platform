@@ -21,12 +21,14 @@
 package eu.mosaic_cloud.cloudlets.implementation.cloudlet;
 
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
 
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletState;
@@ -36,10 +38,12 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmCallbackCompletionTransaction;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmState;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmTransition;
+import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackFunnelHandler;
@@ -52,6 +56,7 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.StateAndOutput;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -70,23 +75,23 @@ public final class Cloudlet<TContext extends Object>
 		Preconditions.checkNotNull (environment);
 		this.environment = environment;
 		this.transcript = Transcript.create (this, true);
-		this.exceptions = this.environment.createExceptionTracer (this.transcript);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, this.environment.getExceptions ());
 		this.fsm = new CloudletFsm (this, this.transcript, this.exceptions);
 		this.failures = QueueingExceptionTracer.create (this.exceptions);
 		this.reactor = this.environment.getReactor ();
 		try {
-			TContext controllerContext;
 			ICloudletCallback<TContext> controllerCallbacksDelegate; // NOPMD
 			try {
-				controllerContext = (TContext) this.environment.createContext ();
-			} catch (final ReflectiveOperationException exception) {
-				controllerContext = null; // NOPMD
-				this.handleInternalFailure (null, new Error ()); // NOPMD
-			}
-			try {
-				controllerCallbacksDelegate = (ICloudletCallback<TContext>) this.environment.createCloudletCallback ();
+				controllerCallbacksDelegate = (ICloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().newInstance ();
 			} catch (final ReflectiveOperationException exception) {
 				controllerCallbacksDelegate = null; // NOPMD
+				this.handleInternalFailure (null, new Error ()); // NOPMD
+			}
+			TContext controllerContext;
+			try {
+				controllerContext = (TContext) this.environment.getCloudletCallbackClass ().newInstance ();
+			} catch (final ReflectiveOperationException exception) {
+				controllerContext = null; // NOPMD
 				this.handleInternalFailure (null, new Error ()); // NOPMD
 			}
 			this.controllerHandler = new ControllerHandler ();
@@ -100,7 +105,7 @@ public final class Cloudlet<TContext extends Object>
 			this.callbacksProxy = this.reactor.createProxy (ICloudletCallback.class);
 			this.genericCallbacksProxies = new ConcurrentHashMap<CallbackProxy, Callbacks> ();
 			this.connectorsFactory = new ConnectorsFactory ();
-			this.connectorsFactoryDelegate = DefaultConnectorsFactory.create (this.controllerProxy, this.environment.getConnectors (), this.environment.getThreading (), this.exceptions);
+			this.connectorsFactoryDelegate = this.provideConnectorsFactory ();
 			this.fsm.execute (FsmTransition.CreateCompleted, FsmState.Created);
 		} catch (final CaughtException.Wrapper wrapper) {
 			this.handleInternalFailure (null, wrapper.exception);
@@ -254,6 +259,71 @@ public final class Cloudlet<TContext extends Object>
 				return StateAndOutput.create (FsmState.Failed, null);
 			}
 		}.trigger ();
+	}
+	
+	private IConnectorsFactory provideConnectorsFactory ()
+	{
+		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.getString ("Cloudlet.1"), String.class, DefaultConnectorsFactory.class.getName ());
+		Preconditions.checkNotNull (className, "unknown cloudlet connectors factory class");
+		final Class<?> clasz;
+		try {
+			clasz = this.environment.getClassLoader ().loadClass (className);
+		} catch (final ReflectiveOperationException exception) {
+			this.exceptions.traceHandledException (exception);
+			throw (new IllegalArgumentException (String.format ("error encountered while loading cloudlet connectors factory class `%s`", className), exception));
+		}
+		Method provideMethod = null;
+		if (provideMethod == null)
+			try {
+				provideMethod = clasz.getMethod ("provide", ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
+			} catch (final NoSuchMethodException exception) {
+				this.exceptions.traceHandledException (exception);
+			}
+		if (provideMethod == null)
+			try {
+				provideMethod = clasz.getMethod ("create", ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
+			} catch (final NoSuchMethodException exception) {
+				this.exceptions.traceHandledException (exception);
+			}
+		Constructor<?> provideConstructor = null;
+		if (provideConstructor == null)
+			try {
+				provideConstructor = clasz.getConstructor (ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
+			} catch (final NoSuchMethodException exception) {
+				this.exceptions.traceHandledException (exception);
+			}
+		Preconditions.checkArgument ((provideMethod != null) || (provideConstructor != null));
+		final Object factoryRaw;
+		if (provideMethod != null) {
+			try {
+				try {
+					factoryRaw = provideMethod.invoke (null, this.controllerProxy, this.environment.getConnectors (), this.environment.getConnectorEnvironment ());
+				} catch (final InvocationTargetException exception) {
+					this.exceptions.trace (ExceptionResolution.Handled, exception);
+					throw (exception.getCause ());
+				}
+			} catch (final Throwable exception) {
+				this.exceptions.trace (ExceptionResolution.Deferred, exception);
+				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while invocking)", clasz.getName ()), exception));
+			}
+		} else if (provideConstructor != null) {
+			try {
+				try {
+					factoryRaw = provideConstructor.newInstance (this.controllerProxy, this.environment.getConnectors (), this.environment.getConnectorEnvironment ());
+				} catch (final InvocationTargetException exception) {
+					this.exceptions.trace (ExceptionResolution.Handled, exception);
+					throw (exception.getCause ());
+				}
+			} catch (final Throwable exception) {
+				this.exceptions.trace (ExceptionResolution.Deferred, exception);
+				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while invocking)", clasz.getName ()), exception));
+			}
+		} else
+			throw (new AssertionError ());
+		Preconditions.checkArgument (factoryRaw != null, "invalid cloudlet connectors factory (is null)");
+		Preconditions.checkArgument (IConnectorsFactory.class.isInstance (factoryRaw), "invalid cloudlet connectors factory `%s` (not an instance of `IConnectorsFactory` (from `eu.mosaic_cloud.cloudlets` package))", clasz.getName ());
+		final IConnectorsFactory factory = (IConnectorsFactory) factoryRaw;
+		return (factory);
 	}
 	
 	public static <Context extends Object> Cloudlet<Context> create (final CloudletEnvironment environment)

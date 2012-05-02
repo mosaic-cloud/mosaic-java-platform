@@ -40,10 +40,9 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnec
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.connectors.tools.BaseConnectorsFactory;
+import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
-import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
 
@@ -58,14 +57,14 @@ public class DefaultConnectorsFactory
 		super (delegate);
 	}
 	
-	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate, final ThreadingContext threading, final ExceptionTracer exceptions)
+	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate, final ConnectorEnvironment environment)
 	{
 		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (delegate);
-		DefaultConnectorsFactory.initialize (factory, cloudlet);
+		DefaultConnectorsFactory.initialize (cloudlet, factory, environment);
 		return factory;
 	}
 	
-	protected static final void initialize (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet)
+	protected static final void initialize (final ICloudletController<?> cloudlet, final DefaultConnectorsFactory factory, final ConnectorEnvironment environment)
 	{
 		Preconditions.checkNotNull (factory);
 		Preconditions.checkNotNull (cloudlet);

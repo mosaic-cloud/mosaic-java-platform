@@ -145,7 +145,7 @@ public final class CloudletManager
 		final IConfiguration cloudletConfiguration = this.resolveCloudletConfiguration ();
 		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, this.exceptions, this.channelFactory, this.channelResolver);
 		final IConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (null, connectorEnvironment);
-		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, this.reactor, this.threading, this.exceptions);
+		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.reactor, this.threading, this.exceptions);
 		final Cloudlet<?> cloudlet = Cloudlet.create (environment);
 		return (cloudlet);
 	}

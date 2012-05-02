@@ -147,7 +147,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 		scenario.contextClass = contextClass;
 		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (scenario.reactor, scenario.threading, scenario.exceptions, connectorChannelFactory, connectorChannelResolver);
 		scenario.connectors = DefaultConnectorsFactory.create (null, connectorEnvironment);
-		scenario.environment = CloudletEnvironment.create (scenario.configuration, scenario.callbacksClass, scenario.contextClass, scenario.callbacksClass.getClassLoader (), scenario.connectors, scenario.reactor, scenario.threading, scenario.exceptions);
+		scenario.environment = CloudletEnvironment.create (scenario.configuration, scenario.callbacksClass, scenario.contextClass, scenario.callbacksClass.getClassLoader (), scenario.connectors, connectorEnvironment, scenario.reactor, scenario.threading, scenario.exceptions);
 	}
 	
 	protected static void tearDownScenario (final BaseScenario<?> scenario)
