@@ -563,7 +563,7 @@ public final class BasicThreadingContext
 		@Override
 		public final boolean isDestroyed ()
 		{
-			return super.isDestroyed ();
+			return (super.isDestroyed ());
 		}
 		
 		@Override

@@ -77,13 +77,13 @@ public class FeedParserTest
 			}
 			bytes = builder.toString ().getBytes ();
 		} catch (final Exception e) {
-			Assert.fail ();
+			throw (new AssertionError (e));
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close ();
 				} catch (final IOException e) {
-					Assert.fail ();
+					throw (new AssertionError (e));
 				}
 			}
 		}

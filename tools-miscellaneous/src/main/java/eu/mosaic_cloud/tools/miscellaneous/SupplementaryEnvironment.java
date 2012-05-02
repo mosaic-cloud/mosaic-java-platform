@@ -17,6 +17,8 @@
  * limitations under the License.
  * #L%
  */
+// $codepro.audit.disable emptyCatchClause
+// $codepro.audit.disable logExceptions
 
 package eu.mosaic_cloud.tools.miscellaneous;
 

@@ -29,6 +29,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 
+import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 
@@ -148,7 +150,9 @@ public final class SerDesUtils
 			try {
 				currentLoader = Thread.currentThread ().getContextClassLoader ();
 				return currentLoader.loadClass (desc.getName ());
-			} catch (final Exception e) {}
+			} catch (final Exception e) {
+				ExceptionTracer.traceIgnored (e);
+			}
 			return null;
 		}
 	}

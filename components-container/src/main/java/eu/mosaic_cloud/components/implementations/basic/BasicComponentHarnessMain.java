@@ -502,12 +502,14 @@ public final class BasicComponentHarnessMain
 			try {
 				provideMethod = this.clasz.getMethod ("provide", ComponentEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
+				context.exceptions.trace (ExceptionResolution.Handled, exception);
 				provideMethod = null;
 			}
 			Constructor<?> provideConstructor;
 			try {
 				provideConstructor = this.clasz.getConstructor (ComponentEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
+				context.exceptions.trace (ExceptionResolution.Handled, exception);
 				provideConstructor = null;
 			}
 			Preconditions.checkArgument ((provideMethod != null) || (provideConstructor != null));

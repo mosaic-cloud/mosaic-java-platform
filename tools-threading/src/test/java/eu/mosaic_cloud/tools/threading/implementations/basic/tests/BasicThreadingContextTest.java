@@ -258,7 +258,7 @@ public final class BasicThreadingContextTest
 			if (this.initialManagedCounter.decrementAndGet () >= 0)
 				thread = Threading.createThread (this.managedContext, this.configuration, runnable);
 			else {
-				thread = new Thread (this.unmanagedGroup, runnable);
+				thread = new Thread (this.unmanagedGroup, runnable, this.configuration.name);
 				thread.setName (this.configuration.name);
 				thread.setDaemon (this.configuration.daemon);
 				if (this.configuration.priority != -1)

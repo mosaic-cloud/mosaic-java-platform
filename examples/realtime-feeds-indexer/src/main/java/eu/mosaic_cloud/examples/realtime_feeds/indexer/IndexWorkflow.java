@@ -65,7 +65,9 @@ public class IndexWorkflow
 			long minItemTimestamp = -1;
 			try {
 				minItemTimestamp = this.previousFeedMetaData.getLong ("timestamp");
-			} catch (final JSONException e) {}
+			} catch (final JSONException e) {
+				ExceptionTracer.traceIgnored (e);
+			}
 			long maxItemTimestamp = -1;
 			maxItemTimestamp = minItemTimestamp;
 			final List<Timeline.Entry> currentItems = new ArrayList<Timeline.Entry> ();
@@ -117,7 +119,9 @@ public class IndexWorkflow
 				JSONArray prevTimelines = null;
 				try {
 					prevTimelines = this.previousFeedMetaData.getJSONArray ("timelines");
-				} catch (final JSONException e) {}
+				} catch (final JSONException e) {
+					ExceptionTracer.traceIgnored (e);
+				}
 				final JSONArray newMetadataTimelines = new JSONArray ();
 				newMetadataTimelines.put (newTimelineKey);
 				if (prevTimelines != null) {

@@ -85,14 +85,14 @@ public final class Cloudlet<TContext extends Object>
 				controllerCallbacksDelegate = (ICloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().newInstance ();
 			} catch (final ReflectiveOperationException exception) {
 				controllerCallbacksDelegate = null; // NOPMD
-				this.handleInternalFailure (null, new Error ()); // NOPMD
+				this.handleInternalFailure (null, exception); // NOPMD
 			}
 			TContext controllerContext;
 			try {
 				controllerContext = (TContext) this.environment.getCloudletCallbackClass ().newInstance ();
 			} catch (final ReflectiveOperationException exception) {
 				controllerContext = null; // NOPMD
-				this.handleInternalFailure (null, new Error ()); // NOPMD
+				this.handleInternalFailure (null, exception); // NOPMD
 			}
 			this.controllerHandler = new ControllerHandler ();
 			this.callbacksHandler = new CallbacksHandler ();
