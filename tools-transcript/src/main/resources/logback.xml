@@ -39,6 +39,7 @@
 	<logger name="eu.mosaic_cloud.platform" level="${logback.levels.mosaic.platform:-}" />
 	<logger name="eu.mosaic_cloud.components" level="${logback.levels.mosaic.components:-}" />
 	<logger name="eu.mosaic_cloud.tools" level="${logback.levels.mosaic.tools:-}" />
+	<logger name="eu.mosaic_cloud.examples" level="${logback.levels.mosaic.examples:-}" />
 	<logger name="eu.mosaic_cloud" level="${logback.levels.mosaic:-}" />
 	
 	<root level="${logback.levels.root:-info}">
