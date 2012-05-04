@@ -81,7 +81,7 @@ public class FeedParser
 			}
 			final String title = entry.getTitleEx ().getValue ();
 			final String titleType = entry.getTitleEx ().getType ();
-			final Timeline.Entry tEntry = timeline.addEntry (entry.getUri (), title, titleType, content, contentType, entry.getUpdatedDate ().getTime (), authorName, authorEmail, authorURI);
+			final Timeline.Entry tEntry = timeline.addEntry (entry.getUri (), title, titleType, content, contentType, entry.getPublishedDate ().getTime (), authorName, authorEmail, authorURI);
 			@SuppressWarnings ("unchecked") final List<SyndLink> links = entry.getLinks ();
 			for (final SyndLink link : links) {
 				tEntry.addLink (link.getRel (), link.getHref ());
