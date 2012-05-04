@@ -27,6 +27,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import com.google.common.base.Preconditions;
 
@@ -62,11 +63,17 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 		this.configuration = configuration;
 		this.callback = callback;
 		this.context = context;
+		this.transcript = Transcript.create (this, true);
+		this.transcript.traceDebugging ("creating the cloudlet connector adapter of type `%{object:class}`...", this);
+		this.transcript.traceDebugging ("used by the cloudlet `%{object}`...", this.cloudlet);
+		this.transcript.traceDebugging ("using the underlying connector `%{object}`...", this.connector);
+		this.transcript.traceDebugging ("using the completion callbacks `%{object}`...", this.callback);
 	}
 	
 	@Override
 	public CallbackCompletion<Void> destroy ()
 	{
+		this.transcript.traceDebugging ("destroying the connector adapter...");
 		final CallbackCompletion<Void> completion = this.connector.destroy ();
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
@@ -75,8 +82,10 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 				{
 					assert (completion_ == completion); // NOPMD
 					if (completion.getException () != null) {
+						BaseConnector.this.transcript.traceDebugging ("triggering the callback for destroy failure...");
 						return BaseConnector.this.callback.destroyFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
 					}
+					BaseConnector.this.transcript.traceDebugging ("triggering the callback for destroy success...");
 					return BaseConnector.this.callback.destroySucceeded (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
 				}
 			});
@@ -87,6 +96,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 	@Override
 	public CallbackCompletion<Void> initialize ()
 	{
+		this.transcript.traceDebugging ("initializing the connector adapter...");
 		final CallbackCompletion<Void> completion = this.connector.initialize ();
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
@@ -95,8 +105,10 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 				{
 					assert (completion_ == completion); // NOPMD
 					if (completion.getException () != null) {
+						BaseConnector.this.transcript.traceDebugging ("triggering the callback for initialize failure...");
 						return BaseConnector.this.callback.initializeFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
 					}
+					BaseConnector.this.transcript.traceDebugging ("triggering the callback for initialize success...");
 					return BaseConnector.this.callback.initializeSucceeded (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
 				}
 			});
@@ -109,4 +121,5 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 	protected final IConfiguration configuration;
 	protected final TConnector connector;
 	protected final TContext context;
+	protected final Transcript transcript;
 }

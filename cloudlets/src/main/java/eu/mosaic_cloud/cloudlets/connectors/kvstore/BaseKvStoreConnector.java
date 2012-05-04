@@ -50,6 +50,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	@Override
 	public CallbackCompletion<Boolean> delete (final String key, final TExtra extra)
 	{
+		this.transcript.traceDebugging ("deleting the record with key `%s` and extra `%{object}`...", key, extra);
 		final CallbackCompletion<Boolean> completion = this.connector.delete (key);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () { // NOPMD
@@ -59,8 +60,10 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 						{
 							assert (completion_ == completion); // NOPMD
 							if (completion.getException () != null) {
+								BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for delete failure for key `%s` and extra `%{object}`...", key, extra);
 								return BaseKvStoreConnector.this.callback.deleteFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
 							}
+							BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for delete success for key `%s` and extra `%{object}`...", key, extra);
 							return BaseKvStoreConnector.this.callback.deleteSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, (TValue) null, extra));
 						}
 					});
@@ -77,6 +80,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	@Override
 	public CallbackCompletion<TValue> get (final String key, final TExtra extra)
 	{
+		this.transcript.traceDebugging ("getting the record with key `%s` and extra `%{object}`...", key, extra);
 		final CallbackCompletion<TValue> completion = this.connector.get (key);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
@@ -86,8 +90,10 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 				{
 					assert (completion_ == completion); // NOPMD
 					if (completion.getException () != null) {
+						BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for get failure for key `%s` and extra `%{object}`...", key, extra);
 						return BaseKvStoreConnector.this.callback.getFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
 					}
+					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for get success for key `%s` and extra `%{object}`...", key, extra);
 					return BaseKvStoreConnector.this.callback.getSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getOutcome (), extra));
 				}
 			});
@@ -104,6 +110,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	@Override
 	public CallbackCompletion<List<String>> list (final TExtra extra)
 	{
+		this.transcript.traceDebugging ("listing the record keys with extra `%{object}`...", extra);
 		final CallbackCompletion<List<String>> completion = this.connector.list ();
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
@@ -113,8 +120,10 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 				{
 					assert (completion_ == completion); // NOPMD
 					if (completion.getException () != null) {
+						BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for list failure for extra `%{object}`...", extra);
 						return BaseKvStoreConnector.this.callback.listFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<List<String>, TExtra> (BaseKvStoreConnector.this.cloudlet, (String) null, completion.getException (), extra));
 					}
+					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for list success for extra `%{object}`...", extra);
 					return BaseKvStoreConnector.this.callback.listSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<List<String>, TExtra> (BaseKvStoreConnector.this.cloudlet, (String) null, completion.getOutcome (), extra));
 				}
 			});
@@ -131,6 +140,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	@Override
 	public CallbackCompletion<Boolean> set (final String key, final TValue value, final TExtra extra)
 	{
+		this.transcript.traceDebugging ("setting the record with key `%s` and extra `%{object}`...", key, extra);
 		final CallbackCompletion<Boolean> completion = this.connector.set (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
@@ -140,8 +150,10 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 				{
 					assert (completion_ == completion); // NOPMD
 					if (completion.getException () != null) {
+						BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for set failure for key `%s` and extra `%{object}`...", key, extra);
 						return BaseKvStoreConnector.this.callback.setFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
 					}
+					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for set success for key `%s` and extra `%{object}`...", key, extra);
 					return BaseKvStoreConnector.this.callback.setSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, value, extra));
 				}
 			});
