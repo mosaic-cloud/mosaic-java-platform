@@ -42,6 +42,17 @@ public final class Transcript
 	}
 	
 	@Override
+	public final <_Logger_ extends Object> _Logger_ adaptAs (final Class<_Logger_> loggerClass)
+	{
+		try {
+			return (this.backend.adaptAs (loggerClass));
+		} catch (final Throwable exception1) {
+			// NOTE: intentional
+			return (null);
+		}
+	}
+	
+	@Override
 	public final void trace (final ExceptionResolution resolution, final Throwable exception)
 	{
 		try {

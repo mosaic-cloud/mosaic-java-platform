@@ -48,6 +48,19 @@ public final class LogbackTranscriptBackend
 	}
 	
 	@Override
+	public final <_Logger_ extends Object> _Logger_ adaptAs (final Class<_Logger_> loggerClass)
+	{
+		final Object logger;
+		if (loggerClass == org.slf4j.Logger.class)
+			logger = this.logger;
+		else if (loggerClass == Logger.class)
+			logger = this.logger;
+		else
+			logger = null;
+		return (loggerClass.cast (logger));
+	}
+	
+	@Override
 	public final void trace (final ExceptionResolution resolution, final Throwable exception)
 	{
 		this.trace (this.map (resolution), null, null, exception);

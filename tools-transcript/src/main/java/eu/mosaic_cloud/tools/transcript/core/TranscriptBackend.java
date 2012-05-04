@@ -28,6 +28,8 @@ public interface TranscriptBackend
 		extends
 			ExceptionTracer
 {
+	public abstract <_Logger_ extends Object> _Logger_ adaptAs (final Class<_Logger_> loggerClass);
+	
 	public abstract void trace (final TranscriptTraceType type, final String message);
 	
 	public abstract void trace (final TranscriptTraceType type, final String format, final Object ... tokens);
