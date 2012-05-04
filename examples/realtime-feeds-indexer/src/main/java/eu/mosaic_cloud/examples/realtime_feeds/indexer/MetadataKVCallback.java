@@ -59,12 +59,11 @@ public final class MetadataKVCallback
 	{
 		final String key = arguments.getKey ();
 		this.logger.debug ("succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key + ")");
-		final JSONObject value = arguments.getValue ();
+		JSONObject value = arguments.getValue ();
 		if (value == null) {
-			this.createFeedMetaData (context, key, arguments.getExtra ());
-		} else {
-			IndexWorkflow.findNewFeeds (arguments.getValue (), arguments.getExtra ());
+			value = this.prepareFeedMetaData (context, key, arguments.getExtra ());
 		}
+		IndexWorkflow.findNewFeeds (value, arguments.getExtra ());
 		return ICallback.SUCCESS;
 	}
 	
@@ -82,18 +81,6 @@ public final class MetadataKVCallback
 		return ICallback.SUCCESS;
 	}
 	
-	private void createFeedMetaData (final IndexerCloudletContext context, final String key, final UUID extra)
-	{
-		final JSONObject feedMetaData = new JSONObject ();
-		try {
-			feedMetaData.put ("key", key);
-			feedMetaData.put ("sequence", 0);
-			context.metadataStore.set (key, feedMetaData, extra);
-		} catch (final JSONException e) {
-			ExceptionTracer.traceDeferred (e);
-		}
-	}
-	
 	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		final String key = arguments.getKey ();
@@ -104,6 +91,18 @@ public final class MetadataKVCallback
 		errorMssg.put ("bucket", MetadataKVCallback.BUCKET_NAME);
 		errorMssg.put ("key", key);
 		IndexWorkflow.onIndexError (errorMssg);
+	}
+	
+	private JSONObject prepareFeedMetaData (final IndexerCloudletContext context, final String key, final UUID extra)
+	{
+		final JSONObject feedMetaData = new JSONObject ();
+		try {
+			feedMetaData.put ("key", key);
+			feedMetaData.put ("sequence", 0);
+		} catch (final JSONException e) {
+			ExceptionTracer.traceIgnored (e);
+		}
+		return (feedMetaData);
 	}
 	
 	private static final String BUCKET_NAME = "feed-metadata";
