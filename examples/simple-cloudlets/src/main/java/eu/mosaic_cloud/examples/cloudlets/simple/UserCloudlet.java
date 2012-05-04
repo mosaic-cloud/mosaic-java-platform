@@ -60,7 +60,7 @@ public class UserCloudlet
 			final AuthenticationToken data = arguments.getMessage ();
 			final String token = data.getToken ();
 			if (token != null) {
-				this.logger.info ("UserCloudlet received authentication token: " + token);
+				this.logger.info ("UserCloudlet received authentication token `{}`.", token);
 			} else {
 				this.logger.error ("UserCloudlet did not receive authentication token.");
 			}
@@ -71,7 +71,7 @@ public class UserCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.info ("UserCloudlet consumer was destroyed successfully.");
+			this.logger.info ("UserCloudlet consumer destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
@@ -89,7 +89,7 @@ public class UserCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.info ("UserCloudlet publisher was destroyed successfully.");
+			this.logger.info ("UserCloudlet publisher destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
@@ -107,21 +107,21 @@ public class UserCloudlet
 		@Override
 		public CallbackCompletion<Void> destroy (final UserCloudletContext context, final CloudletCallbackArguments<UserCloudletContext> arguments)
 		{
-			this.logger.info ("UserCloudlet is being destroyed.");
+			this.logger.info ("UserCloudlet destroying...");
 			return CallbackCompletion.createAndChained (context.consumer.destroy (), context.publisher.destroy ());
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CloudletCallbackCompletionArguments<UserCloudletContext> arguments)
 		{
-			this.logger.info ("UserCloudlet was destroyed successfully.");
+			this.logger.info ("UserCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final UserCloudletContext context, final CloudletCallbackArguments<UserCloudletContext> arguments)
 		{
-			this.logger.info ("UserCloudlet is being initialized.");
+			this.logger.info ("UserCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
 			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));

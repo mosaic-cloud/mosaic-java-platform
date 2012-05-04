@@ -23,7 +23,9 @@ package eu.mosaic_cloud.drivers.interop;
 
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 
 /**
@@ -36,7 +38,7 @@ public class ResponseTransmitter
 {
 	public ResponseTransmitter ()
 	{
-		this.logger = MosaicLogger.createLogger (this);
+		this.logger = Transcript.create (this, true).adaptAs (Logger.class);
 	}
 	
 	/**
@@ -60,5 +62,5 @@ public class ResponseTransmitter
 		session.send (message);
 	}
 	
-	protected MosaicLogger logger;
+	protected Logger logger;
 }

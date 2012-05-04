@@ -27,11 +27,13 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 import com.basho.riak.pbc.KeySource;
 import com.basho.riak.pbc.RiakClient;
@@ -207,8 +209,7 @@ public final class RiakPBOperationFactory
 		RiakPBOperationFactory factory = null; // NOPMD
 		try {
 			factory = new RiakPBOperationFactory (riakHost, port, bucket, clientId);
-			final MosaicLogger sLogger = MosaicLogger.createLogger (RiakRestOperationFactory.class);
-			sLogger.trace ("Created Riak PB factory for " + riakHost + ":" + port + " bucket " + bucket);
+			RiakPBOperationFactory.logger.trace ("Created Riak PB factory for " + riakHost + ":" + port + " bucket " + bucket);
 		} catch (final IOException e) {
 			ExceptionTracer.traceIgnored (e);
 		}
@@ -218,4 +219,5 @@ public final class RiakPBOperationFactory
 	private final String bucket;
 	private final String clientId;
 	private final RiakClient riakcl;
+	private static final Logger logger = Transcript.create (RiakPBOperationFactory.class).adaptAs (Logger.class);
 }

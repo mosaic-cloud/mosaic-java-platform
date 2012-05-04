@@ -31,11 +31,12 @@ import java.util.UUID;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
 
 import com.sun.syndication.io.FeedException;
 
@@ -289,6 +290,6 @@ public class IndexWorkflow
 	private final FeedParser parser;
 	private JSONObject previousFeedMetaData;
 	private static final String INDEX_TASK_TYPE = "index-data";
-	private static Map<UUID, IndexWorkflow> indexers = new HashMap<UUID, IndexWorkflow> ();
-	private static MosaicLogger logger = MosaicLogger.createLogger (IndexWorkflow.class);
+	private static final Map<UUID, IndexWorkflow> indexers = new HashMap<UUID, IndexWorkflow> ();
+	private static final Logger logger = Transcript.create (IndexWorkflow.class).adaptAs (Logger.class);
 }

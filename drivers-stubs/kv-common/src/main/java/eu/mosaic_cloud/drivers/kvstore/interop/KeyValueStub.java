@@ -42,7 +42,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
@@ -57,6 +56,9 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 import com.google.common.base.Preconditions;
 
@@ -129,14 +131,14 @@ public class KeyValueStub
 		final String messagePrefix = "KeyValueStub - Received request for "; // NOPMD
 		switch (kvMessage) {
 			case ACCESS :
-				this.logger.trace ("Received initiation message");
+				KeyValueStub.logger.trace ("Received initiation message");
 				final KeyValuePayloads.InitRequest initRequest = (InitRequest) message.payload;
 				token = initRequest.getToken ();
 				final String bucket = initRequest.getBucket ();
 				driver.registerClient (token.getClientId (), bucket);
 				break;
 			case ABORTED :
-				this.logger.trace ("Received termination message");
+				KeyValueStub.logger.trace ("Received termination message");
 				final IdlCommon.AbortRequest abortRequest = (AbortRequest) message.payload;
 				token = abortRequest.getToken ();
 				driver.unregisterClient (token.getClientId ());
@@ -146,7 +148,7 @@ public class KeyValueStub
 				token = setRequest.getToken ();
 				key = setRequest.getKey ();
 				data = setRequest.getValue ().toByteArray ();
-				this.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				KeyValueStub.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
 				final IResult<Boolean> resultSet = driver.invokeSetOperation (token.getClientId (), key, data, setCallback);
@@ -158,12 +160,12 @@ public class KeyValueStub
 				final DriverOperationFinishedHandler getCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
 				if (getRequest.getKeyCount () != 1) {
 					// NOTE: error - the simple driver can handle only single-key get
-					this.logger.error ("Basic driver can handle only single-key GET.");
+					KeyValueStub.logger.error ("Basic driver can handle only single-key GET.");
 					driver.handleUnsupportedOperationError (kvMessage.toString (), getCallback);
 					break;
 				}
 				key = getRequest.getKey (0);
-				this.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				KeyValueStub.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				final IResult<byte[]> resultGet = driver.invokeGetOperation (token.getClientId (), key, getCallback);
 				getCallback.setDetails (KeyValueOperations.GET, resultGet);
 				break;
@@ -171,7 +173,7 @@ public class KeyValueStub
 				final KeyValuePayloads.DeleteRequest delRequest = (DeleteRequest) message.payload;
 				token = delRequest.getToken ();
 				key = delRequest.getKey ();
-				this.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				KeyValueStub.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				final DriverOperationFinishedHandler delCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
 				final IResult<Boolean> resultDelete = driver.invokeDeleteOperation (token.getClientId (), key, delCallback);
 				delCallback.setDetails (KeyValueOperations.DELETE, resultDelete);
@@ -179,7 +181,7 @@ public class KeyValueStub
 			case LIST_REQUEST :
 				final KeyValuePayloads.ListRequest listRequest = (ListRequest) message.payload;
 				token = listRequest.getToken ();
-				this.logger.trace (messagePrefix + kvMessage.toString () + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				KeyValueStub.logger.trace (messagePrefix + kvMessage.toString () + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				final DriverOperationFinishedHandler listCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
 				final IResult<List<String>> resultList = driver.invokeListOperation (token.getClientId (), listCallback);
 				listCallback.setDetails (KeyValueOperations.LIST, resultList);
@@ -210,7 +212,7 @@ public class KeyValueStub
 	
 	protected void handleUnknownMessage (final Session session, final AbstractKeyValueDriver driver, final String messageType, final CompletionToken token, final Class<? extends KeyValueResponseTransmitter> transmitterClass)
 	{
-		this.logger.error ("Unexpected message type: " + messageType + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+		KeyValueStub.logger.error ("Unexpected message type: " + messageType + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 		// NOTE: create callback
 		final DriverOperationFinishedHandler failCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
 		driver.handleUnsupportedOperationError (messageType, failCallback);
@@ -240,13 +242,12 @@ public class KeyValueStub
 	public static KeyValueStub create (final IConfiguration config, final ThreadingContext threadingContext, final ZeroMqChannel channel)
 	{
 		final DriverConnectionData cData = KeyValueStub.readConnectionData (config);
-		final MosaicLogger sLogger = MosaicLogger.createLogger (KeyValueStub.class);
 		KeyValueStub stub;
 		synchronized (AbstractDriverStub.MONITOR) {
 			stub = KeyValueStub.stubs.get (cData);
 			try {
 				if (stub == null) {
-					sLogger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
+					KeyValueStub.logger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
 					final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
 					final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 					final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
@@ -256,7 +257,7 @@ public class KeyValueStub
 					AbstractDriverStub.incDriverReference (stub);
 					channel.accept (KeyValueSession.DRIVER, stub);
 				} else {
-					sLogger.trace ("KeyValueStub: use existing stub."); // $NON-NLS-1$
+					KeyValueStub.logger.trace ("KeyValueStub: use existing stub."); // $NON-NLS-1$
 					AbstractDriverStub.incDriverReference (stub);
 				}
 			} catch (final DriverNotFoundException e) {
@@ -270,10 +271,9 @@ public class KeyValueStub
 	
 	public static KeyValueStub createDetached (final IConfiguration config, final ThreadingContext threadingContext, final ZeroMqChannel channel)
 	{
-		final MosaicLogger sLogger = MosaicLogger.createLogger (KeyValueStub.class);
 		KeyValueStub stub;
 		try {
-			sLogger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
+			KeyValueStub.logger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
 			final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
 			final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 			final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
@@ -314,6 +314,7 @@ public class KeyValueStub
 	}
 	
 	private Class<? extends AbstractKeyValueDriver> driverClass;
+	private static final Logger logger = Transcript.create (KeyValueStub.class).adaptAs (Logger.class);
 	private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub> ();
 	
 	/**

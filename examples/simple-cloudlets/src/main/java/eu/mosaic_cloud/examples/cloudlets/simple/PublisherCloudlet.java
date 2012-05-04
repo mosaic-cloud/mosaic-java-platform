@@ -21,6 +21,8 @@
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 
+import java.util.UUID;
+
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -45,7 +47,7 @@ public class PublisherCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.info ("PublisherCloudlet publisher was destroyed successfully.");
+			this.logger.info ("PublisherCloudlet publisher destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
@@ -70,21 +72,21 @@ public class PublisherCloudlet
 		@Override
 		public CallbackCompletion<Void> destroy (final PublisherCloudletContext context, final CloudletCallbackArguments<PublisherCloudletContext> arguments)
 		{
-			this.logger.info ("PublisherCloudlet is being destroyed.");
+			this.logger.info ("PublisherCloudlet destroying...");
 			return context.publisher.destroy ();
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments)
 		{
-			this.logger.info ("Publisher cloudlet was destroyed successfully.");
+			this.logger.info ("PublisherCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final PublisherCloudletContext context, final CloudletCallbackArguments<PublisherCloudletContext> arguments)
 		{
-			this.logger.info ("PublisherCloudlet is being initialized.");
+			this.logger.info ("PublisherCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
 			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));
@@ -96,7 +98,7 @@ public class PublisherCloudlet
 		public CallbackCompletion<Void> initializeSucceeded (final PublisherCloudletContext context, final CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments)
 		{
 			this.logger.info ("PublisherCloudlet initialized successfully.");
-			context.publisher.publish ("TEST MESSAGE!", null);
+			context.publisher.publish (String.format ("Test message! (%s)", UUID.randomUUID ().toString ()), null);
 			return ICallback.SUCCESS;
 		}
 	}

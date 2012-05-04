@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
@@ -33,6 +32,9 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -213,8 +215,7 @@ final class AmqpOperationFactory
 					channel.basicQos (8192);
 					consumerTag = channel.basicConsume (queue, autoAck, consumer, true, exclusive, null, AmqpOperationFactory.this.amqpDriver.new ConsumerCallback ());
 					if (!consumer.equals (consumerTag)) {
-						final MosaicLogger sLogger = MosaicLogger.createLogger (AmqpOperationFactory.class);
-						sLogger.error ("Received different consumer tag: consumerTag = " + consumerTag + " consumer " + consumer);
+						AmqpOperationFactory.logger.error ("Received different consumer tag: consumerTag = " + consumerTag + " consumer " + consumer);
 					}
 				}
 				return consumer;
@@ -331,4 +332,5 @@ final class AmqpOperationFactory
 	}
 	
 	private final AmqpDriver amqpDriver;
+	private static final Logger logger = Transcript.create (AmqpOperationFactory.class).adaptAs (Logger.class);
 }

@@ -27,9 +27,11 @@ import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 
 /**
@@ -68,7 +70,7 @@ public final class RiakPBDriver
 	public synchronized void destroy ()
 	{
 		super.destroy ();
-		this.logger.trace ("RiakDriver destroyed."); // $NON-NLS-1$
+		RiakPBDriver.logger.trace ("RiakDriver destroyed."); // $NON-NLS-1$
 	}
 	
 	/*
@@ -111,11 +113,11 @@ public final class RiakPBDriver
 		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
 		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$
-		final MosaicLogger sLogger = MosaicLogger.createLogger (RiakPBDriver.class);
-		sLogger.trace ("Created Riak PB driver for host " + host + ":" + port);
+		RiakPBDriver.logger.trace ("Created Riak PB driver for host " + host + ":" + port);
 		return new RiakPBDriver (threading, noThreads, host, port);
 	}
 	
 	private final String riakHost;
 	private final int riakPort;
+	private static final Logger logger = Transcript.create (RiakPBDriver.class).adaptAs (Logger.class);
 }

@@ -23,9 +23,10 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 
 /**
@@ -40,6 +41,13 @@ public class DefaultCallback<TContext>
 		implements
 			ICallback<TContext>
 {
+	protected DefaultCallback ()
+	{
+		super ();
+		this.transcript = Transcript.create (this, true);
+		this.logger = this.transcript.adaptAs (Logger.class);
+	}
+	
 	/**
 	 * Handles any unhandled callback.
 	 * 
@@ -75,8 +83,13 @@ public class DefaultCallback<TContext>
 	 */
 	protected void traceUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive)
 	{
-		this.logger.trace ("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass ().getName (), callbackType, (positive ? "Succeeded" : "Failed"));
+		if (positive) {
+			this.transcript.traceDebugging ("unhandled successfull callback `%s` for cloudlet `%{object:identity}`; ignoring!", callbackType, arguments.getCloudlet ());
+		} else {
+			this.transcript.traceWarning ("unhandled failure callback `%s` for cloudlet `%{object:identity}`; ignoring!", callbackType, arguments.getCloudlet ());
+		}
 	}
 	
-	protected MosaicLogger logger = MosaicLogger.createLogger (Transcript.create (this, true));
+	protected final Logger logger;
+	protected final Transcript transcript;
 }

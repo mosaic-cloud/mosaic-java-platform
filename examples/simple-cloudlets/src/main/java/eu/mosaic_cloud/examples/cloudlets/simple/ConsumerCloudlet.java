@@ -55,7 +55,7 @@ public class ConsumerCloudlet
 		public CallbackCompletion<Void> consume (final ConsumerCloudletContext context, final AmqpQueueConsumeCallbackArguments<String, Void> arguments)
 		{
 			final String data = arguments.getMessage ();
-			this.logger.debug ("ConsumerCloudlet received logging message for user " + data);
+			this.logger.info ("ConsumerCloudlet received message `{}`.", data);
 			context.consumer.acknowledge (arguments.getDelivery ());
 			return ICallback.SUCCESS;
 		}
@@ -63,14 +63,14 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.debug ("ConsumerCloudlet consumer was destroyed successfully.");
+			this.logger.info ("ConsumerCloudlet consumer destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.debug ("ConsumerCloudlet consumer initialized successfully.");
+			this.logger.info ("ConsumerCloudlet consumer initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
@@ -87,21 +87,21 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> destroy (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.debug ("ConsumerCloudlet is being destroyed.");
+			this.logger.info ("ConsumerCloudlet destroying...");
 			return context.consumer.destroy ();
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.debug ("Consumer cloudlet was destroyed successfully.");
+			this.logger.info ("ConsumerCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.debug ("ConsumerCloudlet is being initialized.");
+			this.logger.info ("ConsumerCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
 			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));
@@ -113,7 +113,7 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.debug ("ConsumerCloudlet initialized successfully.");
+			this.logger.info ("ConsumerCloudlet initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}

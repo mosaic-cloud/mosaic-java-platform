@@ -27,11 +27,13 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.FutureTask;
 
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 
 /**
@@ -54,7 +56,7 @@ public abstract class AbstractResourceDriver
 	{
 		this.pendingResults = new ArrayList<IResult<?>> ();
 		this.executor = threading.createFixedThreadPool (ThreadConfiguration.create (this, "operations", true), noThreads);
-		this.logger = MosaicLogger.createLogger (this);
+		this.logger = Transcript.create (this, true).adaptAs (Logger.class);
 	}
 	
 	public void addPendingOperation (final IResult<?> pendingOp)
@@ -144,7 +146,7 @@ public abstract class AbstractResourceDriver
 	}
 	
 	protected final ExecutorService executor;
-	protected MosaicLogger logger;
+	protected Logger logger;
 	private boolean destroyed = false;
 	private final List<IResult<?>> pendingResults;
 }

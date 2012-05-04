@@ -36,7 +36,6 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
@@ -53,6 +52,9 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 import com.google.common.base.Preconditions;
 
@@ -124,7 +126,7 @@ public class MemcachedStub
 				if (setRequest.hasExpTime ()) {
 					token = setRequest.getToken ();
 					key = setRequest.getKey ();
-					this.logger.trace (mssgPrefix + " SET key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+					MemcachedStub.logger.trace (mssgPrefix + " SET key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 					exp = setRequest.getExpTime ();
 					data = setRequest.getValue ().toByteArray ();
 					callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -136,7 +138,7 @@ public class MemcachedStub
 				final KeyValuePayloads.GetRequest getRequest = (GetRequest) message.payload;
 				if (getRequest.getKeyCount () > 1) {
 					token = getRequest.getToken ();
-					this.logger.trace (mssgPrefix + "GET_BULK " + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+					MemcachedStub.logger.trace (mssgPrefix + "GET_BULK " + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 					callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 					final IResult<Map<String, byte[]>> resultGet = driver.invokeGetBulkOperation (token.getClientId (), getRequest.getKeyList (), callback);
 					callback.setDetails (KeyValueOperations.GET_BULK, resultGet);
@@ -154,7 +156,7 @@ public class MemcachedStub
 				final MemcachedPayloads.AddRequest addRequest = (AddRequest) message.payload;
 				token = addRequest.getToken ();
 				key = addRequest.getKey ();
-				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ()); // NOPMD
+				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ()); // NOPMD
 				exp = addRequest.getExpTime ();
 				data = addRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -165,7 +167,7 @@ public class MemcachedStub
 				final MemcachedPayloads.AppendRequest appendRequest = (AppendRequest) message.payload;
 				token = appendRequest.getToken ();
 				key = appendRequest.getKey ();
-				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				exp = appendRequest.getExpTime (); // NOPMD
 				data = appendRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -176,7 +178,7 @@ public class MemcachedStub
 				final MemcachedPayloads.PrependRequest prependRequest = (PrependRequest) message.payload;
 				token = prependRequest.getToken ();
 				key = prependRequest.getKey ();
-				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				exp = prependRequest.getExpTime (); // NOPMD
 				data = prependRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -187,7 +189,7 @@ public class MemcachedStub
 				final MemcachedPayloads.ReplaceRequest replaceRequest = (ReplaceRequest) message.payload;
 				token = replaceRequest.getToken ();
 				key = replaceRequest.getKey ();
-				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				exp = replaceRequest.getExpTime ();
 				data = replaceRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -198,7 +200,7 @@ public class MemcachedStub
 				final MemcachedPayloads.CasRequest casRequest = (CasRequest) message.payload;
 				token = casRequest.getToken ();
 				key = casRequest.getKey ();
-				this.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
+				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				exp = casRequest.getExpTime (); // NOPMD
 				data = casRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -222,13 +224,12 @@ public class MemcachedStub
 	public static MemcachedStub create (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading)
 	{
 		final DriverConnectionData cData = KeyValueStub.readConnectionData (config);
-		final MosaicLogger sLogger = MosaicLogger.createLogger (MemcachedStub.class);
 		MemcachedStub stub;
 		synchronized (AbstractDriverStub.MONITOR) {
 			stub = MemcachedStub.stubs.get (cData);
 			try {
 				if (stub == null) {
-					sLogger.trace ("MemcachedStub: create new stub.");
+					MemcachedStub.logger.trace ("MemcachedStub: create new stub.");
 					final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter ();
 					final MemcachedDriver driver = MemcachedDriver.create (config, threading);
 					stub = new MemcachedStub (config, transmitter, driver, channel);
@@ -237,7 +238,7 @@ public class MemcachedStub
 					channel.accept (KeyValueSession.DRIVER, stub);
 					channel.accept (MemcachedSession.DRIVER, stub);
 				} else {
-					sLogger.trace ("MemcachedStub: use existing stub.");
+					MemcachedStub.logger.trace ("MemcachedStub: use existing stub.");
 					AbstractDriverStub.incDriverReference (stub);
 				}
 			} catch (final Exception e) {
@@ -251,10 +252,9 @@ public class MemcachedStub
 	
 	public static MemcachedStub createDetached (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading)
 	{
-		final MosaicLogger sLogger = MosaicLogger.createLogger (MemcachedStub.class);
 		MemcachedStub stub;
 		try {
-			sLogger.trace ("MemcachedStub: create new stub.");
+			MemcachedStub.logger.trace ("MemcachedStub: create new stub.");
 			final MemcachedResponseTransmitter transmitter = new MemcachedResponseTransmitter ();
 			final MemcachedDriver driver = MemcachedDriver.create (config, threading);
 			stub = new MemcachedStub (config, transmitter, driver, channel);
@@ -270,5 +270,6 @@ public class MemcachedStub
 		return stub;
 	}
 	
-	private static Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub> ();
+	private static final Logger logger = Transcript.create (MemcachedStub.class).adaptAs (Logger.class);
+	private static final Map<DriverConnectionData, MemcachedStub> stubs = new HashMap<DriverConnectionData, MemcachedStub> ();
 }

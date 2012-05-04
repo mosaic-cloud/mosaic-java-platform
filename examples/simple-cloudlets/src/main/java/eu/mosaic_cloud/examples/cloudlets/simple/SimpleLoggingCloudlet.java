@@ -50,7 +50,7 @@ public class SimpleLoggingCloudlet
 		public CallbackCompletion<Void> consume (final LoggingCloudletContext context, final AmqpQueueConsumeCallbackArguments<LoggingData, Void> arguments)
 		{
 			final LoggingData data = arguments.getMessage ();
-			this.logger.info ("LoggingCloudlet received logging message for user " + data.user);
+			this.logger.info ("LoggingCloudlet received logging message for user `{}`.", data.user);
 			final String token = ConfigUtils.resolveParameter (arguments.getCloudlet ().getConfiguration (), "test.token", String.class, "error");
 			final AuthenticationToken aToken = new AuthenticationToken (token);
 			context.publisher.publish (aToken, null);
@@ -62,7 +62,7 @@ public class SimpleLoggingCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.info ("LoggingCloudlet consumer was destroyed successfully.");
+			this.logger.info ("LoggingCloudlet consumer destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
@@ -80,7 +80,7 @@ public class SimpleLoggingCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.info ("LoggingCloudlet publisher was destroyed successfully.");
+			this.logger.info ("LoggingCloudlet publisher destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
@@ -98,21 +98,21 @@ public class SimpleLoggingCloudlet
 		@Override
 		public CallbackCompletion<Void> destroy (final LoggingCloudletContext context, final CloudletCallbackArguments<LoggingCloudletContext> arguments)
 		{
-			this.logger.info ("LoggingCloudlet is being destroyed.");
+			this.logger.info ("LoggingCloudlet destroying...");
 			return CallbackCompletion.createAndChained (context.consumer.destroy (), context.publisher.destroy ());
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CloudletCallbackCompletionArguments<LoggingCloudletContext> arguments)
 		{
-			this.logger.info ("LoggingCloudlet was destroyed successfully.");
+			this.logger.info ("LoggingCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final LoggingCloudletContext context, final CloudletCallbackArguments<LoggingCloudletContext> arguments)
 		{
-			this.logger.info ("LoggingCloudlet is being initialized.");
+			this.logger.info ("LoggingCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
 			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));

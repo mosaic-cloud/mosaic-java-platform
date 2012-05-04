@@ -34,9 +34,11 @@ import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 
 /**
@@ -66,7 +68,6 @@ public abstract class AbstractDriverStub
 	{
 		super ();
 		this.configuration = config;
-		this.logger = MosaicLogger.createLogger (this);
 		this.sessions = new ArrayList<Session> ();
 		this.commChannel = commChannel;
 		this.transmitter = transmitter;
@@ -92,14 +93,14 @@ public abstract class AbstractDriverStub
 		this.driver.destroy ();
 		this.transmitter.destroy ();
 		this.commChannel.terminate (500);
-		this.logger.trace ("DriverStub destroyed.");
+		AbstractDriverStub.logger.trace ("DriverStub destroyed.");
 	}
 	
 	@Override
 	public CallbackCompletion<Void> destroyed (final Session session)
 	{
 		// NOTE: handle session destroyed
-		this.logger.trace ("Session destroyed.");
+		AbstractDriverStub.logger.trace ("Session destroyed.");
 		this.sessions.remove (session);
 		return null;
 	}
@@ -107,7 +108,7 @@ public abstract class AbstractDriverStub
 	@Override
 	public CallbackCompletion<Void> failed (final Session session, final Throwable exception)
 	{
-		this.logger.error ("Session failed");
+		AbstractDriverStub.logger.error ("Session failed");
 		return null;
 	}
 	
@@ -195,11 +196,11 @@ public abstract class AbstractDriverStub
 	}
 	
 	protected IConfiguration configuration;
-	protected MosaicLogger logger;
 	private final ZeroMqChannel commChannel;
 	private final IResourceDriver driver;
 	private final List<Session> sessions;
 	private final ResponseTransmitter transmitter;
 	protected static final Object MONITOR = Monitor.create (AbstractDriverStub.class);
+	private static final Logger logger = Transcript.create (AbstractDriverStub.class).adaptAs (Logger.class);
 	private static Map<AbstractDriverStub, Integer> references = new IdentityHashMap<AbstractDriverStub, Integer> ();
 }

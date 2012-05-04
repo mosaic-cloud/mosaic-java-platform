@@ -60,7 +60,7 @@ public class PingCloudlet
 		public CallbackCompletion<Void> consume (final PingCloudletContext context, final AmqpQueueConsumeCallbackArguments<PongMessage, Void> arguments)
 		{
 			final PongMessage pong = arguments.getMessage ();
-			this.logger.info ("received pong message with key `%s`; acknowledging...", pong.getKey ());
+			this.logger.info ("received pong message with key `{}`; acknowledging...", pong.getKey ());
 			context.consumer.acknowledge (arguments.getDelivery ());
 			return ICallback.SUCCESS;
 		}
@@ -136,7 +136,7 @@ public class PingCloudlet
 		{
 			this.logger.info ("cloudlet initialized successfully.");
 			final PingMessage ping = new PingMessage (context.pingPongKey);
-			this.logger.info ("sending ping message with key `%s`...", ping.getKey ());
+			this.logger.info ("sending ping message with key `{}`...", ping.getKey ());
 			context.publisher.publish (ping, null);
 			return ICallback.SUCCESS;
 		}

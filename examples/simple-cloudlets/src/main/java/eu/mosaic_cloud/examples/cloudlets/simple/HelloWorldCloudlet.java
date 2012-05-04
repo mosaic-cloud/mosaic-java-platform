@@ -42,21 +42,21 @@ public class HelloWorldCloudlet
 		@Override
 		public CallbackCompletion<Void> destroy (final HelloCloudletContext context, final CloudletCallbackArguments<HelloCloudletContext> arguments)
 		{
-			this.logger.info ("HelloWorld cloudlet is being destroyed.");
+			this.logger.info ("HelloWorldCloudlet destroying...");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final HelloCloudletContext context, final CloudletCallbackCompletionArguments<HelloCloudletContext> arguments)
 		{
-			this.logger.info ("HelloWorld cloudlet was destroyed successfully.");
+			this.logger.info ("HelloWorldCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final HelloCloudletContext context, final CloudletCallbackArguments<HelloCloudletContext> arguments)
 		{
-			this.logger.info ("HelloWorld cloudlet is initializing...");
+			this.logger.info ("HelloWorldCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			return ICallback.SUCCESS;
 		}
@@ -64,8 +64,7 @@ public class HelloWorldCloudlet
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final HelloCloudletContext context, final CloudletCallbackCompletionArguments<HelloCloudletContext> arguments)
 		{
-			this.logger.info ("HelloWorld cloudlet was initialized successfully.");
-			this.logger.info ("Hello world!");
+			this.logger.info ("HelloWorldCloudlet initialized successfully.");
 			context.cloudlet.destroy ();
 			return ICallback.SUCCESS;
 		}

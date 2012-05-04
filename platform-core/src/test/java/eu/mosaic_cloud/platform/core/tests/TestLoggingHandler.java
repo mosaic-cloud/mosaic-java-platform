@@ -21,8 +21,9 @@
 package eu.mosaic_cloud.platform.core.tests;
 
 
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 
 public class TestLoggingHandler<T extends Object>
@@ -32,22 +33,23 @@ public class TestLoggingHandler<T extends Object>
 	public TestLoggingHandler (final String testName)
 	{
 		super ();
-		this.testName = testName;
-		this.logger = MosaicLogger.createLogger (this);
+		this.name = testName;
+		this.transcript = Transcript.create (this, true);
 	}
 	
 	@Override
 	public void onFailure (final Throwable error)
 	{
-		this.logger.error ("Test " + this.testName + " finished with error: " + error.getMessage ());
+		this.transcript.traceError ("Test `%s` finished with error `%{object:class}`: `%s`.", this.name, error, error.getMessage ());
+		this.transcript.trace (ExceptionResolution.Ignored, error);
 	}
 	
 	@Override
 	public void onSuccess (final T result)
 	{
-		this.logger.trace ("Test " + this.testName + " finished with result: " + result);
+		this.transcript.traceDebugging ("Test `%s` finished with result `%{object:class}`: `%s`.", result, result);
 	}
 	
-	private final MosaicLogger logger;
-	private String testName = "";
+	private final String name;
+	private final Transcript transcript;
 }

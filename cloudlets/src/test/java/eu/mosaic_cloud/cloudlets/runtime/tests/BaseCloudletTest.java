@@ -34,7 +34,6 @@ import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
@@ -130,7 +129,6 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final ChannelFactory connectorChannelFactory, final ChannelResolver connectorChannelResolver)
 	{
 		BasicThreadingSecurityManager.initialize ();
-		scenario.logger = MosaicLogger.createLogger (owner);
 		scenario.transcript = Transcript.create (owner);
 		scenario.exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		scenario.exceptions = TranscriptExceptionTracer.create (scenario.transcript, scenario.exceptionsQueue);
@@ -168,7 +166,6 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 		public CloudletEnvironment environment;
 		public TranscriptExceptionTracer exceptions;
 		public QueueingExceptionTracer exceptionsQueue;
-		public MosaicLogger logger;
 		public long poolTimeout = 6 * 1000 * (ConfigProperties.IN_DEBUGGING ? 3600 : 1);
 		public BasicCallbackReactor reactor;
 		public BasicThreadingContext threading;

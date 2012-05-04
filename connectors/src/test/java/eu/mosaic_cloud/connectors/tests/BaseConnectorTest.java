@@ -23,7 +23,6 @@ package eu.mosaic_cloud.connectors.tests;
 
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
@@ -100,10 +99,7 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
 	}
 	
 	static {
-		// NOTE: create configuration
 		BasicThreadingSecurityManager.initialize ();
-		// NOTE: initialize logging system
-		BaseConnectorTest.logger = MosaicLogger.createLogger (BaseConnectorTest.class);
 	}
 	
 	protected static void tearDownScenario (final BaseScenario scenario)
@@ -117,5 +113,4 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
 	protected TConnector connector;
 	protected TScenario scenario;
 	protected static AbstractDriverStub driverStub;
-	protected static MosaicLogger logger;
 }

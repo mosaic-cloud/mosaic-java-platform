@@ -32,7 +32,6 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.log.MosaicLogger;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
@@ -40,6 +39,9 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+
+import org.slf4j.Logger;
 
 import com.google.common.base.Preconditions;
 
@@ -61,7 +63,7 @@ public abstract class AbstractDriverComponentCallbacks
 	{
 		this.threading = context.threading;
 		this.exceptions = context.exceptions;
-		this.logger = MosaicLogger.createLogger (this);
+		this.logger = Transcript.create (this, true).adaptAs (Logger.class);
 	}
 	
 	@Override
@@ -143,7 +145,7 @@ public abstract class AbstractDriverComponentCallbacks
 	protected ComponentController component;
 	protected IConfiguration driverConfiguration;
 	protected ExceptionTracer exceptions;
-	protected MosaicLogger logger;
+	protected Logger logger;
 	protected ComponentCallReference pendingReference;
 	protected ComponentIdentifier resourceGroup;
 	protected ComponentIdentifier selfGroup;

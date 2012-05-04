@@ -51,9 +51,9 @@ public class PongCloudlet
 		{
 			// NOTE: retrieve message data
 			final PingMessage ping = arguments.getMessage ();
-			this.logger.info ("received ping message with key `%s`; acknowledging...", ping.getKey ());
+			this.logger.info ("received ping message with key `{}`; acknowledging...", ping.getKey ());
 			final PongMessage pong = new PongMessage (ping.getKey (), null);
-			this.logger.info ("sending pong message with key `%s`...", pong.getKey ());
+			this.logger.info ("sending pong message with key `{}`...", pong.getKey ());
 			context.publisher.publish (pong, null);
 			return ICallback.SUCCESS;
 		}
