@@ -61,13 +61,8 @@ public class IndexWorkflow
 		int currentSequence;
 		try {
 			this.previousFeedMetaData = fetchedData;
-			final int previousSequence = this.previousFeedMetaData.getInt ("sequence");
-			long minItemTimestamp = -1;
-			try {
-				minItemTimestamp = this.previousFeedMetaData.getLong ("timestamp");
-			} catch (final JSONException e) {
-				ExceptionTracer.traceIgnored (e);
-			}
+			final int previousSequence = this.previousFeedMetaData.has ("sequence") ? this.previousFeedMetaData.getInt ("sequence") : 0;
+			final long minItemTimestamp = this.previousFeedMetaData.has ("timestamp") ? this.previousFeedMetaData.getLong ("timestamp") : -1;
 			long maxItemTimestamp = -1;
 			maxItemTimestamp = minItemTimestamp;
 			final List<Timeline.Entry> currentItems = new ArrayList<Timeline.Entry> ();
@@ -115,21 +110,6 @@ public class IndexWorkflow
 				}
 				this.newTimeline.put ("items", items);
 				this.currentFeedMetaData.put ("timelines", this.newTimeline.getString ("key"));
-				IndexWorkflow.logger.trace ("Current timeline has  " + items.length () + " new items.");
-				JSONArray prevTimelines = null;
-				try {
-					prevTimelines = this.previousFeedMetaData.getJSONArray ("timelines");
-				} catch (final JSONException e) {
-					ExceptionTracer.traceIgnored (e);
-				}
-				final JSONArray newMetadataTimelines = new JSONArray ();
-				newMetadataTimelines.put (newTimelineKey);
-				if (prevTimelines != null) {
-					for (int i = 0; (i < prevTimelines.length ()) && (i < 9); i++) {
-						newMetadataTimelines.put (prevTimelines.getString (i));
-					}
-				}
-				// NOTE: store timeline
 				this.context.timelinesStore.set (newTimelineKey, this.newTimeline, null);
 			} else {
 				this.currentFeedMetaData = this.previousFeedMetaData;
