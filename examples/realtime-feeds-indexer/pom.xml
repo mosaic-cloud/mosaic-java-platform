@@ -43,6 +43,16 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-exceptions</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-transcript</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
 			<version>${versions.dependencies.rome}</version>
@@ -56,6 +66,11 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${versions.dependencies.guava}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${versions.dependencies.slf4j}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
