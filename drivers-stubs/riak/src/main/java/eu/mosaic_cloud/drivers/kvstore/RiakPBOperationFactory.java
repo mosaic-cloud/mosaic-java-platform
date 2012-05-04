@@ -50,12 +50,13 @@ public final class RiakPBOperationFactory
 		implements
 			IOperationFactory
 { // NOPMD
-	private RiakPBOperationFactory (final String riakHost, final int port, final String bucket)
+	private RiakPBOperationFactory (final String riakHost, final int port, final String bucket, final String clientId)
 			throws IOException
 	{
 		super ();
 		this.riakcl = new RiakClient (riakHost, port);
 		this.bucket = bucket;
+		this.clientId = clientId;
 	}
 	
 	@Override
@@ -125,6 +126,7 @@ public final class RiakPBOperationFactory
 					throws IOException
 			{
 				final String key = (String) parameters[0];
+				// FIXME: use the vector clock...
 				RiakPBOperationFactory.this.riakcl.delete (RiakPBOperationFactory.this.bucket, key);
 				return true;
 			}
@@ -140,6 +142,7 @@ public final class RiakPBOperationFactory
 			{
 				byte[] result = null;
 				final String key = (String) parameters[0];
+				// FIXME: use the vector clock...
 				final RiakObject[] riakobj = RiakPBOperationFactory.this.riakcl.fetch (RiakPBOperationFactory.this.bucket, key);
 				if (riakobj.length == 1) {
 					result = riakobj[0].getValue ().toByteArray ();
@@ -157,6 +160,7 @@ public final class RiakPBOperationFactory
 					throws IOException
 			{
 				KeySource keyStore;
+				// FIXME: use the vector clock...
 				keyStore = RiakPBOperationFactory.this.riakcl.listKeys (ByteString.copyFromUtf8 (RiakPBOperationFactory.this.bucket));
 				final List<String> keys = new ArrayList<String> ();
 				while (keyStore.hasNext ()) {
@@ -180,6 +184,7 @@ public final class RiakPBOperationFactory
 				final ByteString bucketBS = ByteString.copyFromUtf8 (RiakPBOperationFactory.this.bucket);
 				final ByteString dataBS = ByteString.copyFrom (dataBytes);
 				final RiakObject riakobj = new RiakObject (bucketBS, keyBS, dataBS);
+				// FIXME: use the vector clock...
 				RiakPBOperationFactory.this.riakcl.store (riakobj);
 				return true;
 			}
@@ -197,11 +202,11 @@ public final class RiakPBOperationFactory
 	 *            the bucket associated with the connection
 	 * @return the factory
 	 */
-	public static RiakPBOperationFactory getFactory (final String riakHost, final int port, final String bucket)
+	public static RiakPBOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId)
 	{
 		RiakPBOperationFactory factory = null; // NOPMD
 		try {
-			factory = new RiakPBOperationFactory (riakHost, port, bucket);
+			factory = new RiakPBOperationFactory (riakHost, port, bucket, clientId);
 			final MosaicLogger sLogger = MosaicLogger.createLogger (RiakRestOperationFactory.class);
 			sLogger.trace ("Created Riak PB factory for " + riakHost + ":" + port + " bucket " + bucket);
 		} catch (final IOException e) {
@@ -211,5 +216,6 @@ public final class RiakPBOperationFactory
 	}
 	
 	private final String bucket;
+	private final String clientId;
 	private final RiakClient riakcl;
 }

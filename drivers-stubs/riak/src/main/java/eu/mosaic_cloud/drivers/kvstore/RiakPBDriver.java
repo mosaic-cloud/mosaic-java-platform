@@ -78,9 +78,10 @@ public final class RiakPBDriver
 	@Override
 	protected IOperationFactory createOperationFactory (final Object ... params)
 	{
-		final String bucket = params[0].toString ();
+		final String bucket = (String) params[0];
+		final String clientId = (String) params[1];
 		IOperationFactory opFactory;
-		opFactory = RiakPBOperationFactory.getFactory (this.riakHost, this.riakPort, bucket);
+		opFactory = RiakPBOperationFactory.getFactory (this.riakHost, this.riakPort, bucket, clientId);
 		return opFactory;
 	}
 	

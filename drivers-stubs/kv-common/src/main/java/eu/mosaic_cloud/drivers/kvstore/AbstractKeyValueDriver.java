@@ -106,7 +106,7 @@ public abstract class AbstractKeyValueDriver
 		Preconditions.checkArgument (!this.clientBucketMap.containsKey (clientId));
 		BucketData bucketData = this.bucketFactories.get (bucket);
 		if (bucketData == null) {
-			bucketData = new BucketData (bucket);
+			bucketData = new BucketData (bucket, clientId);
 			this.bucketFactories.put (bucket, bucketData);
 			bucketData.noClients.incrementAndGet ();
 			this.logger.trace ("Create new client for bucket " + bucket);
@@ -193,11 +193,11 @@ public abstract class AbstractKeyValueDriver
 	
 	private class BucketData
 	{
-		public BucketData (final String bucket)
+		public BucketData (final String bucket, final String clientId)
 		{
 			this.bucketName = bucket;
 			this.noClients = new AtomicInteger (0);
-			this.opFactory = AbstractKeyValueDriver.this.createOperationFactory (bucket);
+			this.opFactory = AbstractKeyValueDriver.this.createOperationFactory (bucket, clientId);
 		}
 		
 		private void destroy ()

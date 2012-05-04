@@ -78,7 +78,8 @@ public final class RiakRestDriver
 	protected IOperationFactory createOperationFactory (final Object ... params)
 	{
 		final String bucket = (String) params[0];
-		final IOperationFactory opFactory = RiakRestOperationFactory.getFactory (this.riakHost, this.riakPort, bucket);
+		final String clientId = (String) params[1];
+		final IOperationFactory opFactory = RiakRestOperationFactory.getFactory (this.riakHost, this.riakPort, bucket, clientId);
 		return opFactory;
 	}
 	

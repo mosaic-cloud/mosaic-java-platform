@@ -34,10 +34,12 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
 import com.basho.riak.client.RiakBucketInfo;
 import com.basho.riak.client.RiakClient;
 import com.basho.riak.client.RiakObject;
+import com.basho.riak.client.request.RequestMeta;
 import com.basho.riak.client.response.BucketResponse;
 import com.basho.riak.client.response.FetchResponse;
 import com.basho.riak.client.response.HttpResponse;
 import com.basho.riak.client.response.StoreResponse;
+import com.basho.riak.client.util.Constants;
 
 
 /**
@@ -51,12 +53,13 @@ public final class RiakRestOperationFactory
 		implements
 			IOperationFactory
 { // NOPMD
-	private RiakRestOperationFactory (final String riakHost, final int riakPort, final String bucket)
+	private RiakRestOperationFactory (final String riakHost, final int riakPort, final String bucket, final String clientId)
 	{
 		super ();
 		final String address = "http://" + riakHost + ":" + riakPort + "/riak";
 		this.riakcl = new RiakClient (address);
 		this.bucket = bucket;
+		this.clientId = clientId;
 	}
 	
 	@Override
@@ -125,7 +128,9 @@ public final class RiakRestOperationFactory
 			public Boolean call ()
 			{
 				final String key = (String) parameters[0];
-				final HttpResponse res = RiakRestOperationFactory.this.riakcl.delete (RiakRestOperationFactory.this.bucket, key);
+				final RequestMeta meta = new RequestMeta ();
+				meta.setClientId (RiakRestOperationFactory.this.clientId);
+				final HttpResponse res = RiakRestOperationFactory.this.riakcl.delete (RiakRestOperationFactory.this.bucket, key, meta);
 				if (res.getStatusCode () == 404) {
 					return false;
 				}
@@ -141,9 +146,27 @@ public final class RiakRestOperationFactory
 			public byte[] call ()
 			{
 				final String key = (String) parameters[0];
-				final FetchResponse res = RiakRestOperationFactory.this.riakcl.fetch (RiakRestOperationFactory.this.bucket, key);
-				if (res.hasObject ()) {
-					final RiakObject riakobj = res.getObject ();
+				final RequestMeta meta = new RequestMeta ();
+				meta.setClientId (RiakRestOperationFactory.this.clientId);
+				meta.setAccept (Constants.CTYPE_ANY + ", " + Constants.CTYPE_MULTIPART_MIXED);
+				final FetchResponse res = RiakRestOperationFactory.this.riakcl.fetch (RiakRestOperationFactory.this.bucket, key, meta);
+				final RiakObject riakobj;
+				if (res.hasSiblings ()) {
+					RiakObject oldest = null;
+					long oldestMod = Long.MIN_VALUE;
+					for (final RiakObject sibling : res.getSiblings ()) {
+						final long siblingMod = sibling.getLastmodAsDate ().getTime ();
+						if (siblingMod >= oldestMod) {
+							oldest = sibling;
+							oldestMod = siblingMod;
+						}
+					}
+					riakobj = oldest;
+				} else if (res.hasObject ()) {
+					riakobj = res.getObject ();
+				} else
+					riakobj = null;
+				if (riakobj != null) {
 					return riakobj.getValueAsBytes ();
 				} else {
 					return null;
@@ -158,7 +181,9 @@ public final class RiakRestOperationFactory
 			@Override
 			public List<String> call ()
 			{
-				final BucketResponse res = RiakRestOperationFactory.this.riakcl.listBucket (RiakRestOperationFactory.this.bucket);
+				final RequestMeta meta = new RequestMeta ();
+				meta.setClientId (RiakRestOperationFactory.this.clientId);
+				final BucketResponse res = RiakRestOperationFactory.this.riakcl.listBucket (RiakRestOperationFactory.this.bucket, meta);
 				List<String> keys = new ArrayList<String> ();
 				if (res.isSuccess ()) {
 					final RiakBucketInfo info = res.getBucketInfo ();
@@ -180,7 +205,9 @@ public final class RiakRestOperationFactory
 				final String key = (String) parameters[0];
 				final byte[] dataBytes = (byte[]) parameters[1];
 				final RiakObject riakobj = new RiakObject (RiakRestOperationFactory.this.bucket, key, dataBytes);
-				final StoreResponse response = RiakRestOperationFactory.this.riakcl.store (riakobj);
+				final RequestMeta meta = new RequestMeta ();
+				meta.setClientId (RiakRestOperationFactory.this.clientId);
+				final StoreResponse response = RiakRestOperationFactory.this.riakcl.store (riakobj, meta);
 				if (response.isSuccess ()) {
 					return true;
 				}
@@ -200,11 +227,12 @@ public final class RiakRestOperationFactory
 	 *            the bucket associated with the connection
 	 * @return the factory
 	 */
-	public static RiakRestOperationFactory getFactory (final String riakHost, final int port, final String bucket)
+	public static RiakRestOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId)
 	{
-		return new RiakRestOperationFactory (riakHost, port, bucket);
+		return new RiakRestOperationFactory (riakHost, port, bucket, clientId);
 	}
 	
 	private final String bucket;
+	private final String clientId;
 	private final RiakClient riakcl;
 }
