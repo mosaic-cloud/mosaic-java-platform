@@ -580,7 +580,7 @@ public final class BasicChannel
 							if (outcome == -1)
 								this.input.close ();
 						} catch (final ClosedChannelException exception) {
-							this.exceptions.traceHandledException (exception);
+							this.exceptions.traceIgnoredException (exception);
 						}
 					} catch (final IOException exception) {
 						throw (new IgnoredException (exception, "i/o error encountered while accessing input flow; aborting!"));
@@ -596,7 +596,7 @@ public final class BasicChannel
 						try {
 							this.output.write (this.outputPending);
 						} catch (final ClosedChannelException exception) {
-							this.exceptions.traceHandledException (exception);
+							this.exceptions.traceIgnoredException (exception);
 						}
 					} catch (final IOException exception) {
 						throw (new IgnoredException (exception, "i/o error encountered while accessing output flow; aborting!"));
