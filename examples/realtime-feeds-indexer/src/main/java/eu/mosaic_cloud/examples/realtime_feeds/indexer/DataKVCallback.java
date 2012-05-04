@@ -61,7 +61,7 @@ public class DataKVCallback
 	public CallbackCompletion<Void> getSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<byte[], UUID> arguments)
 	{
 		final String key = arguments.getKey ();
-		this.logger.trace ("succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key + ")");
+		this.logger.debug ("succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key + ")");
 		IndexWorkflow.parseLatestFeed (arguments.getValue (), arguments.getExtra ());
 		return ICallback.SUCCESS;
 	}

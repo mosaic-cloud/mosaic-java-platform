@@ -58,7 +58,7 @@ public final class MetadataKVCallback
 	public CallbackCompletion<Void> getSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		final String key = arguments.getKey ();
-		this.logger.trace ("succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key + ")");
+		this.logger.debug ("succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key + ")");
 		final JSONObject value = arguments.getValue ();
 		if (value == null) {
 			this.createFeedMetaData (context, key, arguments.getExtra ());

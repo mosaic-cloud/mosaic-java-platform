@@ -55,7 +55,7 @@ public class IndexWorkflow
 	
 	private void doFeedDiff (final JSONObject fetchedData)
 	{
-		IndexWorkflow.logger.trace ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 4 (diff-ing latest feed)...");
+		IndexWorkflow.logger.debug ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 4 (diff-ing latest feed) for " + this.key + "...");
 		String currentKey, currentURL, currentFeed, currentFeedId;
 		long currentTimestamp;
 		int currentSequence;
@@ -149,7 +149,9 @@ public class IndexWorkflow
 	private void fetchLatestFeed ()
 	{
 		try {
-			IndexWorkflow.logger.info ("indexing " + this.indexMessage.getString ("url") + " (from data) step 2 (fetching latest data)...");
+			// FIXME: we should check if this feed isn't still pending for indexing...
+			IndexWorkflow.logger.info ("New indexer created for feed " + this.indexMessage.getString ("url") + " ...");
+			IndexWorkflow.logger.debug ("indexing " + this.indexMessage.getString ("url") + " (from data) step 2 (fetching latest data) for " + this.key + "...");
 			this.context.dataStore.get (this.indexMessage.getString ("data"), this.key);
 		} catch (final JSONException e) {
 			this.handleError (e);
@@ -176,7 +178,7 @@ public class IndexWorkflow
 	
 	private void handleMetadataUpdate ()
 	{
-		IndexWorkflow.logger.trace ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 5 (updating meta-data)...");
+		IndexWorkflow.logger.debug ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 5 (updating meta-data) for " + this.key + "...");
 		try {
 			this.context.metadataStore.set (this.currentFeedMetaData.getString ("key"), this.currentFeedMetaData, this.key);
 		} catch (final JSONException e) {
@@ -188,7 +190,7 @@ public class IndexWorkflow
 			throws JSONException
 	{
 		final String feedKey = StoreUtils.generateFeedKey (this.indexMessage.getString ("url"));
-		IndexWorkflow.logger.trace ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 3 (fetching latest meta-data)...");
+		IndexWorkflow.logger.debug ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 3 (fetching latest meta-data) for " + this.key + "...");
 		// FIXME: ??? (I don't remember what the problem was...)
 		this.context.metadataStore.get (feedKey, this.key);
 	}
@@ -202,7 +204,7 @@ public class IndexWorkflow
 	private void parseFeed (final byte[] fetchedData)
 	{
 		try {
-			IndexWorkflow.logger.trace ("indexing " + this.indexMessage.getString ("url") + " (from data) step 2 (parsing latest data)...");
+			IndexWorkflow.logger.debug ("indexing " + this.indexMessage.getString ("url") + " (from data) step 2 (parsing latest data) for " + this.key + "...");
 			final byte[] data = fetchedData;
 			this.currentTimeline = this.parser.parseFeed (data);
 			this.indexFeed ();
@@ -217,7 +219,7 @@ public class IndexWorkflow
 	
 	private void storeIndexOutcome ()
 	{
-		IndexWorkflow.logger.trace ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 6 (updating index task)...");
+		IndexWorkflow.logger.debug ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 6 (updating index task) for " + this.key + "...");
 		try {
 			final String feedTaskKey = StoreUtils.generateFeedTaskKey (this.indexMessage.getString ("url"), IndexWorkflow.INDEX_TASK_TYPE);
 			this.newFeedTask.put ("key", feedTaskKey);
@@ -249,7 +251,6 @@ public class IndexWorkflow
 	public static void indexNewFeed (final IndexerCloudletContext context, final JSONObject recvMessage)
 	{
 		final IndexWorkflow aIndexer = IndexWorkflow.createIndexer (context, recvMessage);
-		IndexWorkflow.logger.trace ("New indexer created for message " + aIndexer.indexMessage);
 		aIndexer.fetchLatestFeed ();
 	}
 	
