@@ -22,6 +22,7 @@ package eu.mosaic_cloud.platform.core.log;
 
 
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.core.TranscriptTraceType;
 
 
 /**
@@ -114,7 +115,7 @@ public final class MosaicLogger
 	 */
 	public void trace (final String message)
 	{
-		this.logger.traceDebugging (message);
+		this.logger.trace (TranscriptTraceType.Trace, message);
 	}
 	
 	/**
@@ -126,7 +127,7 @@ public final class MosaicLogger
 	 */
 	public void trace (final String format, final Object ... tokens)
 	{
-		this.logger.traceDebugging (format, tokens);
+		this.logger.trace (TranscriptTraceType.Trace, format, tokens);
 	}
 	
 	/**
@@ -176,6 +177,11 @@ public final class MosaicLogger
 	public static MosaicLogger createLogger (final Object owner)
 	{ // NOPMD
 		return MosaicLogger.createLogger (Transcript.create (owner));
+	}
+	
+	public static MosaicLogger createLogger (final Object owner, final boolean unique)
+	{
+		return MosaicLogger.createLogger (Transcript.create (owner, unique));
 	}
 	
 	public static MosaicLogger createLogger (final Transcript transcript)
