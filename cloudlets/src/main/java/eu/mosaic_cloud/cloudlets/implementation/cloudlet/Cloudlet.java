@@ -89,7 +89,7 @@ public final class Cloudlet<TContext extends Object>
 			}
 			TContext controllerContext;
 			try {
-				controllerContext = (TContext) this.environment.getCloudletCallbackClass ().newInstance ();
+				controllerContext = (TContext) this.environment.getCloudletContextClass ().newInstance ();
 			} catch (final ReflectiveOperationException exception) {
 				controllerContext = null; // NOPMD
 				this.handleInternalFailure (null, exception); // NOPMD
