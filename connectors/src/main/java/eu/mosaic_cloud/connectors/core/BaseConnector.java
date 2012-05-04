@@ -23,6 +23,7 @@ package eu.mosaic_cloud.connectors.core;
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import com.google.common.base.Preconditions;
 
@@ -46,6 +47,9 @@ public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
 		super ();
 		Preconditions.checkNotNull (proxy);
 		this.proxy = proxy;
+		this.transcript = Transcript.create (this, true);
+		this.transcript.traceDebugging ("creating the connector of type `%{object:class}`.", this);
+		this.transcript.traceDebugging ("using the underlying connector proxy `%{object}`...", this.proxy);
 	}
 	
 	@Override
@@ -61,4 +65,5 @@ public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
 	}
 	
 	protected final TProxy proxy;
+	protected final Transcript transcript;
 }
