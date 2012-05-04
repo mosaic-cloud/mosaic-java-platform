@@ -137,7 +137,7 @@ public class IndexWorkflow
 			}
 			this.indexDone = true;
 		} catch (final JSONException e) {
-			ExceptionTracer.traceDeferred (e);
+			ExceptionTracer.traceIgnored (e);
 		}
 	}
 	
@@ -160,11 +160,11 @@ public class IndexWorkflow
 	
 	private void handleError (final Exception e)
 	{
-		ExceptionTracer.traceDeferred (e);
 		final Map<String, String> errorMssg = new HashMap<String, String> ();
 		errorMssg.put ("reason", "unexpected parsing error");
 		errorMssg.put ("message", e.getMessage ());
 		IndexWorkflow.onIndexError (errorMssg);
+		ExceptionTracer.traceIgnored (e);
 	}
 	
 	private void handleMetadataStored (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
@@ -182,7 +182,7 @@ public class IndexWorkflow
 		try {
 			this.context.metadataStore.set (this.currentFeedMetaData.getString ("key"), this.currentFeedMetaData, this.key);
 		} catch (final JSONException e) {
-			ExceptionTracer.traceDeferred (e);
+			ExceptionTracer.traceIgnored (e);
 		}
 	}
 	
@@ -239,7 +239,7 @@ public class IndexWorkflow
 			this.newFeedTask.put ("error", error);
 			this.context.tasksStore.set (feedTaskKey, this.newFeedTask, null);
 		} catch (final JSONException e) {
-			ExceptionTracer.traceDeferred (e);
+			ExceptionTracer.traceIgnored (e);
 		}
 	}
 	

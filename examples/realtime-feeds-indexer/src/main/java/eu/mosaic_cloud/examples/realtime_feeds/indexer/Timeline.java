@@ -125,7 +125,7 @@ public class Timeline
 				json.put ("url", Timeline.this.getUrl ());
 				json.put ("key", this.key);
 			} catch (final JSONException e) {
-				ExceptionTracer.traceDeferred (e);
+				ExceptionTracer.traceIgnored (e);
 			}
 			return json;
 		}
