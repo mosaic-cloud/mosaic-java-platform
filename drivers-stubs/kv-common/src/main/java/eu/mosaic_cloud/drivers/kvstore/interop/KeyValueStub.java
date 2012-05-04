@@ -41,7 +41,6 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
@@ -55,6 +54,7 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -261,9 +261,9 @@ public class KeyValueStub
 					AbstractDriverStub.incDriverReference (stub);
 				}
 			} catch (final DriverNotFoundException e) {
-				ExceptionTracer.traceDeferred (e);
+				FallbackExceptionTracer.defaultInstance.traceDeferredException (e);
 				final ConnectionException e1 = new ConnectionException ("The required key-value driver cannot be provided: " + e.getMessage (), e);
-				ExceptionTracer.traceIgnored (e1);
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e1);
 			}
 		}
 		return stub;
@@ -282,9 +282,9 @@ public class KeyValueStub
 			AbstractDriverStub.incDriverReference (stub);
 			channel.accept (KeyValueSession.DRIVER, stub);
 		} catch (final DriverNotFoundException e) {
-			ExceptionTracer.traceDeferred (e);
+			FallbackExceptionTracer.defaultInstance.traceDeferredException (e);
 			final ConnectionException e1 = new ConnectionException ("The required key-value driver cannot be provided: " + e.getMessage (), e);
-			ExceptionTracer.traceIgnored (e1);
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (e1);
 			stub = null;
 		}
 		return stub;
@@ -344,7 +344,7 @@ public class KeyValueStub
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				KeyValueStub.this.exceptions.traceIgnoredException (e);
 			}
 			this.driver.removePendingOperation (this.result);
 			// NOTE: result is error
@@ -357,7 +357,7 @@ public class KeyValueStub
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				KeyValueStub.this.exceptions.traceIgnoredException (e);
 			}
 			this.driver.removePendingOperation (this.result);
 			if (this.operation.equals (KeyValueOperations.GET)) {

@@ -35,7 +35,6 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
@@ -51,6 +50,7 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -242,9 +242,9 @@ public class MemcachedStub
 					AbstractDriverStub.incDriverReference (stub);
 				}
 			} catch (final Exception e) {
-				ExceptionTracer.traceDeferred (e);
+				FallbackExceptionTracer.defaultInstance.traceDeferredException (e);
 				final ConnectionException e1 = new ConnectionException ("The Memcached proxy cannot connect to the driver: " + e.getMessage (), e);
-				ExceptionTracer.traceIgnored (e1);
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e1);
 			}
 		}
 		return stub;
@@ -262,9 +262,9 @@ public class MemcachedStub
 			channel.accept (KeyValueSession.DRIVER, stub);
 			channel.accept (MemcachedSession.DRIVER, stub);
 		} catch (final Exception e) {
-			ExceptionTracer.traceDeferred (e);
+			FallbackExceptionTracer.defaultInstance.traceDeferredException (e);
 			final ConnectionException e1 = new ConnectionException ("The Memcached proxy cannot connect to the driver: " + e.getMessage (), e);
-			ExceptionTracer.traceIgnored (e1);
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (e1);
 			stub = null;
 		}
 		return stub;

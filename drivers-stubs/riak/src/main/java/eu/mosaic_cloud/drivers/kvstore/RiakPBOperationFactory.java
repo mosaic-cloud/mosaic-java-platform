@@ -26,11 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import org.slf4j.Logger;
@@ -59,6 +60,7 @@ public final class RiakPBOperationFactory
 		this.riakcl = new RiakClient (riakHost, port);
 		this.bucket = bucket;
 		this.clientId = clientId;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	@Override
@@ -107,7 +109,7 @@ public final class RiakPBOperationFactory
 							});
 			}
 		} catch (final Exception e) {
-			ExceptionTracer.traceDeferred (e);
+			this.exceptions.traceDeferredException (e);
 			operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
 						@Override
 						public Object call ()
@@ -211,13 +213,14 @@ public final class RiakPBOperationFactory
 			factory = new RiakPBOperationFactory (riakHost, port, bucket, clientId);
 			RiakPBOperationFactory.logger.trace ("Created Riak PB factory for " + riakHost + ":" + port + " bucket " + bucket);
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
 		}
 		return factory;
 	}
 	
 	private final String bucket;
 	private final String clientId;
+	private final BaseExceptionTracer exceptions;
 	private final RiakClient riakcl;
 	private static final Logger logger = Transcript.create (RiakPBOperationFactory.class).adaptAs (Logger.class);
 }

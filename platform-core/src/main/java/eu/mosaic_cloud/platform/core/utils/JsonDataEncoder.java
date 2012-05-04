@@ -23,7 +23,8 @@ package eu.mosaic_cloud.platform.core.utils;
 
 import java.io.IOException;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 
 
 public class JsonDataEncoder<T extends Object>
@@ -33,6 +34,7 @@ public class JsonDataEncoder<T extends Object>
 	public JsonDataEncoder (final Class<T> dataClass)
 	{
 		this.dataClass = dataClass;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	};
 	
 	@Override
@@ -42,9 +44,9 @@ public class JsonDataEncoder<T extends Object>
 		try {
 			object = this.dataClass.cast (SerDesUtils.jsonToObject (dataBytes, this.dataClass));
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		} catch (final ClassNotFoundException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 		return object;
 	}
@@ -61,4 +63,5 @@ public class JsonDataEncoder<T extends Object>
 	}
 	
 	private final Class<T> dataClass;
+	private final BaseExceptionTracer exceptions;
 }

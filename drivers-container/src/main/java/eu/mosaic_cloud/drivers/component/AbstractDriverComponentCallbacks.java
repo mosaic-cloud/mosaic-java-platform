@@ -37,9 +37,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.slf4j.Logger;
 
@@ -62,8 +63,9 @@ public abstract class AbstractDriverComponentCallbacks
 	protected AbstractDriverComponentCallbacks (final ComponentEnvironment context)
 	{
 		this.threading = context.threading;
-		this.exceptions = context.exceptions;
-		this.logger = Transcript.create (this, true).adaptAs (Logger.class);
+		final Transcript transcript = Transcript.create (this, true);
+		this.logger = transcript.adaptAs (Logger.class);
+		this.exceptions = TranscriptExceptionTracer.create (transcript, context.exceptions);
 	}
 	
 	@Override
@@ -144,7 +146,7 @@ public abstract class AbstractDriverComponentCallbacks
 	
 	protected ComponentController component;
 	protected IConfiguration driverConfiguration;
-	protected ExceptionTracer exceptions;
+	protected BaseExceptionTracer exceptions;
 	protected Logger logger;
 	protected ComponentCallReference pendingReference;
 	protected ComponentIdentifier resourceGroup;

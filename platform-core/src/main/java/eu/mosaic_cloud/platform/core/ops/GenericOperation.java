@@ -28,8 +28,9 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.exceptions.NullCompletionCallback;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 
 
 /**
@@ -54,6 +55,7 @@ public class GenericOperation<T>
 	{
 		super ();
 		this.operation = new GenericTask (operation);
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	/**
@@ -95,11 +97,11 @@ public class GenericOperation<T>
 				// FIXME: customize exception
 				final Throwable e1 = e.getCause ();
 				if (e1 instanceof UnsupportedOperationException) {
-					ExceptionTracer.traceHandled (e);
-					ExceptionTracer.traceDeferred (e1);
+					this.exceptions.traceHandledException (e);
+					this.exceptions.traceDeferredException (e1);
 					this.getHandler ().onFailure (e1);
 				} else {
-					ExceptionTracer.traceIgnored (e);
+					this.exceptions.traceIgnoredException (e);
 				}
 			}
 		}
@@ -136,11 +138,11 @@ public class GenericOperation<T>
 				// FIXME: customize exception
 				final Throwable e1 = e.getCause ();
 				if (e1 instanceof UnsupportedOperationException) {
-					ExceptionTracer.traceHandled (e);
-					ExceptionTracer.traceDeferred (e1);
+					this.exceptions.traceHandledException (e);
+					this.exceptions.traceDeferredException (e1);
 					this.getHandler ().onFailure (e1);
 				} else {
-					ExceptionTracer.traceIgnored (e);
+					this.exceptions.traceIgnoredException (e);
 				}
 			}
 		}
@@ -215,6 +217,7 @@ public class GenericOperation<T>
 	
 	private final CountDownLatch cHandlerSet = new CountDownLatch (1);
 	private IOperationCompletionHandler<T> complHandler;
+	private final BaseExceptionTracer exceptions;
 	private final FutureTask<T> operation;
 	
 	private final class GenericTask
@@ -238,16 +241,16 @@ public class GenericOperation<T>
 				GenericOperation.this.cHandlerSet.await ();
 				GenericOperation.this.complHandler.onSuccess (GenericTask.super.get ());
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				GenericOperation.this.exceptions.traceIgnoredException (e);
 			} catch (final ExecutionException e) {
 				// FIXME: customize exception
 				final Throwable e1 = e.getCause ();
 				if (e1 instanceof UnsupportedOperationException) {
-					ExceptionTracer.traceHandled (e);
-					ExceptionTracer.traceDeferred (e1);
+					GenericOperation.this.exceptions.traceHandledException (e);
+					GenericOperation.this.exceptions.traceDeferredException (e1);
 					GenericOperation.this.getHandler ().onFailure (e1);
 				} else {
-					ExceptionTracer.traceIgnored (e);
+					GenericOperation.this.exceptions.traceIgnoredException (e);
 				}
 			}
 		}
@@ -265,7 +268,7 @@ public class GenericOperation<T>
 			try {
 				GenericOperation.this.cHandlerSet.await ();
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				GenericOperation.this.exceptions.traceIgnoredException (e);
 			}
 			GenericOperation.this.complHandler.onFailure (exception);
 		}

@@ -36,7 +36,6 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
@@ -448,7 +447,7 @@ public class AmqpStub
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				AmqpStub.this.exceptions.traceIgnoredException (e);
 			}
 			this.driver.removePendingOperation (this.result);
 			// NOTE: result is error
@@ -461,7 +460,7 @@ public class AmqpStub
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
-				ExceptionTracer.traceIgnored (e);
+				AmqpStub.this.exceptions.traceIgnoredException (e);
 			}
 			this.driver.removePendingOperation (this.result);
 			this.transmitter.sendResponse (this.session, this.complToken, this.operation, response, false);

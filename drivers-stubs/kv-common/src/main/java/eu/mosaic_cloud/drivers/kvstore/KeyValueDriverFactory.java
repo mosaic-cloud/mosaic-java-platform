@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
@@ -72,11 +72,11 @@ public final class KeyValueDriverFactory
 				try {
 					driver = (AbstractKeyValueDriver) createMethod.invoke (null, config, threadingContext);
 				} catch (final InvocationTargetException exception) {
-					ExceptionTracer.traceHandled (exception);
+					FallbackExceptionTracer.defaultInstance.traceHandledException (exception);
 					throw exception.getCause ();
 				}
 			} catch (final Throwable e) {
-				ExceptionTracer.traceIgnored (e);
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
 				final DriverNotFoundException exception = new DriverNotFoundException (e);
 				throw exception;
 			}

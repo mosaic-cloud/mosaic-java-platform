@@ -23,7 +23,8 @@ package eu.mosaic_cloud.platform.core.utils;
 
 import java.io.IOException;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 
 
 public class PojoDataEncoder<T extends Object>
@@ -33,6 +34,7 @@ public class PojoDataEncoder<T extends Object>
 	public PojoDataEncoder (final Class<T> dataClass)
 	{
 		this.dataClass = dataClass;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	@Override
@@ -42,9 +44,9 @@ public class PojoDataEncoder<T extends Object>
 		try {
 			object = this.dataClass.cast (SerDesUtils.toObject (dataBytes));
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		} catch (final ClassNotFoundException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 		return object;
 	}
@@ -61,4 +63,5 @@ public class PojoDataEncoder<T extends Object>
 	}
 	
 	private final Class<T> dataClass;
+	private final BaseExceptionTracer exceptions;
 }

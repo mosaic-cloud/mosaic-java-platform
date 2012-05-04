@@ -42,7 +42,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -73,7 +72,7 @@ public final class AmqpDriverComponentCallbacks
 			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("AmqpDriverComponentCallbacks.1"), String.class, "")); // $NON-NLS-1$
 			this.status = Status.Created;
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 	}
 	
@@ -94,7 +93,7 @@ public final class AmqpDriverComponentCallbacks
 						channelEndpoint = channelEndpoint.replace ("0.0.0.0", InetAddress.getLocalHost ().getHostAddress ());
 					}
 				} catch (final UnknownHostException e) {
-					ExceptionTracer.traceIgnored (e);
+					this.exceptions.traceIgnoredException (e);
 				}
 				final String channelId = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("AmqpDriverComponentCallbacks.4"), String.class, ""); // $NON-NLS-1$
 				final Map<String, String> outcome = new HashMap<String, String> ();
@@ -173,7 +172,7 @@ public final class AmqpDriverComponentCallbacks
 		if (this.pendingReference == reference) {
 			if (!registerOk) {
 				final Exception e = new Exception ("failed registering to group; terminating!"); // $NON-NLS-1$
-				ExceptionTracer.traceDeferred (e);
+				this.exceptions.traceDeferredException (e);
 				this.component.terminate ();
 				throw (new IllegalStateException (e));
 			}
@@ -199,7 +198,7 @@ public final class AmqpDriverComponentCallbacks
 			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("AmqpDriver.4")), pass); // $NON-NLS-1$
 			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("AmqpDriver.5")), vHost); // $NON-NLS-1$
 		} catch (final NullPointerException e) { // NOPMD
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 	}
 }

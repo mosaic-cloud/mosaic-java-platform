@@ -43,7 +43,6 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -75,7 +74,7 @@ public final class KvDriverComponentCallbacks
 			this.driverName = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 			this.status = Status.Created;
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 	}
 	
@@ -96,7 +95,7 @@ public final class KvDriverComponentCallbacks
 						channelEndpoint = channelEndpoint.replace ("0.0.0.0", InetAddress.getLocalHost ().getHostAddress ());
 					}
 				} catch (final UnknownHostException e) {
-					ExceptionTracer.traceIgnored (e);
+					this.exceptions.traceIgnoredException (e);
 				}
 				final String channelId = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("KVDriverComponentCallbacks.4"), String.class, ""); // $NON-NLS-1$
 				final Map<String, String> outcome = new HashMap<String, String> ();
@@ -133,7 +132,7 @@ public final class KvDriverComponentCallbacks
 					Preconditions.checkArgument (port != null);
 				} catch (final IllegalArgumentException exception) {
 					this.terminate ();
-					ExceptionTracer.traceDeferred (exception, "failed resolving Riak broker endpoint: `%s`; terminating!", reply.outputsOrError);
+					this.exceptions.traceDeferredException (exception, "failed resolving Riak broker endpoint: `%s`; terminating!", reply.outputsOrError);
 					throw new IllegalStateException (exception);
 				}
 				this.logger.trace ("Resolved Riak on " + ipAddress + ":" + port); // $NON-NLS-1$ $NON-NLS-2$
@@ -179,7 +178,7 @@ public final class KvDriverComponentCallbacks
 		if (this.pendingReference == reference) {
 			if (!success) {
 				final Exception e = new Exception ("failed registering to group; terminating!"); // $NON-NLS-1$
-				ExceptionTracer.traceDeferred (e);
+				this.exceptions.traceDeferredException (e);
 				this.component.terminate ();
 				throw (new IllegalStateException (e));
 			}

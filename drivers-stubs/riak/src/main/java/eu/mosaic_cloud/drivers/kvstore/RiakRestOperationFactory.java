@@ -25,11 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 
 import com.basho.riak.client.RiakBucketInfo;
 import com.basho.riak.client.RiakClient;
@@ -60,6 +61,7 @@ public final class RiakRestOperationFactory
 		this.riakcl = new RiakClient (address);
 		this.bucket = bucket;
 		this.clientId = clientId;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	@Override
@@ -108,7 +110,7 @@ public final class RiakRestOperationFactory
 							});
 			}
 		} catch (final Exception e) {
-			ExceptionTracer.traceDeferred (e);
+			this.exceptions.traceDeferredException (e);
 			operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
 						@Override
 						public Object call ()
@@ -234,5 +236,6 @@ public final class RiakRestOperationFactory
 	
 	private final String bucket;
 	private final String clientId;
+	private final BaseExceptionTracer exceptions;
 	private final RiakClient riakcl;
 }

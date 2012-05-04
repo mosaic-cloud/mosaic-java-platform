@@ -31,12 +31,12 @@ import java.util.Map;
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
@@ -184,7 +184,7 @@ public final class MemcachedDriver
 				final URI address = new URI ("http://" + hosts.get (index) + ":" + ports.get (index) + "/pools"); // NOPMD
 				nodesURI.add (address);
 			} catch (final URISyntaxException e) {
-				ExceptionTracer.traceIgnored (e);
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
 			}
 		}
 		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$

@@ -30,11 +30,11 @@ import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
 import eu.mosaic_cloud.drivers.kvstore.RiakRestDriver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -57,6 +57,7 @@ public class RiakRestDriverTest
 		final Transcript transcript = Transcript.create (this);
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
+		this.exceptions = exceptions;
 		BasicThreadingSecurityManager.initialize ();
 		this.threadingContext = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		this.threadingContext.initialize ();
@@ -93,10 +94,10 @@ public class RiakRestDriverTest
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<byte[]> handler3 = new TestLoggingHandler<byte[]> ("check deleted");
@@ -104,10 +105,10 @@ public class RiakRestDriverTest
 		try {
 			Assert.assertNull (r3.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -134,10 +135,10 @@ public class RiakRestDriverTest
 		try {
 			Assert.assertEquals ("famous", SerDesUtils.toObject (r1.getResult ()).toString ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -154,10 +155,10 @@ public class RiakRestDriverTest
 			Assert.assertTrue (lresult.contains (k1));
 			Assert.assertTrue (lresult.contains (k2));
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -179,10 +180,10 @@ public class RiakRestDriverTest
 			Assert.assertTrue (r1.getResult ());
 			Assert.assertTrue (r2.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -193,6 +194,7 @@ public class RiakRestDriverTest
 		RiakRestDriverTest.keyPrefix = UUID.randomUUID ().toString ();
 	}
 	
+	private BaseExceptionTracer exceptions;
 	private BasicThreadingContext threadingContext;
 	private AbstractKeyValueDriver wrapper;
 	private static String keyPrefix;

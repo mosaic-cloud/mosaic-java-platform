@@ -31,11 +31,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 import com.couchbase.client.CouchbaseClient;
 import com.couchbase.client.CouchbaseConnectionFactory;
@@ -316,7 +316,7 @@ public final class MemcachedOperationFactory
 		try {
 			return new MemcachedOperationFactory (hosts, user, password, bucket, useBucket); // NOPMD
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
 		}
 		return null;
 	}

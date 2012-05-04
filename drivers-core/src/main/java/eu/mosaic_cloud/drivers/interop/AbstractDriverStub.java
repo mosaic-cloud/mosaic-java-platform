@@ -33,8 +33,9 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -72,6 +73,7 @@ public abstract class AbstractDriverStub
 		this.commChannel = commChannel;
 		this.transmitter = transmitter;
 		this.driver = driver;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	@Override
@@ -132,9 +134,9 @@ public abstract class AbstractDriverStub
 		try {
 			this.startOperation (message, session);
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		} catch (final ClassNotFoundException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 		return null;
 	}
@@ -195,7 +197,8 @@ public abstract class AbstractDriverStub
 		}
 	}
 	
-	protected IConfiguration configuration;
+	protected final IConfiguration configuration;
+	protected final BaseExceptionTracer exceptions;
 	private final ZeroMqChannel commChannel;
 	private final IResourceDriver driver;
 	private final List<Session> sessions;

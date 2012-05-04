@@ -24,7 +24,6 @@ package eu.mosaic_cloud.drivers.queue.amqp;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
@@ -32,6 +31,8 @@ import eu.mosaic_cloud.platform.core.ops.IOperationType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import org.slf4j.Logger;
@@ -57,6 +58,7 @@ final class AmqpOperationFactory
 	{
 		super ();
 		this.amqpDriver = amqpDriver;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	@Override
@@ -141,7 +143,7 @@ final class AmqpOperationFactory
 						channel.basicAck (delivery, multiple);
 						succeeded = true;
 					} catch (final IOException e) {
-						ExceptionTracer.traceIgnored (e);
+						AmqpOperationFactory.this.exceptions.traceIgnoredException (e);
 					}
 				}
 				return succeeded;
@@ -167,7 +169,7 @@ final class AmqpOperationFactory
 						succeeded = (outcome != null);
 					}
 				} catch (final IOException e) {
-					ExceptionTracer.traceIgnored (e);
+					AmqpOperationFactory.this.exceptions.traceIgnoredException (e);
 				}
 				return succeeded;
 			}
@@ -188,7 +190,7 @@ final class AmqpOperationFactory
 						channel.basicCancel (consumer);
 						succeeded = true;
 					} catch (final IOException e) {
-						ExceptionTracer.traceIgnored (e);
+						AmqpOperationFactory.this.exceptions.traceIgnoredException (e);
 					}
 				}
 				return succeeded;
@@ -302,7 +304,7 @@ final class AmqpOperationFactory
 							message = new AmqpInboundMessage (null, envelope.getDeliveryTag (), envelope.getExchange (), envelope.getRoutingKey (), outcome.getBody (), properties.getDeliveryMode () == 2 ? true : false, properties.getReplyTo (), properties.getContentEncoding (), properties.getContentType (), properties.getCorrelationId (), properties.getMessageId ());
 						}
 					} catch (final IOException e) {
-						ExceptionTracer.traceIgnored (e);
+						AmqpOperationFactory.this.exceptions.traceIgnoredException (e);
 					}
 				}
 				return message;
@@ -332,5 +334,6 @@ final class AmqpOperationFactory
 	}
 	
 	private final AmqpDriver amqpDriver;
+	private final BaseExceptionTracer exceptions;
 	private static final Logger logger = Transcript.create (AmqpOperationFactory.class).adaptAs (Logger.class);
 }

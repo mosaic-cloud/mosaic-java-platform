@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -125,7 +125,7 @@ public class Timeline
 				json.put ("url", Timeline.this.getUrl ());
 				json.put ("key", this.key);
 			} catch (final JSONException e) {
-				ExceptionTracer.traceIgnored (e);
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
 			}
 			return json;
 		}

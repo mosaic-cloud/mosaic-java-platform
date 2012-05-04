@@ -32,6 +32,8 @@ import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.google.common.base.Preconditions;
@@ -52,6 +54,7 @@ public abstract class AbstractKeyValueDriver
 		super (threading, noThreads);
 		this.bucketFactories = new HashMap<String, BucketData> ();
 		this.clientBucketMap = new HashMap<String, BucketData> ();
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	@Override
@@ -182,6 +185,7 @@ public abstract class AbstractKeyValueDriver
 		return iResult;
 	}
 	
+	protected final BaseExceptionTracer exceptions;
 	/**
 	 * Map between bucket name and bucket data.
 	 */

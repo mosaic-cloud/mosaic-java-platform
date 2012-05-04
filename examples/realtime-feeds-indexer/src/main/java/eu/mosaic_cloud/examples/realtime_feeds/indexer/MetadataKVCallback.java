@@ -30,8 +30,8 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,7 +100,7 @@ public final class MetadataKVCallback
 			feedMetaData.put ("key", key);
 			feedMetaData.put ("sequence", 0);
 		} catch (final JSONException e) {
-			ExceptionTracer.traceIgnored (e);
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
 		}
 		return (feedMetaData);
 	}

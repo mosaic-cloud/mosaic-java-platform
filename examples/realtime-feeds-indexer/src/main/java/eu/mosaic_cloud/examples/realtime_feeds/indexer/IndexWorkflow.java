@@ -30,7 +30,8 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import org.json.JSONArray;
@@ -52,6 +53,7 @@ public class IndexWorkflow
 		this.newFeedItems = new JSONArray ();
 		this.context = context;
 		this.indexMessage = recvMessage;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	private void doFeedDiff (final JSONObject fetchedData)
@@ -118,7 +120,7 @@ public class IndexWorkflow
 			}
 			this.indexDone = true;
 		} catch (final JSONException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 	}
 	
@@ -145,7 +147,7 @@ public class IndexWorkflow
 		errorMssg.put ("reason", "unexpected parsing error");
 		errorMssg.put ("message", e.getMessage ());
 		IndexWorkflow.onIndexError (errorMssg);
-		ExceptionTracer.traceIgnored (e);
+		this.exceptions.traceIgnoredException (e);
 	}
 	
 	private void handleMetadataStored (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
@@ -163,7 +165,7 @@ public class IndexWorkflow
 		try {
 			this.context.metadataStore.set (this.currentFeedMetaData.getString ("key"), this.currentFeedMetaData, this.key);
 		} catch (final JSONException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 	}
 	
@@ -220,7 +222,7 @@ public class IndexWorkflow
 			this.newFeedTask.put ("error", error);
 			this.context.tasksStore.set (feedTaskKey, this.newFeedTask, null);
 		} catch (final JSONException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 	}
 	
@@ -281,6 +283,7 @@ public class IndexWorkflow
 	private final IndexerCloudletContext context;
 	private JSONObject currentFeedMetaData;
 	private Timeline currentTimeline;
+	private final BaseExceptionTracer exceptions;
 	private boolean indexDone = false;
 	private final JSONObject indexMessage;
 	private UUID key;

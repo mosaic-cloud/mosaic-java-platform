@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
 /**
@@ -206,7 +206,7 @@ public final class PropertyTypeConfiguration
 				stream.close ();
 				configuration = new PropertyTypeConfiguration (properties);
 			} catch (final IOException exception) {
-				ExceptionTracer.traceIgnored (exception);
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			}
 		} else {
 			throw (new IllegalArgumentException ("resource not found"));

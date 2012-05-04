@@ -31,11 +31,11 @@ import java.util.concurrent.ExecutionException;
 import eu.mosaic_cloud.drivers.kvstore.MemcachedDriver;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -60,6 +60,7 @@ public class MemcachedDriverTest
 		final Transcript transcript = Transcript.create (this);
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
+		this.exceptions = exceptions;
 		BasicThreadingSecurityManager.initialize ();
 		this.threadingContext = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		this.threadingContext.initialize ();
@@ -100,10 +101,10 @@ public class MemcachedDriverTest
 			Assert.assertFalse (r1.getResult ());
 			Assert.assertTrue (r2.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -119,10 +120,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]> ("Get after append");
@@ -130,10 +131,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertEquals ("fantabulous and miraculous", SerDesUtils.toObject (r2.getResult ()).toString ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -149,10 +150,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]> ("Get after cas");
@@ -160,10 +161,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertEquals ("replaced by dummy", SerDesUtils.toObject (r2.getResult ()).toString ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -181,10 +182,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]> ("Get after delete");
@@ -192,10 +193,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertNull (r2.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -224,10 +225,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertEquals ("fantastic", SerDesUtils.toObject (r1.getResult ()));
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -247,10 +248,10 @@ public class MemcachedDriverTest
 			Assert.assertEquals ("fantastic", SerDesUtils.toObject (r1.getResult ().get (k1)).toString ());
 			Assert.assertEquals ("famous", SerDesUtils.toObject (r1.getResult ().get (k2)).toString ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -266,10 +267,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]> ("Get after prepend");
@@ -277,10 +278,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertEquals ("it is fantabulous and miraculous", SerDesUtils.toObject (r2.getResult ()).toString ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -296,10 +297,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<byte[]> handler1 = new TestLoggingHandler<byte[]> ("Get after replace");
@@ -307,10 +308,10 @@ public class MemcachedDriverTest
 		try {
 			Assert.assertEquals ("fantabulous", SerDesUtils.toObject (r2.getResult ()).toString ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -332,10 +333,10 @@ public class MemcachedDriverTest
 			Assert.assertTrue (r1.getResult ());
 			Assert.assertTrue (r2.getResult ());
 		} catch (final InterruptedException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		} catch (final ExecutionException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
 		}
 	}
@@ -346,6 +347,7 @@ public class MemcachedDriverTest
 		MemcachedDriverTest.keyPrefix = UUID.randomUUID ().toString ();
 	}
 	
+	private BaseExceptionTracer exceptions;
 	private BasicThreadingContext threadingContext;
 	private MemcachedDriver wrapper;
 	private static String keyPrefix;

@@ -29,7 +29,6 @@ import eu.mosaic_cloud.drivers.AbstractResourceDriver;
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.exceptions.ExceptionTracer;
 import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
@@ -37,6 +36,8 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 import com.rabbitmq.client.AMQP;
@@ -78,6 +79,7 @@ public class AmqpDriver
 		this.returnCallback = new ReturnCallback ();
 		this.shutdownListener = new ConnectionShutdownListener ();
 		this.consumers = new ConcurrentHashMap<String, IAmqpConsumer> ();
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	/**
@@ -272,13 +274,13 @@ public class AmqpDriver
 					try {
 						channel.getValue ().close ();
 					} catch (final AlreadyClosedException e) {
-						ExceptionTracer.traceHandled (e);
+						this.exceptions.traceHandledException (e);
 					}
 				}
 				this.connection.close ();
 				this.connected = false;
 			} catch (final IOException e) {
-				ExceptionTracer.traceIgnored (e);
+				this.exceptions.traceIgnoredException (e);
 				this.logger.error ("AMQP cannot close connection with server."); // $NON-NLS-1$
 			}
 		}
@@ -320,7 +322,7 @@ public class AmqpDriver
 			this.connected = true;
 			this.logger.debug ("AMQP driver connected to " + amqpServerHost + ":" + amqpServerPort);
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 			this.connection = null; // NOPMD
 		}
 	}
@@ -337,7 +339,7 @@ public class AmqpDriver
 				this.channels.put (clientId, channel);
 			}
 		} catch (final IOException e) {
-			ExceptionTracer.traceIgnored (e);
+			this.exceptions.traceIgnoredException (e);
 		}
 		return channel;
 	}
@@ -376,6 +378,7 @@ public class AmqpDriver
 	private final IConfiguration configuration;
 	private boolean connected;
 	private Connection connection;
+	private final BaseExceptionTracer exceptions;
 	private final AmqpOperationFactory opFactory;
 	private final ReturnCallback returnCallback;
 	private final ShutdownListener shutdownListener;
@@ -412,11 +415,11 @@ public class AmqpDriver
 						AmqpDriver.this.connectResource ();
 						tries++; // NOPMD
 					} catch (final InterruptedException e) {
-						ExceptionTracer.traceIgnored (e);
+						AmqpDriver.this.exceptions.traceIgnoredException (e);
 						if (AmqpDriver.super.isDestroyed ()) {
 							break;
 						}
-						ExceptionTracer.traceDeferred (e);
+						AmqpDriver.this.exceptions.traceDeferredException (e);
 					}
 				}
 				if (!AmqpDriver.this.connected && !AmqpDriver.super.isDestroyed ()) {
