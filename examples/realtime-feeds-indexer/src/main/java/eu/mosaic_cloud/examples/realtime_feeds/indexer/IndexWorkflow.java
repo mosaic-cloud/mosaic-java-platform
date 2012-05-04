@@ -106,11 +106,11 @@ public class IndexWorkflow
 					final JSONObject json = item.convertToJson ();
 					json.put ("feed", currentFeed);
 					this.newFeedItems.put (json);
-					this.context.itemsStore.set (itemKey, json, this.key);
+					this.context.itemsStore.set (itemKey, json, null);
 				}
 				this.newTimeline.put ("items", items);
 				this.currentFeedMetaData.put ("timelines", this.newTimeline.getString ("key"));
-				this.context.timelinesStore.set (newTimelineKey, this.newTimeline, null);
+				this.context.timelinesStore.set (newTimelineKey, this.newTimeline, this.key);
 			} else {
 				this.currentFeedMetaData = this.previousFeedMetaData;
 				this.storeIndexOutcome ();
