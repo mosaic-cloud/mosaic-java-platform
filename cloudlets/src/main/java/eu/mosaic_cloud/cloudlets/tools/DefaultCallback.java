@@ -75,7 +75,7 @@ public class DefaultCallback<TContext>
 	 */
 	protected void traceUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive)
 	{
-		this.logger.debug ("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass ().getName (), callbackType, (positive ? "Succeeded" : "Failed"));
+		this.logger.trace ("unhandled cloudlet callback: `%s`@`%s` %s", this.getClass ().getName (), callbackType, (positive ? "Succeeded" : "Failed"));
 	}
 	
 	protected MosaicLogger logger = MosaicLogger.createLogger (Transcript.create (this, true));

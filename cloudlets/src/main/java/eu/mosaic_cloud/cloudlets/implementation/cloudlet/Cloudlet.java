@@ -236,7 +236,7 @@ public final class Cloudlet<TContext extends Object>
 			@Override
 			protected Void execute ()
 			{
-				Cloudlet.this.failures.traceHandledException (exception);
+				Cloudlet.this.failures.traceDeferredException (exception);
 				if (Cloudlet.this.fsm.hasState (FsmState.Active)) {
 					Cloudlet.this.controllerProxy.destroy ();
 				}
@@ -251,7 +251,7 @@ public final class Cloudlet<TContext extends Object>
 			@Override
 			protected StateAndOutput<FsmState, Void> execute ()
 			{
-				Cloudlet.this.failures.traceHandledException (exception, "failed proxy `%{object:identity}`; aborting!", proxy);
+				Cloudlet.this.failures.traceDeferredException (exception, "failed proxy `%{object:identity}`; aborting!", proxy);
 				if (Cloudlet.this.fsm.hasState (FsmState.Failed)) {
 					return StateAndOutput.create (FsmState.Failed, null);
 				}
@@ -445,7 +445,7 @@ public final class Cloudlet<TContext extends Object>
 								Cloudlet.this.initializeFuture = null;
 								result = StateAndOutput.create (FsmState.Active, null);
 							} else {
-								Cloudlet.this.failures.traceHandledException (exception);
+								Cloudlet.this.failures.traceDeferredException (exception);
 								Cloudlet.this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
 								Cloudlet.this.initializeFuture = null;
 								Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
@@ -463,7 +463,7 @@ public final class Cloudlet<TContext extends Object>
 							Cloudlet.this.initializeFuture = null;
 							final Throwable exception = initializedCompletion.getException ();
 							if (exception != null) {
-								Cloudlet.this.failures.traceHandledException (exception);
+								Cloudlet.this.failures.traceDeferredException (exception);
 							}
 							Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
 							return StateAndOutput.create (FsmState.CallbacksUnregisterPending, null);
@@ -481,7 +481,7 @@ public final class Cloudlet<TContext extends Object>
 								initializeSucceededCompletedTransaction.observe (initializedCompletion);
 								result = StateAndOutput.create (FsmState.CallbacksInitializeSucceededPending, null);
 							} else {
-								Cloudlet.this.failures.traceHandledException (exception);
+								Cloudlet.this.failures.traceDeferredException (exception);
 								final CloudletCallbackCompletionArguments<TContext> arguments = new CloudletCallbackCompletionArguments<TContext> (Cloudlet.this.controllerProxy, exception);
 								final CallbackCompletion<Void> initializedCompletion = Cloudlet.this.callbacksProxy.initializeFailed (Cloudlet.this.controllerContext, arguments); // NOPMD
 								initializeFailedCompletedTransaction.observe (initializedCompletion);
@@ -664,7 +664,7 @@ public final class Cloudlet<TContext extends Object>
 						{ // NOPMD
 							final Throwable exception = destroyedCompletion.getException ();
 							if (exception != null) {
-								Cloudlet.this.failures.traceHandledException (exception);
+								Cloudlet.this.failures.traceDeferredException (exception);
 							}
 							Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
 							return StateAndOutput.create (FsmState.CallbacksUnregisterPending, null);
@@ -676,7 +676,7 @@ public final class Cloudlet<TContext extends Object>
 						{ // NOPMD
 							final Throwable exception = destroyedCompletion.getException ();
 							if (exception != null) {
-								Cloudlet.this.failures.traceHandledException (exception);
+								Cloudlet.this.failures.traceDeferredException (exception);
 							}
 							Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
 							return StateAndOutput.create (FsmState.CallbacksUnregisterPending, null);
@@ -694,7 +694,7 @@ public final class Cloudlet<TContext extends Object>
 								destroySucceededCompletedTransaction.observe (destroyedCompletion);
 								result = StateAndOutput.create (FsmState.CallbacksDestroySucceededPending, null);
 							} else {
-								Cloudlet.this.failures.traceHandledException (exception);
+								Cloudlet.this.failures.traceDeferredException (exception);
 								final CloudletCallbackCompletionArguments<TContext> arguments = new CloudletCallbackCompletionArguments<TContext> (Cloudlet.this.controllerProxy, exception);
 								final CallbackCompletion<Void> destroyedCompletion = Cloudlet.this.callbacksProxy.destroyFailed (Cloudlet.this.controllerContext, arguments); // NOPMD
 								destroyFailedCompletedTransaction.observe (destroyedCompletion);

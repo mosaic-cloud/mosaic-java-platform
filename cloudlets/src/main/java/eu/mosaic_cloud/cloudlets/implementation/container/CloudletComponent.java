@@ -200,7 +200,7 @@ public final class CloudletComponent
 			@Override
 			protected final StateAndOutput<FsmState, Void> execute ()
 			{
-				CloudletComponent.this.exceptions.traceHandledException (exception, "failed proxy `%{object:identity}`; aborting!", proxy);
+				CloudletComponent.this.exceptions.traceDeferredException (exception, "failed proxy `%{object:identity}`; aborting!", proxy);
 				if (CloudletComponent.this.fsm.hasState (FsmState.Failed)) {
 					return (StateAndOutput.create (FsmState.Failed, null));
 				}
@@ -349,15 +349,15 @@ public final class CloudletComponent
 						peerIdentifier = (String) ((Map<?, ?>) reply.outputsOrError).get (peerIdentifierKey);
 						peerEndpoint = (String) ((Map<?, ?>) reply.outputsOrError).get (peerEndpointKey);
 					} catch (final Throwable exception) {
-						CloudletComponent.this.exceptions.traceHandledException (exception, "resolving the interoperability channel endpoint for target `%s` failed; ignoring!", target);
 						// FIXME: should call callbacks with failure
+						CloudletComponent.this.exceptions.traceIgnoredException (exception, "resolving the interoperability channel endpoint for target `%s` failed; ignoring!", target);
 						return (null);
 					}
 					CloudletComponent.this.transcript.traceDebugging ("resolved the interoperability channel endpoint for target `%s` successfully (with endpoint `%s`, and identity `%s`); delegating.", target, peerEndpoint, peerIdentifier);
 					try {
 						callbacks.resolved (CloudletComponent.this.channelFactoryProxy, target, peerIdentifier, peerEndpoint);
 					} catch (final Throwable exception) {
-						CloudletComponent.this.exceptions.traceHandledException (exception);
+						CloudletComponent.this.exceptions.traceIgnoredException (exception);
 						return (null);
 					}
 					return (null);
