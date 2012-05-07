@@ -32,6 +32,11 @@
 			<version>${versions.dependencies.jackson}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${versions.dependencies.json}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${versions.dependencies.junit}</version>

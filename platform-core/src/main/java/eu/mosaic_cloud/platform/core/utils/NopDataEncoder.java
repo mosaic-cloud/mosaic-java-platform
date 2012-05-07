@@ -18,10 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.examples.realtime_feeds.indexer;
-
-
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+package eu.mosaic_cloud.platform.core.utils;
 
 
 public class NopDataEncoder
