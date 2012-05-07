@@ -127,8 +127,5 @@ public class QueueMessage
 	transient private Delivery _delivery = null;
 	transient private JSONObject _headers = null;
 	private byte[] _http_request = null;
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6681953494107319042L;
 }

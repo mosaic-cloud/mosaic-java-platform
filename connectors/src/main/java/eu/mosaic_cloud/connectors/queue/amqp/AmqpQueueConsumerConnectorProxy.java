@@ -196,7 +196,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 		@Override
 		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage inbound)
 		{
-			final DeliveryToken token = new DeliveryToken (inbound.getDelivery ());
+			final DeliveryToken token = new DeliveryToken (AmqpQueueConsumerConnectorProxy.this, inbound.getDelivery ());
 			final byte[] data = inbound.getData ();
 			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("delivered the message `%s` for consumer `%s`...", token, AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
 			TMessage message = null;
@@ -224,15 +224,15 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 		final IAmqpQueueConsumerCallback<TMessage> delegate;
 	}
 	
-	private final class DeliveryToken
+	private static final class DeliveryToken
 			implements
 				IAmqpMessageToken
 	{
-		DeliveryToken (final long token)
+		DeliveryToken (final AmqpQueueConsumerConnectorProxy<?> proxy, final long token)
 		{
 			super ();
+			this.proxy = proxy;
 			this.token = token;
-			this.proxy = AmqpQueueConsumerConnectorProxy.this;
 		}
 		
 		@Override
@@ -246,7 +246,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			return (this.token);
 		}
 		
-		final AmqpQueueConsumerConnectorProxy<TMessage> proxy;
+		final AmqpQueueConsumerConnectorProxy<?> proxy;
 		final long token;
 	}
 }
