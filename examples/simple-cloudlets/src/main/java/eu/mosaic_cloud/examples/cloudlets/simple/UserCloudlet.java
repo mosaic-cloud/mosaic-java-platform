@@ -64,7 +64,7 @@ public class UserCloudlet
 			} else {
 				this.logger.error ("UserCloudlet did not receive authentication token.");
 			}
-			context.consumer.acknowledge (arguments.getDelivery ());
+			context.consumer.acknowledge (arguments.getToken ());
 			return ICallback.SUCCESS;
 		}
 		

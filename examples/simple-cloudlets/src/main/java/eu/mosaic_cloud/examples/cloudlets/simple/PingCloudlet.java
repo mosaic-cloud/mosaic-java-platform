@@ -61,7 +61,7 @@ public class PingCloudlet
 		{
 			final PongMessage pong = arguments.getMessage ();
 			this.logger.info ("received pong message with key `{}`; acknowledging...", pong.getKey ());
-			context.consumer.acknowledge (arguments.getDelivery ());
+			context.consumer.acknowledge (arguments.getToken ());
 			return ICallback.SUCCESS;
 		}
 		

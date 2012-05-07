@@ -56,7 +56,7 @@ public class ConsumerCloudlet
 		{
 			final String data = arguments.getMessage ();
 			this.logger.info ("ConsumerCloudlet received message `{}`.", data);
-			context.consumer.acknowledge (arguments.getDelivery ());
+			context.consumer.acknowledge (arguments.getToken ());
 			return ICallback.SUCCESS;
 		}
 		

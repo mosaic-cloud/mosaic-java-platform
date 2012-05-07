@@ -66,7 +66,7 @@ public class LoggingCloudlet
 			}
 			final AuthenticationToken aToken = new AuthenticationToken (token);
 			context.publisher.publish (aToken, null);
-			context.consumer.acknowledge (arguments.getDelivery ());
+			context.consumer.acknowledge (arguments.getToken ());
 			context.cloudlet.destroy ();
 			return ICallback.SUCCESS;
 		}

@@ -42,5 +42,5 @@ public interface IAmqpQueueConsumerConnector<TMessage>
 	 * @param message
 	 *            the message to acknowledge
 	 */
-	CallbackCompletion<Void> acknowledge (IAmqpQueueDeliveryToken delivery);
+	CallbackCompletion<Void> acknowledge (IAmqpMessageToken token);
 }

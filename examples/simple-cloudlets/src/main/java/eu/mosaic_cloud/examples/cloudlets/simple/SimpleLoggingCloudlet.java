@@ -54,7 +54,7 @@ public class SimpleLoggingCloudlet
 			final String token = ConfigUtils.resolveParameter (arguments.getCloudlet ().getConfiguration (), "test.token", String.class, "error");
 			final AuthenticationToken aToken = new AuthenticationToken (token);
 			context.publisher.publish (aToken, null);
-			context.consumer.acknowledge (arguments.getDelivery ());
+			context.consumer.acknowledge (arguments.getToken ());
 			context.cloudlet.destroy ();
 			return ICallback.SUCCESS;
 		}

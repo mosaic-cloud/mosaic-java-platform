@@ -39,9 +39,9 @@ public class QueueConsumerCallback
 		final JSONObject message = arguments.getMessage ();
 		IndexWorkflow.indexNewFeed (context, message);
 		if (this == context.batchConsumer) {
-			context.batchConsumer.acknowledge (arguments.getDelivery ());
+			context.batchConsumer.acknowledge (arguments.getToken ());
 		} else if (this == context.urgentConsumer) {
-			context.urgentConsumer.acknowledge (arguments.getDelivery ());
+			context.urgentConsumer.acknowledge (arguments.getToken ());
 		}
 		return ICallback.SUCCESS;
 	}

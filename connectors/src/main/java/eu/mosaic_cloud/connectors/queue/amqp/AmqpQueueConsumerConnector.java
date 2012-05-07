@@ -37,9 +37,9 @@ public class AmqpQueueConsumerConnector<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final IAmqpQueueDeliveryToken delivery)
+	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token)
 	{
-		return this.proxy.acknowledge (delivery);
+		return this.proxy.acknowledge (token);
 	}
 	
 	public static <TMessage> AmqpQueueConsumerConnector<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback)

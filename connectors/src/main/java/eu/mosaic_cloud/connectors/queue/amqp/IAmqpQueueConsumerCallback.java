@@ -35,5 +35,5 @@ public interface IAmqpQueueConsumerCallback<TMessage>
 	 * @param message
 	 *            the message and all its properties
 	 */
-	CallbackCompletion<Void> consume (IAmqpQueueDeliveryToken delivery, TMessage message);
+	CallbackCompletion<Void> consume (IAmqpMessageToken token, TMessage message);
 }

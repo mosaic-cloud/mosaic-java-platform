@@ -66,13 +66,13 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final IAmqpQueueDeliveryToken delivery_)
+	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token_)
 	{
-		final DeliveryToken delivery = (DeliveryToken) delivery_;
-		Preconditions.checkNotNull (delivery);
-		Preconditions.checkArgument (delivery.proxy == this);
-		this.transcript.traceDebugging ("acknowledging the message `%s` for consumer `%s`...", delivery, this.consumerIdentifier);
-		return (this.raw.ack (delivery.getToken (), false));
+		final DeliveryToken token = (DeliveryToken) token_;
+		Preconditions.checkNotNull (token);
+		Preconditions.checkArgument (token.proxy == this);
+		this.transcript.traceDebugging ("acknowledging the message `%s` for consumer `%s`...", token, this.consumerIdentifier);
+		return (this.raw.ack (token.getDelivery (), false));
 	}
 	
 	@Override
@@ -196,20 +196,20 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 		@Override
 		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage inbound)
 		{
-			final DeliveryToken delivery = new DeliveryToken (inbound.getDelivery ());
+			final DeliveryToken token = new DeliveryToken (inbound.getDelivery ());
 			final byte[] data = inbound.getData ();
-			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("delivered the message `%s` for consumer `%s`...", delivery, AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
+			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("delivered the message `%s` for consumer `%s`...", token, AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
 			TMessage message = null;
 			CallbackCompletion<Void> result = null;
 			try {
 				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, EncodingMetadata.NULL);
 			} catch (final EncodingException exception) {
-				AmqpQueueConsumerConnectorProxy.this.exceptions.traceDeferredException (exception, "decoding the message `%s` failed; deferring!", delivery);
+				AmqpQueueConsumerConnectorProxy.this.exceptions.traceDeferredException (exception, "decoding the message `%s` failed; deferring!", token);
 				result = CallbackCompletion.createFailure (exception);
 			}
 			if (result == null) {
-				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("triggering callback for the message `%s`...", delivery);
-				result = this.delegate.consume (delivery, message);
+				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("triggering callback for the message `%s`...", token);
+				result = this.delegate.consume (token, message);
 			}
 			return (result);
 		}
@@ -226,7 +226,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	
 	private final class DeliveryToken
 			implements
-				IAmqpQueueDeliveryToken
+				IAmqpMessageToken
 	{
 		DeliveryToken (final long token)
 		{
@@ -241,7 +241,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			return (String.format ("%032x", Long.valueOf (this.token)));
 		}
 		
-		long getToken ()
+		long getDelivery ()
 		{
 			return (this.token);
 		}
