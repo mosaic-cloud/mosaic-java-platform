@@ -35,7 +35,7 @@ public class DefaultHttpgQueueConnectorCallback<TContext, TRequestBody, TRespons
 	@Override
 	public CallbackCompletion<Void> requested (final TContext context, final HttpgQueueRequestedCallbackArguments<TRequestBody> arguments)
 	{
-		return this.handleUnhandledCallback (arguments, "Consume", true, false);
+		return this.handleUnhandledCallback (arguments, "Requested", false, false);
 	}
 	
 	@Override

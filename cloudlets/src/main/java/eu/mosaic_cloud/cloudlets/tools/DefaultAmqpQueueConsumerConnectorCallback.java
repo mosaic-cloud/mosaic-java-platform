@@ -61,6 +61,6 @@ public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TValue, TExtra>
 	@Override
 	public CallbackCompletion<Void> consume (final TContext context, final AmqpQueueConsumeCallbackArguments<TValue> arguments)
 	{
-		return this.handleUnhandledCallback (arguments, "Consume", true, false);
+		return this.handleUnhandledCallback (arguments, "Consume", false, false);
 	}
 }
