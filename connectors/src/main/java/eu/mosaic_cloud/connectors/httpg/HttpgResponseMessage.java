@@ -34,6 +34,17 @@ public final class HttpgResponseMessage<TBody extends Object>
 		return (new HttpgResponseMessage<TBody> (version, status, ImmutableMap.copyOf (headers), body, token));
 	}
 	
+	public static final <TBody extends Object> HttpgResponseMessage<TBody> create (final String version, final int status, final TBody body, final IHttpgMessageToken token)
+	{
+		return (new HttpgResponseMessage<TBody> (version, status, ImmutableMap.<String, String>of (), body, token));
+	}
+	
+	public static final <TBody extends Object> HttpgResponseMessage<TBody> create200 (final HttpgRequestMessage<?> request, final TBody body)
+	{
+		Preconditions.checkNotNull (request);
+		return (new HttpgResponseMessage<TBody> (request.version, 200, ImmutableMap.<String, String>of (), body, request.token));
+	}
+	
 	public final TBody body;
 	public final ImmutableMap<String, String> headers;
 	public final int status;

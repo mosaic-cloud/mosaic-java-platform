@@ -36,6 +36,11 @@ public final class HttpgRequestMessage<TBody extends Object>
 		return (new HttpgRequestMessage<TBody> (version, method, path, ImmutableMap.copyOf (headers), body, token));
 	}
 	
+	public static final <TBody extends Object> HttpgRequestMessage<TBody> create (final String version, final String method, final String path, final TBody body, final IHttpgMessageToken token)
+	{
+		return (new HttpgRequestMessage<TBody> (version, method, path, ImmutableMap.<String, String>of (), body, token));
+	}
+	
 	public final TBody body;
 	public final ImmutableMap<String, String> headers;
 	public final String method;

@@ -66,8 +66,8 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 		Preconditions.checkNotNull (requestBodyEncoder);
 		Preconditions.checkNotNull (responseBodyClass);
 		Preconditions.checkNotNull (responseBodyEncoder);
-		final String identifier = this.raw.getIdentifier ();
 		this.raw = raw;
+		final String identifier = this.raw.getIdentifier ();
 		this.configuration = configuration;
 		this.requestBodyClass = requestBodyClass;
 		this.requestBodyEncoder = requestBodyEncoder;
@@ -253,9 +253,9 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 				final JSONObject httpHeadersRaw = metadata.getJSONObject ("http-headers");
 				final Iterator<?> httpHeadersIterator = httpHeadersRaw.keys ();
 				while (httpHeadersIterator.hasNext ()) {
-					final String httpHeaderName = ((String) httpHeadersIterator.next ()).toLowerCase ();
+					final String httpHeaderName = ((String) httpHeadersIterator.next ());
 					final String httpHeaderValue = httpHeadersRaw.getString (httpHeaderName);
-					httpHeadersBuilder.put (httpHeaderName, httpHeaderValue);
+					httpHeadersBuilder.put (httpHeaderName.toLowerCase (), httpHeaderValue);
 				}
 				httpHeaders = httpHeadersBuilder.build ();
 				httpBodyEncoding = metadata.getString ("http-body");
@@ -283,11 +283,14 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			}
 			final EncodingMetadata bodyEncodingMetadata = new EncodingMetadata (httpHeaders.get ("content-type"), httpHeaders.get ("content-encoding"));
 			final TRequestBody httpBody;
-			try {
-				httpBody = this.requestBodyEncoder.decode (httpBodyBytes, bodyEncodingMetadata);
-			} catch (final EncodingException exception) {
-				throw (new EncodingException ("invalid body", exception));
-			}
+			if (httpBodyBytes != null)
+				try {
+					httpBody = this.requestBodyEncoder.decode (httpBodyBytes, bodyEncodingMetadata);
+				} catch (final EncodingException exception) {
+					throw (new EncodingException ("invalid body", exception));
+				}
+			else
+				httpBody = null;
 			final DeliveryToken token = new DeliveryToken (this, message.getDelivery (), callbackExchange, callbackRoutingKey, callbackIdentifier);
 			final HttpgRequestMessage<TRequestBody> request = HttpgRequestMessage.create (httpVersion, httpMethod, httpPath, httpHeaders, httpBody, token);
 			return (request);
