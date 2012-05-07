@@ -45,11 +45,16 @@ public class NullDataEncoder
 		return (data);
 	}
 	
+	static {
+		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("appilacion/octet-stream", "identity");
+		DEFAULT_INSTANCE = NullDataEncoder.create ();
+	}
+	
 	public static final NullDataEncoder create ()
 	{
 		return (new NullDataEncoder (FallbackExceptionTracer.defaultInstance));
 	}
 	
-	public static final NullDataEncoder DEFAULT_INSTANCE = NullDataEncoder.create ();
-	public static final EncodingMetadata EXPECTED_ENCODING_METADATA = new EncodingMetadata ("appilacion/octet-stream", "identity");
+	public static final NullDataEncoder DEFAULT_INSTANCE;
+	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;
 }

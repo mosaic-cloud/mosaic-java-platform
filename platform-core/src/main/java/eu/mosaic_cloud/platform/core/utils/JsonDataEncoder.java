@@ -78,6 +78,11 @@ public class JsonDataEncoder<TData extends Object>
 		}
 	}
 	
+	static {
+		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/json", "identity");
+		DEFAULT_INSTANCE = JsonDataEncoder.create ();
+	}
+	
 	public static JsonDataEncoder<JSONObject> create ()
 	{
 		return (new JsonDataEncoder<JSONObject> (JSONObject.class, false, FallbackExceptionTracer.defaultInstance));
@@ -93,6 +98,6 @@ public class JsonDataEncoder<TData extends Object>
 		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, FallbackExceptionTracer.defaultInstance));
 	}
 	
-	public static final JsonDataEncoder<JSONObject> DEFAULT_INSTANCE = JsonDataEncoder.create ();
-	public static final EncodingMetadata EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/json", "identity");
+	public static final JsonDataEncoder<JSONObject> DEFAULT_INSTANCE;
+	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;
 }

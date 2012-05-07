@@ -62,6 +62,10 @@ public class SerializedDataEncoder<TData extends Object>
 		}
 	}
 	
+	static {
+		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/x-java-serialized-object", "identity");
+	}
+	
 	public static <TData extends Object> SerializedDataEncoder<TData> create (final Class<TData> dataClass)
 	{
 		return (new SerializedDataEncoder<TData> (dataClass, false, FallbackExceptionTracer.defaultInstance));
@@ -72,5 +76,5 @@ public class SerializedDataEncoder<TData extends Object>
 		return (new SerializedDataEncoder<TData> (dataClass, nullAllowed, FallbackExceptionTracer.defaultInstance));
 	}
 	
-	public static final EncodingMetadata EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/x-java-serialized-object", "identity");
+	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;
 }
