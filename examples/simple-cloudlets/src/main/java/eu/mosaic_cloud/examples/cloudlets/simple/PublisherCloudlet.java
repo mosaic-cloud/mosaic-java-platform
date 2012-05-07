@@ -36,7 +36,6 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
-import eu.mosaic_cloud.platform.core.utils.SerializedDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
