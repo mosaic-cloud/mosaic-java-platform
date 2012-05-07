@@ -32,6 +32,11 @@
 			<version>${versions.dependencies.jackson}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${versions.dependencies.guava}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>${versions.dependencies.json}</version>
