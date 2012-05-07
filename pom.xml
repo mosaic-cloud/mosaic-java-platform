@@ -54,7 +54,7 @@
 							<goal>analyze-only</goal>
 						</goals>
 						<configuration>
-							<failOnWarning>true</failOnWarning>
+							<failOnWarning>false</failOnWarning>
 							<ignoreNonCompile>true</ignoreNonCompile>
 						</configuration>
 					</execution>
@@ -239,7 +239,7 @@
 		<versions.dependencies.logback>1.0.0</versions.dependencies.logback>
 		<versions.dependencies.protobuf>2.4.1</versions.dependencies.protobuf>
 		<versions.dependencies.redis>2.0.0</versions.dependencies.redis>
-		<versions.dependencies.riak>1.0.3</versions.dependencies.riak>
+		<versions.dependencies.riak>1.0.5</versions.dependencies.riak>
 		<versions.dependencies.servlet-javax>2.5</versions.dependencies.servlet-javax> <!-- TO UPGRADE -->
 		<versions.dependencies.servlet-mortbay>3.0.20100224</versions.dependencies.servlet-mortbay>
 		<versions.dependencies.slf4j>1.6.4</versions.dependencies.slf4j>
