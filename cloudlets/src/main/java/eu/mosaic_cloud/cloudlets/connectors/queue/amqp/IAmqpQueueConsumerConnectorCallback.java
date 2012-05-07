@@ -71,5 +71,5 @@ public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
 	 * @param arguments
 	 *            the arguments of the callback
 	 */
-	CallbackCompletion<Void> consume (TContext context, AmqpQueueConsumeCallbackArguments<TMessage, TExtra> arguments);
+	CallbackCompletion<Void> consume (TContext context, AmqpQueueConsumeCallbackArguments<TMessage> arguments);
 }

@@ -57,7 +57,7 @@ public class PingCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final PingCloudletContext context, final AmqpQueueConsumeCallbackArguments<PongMessage, Void> arguments)
+		public CallbackCompletion<Void> consume (final PingCloudletContext context, final AmqpQueueConsumeCallbackArguments<PongMessage> arguments)
 		{
 			final PongMessage pong = arguments.getMessage ();
 			this.logger.info ("received pong message with key `{}`; acknowledging...", pong.getKey ());

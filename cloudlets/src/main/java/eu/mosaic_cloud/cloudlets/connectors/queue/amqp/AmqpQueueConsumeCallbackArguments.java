@@ -37,7 +37,7 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpMessageToken;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class AmqpQueueConsumeCallbackArguments<TMessage, TExtra>
+public class AmqpQueueConsumeCallbackArguments<TMessage>
 		extends CallbackArguments
 {
 	/**

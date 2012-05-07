@@ -50,7 +50,7 @@ public class LoggingCloudlet
 			extends DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> consume (final LoggingCloudletContext context, final AmqpQueueConsumeCallbackArguments<LoggingData, Void> arguments)
+		public CallbackCompletion<Void> consume (final LoggingCloudletContext context, final AmqpQueueConsumeCallbackArguments<LoggingData> arguments)
 		{
 			final LoggingData data = arguments.getMessage ();
 			this.logger.info ("LoggingCloudlet received logging message for user `{}`.", data.user);

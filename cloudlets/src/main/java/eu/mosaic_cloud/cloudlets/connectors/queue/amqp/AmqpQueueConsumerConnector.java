@@ -78,7 +78,7 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 		if (this.callback == null) {
 			result = CallbackCompletion.createFailure (new IllegalStateException ());
 		} else {
-			result = this.callback.consume (this.context, new AmqpQueueConsumeCallbackArguments<TMessage, TExtra> (this.cloudlet, token, message));
+			result = this.callback.consume (this.context, new AmqpQueueConsumeCallbackArguments<TMessage> (this.cloudlet, token, message));
 		}
 		return result;
 	}

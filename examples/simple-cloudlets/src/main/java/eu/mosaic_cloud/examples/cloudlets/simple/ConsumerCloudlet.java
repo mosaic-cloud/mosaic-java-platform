@@ -52,7 +52,7 @@ public class ConsumerCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final ConsumerCloudletContext context, final AmqpQueueConsumeCallbackArguments<String, Void> arguments)
+		public CallbackCompletion<Void> consume (final ConsumerCloudletContext context, final AmqpQueueConsumeCallbackArguments<String> arguments)
 		{
 			final String data = arguments.getMessage ();
 			this.logger.info ("ConsumerCloudlet received message `{}`.", data);

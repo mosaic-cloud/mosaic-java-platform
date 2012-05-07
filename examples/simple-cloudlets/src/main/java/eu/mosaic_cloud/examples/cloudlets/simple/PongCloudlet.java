@@ -47,7 +47,7 @@ public class PongCloudlet
 			extends DefaultAmqpQueueConsumerConnectorCallback<PongCloudletContext, PingMessage, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> consume (final PongCloudletContext context, final AmqpQueueConsumeCallbackArguments<PingMessage, Void> arguments)
+		public CallbackCompletion<Void> consume (final PongCloudletContext context, final AmqpQueueConsumeCallbackArguments<PingMessage> arguments)
 		{
 			// NOTE: retrieve message data
 			final PingMessage ping = arguments.getMessage ();

@@ -55,7 +55,7 @@ public class UserCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final UserCloudletContext context, final AmqpQueueConsumeCallbackArguments<AuthenticationToken, Void> arguments)
+		public CallbackCompletion<Void> consume (final UserCloudletContext context, final AmqpQueueConsumeCallbackArguments<AuthenticationToken> arguments)
 		{
 			final AuthenticationToken data = arguments.getMessage ();
 			final String token = data.getToken ();
