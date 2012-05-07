@@ -43,7 +43,7 @@ public class RedisKvStoreConnectorTest
 	{
 		this.scenario = RedisKvStoreConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
-		this.connector = GenericKvStoreConnector.create (configuration, new PojoDataEncoder<String> (String.class));
+		this.connector = GenericKvStoreConnector.create (configuration, PojoDataEncoder.create (String.class));
 	}
 	
 	@BeforeClass

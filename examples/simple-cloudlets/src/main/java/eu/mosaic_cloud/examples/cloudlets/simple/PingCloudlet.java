@@ -125,8 +125,8 @@ public class PingCloudlet
 			final IConfiguration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue.consumer"));
 			final IConfiguration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue.publisher"));
 			this.logger.info ("creating queue connectors...");
-			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, PongMessage.class, new JsonDataEncoder<PongMessage> (PongMessage.class), new AmqpConsumerCallback (), context);
-			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, PingMessage.class, new JsonDataEncoder<PingMessage> (PingMessage.class), new AmqpPublisherCallback (), context);
+			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, PongMessage.class, JsonDataEncoder.create (PongMessage.class), new AmqpConsumerCallback (), context);
+			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, PingMessage.class, JsonDataEncoder.create (PingMessage.class), new AmqpPublisherCallback (), context);
 			this.logger.info ("initializing queue connectors...");
 			return CallbackCompletion.createAndChained (context.consumer.initialize (), context.publisher.initialize ());
 		}

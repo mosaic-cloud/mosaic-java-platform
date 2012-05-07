@@ -23,45 +23,89 @@ package eu.mosaic_cloud.platform.core.utils;
 
 import java.io.IOException;
 
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
-import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
+import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
+
+import com.google.common.base.Preconditions;
 
 
-public class PojoDataEncoder<T extends Object>
+public class PojoDataEncoder<TData extends Object>
 		implements
-			DataEncoder<T>
+			DataEncoder<TData>
 {
-	public PojoDataEncoder (final Class<T> dataClass)
+	public PojoDataEncoder (final Class<TData> dataClass, final ExceptionTracer exceptions)
 	{
+		super ();
+		Preconditions.checkNotNull (dataClass);
 		this.dataClass = dataClass;
-		this.exceptions = FallbackExceptionTracer.defaultInstance;
+		this.transcirpt = Transcript.create (this, true);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcirpt, exceptions);
 	}
 	
 	@Override
-	public T decode (final byte[] dataBytes)
-	{
-		T object = null; // NOPMD
-		try {
-			object = this.dataClass.cast (SerDesUtils.toObject (dataBytes));
-		} catch (final IOException e) {
-			this.exceptions.traceIgnoredException (e);
-		} catch (final ClassNotFoundException e) {
-			this.exceptions.traceIgnoredException (e);
-		}
-		return object;
-	}
-	
-	@Override
-	public byte[] encode (final T data)
+	public TData decode (final byte[] dataBytes, final EncodingMetadata metadata)
 			throws EncodingException
 	{
+		Preconditions.checkNotNull (dataBytes);
+		Preconditions.checkNotNull (metadata);
+		this.checkMetadata (metadata);
+		final TData object;
 		try {
-			return SerDesUtils.pojoToBytes (data);
-		} catch (final IOException e) {
-			throw new EncodingException ("Java object cannot be serialized", e);
+			object = this.dataClass.cast (SerDesUtils.toObject (dataBytes));
+		} catch (final IOException exception) {
+			this.exceptions.traceHandledException (exception);
+			throw (new EncodingException ("unexpected i/o exception", exception));
+		} catch (final Throwable exception) {
+			this.exceptions.traceHandledException (exception);
+			throw (new EncodingException ("unexpected abnormal exception", exception));
+		}
+		return (object);
+	}
+	
+	@Override
+	public byte[] encode (final TData data, final EncodingMetadata metadata)
+			throws EncodingException
+	{
+		Preconditions.checkNotNull (metadata);
+		this.checkMetadata (metadata);
+		final byte[] dataBytes;
+		try {
+			dataBytes = SerDesUtils.pojoToBytes (data);
+		} catch (final IOException exception) {
+			this.exceptions.traceHandledException (exception);
+			throw (new EncodingException ("unexpected i/o exception", exception));
+		} catch (final Throwable exception) {
+			this.exceptions.traceHandledException (exception);
+			throw (new EncodingException ("unexpected abnormal exception", exception));
+		}
+		return (dataBytes);
+	}
+	
+	private void checkMetadata (final EncodingMetadata metadata)
+			throws EncodingException
+	{
+		if (metadata.contentType == null) {
+			this.transcirpt.traceWarning ("decoding binary data with a `null` content-type; ignoring!");
+		} else if (!PojoDataEncoder.EXPECTED_CONTENT_TYPE.equals (metadata.contentType)) {
+			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-type; throwing!", metadata.contentType);
+			throw (new EncodingException (String.format ("unexpected content-type: `%s`", metadata.contentType)));
+		}
+		if ((metadata.contentEncoding != null) && !PojoDataEncoder.EXPECTED_CONTENT_ENCODING.equals (metadata.contentEncoding)) {
+			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-encoding; throwing!", metadata.contentType);
+			throw (new EncodingException (String.format ("unexpected content-encoding: `%s`", metadata.contentEncoding)));
 		}
 	}
 	
-	private final Class<T> dataClass;
-	private final BaseExceptionTracer exceptions;
+	public static <TData extends Object> PojoDataEncoder<TData> create (final Class<TData> dataClass)
+	{
+		return (new PojoDataEncoder<TData> (dataClass, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	protected final Class<TData> dataClass;
+	protected final TranscriptExceptionTracer exceptions;
+	protected final Transcript transcirpt;
+	public static final String EXPECTED_CONTENT_ENCODING = "identity";
+	public static final String EXPECTED_CONTENT_TYPE = "application/x-java-serialized-object";
 }

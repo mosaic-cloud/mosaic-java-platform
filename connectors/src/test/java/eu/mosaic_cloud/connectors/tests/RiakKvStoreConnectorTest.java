@@ -41,7 +41,7 @@ public class RiakKvStoreConnectorTest
 	{
 		this.scenario = RiakKvStoreConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
-		this.connector = GenericKvStoreConnector.create (configuration, new PojoDataEncoder<String> (String.class));
+		this.connector = GenericKvStoreConnector.create (configuration, PojoDataEncoder.create (String.class));
 	}
 	
 	@BeforeClass

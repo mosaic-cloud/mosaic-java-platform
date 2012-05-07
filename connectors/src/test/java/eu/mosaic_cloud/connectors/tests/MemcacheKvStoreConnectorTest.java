@@ -49,7 +49,7 @@ public class MemcacheKvStoreConnectorTest
 	{
 		this.scenario = MemcacheKvStoreConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
-		this.connector = MemcacheKvStoreConnector.create (configuration, new PojoDataEncoder<String> (String.class));
+		this.connector = MemcacheKvStoreConnector.create (configuration, PojoDataEncoder.create (String.class));
 	}
 	
 	@Override

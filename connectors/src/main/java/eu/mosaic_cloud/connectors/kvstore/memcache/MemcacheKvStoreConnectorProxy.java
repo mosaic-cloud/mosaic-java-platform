@@ -31,6 +31,7 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
@@ -75,7 +76,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setExpTime (exp);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data);
+			final byte[] dataBytes = this.encoder.encode (data, EncodingMetadata.NULL);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -98,7 +99,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setKey (key);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data);
+			final byte[] dataBytes = this.encoder.encode (data, EncodingMetadata.NULL);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -121,7 +122,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setKey (key);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data);
+			final byte[] dataBytes = this.encoder.encode (data, EncodingMetadata.NULL);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -161,7 +162,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setKey (key);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data);
+			final byte[] dataBytes = this.encoder.encode (data, EncodingMetadata.NULL);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -185,7 +186,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setExpTime (exp);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data);
+			final byte[] dataBytes = this.encoder.encode (data, EncodingMetadata.NULL);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);

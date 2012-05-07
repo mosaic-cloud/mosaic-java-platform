@@ -36,11 +36,11 @@ public interface DataEncoder<T extends Object>
 	/**
 	 * Decodes (deserializes) the data.
 	 * 
-	 * @param dataBytes
+	 * @param data
 	 *            data bytes
 	 * @return the decoded object
 	 */
-	T decode (byte[] dataBytes)
+	T decode (byte[] data, EncodingMetadata metadata)
 			throws EncodingException;
 	
 	/**
@@ -50,6 +50,6 @@ public interface DataEncoder<T extends Object>
 	 *            the data to serialize
 	 * @return the bytes
 	 */
-	byte[] encode (T data)
+	byte[] encode (T data, EncodingMetadata metadata)
 			throws EncodingException;
 }

@@ -105,7 +105,7 @@ public class ConsumerCloudlet
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
 			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));
-			final DataEncoder<String> encoder = new PojoDataEncoder<String> (String.class);
+			final DataEncoder<String> encoder = PojoDataEncoder.create (String.class);
 			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (queueConfiguration, String.class, encoder, new AmqpConsumerCallback (), context);
 			return context.consumer.initialize ();
 		}

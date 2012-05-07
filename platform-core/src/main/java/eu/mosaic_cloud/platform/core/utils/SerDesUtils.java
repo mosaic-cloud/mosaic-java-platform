@@ -21,18 +21,24 @@
 package eu.mosaic_cloud.platform.core.utils;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
-
-import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 
 /**
@@ -44,10 +50,12 @@ import org.codehaus.jackson.map.SerializationConfig;
 public final class SerDesUtils
 {
 	private SerDesUtils ()
-	{}
+	{
+		throw (new UnsupportedOperationException ());
+	}
 	
 	static {
-		SerDesUtils.objectMapper = new ObjectMapper ();
+		objectMapper = new ObjectMapper ();
 		SerDesUtils.objectMapper.configure (SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 	}
 	
@@ -65,13 +73,24 @@ public final class SerDesUtils
 	 * @throws IOException
 	 */
 	public static <T extends Object> T jsonToObject (final byte[] bytes, final Class<T> valueClass)
-			throws IOException,
-				ClassNotFoundException
+			throws IOException
 	{
 		T object = null;
 		if (bytes.length > 0) {
 			object = SerDesUtils.objectMapper.readValue (bytes, 0, bytes.length, valueClass);
 		}
+		return object;
+	}
+	
+	public static JSONObject jsonToRawObject (final byte[] dataBytes)
+			throws JSONException
+	{
+		if (dataBytes.length == 0) {
+			return null;
+		}
+		final BufferedReader reader = new BufferedReader (new InputStreamReader (new ByteArrayInputStream (dataBytes)));
+		final JSONTokener tokener = new JSONTokener (reader);
+		final JSONObject object = new JSONObject (tokener);
 		return object;
 	}
 	
@@ -89,6 +108,17 @@ public final class SerDesUtils
 		final ObjectOutputStream oos = new ObjectOutputStream (baos);
 		oos.writeObject (object);
 		oos.close ();
+		return baos.toByteArray ();
+	}
+	
+	public static byte[] toJsonBytes (final JSONObject data)
+			throws JSONException,
+				IOException
+	{
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream ();
+		final Writer writer = new BufferedWriter (new OutputStreamWriter (baos));
+		data.write (writer);
+		writer.close ();
 		return baos.toByteArray ();
 	}
 	
@@ -130,30 +160,26 @@ public final class SerDesUtils
 		return object;
 	}
 	
-	private static ObjectMapper objectMapper;
+	private static final ObjectMapper objectMapper;
 	
-	static class SpecialObjectInputStream
+	private static class SpecialObjectInputStream
 			extends ObjectInputStream
 	{
-		public SpecialObjectInputStream (final InputStream in)
+		public SpecialObjectInputStream (final InputStream stream)
 				throws IOException
 		{
-			super (in);
+			super (stream);
 		}
 		
 		@Override
-		public Class resolveClass (final ObjectStreamClass desc)
-				throws IOException,
-					ClassNotFoundException
+		public Class<?> resolveClass (final ObjectStreamClass descriptor)
+				throws ClassNotFoundException
 		{
-			ClassLoader currentLoader = null;
-			try {
-				currentLoader = Thread.currentThread ().getContextClassLoader ();
-				return currentLoader.loadClass (desc.getName ());
-			} catch (final Exception e) {
-				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
-			}
-			return null;
+			final ClassLoader currentLoader = Thread.currentThread ().getContextClassLoader ();
+			if (currentLoader == null)
+				return (null);
+			final Class<?> clasz = currentLoader.loadClass (descriptor.getName ());
+			return clasz;
 		}
 	}
 }

@@ -21,22 +21,26 @@
 package eu.mosaic_cloud.platform.core.utils;
 
 
+import com.google.common.base.Preconditions;
+
+
 public class NopDataEncoder
 		implements
 			DataEncoder<byte[]>
 {
-	public NopDataEncoder ()
-	{}
-	
 	@Override
-	public byte[] decode (final byte[] dataBytes)
+	public byte[] decode (final byte[] data, final EncodingMetadata metadata)
 	{
-		return dataBytes;
+		Preconditions.checkNotNull (data);
+		Preconditions.checkNotNull (metadata);
+		return data;
 	}
 	
 	@Override
-	public byte[] encode (final byte[] data)
+	public byte[] encode (final byte[] data, final EncodingMetadata metadata)
 	{
+		Preconditions.checkNotNull (data);
+		Preconditions.checkNotNull (metadata);
 		return data;
 	}
 }
