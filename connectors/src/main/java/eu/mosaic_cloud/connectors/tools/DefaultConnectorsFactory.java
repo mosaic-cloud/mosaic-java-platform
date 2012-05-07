@@ -22,6 +22,10 @@ package eu.mosaic_cloud.connectors.tools;
 
 
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.httpg.HttpgQueueConnector;
+import eu.mosaic_cloud.connectors.httpg.IHttpgQueueCallback;
+import eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnector;
+import eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnectorFactory;
 import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
@@ -96,6 +100,13 @@ public class DefaultConnectorsFactory
 			public <TMessage> IAmqpQueuePublisherConnector<TMessage> create (final IConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
 			{
 				return AmqpQueuePublisherConnector.create (ConnectorConfiguration.create (configuration, environment), messageClass, messageEncoder);
+			}
+		});
+		factory.registerFactory (IHttpgQueueConnectorFactory.class, new IHttpgQueueConnectorFactory () {
+			@Override
+			public <TRequestBody, TResponseBody> IHttpgQueueConnector<TRequestBody, TResponseBody> create (final IConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback)
+			{
+				return HttpgQueueConnector.create (ConnectorConfiguration.create (configuration, environment), requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
 			}
 		});
 	}

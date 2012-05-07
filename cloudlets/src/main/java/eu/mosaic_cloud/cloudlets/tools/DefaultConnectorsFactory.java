@@ -22,6 +22,10 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.cloudlets.connectors.httpg.HttpgQueueConnector;
+import eu.mosaic_cloud.cloudlets.connectors.httpg.IHttpgQueueConnector;
+import eu.mosaic_cloud.cloudlets.connectors.httpg.IHttpgQueueConnectorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.httpg.IHttpgQueueConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
@@ -89,7 +93,7 @@ public class DefaultConnectorsFactory
 			public <TContext, Message, TExtra> IAmqpQueueConsumerConnector<Message, TExtra> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final IAmqpQueueConsumerConnectorCallback<TContext, Message, TExtra> callback, final TContext callbackContext)
 			{
 				final AmqpQueueConsumerConnector.Callback<Message> backingCallback = new AmqpQueueConsumerConnector.Callback<Message> ();
-				final eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConsumerConnector<Message> backingConnector = (eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConsumerConnector<Message>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory.class).create (configuration, messageClass, messageEncoder, backingCallback);
+				final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> backingConnector = factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory.class).create (configuration, messageClass, messageEncoder, backingCallback);
 				return new AmqpQueueConsumerConnector<TContext, Message, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
 			}
 		});
@@ -97,8 +101,17 @@ public class DefaultConnectorsFactory
 			@Override
 			public <TContext, Message, TExtra> IAmqpQueuePublisherConnector<Message, TExtra> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final IAmqpQueuePublisherConnectorCallback<TContext, Message, TExtra> callback, final TContext callbackContext)
 			{
-				final eu.mosaic_cloud.connectors.queue.amqp.AmqpQueuePublisherConnector<Message> backingConnector = (eu.mosaic_cloud.connectors.queue.amqp.AmqpQueuePublisherConnector<Message>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory.class).create (configuration, messageClass, messageEncoder);
+				final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<Message> backingConnector = factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory.class).create (configuration, messageClass, messageEncoder);
 				return new AmqpQueuePublisherConnector<TContext, Message, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
+			}
+		});
+		factory.registerFactory (IHttpgQueueConnectorFactory.class, new IHttpgQueueConnectorFactory () {
+			@Override
+			public <TContext, TRequestBody, TResponseBody, TExtra> IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final IConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext)
+			{
+				final HttpgQueueConnector.Callback<TRequestBody, TResponseBody> backingCallback = new HttpgQueueConnector.Callback<TRequestBody, TResponseBody> ();
+				final eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> backingConnector = factory.getConnectorFactory (eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnectorFactory.class).create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, backingCallback);
+				return new HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
 			}
 		});
 	}
