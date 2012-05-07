@@ -29,7 +29,8 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.drivers.kvstore.interop.MemcachedStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
+import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.core.utils.SerializedDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 
@@ -49,7 +50,7 @@ public class MemcacheKvStoreConnectorTest
 	{
 		this.scenario = MemcacheKvStoreConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
-		this.connector = MemcacheKvStoreConnector.create (configuration, PojoDataEncoder.create (String.class));
+		this.connector = MemcacheKvStoreConnector.create (configuration, PlainTextDataEncoder.DEFAULT_INSTANCE);
 	}
 	
 	@Override

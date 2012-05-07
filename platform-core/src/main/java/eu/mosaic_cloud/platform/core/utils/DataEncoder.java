@@ -25,13 +25,13 @@ package eu.mosaic_cloud.platform.core.utils;
  * Interface for defining data specific encoders (serializers) and decode
  * (deserializers).
  * 
- * @param <T>
+ * @param <TData>
  *            the type of data to encode and decode
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface DataEncoder<T extends Object>
+public interface DataEncoder<TData extends Object>
 {
 	/**
 	 * Decodes (deserializes) the data.
@@ -40,7 +40,7 @@ public interface DataEncoder<T extends Object>
 	 *            data bytes
 	 * @return the decoded object
 	 */
-	T decode (byte[] data, EncodingMetadata metadata)
+	TData decode (byte[] data, EncodingMetadata metadata)
 			throws EncodingException;
 	
 	/**
@@ -50,6 +50,6 @@ public interface DataEncoder<T extends Object>
 	 *            the data to serialize
 	 * @return the bytes
 	 */
-	byte[] encode (T data, EncodingMetadata metadata)
+	byte[] encode (TData data, EncodingMetadata metadata)
 			throws EncodingException;
 }

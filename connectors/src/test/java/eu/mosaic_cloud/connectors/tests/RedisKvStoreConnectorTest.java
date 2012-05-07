@@ -26,7 +26,8 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.utils.PojoDataEncoder;
+import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.core.utils.SerializedDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
 import org.junit.AfterClass;
@@ -43,7 +44,7 @@ public class RedisKvStoreConnectorTest
 	{
 		this.scenario = RedisKvStoreConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
-		this.connector = GenericKvStoreConnector.create (configuration, PojoDataEncoder.create (String.class));
+		this.connector = GenericKvStoreConnector.create (configuration, PlainTextDataEncoder.DEFAULT_INSTANCE);
 	}
 	
 	@BeforeClass

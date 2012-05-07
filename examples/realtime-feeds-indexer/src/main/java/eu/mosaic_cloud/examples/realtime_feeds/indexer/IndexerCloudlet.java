@@ -38,7 +38,7 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
-import eu.mosaic_cloud.platform.core.utils.NopDataEncoder;
+import eu.mosaic_cloud.platform.core.utils.NullDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
@@ -82,13 +82,13 @@ public class IndexerCloudlet
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
 			final IConfiguration metadataConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("metadata"));
-			final DataEncoder<byte[]> nopEncoder = new NopDataEncoder ();
-			final DataEncoder<JSONObject> jsonEncoder = JsonDataEncoder.create ();
+			final DataEncoder<byte[]> nullEncoder = NullDataEncoder.DEFAULT_INSTANCE;
+			final DataEncoder<JSONObject> jsonEncoder = JsonDataEncoder.DEFAULT_INSTANCE;
 			context.metadataStoreCallback = new MetadataKVCallback ();
 			context.metadataStore = context.cloudlet.getConnectorFactory (IKvStoreConnectorFactory.class).create (metadataConfiguration, JSONObject.class, jsonEncoder, context.metadataStoreCallback, context);
 			final IConfiguration dataConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("data"));
 			context.dataStoreCallback = new DataKVCallback ();
-			context.dataStore = context.cloudlet.getConnectorFactory (IKvStoreConnectorFactory.class).create (dataConfiguration, byte[].class, nopEncoder, context.dataStoreCallback, context);
+			context.dataStore = context.cloudlet.getConnectorFactory (IKvStoreConnectorFactory.class).create (dataConfiguration, byte[].class, nullEncoder, context.dataStoreCallback, context);
 			final IConfiguration timelinesConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("timelines"));
 			context.timelinesStoreCallback = new TimelinesKVCallback ();
 			context.timelinesStore = context.cloudlet.getConnectorFactory (IKvStoreConnectorFactory.class).create (timelinesConfiguration, JSONObject.class, jsonEncoder, context.timelinesStoreCallback, context);
