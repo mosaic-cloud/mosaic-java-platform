@@ -8,7 +8,7 @@
 	
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>java-parent</artifactId>
-	<version>0.4-SNAPSHOT</version>
+	<version>0.4.0</version>
 	<packaging>pom</packaging>
 	<url>http://www.mosaic-cloud.eu/</url>
 	
