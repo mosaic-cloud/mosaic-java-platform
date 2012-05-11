@@ -209,12 +209,14 @@ final class AmqpOperationFactory
 				final String consumer = (String) parameters[1];
 				final boolean exclusive = (Boolean) parameters[2];
 				final boolean autoAck = (Boolean) parameters[3];
+				// FIXME: we should allow explicit setting of QOS
+				final int qos = 1;
 				final IAmqpConsumer consumeCallback = (IAmqpConsumer) parameters[4];
 				String consumerTag;
 				final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel (consumer);
 				if (channel != null) {
 					AmqpOperationFactory.this.amqpDriver.consumers.put (consumer, consumeCallback);
-					channel.basicQos (8192);
+					channel.basicQos (qos);
 					consumerTag = channel.basicConsume (queue, autoAck, consumer, true, exclusive, null, AmqpOperationFactory.this.amqpDriver.new ConsumerCallback ());
 					if (!consumer.equals (consumerTag)) {
 						AmqpOperationFactory.logger.error ("Received different consumer tag: consumerTag = " + consumerTag + " consumer " + consumer);
