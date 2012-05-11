@@ -30,6 +30,6 @@ _mvn_env=(
 )
 
 _package_name=mosaic-components-java-cloudlet-container
-_package_version=0.1.alpha
+_package_version=0.1.0
 _package_afs=/afs/olympus.volution.ro/people/ciprian/web/data/5e069b1ba84ae3ab9c0eb0d8cbcb0a57
 _package_jar_name=mosaic-cloudlet-0.4.0-jar-with-dependencies.jar
