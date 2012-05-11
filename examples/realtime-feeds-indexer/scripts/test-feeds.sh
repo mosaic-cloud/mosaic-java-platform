@@ -56,7 +56,7 @@ curl -s -X POST -H 'Content-Type: application/json' --data-binary @- "http://${i
         },
         "indexer" : {
                 "type" : "#mosaic-components:java-cloudlet-container",
-                "configuration" : ["http://194.102.62.79:27665/target/mosaic-examples-feeds-indexer-0.0.1-SNAPSHOT-jar-with-dependencies.jar","indexer-cloudlet.prop"],
+                "configuration" : ["http://194.102.62.79:27665/target/mosaic-examples-feeds-indexer-0.4.0-jar-with-dependencies.jar","indexer-cloudlet.prop"],
                 "count" : 1,
                 "order" : 5,
                 "delay" : 1000
