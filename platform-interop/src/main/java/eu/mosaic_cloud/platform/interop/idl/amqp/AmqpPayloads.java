@@ -5753,7 +5753,9 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-			// required .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType type = 3;
+			// required
+			// .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType type =
+			// 3;
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType type_ = eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType.DIRECT;
 		}
 		
@@ -5870,7 +5872,8 @@ public final class AmqpPayloads
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		boolean hasToken ();
 		
-		// required .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType type = 3;
+		// required .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType
+		// type = 3;
 		boolean hasType ();
 	}
 	

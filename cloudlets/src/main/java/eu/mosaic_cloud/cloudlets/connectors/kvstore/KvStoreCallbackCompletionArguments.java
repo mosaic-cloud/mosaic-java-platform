@@ -62,7 +62,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	{
 		super (cloudlet, error);
 		this.keys = keys;
-		this.value = null; // NOPMD
+		this.value = null;
 		this.extra = extra;
 	}
 	
@@ -102,8 +102,8 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	{
 		super (cloudlet, error);
 		this.keys = Arrays.asList (key);
-		this.value = null; // NOPMD
-		this.extra = null; // NOPMD
+		this.value = null;
+		this.extra = null;
 	}
 	
 	/**
@@ -122,7 +122,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	{
 		super (cloudlet, error);
 		this.keys = Arrays.asList (key);
-		this.value = null; // NOPMD
+		this.value = null;
 		this.extra = extra;
 	}
 	

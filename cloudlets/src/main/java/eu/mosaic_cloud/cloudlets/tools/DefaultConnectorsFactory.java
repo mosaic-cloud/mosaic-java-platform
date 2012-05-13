@@ -55,7 +55,7 @@ public class DefaultConnectorsFactory
 		extends BaseConnectorsFactory
 		implements
 			IConnectorsFactory
-{ // NOPMD
+{
 	protected DefaultConnectorsFactory (final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate)
 	{
 		super (delegate);

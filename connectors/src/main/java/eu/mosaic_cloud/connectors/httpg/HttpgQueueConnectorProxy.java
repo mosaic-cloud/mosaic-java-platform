@@ -283,14 +283,15 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			}
 			final EncodingMetadata bodyEncodingMetadata = new EncodingMetadata (httpHeaders.get ("content-type"), httpHeaders.get ("content-encoding"));
 			final TRequestBody httpBody;
-			if (httpBodyBytes != null)
+			if (httpBodyBytes != null) {
 				try {
 					httpBody = this.requestBodyEncoder.decode (httpBodyBytes, bodyEncodingMetadata);
 				} catch (final EncodingException exception) {
 					throw (new EncodingException ("invalid body", exception));
 				}
-			else
+			} else {
 				httpBody = null;
+			}
 			final DeliveryToken token = new DeliveryToken (this, message.getDelivery (), callbackExchange, callbackRoutingKey, callbackIdentifier);
 			final HttpgRequestMessage<TRequestBody> request = HttpgRequestMessage.create (httpVersion, httpMethod, httpPath, httpHeaders, httpBody, token);
 			return (request);
@@ -311,14 +312,17 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			String bodyContentEncoding = null;
 			for (final Map.Entry<String, String> httpHeader : response.headers.entrySet ()) {
 				final String httpHeaderName = httpHeader.getKey ().toLowerCase ();
-				if (HttpgQueueConnectorProxy.ignoredHttpHeaders.contains (httpHeaderName))
+				if (HttpgQueueConnectorProxy.ignoredHttpHeaders.contains (httpHeaderName)) {
 					continue;
+				}
 				final String httpHeaderValue = httpHeader.getValue ();
 				httpHeaders.put (httpHeaderName, httpHeaderValue);
-				if (httpHeaderName.equals ("content-type"))
+				if (httpHeaderName.equals ("content-type")) {
 					bodyContentType = httpHeaderValue;
-				if (httpHeaderName.equals ("content-encoding"))
+				}
+				if (httpHeaderName.equals ("content-encoding")) {
 					bodyContentEncoding = httpHeaderValue;
+				}
 			}
 			final JSONObject metadata = new JSONObject ();
 			final EncodingMetadata httpBodyEncodingMetadata = new EncodingMetadata (bodyContentType, bodyContentEncoding);
@@ -349,7 +353,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			rawStream.writeInt (httpBodyBytes.length);
 			rawStream.write (httpBodyBytes);
 			final byte[] rawData = rawBytesStream.toByteArray ();
-			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData);
+			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, this.responseBodyEncoder.getEncodingMetadata ().getContentType ());
 			return (rawMessage);
 		} catch (final EncodingException exception) {
 			throw (exception);

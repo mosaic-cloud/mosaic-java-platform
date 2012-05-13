@@ -87,7 +87,8 @@ public final class CloudletManager
 		this.transcript.traceDebugging ("creating a new cloudlet...");
 		synchronized (this.monitor) {
 			final Cloudlet<?> cloudlet = this.createCloudletInstance ();
-			// FIXME: this should be done asynchronously and we should check the outcome...
+			// FIXME: this should be done asynchronously and we should check the
+			// outcome...
 			cloudlet.initialize ();
 			this.cloudlets.put (cloudlet, cloudlet);
 			this.transcript.traceDebugging ("created the cloudlet `%{object:identity}`.", cloudlet);
@@ -116,7 +117,8 @@ public final class CloudletManager
 					return (false);
 				}
 				final Cloudlet<?> cloudlet = cloudletIterator.next ();
-				// FIXME: we should have some cloudlet observers to manage this...
+				// FIXME: we should have some cloudlet observers to manage
+				// this...
 				switch (cloudlet.getState ()) {
 					case DESTROYED :
 					case DESTROYING :
@@ -127,9 +129,10 @@ public final class CloudletManager
 					case INITIALIZING :
 						break;
 					default:
-						throw (new AssertionError ()); // NOPMD
+						throw (new AssertionError ());
 				}
-				// FIXME: this should be done asynchronously and we should check the outcome...
+				// FIXME: this should be done asynchronously and we should check
+				// the outcome...
 				cloudlet.destroy ();
 				this.cloudlets.remove (cloudlet);
 				this.transcript.traceDebugging ("destroyed the cloudlet `%{object:identity}`.", cloudlet);

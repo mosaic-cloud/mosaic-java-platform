@@ -44,10 +44,11 @@ public class JsonDataEncoder<TData extends Object>
 	{
 		try {
 			final TData data;
-			if (this.dataClass == JSONObject.class)
+			if (this.dataClass == JSONObject.class) {
 				data = this.dataClass.cast (SerDesUtils.jsonToRawObject (dataBytes));
-			else
+			} else {
 				data = this.dataClass.cast (SerDesUtils.jsonToObject (dataBytes, this.dataClass));
+			}
 			return (data);
 		} catch (final JSONException exception) {
 			this.exceptions.traceHandledException (exception);
@@ -64,10 +65,11 @@ public class JsonDataEncoder<TData extends Object>
 	{
 		try {
 			final byte[] dataBytes;
-			if (this.dataClass == JSONObject.class)
+			if (this.dataClass == JSONObject.class) {
 				dataBytes = SerDesUtils.toJsonBytes ((JSONObject) data);
-			else
+			} else {
 				dataBytes = SerDesUtils.toJsonBytes (data);
+			}
 			return (dataBytes);
 		} catch (final JSONException exception) {
 			this.exceptions.traceHandledException (exception);

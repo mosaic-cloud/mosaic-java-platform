@@ -188,8 +188,9 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 							this.pendingRequests.fail (token.getMessageId (), exception);
 							break;
 						}
-					} else
+					} else {
 						value = null;
+					}
 					outcome = value;
 				} else {
 					this.pendingRequests.fail (token.getMessageId (), new AssertionError ());
@@ -234,7 +235,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (KeyValueMessage.SET_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class); // NOPMD
+			result = this.sendRequest (message, token, Boolean.class);
 		}
 		return (result);
 	}

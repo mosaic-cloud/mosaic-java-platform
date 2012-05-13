@@ -54,7 +54,7 @@ public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
 				@Override
 				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
 				{
-					assert (completion_ == completion); // NOPMD
+					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						return AmqpQueuePublisherConnector.this.callback.publishFailed (AmqpQueuePublisherConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueuePublisherConnector.this.cloudlet, completion.getException ()));
 					}

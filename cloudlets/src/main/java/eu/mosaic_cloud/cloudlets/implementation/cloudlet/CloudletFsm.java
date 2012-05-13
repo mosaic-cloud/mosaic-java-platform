@@ -40,7 +40,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 final class CloudletFsm
 		extends StateMachine<FsmState, FsmTransition>
-{ // NOPMD
+{
 	protected CloudletFsm (final Cloudlet<?> cloudlet, final Transcript transcript, final ExceptionTracer exceptions)
 	{
 		super (FsmState.class, FsmTransition.class, transcript, exceptions);

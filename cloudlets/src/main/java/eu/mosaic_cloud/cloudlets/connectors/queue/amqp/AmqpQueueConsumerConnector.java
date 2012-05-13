@@ -58,7 +58,7 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 				@Override
 				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
 				{
-					assert (completion_ == completion); // NOPMD
+					assert (completion_ == completion);
 					CallbackCompletion<Void> result;
 					if (completion.getException () == null) {
 						result = AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded (AmqpQueueConsumerConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueueConsumerConnector.this.cloudlet, extra));
@@ -93,6 +93,6 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 			return this.connector.consume (token, message);
 		}
 		
-		private AmqpQueueConsumerConnector<?, Message, ?> connector = null; // NOPMD
+		private AmqpQueueConsumerConnector<?, Message, ?> connector = null;
 	}
 }

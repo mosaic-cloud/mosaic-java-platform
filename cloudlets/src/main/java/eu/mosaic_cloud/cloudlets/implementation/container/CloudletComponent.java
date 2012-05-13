@@ -138,10 +138,11 @@ public final class CloudletComponent
 	
 	final void handleCleanup (final boolean gracefully)
 	{
-		if (gracefully)
+		if (gracefully) {
 			this.transcript.traceDebugging ("cleaning-up the cloudlet component (gracefully)...");
-		else
+		} else {
 			this.transcript.traceWarning ("cleaning-up the cloudlet component (forced)...");
+		}
 		if ((this.componentControllerProxy != null) && !gracefully) {
 			this.transcript.traceDebugging ("destroying the component controller proxy (forced)...");
 			try {
@@ -166,7 +167,8 @@ public final class CloudletComponent
 				this.exceptions.traceIgnoredException (exception, "destroying the interoperability channel proxy failed; ignoring!");
 			}
 		}
-		// FIXME: this should be asynchronous and handled as part of the life-cycle
+		// FIXME: this should be asynchronous and handled as part of the
+		// life-cycle
 		if (this.manager != null) {
 			this.transcript.traceDebugging ("destroying the cloudlet manager...");
 			try {
@@ -175,7 +177,8 @@ public final class CloudletComponent
 				this.exceptions.traceIgnoredException (exception, "destroying the cloudlet manager failed; ignoring!");
 			}
 		}
-		// FIXME: this should be asynchronous and handled as part of the life-cycle
+		// FIXME: this should be asynchronous and handled as part of the
+		// life-cycle
 		if (this.channel != null) {
 			this.transcript.traceDebugging ("destroying the interoperability channel...");
 			try {
@@ -458,7 +461,8 @@ public final class CloudletComponent
 				protected StateAndOutput<FsmState, CallbackCompletion<Void>> execute ()
 				{
 					CloudletComponent.this.reactor.assignDelegate (CloudletComponent.this.componentControllerProxy, component);
-					// FIXME: this should be asynchronous and handled as part of the life-cycle
+					// FIXME: this should be asynchronous and handled as part of
+					// the life-cycle
 					final int count = 1;
 					CloudletComponent.this.transcript.traceDebugging ("creating the cloudlet instances (with count `%d`)...", Integer.valueOf (count));
 					for (int index = 0; index < count; index++) {

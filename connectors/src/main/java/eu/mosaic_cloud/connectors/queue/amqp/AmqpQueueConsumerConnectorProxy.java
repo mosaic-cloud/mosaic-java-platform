@@ -150,7 +150,8 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	{
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
 		// FIXME: the splice below will be done when creating the environment
-		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+		// # final IConfiguration subConfiguration =
+		// configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
 		final AmqpQueueConsumerConnectorProxy<TMessage> proxy = new AmqpQueueConsumerConnectorProxy<TMessage> (rawProxy, configuration, messageClass, messageEncoder, callback);
 		return (proxy);
 	}
@@ -161,7 +162,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	private final String consumerIdentifier;
 	private final boolean definePassive;
 	private final String exchange;
-	private final boolean exchangeAutoDelete; // NOPMD
+	private final boolean exchangeAutoDelete;
 	private final boolean exchangeDurable;
 	private final AmqpExchangeType exchangeType;
 	private final String queue;

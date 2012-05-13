@@ -52,4 +52,11 @@ public interface DataEncoder<TData extends Object>
 	 */
 	byte[] encode (TData data, EncodingMetadata metadata)
 			throws EncodingException;
+	
+	/**
+	 * Returns encoding metadata, such as message content type.
+	 * 
+	 * @return encoding metadata
+	 */
+	EncodingMetadata getEncodingMetadata ();
 }

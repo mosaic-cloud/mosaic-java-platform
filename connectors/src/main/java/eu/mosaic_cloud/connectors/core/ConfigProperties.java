@@ -35,7 +35,7 @@ public final class ConfigProperties
 	public static String getString (final String key)
 	{
 		try {
-			return ConfigProperties.RESOURCE_BUNDLE.getString (key); // NOPMD
+			return ConfigProperties.RESOURCE_BUNDLE.getString (key);
 		} catch (final MissingResourceException exception) {
 			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception, "failed resolving the config-property `%s`...", key);
 			return '!' + key + '!';

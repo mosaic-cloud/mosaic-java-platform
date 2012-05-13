@@ -50,7 +50,7 @@ import com.google.common.base.Preconditions;
 
 public class DefaultConnectorsFactory
 		extends BaseConnectorsFactory
-{ // NOPMD
+{
 	protected DefaultConnectorsFactory (final IConnectorsFactory delegate)
 	{
 		super (delegate);

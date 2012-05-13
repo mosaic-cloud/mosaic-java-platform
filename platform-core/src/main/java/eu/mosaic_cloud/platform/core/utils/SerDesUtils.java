@@ -176,8 +176,9 @@ public final class SerDesUtils
 				throws ClassNotFoundException
 		{
 			final ClassLoader currentLoader = Thread.currentThread ().getContextClassLoader ();
-			if (currentLoader == null)
+			if (currentLoader == null) {
 				return (null);
+			}
 			final Class<?> clasz = currentLoader.loadClass (descriptor.getName ());
 			return clasz;
 		}

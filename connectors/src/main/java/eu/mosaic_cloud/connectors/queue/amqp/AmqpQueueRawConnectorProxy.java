@@ -62,9 +62,8 @@ import com.google.protobuf.ByteString;
 public final class AmqpQueueRawConnectorProxy
 		extends BaseConnectorProxy
 		implements
-			// NOPMD
 			IAmqpQueueRawConnector
-{ // NOPMD
+{
 	protected AmqpQueueRawConnectorProxy (final ConnectorConfiguration configuration)
 	{
 		super (configuration);
@@ -242,9 +241,9 @@ public final class AmqpQueueRawConnectorProxy
 			requestBuilder.setContentType (contentType);
 		}
 		// FIXME: content encoding is missing...
-		//# if (contentEncoding != null) {
-		//# 	requestBuilder.setContentEncoding (contentEncoding);
-		//# }
+		// # if (contentEncoding != null) {
+		// # requestBuilder.setContentEncoding (contentEncoding);
+		// # }
 		if (correlation != null) {
 			requestBuilder.setCorrelationId (correlation);
 		}
@@ -257,7 +256,7 @@ public final class AmqpQueueRawConnectorProxy
 	
 	@Override
 	protected void processResponse (final Message message)
-	{ // NOPMD
+	{
 		final AmqpMessage amqpMessage = (AmqpMessage) message.specification;
 		switch (amqpMessage) {
 			case OK : {
@@ -305,16 +304,18 @@ public final class AmqpQueueRawConnectorProxy
 				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
 				Preconditions.checkNotNull (consumerCallback);
 				consumerCallback.handleCancelOk (consumerIdentifier);
-				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//consume") != null)
+				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//consume") != null) {
 					this.pendingRequests.cancel (consumerIdentifier + "//consume");
-				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//cancel") != null)
+				}
+				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//cancel") != null) {
 					this.pendingRequests.cancel (consumerIdentifier + "//cancel");
+				}
 			}
 				break;
 			case CONSUME_OK : {
 				final AmqpPayloads.ConsumeOkMessage consumeOkPayload = (ConsumeOkMessage) message.payload;
 				// FIXME: missing token...
-				//# final CompletionToken token = cancelOkPayload.getToken ();
+				// # final CompletionToken token = cancelOkPayload.getToken ();
 				final String consumerIdentifier = consumeOkPayload.getConsumerTag ();
 				this.transcript.traceDebugging ("processing the registration for the consumer `%s` for pending request with token `%s`...", consumerIdentifier, null);
 				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.get (consumerIdentifier);
@@ -333,7 +334,8 @@ public final class AmqpQueueRawConnectorProxy
 				final byte[] data = delivery.getData ().toByteArray ();
 				final String contentType = delivery.hasContentType () ? delivery.getContentType () : null;
 				// FIXME: content encoding is missing...
-				//# final String contentEncoding = delivery.hasContentEncoding () ? delivery.getContentEncoding () : null;
+				// # final String contentEncoding = delivery.hasContentEncoding () ?
+				// delivery.getContentEncoding () : null;
 				final String contentEncoding = null;
 				final String correlation = delivery.hasCorrelationId () ? delivery.getCorrelationId () : null;
 				final String callback = delivery.hasReplyTo () ? delivery.getReplyTo () : null;
@@ -352,10 +354,12 @@ public final class AmqpQueueRawConnectorProxy
 				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
 				Preconditions.checkNotNull (consumerCallback);
 				consumerCallback.handleShutdownSignal (consumerIdentifier, shutdownSignal);
-				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//consume") != null)
+				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//consume") != null) {
 					this.pendingRequests.cancel (consumerIdentifier + "//consume");
-				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//cancel") != null)
+				}
+				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//cancel") != null) {
 					this.pendingRequests.cancel (consumerIdentifier + "//cancel");
+				}
 			}
 				break;
 			default: {
