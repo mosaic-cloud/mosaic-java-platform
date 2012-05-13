@@ -27,7 +27,6 @@ import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -203,7 +202,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			TMessage message = null;
 			CallbackCompletion<Void> result = null;
 			try {
-				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, EncodingMetadata.NULL);
+				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, AmqpQueueConsumerConnectorProxy.this.messageEncoder.getEncodingMetadata ());
 			} catch (final EncodingException exception) {
 				AmqpQueueConsumerConnectorProxy.this.exceptions.traceDeferredException (exception, "decoding the message `%s` failed; deferring!", token);
 				result = CallbackCompletion.createFailure (exception);
