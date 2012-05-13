@@ -52,7 +52,7 @@ public class MemcachedResponseTransmitter
 		extends KeyValueResponseTransmitter
 {
 	@Override
-	protected void packAndSend (final Session session, final CompletionToken token, final KeyValueOperations operation, final Object result, final boolean isError) // NOPMD
+	protected void packAndSend (final Session session, final CompletionToken token, final KeyValueOperations operation, final Object result, final boolean isError)
 	{
 		Message message;
 		this.logger.trace ("MemcachedTransmitter: send response for " + operation + " request " + token.getMessageId () + " client id " + token.getClientId ());
@@ -73,11 +73,11 @@ public class MemcachedResponseTransmitter
 					if (success) {
 						final Ok.Builder okPayload = IdlCommon.Ok.newBuilder ();
 						okPayload.setToken (token);
-						message = new Message (KeyValueMessage.OK, okPayload.build ()); // NOPMD
+						message = new Message (KeyValueMessage.OK, okPayload.build ());
 					} else {
 						final NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder ();
 						nokPayload.setToken (token);
-						message = new Message (KeyValueMessage.NOK, nokPayload.build ()); // NOPMD
+						message = new Message (KeyValueMessage.NOK, nokPayload.build ());
 					}
 					break;
 				case GET_BULK :

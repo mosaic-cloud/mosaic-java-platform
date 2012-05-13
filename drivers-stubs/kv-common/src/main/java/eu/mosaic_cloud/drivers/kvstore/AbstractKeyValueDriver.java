@@ -152,7 +152,7 @@ public abstract class AbstractKeyValueDriver
 	 */
 	protected <T extends IOperationFactory> T getOperationFactory (final String clientId, final Class<T> factClass)
 	{
-		T factory = null; // NOPMD
+		T factory = null;
 		final BucketData bucket = this.clientBucketMap.get (clientId);
 		if (bucket != null) {
 			factory = factClass.cast (bucket.opFactory);
@@ -167,7 +167,7 @@ public abstract class AbstractKeyValueDriver
 	 */
 	private IOperationFactory getOperationFactory (final String clientId)
 	{
-		IOperationFactory factory = null; // NOPMD
+		IOperationFactory factory = null;
 		final BucketData bucket = this.clientBucketMap.get (clientId);
 		if (bucket != null) {
 			factory = bucket.opFactory;

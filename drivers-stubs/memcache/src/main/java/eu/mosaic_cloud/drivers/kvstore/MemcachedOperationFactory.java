@@ -54,7 +54,7 @@ import net.spy.memcached.MemcachedClient;
 public final class MemcachedOperationFactory
 		implements
 			IOperationFactory
-{ // NOPMD
+{
 	private MemcachedOperationFactory (final List<?> servers, final String user, final String password, final String bucket, final boolean useBucket)
 			throws IOException
 	{
@@ -83,18 +83,18 @@ public final class MemcachedOperationFactory
 	 * .platform.core.IOperationType, java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) // NOPMD
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
 	{
-		IOperation<?> operation = null; // NOPMD
+		IOperation<?> operation = null;
 		if (!(type instanceof KeyValueOperations)) {
-			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						@Override
-						public Object call ()
-								throws UnsupportedOperationException
-						{
-							throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
-						}
-					});
+			return new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws UnsupportedOperationException
+				{
+					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
+				}
+			});
 		}
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		switch (mType) {
@@ -126,14 +126,14 @@ public final class MemcachedOperationFactory
 				operation = this.buildDeleteOperation (parameters);
 				break;
 			default:
-				operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-							@Override
-							public Object call ()
-									throws UnsupportedOperationException
-							{
-								throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
-							}
-						});
+				operation = new GenericOperation<Object> (new Callable<Object> () {
+					@Override
+					public Object call ()
+							throws UnsupportedOperationException
+					{
+						throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
+					}
+				});
 		}
 		return operation;
 	}
@@ -314,7 +314,7 @@ public final class MemcachedOperationFactory
 	public static MemcachedOperationFactory getFactory (final List<?> hosts, final String user, final String password, final String bucket, final boolean useBucket)
 	{
 		try {
-			return new MemcachedOperationFactory (hosts, user, password, bucket, useBucket); // NOPMD
+			return new MemcachedOperationFactory (hosts, user, password, bucket, useBucket);
 		} catch (final IOException e) {
 			FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
 		}

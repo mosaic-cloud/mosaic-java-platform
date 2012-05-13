@@ -53,7 +53,7 @@ import com.basho.riak.client.util.Constants;
 public final class RiakRestOperationFactory
 		implements
 			IOperationFactory
-{ // NOPMD
+{
 	private RiakRestOperationFactory (final String riakHost, final int riakPort, final String bucket, final String clientId)
 	{
 		super ();
@@ -71,54 +71,54 @@ public final class RiakRestOperationFactory
 	}
 	
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) // NOPMD
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
 	{
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
-			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						@Override
-						public Object call ()
-								throws UnsupportedOperationException
-						{
-							throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
-						}
-					});
+			return new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws UnsupportedOperationException
+				{
+					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
+				}
+			});
 		}
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		try {
 			switch (mType) {
 				case SET :
-					operation = this.buildSetOperation (parameters); // NOPMD
+					operation = this.buildSetOperation (parameters);
 					break;
 				case GET :
-					operation = this.buildGetOperation (parameters); // NOPMD
+					operation = this.buildGetOperation (parameters);
 					break;
 				case LIST :
-					operation = this.buildListOperation (); // NOPMD
+					operation = this.buildListOperation ();
 					break;
 				case DELETE :
-					operation = this.buildDeleteOperation (parameters); // NOPMD
+					operation = this.buildDeleteOperation (parameters);
 					break;
 				default:
-					operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-								@Override
-								public Object call ()
-										throws UnsupportedOperationException
-								{
-									throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
-								}
-							});
+					operation = new GenericOperation<Object> (new Callable<Object> () {
+						@Override
+						public Object call ()
+								throws UnsupportedOperationException
+						{
+							throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
+						}
+					});
 			}
 		} catch (final Exception e) {
 			this.exceptions.traceDeferredException (e);
-			operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						@Override
-						public Object call ()
-								throws Exception
-						{ // NOPMD
-							throw e;
-						}
-					});
+			operation = new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws Exception
+				{
+					throw e;
+				}
+			});
 		}
 		return operation;
 	}
@@ -166,8 +166,9 @@ public final class RiakRestOperationFactory
 					riakobj = oldest;
 				} else if (res.hasObject ()) {
 					riakobj = res.getObject ();
-				} else
+				} else {
 					riakobj = null;
+				}
 				if (riakobj != null) {
 					return riakobj.getValueAsBytes ();
 				} else {

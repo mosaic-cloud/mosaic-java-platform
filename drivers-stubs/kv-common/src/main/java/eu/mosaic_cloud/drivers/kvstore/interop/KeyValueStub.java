@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.interop; // NOPMD
+package eu.mosaic_cloud.drivers.kvstore.interop;
 
 
 import java.io.IOException;
@@ -72,7 +72,7 @@ import com.google.common.base.Preconditions;
  */
 public class KeyValueStub
 		extends AbstractDriverStub
-{ // NOPMD
+{
 	/**
 	 * Creates a new stub for the key-value store driver.
 	 * 
@@ -124,11 +124,11 @@ public class KeyValueStub
 				ClassNotFoundException
 	{
 		byte[] data;
-		boolean unknownMessage = false; // NOPMD
+		boolean unknownMessage = false;
 		final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
-		CompletionToken token = null; // NOPMD
+		CompletionToken token = null;
 		String key;
-		final String messagePrefix = "KeyValueStub - Received request for "; // NOPMD
+		final String messagePrefix = "KeyValueStub - Received request for ";
 		switch (kvMessage) {
 			case ACCESS :
 				KeyValueStub.logger.trace ("Received initiation message");
@@ -187,19 +187,19 @@ public class KeyValueStub
 				listCallback.setDetails (KeyValueOperations.LIST, resultList);
 				break;
 			case ERROR :
-				token = ((IdlCommon.Error) message.payload).getToken (); // NOPMD
+				token = ((IdlCommon.Error) message.payload).getToken ();
 				unknownMessage = true;
 				break;
 			case OK :
-				token = ((IdlCommon.Ok) message.payload).getToken (); // NOPMD
+				token = ((IdlCommon.Ok) message.payload).getToken ();
 				unknownMessage = true;
 				break;
 			case GET_REPLY :
-				token = ((KeyValuePayloads.GetReply) message.payload).getToken (); // NOPMD
+				token = ((KeyValuePayloads.GetReply) message.payload).getToken ();
 				unknownMessage = true;
 				break;
 			case LIST_REPLY :
-				token = ((KeyValuePayloads.ListReply) message.payload).getToken (); // NOPMD
+				token = ((KeyValuePayloads.ListReply) message.payload).getToken ();
 				unknownMessage = true;
 				break;
 			default:

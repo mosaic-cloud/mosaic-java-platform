@@ -73,8 +73,8 @@ public class ChannelData
 	@Override
 	public int hashCode ()
 	{
-		final int prime = 31; // NOPMD
-		int result = 1; // NOPMD
+		final int prime = 31;
+		int result = 1;
 		result = (prime * result) + ((this.channelEndpoint == null) ? 0 : this.channelEndpoint.hashCode ());
 		result = (prime * result) + ((this.channelIdentifier == null) ? 0 : this.channelIdentifier.hashCode ());
 		return result;
