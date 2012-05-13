@@ -151,7 +151,7 @@ public class AmqpDriverTest
 		final boolean manadatory = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.manadatory", Boolean.class, true);
 		final boolean immediate = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.immediate", Boolean.class, true);
 		final boolean durable = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.durable", Boolean.class, false);
-		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, this.encoder.getEncodingMetadata ()), manadatory, immediate, durable, null, null, this.encoder.getEncodingMetadata ().getContentType (), null, null);
+		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, this.encoder.getEncodingMetadata ()), manadatory, immediate, durable, null, null, this.encoder.getEncodingMetadata ().getContentType (), null, null);//FIXME
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("publish message");
 		final IResult<Boolean> r = this.wrapper.basicPublish (this.clientId, mssg, handler);
 		Assert.assertTrue (r.getResult ());

@@ -75,7 +75,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setExpTime (exp);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());
+			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());//FIXME
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -98,7 +98,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setKey (key);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());
+			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());//FIXME
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -121,7 +121,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setKey (key);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());
+			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());//FIXME
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -161,7 +161,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setKey (key);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());
+			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());//FIXME
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -185,7 +185,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setExpTime (exp);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());
+			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());//FIXME
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
