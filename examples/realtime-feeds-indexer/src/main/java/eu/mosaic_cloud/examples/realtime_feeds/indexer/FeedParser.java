@@ -24,6 +24,9 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import com.sun.syndication.feed.atom.Feed;
 import com.sun.syndication.feed.synd.SyndContent;
@@ -50,7 +53,24 @@ public class FeedParser
 	{
 		// NOTE: Load the feed, regardless of RSS or Atom type
 		final XmlReader reader = new XmlReader (new ByteArrayInputStream (xmlEntry));
-		final SyndFeed feed = this.input.build (reader);
+		final SyndFeed feed;
+		// FIXME: This class-loader handling should be properly addressed...
+		try {
+			feed = Threading.executeWithCurrentThreadClassLoader (FeedParser.class.getClassLoader (), new Callable<SyndFeed> () {
+				@Override
+				public SyndFeed call ()
+						throws Exception
+				{
+					return FeedParser.this.input.build (reader);
+				}
+			});
+		} catch (final FeedException exception) {
+			throw (exception);
+		} catch (final IOException exception) {
+			throw (exception);
+		} catch (final Exception exception) {
+			throw new Error (exception);
+		}
 		// NOTE: check feed type, only ATOM is accepted
 		Feed atomFeed = null;
 		if (feed.getFeedType ().toLowerCase ().startsWith ("atom")) {
