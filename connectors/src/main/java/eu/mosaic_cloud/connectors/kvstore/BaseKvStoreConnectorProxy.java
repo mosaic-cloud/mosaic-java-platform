@@ -183,14 +183,20 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 				} else if (outcomeClass == Object.class) {
 					final TValue value;
 					if (!resultEntries.isEmpty ()) {
-						// FIXME: The encoding meta-data should be obtained from the request's "envelope".
-						final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
-						try {
-							value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray (), encodingMetadata);
-						} catch (final EncodingException exception) {
-							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
-							this.pendingRequests.fail (token.getMessageId (), exception);
-							break;
+						final byte[] rawValue = resultEntries.get (0).getValue ().toByteArray ();
+						// FIXME: This `length > 0` should be handled differently...
+						if (rawValue != null && rawValue.length > 0) {
+							// FIXME: The encoding meta-data should be obtained from the request's "envelope".
+							final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+							try {
+								value = this.encoder.decode (rawValue, encodingMetadata);
+							} catch (final EncodingException exception) {
+								this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
+								this.pendingRequests.fail (token.getMessageId (), exception);
+								break;
+							}
+						} else {
+							value = null;
 						}
 					} else {
 						value = null;
