@@ -75,7 +75,7 @@ public final class ResponseHandlerMap
 				final String request = entry.getKey ();
 				final CallbackCompletionDeferredFuture<?> future = entry.getValue ();
 				this.transcript.traceDebugging ("canceling the pending request `%s`...", request);
-				future.trigger.triggerFailed (new CallbackCanceled ()); // NOPMD
+				future.trigger.triggerFailed (new CallbackCanceled ());
 			}
 			this.futures.clear ();
 		}
@@ -101,7 +101,8 @@ public final class ResponseHandlerMap
 	}
 	
 	/**
-	 * Checks if the map contains an entry for the specified request. (It throws if no request exists.)
+	 * Checks if the map contains an entry for the specified request. (It throws
+	 * if no request exists.)
 	 * 
 	 * @param request
 	 *            the request identifier
@@ -116,7 +117,8 @@ public final class ResponseHandlerMap
 	}
 	
 	/**
-	 * Checks if the map contains an entry for the specified request. (It returns null if no request exists.)
+	 * Checks if the map contains an entry for the specified request. (It
+	 * returns null if no request exists.)
 	 * 
 	 * @param request
 	 *            the request identifier

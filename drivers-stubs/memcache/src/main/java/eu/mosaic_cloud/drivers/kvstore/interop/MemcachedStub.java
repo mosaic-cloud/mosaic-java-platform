@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.interop; // NOPMD
+package eu.mosaic_cloud.drivers.kvstore.interop;
 
 
 import java.io.IOException;
@@ -69,7 +69,7 @@ import com.google.common.base.Preconditions;
  */
 public class MemcachedStub
 		extends KeyValueStub
-{ // NOPMD
+{
 	/**
 	 * Creates a new stub for the Memcached driver.
 	 * 
@@ -104,7 +104,6 @@ public class MemcachedStub
 	@Override
 	@SuppressWarnings ("unchecked")
 	protected void startOperation (final Message message, final Session session)
-			// NOPMD
 			throws IOException,
 				ClassNotFoundException
 	{
@@ -115,11 +114,11 @@ public class MemcachedStub
 		int exp;
 		IResult<Boolean> resultStore;
 		DriverOperationFinishedHandler callback;
-		final MemcachedDriver driver = super.getDriver (MemcachedDriver.class); // NOPMD
-		final String mssgPrefix = "MemcachedStub - Received request for "; // NOPMD
+		final MemcachedDriver driver = super.getDriver (MemcachedDriver.class);
+		final String mssgPrefix = "MemcachedStub - Received request for ";
 		if (message.specification instanceof KeyValueMessage) {
 			// NOTE: handle set with exp
-			boolean handle = false; // NOPMD
+			boolean handle = false;
 			final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
 			if (kvMessage == KeyValueMessage.SET_REQUEST) {
 				final KeyValuePayloads.SetRequest setRequest = (SetRequest) message.payload;
@@ -156,7 +155,7 @@ public class MemcachedStub
 				final MemcachedPayloads.AddRequest addRequest = (AddRequest) message.payload;
 				token = addRequest.getToken ();
 				key = addRequest.getKey ();
-				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ()); // NOPMD
+				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				exp = addRequest.getExpTime ();
 				data = addRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
@@ -168,7 +167,7 @@ public class MemcachedStub
 				token = appendRequest.getToken ();
 				key = appendRequest.getKey ();
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = appendRequest.getExpTime (); // NOPMD
+				exp = appendRequest.getExpTime ();
 				data = appendRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 				resultStore = driver.invokeAppendOperation (token.getClientId (), key, data, callback);
@@ -179,7 +178,7 @@ public class MemcachedStub
 				token = prependRequest.getToken ();
 				key = prependRequest.getKey ();
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = prependRequest.getExpTime (); // NOPMD
+				exp = prependRequest.getExpTime ();
 				data = prependRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 				resultStore = driver.invokePrependOperation (token.getClientId (), key, data, callback);
@@ -201,7 +200,7 @@ public class MemcachedStub
 				token = casRequest.getToken ();
 				key = casRequest.getKey ();
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = casRequest.getExpTime (); // NOPMD
+				exp = casRequest.getExpTime ();
 				data = casRequest.getValue ().toByteArray ();
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 				resultStore = driver.invokeCASOperation (token.getClientId (), key, data, callback);

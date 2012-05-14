@@ -49,7 +49,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  */
 public final class MemcachedDriver
 		extends AbstractKeyValueDriver
-{ // NOPMD
+{
 	/**
 	 * Creates a new memcached driver.
 	 * 
@@ -162,17 +162,17 @@ public final class MemcachedDriver
 	 */
 	public static MemcachedDriver create (final IConfiguration config, final ThreadingContext threading)
 	{
-		final List<URI> nodesURI = new ArrayList<URI> (10); // NOPMD
-		int noNodes = 0; // NOPMD
+		final List<URI> nodesURI = new ArrayList<URI> (10);
+		int noNodes = 0;
 		int port, noThreads;
-		final List<String> hosts = new ArrayList<String> (10); // NOPMD
-		final List<Integer> ports = new ArrayList<Integer> (10); // NOPMD
+		final List<String> hosts = new ArrayList<String> (10);
+		final List<Integer> ports = new ArrayList<Integer> (10);
 		MemcachedDriver driver;
 		while (true) {
 			noNodes++;
 			final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("MemcachedDriver.0") + noNodes, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 			if ("".equals (host)) { // $NON-NLS-1$
-				noNodes--; // NOPMD
+				noNodes--;
 				break;
 			}
 			port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("MemcachedDriver.1") + noNodes, Integer.class, 0); // $NON-NLS-1$
@@ -181,7 +181,7 @@ public final class MemcachedDriver
 		}
 		for (int index = 0; index < noNodes; index++) {
 			try {
-				final URI address = new URI ("http://" + hosts.get (index) + ":" + ports.get (index) + "/pools"); // NOPMD
+				final URI address = new URI ("http://" + hosts.get (index) + ":" + ports.get (index) + "/pools");
 				nodesURI.add (address);
 			} catch (final URISyntaxException e) {
 				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);

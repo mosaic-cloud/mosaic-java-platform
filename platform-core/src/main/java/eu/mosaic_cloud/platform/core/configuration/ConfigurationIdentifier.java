@@ -75,8 +75,8 @@ public final class ConfigurationIdentifier
 	@Override
 	public int hashCode ()
 	{
-		final int prime = 31; // NOPMD
-		int result = 1; // NOPMD
+		final int prime = 31;
+		int result = 1;
 		result = (prime * result) + (this.absolute ? 1231 : 1237);
 		result = (prime * result) + ((this.identifier == null) ? 0 : this.identifier.hashCode ());
 		return result;
@@ -182,21 +182,21 @@ public final class ConfigurationIdentifier
 	 */
 	private static ConfigurationIdentifier resolve (final ConfigurationIdentifier reference, final String specification)
 	{
-		boolean isAbsolute = false; // NOPMD
+		boolean isAbsolute = false;
 		String identifier_;
 		String identifier;
 		ConfigurationIdentifier parameterIdentifier;
 		if (reference == null) {
 			if (specification.charAt (0) == '/') {
-				isAbsolute = true; // NOPMD
+				isAbsolute = true;
 			}
 			identifier_ = specification;
 		} else if (reference.absolute) {
-			isAbsolute = true; // NOPMD
+			isAbsolute = true;
 			if (reference.identifier == null) {
-				identifier_ = "/" + specification; // NOPMD
+				identifier_ = "/" + specification;
 			} else {
-				identifier_ = reference.identifier + "/" + specification; // NOPMD
+				identifier_ = reference.identifier + "/" + specification;
 			}
 			identifier_ = identifier_.replaceAll ("//", "/");
 		} else {

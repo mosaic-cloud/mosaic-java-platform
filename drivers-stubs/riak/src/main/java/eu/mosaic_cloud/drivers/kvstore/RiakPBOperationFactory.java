@@ -52,7 +52,7 @@ import com.google.protobuf.ByteString;
 public final class RiakPBOperationFactory
 		implements
 			IOperationFactory
-{ // NOPMD
+{
 	private RiakPBOperationFactory (final String riakHost, final int port, final String bucket, final String clientId)
 			throws IOException
 	{
@@ -70,54 +70,54 @@ public final class RiakPBOperationFactory
 	}
 	
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) // NOPMD
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
 	{
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
-			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						@Override
-						public Object call ()
-								throws UnsupportedOperationException
-						{
-							throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
-						}
-					});
+			return new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws UnsupportedOperationException
+				{
+					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
+				}
+			});
 		}
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		try {
 			switch (mType) {
 				case SET :
-					operation = this.buildSetOperation (parameters); // NOPMD
+					operation = this.buildSetOperation (parameters);
 					break;
 				case GET :
-					operation = this.buildGetOperation (parameters); // NOPMD
+					operation = this.buildGetOperation (parameters);
 					break;
 				case LIST :
-					operation = this.buildListOperation (); // NOPMD
+					operation = this.buildListOperation ();
 					break;
 				case DELETE :
-					operation = this.buildDeleteOperation (parameters); // NOPMD
+					operation = this.buildDeleteOperation (parameters);
 					break;
 				default:
-					operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-								@Override
-								public Object call ()
-										throws UnsupportedOperationException
-								{
-									throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
-								}
-							});
+					operation = new GenericOperation<Object> (new Callable<Object> () {
+						@Override
+						public Object call ()
+								throws UnsupportedOperationException
+						{
+							throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
+						}
+					});
 			}
 		} catch (final Exception e) {
 			this.exceptions.traceDeferredException (e);
-			operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						@Override
-						public Object call ()
-								throws Exception
-						{ // NOPMD
-							throw e;
-						}
-					});
+			operation = new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws Exception
+				{
+					throw e;
+				}
+			});
 		}
 		return operation;
 	}
@@ -208,7 +208,7 @@ public final class RiakPBOperationFactory
 	 */
 	public static RiakPBOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId)
 	{
-		RiakPBOperationFactory factory = null; // NOPMD
+		RiakPBOperationFactory factory = null;
 		try {
 			factory = new RiakPBOperationFactory (riakHost, port, bucket, clientId);
 			RiakPBOperationFactory.logger.trace ("Created Riak PB factory for " + riakHost + ":" + port + " bucket " + bucket);

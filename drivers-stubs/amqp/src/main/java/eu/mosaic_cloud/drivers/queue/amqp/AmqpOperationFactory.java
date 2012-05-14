@@ -53,7 +53,7 @@ import com.rabbitmq.client.GetResponse;
 final class AmqpOperationFactory
 		implements
 			IOperationFactory
-{ // NOPMD
+{
 	AmqpOperationFactory (final AmqpDriver amqpDriver)
 	{
 		super ();
@@ -75,18 +75,18 @@ final class AmqpOperationFactory
 	 * .platform.core.IOperationType , java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) // NOPMD
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
 	{
 		IOperation<?> operation;
 		if (!(type instanceof AmqpOperations)) {
-			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						@Override
-						public Object call ()
-								throws UnsupportedOperationException
-						{
-							throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
-						}
-					});
+			return new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws UnsupportedOperationException
+				{
+					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
+				}
+			});
 		}
 		final AmqpOperations mType = (AmqpOperations) type;
 		switch (mType) {
@@ -115,14 +115,14 @@ final class AmqpOperationFactory
 				operation = this.buildCancelOperation (parameters);
 				break;
 			default:
-				operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-							@Override
-							public Object call ()
-									throws UnsupportedOperationException
-							{
-								throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
-							}
-						});
+				operation = new GenericOperation<Object> (new Callable<Object> () {
+					@Override
+					public Object call ()
+							throws UnsupportedOperationException
+					{
+						throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
+					}
+				});
 		}
 		return operation;
 	}

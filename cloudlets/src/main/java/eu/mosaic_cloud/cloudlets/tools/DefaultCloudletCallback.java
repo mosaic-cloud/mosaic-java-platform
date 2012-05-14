@@ -37,7 +37,6 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public abstract class DefaultCloudletCallback<TContext>
 		extends DefaultCallback<TContext>
-		// NOPMD
 		implements
 			ICloudletCallback<TContext>
 {

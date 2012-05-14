@@ -45,7 +45,7 @@ import redis.clients.util.SafeEncoder;
 public final class RedisOperationFactory
 		implements
 			IOperationFactory
-{ // NOPMD
+{
 	private RedisOperationFactory (final String host, final int port, final String passwd, final String bucket)
 	{
 		super ();
@@ -78,14 +78,14 @@ public final class RedisOperationFactory
 	{
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
-			return new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-						@Override
-						public Object call ()
-								throws UnsupportedOperationException
-						{
-							throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
-						}
-					});
+			return new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws UnsupportedOperationException
+				{
+					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
+				}
+			});
 		}
 		final KeyValueOperations mType = (KeyValueOperations) type;
 		switch (mType) {
@@ -102,14 +102,14 @@ public final class RedisOperationFactory
 				operation = this.buildDeleteOperation (parameters);
 				break;
 			default:
-				operation = new GenericOperation<Object> (new Callable<Object> () { // NOPMD
-							@Override
-							public Object call ()
-									throws UnsupportedOperationException
-							{
-								throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
-							}
-						});
+				operation = new GenericOperation<Object> (new Callable<Object> () {
+					@Override
+					public Object call ()
+							throws UnsupportedOperationException
+					{
+						throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
+					}
+				});
 		}
 		return operation;
 	}

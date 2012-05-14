@@ -175,7 +175,7 @@ public abstract class AbstractDriverStub
 		synchronized (AbstractDriverStub.MONITOR) {
 			Integer ref = AbstractDriverStub.references.get (stub);
 			if (ref == null) {
-				ref = 0; // NOPMD
+				ref = 0;
 			}
 			ref--;
 			if (ref == 0) {
@@ -190,7 +190,7 @@ public abstract class AbstractDriverStub
 		synchronized (AbstractDriverStub.MONITOR) {
 			Integer ref = AbstractDriverStub.references.get (stub);
 			if (ref == null) {
-				ref = 0; // NOPMD
+				ref = 0;
 			}
 			ref++;
 			AbstractDriverStub.references.put (stub, ref);

@@ -48,8 +48,8 @@ public final class ConfigUtils
 	 *            the given configuration
 	 * @return the value of the parameter
 	 */
-	public static <T extends Object> T resolveParameter (final IConfiguration configuration, final String identifier, final Class<T> valueClass, final T defaultValue) // NOPMD
-	{ // NOPMD
+	public static <T extends Object> T resolveParameter (final IConfiguration configuration, final String identifier, final Class<T> valueClass, final T defaultValue)
+	{
 		T retValue;
 		if (configuration == null) {
 			retValue = defaultValue;

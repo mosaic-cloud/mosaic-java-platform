@@ -25,13 +25,19 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
+import eu.mosaic_cloud.drivers.queue.amqp.IAmqpConsumer;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -58,6 +64,8 @@ public class AmqpDriverTest
 		this.threadingContext = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		this.threadingContext.initialize ();
 		this.wrapper = AmqpDriver.create (AmqpDriverTest.configuration, this.threadingContext);
+		this.encoder = PlainTextDataEncoder.DEFAULT_INSTANCE;
+		this.sentMessage = "DriverTest" + this.clientId;
 	}
 	
 	@After
@@ -70,12 +78,15 @@ public class AmqpDriverTest
 	@Test
 	public void testAll ()
 			throws InterruptedException,
-				ExecutionException
+				ExecutionException,
+				EncodingException
 	{
 		this.testDriver ();
 		this.testDeclareExchange ();
 		this.testDeclareQueue ();
 		this.testBindQueue ();
+		this.testConsume ();// FIXME this fails due to threading
+		this.testPublish ();
 	}
 	
 	public void testBindQueue ()
@@ -90,13 +101,26 @@ public class AmqpDriverTest
 		Assert.assertTrue (r.getResult ());
 	}
 	
+	public void testConsume ()
+			throws InterruptedException,
+				ExecutionException
+	{
+		final String queue = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.queue", String.class, "");
+		final boolean autoAck = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.auto_ack", Boolean.class, true);
+		final boolean exclusive = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.exclusive", Boolean.class, true);
+		final IOperationCompletionHandler<String> handler = new TestLoggingHandler<String> ("consume");
+		final IAmqpConsumer consumeCallback = new ConsumerHandler ();
+		final IResult<String> r = this.wrapper.basicConsume (queue, this.clientId, exclusive, autoAck, consumeCallback, handler);
+		Assert.assertTrue ("Register consumer", this.clientId.equals (r.getResult ()));
+	}
+	
 	public void testDeclareExchange ()
 			throws InterruptedException,
 				ExecutionException
 	{
 		final String exchange = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.exchange", String.class, "");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("declare exchange");
-		final IResult<Boolean> r = this.wrapper.declareExchange (this.clientId, exchange, AmqpExchangeType.DIRECT, false, false, false, handler);
+		final IResult<Boolean> r = this.wrapper.declareExchange (this.clientId, exchange, AmqpExchangeType.DIRECT, false, true, false, handler);
 		Assert.assertTrue (r.getResult ());
 	}
 	
@@ -117,6 +141,22 @@ public class AmqpDriverTest
 		Assert.assertNotNull (this.wrapper);
 	}
 	
+	public void testPublish ()
+			throws EncodingException,
+				InterruptedException,
+				ExecutionException
+	{
+		final String exchange = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.exchange", String.class, "");
+		final String routingKey = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.routing_key", String.class, "");
+		final boolean manadatory = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.manadatory", Boolean.class, true);
+		final boolean immediate = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.immediate", Boolean.class, true);
+		final boolean durable = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.durable", Boolean.class, false);
+		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, this.encoder.getEncodingMetadata ()), manadatory, immediate, durable, null, null, this.encoder.getEncodingMetadata ().getContentType (), null, null);//FIXME
+		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("publish message");
+		final IResult<Boolean> r = this.wrapper.basicPublish (this.clientId, mssg, handler);
+		Assert.assertTrue (r.getResult ());
+	}
+	
 	@BeforeClass
 	public static void setUpBeforeClass ()
 	{
@@ -127,17 +167,19 @@ public class AmqpDriverTest
 		AmqpDriverTest.configuration.addParameter ("amqp.port", port);
 		AmqpDriverTest.configuration.addParameter ("amqp.driver_threads", 1);
 		AmqpDriverTest.configuration.addParameter ("consumer.amqp.queue", "tests.queue");
-		AmqpDriverTest.configuration.addParameter ("consumer.amqp.consumer_id", "tests.consumer");
 		AmqpDriverTest.configuration.addParameter ("consumer.amqp.auto_ack", true);
 		AmqpDriverTest.configuration.addParameter ("consumer.amqp.exclusive", true);
 		AmqpDriverTest.configuration.addParameter ("publisher.amqp.exchange", "tests.exchange");
-		AmqpDriverTest.configuration.addParameter ("publisher.amqp.routing_key", "tests.routing-key");
+		AmqpDriverTest.configuration.addParameter ("publisher.amqp.routing_key", "tests.queue");
 		AmqpDriverTest.configuration.addParameter ("publisher.amqp.manadatory", true);
 		AmqpDriverTest.configuration.addParameter ("publisher.amqp.immediate", true);
 		AmqpDriverTest.configuration.addParameter ("publisher.amqp.durable", false);
 	}
 	
 	private final String clientId = UUID.randomUUID ().toString ();
+	private String consumerTag;
+	private DataEncoder<String> encoder;
+	private String sentMessage;
 	private BasicThreadingContext threadingContext;
 	private AmqpDriver wrapper;
 	private static IConfiguration configuration;
@@ -145,4 +187,45 @@ public class AmqpDriverTest
 	private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
 	private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
 	private static final String MOSAIC_AMQP_PORT_DEFAULT = "21688";
+	
+	final class ConsumerHandler
+			implements
+				IAmqpConsumer
+	{
+		@Override
+		public void handleCancel (final String consumerTag)
+		{
+			Assert.assertTrue ("Cancel - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
+		}
+		
+		@Override
+		public void handleCancelOk (final String consumerTag)
+		{
+			Assert.assertTrue ("CancelOk - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
+		}
+		
+		@Override
+		public void handleConsumeOk (final String consumerTag)
+		{
+			Assert.assertTrue ("ConsumeOk - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
+		}
+		
+		@Override
+		public void handleDelivery (final AmqpInboundMessage message)
+		{
+			String recvMessage;
+			try {
+				recvMessage = AmqpDriverTest.this.encoder.decode (message.getData (), AmqpDriverTest.this.encoder.getEncodingMetadata ());
+				Assert.assertTrue ("Received message: " + recvMessage, AmqpDriverTest.this.sentMessage.equals (recvMessage));
+			} catch (final EncodingException e) {
+				Assert.fail ("Delivery exception " + e.getMessage ());
+			}
+		}
+		
+		@Override
+		public void handleShutdown (final String consumerTag, final String signalMessage)
+		{
+			Assert.assertTrue ("Shutdown - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
+		}
+	}
 }

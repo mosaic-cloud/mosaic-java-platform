@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.queue.amqp.interop; // NOPMD
+package eu.mosaic_cloud.drivers.queue.amqp.interop;
 
 
 import java.io.IOException;
@@ -72,7 +72,7 @@ import com.rabbitmq.client.ConnectionFactory;
  */
 public class AmqpStub
 		extends AbstractDriverStub
-{ // NOPMD
+{
 	/**
 	 * Creates a new stub for the AMQP driver.
 	 * 
@@ -108,7 +108,6 @@ public class AmqpStub
 	@Override
 	@SuppressWarnings ("unchecked")
 	protected void startOperation (final Message message, final Session session)
-			// NOPMD
 			throws IOException,
 				ClassNotFoundException
 	{
@@ -127,7 +126,7 @@ public class AmqpStub
 		String consumer;
 		String routingKey;
 		byte[] dataBytes;
-		final AmqpDriver driver = super.getDriver (AmqpDriver.class); // NOPMD
+		final AmqpDriver driver = super.getDriver (AmqpDriver.class);
 		switch (amqpMessage) {
 			case ACCESS :
 				AmqpStub.logger.trace ("Received initiation message"); // $NON-NLS-1$

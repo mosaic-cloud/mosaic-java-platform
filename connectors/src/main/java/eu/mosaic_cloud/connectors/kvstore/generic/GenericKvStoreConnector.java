@@ -35,7 +35,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
  */
 public class GenericKvStoreConnector<TValue extends Object>
 		extends BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>>
-{ // NOPMD
+{
 	protected GenericKvStoreConnector (final GenericKvStoreConnectorProxy<TValue> proxy)
 	{
 		super (proxy);

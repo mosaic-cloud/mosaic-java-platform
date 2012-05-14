@@ -31,7 +31,6 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -169,7 +168,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 					final Map<String, TValue> values = new HashMap<String, TValue> ();
 					for (final KVEntry entry : resultEntries) {
 						try {
-							final TValue value = this.encoder.decode (entry.getValue ().toByteArray (), EncodingMetadata.NULL);
+							final TValue value = this.encoder.decode (entry.getValue ().toByteArray (), this.encoder.getEncodingMetadata ());//FIXME
 							values.put (entry.getKey (), value);
 						} catch (final EncodingException exception) {
 							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
@@ -182,14 +181,15 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 					final TValue value;
 					if (!resultEntries.isEmpty ()) {
 						try {
-							value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray (), EncodingMetadata.NULL);
+							value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray (), this.encoder.getEncodingMetadata ());//FIXME
 						} catch (final EncodingException exception) {
 							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
 							this.pendingRequests.fail (token.getMessageId (), exception);
 							break;
 						}
-					} else
+					} else {
 						value = null;
+					}
 					outcome = value;
 				} else {
 					this.pendingRequests.fail (token.getMessageId (), new AssertionError ());
@@ -226,7 +226,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setExpTime (exp);
 		CallbackCompletion<Boolean> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, EncodingMetadata.NULL);
+			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getEncodingMetadata ());//FIXME
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
@@ -234,7 +234,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (KeyValueMessage.SET_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class); // NOPMD
+			result = this.sendRequest (message, token, Boolean.class);
 		}
 		return (result);
 	}

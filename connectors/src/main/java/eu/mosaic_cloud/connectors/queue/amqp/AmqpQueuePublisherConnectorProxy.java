@@ -27,7 +27,6 @@ import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -58,7 +57,7 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 	{
 		this.transcript.traceDebugging ("destroying the proxy...");
 		this.transcript.traceDebugging ("destroying the underlying raw proxy...");
-		return (this.raw.destroy ());
+		return this.raw.destroy ();
 	}
 	
 	@Override
@@ -82,7 +81,7 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 			}
 		};
 		// FIXME: If these operations fail we should continue with `destroy`.
-		return (CallbackCompletionWorkflows.executeSequence (initializeOperation, declareExchangeOperation));
+		return CallbackCompletionWorkflows.executeSequence (initializeOperation, declareExchangeOperation);
 	}
 	
 	@Override
@@ -93,13 +92,13 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 		byte[] data = null;
 		CallbackCompletion<Void> result = null;
 		try {
-			data = this.messageEncoder.encode (message, EncodingMetadata.NULL);
+			data = this.messageEncoder.encode (message, this.messageEncoder.getEncodingMetadata ());//FIXME
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the message failed; deferring!");
 			result = CallbackCompletion.createFailure (exception);
 		}
 		if (result == null) {
-			final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data);
+			final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data, this.messageEncoder.getEncodingMetadata ().getContentType ());//FIXME
 			result = this.raw.publish (outbound);
 		}
 		return (result);
@@ -109,14 +108,15 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 	{
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
 		// FIXME: the splice below will be done when creating the environment
-		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+		// # final IConfiguration subConfiguration =
+		// configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
 		final AmqpQueuePublisherConnectorProxy<Message> proxy = new AmqpQueuePublisherConnectorProxy<Message> (rawProxy, configuration, messageClass, messageEncoder);
-		return (proxy);
+		return proxy;
 	}
 	
 	private final boolean definePassive;
 	private final String exchange;
-	private final boolean exchangeAutoDelete; // NOPMD
+	private final boolean exchangeAutoDelete;
 	private final boolean exchangeDurable;
 	private final AmqpExchangeType exchangeType;
 	private final String publishRoutingKey;

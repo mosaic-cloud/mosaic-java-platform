@@ -84,9 +84,9 @@ public class KeyValueResponseTransmitter
 	 *            the result of the operation
 	 * @return the message
 	 */
-	protected Message buildKeyValueResponse (final KeyValueOperations operation, final CompletionToken token, final Object result) // NOPMD
+	protected Message buildKeyValueResponse (final KeyValueOperations operation, final CompletionToken token, final Object result)
 	{
-		Message message = null; // NOPMD
+		Message message = null;
 		switch (operation) {
 			case SET :
 			case DELETE :
@@ -94,11 +94,11 @@ public class KeyValueResponseTransmitter
 				if (success) {
 					final Ok.Builder okPayload = IdlCommon.Ok.newBuilder ();
 					okPayload.setToken (token);
-					message = new Message (KeyValueMessage.OK, okPayload.build ()); // NOPMD
+					message = new Message (KeyValueMessage.OK, okPayload.build ());
 				} else {
 					final NotOk.Builder nokPayload = IdlCommon.NotOk.newBuilder ();
 					nokPayload.setToken (token);
-					message = new Message (KeyValueMessage.NOK, nokPayload.build ()); // NOPMD
+					message = new Message (KeyValueMessage.NOK, nokPayload.build ());
 				}
 				break;
 			case LIST :
@@ -106,7 +106,7 @@ public class KeyValueResponseTransmitter
 				listPayload.setToken (token);
 				@SuppressWarnings ("unchecked") final List<String> resList = (List<String>) result;
 				listPayload.addAllKeys (resList);
-				message = new Message (KeyValueMessage.LIST_REPLY, listPayload.build ()); // NOPMD
+				message = new Message (KeyValueMessage.LIST_REPLY, listPayload.build ());
 				break;
 			case GET :
 				final GetReply.Builder getPayload = KeyValuePayloads.GetReply.newBuilder ();

@@ -154,7 +154,7 @@ public class AmqpResponseTransmitter
 	 */
 	public void sendResponse (final Session session, final CompletionToken token, final AmqpOperations operation, final Object result, final boolean isError)
 	{
-		Message message = null; // NOPMD
+		Message message = null;
 		if (isError) {
 			// NOTE: create error message
 			final Error.Builder errorPayload = IdlCommon.Error.newBuilder ();

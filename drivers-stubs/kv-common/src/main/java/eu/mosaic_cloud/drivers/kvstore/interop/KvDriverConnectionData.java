@@ -97,8 +97,8 @@ public class KvDriverConnectionData
 	@Override
 	public int hashCode ()
 	{
-		final int prime = 31; // NOPMD
-		int result = super.hashCode (); // NOPMD
+		final int prime = 31;
+		int result = super.hashCode ();
 		result = (prime * result) + ((this.bucket == null) ? 0 : this.bucket.hashCode ());
 		return result;
 	}

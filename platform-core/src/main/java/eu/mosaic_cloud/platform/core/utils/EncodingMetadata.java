@@ -30,7 +30,17 @@ public final class EncodingMetadata
 		this.contentEncoding = contentEncoding;
 	}
 	
-	public final String contentEncoding;
-	public final String contentType;
+	public String getContentEncoding ()
+	{
+		return this.contentEncoding;
+	}
+	
+	public String getContentType ()
+	{
+		return this.contentType;
+	}
+	
+	private final String contentEncoding;
+	private final String contentType;
 	public static final EncodingMetadata NULL = new EncodingMetadata (null, null);
 }

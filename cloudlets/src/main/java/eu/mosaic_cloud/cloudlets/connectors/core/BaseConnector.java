@@ -47,7 +47,6 @@ import com.google.common.base.Preconditions;
  *            cloudlet callback context
  */
 public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object>
-		// NOPMD
 		implements
 			IConnector,
 			CallbackProxy
@@ -80,7 +79,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 				@Override
 				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
 				{
-					assert (completion_ == completion); // NOPMD
+					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseConnector.this.transcript.traceDebugging ("triggering the callback for destroy failure...");
 						return BaseConnector.this.callback.destroyFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
@@ -103,7 +102,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 				@Override
 				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
 				{
-					assert (completion_ == completion); // NOPMD
+					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseConnector.this.transcript.traceDebugging ("triggering the callback for initialize failure...");
 						return BaseConnector.this.callback.initializeFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));

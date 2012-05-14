@@ -33,6 +33,6 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 public interface ICallback<TContext>
 		extends
 			Callbacks
-{ // NOPMD
-	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome (); // NOPMD
+{
+	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome ();
 }

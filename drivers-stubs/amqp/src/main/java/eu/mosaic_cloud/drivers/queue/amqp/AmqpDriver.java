@@ -61,7 +61,7 @@ import com.rabbitmq.client.ShutdownSignalException;
  */
 public class AmqpDriver
 		extends AbstractResourceDriver
-{ // NOPMD
+{
 	/**
 	 * Creates a new driver.
 	 * 
@@ -285,7 +285,7 @@ public class AmqpDriver
 			}
 		}
 		// FIXME: moved shutdown from here to `handleShutdownSignal` (is it ok?)
-		//# this.executor.shutdown();
+		// # this.executor.shutdown();
 		this.logger.trace ("AmqpDriver destroyed."); // $NON-NLS-1$
 	}
 	
@@ -323,13 +323,13 @@ public class AmqpDriver
 			this.logger.debug ("AMQP driver connected to " + amqpServerHost + ":" + amqpServerPort);
 		} catch (final IOException e) {
 			this.exceptions.traceIgnoredException (e);
-			this.connection = null; // NOPMD
+			this.connection = null;
 		}
 	}
 	
 	private synchronized Channel openChannel (final String clientId)
 	{
-		Channel channel = null; // NOPMD
+		Channel channel = null;
 		try {
 			if (this.connected) {
 				channel = this.connection.createChannel ();
@@ -362,13 +362,13 @@ public class AmqpDriver
 	 * @return an AMQP driver
 	 */
 	public static AmqpDriver create (final IConfiguration configuration, final ThreadingContext threading)
-	{ // NOPMD
+	{
 		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpDriver.0"), Integer.class, 1); // $NON-NLS-1$
 		AmqpDriver driver = new AmqpDriver (configuration, threading, noThreads);
 		// NOTE: open connection - moved to the stub
 		driver.connectResource ();
 		if (!driver.connected) {
-			driver = null; // NOPMD
+			driver = null;
 		}
 		return driver;
 	}
@@ -413,7 +413,7 @@ public class AmqpDriver
 					try {
 						AmqpDriver.this.wait (this.minReconnectionTime);
 						AmqpDriver.this.connectResource ();
-						tries++; // NOPMD
+						tries++;
 					} catch (final InterruptedException e) {
 						AmqpDriver.this.exceptions.traceIgnoredException (e);
 						if (AmqpDriver.super.isDestroyed ()) {
@@ -449,7 +449,7 @@ public class AmqpDriver
 	final class ConsumerCallback
 			implements
 				Consumer
-	{ // NOPMD
+	{
 		ConsumerCallback ()
 		{
 			super ();
@@ -570,8 +570,10 @@ public class AmqpDriver
 		{
 			final AmqpInboundMessage message = new AmqpInboundMessage (null, -1, exchange, routingKey, data, properties.getDeliveryMode () == 2 ? true : false, properties.getReplyTo (), properties.getContentEncoding (), properties.getContentType (), properties.getCorrelationId (), properties.getMessageId ());
 			AmqpDriver.this.logger.trace ("AmqpDriver - Received RETURN callback for " + message.getDelivery ()); // $NON-NLS-1$
-			// FIXME: We should trigger a `publishFailed` callback, but due to the lack of "positive" acknowledgements,
-			//-- we just ignore this situation. Maybe we should use the RabbitMQ extension for publish acknowledgements.
+			// FIXME: We should trigger a `publishFailed` callback, but due to
+			// the lack of "positive" acknowledgements,
+			// -- we just ignore this situation. Maybe we should use the
+			// RabbitMQ extension for publish acknowledgements.
 		}
 	}
 }

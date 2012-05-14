@@ -50,8 +50,9 @@ public abstract class BaseDataEncoder<TData extends Object>
 	{
 		Preconditions.checkNotNull (metadata);
 		this.checkMetadata (metadata);
-		if (dataBytes == null)
+		if (dataBytes == null) {
 			throw (new EncodingException ("unexpected `null` data bytes"));
+		}
 		final TData data;
 		try {
 			data = this.decodeActual (dataBytes, metadata);
@@ -62,11 +63,13 @@ public abstract class BaseDataEncoder<TData extends Object>
 			throw (new EncodingException ("unexpected abnormal exception", exception));
 		}
 		if (data != null) {
-			if (!this.dataClass.isInstance (data))
+			if (!this.dataClass.isInstance (data)) {
 				throw (new EncodingException (String.format ("unexpected data class `%s`", data.getClass ().getName ())));
+			}
 		} else {
-			if (!this.nullAllowed)
+			if (!this.nullAllowed) {
 				throw (new EncodingException ("disallowed `null` data"));
+			}
 		}
 		return (data);
 	}
@@ -78,11 +81,13 @@ public abstract class BaseDataEncoder<TData extends Object>
 		Preconditions.checkNotNull (metadata);
 		this.checkMetadata (metadata);
 		if (data != null) {
-			if (!this.dataClass.isInstance (data))
+			if (!this.dataClass.isInstance (data)) {
 				throw (new EncodingException (String.format ("unexpected data class `%s`", data.getClass ().getName ())));
+			}
 		} else {
-			if (!this.nullAllowed)
+			if (!this.nullAllowed) {
 				throw (new EncodingException ("disallowed `null` data"));
+			}
 		}
 		final byte[] dataBytes;
 		try {
@@ -91,23 +96,30 @@ public abstract class BaseDataEncoder<TData extends Object>
 			this.exceptions.traceHandledException (exception);
 			throw (new EncodingException ("unexpected abnormal exception", exception));
 		}
-		if (dataBytes == null)
+		if (dataBytes == null) {
 			throw (new EncodingException ("unexpected `null` data bytes"));
+		}
 		return (dataBytes);
+	}
+	
+	@Override
+	public EncodingMetadata getEncodingMetadata ()
+	{
+		return this.expectedEncodingMetadata;
 	}
 	
 	protected void checkMetadata (final EncodingMetadata metadata)
 			throws EncodingException
 	{
-		if (metadata.contentType == null) {
+		if (metadata.getContentType () == null) {
 			this.transcirpt.traceWarning ("decoding binary data with a `null` content-type; ignoring!");
-		} else if (!this.expectedEncodingMetadata.contentType.equals (metadata.contentType)) {
-			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-type; throwing!", metadata.contentType);
-			throw (new EncodingException (String.format ("unexpected content-type: `%s`", metadata.contentType)));
+		} else if (!this.expectedEncodingMetadata.getContentType ().equals (metadata.getContentType ())) {
+			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-type; throwing!", metadata.getContentType ());
+			throw (new EncodingException (String.format ("unexpected content-type: `%s`", metadata.getContentType ())));
 		}
-		if ((metadata.contentEncoding != null) && !this.expectedEncodingMetadata.contentEncoding.equals (metadata.contentEncoding)) {
-			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-encoding; throwing!", metadata.contentType);
-			throw (new EncodingException (String.format ("unexpected content-encoding: `%s`", metadata.contentEncoding)));
+		if ((metadata.getContentEncoding () != null) && !this.expectedEncodingMetadata.getContentEncoding ().equals (metadata.getContentEncoding ())) {
+			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-encoding; throwing!", metadata.getContentEncoding ());
+			throw (new EncodingException (String.format ("unexpected content-encoding: `%s`", metadata.getContentEncoding ())));
 		}
 	}
 	

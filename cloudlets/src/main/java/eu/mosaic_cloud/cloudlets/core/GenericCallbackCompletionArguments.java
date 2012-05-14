@@ -45,7 +45,7 @@ public class GenericCallbackCompletionArguments<TResult>
 	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final Throwable error)
 	{
 		super (cloudlet, error);
-		this.result = null; // NOPMD
+		this.result = null;
 	}
 	
 	/**
