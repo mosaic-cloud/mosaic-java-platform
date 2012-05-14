@@ -48,8 +48,10 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_fabulous";
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.delete (k1)));
-		Assert.assertFalse (this.awaitBooleanOutcome (this.connector.delete (k2)));
+		// NOTE: In past this would have returned `true`.
+		Assert.assertNull (this.awaitOutcome (this.connector.delete (k1)));
+		// NOTE: In past this would have returned `false`.
+		Assert.assertNotNull (this.awaitFailure (this.connector.delete (k2)));
 		Assert.assertNull (this.awaitOutcome (this.connector.get (k1)));
 		Assert.assertNull (this.awaitOutcome (this.connector.get (k2)));
 	}
@@ -69,8 +71,8 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_famous";
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.set (k1, "fantastic")));
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.set (k2, "famous")));
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k1, "fantastic")));
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k2, "famous")));
 	}
 	
 	public static class Scenario
