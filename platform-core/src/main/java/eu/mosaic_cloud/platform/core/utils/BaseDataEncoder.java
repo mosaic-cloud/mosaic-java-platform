@@ -103,9 +103,9 @@ public abstract class BaseDataEncoder<TData extends Object>
 	}
 	
 	@Override
-	public EncodingMetadata getEncodingMetadata ()
+	public EncodingMetadata getExpectedEncodingMetadata ()
 	{
-		return this.expectedEncodingMetadata;
+		return (this.expectedEncodingMetadata);
 	}
 	
 	protected void checkMetadata (final EncodingMetadata metadata)

@@ -353,7 +353,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			rawStream.writeInt (httpBodyBytes.length);
 			rawStream.write (httpBodyBytes);
 			final byte[] rawData = rawBytesStream.toByteArray ();
-			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, this.responseBodyEncoder.getEncodingMetadata ().getContentType ());
+			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, this.responseBodyEncoder.getExpectedEncodingMetadata ().getContentType ());
 			return (rawMessage);
 		} catch (final EncodingException exception) {
 			throw (exception);

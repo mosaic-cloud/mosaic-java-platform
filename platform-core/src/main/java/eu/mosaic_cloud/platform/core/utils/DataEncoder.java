@@ -58,5 +58,5 @@ public interface DataEncoder<TData extends Object>
 	 * 
 	 * @return encoding metadata
 	 */
-	EncodingMetadata getEncodingMetadata ();
+	EncodingMetadata getExpectedEncodingMetadata ();
 }

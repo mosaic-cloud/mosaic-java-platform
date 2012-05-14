@@ -202,7 +202,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			TMessage message = null;
 			CallbackCompletion<Void> result = null;
 			try {
-				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, AmqpQueueConsumerConnectorProxy.this.messageEncoder.getEncodingMetadata ());//FIXME
+				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, AmqpQueueConsumerConnectorProxy.this.messageEncoder.getExpectedEncodingMetadata ());//FIXME
 			} catch (final EncodingException exception) {
 				AmqpQueueConsumerConnectorProxy.this.exceptions.traceDeferredException (exception, "decoding the message `%s` failed; deferring!", token);
 				result = CallbackCompletion.createFailure (exception);

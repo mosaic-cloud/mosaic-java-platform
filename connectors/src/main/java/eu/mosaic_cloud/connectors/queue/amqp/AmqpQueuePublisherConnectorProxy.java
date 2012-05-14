@@ -92,13 +92,13 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 		byte[] data = null;
 		CallbackCompletion<Void> result = null;
 		try {
-			data = this.messageEncoder.encode (message, this.messageEncoder.getEncodingMetadata ());//FIXME
+			data = this.messageEncoder.encode (message, this.messageEncoder.getExpectedEncodingMetadata ());//FIXME
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the message failed; deferring!");
 			result = CallbackCompletion.createFailure (exception);
 		}
 		if (result == null) {
-			final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data, this.messageEncoder.getEncodingMetadata ().getContentType ());//FIXME
+			final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data, this.messageEncoder.getExpectedEncodingMetadata ().getContentType ());//FIXME
 			result = this.raw.publish (outbound);
 		}
 		return (result);
