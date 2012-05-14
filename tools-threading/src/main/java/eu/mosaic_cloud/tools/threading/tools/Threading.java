@@ -28,6 +28,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Exchanger;
@@ -323,6 +324,18 @@ public final class Threading
 		}
 	}
 	
+	public static final <_Outcome_ extends Object> _Outcome_ executeWithCurrentThreadClassLoader (final ClassLoader classLoader, final Callable<_Outcome_> operation)
+			throws Exception
+	{
+		final ClassLoader originalClassLoader = Threading.getCurrentThreadClassLoader ();
+		Threading.setCurrentThreadClassLoader (classLoader);
+		try {
+			return (operation.call ());
+		} finally {
+			Threading.setCurrentThreadClassLoader (originalClassLoader);
+		}
+	}
+	
 	public static final void exit ()
 	{
 		Threading.exit (Threading.defaultAbortExitCode);
@@ -347,6 +360,11 @@ public final class Threading
 	public static final Thread getCurrentThread ()
 	{
 		return (Thread.currentThread ());
+	}
+	
+	public static final ClassLoader getCurrentThreadClassLoader ()
+	{
+		return (Threading.getCurrentThread ().getContextClassLoader ());
 	}
 	
 	public static final ThreadGroup getCurrentThreadGroup ()
@@ -652,6 +670,12 @@ public final class Threading
 			Threading.interruptCurrentThread ();
 			return (null);
 		}
+	}
+	
+	public static final void setCurrentThreadClassLoader (final ClassLoader classLoader)
+	{
+		Preconditions.checkNotNull (classLoader);
+		Threading.getCurrentThread ().setContextClassLoader (classLoader);
 	}
 	
 	public static final void setDefaultContext (final ThreadingContext context)
