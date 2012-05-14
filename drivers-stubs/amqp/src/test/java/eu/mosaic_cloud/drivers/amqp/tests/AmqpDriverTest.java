@@ -42,6 +42,7 @@ import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -88,6 +89,7 @@ public class AmqpDriverTest
 		// FIXME: this fails due to threading
 		this.testConsume ();
 		this.testPublish ();
+		this.testConsumeCancel ();
 	}
 	
 	public void testBindQueue ()
@@ -113,6 +115,14 @@ public class AmqpDriverTest
 		final IAmqpConsumer consumeCallback = new ConsumerHandler ();
 		final IResult<String> r = this.wrapper.basicConsume (queue, this.clientId, exclusive, autoAck, consumeCallback, handler);
 		Assert.assertTrue ("Register consumer", this.clientId.equals (r.getResult ()));
+	}
+	
+	public void testConsumeCancel ()
+	{
+		Threading.sleep (100);
+		Assert.assertNotNull (this.consumerTag);
+		this.wrapper.basicCancel (this.consumerTag, null);
+		Threading.sleep (100);
 	}
 	
 	public void testDeclareExchange ()
@@ -208,7 +218,8 @@ public class AmqpDriverTest
 		@Override
 		public void handleConsumeOk (final String consumerTag)
 		{
-			Assert.assertTrue ("ConsumeOk - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
+			Assert.assertTrue ("ConsumeOk - consumer tag compare", AmqpDriverTest.this.consumerTag == null);
+			AmqpDriverTest.this.consumerTag = consumerTag;
 		}
 		
 		@Override
