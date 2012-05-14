@@ -27,6 +27,7 @@ import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -201,8 +202,10 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("delivered the message `%s` for consumer `%s`...", token, AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
 			TMessage message = null;
 			CallbackCompletion<Void> result = null;
+			// FIXME: The encoding meta-data should be obtained from the request's "envelope".
+			final EncodingMetadata encodingMetadata = AmqpQueueConsumerConnectorProxy.this.messageEncoder.getExpectedEncodingMetadata ();
 			try {
-				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, AmqpQueueConsumerConnectorProxy.this.messageEncoder.getExpectedEncodingMetadata ());//FIXME
+				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, encodingMetadata);
 			} catch (final EncodingException exception) {
 				AmqpQueueConsumerConnectorProxy.this.exceptions.traceDeferredException (exception, "decoding the message `%s` failed; deferring!", token);
 				result = CallbackCompletion.createFailure (exception);

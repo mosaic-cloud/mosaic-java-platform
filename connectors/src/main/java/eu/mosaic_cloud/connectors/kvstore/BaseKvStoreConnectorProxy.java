@@ -31,6 +31,7 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -166,9 +167,11 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 				final Object outcome;
 				if (outcomeClass == Map.class) {
 					final Map<String, TValue> values = new HashMap<String, TValue> ();
+					// FIXME: The encoding meta-data should be obtained from the request's "envelope".
+					final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
 					for (final KVEntry entry : resultEntries) {
 						try {
-							final TValue value = this.encoder.decode (entry.getValue ().toByteArray (), this.encoder.getExpectedEncodingMetadata ());//FIXME
+							final TValue value = this.encoder.decode (entry.getValue ().toByteArray (), encodingMetadata);
 							values.put (entry.getKey (), value);
 						} catch (final EncodingException exception) {
 							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
@@ -180,8 +183,10 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 				} else if (outcomeClass == Object.class) {
 					final TValue value;
 					if (!resultEntries.isEmpty ()) {
+						// FIXME: The encoding meta-data should be obtained from the request's "envelope".
+						final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
 						try {
-							value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray (), this.encoder.getExpectedEncodingMetadata ());//FIXME
+							value = this.encoder.decode (resultEntries.get (0).getValue ().toByteArray (), encodingMetadata);
 						} catch (final EncodingException exception) {
 							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
 							this.pendingRequests.fail (token.getMessageId (), exception);
@@ -225,8 +230,9 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setKey (key);
 		requestBuilder.setExpTime (exp);
 		CallbackCompletion<Boolean> result = null;
+		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, this.encoder.getExpectedEncodingMetadata ());//FIXME
+			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);

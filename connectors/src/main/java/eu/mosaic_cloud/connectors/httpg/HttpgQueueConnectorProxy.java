@@ -204,6 +204,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			throws EncodingException
 	{
 		try {
+			// FIXME: We should check that the encoding meta-data to be sure it specific for HTTP-gateway.
 			final byte[] rawBytes = message.getData ();
 			if (rawBytes.length < 4) {
 				throw (new EncodingException ("invalid message length"));
@@ -353,7 +354,8 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			rawStream.writeInt (httpBodyBytes.length);
 			rawStream.write (httpBodyBytes);
 			final byte[] rawData = rawBytesStream.toByteArray ();
-			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, this.responseBodyEncoder.getExpectedEncodingMetadata ().getContentType ());
+			// FIXME: We should put the encoding meta-data specific only to the HTTP-gateway.
+			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, null);
 			return (rawMessage);
 		} catch (final EncodingException exception) {
 			throw (exception);
