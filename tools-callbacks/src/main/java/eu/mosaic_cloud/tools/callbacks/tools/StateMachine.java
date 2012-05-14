@@ -224,8 +224,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 				{
 					try {
 						return (operation.execute (Accessor.this, input));
-					} catch (final CaughtException.Wrapper exception) {
-						throw (exception);
+					} catch (final CaughtException.Wrapper wrapper) {
+						throw (wrapper);
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!").wrap ());
 					}
@@ -274,8 +274,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 				final _Output_ output;
 				try {
 					output = operation.call ();
-				} catch (final CaughtException.Wrapper exception) {
-					throw (exception);
+				} catch (final CaughtException.Wrapper wrapper) {
+					throw (wrapper);
 				} catch (final Throwable exception) {
 					throw (new DeferredException (exception, "operation failed; aborting!").wrap ());
 				}
@@ -459,8 +459,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 					final _Output_ output;
 					try {
 						output = operation.call ();
-					} catch (final CaughtException.Wrapper exception) {
-						throw (exception);
+					} catch (final CaughtException.Wrapper wrapper) {
+						throw (wrapper);
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!").wrap ());
 					}
@@ -482,8 +482,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 				{
 					try {
 						operation.run ();
-					} catch (final CaughtException.Wrapper exception) {
-						throw (exception);
+					} catch (final CaughtException.Wrapper wrapper) {
+						throw (wrapper);
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!").wrap ());
 					}
@@ -504,8 +504,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 					final _State_ finalState;
 					try {
 						finalState = operation.call ();
-					} catch (final CaughtException.Wrapper exception) {
-						throw (exception);
+					} catch (final CaughtException.Wrapper wrapper) {
+						throw (wrapper);
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!").wrap ());
 					}
@@ -525,8 +525,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 				{
 					try {
 						return (operation.execute (Transaction.this, input));
-					} catch (final CaughtException.Wrapper exception) {
-						throw (exception);
+					} catch (final CaughtException.Wrapper wrapper) {
+						throw (wrapper);
 					} catch (final Throwable exception) {
 						throw (new DeferredException (exception, "operation failed; aborting!").wrap ());
 					}
@@ -565,8 +565,8 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 				final StateAndOutput<_State_, _Output_> stateAndOutput;
 				try {
 					stateAndOutput = operation.call ();
-				} catch (final CaughtException.Wrapper exception) {
-					throw (exception);
+				} catch (final CaughtException.Wrapper wrapper) {
+					throw (wrapper);
 				} catch (final Throwable exception) {
 					throw (new DeferredException (exception, "operation failed; aborting!").wrap ());
 				}

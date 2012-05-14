@@ -206,9 +206,11 @@ public final class BasicCallbackReactor
 			if (method.getDeclaringClass () == Object.class)
 				try {
 					return (method.invoke (this, arguments));
-				} catch (final InvocationTargetException exception) {
-					this.reactor.exceptions.traceHandledException (exception);
-					throw (exception.getCause ());
+				} catch (final InvocationTargetException wrapper) {
+					final Throwable exception = wrapper.getCause ();
+					this.reactor.exceptions.traceHandledException (wrapper);
+					this.reactor.exceptions.traceDeferredException (exception);
+					throw (exception);
 				}
 			// FIXME: This is a VERY BIG HACK... This code should be refactored...
 			//-- The problem is that those methods annotated with `CallbackPassthrough` should enter the `monitor`,
@@ -227,9 +229,11 @@ public final class BasicCallbackReactor
 						if (this.handlerStatus.get () == HandlerStatus.Assigned)
 							try {
 								return (method.invoke (this.handler.get (), arguments));
-							} catch (final InvocationTargetException exception) {
-								this.reactor.exceptions.traceHandledException (exception);
-								throw (exception.getCause ());
+							} catch (final InvocationTargetException wrapper) {
+								final Throwable exception = wrapper.getCause ();
+								this.reactor.exceptions.traceHandledException (wrapper);
+								this.reactor.exceptions.traceDeferredException (exception);
+								throw (exception);
 							}
 						throw (new IllegalAccessError ());
 					}
@@ -254,9 +258,9 @@ public final class BasicCallbackReactor
 			try {
 				try {
 					returnedCompletion = (CallbackCompletion<?>) method.invoke (delegate, arguments);
-				} catch (final InvocationTargetException exception) {
-					this.reactor.exceptions.traceHandledException (exception);
-					throw (exception.getCause ());
+				} catch (final InvocationTargetException wrapper) {
+					this.reactor.exceptions.traceHandledException (wrapper);
+					throw (wrapper.getCause ());
 				}
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);
@@ -467,9 +471,9 @@ public final class BasicCallbackReactor
 						returnedCompletion = (CallbackCompletion<?>) ((CallbackFunnelHandler) handler).executeCallback (this.proxy, action.method, action.arguments);
 					else
 						returnedCompletion = (CallbackCompletion<?>) action.method.invoke (handler, action.arguments);
-				} catch (final InvocationTargetException exception) {
-					this.reactor.exceptions.traceHandledException (exception);
-					throw (exception.getCause ());
+				} catch (final InvocationTargetException wrapper) {
+					this.reactor.exceptions.traceHandledException (wrapper);
+					throw (wrapper.getCause ());
 				}
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);

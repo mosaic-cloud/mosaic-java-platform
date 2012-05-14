@@ -285,6 +285,9 @@ public final class ZeroMqChannel
 			} catch (final IOException exception) {
 				this.exceptions.traceIgnoredException (exception, "error encountered while decoding packet; ignoring!");
 				return;
+			} catch (final Error exception) {
+				this.exceptions.traceIgnoredException (exception, "error encountered while decoding packet; ignoring!");
+				return;
 			}
 			final String acceptorKey = selfRoleIdentifier + "//" + peerRoleIdentifier;
 			final String coderKey = selfRoleIdentifier + "//" + peerRoleIdentifier + "//" + messageIdentifier;
@@ -393,6 +396,9 @@ public final class ZeroMqChannel
 				stream.close ();
 				header = headerStream.toByteArray ();
 			} catch (final IOException exception) {
+				this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
+				return;
+			} catch (final Error exception) {
 				this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}

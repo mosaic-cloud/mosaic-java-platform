@@ -56,7 +56,6 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.StateAndOutput;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
-import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -83,14 +82,14 @@ public final class Cloudlet<TContext extends Object>
 			ICloudletCallback<TContext> controllerCallbacksDelegate;
 			try {
 				controllerCallbacksDelegate = (ICloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().newInstance ();
-			} catch (final ReflectiveOperationException exception) {
+			} catch (final Throwable exception) {
 				controllerCallbacksDelegate = null;
 				this.handleInternalFailure (null, exception);
 			}
 			TContext controllerContext;
 			try {
 				controllerContext = (TContext) this.environment.getCloudletContextClass ().newInstance ();
-			} catch (final ReflectiveOperationException exception) {
+			} catch (final Throwable exception) {
 				controllerContext = null;
 				this.handleInternalFailure (null, exception);
 			}
@@ -108,7 +107,8 @@ public final class Cloudlet<TContext extends Object>
 			this.connectorsFactoryDelegate = this.provideConnectorsFactory ();
 			this.fsm.execute (FsmTransition.CreateCompleted, FsmState.Created);
 		} catch (final CaughtException.Wrapper wrapper) {
-			this.handleInternalFailure (null, wrapper.exception);
+			wrapper.trace (this.exceptions);
+			this.handleInternalFailure (null, wrapper.exception.caught);
 			throw (wrapper);
 		} catch (final Throwable exception) {
 			this.handleInternalFailure (null, exception);
@@ -225,7 +225,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 		if (this.destroyFuture != null) {
 			Preconditions.checkState (this.initializeFuture == null);
-			this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (this.failures.queue));
+			this.destroyFuture.trigger.triggerFailed (QueuedExceptions.create (this.failures));
 			this.destroyFuture = null;
 		}
 	}
@@ -268,7 +268,7 @@ public final class Cloudlet<TContext extends Object>
 		final Class<?> clasz;
 		try {
 			clasz = this.environment.getClassLoader ().loadClass (className);
-		} catch (final ReflectiveOperationException exception) {
+		} catch (final Throwable exception) {
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException (String.format ("error encountered while loading cloudlet connectors factory class `%s`", className), exception));
 		}
@@ -278,6 +278,9 @@ public final class Cloudlet<TContext extends Object>
 				provideMethod = clasz.getMethod ("provide", ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
+			} catch (final Throwable exception) {
+				this.exceptions.traceHandledException (exception);
+				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", className), exception));
 			}
 		}
 		if (provideMethod == null) {
@@ -285,6 +288,9 @@ public final class Cloudlet<TContext extends Object>
 				provideMethod = clasz.getMethod ("create", ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
+			} catch (final Throwable exception) {
+				this.exceptions.traceHandledException (exception);
+				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", className), exception));
 			}
 		}
 		Constructor<?> provideConstructor = null;
@@ -293,6 +299,9 @@ public final class Cloudlet<TContext extends Object>
 				provideConstructor = clasz.getConstructor (ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
+			} catch (final Throwable exception) {
+				this.exceptions.traceHandledException (exception);
+				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", className), exception));
 			}
 		}
 		Preconditions.checkArgument ((provideMethod != null) || (provideConstructor != null));
@@ -301,24 +310,24 @@ public final class Cloudlet<TContext extends Object>
 			try {
 				try {
 					factoryRaw = provideMethod.invoke (null, this.controllerProxy, this.environment.getConnectors (), this.environment.getConnectorEnvironment ());
-				} catch (final InvocationTargetException exception) {
-					this.exceptions.trace (ExceptionResolution.Handled, exception);
-					throw (exception.getCause ());
+				} catch (final InvocationTargetException wrapper) {
+					this.exceptions.traceHandledException (wrapper);
+					throw (wrapper.getCause ());
 				}
 			} catch (final Throwable exception) {
-				this.exceptions.trace (ExceptionResolution.Deferred, exception);
+				this.exceptions.traceDeferredException (exception);
 				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while invocking)", clasz.getName ()), exception));
 			}
 		} else if (provideConstructor != null) {
 			try {
 				try {
 					factoryRaw = provideConstructor.newInstance (this.controllerProxy, this.environment.getConnectors (), this.environment.getConnectorEnvironment ());
-				} catch (final InvocationTargetException exception) {
-					this.exceptions.trace (ExceptionResolution.Handled, exception);
-					throw (exception.getCause ());
+				} catch (final InvocationTargetException wrapper) {
+					this.exceptions.traceHandledException (wrapper);
+					throw (wrapper.getCause ());
 				}
 			} catch (final Throwable exception) {
-				this.exceptions.trace (ExceptionResolution.Deferred, exception);
+				this.exceptions.traceDeferredException (exception);
 				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while invocking)", clasz.getName ()), exception));
 			}
 		} else {
@@ -366,6 +375,10 @@ public final class Cloudlet<TContext extends Object>
 		{
 			try {
 				return Cloudlet.this.callbacksDelegate.destroy (context, arguments);
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
+				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
+				return CallbackCompletion.createFailure (wrapper.exception.caught);
 			} catch (final Throwable exception) {
 				Cloudlet.this.handleDelegateFailure (exception);
 				return CallbackCompletion.createFailure (exception);
@@ -377,6 +390,10 @@ public final class Cloudlet<TContext extends Object>
 		{
 			try {
 				return Cloudlet.this.callbacksDelegate.destroyFailed (context, arguments);
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
+				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
+				return CallbackCompletion.createFailure (wrapper.exception.caught);
 			} catch (final Throwable exception) {
 				Cloudlet.this.handleDelegateFailure (exception);
 				return CallbackCompletion.createFailure (exception);
@@ -388,6 +405,10 @@ public final class Cloudlet<TContext extends Object>
 		{
 			try {
 				return Cloudlet.this.callbacksDelegate.destroySucceeded (context, arguments);
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
+				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
+				return CallbackCompletion.createFailure (wrapper.exception.caught);
 			} catch (final Throwable exception) {
 				Cloudlet.this.handleDelegateFailure (exception);
 				return CallbackCompletion.createFailure (exception);
@@ -406,6 +427,10 @@ public final class Cloudlet<TContext extends Object>
 		{
 			try {
 				return Cloudlet.this.callbacksDelegate.initialize (context, arguments);
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
+				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
+				return CallbackCompletion.createFailure (wrapper.exception.caught);
 			} catch (final Throwable exception) {
 				Cloudlet.this.handleDelegateFailure (exception);
 				return CallbackCompletion.createFailure (exception);
@@ -417,6 +442,10 @@ public final class Cloudlet<TContext extends Object>
 		{
 			try {
 				return Cloudlet.this.callbacksDelegate.initializeFailed (context, arguments);
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
+				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
+				return CallbackCompletion.createFailure (wrapper.exception.caught);
 			} catch (final Throwable exception) {
 				Cloudlet.this.handleDelegateFailure (exception);
 				return CallbackCompletion.createFailure (exception);
@@ -428,6 +457,10 @@ public final class Cloudlet<TContext extends Object>
 		{
 			try {
 				return Cloudlet.this.callbacksDelegate.initializeSucceeded (context, arguments);
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
+				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
+				return CallbackCompletion.createFailure (wrapper.exception.caught);
 			} catch (final Throwable exception) {
 				Cloudlet.this.handleDelegateFailure (exception);
 				return CallbackCompletion.createFailure (exception);
@@ -463,12 +496,12 @@ public final class Cloudlet<TContext extends Object>
 				protected final StateAndOutput<FsmState, Void> execute (final CallbackCompletion<Void> initializedCompletion)
 				{
 					Preconditions.checkState (Cloudlet.this.initializeFuture != null);
-					Cloudlet.this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
-					Cloudlet.this.initializeFuture = null;
 					final Throwable exception = initializedCompletion.getException ();
 					if (exception != null) {
 						Cloudlet.this.failures.traceDeferredException (exception);
 					}
+					Cloudlet.this.initializeFuture.trigger.triggerFailed (QueuedExceptions.create (Cloudlet.this.failures));
+					Cloudlet.this.initializeFuture = null;
 					Cloudlet.this.reactor.destroyProxy (Cloudlet.this.callbacksProxy);
 					return StateAndOutput.create (FsmState.CallbacksUnregisterPending, null);
 				}
@@ -567,20 +600,21 @@ public final class Cloudlet<TContext extends Object>
 						try {
 							try {
 								return method.invoke (ConnectorFactory.this.factoryDelegate, newArguments);
-							} catch (final InvocationTargetException exception) {
-								Cloudlet.this.exceptions.traceHandledException (exception);
-								throw (exception.getCause ());
+							} catch (final InvocationTargetException wrapper) {
+								Cloudlet.this.exceptions.traceHandledException (wrapper);
+								throw (wrapper.getCause ());
 							}
-						} catch (final CaughtException.Wrapper exception) {
-							throw (exception);
+						} catch (final CaughtException.Wrapper wrapper) {
+							throw (wrapper);
 						} catch (final Throwable exception) {
 							throw (new DeferredException (exception).wrap ());
 						}
 					}
 				}.trigger (null);
 			} catch (final CaughtException.Wrapper wrapper) {
-				wrapper.exception.trace (Cloudlet.this.exceptions);
-				throw (wrapper.exception.caught);
+				wrapper.trace (Cloudlet.this.exceptions);
+				wrapper.rethrow ();
+				throw (new AssertionError ());
 			}
 		}
 		
@@ -627,8 +661,9 @@ public final class Cloudlet<TContext extends Object>
 						}
 					}
 				}.trigger (null);
-			} catch (final CaughtException.Wrapper exception) {
-				exception.rethrow ();
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
+				wrapper.rethrow ();
 				throw (new AssertionError ());
 			}
 		}
@@ -827,18 +862,19 @@ public final class Cloudlet<TContext extends Object>
 						try {
 							try {
 								return (CallbackCompletion<Void>) (method.invoke (delegate, arguments));
-							} catch (final InvocationTargetException exception) {
-								Cloudlet.this.exceptions.traceHandledException (exception);
-								throw (exception.getCause ());
+							} catch (final InvocationTargetException wrapper) {
+								Cloudlet.this.exceptions.traceHandledException (wrapper);
+								throw (wrapper.getCause ());
 							}
-						} catch (final CaughtException.Wrapper exception) {
-							throw (exception);
+						} catch (final CaughtException.Wrapper wrapper) {
+							throw (wrapper);
 						} catch (final Throwable exception) {
 							throw (new DeferredException (exception).wrap ());
 						}
 					}
 				}.trigger ();
 			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (Cloudlet.this.exceptions);
 				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
 				return CallbackCompletion.createFailure (wrapper.exception.caught);
 			}

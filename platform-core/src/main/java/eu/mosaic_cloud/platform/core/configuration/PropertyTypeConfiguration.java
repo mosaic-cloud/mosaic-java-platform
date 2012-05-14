@@ -207,6 +207,8 @@ public final class PropertyTypeConfiguration
 				configuration = new PropertyTypeConfiguration (properties);
 			} catch (final IOException exception) {
 				FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
+			} catch (final Error exception) {
+				FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception);
 			}
 		} else {
 			throw (new IllegalArgumentException ("resource not found"));

@@ -85,6 +85,7 @@ public abstract class CaughtException
 	
 	public final void trace (final ExceptionTracer tracer)
 	{
+		tracer.trace (ExceptionResolution.Handled, this);
 		final Throwable cause = this.getCause ();
 		if (this.messageFormat != null) {
 			final String message = this.getMessage ();
@@ -161,6 +162,12 @@ public abstract class CaughtException
 		public final void rethrow ()
 		{
 			this.exception.rethrow ();
+		}
+		
+		public final void trace (final ExceptionTracer tracer)
+		{
+			tracer.trace (ExceptionResolution.Handled, this);
+			this.exception.trace (tracer);
 		}
 		
 		public final CaughtException exception;

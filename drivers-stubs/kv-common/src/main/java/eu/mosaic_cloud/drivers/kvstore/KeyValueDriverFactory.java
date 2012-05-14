@@ -71,9 +71,9 @@ public final class KeyValueDriverFactory
 				final Method createMethod = driverClass.getMethod ("create", IConfiguration.class, ThreadingContext.class);
 				try {
 					driver = (AbstractKeyValueDriver) createMethod.invoke (null, config, threadingContext);
-				} catch (final InvocationTargetException exception) {
-					FallbackExceptionTracer.defaultInstance.traceHandledException (exception);
-					throw exception.getCause ();
+				} catch (final InvocationTargetException wrapper) {
+					FallbackExceptionTracer.defaultInstance.traceHandledException (wrapper);
+					throw wrapper.getCause ();
 				}
 			} catch (final Throwable e) {
 				FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);

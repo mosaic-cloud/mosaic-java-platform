@@ -87,8 +87,8 @@ public final class BasicComponentHarnessPreMain
 		final Method mainMethod = mainClass.getMethod ("main", String[].class);
 		try {
 			mainMethod.invoke (null, new Object[] {arguments});
-		} catch (final InvocationTargetException exception) {
-			throw (exception.getCause ());
+		} catch (final InvocationTargetException wrapper) {
+			throw (wrapper.getCause ());
 		}
 	}
 	

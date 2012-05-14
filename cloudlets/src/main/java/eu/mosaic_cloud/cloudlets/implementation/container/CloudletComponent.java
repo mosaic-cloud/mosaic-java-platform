@@ -127,7 +127,8 @@ public final class CloudletComponent
 				this.transcript.traceDebugging ("using the interoperability channel resolver handler `%{object:identity}` assigned to `%{object:identity}`...", this.channelFactoryHandler, this.channelFactoryProxy);
 			}
 		} catch (final CaughtException.Wrapper wrapper) {
-			this.handleInternalFailure (null, wrapper.exception);
+			wrapper.trace (this.exceptions);
+			this.handleInternalFailure (null, wrapper.exception.caught);
 			throw (wrapper);
 		} catch (final Throwable exception) {
 			this.handleInternalFailure (null, exception);
@@ -359,6 +360,10 @@ public final class CloudletComponent
 					CloudletComponent.this.transcript.traceDebugging ("resolved the interoperability channel endpoint for target `%s` successfully (with endpoint `%s`, and identity `%s`); delegating.", target, peerEndpoint, peerIdentifier);
 					try {
 						callbacks.resolved (CloudletComponent.this.channelFactoryProxy, target, peerIdentifier, peerEndpoint);
+					} catch (final CaughtException.Wrapper wrapper) {
+						wrapper.trace (CloudletComponent.this.exceptions);
+						CloudletComponent.this.exceptions.traceIgnoredException (wrapper.exception.caught);
+						return (null);
 					} catch (final Throwable exception) {
 						CloudletComponent.this.exceptions.traceIgnoredException (exception);
 						return (null);

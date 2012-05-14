@@ -64,6 +64,14 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
 		return this.getBooleanOutcome (completion);
 	}
 	
+	protected Throwable awaitFailure (final CallbackCompletion<?> completion)
+	{
+		this.await (completion);
+		Assert.assertTrue (completion.isCompleted ());
+		Assert.assertNotNull (completion.getException ());
+		return completion.getException ();
+	}
+	
 	protected <Outcome> Outcome awaitOutcome (final CallbackCompletion<Outcome> completion)
 	{
 		this.await (completion);
@@ -76,14 +84,6 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
 		Assert.assertTrue (completion.isCompleted ());
 		Assert.assertEquals (null, completion.getException ());
 		return true;
-	}
-	
-	protected Throwable awaitFailure (final CallbackCompletion<?> completion)
-	{
-		this.await (completion);
-		Assert.assertTrue (completion.isCompleted ());
-		Assert.assertNotNull (completion.getException ());
-		return completion.getException ();
 	}
 	
 	protected boolean getBooleanOutcome (final CallbackCompletion<Boolean> completion)

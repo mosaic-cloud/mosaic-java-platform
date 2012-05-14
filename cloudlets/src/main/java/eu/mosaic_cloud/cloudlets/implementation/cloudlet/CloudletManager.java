@@ -162,7 +162,7 @@ public final class CloudletManager
 		final Class<?> clasz;
 		try {
 			clasz = this.classLoader.loadClass (className);
-		} catch (final ReflectiveOperationException exception) {
+		} catch (final Throwable exception) {
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet callbacks class", exception));
 		}
@@ -195,7 +195,7 @@ public final class CloudletManager
 		final Class<?> clasz;
 		try {
 			clasz = this.classLoader.loadClass (className);
-		} catch (final ReflectiveOperationException exception) {
+		} catch (final Throwable exception) {
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet context class", exception));
 		}

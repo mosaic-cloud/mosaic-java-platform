@@ -130,8 +130,8 @@ public final class JettyComponentCallbacks
 							brokerPort = (Integer) outputs.get ("port");
 							Preconditions.checkNotNull (brokerPort);
 						} catch (final Throwable exception) {
-							this.terminate ();
 							this.exceptions.traceIgnoredException (exception, "failed resolving RabbitMQ broker endpoint: `%s`; terminating!", reply.outputsOrError);
+							this.terminate ();
 							throw (new IllegalStateException ());
 						}
 						this.transcript.traceInformation ("resolved RabbitMQ on `%s:%d`", brokerIp, brokerPort);
@@ -305,8 +305,8 @@ public final class JettyComponentCallbacks
 					try {
 						jettyServer.start ();
 					} catch (final Throwable exception) {
-						JettyComponentCallbacks.this.terminate ();
 						JettyComponentCallbacks.this.exceptions.traceIgnoredException (exception, "error encountered while starting Jetty; terminating!");
+						JettyComponentCallbacks.this.terminate ();
 					}
 				}
 			});

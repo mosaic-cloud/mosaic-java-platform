@@ -66,6 +66,8 @@ public final class CallbackIsolate
 				return (CallbackCompletion.createFailure (new IllegalStateException ()));
 			return (completion);
 		} catch (final Throwable exception) {
+			// FIXME: See the `FIXME` notice at the top of the `CallbackCompletion` class.
+			FallbackExceptionTracer.defaultInstance.traceDeferredException (exception);
 			return (CallbackCompletion.createFailure (exception));
 		}
 	}

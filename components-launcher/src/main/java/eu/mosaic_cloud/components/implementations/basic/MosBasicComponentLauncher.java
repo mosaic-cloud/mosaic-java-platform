@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessMain.ArgumentsProvider;
 import eu.mosaic_cloud.tools.classpath_exporter.ClasspathExporter;
-import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
+import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
@@ -176,7 +176,7 @@ public final class MosBasicComponentLauncher
 					try {
 						BasicComponentHarnessMain.main (argumentsProvider, classLoader, threading, null, exceptions);
 					} catch (final Throwable exeption) {
-						throw (CaughtException.create (ExceptionResolution.Deferred, exeption).wrap ());
+						throw (new DeferredException (exeption).wrap ());
 					}
 				}
 			};

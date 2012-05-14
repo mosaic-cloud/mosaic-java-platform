@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 import com.google.common.base.Preconditions;
 import com.google.protobuf.GeneratedMessage;
@@ -69,8 +70,9 @@ public class DefaultPBPayloadCoder
 		final Object object;
 		try {
 			object = createMethod.invoke (null, buffer.array ());
-		} catch (final InvocationTargetException exception) {
-			throw exception.getCause ();
+		} catch (final InvocationTargetException wrapper) {
+			FallbackExceptionTracer.defaultInstance.traceHandledException (wrapper);
+			throw wrapper.getCause ();
 		}
 		if (!this.nullAllowed && (object == null)) {
 			throw new IOException ("unexpected null object");

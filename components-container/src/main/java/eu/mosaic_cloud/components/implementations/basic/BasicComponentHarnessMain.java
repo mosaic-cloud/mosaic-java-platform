@@ -28,6 +28,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
@@ -145,7 +146,7 @@ public final class BasicComponentHarnessMain
 		else
 			try {
 				callbacksProvider = (ComponentCallbacksProvider) callbacksClass.newInstance ();
-			} catch (final Exception exception) {
+			} catch (final Throwable exception) {
 				environment.exceptions.trace (ExceptionResolution.Deferred, exception);
 				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while instantiating)", callbacksClass.getName ()), exception));
 			}
@@ -212,7 +213,8 @@ public final class BasicComponentHarnessMain
 					if (classpathPart.startsWith ("http:") || classpathPart.startsWith ("file:"))
 						try {
 							classpathUrl = new URL (classpathPart);
-						} catch (final Exception exception) {
+						} catch (final MalformedURLException exception) {
+							exceptions.trace (ExceptionResolution.Handled, exception);
 							throw (new IllegalArgumentException (String.format ("invalid class-path URL `%s`", classpathPart), exception));
 						}
 					else {
@@ -504,12 +506,18 @@ public final class BasicComponentHarnessMain
 			} catch (final NoSuchMethodException exception) {
 				context.exceptions.trace (ExceptionResolution.Handled, exception);
 				provideMethod = null;
+			} catch (final Throwable exception) {
+				context.exceptions.trace (ExceptionResolution.Ignored, exception);
+				provideMethod = null;
 			}
 			Constructor<?> provideConstructor;
 			try {
 				provideConstructor = this.clasz.getConstructor (ComponentEnvironment.class);
 			} catch (final NoSuchMethodException exception) {
 				context.exceptions.trace (ExceptionResolution.Handled, exception);
+				provideConstructor = null;
+			} catch (final Throwable exception) {
+				context.exceptions.trace (ExceptionResolution.Ignored, exception);
 				provideConstructor = null;
 			}
 			Preconditions.checkArgument ((provideMethod != null) || (provideConstructor != null));
@@ -520,12 +528,12 @@ public final class BasicComponentHarnessMain
 				try {
 					try {
 						callbacksProxy = (CallbackProxy) provideMethod.invoke (null, context);
-					} catch (final InvocationTargetException exception) {
-						context.exceptions.trace (ExceptionResolution.Handled, exception);
-						throw (exception.getCause ());
+					} catch (final InvocationTargetException wrapper) {
+						context.exceptions.trace (ExceptionResolution.Handled, wrapper);
+						throw (wrapper.getCause ());
 					}
 				} catch (final Throwable exception) {
-					context.exceptions.trace (ExceptionResolution.Deferred, exception);
+					context.exceptions.trace (ExceptionResolution.Handled, exception);
 					throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while invocking)", this.clasz.getName ()), exception));
 				} finally {
 					Threading.setDefaultContext (null);
@@ -540,12 +548,12 @@ public final class BasicComponentHarnessMain
 				try {
 					try {
 						callbacksHandler = (CallbackHandler) provideConstructor.newInstance (context);
-					} catch (final InvocationTargetException exception) {
-						context.exceptions.trace (ExceptionResolution.Handled, exception);
-						throw (exception.getCause ());
+					} catch (final InvocationTargetException wrapper) {
+						context.exceptions.trace (ExceptionResolution.Handled, wrapper);
+						throw (wrapper.getCause ());
 					}
 				} catch (final Throwable exception) {
-					context.exceptions.trace (ExceptionResolution.Deferred, exception);
+					context.exceptions.trace (ExceptionResolution.Handled, exception);
 					throw (new IllegalArgumentException (String.format ("invalid callbacks handler class `%s` (error encountered while instantiating)", this.clasz.getName ()), exception));
 				} finally {
 					Threading.setDefaultContext (null);
