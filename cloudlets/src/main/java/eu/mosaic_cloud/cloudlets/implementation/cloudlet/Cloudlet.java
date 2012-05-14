@@ -816,26 +816,32 @@ public final class Cloudlet<TContext extends Object>
 		@Override
 		public CallbackCompletion<?> executeCallback (final Callbacks proxy, final Method method, final Object[] arguments)
 		{
-			return Cloudlet.this.fsm.new FsmCallbackAccess () {
-				@SuppressWarnings ("unchecked")
-				@Override
-				protected CallbackCompletion<Void> execute ()
-				{
-					final Callbacks delegate = Cloudlet.this.genericCallbacksProxies.get (proxy);
-					Preconditions.checkState (delegate != null);
-					try {
+			try {
+				return Cloudlet.this.fsm.new FsmCallbackAccess () {
+					@SuppressWarnings ("unchecked")
+					@Override
+					protected CallbackCompletion<Void> execute ()
+					{
+						final Callbacks delegate = Cloudlet.this.genericCallbacksProxies.get (proxy);
+						Preconditions.checkState (delegate != null);
 						try {
-							return (CallbackCompletion<Void>) (method.invoke (delegate, arguments));
-						} catch (final InvocationTargetException exception) {
-							Cloudlet.this.exceptions.traceHandledException (exception);
-							throw (exception.getCause ());
+							try {
+								return (CallbackCompletion<Void>) (method.invoke (delegate, arguments));
+							} catch (final InvocationTargetException exception) {
+								Cloudlet.this.exceptions.traceHandledException (exception);
+								throw (exception.getCause ());
+							}
+						} catch (final CaughtException.Wrapper exception) {
+							throw (exception);
+						} catch (final Throwable exception) {
+							throw (new DeferredException (exception).wrap ());
 						}
-					} catch (final Throwable exception) {
-						Cloudlet.this.handleDelegateFailure (exception);
-						return CallbackCompletion.createFailure (exception);
 					}
-				}
-			}.trigger ();
+				}.trigger ();
+			} catch (final CaughtException.Wrapper wrapper) {
+				Cloudlet.this.handleDelegateFailure (wrapper.exception.caught);
+				return CallbackCompletion.createFailure (wrapper.exception.caught);
+			}
 		}
 		
 		@Override
