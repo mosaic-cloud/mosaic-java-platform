@@ -62,6 +62,12 @@
 			<groupId>com.basho.riak</groupId>
 			<artifactId>riak-client</artifactId>
 			<version>${versions.dependencies.riak}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

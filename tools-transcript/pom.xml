@@ -46,6 +46,18 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${versions.dependencies.slf4j}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${versions.dependencies.slf4j}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${versions.dependencies.slf4j}</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 	
 </project>
