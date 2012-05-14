@@ -326,7 +326,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 				}
 			}
 			final JSONObject metadata = new JSONObject ();
-			final EncodingMetadata httpBodyEncodingMetadata = new EncodingMetadata (bodyContentType, bodyContentEncoding); //FIXME
+			final EncodingMetadata httpBodyEncodingMetadata = new EncodingMetadata (bodyContentType, bodyContentEncoding);
 			final byte[] httpBodyBytes;
 			try {
 				httpBodyBytes = this.responseBodyEncoder.encode (response.body, httpBodyEncodingMetadata);

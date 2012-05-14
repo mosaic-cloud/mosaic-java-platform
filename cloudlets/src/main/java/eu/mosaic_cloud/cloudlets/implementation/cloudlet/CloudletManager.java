@@ -88,7 +88,7 @@ public final class CloudletManager
 		synchronized (this.monitor) {
 			final Cloudlet<?> cloudlet = this.createCloudletInstance ();
 			// FIXME: this should be done asynchronously and we should check the
-			// outcome...
+			//-- outcome...
 			cloudlet.initialize ();
 			this.cloudlets.put (cloudlet, cloudlet);
 			this.transcript.traceDebugging ("created the cloudlet `%{object:identity}`.", cloudlet);
@@ -118,7 +118,7 @@ public final class CloudletManager
 				}
 				final Cloudlet<?> cloudlet = cloudletIterator.next ();
 				// FIXME: we should have some cloudlet observers to manage
-				// this...
+				//-- this...
 				switch (cloudlet.getState ()) {
 					case DESTROYED :
 					case DESTROYING :
@@ -132,7 +132,7 @@ public final class CloudletManager
 						throw (new AssertionError ());
 				}
 				// FIXME: this should be done asynchronously and we should check
-				// the outcome...
+				//-- the outcome...
 				cloudlet.destroy ();
 				this.cloudlets.remove (cloudlet);
 				this.transcript.traceDebugging ("destroyed the cloudlet `%{object:identity}`.", cloudlet);

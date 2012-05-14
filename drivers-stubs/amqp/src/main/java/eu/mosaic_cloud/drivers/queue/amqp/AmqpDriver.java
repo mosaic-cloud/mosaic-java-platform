@@ -285,7 +285,7 @@ public class AmqpDriver
 			}
 		}
 		// FIXME: moved shutdown from here to `handleShutdownSignal` (is it ok?)
-		// # this.executor.shutdown();
+		//# this.executor.shutdown();
 		this.logger.trace ("AmqpDriver destroyed."); // $NON-NLS-1$
 	}
 	
@@ -571,9 +571,9 @@ public class AmqpDriver
 			final AmqpInboundMessage message = new AmqpInboundMessage (null, -1, exchange, routingKey, data, properties.getDeliveryMode () == 2 ? true : false, properties.getReplyTo (), properties.getContentEncoding (), properties.getContentType (), properties.getCorrelationId (), properties.getMessageId ());
 			AmqpDriver.this.logger.trace ("AmqpDriver - Received RETURN callback for " + message.getDelivery ()); // $NON-NLS-1$
 			// FIXME: We should trigger a `publishFailed` callback, but due to
-			// the lack of "positive" acknowledgements,
-			// -- we just ignore this situation. Maybe we should use the
-			// RabbitMQ extension for publish acknowledgements.
+			//-- the lack of "positive" acknowledgements,
+			//-- we just ignore this situation. Maybe we should use the
+			//-- RabbitMQ extension for publish acknowledgements.
 		}
 	}
 }

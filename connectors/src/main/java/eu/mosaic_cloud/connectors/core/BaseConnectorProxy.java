@@ -65,7 +65,7 @@ public abstract class BaseConnectorProxy
 		Preconditions.checkNotNull (configuration);
 		this.configuration = configuration;
 		// FIXME: the channel acquisition should be made as part of the channel
-		// endpoint resolution
+		//-- endpoint resolution
 		this.channel = this.configuration.getCommunicationChannel ();
 		this.identifier = UUID.randomUUID ().toString ();
 		this.transcript = Transcript.create (this, true);
@@ -146,7 +146,7 @@ public abstract class BaseConnectorProxy
 			this.transcript.traceDebugging ("using the driver endpoint `%s`...", driverEndpoint);
 			this.transcript.traceDebugging ("using the driver identity `%s`...", driverIdentity);
 			// FIXME: The connection operation should be done by the channel
-			// resolver.
+			//-- resolver.
 			((ZeroMqChannel) this.channel).connect (driverEndpoint);
 			this.channel.connect (driverIdentity, session, initMessage, this);
 			result = CallbackCompletion.createOutcome ();
@@ -165,14 +165,14 @@ public abstract class BaseConnectorProxy
 					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver endpoint `%s`...", endpoint);
 					BaseConnectorProxy.this.transcript.traceDebugging ("using the driver identity `%s`...", peer);
 					// FIXME: The connection operation should be done by the
-					// channel resolver.
+					//-- channel resolver.
 					BaseConnectorProxy.this.transcript.traceDebugging ("registering the interoperability endpoint...");
 					((ZeroMqChannel) BaseConnectorProxy.this.channel).connect (endpoint);
 					BaseConnectorProxy.this.transcript.traceDebugging ("creating the interoperability session...");
 					BaseConnectorProxy.this.channel.connect (peer, session, initMessage, BaseConnectorProxy.this);
 					// FIXME: Calling `connect` is not enough; the connection is
-					// successful only after the call of `created(Session)` was
-					// done.
+					//-- successful only after the call of `created(Session)` was
+					//-- done.
 					future.trigger.triggerSucceeded (null);
 					return (CallbackCompletion.createOutcome ());
 				}
@@ -186,11 +186,11 @@ public abstract class BaseConnectorProxy
 	protected CallbackCompletion<Void> disconnect (final Message finalMessage)
 	{
 		// FIXME: The disconnection should push the termination also to the
-		// interoperability layer.
-		// -- Currently the driver side has no idea that the connector was
-		// disconnected except if the `finalMessage` contains such information.
+		//-- interoperability layer.
+		//-- Currently the driver side has no idea that the connector was
+		//-- disconnected except if the `finalMessage` contains such information.
 		// FIXME: The `finalMessage` should always exist and should always be an
-		// "terminal" one.
+		//-- "terminal" one.
 		if (finalMessage != null) {
 			this.sendMessage (finalMessage);
 		}
@@ -225,8 +225,8 @@ public abstract class BaseConnectorProxy
 	protected void sendMessage (final Message message)
 	{
 		// FIXME: Currently this is a hack to avoid a race condition introduced
-		// by the `connect` code above.
-		// -- For now we just busy-wait until the session object is available
+		//-- by the `connect` code above.
+		//-- For now we just busy-wait until the session object is available
 		if (this.session == null) {
 			this.transcript.traceDebugging ("waiting for the interoperability session...");
 			while (this.session == null) {

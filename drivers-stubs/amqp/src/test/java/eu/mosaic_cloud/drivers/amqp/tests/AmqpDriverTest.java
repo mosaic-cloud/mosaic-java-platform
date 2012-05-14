@@ -85,7 +85,8 @@ public class AmqpDriverTest
 		this.testDeclareExchange ();
 		this.testDeclareQueue ();
 		this.testBindQueue ();
-		this.testConsume ();// FIXME this fails due to threading
+		// FIXME: this fails due to threading
+		this.testConsume ();
 		this.testPublish ();
 	}
 	
@@ -151,7 +152,7 @@ public class AmqpDriverTest
 		final boolean manadatory = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.manadatory", Boolean.class, true);
 		final boolean immediate = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.immediate", Boolean.class, true);
 		final boolean durable = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.durable", Boolean.class, false);
-		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, this.encoder.getExpectedEncodingMetadata ()), manadatory, immediate, durable, null, null, this.encoder.getExpectedEncodingMetadata ().getContentType (), null, null);//FIXME
+		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, this.encoder.getExpectedEncodingMetadata ()), manadatory, immediate, durable, null, null, this.encoder.getExpectedEncodingMetadata ().getContentType (), null, null);
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("publish message");
 		final IResult<Boolean> r = this.wrapper.basicPublish (this.clientId, mssg, handler);
 		Assert.assertTrue (r.getResult ());

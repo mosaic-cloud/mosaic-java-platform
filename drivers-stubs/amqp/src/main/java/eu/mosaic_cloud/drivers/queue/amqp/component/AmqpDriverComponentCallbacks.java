@@ -85,9 +85,9 @@ public final class AmqpDriverComponentCallbacks
 			if (request.operation.equals (ConfigProperties.getString ("AmqpDriverComponentCallbacks.5"))) { // $NON-NLS-1$
 				String channelEndpoint = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("AmqpDriverComponentCallbacks.3"), String.class, ""); // $NON-NLS-1$
 				// FIXME: These parameters should be determined through
-				// component "resource acquire" operations.
-				// -- Also this hack reduces the number of driver instances of
-				// the same type to one per VM.
+				//-- component "resource acquire" operations.
+				//-- Also this hack reduces the number of driver instances of
+				//-- the same type to one per VM.
 				try {
 					if (System.getenv ("mosaic_node_ip") != null) {
 						channelEndpoint = channelEndpoint.replace ("0.0.0.0", System.getenv ("mosaic_node_ip"));
@@ -130,8 +130,7 @@ public final class AmqpDriverComponentCallbacks
 				brokerPort = (Integer) outputs.get ("port"); // $NON-NLS-1$
 				if (!"tcp".equals (rabbitmqTransport) || (brokerIp == null) || (brokerPort == null)) {
 					this.terminate ();
-					this.logger.error ("failed resolving RabbitMQ broker endpoint: `" + reply.outputsOrError + "`; terminating!"); // $NON-NLS-1$
-																																	// $NON-NLS-2$
+					this.logger.error ("failed resolving RabbitMQ broker endpoint: `" + reply.outputsOrError + "`; terminating!"); // $NON-NLS-1$ $NON-NLS-2$
 					throw new IllegalStateException ();
 				}
 				user = (String) outputs.get ("username"); // $NON-NLS-1$
@@ -140,11 +139,7 @@ public final class AmqpDriverComponentCallbacks
 				user = user != null ? user : "";
 				password = password != null ? password : "";
 				virtualHost = virtualHost != null ? virtualHost : "";
-				this.logger.debug ("Resolved RabbitMQ on " + brokerIp + ":" + brokerPort + " user = " + user + " password = " + password + " vhost = " + virtualHost); // $NON-NLS-1$
-																																										// $NON-NLS-2$
-																																										// $NON-NLS-3$
-																																										// $NON-NLS-4$
-																																										// $NON-NLS-5$
+				this.logger.debug ("Resolved RabbitMQ on " + brokerIp + ":" + brokerPort + " user = " + user + " password = " + password + " vhost = " + virtualHost); // $NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$ $NON-NLS-4$ $NON-NLS-5$
 				this.configureDriver (brokerIp, brokerPort.toString (), user, password, virtualHost);
 			}
 			if (this.selfGroup != null) {

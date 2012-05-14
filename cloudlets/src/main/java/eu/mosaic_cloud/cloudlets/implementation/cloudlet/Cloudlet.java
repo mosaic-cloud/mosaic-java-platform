@@ -650,7 +650,7 @@ public final class Cloudlet<TContext extends Object>
 		public void destroy (final CallbackCompletionDeferredFuture<Void> future)
 		{
 			// FIXME: There should be a better way to handle external
-			// destroys...
+			//-- destroys...
 			switch (Cloudlet.this.fsm.getState ().getCloudletState ()) {
 				case INITIALIZING :
 				case DESTROYING :
@@ -780,8 +780,7 @@ public final class Cloudlet<TContext extends Object>
 				protected StateAndOutput<FsmState, Void> execute ()
 				{
 					// FIXME: ...
-					// # Preconditions.checkState (Cloudlet.this.destroyFuture
-					// != null);
+					//# Preconditions.checkState (Cloudlet.this.destroyFuture != null);
 					StateAndOutput<FsmState, Void> result;
 					if (Cloudlet.this.failures.queue.isEmpty ()) {
 						if (Cloudlet.this.destroyFuture != null) {
