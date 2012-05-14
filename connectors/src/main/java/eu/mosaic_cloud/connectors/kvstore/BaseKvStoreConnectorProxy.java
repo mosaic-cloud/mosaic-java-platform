@@ -170,14 +170,21 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 					// FIXME: The encoding meta-data should be obtained from the request's "envelope".
 					final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
 					for (final KVEntry entry : resultEntries) {
-						try {
-							final TValue value = this.encoder.decode (entry.getValue ().toByteArray (), encodingMetadata);
-							values.put (entry.getKey (), value);
-						} catch (final EncodingException exception) {
-							this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
-							this.pendingRequests.fail (token.getMessageId (), exception);
-							break;
+						final TValue value;
+						final byte[] rawValue = resultEntries.get (0).getValue ().toByteArray ();
+						// FIXME: This `length > 0` should be handled differently...
+						if ((rawValue != null) && (rawValue.length > 0)) {
+							try {
+								value = this.encoder.decode (rawValue, encodingMetadata);
+							} catch (final EncodingException exception) {
+								this.exceptions.traceDeferredException (exception, "decoding the value for record failed; deferring!");
+								this.pendingRequests.fail (token.getMessageId (), exception);
+								break;
+							}
+						} else {
+							value = null;
 						}
+						values.put (entry.getKey (), value);
 					}
 					outcome = values;
 				} else if (outcomeClass == Object.class) {
@@ -185,7 +192,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 					if (!resultEntries.isEmpty ()) {
 						final byte[] rawValue = resultEntries.get (0).getValue ().toByteArray ();
 						// FIXME: This `length > 0` should be handled differently...
-						if (rawValue != null && rawValue.length > 0) {
+						if ((rawValue != null) && (rawValue.length > 0)) {
 							// FIXME: The encoding meta-data should be obtained from the request's "envelope".
 							final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
 							try {
