@@ -479,7 +479,7 @@ public final class BasicCallbackReactor
 					throw (wrapper.getCause ());
 				}
 			} catch (final CaughtException.Wrapper wrapper) {
-				wrapper.trace (ExceptionResolution.Deferred, reactor.exceptions);
+				wrapper.trace (ExceptionResolution.Deferred, this.reactor.exceptions);
 				final Throwable exception = wrapper.exception.caught;
 				action.future.triggerFailure (exception);
 				this.triggerFailure (exception);
