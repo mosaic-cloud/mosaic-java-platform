@@ -54,7 +54,7 @@
 							<goal>analyze-only</goal>
 						</goals>
 						<configuration>
-							<failOnWarning>false</failOnWarning>
+							<failOnWarning>true</failOnWarning>
 							<ignoreNonCompile>true</ignoreNonCompile>
 						</configuration>
 					</execution>
