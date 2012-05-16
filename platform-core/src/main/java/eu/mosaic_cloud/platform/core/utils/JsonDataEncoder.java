@@ -22,6 +22,7 @@ package eu.mosaic_cloud.platform.core.utils;
 
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
@@ -29,13 +30,18 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
+
 
 public class JsonDataEncoder<TData extends Object>
 		extends BaseDataEncoder<TData>
 {
-	protected JsonDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final ExceptionTracer exceptions)
+	protected JsonDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final Charset charset, final ExceptionTracer exceptions)
 	{
 		super (dataClass, nullAllowed, JsonDataEncoder.EXPECTED_ENCODING_METADATA, exceptions);
+		Preconditions.checkNotNull (charset);
+		this.charset = charset;
 	}
 	
 	@Override
@@ -45,9 +51,9 @@ public class JsonDataEncoder<TData extends Object>
 		try {
 			final TData data;
 			if (this.dataClass == JSONObject.class) {
-				data = this.dataClass.cast (SerDesUtils.jsonToRawObject (dataBytes));
+				data = this.dataClass.cast (SerDesUtils.jsonToRawObject (dataBytes, this.charset));
 			} else {
-				data = this.dataClass.cast (SerDesUtils.jsonToObject (dataBytes, this.dataClass));
+				data = this.dataClass.cast (SerDesUtils.jsonToObject (dataBytes, this.dataClass, this.charset));
 			}
 			return (data);
 		} catch (final JSONException exception) {
@@ -66,9 +72,9 @@ public class JsonDataEncoder<TData extends Object>
 		try {
 			final byte[] dataBytes;
 			if (this.dataClass == JSONObject.class) {
-				dataBytes = SerDesUtils.toJsonBytes ((JSONObject) data);
+				dataBytes = SerDesUtils.toJsonBytes ((JSONObject) data, this.charset);
 			} else {
-				dataBytes = SerDesUtils.toJsonBytes (data);
+				dataBytes = SerDesUtils.toJsonBytes (data, this.charset);
 			}
 			return (dataBytes);
 		} catch (final JSONException exception) {
@@ -82,24 +88,37 @@ public class JsonDataEncoder<TData extends Object>
 	
 	static {
 		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/json", "identity");
+		DEFAULT_CHARSET = Charsets.UTF_8;
 		DEFAULT_INSTANCE = JsonDataEncoder.create ();
 	}
 	
 	public static JsonDataEncoder<JSONObject> create ()
 	{
-		return (new JsonDataEncoder<JSONObject> (JSONObject.class, false, FallbackExceptionTracer.defaultInstance));
+		return (new JsonDataEncoder<JSONObject> (JSONObject.class, false, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
 	}
 	
 	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass)
 	{
-		return (new JsonDataEncoder<TData> (dataClass, false, FallbackExceptionTracer.defaultInstance));
+		return (new JsonDataEncoder<TData> (dataClass, false, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
 	}
 	
 	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed)
 	{
-		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, FallbackExceptionTracer.defaultInstance));
+		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
 	}
 	
+	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed, final Charset charset)
+	{
+		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, charset, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final Charset charset)
+	{
+		return (new JsonDataEncoder<TData> (dataClass, false, charset, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	protected final Charset charset;
+	public static final Charset DEFAULT_CHARSET;
 	public static final JsonDataEncoder<JSONObject> DEFAULT_INSTANCE;
 	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;
 }

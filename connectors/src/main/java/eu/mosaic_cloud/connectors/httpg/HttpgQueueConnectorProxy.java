@@ -48,6 +48,7 @@ import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -218,7 +219,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			rawStream.readFully (metadataBytes);
 			final JSONObject metadata;
 			try {
-				metadata = SerDesUtils.jsonToRawObject (metadataBytes);
+				metadata = SerDesUtils.jsonToRawObject (metadataBytes, Charsets.UTF_8);
 			} catch (final JSONException exception) {
 				throw (new EncodingException ("invalid metadata"));
 			}
@@ -342,7 +343,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			metadata.put ("http-body", "following");
 			final byte[] metadataBytes;
 			try {
-				metadataBytes = SerDesUtils.toJsonBytes (metadata);
+				metadataBytes = SerDesUtils.toJsonBytes (metadata, Charsets.UTF_8);
 			} catch (final JSONException exception) {
 				throw (new EncodingException ("invalid metadata"));
 			}

@@ -66,12 +66,13 @@ public class PlainTextDataEncoder
 	
 	static {
 		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("text/plain", "identity");
+		DEFAULT_CHARSET = Charsets.UTF_8;
 		DEFAULT_INSTANCE = PlainTextDataEncoder.create ();
 	}
 	
 	public static PlainTextDataEncoder create ()
 	{
-		return (new PlainTextDataEncoder (Charsets.UTF_8, FallbackExceptionTracer.defaultInstance));
+		return (new PlainTextDataEncoder (PlainTextDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
 	}
 	
 	public static PlainTextDataEncoder create (final Charset charset)
@@ -79,12 +80,8 @@ public class PlainTextDataEncoder
 		return (new PlainTextDataEncoder (charset, FallbackExceptionTracer.defaultInstance));
 	}
 	
-	public static PlainTextDataEncoder create (final String charset)
-	{
-		return (new PlainTextDataEncoder (Charset.forName (charset), FallbackExceptionTracer.defaultInstance));
-	}
-	
 	protected final Charset charset;
+	public static final Charset DEFAULT_CHARSET;
 	public static final PlainTextDataEncoder DEFAULT_INSTANCE;
 	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;
 }

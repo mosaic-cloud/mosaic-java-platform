@@ -33,6 +33,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -72,9 +73,10 @@ public final class SerDesUtils
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public static <T extends Object> T jsonToObject (final byte[] bytes, final Class<T> valueClass)
+	public static <T extends Object> T jsonToObject (final byte[] bytes, final Class<T> valueClass, final Charset charset)
 			throws IOException
 	{
+		// FIXME: Should be able to use the charset...
 		T object = null;
 		if (bytes.length > 0) {
 			object = SerDesUtils.objectMapper.readValue (bytes, 0, bytes.length, valueClass);
@@ -82,13 +84,13 @@ public final class SerDesUtils
 		return object;
 	}
 	
-	public static JSONObject jsonToRawObject (final byte[] dataBytes)
+	public static JSONObject jsonToRawObject (final byte[] dataBytes, final Charset charset)
 			throws JSONException
 	{
 		if (dataBytes.length == 0) {
 			return null;
 		}
-		final BufferedReader reader = new BufferedReader (new InputStreamReader (new ByteArrayInputStream (dataBytes)));
+		final BufferedReader reader = new BufferedReader (new InputStreamReader (new ByteArrayInputStream (dataBytes), charset));
 		final JSONTokener tokener = new JSONTokener (reader);
 		final JSONObject object = new JSONObject (tokener);
 		return object;
@@ -111,12 +113,12 @@ public final class SerDesUtils
 		return baos.toByteArray ();
 	}
 	
-	public static byte[] toJsonBytes (final JSONObject data)
+	public static byte[] toJsonBytes (final JSONObject data, final Charset charset)
 			throws JSONException,
 				IOException
 	{
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream ();
-		final Writer writer = new BufferedWriter (new OutputStreamWriter (baos));
+		final Writer writer = new BufferedWriter (new OutputStreamWriter (baos, charset));
 		data.write (writer);
 		writer.close ();
 		return baos.toByteArray ();
@@ -130,9 +132,10 @@ public final class SerDesUtils
 	 *            the object to convert.
 	 * @return the associated byte array.
 	 */
-	public static byte[] toJsonBytes (final Object object)
+	public static byte[] toJsonBytes (final Object object, final Charset charset)
 			throws IOException
 	{
+		// FIXME: Should be able to use the charset...
 		final byte[] bytes = SerDesUtils.objectMapper.writeValueAsString (object).getBytes ();
 		return bytes;
 	}
