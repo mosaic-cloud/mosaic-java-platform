@@ -30,7 +30,8 @@ _mvn_this_pom="${_workbench}/pom.xml"
 _mvn_umbrella_pom="${_self_do_realpath_dirname}/../../pom.xml"
 _mvn_pkg_pom="${_outputs}/package.mvn/pom.xml"
 _mvn_args=(
-		--errors --quiet
+		--errors
+		--quiet
 )
 _mvn_env=(
 		PATH="${_PATH}"
