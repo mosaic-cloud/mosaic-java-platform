@@ -54,6 +54,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
+import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.AbortingExceptionTracer;
@@ -243,7 +244,14 @@ public final class BasicComponentHarnessMain
 		environment.transcript.traceDebugging ("creating callbacks...");
 		final ComponentController componentController = component.getController ();
 		final ComponentEnvironment componentEnvironment = ComponentEnvironment.create (environment.identifier, environment.classLoader, environment.reactor, environment.threading, environment.exceptions, environment.options);
-		final ComponentCallbacks componentCallbacks = callbacksProvider.provide (componentEnvironment);
+		final ComponentCallbacks componentCallbacks;
+		try {
+			componentCallbacks = callbacksProvider.provide (componentEnvironment);
+		} catch (final CaughtException.Wrapper wrapper) {
+			throw (wrapper.exception.caught);
+		} catch (final Throwable exception) {
+			throw (exception);
+		}
 		environment.transcript.traceDebugging ("binding callbacks...");
 		componentController.bind (componentCallbacks, channel.getController ());
 		environment.transcript.traceInformation ("prepared component.");
