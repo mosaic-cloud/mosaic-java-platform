@@ -50,8 +50,8 @@ public class RiakKvStoreConnectorTest
 		final String host = System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST, RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT, RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT_DEFAULT));
 		final IConfiguration configuration = PropertyTypeConfiguration.create ();
-		configuration.addParameter ("interop.channel.address", "inproc://fb012d6b-c238-4b31-b889-4121a318b2cb");
-		configuration.addParameter ("interop.driver.identifier", "fb012d6b-c238-4b31-b889-4121a318b2cb");
+		configuration.addParameter ("interop.driver.endpoint", "inproc://fb012d6b-c238-4b31-b889-4121a318b2cb");
+		configuration.addParameter ("interop.driver.identity", "fb012d6b-c238-4b31-b889-4121a318b2cb");
 		configuration.addParameter ("kvstore.host", host);
 		configuration.addParameter ("kvstore.port", port);
 		configuration.addParameter ("kvstore.driver_name", "RIAKREST");

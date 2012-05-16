@@ -52,8 +52,8 @@ public class RedisKvStoreConnectorTest
 		final String host = System.getProperty (RedisKvStoreConnectorTest.MOSAIC_REDIS_HOST, RedisKvStoreConnectorTest.MOSAIC_REDIS_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (RedisKvStoreConnectorTest.MOSAIC_REDIS_PORT, RedisKvStoreConnectorTest.MOSAIC_REDIS_PORT_DEFAULT));
 		final IConfiguration configuration = PropertyTypeConfiguration.create ();
-		configuration.addParameter ("interop.channel.address", "inproc://98eceebc-fd87-4ef3-84cf-3feca6044e5a");
-		configuration.addParameter ("interop.driver.identifier", "98eceebc-fd87-4ef3-84cf-3feca6044e5a");
+		configuration.addParameter ("interop.driver.endpoint", "inproc://98eceebc-fd87-4ef3-84cf-3feca6044e5a");
+		configuration.addParameter ("interop.driver.identity", "98eceebc-fd87-4ef3-84cf-3feca6044e5a");
 		configuration.addParameter ("kvstore.host", host);
 		configuration.addParameter ("kvstore.port", port);
 		configuration.addParameter ("kvstore.driver_name", "REDIS");

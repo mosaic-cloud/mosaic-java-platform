@@ -135,8 +135,8 @@ public abstract class BaseCloudletTest
 			final String host = System.getProperty (BaseCloudletTest.MOSAIC_AMQP_HOST, BaseCloudletTest.MOSAIC_AMQP_HOST_DEFAULT);
 			final Integer port = Integer.valueOf (System.getProperty (BaseCloudletTest.MOSAIC_AMQP_PORT, BaseCloudletTest.MOSAIC_AMQP_PORT_DEFAULT));
 			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create ();
-			driverConfiguration.addParameter ("interop.channel.address", scenario.driversEndpoint);
-			driverConfiguration.addParameter ("interop.driver.identifier", scenario.driversIdentity);
+			driverConfiguration.addParameter ("interop.driver.endpoint", scenario.driversEndpoint);
+			driverConfiguration.addParameter ("interop.driver.identity", scenario.driversIdentity);
 			driverConfiguration.addParameter ("amqp.host", host);
 			driverConfiguration.addParameter ("amqp.port", port);
 			driverConfiguration.addParameter ("amqp.driver_threads", Integer.valueOf (1));
@@ -156,8 +156,8 @@ public abstract class BaseCloudletTest
 			final String host = System.getProperty (BaseCloudletTest.MOSAIC_RIAK_HOST, BaseCloudletTest.MOSAIC_RIAK_HOST_DEFAULT);
 			final Integer port = Integer.valueOf (System.getProperty (BaseCloudletTest.MOSAIC_RIAK_PORT, BaseCloudletTest.MOSAIC_RIAK_PORT_DEFAULT));
 			final PropertyTypeConfiguration driverConfiguration = PropertyTypeConfiguration.create ();
-			driverConfiguration.addParameter ("interop.channel.address", scenario.driversEndpoint);
-			driverConfiguration.addParameter ("interop.driver.identifier", scenario.driversIdentity);
+			driverConfiguration.addParameter ("interop.driver.endpoint", scenario.driversEndpoint);
+			driverConfiguration.addParameter ("interop.driver.identity", scenario.driversIdentity);
 			driverConfiguration.addParameter ("kvstore.host", host);
 			driverConfiguration.addParameter ("kvstore.port", port);
 			driverConfiguration.addParameter ("kvstore.driver_name", "RIAKREST");

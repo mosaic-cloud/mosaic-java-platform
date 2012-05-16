@@ -146,8 +146,8 @@ public class MemcacheKvStoreConnectorTest
 		final String host = System.getProperty (MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_HOST, MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_PORT, MemcacheKvStoreConnectorTest.MOSAIC_MEMCACHED_PORT_DEFAULT));
 		final IConfiguration configuration = PropertyTypeConfiguration.create ();
-		configuration.addParameter ("interop.channel.address", "inproc://f0bfd2cc-07ab-4df1-935c-22e80779bc87");
-		configuration.addParameter ("interop.driver.identifier", "f0bfd2cc-07ab-4df1-935c-22e80779bc87");
+		configuration.addParameter ("interop.driver.endpoint", "inproc://f0bfd2cc-07ab-4df1-935c-22e80779bc87");
+		configuration.addParameter ("interop.driver.identity", "f0bfd2cc-07ab-4df1-935c-22e80779bc87");
 		configuration.addParameter ("memcached.host_1", host);
 		configuration.addParameter ("memcached.port_1", port);
 		configuration.addParameter ("kvstore.driver_name", "MEMCACHED");

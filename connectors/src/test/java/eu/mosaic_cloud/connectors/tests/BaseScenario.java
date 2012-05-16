@@ -58,8 +58,8 @@ public class BaseScenario
 		this.callbacks = BasicCallbackReactor.create (this.threading, this.exceptions);
 		this.callbacks.initialize ();
 		// NOTE: set-up communication channel with the driver
-		final String driverIdentity = ConfigUtils.resolveParameter (this.configuration, "interop.driver.identifier", String.class, "");
-		final String driverEndpoint = ConfigUtils.resolveParameter (this.configuration, "interop.channel.address", String.class, "");
+		final String driverIdentity = ConfigUtils.resolveParameter (this.configuration, "interop.driver.identity", String.class, "");
+		final String driverEndpoint = ConfigUtils.resolveParameter (this.configuration, "interop.driver.endpoint", String.class, "");
 		this.connectorChannel = ZeroMqChannel.create (UUID.randomUUID ().toString (), this.threading, this.exceptions);
 		this.driverChannel = ZeroMqChannel.create (driverIdentity, this.threading, this.exceptions);
 		this.driverChannel.accept (driverEndpoint);
