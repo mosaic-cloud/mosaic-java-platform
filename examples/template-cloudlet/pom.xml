@@ -5,31 +5,42 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-	<parent>
-		<groupId>eu.mosaic_cloud.examples</groupId>
-		<artifactId>examples-parent</artifactId>
-		<version>0.5.0_mosaic_dev-SNAPSHOT</version>
-		<relativePath>../parent</relativePath>
-	</parent>
-	
+	<!--
+		NOTE: All the following should be something customized!
+		The field `name` is optional.
+	-->
+	<groupId>eu.mosaic_cloud.examples</groupId>
 	<artifactId>examples-template-cloudlet</artifactId>
+	<version>0.5.0_mosaic_dev-SNAPSHOT</version>
 	<name>mosaic-examples-template-cloudlet</name>
 	
+	<!--
+		NOTE: Always use the `<scope>provided</scope>` for things which
+		are part of the platform, including the following artifacts:
+		* `ch.qos.logback:logback-core`, `ch.qos.logback:logback-classic`;
+		* `org.slf4j:slf4j-api`, `log4j:log4j`, or `commons-logging:commons-logging`;
+		* `eu.mosaic_cloud.platform:*`;
+		* `eu.mosaic_cloud.tools:tools-exceptions`, `eu.mosaic_cloud.tools:tools-transcript`;
+		* `eu.mosaic_cloud.tools:tools-callbacks, `eu.mosaic_cloud.tools:tools-threading`
+	-->
 	<dependencies>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>cloudlets</artifactId>
-			<version>${project.version}</version>
+			<version>${versions.dependencies.mosaic}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-core</artifactId>
-			<version>${project.version}</version>
+			<version>${versions.dependencies.mosaic}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-callbacks</artifactId>
-			<version>${project.version}</version>
+			<version>${versions.dependencies.mosaic}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	
@@ -55,5 +66,14 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<properties>
+		
+		<versions.dependencies.mosaic>0.5.0_mosaic_dev-SNAPSHOT</versions.dependencies.mosaic>
+		<versions.plugins.assembly>2.2.2</versions.plugins.assembly>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+	</properties>
 	
 </project>
