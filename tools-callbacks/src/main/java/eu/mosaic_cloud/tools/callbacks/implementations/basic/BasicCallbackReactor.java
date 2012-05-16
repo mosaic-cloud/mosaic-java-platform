@@ -47,6 +47,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
@@ -417,6 +419,7 @@ public final class BasicCallbackReactor
 						final Scheduler scheduler = this.scheduler.get ();
 						Preconditions.checkState (scheduler != null);
 						this.reactor.transcript.traceDebugging ("invocking failure callback on handler `%{object}` for proxy `%{object:identity}` (owned by actor `%{object:identity}`) backed by isolate `%{object:identity}` (owned by scheduler `%{object:identity}`)...", handler, this.proxy, this, scheduler.isolate, scheduler);
+						// FIXME: This should be called only if we have successfully called `registeredCallbacks`
 						try {
 							handler.failedCallbacks (this.specification.cast (this.proxy), failure);
 						} catch (final Throwable exception) {
@@ -475,6 +478,12 @@ public final class BasicCallbackReactor
 					this.reactor.exceptions.traceHandledException (wrapper);
 					throw (wrapper.getCause ());
 				}
+			} catch (final CaughtException.Wrapper wrapper) {
+				wrapper.trace (ExceptionResolution.Deferred, reactor.exceptions);
+				final Throwable exception = wrapper.exception.caught;
+				action.future.triggerFailure (exception);
+				this.triggerFailure (exception);
+				return;
 			} catch (final Throwable exception) {
 				this.reactor.exceptions.traceDeferredException (exception);
 				action.future.triggerFailure (exception);
