@@ -83,18 +83,23 @@ public abstract class CaughtException
 		Throwables.propagate (this.caught);
 	}
 	
-	public final void trace (final ExceptionTracer tracer)
+	public final void trace (final ExceptionResolution resolution, final ExceptionTracer tracer)
 	{
 		tracer.trace (ExceptionResolution.Handled, this);
 		final Throwable cause = this.getCause ();
 		if (this.messageFormat != null) {
 			final String message = this.getMessage ();
 			if (message != null)
-				tracer.trace (this.resolution, cause, message);
+				tracer.trace (resolution, cause, message);
 			else
-				tracer.trace (this.resolution, cause);
+				tracer.trace (resolution, cause);
 		} else
-			tracer.trace (this.resolution, cause, this.messageFormat, this.messageArguments);
+			tracer.trace (resolution, cause, this.messageFormat, this.messageArguments);
+	}
+	
+	public final void trace (final ExceptionTracer tracer)
+	{
+		this.trace (this.resolution, tracer);
 	}
 	
 	public final Wrapper wrap ()
@@ -162,6 +167,12 @@ public abstract class CaughtException
 		public final void rethrow ()
 		{
 			this.exception.rethrow ();
+		}
+		
+		public final void trace (final ExceptionResolution resolution, final ExceptionTracer tracer)
+		{
+			tracer.trace (ExceptionResolution.Handled, this);
+			this.exception.trace (resolution, tracer);
 		}
 		
 		public final void trace (final ExceptionTracer tracer)
