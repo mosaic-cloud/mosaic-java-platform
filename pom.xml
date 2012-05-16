@@ -255,7 +255,7 @@
 		<versions.plugins.javadoc>2.8</versions.plugins.javadoc>
 		<versions.plugins.license>1.0</versions.plugins.license>
 		<versions.plugins.project-info-reports>2.4</versions.plugins.project-info-reports>
-		<versions.plugins.site>3.0</versions.plugins.site>
+		<versions.plugins.site>3.1</versions.plugins.site>
 		<versions.plugins.surefire>2.11</versions.plugins.surefire>
 		<versions.plugins.wagon>1.0</versions.plugins.wagon>
 		<versions.plugins.war>2.1.1</versions.plugins.war>
@@ -297,6 +297,15 @@
 			<name>CouchBase Repository</name>
 			<layout>default</layout>
 			<url>http://files.couchbase.com/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>maven-java-formatter-plugin-github-cipriancraciun</id>
+			<name>Maven Java Formatter Plugin (GitHub `cipriancraciun`) Repository</name>
+			<url>https://raw.github.com/cipriancraciun/maven-java-formatter-plugin/master/releases</url>
+			<layout>default</layout>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
