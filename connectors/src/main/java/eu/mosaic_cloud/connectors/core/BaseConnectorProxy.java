@@ -139,7 +139,7 @@ public abstract class BaseConnectorProxy
 		this.transcript.traceDebugging ("creating and connecting the interoperability session of type `%s`...", session);
 		final String driverEndpoint = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.0"), String.class, null);
 		final String driverIdentity = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.1"), String.class, null);
-		final String driverTarget = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.2"), String.class, null);
+		final String driverTarget = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.2"), String.class, this.getDefaultDriverGroup ());
 		CallbackCompletion<Void> result;
 		this.channel.register (session);
 		if ((driverEndpoint != null) && (driverIdentity != null)) {
@@ -205,6 +205,8 @@ public abstract class BaseConnectorProxy
 		tokenBuilder.setClientId (this.identifier);
 		return (tokenBuilder.build ());
 	}
+	
+	protected abstract String getDefaultDriverGroup ();
 	
 	/**
 	 * Process a received response for a previous submitted request.

@@ -205,6 +205,12 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		return (result);
 	}
 	
+	@Override
+	protected String getDefaultDriverGroup ()
+	{
+		return (ConfigProperties.getString ("MemcacheKvStoreConnector.0"));
+	}
+	
 	/**
 	 * Returns a proxy for key-value distributed storage systems.
 	 * 

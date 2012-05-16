@@ -24,6 +24,7 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
+import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
@@ -252,6 +253,12 @@ public final class AmqpQueueRawConnectorProxy
 		}
 		final Message mssg = new Message (AmqpMessage.PUBLISH_REQUEST, requestBuilder.build ());
 		return (this.sendRequest (mssg, token, Void.class));
+	}
+	
+	@Override
+	protected String getDefaultDriverGroup ()
+	{
+		return (ConfigProperties.getString ("AmqpConnector.0"));
 	}
 	
 	@Override

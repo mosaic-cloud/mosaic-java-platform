@@ -62,6 +62,12 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object>
 		return (this.connect (KeyValueSession.CONNECTOR, new Message (KeyValueMessage.ACCESS, requestBuilder.build ())));
 	}
 	
+	@Override
+	protected String getDefaultDriverGroup ()
+	{
+		return (ConfigProperties.getString ("GenericKvStoreConnector.0"));
+	}
+	
 	/**
 	 * Returns a proxy for key-value distributed storage systems.
 	 * 
