@@ -19,6 +19,7 @@
 	
 	<modules>
 		<module>../realtime-feeds-indexer</module>
+		<module>../template-cloudlet</module>
 		<module>../simple-cloudlets</module>
 		<module>../simple-components</module>
 		<module>../interoperability</module>
