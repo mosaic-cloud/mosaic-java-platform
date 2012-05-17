@@ -14,7 +14,6 @@ if test "${_mosaic_deploy_artifactory:-true}" == true ; then
 			-f "${_mvn_pom}" \
 			--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
 			--also-make \
-			--offline \
 			"${_mvn_args[@]}" \
 			deploy \
 			-DskipTests=true
