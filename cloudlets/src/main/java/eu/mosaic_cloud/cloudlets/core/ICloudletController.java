@@ -28,6 +28,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
 /**
@@ -54,4 +55,7 @@ public interface ICloudletController<Context>
 	
 	@CallbackPassthrough
 	CloudletState getState ();
+	
+	@CallbackPassthrough
+	ThreadingContext getThreadingContext ();
 }

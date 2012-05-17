@@ -58,6 +58,7 @@ import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
@@ -778,6 +779,12 @@ public final class Cloudlet<TContext extends Object>
 		public CloudletState getState ()
 		{
 			return Cloudlet.this.fsm.getState ().getCloudletState ();
+		}
+		
+		@Override
+		public ThreadingContext getThreadingContext ()
+		{
+			return Cloudlet.this.environment.getThreading ();
 		}
 		
 		public void initialize (final CallbackCompletionDeferredFuture<Void> future)
