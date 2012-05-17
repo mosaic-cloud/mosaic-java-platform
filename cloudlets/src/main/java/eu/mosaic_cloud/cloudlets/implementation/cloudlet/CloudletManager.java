@@ -35,7 +35,9 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
+import eu.mosaic_cloud.tools.exceptions.tools.DelegatingExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -146,9 +148,12 @@ public final class CloudletManager
 		final Class<?> cloudletCallbacksClass = this.resolveCloudletCallbacksClass ();
 		final Class<?> cloudletContextClass = this.resolveCloudletStateClass ();
 		final IConfiguration cloudletConfiguration = this.resolveCloudletConfiguration ();
-		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, this.exceptions, this.channelFactory, this.channelResolver);
+		// FIXME: Currently exceptions from cloudlets are not deferred anywhere.
+		//-- Thus any deferred exception should be treated as an ignored one.
+		final ExceptionTracer exceptions = new CloudletExceptionTracer ();
+		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, exceptions, this.channelFactory, this.channelResolver);
 		final IConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (null, connectorEnvironment);
-		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.reactor, this.threading, this.exceptions);
+		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.reactor, this.threading, exceptions);
 		final Cloudlet<?> cloudlet = Cloudlet.create (environment);
 		return (cloudlet);
 	}
@@ -217,4 +222,52 @@ public final class CloudletManager
 	private final CallbackReactor reactor;
 	private final ThreadingContext threading;
 	private final Transcript transcript;
+	
+	final class CloudletExceptionTracer
+			extends DelegatingExceptionTracer
+	{
+		CloudletExceptionTracer ()
+		{
+			super (CloudletManager.this.exceptions);
+		}
+		
+		@Override
+		protected void trace_ (final ExceptionResolution resolution, final Throwable exception)
+		{
+			switch (resolution) {
+				case Deferred :
+				case Ignored :
+					CloudletManager.this.transcript.trace (ExceptionResolution.Ignored, exception);
+					break;
+				default:
+					break;
+			}
+		}
+		
+		@Override
+		protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
+		{
+			switch (resolution) {
+				case Deferred :
+				case Ignored :
+					CloudletManager.this.transcript.trace (ExceptionResolution.Ignored, exception, message);
+					break;
+				default:
+					break;
+			}
+		}
+		
+		@Override
+		protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
+		{
+			switch (resolution) {
+				case Deferred :
+				case Ignored :
+					CloudletManager.this.transcript.trace (ExceptionResolution.Ignored, exception, format, tokens);
+					break;
+				default:
+					break;
+			}
+		}
+	}
 }
