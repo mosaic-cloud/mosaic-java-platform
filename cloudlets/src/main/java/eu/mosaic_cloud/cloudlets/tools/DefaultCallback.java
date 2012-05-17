@@ -24,7 +24,9 @@ package eu.mosaic_cloud.cloudlets.tools;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
+import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.slf4j.Logger;
 
@@ -46,6 +48,7 @@ public class DefaultCallback<TContext>
 		super ();
 		this.transcript = Transcript.create (this, true);
 		this.logger = this.transcript.adaptAs (Logger.class);
+		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);
 	}
 	
 	/**
@@ -92,4 +95,5 @@ public class DefaultCallback<TContext>
 	
 	protected final Logger logger;
 	protected final Transcript transcript;
+	protected final TranscriptExceptionTracer exceptions;
 }
