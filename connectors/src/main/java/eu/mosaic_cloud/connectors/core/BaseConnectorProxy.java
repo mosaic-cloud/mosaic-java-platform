@@ -66,7 +66,7 @@ public abstract class BaseConnectorProxy
 		this.configuration = configuration;
 		// FIXME: the channel acquisition should be made as part of the channel
 		//-- endpoint resolution
-		this.channel = this.configuration.getCommunicationChannel ();
+		this.channel = this.configuration.getEnvironment ().getChannelFactory ().create ();
 		this.identifier = UUID.randomUUID ().toString ();
 		this.transcript = Transcript.create (this, true);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);
@@ -177,7 +177,7 @@ public abstract class BaseConnectorProxy
 					return (CallbackCompletion.createOutcome ());
 				}
 			};
-			this.configuration.resolveChannel (driverTarget, resolverCallbacks);
+			this.configuration.getEnvironment ().getChannelResolver ().resolve (driverTarget, resolverCallbacks);
 			result = future.completion;
 		}
 		return (result);

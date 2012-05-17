@@ -25,10 +25,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
-import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -63,14 +61,34 @@ public final class ConnectorEnvironment
 		});
 	}
 	
-	public Channel getCommunicationChannel ()
+	public ChannelFactory getChannelFactory ()
 	{
-		return this.channelFactory.create ();
+		return this.channelFactory;
 	}
 	
-	public void resolveChannel (final String driverTarget, final ResolverCallbacks resolverCallbacks)
+	public ChannelResolver getChannelResolver ()
 	{
-		this.channelResolver.resolve (driverTarget, resolverCallbacks);
+		return this.channelResolver;
+	}
+	
+	public ExceptionTracer getExceptions ()
+	{
+		return this.exceptions;
+	}
+	
+	public CallbackReactor getReactor ()
+	{
+		return this.reactor;
+	}
+	
+	public SupplementaryEnvironment getSupplementary ()
+	{
+		return this.supplementary;
+	}
+	
+	public ThreadingContext getThreading ()
+	{
+		return this.threading;
 	}
 	
 	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)

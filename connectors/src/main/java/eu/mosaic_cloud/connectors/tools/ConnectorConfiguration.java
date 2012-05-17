@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.connectors.tools;
 
 
-import eu.mosaic_cloud.interoperability.core.Channel;
-import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 
@@ -40,19 +38,19 @@ public final class ConnectorConfiguration
 		this.environment = environment;
 	}
 	
-	public Channel getCommunicationChannel ()
-	{
-		return this.environment.getCommunicationChannel ();
-	}
-	
 	public <T extends Object> T getConfigParameter (final String identifier, final Class<T> valueClass, final T defaultValue)
 	{
 		return ConfigUtils.resolveParameter (this.configuration, identifier, valueClass, defaultValue);
 	}
 	
-	public void resolveChannel (final String driverTarget, final ResolverCallbacks resolverCallbacks)
+	public IConfiguration getConfiguration ()
 	{
-		this.environment.resolveChannel (driverTarget, resolverCallbacks);
+		return this.configuration;
+	}
+	
+	public ConnectorEnvironment getEnvironment ()
+	{
+		return this.environment;
 	}
 	
 	public static ConnectorConfiguration create (final IConfiguration configuration, final ConnectorEnvironment environment)
