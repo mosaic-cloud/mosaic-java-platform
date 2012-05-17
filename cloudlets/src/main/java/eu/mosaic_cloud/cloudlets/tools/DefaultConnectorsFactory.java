@@ -22,6 +22,10 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.cloudlets.connectors.executors.Executor;
+import eu.mosaic_cloud.cloudlets.connectors.executors.IExecutor;
+import eu.mosaic_cloud.cloudlets.connectors.executors.IExecutorCallback;
+import eu.mosaic_cloud.cloudlets.connectors.executors.IExecutorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.httpg.HttpgQueueConnector;
 import eu.mosaic_cloud.cloudlets.connectors.httpg.IHttpgQueueConnector;
 import eu.mosaic_cloud.cloudlets.connectors.httpg.IHttpgQueueConnectorCallback;
@@ -72,6 +76,13 @@ public class DefaultConnectorsFactory
 	{
 		Preconditions.checkNotNull (factory);
 		Preconditions.checkNotNull (cloudlet);
+		factory.registerFactory (IExecutorFactory.class, new IExecutorFactory () {
+			@Override
+			public <TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final IConfiguration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext)
+			{
+				return new Executor<TContext, TOutcome, TExtra> (cloudlet, environment.getThreading (), environment.getExceptions (), configuration, callback, callbackContext);
+			}
+		});
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
 			public <TContext, TTValue, TExtra> IKvStoreConnector<TTValue, TExtra> create (final IConfiguration configuration, final Class<TTValue> valueClass, final DataEncoder<TTValue> valueEncoder, final IKvStoreConnectorCallback<TContext, TTValue, TExtra> callback, final TContext callbackContext)
