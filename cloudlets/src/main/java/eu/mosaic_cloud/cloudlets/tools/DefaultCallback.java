@@ -93,7 +93,7 @@ public class DefaultCallback<TContext>
 		}
 	}
 	
+	protected final TranscriptExceptionTracer exceptions;
 	protected final Logger logger;
 	protected final Transcript transcript;
-	protected final TranscriptExceptionTracer exceptions;
 }
