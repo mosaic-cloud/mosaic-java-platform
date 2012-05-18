@@ -25,8 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.commons.cli.CommandLine;
@@ -40,6 +38,7 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.webapp.WebAppClassLoader;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 
@@ -56,14 +55,18 @@ public class ServerCommandLine
 		final String queueName = props.getProperty ("queue");
 		final int amqpPort = Integer.parseInt (props.getProperty ("port"));
 		final String amqpVirtualHost = props.getProperty ("virtual-host");
+		final boolean amqpAutoDeclare = props.containsKey ("auto-declare");
 		final String tmp = props.getProperty ("tmp");
+		final String webAppDir = props.getProperty ("webapp");
+		final String ctxPath = props.getProperty ("app-context", "/");
+		final String listen = props.getProperty ("jetty-socket-connector-port");
 		/*
 		 * Setup connectors
 		 */
-		final AmqpConnector amqpConnector = new AmqpConnector (exchangeName, routingKey, queueName, hostName, userName, userPassword, amqpPort, amqpVirtualHost, props.containsKey ("auto-declare"));
-		Connector[] connectors = null;
-		if (props.containsKey ("jetty-socket-connector-port")) {
-			final int port = Integer.parseInt (props.getProperty ("jetty-socket-connector-port"));
+		final AmqpConnector amqpConnector = new AmqpConnector (exchangeName, routingKey, queueName, hostName, userName, userPassword, amqpPort, amqpVirtualHost, amqpAutoDeclare);
+		final Connector[] connectors;
+		if ((listen != null) && !listen.isEmpty ()) {
+			final int port = Integer.parseInt (listen);
 			final SocketConnector socketConnector = new SocketConnector ();
 			socketConnector.setPort (port);
 			connectors = new Connector[] {socketConnector, amqpConnector};
@@ -74,43 +77,36 @@ public class ServerCommandLine
 		/*
 		 * Check if user want's to register webapps
 		 */
-		if (props.containsKey ("webapp")) {
-			final String webAppDir = props.getProperty ("webapp");
-			final String ctxPath = props.getProperty ("app-context", "/");
+		if (webAppDir != null) {
 			final WebAppContext webapp = new WebAppContext ();
-			if ((tmp != null) && (!tmp.isEmpty ()))
-				webapp.setTempDirectory (new File (tmp));
-			webapp.setContextPath (ctxPath);
-			if (!"embedded".equals (webAppDir))
-				webapp.setWar (webAppDir);
-			else {
-				final String resourceBase = loader.getResource ("WEB-INF/web.xml").toString ().replaceAll ("/WEB-INF/web.xml$", "");
-				if (!resourceBase.matches ("^jar:file:[^;]+!$")) {
-					//# System.err.println("using embedded " + resourceBase);
-					final StringBuilder classPath = new StringBuilder ();
-					try {
-						final Enumeration<URL> resources = loader.getResources ("");
-						while (resources.hasMoreElements ()) {
-							classPath.append (resources.nextElement ().toString ());
-							classPath.append (';');
-						}
-					} catch (final Throwable exception) {
-						throw (new Error (exception));
-					}
-					webapp.setResourceBase (resourceBase);
-					webapp.setExtraClasspath (classPath.toString ());
-					webapp.setClassLoader (loader);
-				} else {
-					//# System.err.println("using jar " + resourceBase);
-					webapp.setWar (resourceBase.substring ("jar:file:".length (), resourceBase.length () - 1));
-				}
+			final WebAppClassLoader classloader;
+			try {
+				classloader = new WebAppClassLoader (loader, webapp);
+			} catch (final Throwable exception) {
+				throw (new Error (exception));
 			}
-			webapp.setParentLoaderPriority (true);
+			if (!"embedded".equals (webAppDir)) {
+				webapp.setWar (webAppDir);
+				webapp.setExtractWAR (true);
+				webapp.setCopyWebInf (true);
+				webapp.setCopyWebDir (true);
+			} else {
+				final String resourceBase = loader.getResource ("WEB-INF/web.xml").toString ().replaceAll ("WEB-INF/web.xml$", "");
+				webapp.setResourceBase (resourceBase);
+				webapp.setWar (null);
+				webapp.setExtractWAR (false);
+				webapp.setCopyWebInf (false);
+				webapp.setCopyWebDir (false);
+			}
+			webapp.setClassLoader (classloader);
+			webapp.setContextPath (ctxPath);
+			webapp.setParentLoaderPriority (false);
 			webapp.addServlet (DefaultServlet.class, "/");
 			webapp.setInitParameter ("dirAllowed", "false");
 			webapp.setInitParameter ("welcomeServlets", "true");
 			webapp.setInitParameter ("redirectWelcome", "true");
-			webapp.setExtractWAR (false);
+			if ((tmp != null) && (!tmp.isEmpty ()))
+				webapp.setTempDirectory (new File (tmp));
 			jettyServer.setHandler (webapp);
 		}
 		/*
