@@ -13,7 +13,6 @@ env "${_mvn_env[@]}" "${_mvn_bin}" \
 		compile \
 		package \
 		install \
-		deploy \
 		-DskipTests=true \
 		-D_maven_pom_skip_analyze=true \
 		-D_maven_pom_skip_licenses=true \
