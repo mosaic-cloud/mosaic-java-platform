@@ -34,7 +34,7 @@ import org.eclipse.jetty.io.ConnectedEndPoint;
 import org.eclipse.jetty.io.EndPoint;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.server.AbstractConnector;
-import org.eclipse.jetty.server.HttpConnection;
+import org.eclipse.jetty.server.BlockingHttpConnection;
 import org.eclipse.jetty.util.log.Log;
 import org.json.JSONException;
 
@@ -143,7 +143,7 @@ public class AmqpConnector
 	
 	protected org.eclipse.jetty.io.Connection newConnection (final EndPoint endp)
 	{
-		return new HttpConnection (this, endp, this.getServer ());
+		return new BlockingHttpConnection (this, endp, this.getServer ());
 	}
 	
 	private void setupConnection ()
