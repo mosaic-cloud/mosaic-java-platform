@@ -204,9 +204,9 @@ public final class JettyComponentCallbacks
 			Preconditions.checkState (this.status == Status.WaitingInitialized);
 			this.component = component;
 			final ComponentCallReference callReference = ComponentCallReference.create ();
-			this.component.call (JettyComponentContext.brokerGroup, ComponentCallRequest.create ("mosaic-rabbitmq:get-broker-endpoint", null, callReference));
 			this.pendingReference = callReference;
 			this.status = Status.WaitingRabbitmqResolveReturn;
+			this.component.call (JettyComponentContext.brokerGroup, ComponentCallRequest.create ("mosaic-rabbitmq:get-broker-endpoint", null, callReference));
 		}
 		return (null);
 	}

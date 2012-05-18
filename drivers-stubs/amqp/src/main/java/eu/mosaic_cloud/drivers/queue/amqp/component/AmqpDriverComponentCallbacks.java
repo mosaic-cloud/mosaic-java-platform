@@ -160,9 +160,9 @@ public final class AmqpDriverComponentCallbacks
 		Preconditions.checkState (this.status == Status.Created);
 		this.component = component;
 		final ComponentCallReference callReference = ComponentCallReference.create ();
-		this.component.call (this.resourceGroup, ComponentCallRequest.create (ConfigProperties.getString ("AmqpDriverComponentCallbacks.2"), null, callReference)); // $NON-NLS-1$
 		this.pendingReference = callReference;
 		this.status = Status.WaitingResourceResolved;
+		this.component.call (this.resourceGroup, ComponentCallRequest.create (ConfigProperties.getString ("AmqpDriverComponentCallbacks.2"), null, callReference)); // $NON-NLS-1$
 		this.logger.trace ("AMQP driver callback initialized.");
 		return null;
 	}

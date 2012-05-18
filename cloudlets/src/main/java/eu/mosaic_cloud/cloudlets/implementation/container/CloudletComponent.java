@@ -325,8 +325,8 @@ public final class CloudletComponent
 			final ComponentCallReference reference = ComponentCallReference.create ();
 			final ComponentCallRequest request = ComponentCallRequest.create (operation, null, reference);
 			final DeferredFuture<ComponentCallReply> future = DeferredFuture.create (ComponentCallReply.class);
-			CloudletComponent.this.componentControllerProxy.call (identifier, request);
 			CloudletComponent.this.componentPendingOutboundCalls.put (reference, future.trigger);
+			CloudletComponent.this.componentControllerProxy.call (identifier, request);
 			CloudletComponent.this.fsm.new FsmFutureCompletionAccess<ComponentCallReply> () {
 				@Override
 				protected Void execute (final Future<ComponentCallReply> future1)

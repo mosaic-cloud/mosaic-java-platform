@@ -164,9 +164,9 @@ public final class KvDriverComponentCallbacks
 		} else {
 			operation = ConfigProperties.getString ("KVDriverComponentCallbacks.6"); // $NON-NLS-1$
 		}
-		this.component.call (this.resourceGroup, ComponentCallRequest.create (operation, null, callReference));
 		this.pendingReference = callReference;
 		this.status = Status.WaitingResourceResolved;
+		this.component.call (this.resourceGroup, ComponentCallRequest.create (operation, null, callReference));
 		this.logger.trace ("Key Value driver callback initialized.");
 		return null;
 	}
