@@ -35,7 +35,6 @@ import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
-import eu.mosaic_cloud.components.httpg.jetty.connector.ServerCommandLine;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;

@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.components.httpg.jetty.connector;
+package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
 import java.io.File;
@@ -26,6 +26,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+
+import eu.mosaic_cloud.components.httpg.jetty.connector.AmqpConnector;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
