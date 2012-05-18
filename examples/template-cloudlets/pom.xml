@@ -48,6 +48,15 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${versions.plugins.compiler}</version>
+				<configuration>
+					<source>${versions.java.source}</source>
+					<target>${versions.java.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>${versions.plugins.assembly}</version>
 				<executions>
@@ -71,6 +80,10 @@
 		
 		<versions.dependencies.mosaic>0.5.0_mosaic_dev-SNAPSHOT</versions.dependencies.mosaic>
 		<versions.plugins.assembly>2.2.2</versions.plugins.assembly>
+		<versions.plugins.compiler>2.3.2</versions.plugins.compiler>
+		
+		<versions.java.source>1.6</versions.java.source>
+		<versions.java.target>1.6</versions.java.target>
 		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
