@@ -42,6 +42,7 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest;
@@ -185,13 +186,14 @@ public class AmqpStub
 				routingKey = publish.getRoutingKey ();
 				String correlationId = null;
 				String replyTo = null;
+				final Envelope envelope = publish.getEnvelope ();
 				if (publish.hasCorrelationId ()) {
 					correlationId = publish.getCorrelationId ();
 				}
 				if (publish.hasReplyTo ()) {
 					replyTo = publish.getReplyTo ();
 				}
-				final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, dataBytes, mandatory, immediate, durable, replyTo, null, publish.getContentType (), correlationId, null);
+				final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, dataBytes, mandatory, immediate, durable, replyTo, envelope.getContentEncoding (), envelope.getContentType (), correlationId, null);
 				AmqpStub.logger.trace ("AmqpStub - Received request for PUBLISH"); // $NON-NLS-1$
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler (token, session);

@@ -34,6 +34,7 @@ import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
@@ -162,7 +163,8 @@ public class AmqpDriverTest
 		final boolean manadatory = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.manadatory", Boolean.class, true);
 		final boolean immediate = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.immediate", Boolean.class, true);
 		final boolean durable = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.durable", Boolean.class, false);
-		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, this.encoder.getExpectedEncodingMetadata ()), manadatory, immediate, durable, null, null, this.encoder.getExpectedEncodingMetadata ().getContentType (), null, null);
+		final EncodingMetadata encoding = new EncodingMetadata ("application/json", "identity");
+		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, encoding), manadatory, immediate, durable, null, encoding.getContentEncoding (), encoding.getContentType (), null, null);
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("publish message");
 		final IResult<Boolean> r = this.wrapper.basicPublish (this.clientId, mssg, handler);
 		Assert.assertTrue (r.getResult ());
@@ -226,8 +228,9 @@ public class AmqpDriverTest
 		public void handleDelivery (final AmqpInboundMessage message)
 		{
 			String recvMessage;
+			final EncodingMetadata encoding = new EncodingMetadata (message.getContentType (), message.getContentEncoding ());
 			try {
-				recvMessage = AmqpDriverTest.this.encoder.decode (message.getData (), AmqpDriverTest.this.encoder.getExpectedEncodingMetadata ());
+				recvMessage = AmqpDriverTest.this.encoder.decode (message.getData (), encoding);
 				Assert.assertTrue ("Received message: " + recvMessage, AmqpDriverTest.this.sentMessage.equals (recvMessage));
 			} catch (final EncodingException e) {
 				Assert.fail ("Delivery exception " + e.getMessage ());

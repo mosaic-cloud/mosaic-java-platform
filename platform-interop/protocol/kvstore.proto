@@ -15,6 +15,7 @@ message InitRequest {
 message KVEntry {
 	required string key = 1;
 	required bytes value = 2;
+	required mosaic_cloud.idl.common.Envelope envelope = 3;
 }
 
 message SetRequest {
@@ -22,6 +23,7 @@ message SetRequest {
 	required string key = 2;
 	optional int32 exp_time = 3 [default = 0];
 	required bytes value = 4;
+	required mosaic_cloud.idl.common.Envelope envelope = 5;
 }
 
 message GetRequest {

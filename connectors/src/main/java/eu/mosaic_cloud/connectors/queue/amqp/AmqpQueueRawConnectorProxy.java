@@ -32,6 +32,7 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok;
@@ -231,6 +232,7 @@ public final class AmqpQueueRawConnectorProxy
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("publishing a message (of size `%d`) to exchange `%s` with routing key `%s` (with content-type `%s`, content-encoding `%s`, mandatory `%b`, immediate `%b`, durable `%b`, correlation `%s`, and callback `%s`) (with request token `%s`)", Integer.valueOf (data.length), exchange, routingKey, contentType, contentEncoding, Boolean.valueOf (mandatory), Boolean.valueOf (immediate), Boolean.valueOf (durable), correlation, callback, token.getMessageId ());
 		final AmqpPayloads.PublishRequest.Builder requestBuilder = AmqpPayloads.PublishRequest.newBuilder ();
+		final IdlCommon.Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setExchange (exchange);
 		requestBuilder.setRoutingKey (routingKey);
@@ -239,12 +241,12 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setImmediate (immediate);
 		requestBuilder.setDurable (durable);
 		if (contentType != null) {
-			requestBuilder.setContentType (contentType);
+			envelopeBuilder.setContentType (contentType);
 		}
-		// FIXME: content encoding is missing...
-		//# if (contentEncoding != null) {
-		//# requestBuilder.setContentEncoding (contentEncoding);
-		//# }
+		if (contentEncoding != null) {
+			envelopeBuilder.setContentEncoding (contentEncoding);
+		}
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		if (correlation != null) {
 			requestBuilder.setCorrelationId (correlation);
 		}
@@ -322,7 +324,7 @@ public final class AmqpQueueRawConnectorProxy
 			case CONSUME_OK : {
 				final AmqpPayloads.ConsumeOkMessage consumeOkPayload = (ConsumeOkMessage) message.payload;
 				// FIXME: missing token...
-				//# final CompletionToken token = cancelOkPayload.getToken ();
+				// # final CompletionToken token = cancelOkPayload.getToken ();
 				final String consumerIdentifier = consumeOkPayload.getConsumerTag ();
 				this.transcript.traceDebugging ("processing the registration for the consumer `%s` for pending request with token `%s`...", consumerIdentifier, null);
 				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.get (consumerIdentifier);
@@ -339,10 +341,8 @@ public final class AmqpQueueRawConnectorProxy
 				final int deliveryMode = delivery.getDeliveryMode ();
 				final boolean durable = deliveryMode == 2;
 				final byte[] data = delivery.getData ().toByteArray ();
-				final String contentType = delivery.hasContentType () ? delivery.getContentType () : null;
-				// FIXME: content encoding is missing...
-				//# final String contentEncoding = delivery.hasContentEncoding () ? delivery.getContentEncoding () : null;
-				final String contentEncoding = null;
+				final String contentType = delivery.getEnvelope ().getContentType ();
+				final String contentEncoding = delivery.getEnvelope ().getContentEncoding ();
 				final String correlation = delivery.hasCorrelationId () ? delivery.getCorrelationId () : null;
 				final String callback = delivery.hasReplyTo () ? delivery.getReplyTo () : null;
 				this.transcript.traceDebugging ("processing a message delivery (of size `%d`) for the consumer `%s` from exchange `%s` with routing key `%s` (with content-type `%s`, content-encoding `%s`, durable `%b`, correlation `%s`, callback `%s`)...", Integer.valueOf (data.length), consumerIdentifier, exchange, routingKey, contentType, contentEncoding, Boolean.valueOf (durable), correlation, callback);

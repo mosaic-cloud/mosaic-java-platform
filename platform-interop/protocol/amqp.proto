@@ -59,7 +59,7 @@ message PublishRequest {
 	optional bool immediate = 5 [default = true];
 	optional bool mandatory = 6 [default = true];
 	required string routing_key = 7;
-	optional string content_type = 8;
+	required mosaic_cloud.idl.common.Envelope envelope = 8;
 	optional string correlation_id = 9;
 	optional string reply_to = 10;
 }
@@ -100,7 +100,7 @@ message DeliveryMessage {
 	required string routing_key = 4;
 	required int32 delivery_mode = 5;
 	required bytes data = 6;
-	optional string content_type = 7;
+	required mosaic_cloud.idl.common.Envelope envelope = 7;
 	optional string correlation_id = 8;
 	optional string reply_to = 9;
 }
