@@ -29,6 +29,7 @@ import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import eu.mosaic_cloud.tools.miscellaneous.BrokenInputStream;
@@ -148,7 +149,7 @@ public final class BasicComponentHarnessPreMain
 		final ArgumentsProvider arguments = CliFactory.parseArguments (ArgumentsProvider.class, argumentsList);
 		final Class<?> mainClass = ClassLoader.getSystemClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("HarnessPreMain", "Launcher"));
 		final String componentCallbacks = arguments.getCallbacksClass ();
-		final List<String> componentConfiguration = arguments.getCallbacksOptions ();
+		final List<String> componentConfiguration = (arguments.getCallbacksOptions () != null) ? arguments.getCallbacksOptions () : new LinkedList<String> ();
 		final URL controllerBaseUrl = new URL (arguments.getControllerUrl ());
 		final InetSocketAddress channelAddress = new InetSocketAddress (arguments.getLocalAddress (), arguments.getLocalPort ());
 		final Method mainMethod = mainClass.getMethod ("runLocal", URL.class, InetSocketAddress.class, String.class, List.class);
@@ -167,7 +168,7 @@ public final class BasicComponentHarnessPreMain
 		@Option (longName = "component-callbacks-class", exactly = 1, defaultToNull = false)
 		public abstract String getCallbacksClass ();
 		
-		@Option (longName = "component-callbacks-configuration", minimum = 1, maximum = Integer.MAX_VALUE, defaultToNull = true)
+		@Option (longName = "component-callbacks-configuration", minimum = 0, maximum = Integer.MAX_VALUE, defaultToNull = true)
 		public abstract List<String> getCallbacksOptions ();
 		
 		@Option (longName = "controller-url", exactly = 1, defaultToNull = false)
