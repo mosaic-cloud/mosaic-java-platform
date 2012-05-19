@@ -42,9 +42,9 @@
 			<version>${versions.dependencies.jetty-eclipse}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>${versions.dependencies.jetty-eclipse}</version>
+			<groupId>org.eclipse.jetty.orbit</groupId>
+			<artifactId>javax.servlet</artifactId>
+			<version>${versions.dependencies.servlet-orbit}</version>
 		</dependency>
 	</dependencies>
 	

@@ -47,14 +47,16 @@
 			<version>${versions.dependencies.guava}</version>
 		</dependency>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${versions.dependencies.logback}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${versions.dependencies.slf4j}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${versions.dependencies.logback}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	
@@ -64,22 +66,29 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>${versions.plugins.assembly}</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>eu.mosaic_cloud.components</groupId>
+						<artifactId>components-container</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>component</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

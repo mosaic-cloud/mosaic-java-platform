@@ -114,6 +114,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${versions.dependencies.slf4j}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -129,22 +130,29 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>${versions.plugins.assembly}</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentPreMain</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>eu.mosaic_cloud.components</groupId>
+						<artifactId>components-container</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>component</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentPreMain</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -153,6 +161,7 @@
 	
 	<properties>
 		<_maven_pom_package>mosaic-components-java-driver-memcache</_maven_pom_package>
+		<_maven_pom_classifier>component</_maven_pom_classifier>
 	</properties>
 	
 </project>

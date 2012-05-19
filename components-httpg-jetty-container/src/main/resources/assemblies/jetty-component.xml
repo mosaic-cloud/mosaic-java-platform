@@ -4,7 +4,7 @@
 			xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 	
-	<id>jetty-container-component</id>
+	<id>jetty-component</id>
 	
 	<formats>
 		<format>jar</format>
@@ -26,7 +26,6 @@
 				<excludes>
 					<exclude>WEB-INF/lib</exclude>
 					<exclude>WEB-INF/lib/*</exclude>
-					<!--<exclude>META-INF/MANIFEST.MF</exclude>-->
 				</excludes>
 			</unpackOptions>
 		</dependencySet>

@@ -53,12 +53,12 @@
 						<goals>
 							<goal>analyze-only</goal>
 						</goals>
-						<configuration>
-							<failOnWarning>true</failOnWarning>
-							<ignoreNonCompile>true</ignoreNonCompile>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<failOnWarning>true</failOnWarning>
+					<ignoreNonCompile>true</ignoreNonCompile>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -66,6 +66,7 @@
 				<version>${versions.plugins.jar}</version>
 				<executions>
 					<execution>
+						<phase>package</phase>
 						<goals>
 							<goal>test-jar</goal>
 						</goals>
@@ -114,13 +115,13 @@
 							<goal>update-project-license</goal>
 							<goal>update-file-header</goal>
 						</goals>
-						<configuration>
-							<canUpdateDescription>true</canUpdateDescription>
-							<canUpdateCopyright>true</canUpdateCopyright>
-							<canUpdateLicense>true</canUpdateLicense>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<canUpdateDescription>true</canUpdateDescription>
+					<canUpdateCopyright>true</canUpdateCopyright>
+					<canUpdateLicense>true</canUpdateLicense>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>eu.mosaic_cloud.plugins</groupId>
@@ -161,6 +162,9 @@
 									message="_maven_pom_artifact=${project.artifactId}${line.separator}"
 									file="/dev/stdout" />
 								<echo message="_maven_pom_version=${project.version}${line.separator}"
+									file="/dev/stdout" />
+								<echo
+									message="_maven_pom_classifier=${_maven_pom_classifier}${line.separator}"
 									file="/dev/stdout" />
 								<echo
 									message="_maven_pom_package=${_maven_pom_package}${line.separator}"
@@ -245,6 +249,7 @@
 		<versions.dependencies.redis>2.0.0</versions.dependencies.redis>
 		<versions.dependencies.riak>1.0.5</versions.dependencies.riak>
 		<versions.dependencies.servlet-javax>3.0.1</versions.dependencies.servlet-javax>
+		<versions.dependencies.servlet-orbit>3.0.0.v201112011016</versions.dependencies.servlet-orbit>
 		<versions.dependencies.slf4j>1.6.4</versions.dependencies.slf4j>
 		<versions.dependencies.spy>2.8.0</versions.dependencies.spy>
 		
@@ -271,10 +276,12 @@
 		
 		<license.licenseName>apache_v2</license.licenseName>
 		
-		<_maven_pom_package />
 		<_maven_pom_skip_analyze />
 		<_maven_pom_skip_licenses />
 		<_maven_pom_skip_formatter />
+		
+		<_maven_pom_package />
+		<_maven_pom_classifier />
 		
 	</properties>
 	

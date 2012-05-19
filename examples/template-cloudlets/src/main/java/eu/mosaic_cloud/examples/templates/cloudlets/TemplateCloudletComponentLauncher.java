@@ -18,15 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.examples.realtime_feeds.indexer;
+package eu.mosaic_cloud.examples.templates.cloudlets;
 
 
 import eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponentLauncher;
 
 
-public final class IndexerComponentLauncher
+public final class TemplateCloudletComponentLauncher
 {
-	private IndexerComponentLauncher ()
+	private TemplateCloudletComponentLauncher ()
 	{
 		super ();
 		throw (new UnsupportedOperationException ());
@@ -35,6 +35,6 @@ public final class IndexerComponentLauncher
 	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		CloudletComponentLauncher.main ("indexer-cloudlet.properties", arguments);
+		CloudletComponentLauncher.main ("eu/mosaic_cloud/examples/templates/cloudlets/template-cloudlet.properties", arguments);
 	}
 }

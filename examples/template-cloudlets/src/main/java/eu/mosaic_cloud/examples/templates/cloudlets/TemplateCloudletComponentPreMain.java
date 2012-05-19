@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-examples-realtime-feeds-indexer
  * %%
  * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,30 +18,24 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.implementation.container;
+package eu.mosaic_cloud.examples.templates.cloudlets;
 
 
-import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
+import eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponentPreMain;
 
 
-public final class CloudletComponentPreMain
+public final class TemplateCloudletComponentPreMain
 		extends Object
 {
-	private CloudletComponentPreMain ()
+	private TemplateCloudletComponentPreMain ()
 	{
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final String descriptor, final String[] arguments)
-			throws Throwable
-	{
-		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), new String[] {}, new String[] {"--component-callbacks-configuration", String.format ("{\"%s\":\"%s\"}", "descriptor", descriptor)}, arguments, 0);
-	}
-	
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), arguments, 0);
+		CloudletComponentPreMain.main ("eu/mosaic_cloud/examples/templates/cloudlets/template-cloudlet.properties", arguments);
 	}
 }

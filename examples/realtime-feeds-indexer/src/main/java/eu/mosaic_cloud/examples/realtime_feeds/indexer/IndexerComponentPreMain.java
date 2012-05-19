@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 
-import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPreMain;
+import eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponentPreMain;
 
 
 public final class IndexerComponentPreMain
@@ -36,6 +36,6 @@ public final class IndexerComponentPreMain
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentHarnessPreMain.main ("eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponent$ComponentCallbacksProvider", new String[] {}, new String[] {"--component-callbacks-configuration", String.format ("{\"%s\":\"%s\"}", "descriptor", "indexer-cloudlet.properties")}, arguments, 0);
+		CloudletComponentPreMain.main ("indexer-cloudlet.properties", arguments);
 	}
 }
