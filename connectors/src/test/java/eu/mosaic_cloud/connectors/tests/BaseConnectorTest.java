@@ -21,8 +21,11 @@
 package eu.mosaic_cloud.connectors.tests;
 
 
+import java.util.concurrent.ExecutionException;
+
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
+import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 
@@ -51,7 +54,10 @@ public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario
 	}
 	
 	@Test
-	public abstract void test ();
+	public abstract void test ()
+			throws InterruptedException,
+				ExecutionException,
+				EncodingException;
 	
 	protected void await (final CallbackCompletion<?> completion)
 	{
