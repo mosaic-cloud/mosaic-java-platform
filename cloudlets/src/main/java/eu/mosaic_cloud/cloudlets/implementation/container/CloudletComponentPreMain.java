@@ -33,15 +33,16 @@ public final class CloudletComponentPreMain
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final String descriptor, final String[] arguments)
+	public static void main (final String descriptor, final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), new String[] {}, new String[] {"--component-callbacks-configuration", String.format ("{\"%s\":\"%s\"}", "descriptor", descriptor)}, arguments, 0);
+		final String configuration = String.format ("{\"%s\":\"%s\"}", "descriptor", descriptor);
+		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), configuration, arguments);
 	}
 	
-	public static final void main (final String[] arguments)
+	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), arguments, 0);
+		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), arguments);
 	}
 }

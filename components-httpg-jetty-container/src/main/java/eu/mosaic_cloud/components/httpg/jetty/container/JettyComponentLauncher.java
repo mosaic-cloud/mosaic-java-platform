@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.components.httpg.jetty.container;
 
 
-import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
+import eu.mosaic_cloud.components.implementations.basic.BasicComponentLauncher;
 
 import com.google.common.base.Preconditions;
 
@@ -38,9 +38,7 @@ public final class JettyComponentLauncher
 			throws Throwable
 	{
 		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 1), "invalid arguments: expected `<application-war> ...`");
-		final String[] finalArguments = new String[arguments.length];
-		System.arraycopy (arguments, 1, finalArguments, 0, arguments.length - 1);
-		finalArguments[finalArguments.length - 1] = String.format ("{\"%s\":\"%s\"}", "war", arguments[0]);
-		MosBasicComponentLauncher.main (JettyComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), finalArguments, JettyComponentLauncher.class.getClassLoader ());
+		final String configuration = String.format ("{\"%s\":\"%s\"}", "war", arguments[0]);
+		BasicComponentLauncher.main (JettyComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), configuration, arguments, 1);
 	}
 }

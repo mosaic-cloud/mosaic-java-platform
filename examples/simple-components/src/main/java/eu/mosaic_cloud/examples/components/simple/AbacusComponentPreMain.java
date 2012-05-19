@@ -36,6 +36,6 @@ public final class AbacusComponentPreMain
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentHarnessPreMain.main (AbacusComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments, 0);
+		BasicComponentHarnessPreMain.main (AbacusComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments);
 	}
 }

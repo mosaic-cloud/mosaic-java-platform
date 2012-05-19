@@ -166,7 +166,7 @@ public final class BasicComponentHarnessMain
 			environment.transcript.traceDebugging ("creating stdio streams...");
 			inputStream = BasicComponentHarnessPreMain.stdin;
 			outputStream = BasicComponentHarnessPreMain.stdout;
-		} else if ((endpoint != null) && endpoint.startsWith ("tcp:")) {
+		} else if (endpoint.startsWith ("tcp:")) {
 			environment.transcript.traceDebugging ("creating socket streams (forwarding to `%s`)...", endpoint);
 			final String[] endpointParts = endpoint.split (":");
 			Preconditions.checkArgument (endpointParts.length == 3);
@@ -224,7 +224,7 @@ public final class BasicComponentHarnessMain
 					transcript.traceDebugging ("initializing class loader with URL `%s`...", classpathUrl.toExternalForm ());
 					classLoaderUrls.add (classpathUrl);
 				}
-			classLoader = new URLClassLoader (classLoaderUrls.toArray (new URL[0]), BasicComponentHarnessMain.class.getClassLoader ());
+			classLoader = new URLClassLoader (classLoaderUrls.toArray (new URL[0]), ClassLoader.getSystemClassLoader ());
 			transcript.traceInformation ("prepared class loader.");
 		} else {
 			transcript.traceInformation ("no customized class loader configured...");
@@ -353,22 +353,22 @@ public final class BasicComponentHarnessMain
 	
 	public static interface ArgumentsProvider
 	{
-		@Option (longName = "component-callbacks-class")
+		@Option (longName = "component-callbacks-class", exactly = 1, defaultToNull = false)
 		public abstract String getCallbacksClass ();
 		
-		@Option (longName = "component-callbacks-configuration", defaultToNull = true)
+		@Option (longName = "component-callbacks-configuration", minimum = 0, maximum = Integer.MAX_VALUE, defaultToNull = true)
 		public abstract List<String> getCallbacksOptions ();
 		
-		@Option (longName = "component-channel-endpoint", defaultToNull = true)
+		@Option (longName = "component-channel-endpoint", exactly = 1, defaultToNull = true)
 		public abstract String getChannelEndpoint ();
 		
-		@Option (longName = "component-classpath", defaultToNull = true)
+		@Option (longName = "component-classpath", exactly = 1, defaultToNull = true)
 		public abstract String getClasspath ();
 		
-		@Option (longName = "component-identifier", defaultToNull = true)
+		@Option (longName = "component-identifier", exactly = 1, defaultToNull = true)
 		public abstract String getIdentifier ();
 		
-		@Option (longName = "component-logging-endpoint", defaultToNull = true)
+		@Option (longName = "component-logging-endpoint", exactly = 1, defaultToNull = true)
 		public abstract String getLoggingEndpoint ();
 	}
 	

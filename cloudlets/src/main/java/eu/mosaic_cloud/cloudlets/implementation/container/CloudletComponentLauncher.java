@@ -21,9 +21,7 @@
 package eu.mosaic_cloud.cloudlets.implementation.container;
 
 
-import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
-
-import com.google.common.base.Preconditions;
+import eu.mosaic_cloud.components.implementations.basic.BasicComponentLauncher;
 
 
 public final class CloudletComponentLauncher
@@ -34,19 +32,17 @@ public final class CloudletComponentLauncher
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final String descriptor, final String[] arguments)
+	public static void main (final String descriptor, final String[] arguments)
 			throws Throwable
 	{
-		Preconditions.checkNotNull (arguments);
-		final String[] finalArguments = new String[arguments.length + 1];
-		System.arraycopy (arguments, 0, finalArguments, 0, arguments.length);
-		finalArguments[finalArguments.length - 1] = String.format ("{\"%s\":\"%s\"}", "descriptor", descriptor);
-		MosBasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "$ComponentCallbacksProvider"), finalArguments, CloudletComponentLauncher.class.getClassLoader ());
+		final String configuration = String.format ("{\"%s\":\"%s\"}", "descriptor", descriptor);
+		BasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "$ComponentCallbacksProvider"), configuration, arguments);
 	}
 	
 	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		MosBasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "$ComponentCallbacksProvider"), arguments, CloudletComponentLauncher.class.getClassLoader ());
+		final String configuration = arguments[0];
+		BasicComponentLauncher.main (CloudletComponentLauncher.class.getName ().replace ("Launcher", "$ComponentCallbacksProvider"), configuration, arguments, 1);
 	}
 }
