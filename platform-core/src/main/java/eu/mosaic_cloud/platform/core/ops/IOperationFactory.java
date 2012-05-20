@@ -31,9 +31,7 @@ package eu.mosaic_cloud.platform.core.ops;
  */
 public interface IOperationFactory
 {
-	public static final String CONTENT_ENCODING = "contentEncoding";
-
-    /**
+	/**
 	 * Destroys a facory..
 	 */
 	void destroy ();
@@ -48,4 +46,6 @@ public interface IOperationFactory
 	 * @return the operation
 	 */
 	IOperation<?> getOperation (IOperationType type, Object ... parameters);
+	
+	public static final String CONTENT_ENCODING = "contentEncoding";
 }

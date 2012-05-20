@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.drivers.kvstore;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,7 +51,7 @@ import com.basho.riak.client.convert.ConversionException;
 import com.basho.riak.client.raw.config.Configuration;
 import com.basho.riak.client.raw.http.HTTPClientConfig;
 import com.basho.riak.client.raw.pbc.PBClientConfig;
-import com.google.common.base.Charsets;
+
 
 /**
  * Factory class which builds the asynchronous calls for the operations defined
@@ -59,210 +60,210 @@ import com.google.common.base.Charsets;
  * @author Georgiana Macariu
  * 
  */
-public final class RiakOperationFactory implements IOperationFactory {
-
-    private final Bucket bucket;
-
-    @SuppressWarnings("unused")
-    private final String clientId;
-
-    private final BaseExceptionTracer exceptions;
-
-    private final IRiakClient riakcl;
-
-    private static final Logger logger = Transcript.create(RiakOperationFactory.class).adaptAs(
-            Logger.class);
-
-    private RiakOperationFactory(final Configuration config, final String bucket,
-            final String clientId) throws RiakException {
-        super();
-        this.riakcl = RiakFactory.newClient(config);
-        this.bucket = this.riakcl.fetchBucket(bucket).execute();
-        ;
-        this.clientId = clientId;
-        this.exceptions = FallbackExceptionTracer.defaultInstance;
-    }
-
-    /**
-     * Creates a new factory.
-     * 
-     * @param riakHost
-     *            the hostname of the Riak server
-     * @param port
-     *            the port for the Riak server
-     * @param bucket
-     *            the bucket associated with the connection
-     * @return the factory
-     */
-    public static IOperationFactory getFactory(final String riakHost, final int port,
-            final String bucket, final String clientId, final boolean pb) {
-        IOperationFactory factory = null;
-        try {
-            Configuration config = null;
-            if (pb) {
-                config = new PBClientConfig.Builder().withHost(riakHost).withPort(port).build();
-            } else {
-                config = new HTTPClientConfig.Builder().withHost(riakHost).withPort(port).build();
-            }
-            factory = new RiakOperationFactory(config, bucket, clientId);
-            RiakOperationFactory.logger.trace("Created Riak PB factory for " + riakHost + ":"
-                    + port + " bucket " + bucket);
-        } catch (RiakException e) {
-            FallbackExceptionTracer.defaultInstance.traceIgnoredException(e);
-        }
-        return factory;
-    }
-
-    private IOperation<?> buildDeleteOperation(final Object... parameters) {
-        return new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-            @Override
-            public Boolean call() throws IOException {
-                final String key = (String) parameters[0];
-                // FIXME: use the vector clock...
-                try {
-                    RiakOperationFactory.this.bucket.delete(key).execute();
-                } catch (RiakException e) {
-                    // TODO: shutdown all connectors for this bucket?
-                    FallbackExceptionTracer.defaultInstance.traceIgnoredException(e);
-                    return false;
-                }
-                return true;
-            }
-        });
-    }
-
-    private IOperation<?> buildGetOperation(final Object... parameters) {
-        return new GenericOperation<KeyValueMessage>(new Callable<KeyValueMessage>() {
-
-            @Override
-            public KeyValueMessage call() throws IOException {
-                KeyValueMessage result = null;
-                final String key = (String) parameters[0];
-                // FIXME: use the vector clock...
-                IRiakObject riakObj = null;
-                try {
-                    riakObj = RiakOperationFactory.this.bucket.fetch(key).execute();
-                } catch (UnresolvedConflictException e) {
-                    FallbackExceptionTracer.defaultInstance.traceIgnoredException(e);
-                } catch (RiakRetryFailedException e) {
-                    // TODO: shutdown all connectors for this bucket?
-                    FallbackExceptionTracer.defaultInstance.traceIgnoredException(e);
-                } catch (ConversionException e) {
-                    FallbackExceptionTracer.defaultInstance.traceIgnoredException(e);
-                }
-                if (null != riakObj) {
-                    result = new KeyValueMessage(key, riakObj.getValue(),
-                            riakObj.getUsermeta(CONTENT_ENCODING), riakObj.getContentType());
-                }
-
-                return result;
-            }
-        });
-    }
-
-    private IOperation<?> buildListOperation() {
-        return new GenericOperation<List<String>>(new Callable<List<String>>() {
-
-            @Override
-            public List<String> call() throws IOException {
-                // FIXME: use the vector clock...
-                final List<String> keys = new ArrayList<String>();
-                try {
-                    Iterator<String> keyStore = RiakOperationFactory.this.bucket.keys().iterator();
-                    while (keyStore.hasNext()) {
-                        keys.add(keyStore.next());
-                    }
-                } catch (RiakException e) {
-                    // TODO: shutdown all connectors for this bucket?
-                    FallbackExceptionTracer.defaultInstance.traceIgnoredException(e);
-                }
-
-                return keys;
-            }
-        });
-    }
-
-    private IOperation<?> buildSetOperation(final Object... parameters) {
-        return new GenericOperation<Boolean>(new Callable<Boolean>() {
-
-            @Override
-            public Boolean call() throws IOException {
-                final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
-                final String key = kvMessage.getKey();
-
-                // FIXME: use the vector clock...
-                IRiakObject riakObject = RiakObjectBuilder
-                        .newBuilder(RiakOperationFactory.this.bucket.getName(), key)
-                        .addUsermeta(CONTENT_ENCODING, kvMessage.getContentEncoding())
-                        .withContentType(kvMessage.getContentType()).withValue(kvMessage.getData())
-                        .build();
-                RiakBucket riakBucket = RiakBucket.newRiakBucket(RiakOperationFactory.this.bucket);
-                try {
-                    riakBucket.store(riakObject);
-                } catch (RiakException e) {
-                    // TODO: shutdown all connectors for this bucket?
-                    FallbackExceptionTracer.defaultInstance.traceIgnoredException(e);
-                    return false;
-                }
-                return true;
-            }
-        });
-    }
-
-    @Override
-    public void destroy() {
-        // NOTE: nothing to do here
-    }
-
-    @Override
-    public IOperation<?> getOperation(final IOperationType type, final Object... parameters) {
-        IOperation<?> operation;
-        if (!(type instanceof KeyValueOperations)) {
-            return new GenericOperation<Object>(new Callable<Object>() {
-
-                @Override
-                public Object call() throws UnsupportedOperationException {
-                    throw new UnsupportedOperationException("Unsupported operation: "
-                            + type.toString());
-                }
-            });
-        }
-        final KeyValueOperations mType = (KeyValueOperations) type;
-        try {
-            switch (mType) {
-            case SET:
-                operation = this.buildSetOperation(parameters);
-                break;
-            case GET:
-                operation = this.buildGetOperation(parameters);
-                break;
-            case LIST:
-                operation = this.buildListOperation();
-                break;
-            case DELETE:
-                operation = this.buildDeleteOperation(parameters);
-                break;
-            default:
-                operation = new GenericOperation<Object>(new Callable<Object>() {
-
-                    @Override
-                    public Object call() throws UnsupportedOperationException {
-                        throw new UnsupportedOperationException("Unsupported operation: "
-                                + mType.toString());
-                    }
-                });
-            }
-        } catch (final Exception e) {
-            this.exceptions.traceDeferredException(e);
-            operation = new GenericOperation<Object>(new Callable<Object>() {
-
-                @Override
-                public Object call() throws Exception {
-                    throw e;
-                }
-            });
-        }
-        return operation;
-    }
+public final class RiakOperationFactory
+		implements
+			IOperationFactory
+{
+	private RiakOperationFactory (final Configuration config, final String bucket, final String clientId)
+			throws RiakException
+	{
+		super ();
+		this.riakcl = RiakFactory.newClient (config);
+		this.bucket = this.riakcl.fetchBucket (bucket).execute ();
+		;
+		this.clientId = clientId;
+		this.exceptions = FallbackExceptionTracer.defaultInstance;
+	}
+	
+	@Override
+	public void destroy ()
+	{
+		// NOTE: nothing to do here
+	}
+	
+	@Override
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
+	{
+		IOperation<?> operation;
+		if (!(type instanceof KeyValueOperations)) {
+			return new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws UnsupportedOperationException
+				{
+					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
+				}
+			});
+		}
+		final KeyValueOperations mType = (KeyValueOperations) type;
+		try {
+			switch (mType) {
+				case SET :
+					operation = this.buildSetOperation (parameters);
+					break;
+				case GET :
+					operation = this.buildGetOperation (parameters);
+					break;
+				case LIST :
+					operation = this.buildListOperation ();
+					break;
+				case DELETE :
+					operation = this.buildDeleteOperation (parameters);
+					break;
+				default:
+					operation = new GenericOperation<Object> (new Callable<Object> () {
+						@Override
+						public Object call ()
+								throws UnsupportedOperationException
+						{
+							throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
+						}
+					});
+			}
+		} catch (final Exception e) {
+			this.exceptions.traceDeferredException (e);
+			operation = new GenericOperation<Object> (new Callable<Object> () {
+				@Override
+				public Object call ()
+						throws Exception
+				{
+					throw e;
+				}
+			});
+		}
+		return operation;
+	}
+	
+	private IOperation<?> buildDeleteOperation (final Object ... parameters)
+	{
+		return new GenericOperation<Boolean> (new Callable<Boolean> () {
+			@Override
+			public Boolean call ()
+					throws IOException
+			{
+				final String key = (String) parameters[0];
+				// FIXME: use the vector clock...
+				try {
+					RiakOperationFactory.this.bucket.delete (key).execute ();
+				} catch (final RiakException e) {
+					// TODO: shutdown all connectors for this bucket?
+					FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
+					return false;
+				}
+				return true;
+			}
+		});
+	}
+	
+	private IOperation<?> buildGetOperation (final Object ... parameters)
+	{
+		return new GenericOperation<KeyValueMessage> (new Callable<KeyValueMessage> () {
+			@Override
+			public KeyValueMessage call ()
+					throws IOException
+			{
+				KeyValueMessage result = null;
+				final String key = (String) parameters[0];
+				// FIXME: use the vector clock...
+				IRiakObject riakObj = null;
+				try {
+					riakObj = RiakOperationFactory.this.bucket.fetch (key).execute ();
+				} catch (final UnresolvedConflictException e) {
+					FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
+				} catch (final RiakRetryFailedException e) {
+					// TODO: shutdown all connectors for this bucket?
+					FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
+				} catch (final ConversionException e) {
+					FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
+				}
+				if (null != riakObj) {
+					result = new KeyValueMessage (key, riakObj.getValue (), riakObj.getUsermeta (IOperationFactory.CONTENT_ENCODING), riakObj.getContentType ());
+				}
+				return result;
+			}
+		});
+	}
+	
+	private IOperation<?> buildListOperation ()
+	{
+		return new GenericOperation<List<String>> (new Callable<List<String>> () {
+			@Override
+			public List<String> call ()
+					throws IOException
+			{
+				// FIXME: use the vector clock...
+				final List<String> keys = new ArrayList<String> ();
+				try {
+					final Iterator<String> keyStore = RiakOperationFactory.this.bucket.keys ().iterator ();
+					while (keyStore.hasNext ()) {
+						keys.add (keyStore.next ());
+					}
+				} catch (final RiakException e) {
+					// TODO: shutdown all connectors for this bucket?
+					FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
+				}
+				return keys;
+			}
+		});
+	}
+	
+	private IOperation<?> buildSetOperation (final Object ... parameters)
+	{
+		return new GenericOperation<Boolean> (new Callable<Boolean> () {
+			@Override
+			public Boolean call ()
+					throws IOException
+			{
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
+				final String key = kvMessage.getKey ();
+				// FIXME: use the vector clock...
+				final IRiakObject riakObject = RiakObjectBuilder.newBuilder (RiakOperationFactory.this.bucket.getName (), key).addUsermeta (IOperationFactory.CONTENT_ENCODING, kvMessage.getContentEncoding ()).withContentType (kvMessage.getContentType ()).withValue (kvMessage.getData ()).build ();
+				final RiakBucket riakBucket = RiakBucket.newRiakBucket (RiakOperationFactory.this.bucket);
+				try {
+					riakBucket.store (riakObject);
+				} catch (final RiakException e) {
+					// TODO: shutdown all connectors for this bucket?
+					FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
+					return false;
+				}
+				return true;
+			}
+		});
+	}
+	
+	/**
+	 * Creates a new factory.
+	 * 
+	 * @param riakHost
+	 *            the hostname of the Riak server
+	 * @param port
+	 *            the port for the Riak server
+	 * @param bucket
+	 *            the bucket associated with the connection
+	 * @return the factory
+	 */
+	public static IOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId, final boolean pb)
+	{
+		IOperationFactory factory = null;
+		try {
+			Configuration config = null;
+			if (pb) {
+				config = new PBClientConfig.Builder ().withHost (riakHost).withPort (port).build ();
+			} else {
+				config = new HTTPClientConfig.Builder ().withHost (riakHost).withPort (port).build ();
+			}
+			factory = new RiakOperationFactory (config, bucket, clientId);
+			RiakOperationFactory.logger.trace ("Created Riak PB factory for " + riakHost + ":" + port + " bucket " + bucket);
+		} catch (final RiakException e) {
+			FallbackExceptionTracer.defaultInstance.traceIgnoredException (e);
+		}
+		return factory;
+	}
+	
+	private final Bucket bucket;
+	@SuppressWarnings ("unused")
+	private final String clientId;
+	private final BaseExceptionTracer exceptions;
+	private final IRiakClient riakcl;
+	private static final Logger logger = Transcript.create (RiakOperationFactory.class).adaptAs (Logger.class);
 }

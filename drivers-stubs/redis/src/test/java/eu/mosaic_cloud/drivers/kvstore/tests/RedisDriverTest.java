@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.drivers.kvstore.tests;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,180 +54,177 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+
 @Ignore
-public class RedisDriverTest {
-
-    @Before
-    public void setUp() throws Exception {
-        final Transcript transcript = Transcript.create(this);
-        final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer
-                .create(NullExceptionTracer.defaultInstance);
-        final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create(transcript,
-                exceptionsQueue);
-        this.exceptions = exceptions;
-        BasicThreadingSecurityManager.initialize();
-        this.threadingContext = BasicThreadingContext.create(this, exceptions, exceptions.catcher);
-        this.threadingContext.initialize();
-        final String host = System.getProperty(RedisDriverTest.MOSAIC_REDIS_HOST,
-                RedisDriverTest.MOSAIC_REDIS_HOST_DEFAULT);
-        final Integer port = Integer.valueOf(System.getProperty(RedisDriverTest.MOSAIC_REDIS_PORT,
-                RedisDriverTest.MOSAIC_REDIS_PORT_DEFAULT));
-        final IConfiguration configuration = PropertyTypeConfiguration.create();
-        configuration.addParameter("kvstore.host", host);
-        configuration.addParameter("kvstore.port", port);
-        configuration.addParameter("kvstore.driver_name", "REDIS");
-        configuration.addParameter("kvstore.driver_threads", 1);
-        configuration.addParameter("kvstore.bucket", "999");
-        this.wrapper = RedisDriver.create(configuration, this.threadingContext);
-        this.wrapper.registerClient(RedisDriverTest.keyPrefix, "1");
-        this.encoder = PlainTextDataEncoder.DEFAULT_INSTANCE;
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        this.wrapper.unregisterClient(RedisDriverTest.keyPrefix);
-        this.wrapper.destroy();
-        this.threadingContext.destroy();
-    }
-
-    public void testConnection() {
-        Assert.assertNotNull(this.wrapper);
-    }
-
-    public void testDelete() {
-        final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
-        final String k2 = RedisDriverTest.keyPrefix + "_key_famous";
-        final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
-                "delete 1");
-        final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
-                "delete 2");
-        final IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation(RedisDriverTest.keyPrefix,
-                k1, handler1);
-        final IResult<Boolean> r2 = this.wrapper.invokeDeleteOperation(RedisDriverTest.keyPrefix,
-                k2, handler2);
-        try {
-            Assert.assertTrue(r1.getResult());
-            Assert.assertTrue(r2.getResult());
-        } catch (final InterruptedException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        }
-        final IOperationCompletionHandler<KeyValueMessage> handler3 = new TestLoggingHandler<KeyValueMessage>(
-                "check deleted");
-        final IResult<KeyValueMessage> r3 = this.wrapper.invokeGetOperation(
-                RedisDriverTest.keyPrefix, k1, handler3);
-        try {
-            Assert.assertNull(r3.getResult());
-        } catch (final InterruptedException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        }
-    }
-
-    @Test
-    public void testDriver() throws IOException, ClassNotFoundException, EncodingException {
-        this.testConnection();
-        this.testSet();
-        this.testGet();
-        this.testList();
-        this.testDelete();
-    }
-
-    public void testGet() throws IOException, ClassNotFoundException, EncodingException {
-        final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
-        final IOperationCompletionHandler<KeyValueMessage> handler = new TestLoggingHandler<KeyValueMessage>(
-                "get");
-        final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation(
-                RedisDriverTest.keyPrefix, k1, handler);
-        try {
-            KeyValueMessage mssg = r1.getResult();
-            Assert.assertEquals("fantastic", this.encoder.decode(mssg.getData(),
-                    new EncodingMetadata("text/plain", "identity")));
-        } catch (final InterruptedException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        }
-    }
-
-    public void testList() {
-        final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
-        final String k2 = RedisDriverTest.keyPrefix + "_key_famous";
-        final List<String> keys = new ArrayList<String>();
-        keys.add(k1);
-        keys.add(k2);
-        final IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>>(
-                "list");
-        final IResult<List<String>> r1 = this.wrapper.invokeListOperation(
-                RedisDriverTest.keyPrefix, handler);
-        try {
-            final List<String> lresult = r1.getResult();
-            Assert.assertNotNull(lresult);
-            Assert.assertTrue(lresult.contains(k1));
-            Assert.assertTrue(lresult.contains(k2));
-        } catch (final InterruptedException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        }
-    }
-
-    public void testSet() throws IOException, EncodingException {
-        final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
-        final byte[] b1 = this.encoder.encode("fantastic", new EncodingMetadata("text/plain",
-                "identity"));
-        ;
-        KeyValueMessage mssg = new KeyValueMessage(k1, b1,
-                RedisDriver.REDIS_DEFAULT_CONTENT_ENCODING, RedisDriver.REDIS_DEFAULT_CONTENT_TYPE);
-        final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean>(
-                "set 1");
-        final IResult<Boolean> r1 = this.wrapper.invokeSetOperation(RedisDriverTest.keyPrefix,
-                mssg, handler1);
-        Assert.assertNotNull(r1);
-        final String k2 = RedisDriverTest.keyPrefix + "_key_famous";
-        final byte[] b2 = this.encoder.encode("famous", new EncodingMetadata("text/plain",
-                "identity"));
-        mssg = new KeyValueMessage(k2, b2, RedisDriver.REDIS_DEFAULT_CONTENT_ENCODING,
-                RedisDriver.REDIS_DEFAULT_CONTENT_TYPE);
-        final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean>(
-                "set 2");
-        final IResult<Boolean> r2 = this.wrapper.invokeSetOperation(RedisDriverTest.keyPrefix,
-                mssg, handler2);
-        Assert.assertNotNull(r2);
-        try {
-            Assert.assertTrue(r1.getResult());
-            Assert.assertTrue(r2.getResult());
-        } catch (final InterruptedException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        } catch (final ExecutionException e) {
-            this.exceptions.traceIgnoredException(e);
-            Assert.fail();
-        }
-    }
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        RedisDriverTest.keyPrefix = UUID.randomUUID().toString();
-    }
-
-    private BaseExceptionTracer exceptions;
-    private BasicThreadingContext threadingContext;
-    private AbstractKeyValueDriver wrapper;
-    private DataEncoder<String> encoder;
-    private static String keyPrefix;
-    private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
-    private static final String MOSAIC_REDIS_HOST_DEFAULT = "127.0.0.1";
-    private static final String MOSAIC_REDIS_PORT = "mosaic.tests.resources.redis.port";
-    private static final String MOSAIC_REDIS_PORT_DEFAULT = "6379";
+public class RedisDriverTest
+{
+	@Before
+	public void setUp ()
+			throws Exception
+	{
+		final Transcript transcript = Transcript.create (this);
+		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
+		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
+		this.exceptions = exceptions;
+		BasicThreadingSecurityManager.initialize ();
+		this.threadingContext = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
+		this.threadingContext.initialize ();
+		final String host = System.getProperty (RedisDriverTest.MOSAIC_REDIS_HOST, RedisDriverTest.MOSAIC_REDIS_HOST_DEFAULT);
+		final Integer port = Integer.valueOf (System.getProperty (RedisDriverTest.MOSAIC_REDIS_PORT, RedisDriverTest.MOSAIC_REDIS_PORT_DEFAULT));
+		final IConfiguration configuration = PropertyTypeConfiguration.create ();
+		configuration.addParameter ("kvstore.host", host);
+		configuration.addParameter ("kvstore.port", port);
+		configuration.addParameter ("kvstore.driver_name", "REDIS");
+		configuration.addParameter ("kvstore.driver_threads", 1);
+		configuration.addParameter ("kvstore.bucket", "999");
+		this.wrapper = RedisDriver.create (configuration, this.threadingContext);
+		this.wrapper.registerClient (RedisDriverTest.keyPrefix, "1");
+		this.encoder = PlainTextDataEncoder.DEFAULT_INSTANCE;
+	}
+	
+	@After
+	public void tearDown ()
+			throws Exception
+	{
+		this.wrapper.unregisterClient (RedisDriverTest.keyPrefix);
+		this.wrapper.destroy ();
+		this.threadingContext.destroy ();
+	}
+	
+	public void testConnection ()
+	{
+		Assert.assertNotNull (this.wrapper);
+	}
+	
+	public void testDelete ()
+	{
+		final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
+		final String k2 = RedisDriverTest.keyPrefix + "_key_famous";
+		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("delete 1");
+		final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean> ("delete 2");
+		final IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation (RedisDriverTest.keyPrefix, k1, handler1);
+		final IResult<Boolean> r2 = this.wrapper.invokeDeleteOperation (RedisDriverTest.keyPrefix, k2, handler2);
+		try {
+			Assert.assertTrue (r1.getResult ());
+			Assert.assertTrue (r2.getResult ());
+		} catch (final InterruptedException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		}
+		final IOperationCompletionHandler<KeyValueMessage> handler3 = new TestLoggingHandler<KeyValueMessage> ("check deleted");
+		final IResult<KeyValueMessage> r3 = this.wrapper.invokeGetOperation (RedisDriverTest.keyPrefix, k1, handler3);
+		try {
+			Assert.assertNull (r3.getResult ());
+		} catch (final InterruptedException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		}
+	}
+	
+	@Test
+	public void testDriver ()
+			throws IOException,
+				ClassNotFoundException,
+				EncodingException
+	{
+		this.testConnection ();
+		this.testSet ();
+		this.testGet ();
+		this.testList ();
+		this.testDelete ();
+	}
+	
+	public void testGet ()
+			throws IOException,
+				ClassNotFoundException,
+				EncodingException
+	{
+		final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
+		final IOperationCompletionHandler<KeyValueMessage> handler = new TestLoggingHandler<KeyValueMessage> ("get");
+		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (RedisDriverTest.keyPrefix, k1, handler);
+		try {
+			final KeyValueMessage mssg = r1.getResult ();
+			Assert.assertEquals ("fantastic", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
+		} catch (final InterruptedException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		}
+	}
+	
+	public void testList ()
+	{
+		final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
+		final String k2 = RedisDriverTest.keyPrefix + "_key_famous";
+		final List<String> keys = new ArrayList<String> ();
+		keys.add (k1);
+		keys.add (k2);
+		final IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>> ("list");
+		final IResult<List<String>> r1 = this.wrapper.invokeListOperation (RedisDriverTest.keyPrefix, handler);
+		try {
+			final List<String> lresult = r1.getResult ();
+			Assert.assertNotNull (lresult);
+			Assert.assertTrue (lresult.contains (k1));
+			Assert.assertTrue (lresult.contains (k2));
+		} catch (final InterruptedException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		}
+	}
+	
+	public void testSet ()
+			throws IOException,
+				EncodingException
+	{
+		final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
+		final byte[] b1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity"));
+		;
+		KeyValueMessage mssg = new KeyValueMessage (k1, b1, RedisDriver.REDIS_DEFAULT_CONTENT_ENCODING, RedisDriver.REDIS_DEFAULT_CONTENT_TYPE);
+		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("set 1");
+		final IResult<Boolean> r1 = this.wrapper.invokeSetOperation (RedisDriverTest.keyPrefix, mssg, handler1);
+		Assert.assertNotNull (r1);
+		final String k2 = RedisDriverTest.keyPrefix + "_key_famous";
+		final byte[] b2 = this.encoder.encode ("famous", new EncodingMetadata ("text/plain", "identity"));
+		mssg = new KeyValueMessage (k2, b2, RedisDriver.REDIS_DEFAULT_CONTENT_ENCODING, RedisDriver.REDIS_DEFAULT_CONTENT_TYPE);
+		final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean> ("set 2");
+		final IResult<Boolean> r2 = this.wrapper.invokeSetOperation (RedisDriverTest.keyPrefix, mssg, handler2);
+		Assert.assertNotNull (r2);
+		try {
+			Assert.assertTrue (r1.getResult ());
+			Assert.assertTrue (r2.getResult ());
+		} catch (final InterruptedException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		}
+	}
+	
+	@BeforeClass
+	public static void setUpBeforeClass ()
+	{
+		RedisDriverTest.keyPrefix = UUID.randomUUID ().toString ();
+	}
+	
+	private DataEncoder<String> encoder;
+	private BaseExceptionTracer exceptions;
+	private BasicThreadingContext threadingContext;
+	private AbstractKeyValueDriver wrapper;
+	private static String keyPrefix;
+	private static final String MOSAIC_REDIS_HOST = "mosaic.tests.resources.redis.host";
+	private static final String MOSAIC_REDIS_HOST_DEFAULT = "127.0.0.1";
+	private static final String MOSAIC_REDIS_PORT = "mosaic.tests.resources.redis.port";
+	private static final String MOSAIC_REDIS_PORT_DEFAULT = "6379";
 }

@@ -21,11 +21,12 @@
 package eu.mosaic_cloud.drivers.kvstore.tests;
 
 
-public class RiakPBDriverTest extends RiakDriverTest {
-
-    public RiakPBDriverTest() {
-        super();
-        configuration.addParameter("kvstore.driver_name", "RIAKPB");
-    }
-
+public class RiakPBDriverTest
+		extends RiakDriverTest
+{
+	public RiakPBDriverTest ()
+	{
+		super ();
+		this.configuration.addParameter ("kvstore.driver_name", "RIAKPB");
+	}
 }

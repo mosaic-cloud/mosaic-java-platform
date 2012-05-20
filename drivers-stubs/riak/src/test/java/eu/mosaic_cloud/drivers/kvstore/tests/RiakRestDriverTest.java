@@ -21,13 +21,12 @@
 package eu.mosaic_cloud.drivers.kvstore.tests;
 
 
-
-
-public class RiakRestDriverTest extends RiakDriverTest 
+public class RiakRestDriverTest
+		extends RiakDriverTest
 {
-    public RiakRestDriverTest() {
-        super();
-        configuration.addParameter("kvstore.driver_name", "RIAKREST");
-    }
-	
+	public RiakRestDriverTest ()
+	{
+		super ();
+		this.configuration.addParameter ("kvstore.driver_name", "RIAKREST");
+	}
 }
