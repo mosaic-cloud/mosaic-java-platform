@@ -142,7 +142,7 @@ public final class RedisOperationFactory
 				final byte[] result = RedisOperationFactory.this.redisClient.get (keyBytes);
 				KeyValueMessage kvMessage = null;
 				if (null != result) {
-					kvMessage = new KeyValueMessage (key, result, RedisDriver.REDIS_DEFAULT_CONTENT_TYPE, RedisDriver.REDIS_DEFAULT_CONTENT_ENCODING);
+					kvMessage = new KeyValueMessage (key, result, RedisDriver.DEFAULT_CONTENT_TYPE, RedisDriver.DEFAULT_CONTENT_ENCODING);
 				}
 				return kvMessage;
 			}

@@ -35,6 +35,7 @@ import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 import com.couchbase.client.CouchbaseClient;
@@ -206,17 +207,22 @@ public final class MemcachedOperationFactory
 	
 	private IOperation<?> buildGetBulkOperation (final Object ... parameters)
 	{
-		return new GenericOperation<Map<String, byte[]>> (new Callable<Map<String, byte[]>> () {
+		return new GenericOperation<Map<String, KeyValueMessage>> (new Callable<Map<String, KeyValueMessage>> () {
 			@Override
-			public Map<String, byte[]> call ()
+			public Map<String, KeyValueMessage> call ()
 					throws ExecutionException,
 						InterruptedException
 			{
 				final String[] keys = (String[]) parameters;
 				final Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient.asyncGetBulk (keys);
-				final Map<String, byte[]> result = new HashMap<String, byte[]> ();
+				final Map<String, KeyValueMessage> result = new HashMap<String, KeyValueMessage> ();
+				KeyValueMessage kvMessage = null;
 				for (final Map.Entry<String, Object> entry : opResult.get ().entrySet ()) {
-					result.put (entry.getKey (), (byte[]) entry.getValue ());
+					kvMessage = null;
+					if (null != entry.getValue ()) {
+						kvMessage = new KeyValueMessage (entry.getKey (), (byte[]) entry.getValue (), MemcachedDriver.DEFAULT_CONTENT_TYPE, MemcachedDriver.DEFAULT_CONTENT_ENCODING);
+					}
+					result.put (entry.getKey (), kvMessage);
 				}
 				return result;
 			}
@@ -225,15 +231,20 @@ public final class MemcachedOperationFactory
 	
 	private IOperation<?> buildGetOperation (final Object ... parameters)
 	{
-		return new GenericOperation<byte[]> (new Callable<byte[]> () {
+		return new GenericOperation<KeyValueMessage> (new Callable<KeyValueMessage> () {
 			@Override
-			public byte[] call ()
+			public KeyValueMessage call ()
 					throws ExecutionException,
 						InterruptedException
 			{
 				final String key = (String) parameters[0];
 				final Future<Object> opResult = MemcachedOperationFactory.this.mcClient.asyncGet (key);
-				return (byte[]) opResult.get ();
+				final byte[] data = (byte[]) opResult.get ();
+				KeyValueMessage kvMessage = null;
+				if (null != data) {
+					kvMessage = new KeyValueMessage (key, data, MemcachedDriver.DEFAULT_CONTENT_TYPE, MemcachedDriver.DEFAULT_CONTENT_ENCODING);
+				}
+				return kvMessage;
 			}
 		});
 	}
@@ -280,15 +291,12 @@ public final class MemcachedOperationFactory
 					throws ExecutionException,
 						InterruptedException
 			{
-				final String key = (String) parameters[0];
-				int exp;
-				byte[] data;
-				if (parameters.length == 3) {
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
+				final String key = kvMessage.getKey ();
+				int exp = 0;
+				final byte[] data = kvMessage.getData ();
+				if (parameters.length == 2) {
 					exp = (Integer) parameters[1];
-					data = (byte[]) parameters[2];
-				} else {
-					exp = 0;
-					data = (byte[]) parameters[1];
 				}
 				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.set (key, exp, data);
 				return opResult.get ();
