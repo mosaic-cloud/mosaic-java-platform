@@ -121,7 +121,7 @@ public class ServerCommandLine
 			throws Exception
 	{
 		final Properties props = ServerCommandLine.getConfig (args);
-		final Server server = ServerCommandLine.createServer (props, ServerCommandLine.class.getClassLoader ());
+		final Server server = ServerCommandLine.createServer (props, ClassLoader.getSystemClassLoader ());
 		server.start ();
 		server.join ();
 	}

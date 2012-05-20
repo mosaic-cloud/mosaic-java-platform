@@ -35,10 +35,18 @@ public final class JettyComponentPreMain
 		throw (new UnsupportedOperationException ());
 	}
 	
+	public static final void main (final String war, final String[] arguments)
+			throws Throwable
+	{
+		final String configuration = String.format ("{\"%s\":\"%s\"}", "war", war);
+		BasicComponentHarnessPreMain.main (JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), configuration, arguments);
+	}
+	
 	public static final void main (final String[] arguments)
 			throws Throwable
 	{
 		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 1), "invalid arguments: expected `<application-war> ...`");
-		BasicComponentHarnessPreMain.main (JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), new String[] {}, new String[] {"--component-callbacks-configuration", String.format ("{\"%s\":\"%s\"}", "war", arguments[0])}, arguments, 1);
+		final String configuration = String.format ("{\"%s\":\"%s\"}", "war", arguments[0]);
+		BasicComponentHarnessPreMain.main (JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), configuration, arguments, 1);
 	}
 }

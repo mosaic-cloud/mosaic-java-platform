@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.examples.components.simple;
 
 
-import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
+import eu.mosaic_cloud.components.implementations.basic.BasicComponentLauncher;
 
 
 public final class AbacusComponentLauncher
@@ -32,9 +32,9 @@ public final class AbacusComponentLauncher
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final String[] arguments)
+	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		MosBasicComponentLauncher.main (AbacusComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments, AbacusComponentLauncher.class.getClassLoader ());
+		BasicComponentLauncher.main (AbacusComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
 	}
 }

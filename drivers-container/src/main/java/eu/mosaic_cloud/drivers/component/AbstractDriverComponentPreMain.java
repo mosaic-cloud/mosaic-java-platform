@@ -36,6 +36,6 @@ public final class AbstractDriverComponentPreMain
 	public static final void main (final String callbacks, final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentHarnessPreMain.main (callbacks, arguments, 0);
+		BasicComponentHarnessPreMain.main (callbacks, arguments);
 	}
 }

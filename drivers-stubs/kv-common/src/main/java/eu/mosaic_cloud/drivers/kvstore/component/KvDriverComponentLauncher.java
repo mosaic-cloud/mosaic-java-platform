@@ -32,9 +32,9 @@ public final class KvDriverComponentLauncher
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final String[] arguments)
+	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		AbstractDriverComponentLauncher.main ("eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentCallbacks", arguments);
+		AbstractDriverComponentLauncher.main (KvDriverComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
 	}
 }

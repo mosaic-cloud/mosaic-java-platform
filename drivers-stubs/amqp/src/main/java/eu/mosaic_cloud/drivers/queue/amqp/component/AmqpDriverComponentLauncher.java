@@ -32,9 +32,9 @@ public final class AmqpDriverComponentLauncher
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final void main (final String[] arguments)
+	public static void main (final String[] arguments)
 			throws Throwable
 	{
-		AbstractDriverComponentLauncher.main ("eu.mosaic_cloud.drivers.queue.amqp.component.AmqpDriverComponentCallbacks", arguments);
+		AbstractDriverComponentLauncher.main (AmqpDriverComponentLauncher.class.getName ().replace ("Launcher", "Callbacks"), arguments);
 	}
 }

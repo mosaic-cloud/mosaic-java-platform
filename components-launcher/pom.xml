@@ -85,7 +85,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher</mainClass>
+									<mainClass>eu.mosaic_cloud.components.implementations.basic.BasicComponentLauncher</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

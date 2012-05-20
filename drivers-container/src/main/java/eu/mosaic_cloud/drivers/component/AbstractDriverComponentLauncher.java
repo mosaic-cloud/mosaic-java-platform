@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.drivers.component;
 
 
-import eu.mosaic_cloud.components.implementations.basic.MosBasicComponentLauncher;
+import eu.mosaic_cloud.components.implementations.basic.BasicComponentLauncher;
 
 
 public final class AbstractDriverComponentLauncher
@@ -35,6 +35,6 @@ public final class AbstractDriverComponentLauncher
 	public static final void main (final String callbacks, final String[] arguments)
 			throws Throwable
 	{
-		MosBasicComponentLauncher.main (callbacks, arguments, AbstractDriverComponentCallbacks.class.getClassLoader ());
+		BasicComponentLauncher.main (callbacks, arguments);
 	}
 }
