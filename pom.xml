@@ -238,7 +238,7 @@
 		<versions.dependencies.guava>11.0</versions.dependencies.guava>
 		<versions.dependencies.jackson>1.9.3</versions.dependencies.jackson>
 		<versions.dependencies.jetty-eclipse>8.1.3.v20120416</versions.dependencies.jetty-eclipse>
-		<versions.dependencies.jewelcli>0.8.1</versions.dependencies.jewelcli>
+		<versions.dependencies.jewelcli>0.8.2_mosaic</versions.dependencies.jewelcli>
 		<versions.dependencies.json>20090211</versions.dependencies.json>
 		<versions.dependencies.json-smart>1.0.9</versions.dependencies.json-smart>
 		<versions.dependencies.jsp-eclipse>7.5.4.v20111024</versions.dependencies.jsp-eclipse>
