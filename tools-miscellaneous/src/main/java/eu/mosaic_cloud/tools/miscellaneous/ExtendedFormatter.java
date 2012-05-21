@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.tools.miscellaneous;
 
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -105,7 +106,7 @@ public final class ExtendedFormatter
 						final String tokenReplacement;
 						if (token == null)
 							tokenReplacement = "null";
-						else if (token instanceof Object[])
+						else if (token.getClass ().isArray ())
 							tokenReplacement = Arrays.toString ((Object[]) token);
 						else
 							throw (new IllegalArgumentException ());
