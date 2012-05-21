@@ -145,4 +145,16 @@
 		</repository>
 	</repositories>
 	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>mOSAIC Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+	
 </project>
