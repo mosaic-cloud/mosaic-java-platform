@@ -7,7 +7,7 @@
 	
 	<groupId>eu.mosaic_cloud</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.5.0</version>
+	<version>0.5.1_mosaic_dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>mosaic-parent</name>
