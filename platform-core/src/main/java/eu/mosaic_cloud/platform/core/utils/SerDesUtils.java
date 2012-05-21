@@ -176,13 +176,21 @@ public final class SerDesUtils
 		
 		@Override
 		public Class<?> resolveClass (final ObjectStreamClass descriptor)
-				throws ClassNotFoundException
+				throws ClassNotFoundException,
+					IOException
 		{
 			final ClassLoader currentLoader = Thread.currentThread ().getContextClassLoader ();
-			if (currentLoader == null) {
-				return (null);
+			Class<?> clasz = null;
+			if (currentLoader != null) {
+				try {
+					clasz = currentLoader.loadClass (descriptor.getName ());
+				} catch (final ClassNotFoundException exception) {
+					// NOTE: intentional
+				}
 			}
-			final Class<?> clasz = currentLoader.loadClass (descriptor.getName ());
+			if (clasz == null) {
+				clasz = super.resolveClass (descriptor);
+			}
 			return clasz;
 		}
 	}
