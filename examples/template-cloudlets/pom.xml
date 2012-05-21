@@ -133,4 +133,16 @@
 		
 	</properties>
 	
+	<repositories>
+		<repository>
+			<id>developers.mosaic-cloud.eu</id>
+			<name>mOSAIC Repository</name>
+			<layout>default</layout>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	
 </project>
