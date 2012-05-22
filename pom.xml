@@ -31,7 +31,11 @@
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>${versions.plugins.eclipse}</version>
 				<configuration>
-					<projectNameTemplate>${project.name}</projectNameTemplate>
+					<projectNameTemplate>mosaic-${project.artifactId}</projectNameTemplate>
+					<buildOutputDirectory>${project.build.outputDirectory}-eclipse</buildOutputDirectory>
+					<manifest>${project.build.outputDirectory}</manifest>
+					<downloadJavadocs>true</downloadJavadocs>
+					<downloadSources>true</downloadSources>
 				</configuration>
 			</plugin>
 			<plugin>
