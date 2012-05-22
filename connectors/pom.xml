@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>connectors</artifactId>
-	<name>mosaic-connectors</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

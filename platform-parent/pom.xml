@@ -15,7 +15,7 @@
 	<groupId>eu.mosaic_cloud.platform</groupId>
 	<artifactId>platform-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-platform-parent</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<modules>
 		<module>../cloudlets</module>

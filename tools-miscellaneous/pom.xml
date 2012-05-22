@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>tools-miscellaneous</artifactId>
-	<name>mosaic-tools-miscellaneous</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>tools-transcript</artifactId>
-	<name>mosaic-tools-transcript</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

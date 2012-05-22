@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>components-container</artifactId>
-	<name>mosaic-components-container</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>drivers-container</artifactId>
-	<name>mosaic-drivers-container</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

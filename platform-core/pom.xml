@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>platform-core</artifactId>
-	<name>mosaic-platform-core</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

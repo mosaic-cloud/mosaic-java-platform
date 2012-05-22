@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>tools-classpath-exporter</artifactId>
-	<name>mosaic-tools-classpath-exporter</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

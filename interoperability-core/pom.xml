@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>interoperability-core</artifactId>
-	<name>mosaic-interoperability-core</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

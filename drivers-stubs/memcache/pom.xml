@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>drivers-stubs-memcache</artifactId>
-	<name>mosaic-drivers-stubs-memcache</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

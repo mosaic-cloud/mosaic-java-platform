@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>components-launcher</artifactId>
-	<name>mosaic-components-launcher</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

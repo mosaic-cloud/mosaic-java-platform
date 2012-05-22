@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>tools-threading</artifactId>
-	<name>mosaic-tools-threading</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

@@ -10,7 +10,7 @@
 	<version>0.5.1_mosaic_dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
-	<name>mosaic-parent</name>
+	<name>mosaic-${project.artifactId}</name>
 	<url>http://developers.mosaic-cloud.eu/</url>
 	<inceptionYear>2010</inceptionYear>
 	

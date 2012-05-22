@@ -15,7 +15,7 @@
 	<groupId>eu.mosaic_cloud.tools</groupId>
 	<artifactId>tools-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-tools-parent</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<modules>
 		<module>../tools-callbacks</module>

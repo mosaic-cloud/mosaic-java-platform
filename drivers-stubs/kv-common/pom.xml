@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>drivers-stubs-kv-common</artifactId>
-	<name>mosaic-drivers-stubs-kv-common</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

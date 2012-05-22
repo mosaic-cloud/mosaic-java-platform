@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>tools-json</artifactId>
-	<name>mosaic-tools-json</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

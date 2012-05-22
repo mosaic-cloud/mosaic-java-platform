@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>drivers-stubs-riak</artifactId>
-	<name>mosaic-drivers-stubs-riak</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

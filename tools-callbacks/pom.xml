@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>tools-callbacks</artifactId>
-	<name>mosaic-tools-callbacks</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

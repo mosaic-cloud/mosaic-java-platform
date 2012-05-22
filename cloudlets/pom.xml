@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>cloudlets</artifactId>
-	<name>mosaic-cloudlets</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

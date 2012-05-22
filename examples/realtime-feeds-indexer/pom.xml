@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>examples-realtime-feeds-indexer</artifactId>
-	<name>mosaic-examples-realtime-feeds-indexer</name>
+	<name>mosaic-${project.artifactId}</name>
 	<description>An example of a cloudlet for Twitter feeds indexing</description>
 	
 	<dependencies>

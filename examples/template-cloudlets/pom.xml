@@ -12,7 +12,7 @@
 	<groupId>eu.mosaic_cloud.examples</groupId>
 	<artifactId>examples-template-cloudlets</artifactId>
 	<version>0.5.1_mosaic_dev-SNAPSHOT</version>
-	<name>mosaic-examples-template-cloudlets</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<!--
 		NOTE: Always use the `<scope>provided</scope>` for things which

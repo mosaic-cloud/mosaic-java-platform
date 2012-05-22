@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>tools-zeromq</artifactId>
-	<name>mosaic-tools-zeromq</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

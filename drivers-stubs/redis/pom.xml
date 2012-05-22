@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>drivers-stubs-redis</artifactId>
-	<name>mosaic-drivers-stubs-redis</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

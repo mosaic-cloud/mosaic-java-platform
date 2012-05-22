@@ -13,7 +13,7 @@
 	</parent>
 	
 	<artifactId>components-httpg-jetty-connector</artifactId>
-	<name>mosaic-components-httpg-jetty-connector</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

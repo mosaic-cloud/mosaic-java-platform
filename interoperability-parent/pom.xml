@@ -15,7 +15,7 @@
 	<groupId>eu.mosaic_cloud.interoperability</groupId>
 	<artifactId>interoperability-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-interoperability-parent</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<modules>
 		<module>../interoperability-core</module>

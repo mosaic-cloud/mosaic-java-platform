@@ -15,7 +15,7 @@
 	<groupId>eu.mosaic_cloud.examples</groupId>
 	<artifactId>examples-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-examples-parent</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<modules>
 		<module>../realtime-feeds-indexer</module>
