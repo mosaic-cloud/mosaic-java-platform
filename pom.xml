@@ -79,10 +79,10 @@
 	
 	<repositories>
 		<repository>
-			<id>mosaic</id>
+			<id>developers.mosaic-cloud.eu</id>
 			<name>mOSAIC Maven Repository</name>
 			<layout>default</layout>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 			<snapshots>
 				<updatePolicy>always</updatePolicy>
 				<enabled>true</enabled>
@@ -153,15 +153,15 @@
 			<url>scp://builder.mosaic.ieat.ro/srv/sites/mosaic-java-platform</url>
 		</site>
 		<repository>
-			<id>developers.mosaic-cloud.eu</id>
+			<id>developers.mosaic-cloud.eu-releases</id>
 			<name>developers.mosaic-cloud.eu-releases</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 		</repository>
 		<snapshotRepository>
-			<id>developers.mosaic-cloud.eu</id>
+			<id>developers.mosaic-cloud.eu-snapshots</id>
 			<name>developers.mosaic-cloud.eu-snapshots</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 		</snapshotRepository>
 	</distributionManagement>
 	

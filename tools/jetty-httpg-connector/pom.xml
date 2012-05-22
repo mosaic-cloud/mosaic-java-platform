@@ -143,14 +143,14 @@
 			<url>file:///srv/sites/mosaic-jetty-httpg-connector</url>
 		</site>
 		<repository>
-			<id>developers.mosaic-cloud.eu</id>
+			<id>developers.mosaic-cloud.eu-releases</id>
 			<name>developers.mosaic-cloud.eu-releases</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 		</repository>
 		<snapshotRepository>
-			<id>developers.mosaic-cloud.eu</id>
+			<id>developers.mosaic-cloud.eu-snapshots</id>
 			<name>developers.mosaic-cloud.eu-snapshots</name>
-			<url>http://developers.mosaic-cloud.eu:8081/artifactory/mosaic</url>
+			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 		</snapshotRepository>
 	</distributionManagement>
 
