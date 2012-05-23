@@ -53,7 +53,7 @@
 				<version>${versions.plugins.dependency}</version>
 				<executions>
 					<execution>
-						<phase>package${_maven_pom_skip_analyze}</phase>
+						<phase>verify${_maven_pom_skip_analyze}</phase>
 						<goals>
 							<goal>analyze-only</goal>
 						</goals>
@@ -63,6 +63,32 @@
 					<failOnWarning>true</failOnWarning>
 					<ignoreNonCompile>true</ignoreNonCompile>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${versions.plugins.source}</version>
+				<executions>
+					<execution>
+						<phase>verify${_maven_pom_skip_source}</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${versions.plugins.javadoc}</version>
+				<executions>
+					<execution>
+						<phase>verify${_maven_pom_skip_javadoc}</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -92,6 +118,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${versions.plugins.surefire}</version>
 				<configuration>
+					<skipTests>${_maven_pom_skip_tests}</skipTests>
 					<argLine>-Djava.library.path=${java.library.path}:${project.basedir}/lib</argLine>
 				</configuration>
 			</plugin>
@@ -275,6 +302,7 @@
 		<versions.plugins.project-info-reports>2.4</versions.plugins.project-info-reports>
 		<versions.plugins.resources>2.5</versions.plugins.resources>
 		<versions.plugins.site>3.1</versions.plugins.site>
+		<versions.plugins.source>2.1.2</versions.plugins.source>
 		<versions.plugins.surefire>2.11</versions.plugins.surefire>
 		<versions.plugins.wagon>1.0</versions.plugins.wagon>
 		<versions.plugins.war>2.1.1</versions.plugins.war>
@@ -286,9 +314,13 @@
 		
 		<license.licenseName>apache_v2</license.licenseName>
 		
-		<_maven_pom_skip_analyze />
-		<_maven_pom_skip_licenses />
-		<_maven_pom_skip_formatter />
+		<_maven_pom_skip_all />
+		<_maven_pom_skip_tests>true</_maven_pom_skip_tests>
+		<_maven_pom_skip_source>${_maven_pom_skip_all}</_maven_pom_skip_source>
+		<_maven_pom_skip_javadoc>${_maven_pom_skip_all}</_maven_pom_skip_javadoc>
+		<_maven_pom_skip_analyze>${_maven_pom_skip_all}</_maven_pom_skip_analyze>
+		<_maven_pom_skip_licenses>${_maven_pom_skip_all}</_maven_pom_skip_licenses>
+		<_maven_pom_skip_formatter>${_maven_pom_skip_all}</_maven_pom_skip_formatter>
 		
 		<_maven_pom_package />
 		<_maven_pom_classifier />
