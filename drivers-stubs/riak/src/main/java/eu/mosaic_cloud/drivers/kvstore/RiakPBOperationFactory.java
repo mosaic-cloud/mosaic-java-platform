@@ -220,6 +220,7 @@ public final class RiakPBOperationFactory
 	}
 	
 	private final String bucket;
+	@SuppressWarnings ("unused")
 	private final String clientId;
 	private final BaseExceptionTracer exceptions;
 	private final RiakClient riakcl;

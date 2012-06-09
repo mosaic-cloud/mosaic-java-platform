@@ -117,7 +117,7 @@ public abstract class BaseDataEncoder<TData extends Object>
 			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-type; throwing!", metadata.getContentType ());
 			throw (new EncodingException (String.format ("unexpected content-type: `%s`", metadata.getContentType ())));
 		}
-		if ((metadata.getContentEncoding () != null) && !this.expectedEncodingMetadata.getContentEncoding ().equals (metadata.getContentEncoding ())) {
+		if ((metadata.getContentEncoding () != null) && !metadata.getContentEncoding ().isEmpty () && !this.expectedEncodingMetadata.getContentEncoding ().equals (metadata.getContentEncoding ())) {
 			this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-encoding; throwing!", metadata.getContentEncoding ());
 			throw (new EncodingException (String.format ("unexpected content-encoding: `%s`", metadata.getContentEncoding ())));
 		}

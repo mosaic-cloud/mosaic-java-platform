@@ -32,6 +32,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -75,7 +76,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> delete (final String key)
+	public CallbackCompletion<Void> delete (final String key)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("deleting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -83,7 +84,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		final Message message = new Message (KeyValueMessage.DELETE_REQUEST, requestBuilder.build ());
-		return (this.sendRequest (message, token, Boolean.class));
+		return this.sendRequest (message, token, Void.class);
 	}
 	
 	@Override
@@ -115,15 +116,15 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		return ((CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest (message, token, List.class)));
 	}
 	
-	public CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final int exp, final TValue data, final TExtra extra)
 	{
-		return (this.sendSetRequest (key, data, exp));
+		return this.sendSetRequest (key, data, exp, extra);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra)
 	{
-		return (this.set (key, 0, data));
+		return this.set (key, 0, data, extra);
 	}
 	
 	@Override
@@ -235,7 +236,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		return (this.sendRequest (message, token, outcomeClass));
 	}
 	
-	protected CallbackCompletion<Boolean> sendSetRequest (final String key, final TValue data, final int exp)
+	protected <TExtra extends MessageEnvelope> CallbackCompletion<Void> sendSetRequest (final String key, final TValue data, final int exp, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("setting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -243,9 +244,13 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		requestBuilder.setExpTime (exp);
-		CallbackCompletion<Boolean> result = null;
-		// FIXME enecoding metadata
-		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		CallbackCompletion<Void> result = null;
+		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
+		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
+		if (null != encodingMetadata.getContentEncoding ())
+			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
+		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		try {
 			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
@@ -255,7 +260,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (KeyValueMessage.SET_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class);
+			result = this.sendRequest (message, token, Void.class);
 		}
 		return (result);
 	}

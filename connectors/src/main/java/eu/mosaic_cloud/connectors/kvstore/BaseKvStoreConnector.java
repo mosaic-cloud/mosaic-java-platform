@@ -24,6 +24,7 @@ package eu.mosaic_cloud.connectors.kvstore;
 import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -49,7 +50,7 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> delete (final String key)
+	public CallbackCompletion<Void> delete (final String key)
 	{
 		return this.proxy.delete (key);
 	}
@@ -67,8 +68,8 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra)
 	{
-		return this.proxy.set (key, data);
+		return this.proxy.set (key, data, extra);
 	}
 }

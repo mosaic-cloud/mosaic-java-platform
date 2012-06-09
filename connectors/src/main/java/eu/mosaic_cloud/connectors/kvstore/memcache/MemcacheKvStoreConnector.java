@@ -27,6 +27,7 @@ import java.util.Map;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -85,9 +86,9 @@ public class MemcacheKvStoreConnector<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data, final TExtra extra)
 	{
-		return this.proxy.set (key, exp, data);
+		return this.proxy.set (key, exp, data, extra);
 	}
 	
 	/**

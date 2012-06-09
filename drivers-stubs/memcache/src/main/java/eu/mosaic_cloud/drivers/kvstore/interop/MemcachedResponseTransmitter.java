@@ -90,9 +90,10 @@ public class MemcachedResponseTransmitter
 						final KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry.newBuilder ();
 						kvEntry.setKey (entry.getKey ());
 						final IdlCommon.Envelope.Builder envelope = IdlCommon.Envelope.newBuilder ();
-						envelope.setContentEncoding (entry.getValue ().getContentEncoding ());
+						if (null != entry.getValue ().getContentEncoding ())
+							envelope.setContentEncoding (entry.getValue ().getContentEncoding ());
 						envelope.setContentType (entry.getValue ().getContentType ());
-						kvEntry.setEnvelope (envelope);
+						kvEntry.setEnvelope (envelope.build ());
 						if (entry.getValue ().getData () == null) {
 							kvEntry.setValue (ByteString.EMPTY);
 						} else {

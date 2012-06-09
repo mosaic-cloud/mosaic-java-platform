@@ -24,6 +24,7 @@ package eu.mosaic_cloud.connectors.kvstore;
 import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.IConnector;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -45,7 +46,7 @@ public interface IKvStoreConnector<TValue extends Object>
 	 *            the key to delete
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> delete (String key);
+	CallbackCompletion<Void> delete (String key);
 	
 	/**
 	 * Gets data associated with a single key.
@@ -70,7 +71,9 @@ public interface IKvStoreConnector<TValue extends Object>
 	 *            the key under which this data should be stored
 	 * @param data
 	 *            the data
+	 * @param extra
+	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> set (String key, TValue data);
+	<TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra);
 }

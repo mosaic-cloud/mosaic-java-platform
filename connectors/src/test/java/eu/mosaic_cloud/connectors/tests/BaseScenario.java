@@ -130,7 +130,7 @@ public class BaseScenario
 	private ConnectorEnvironment environment;
 	private TranscriptExceptionTracer exceptions;
 	private QueueingExceptionTracer exceptionsQueue;
-	private final long poolTimeout = 1000;
+	private final long poolTimeout = -1;
 	private BasicThreadingContext threading;
 	private Transcript transcript;
 }
