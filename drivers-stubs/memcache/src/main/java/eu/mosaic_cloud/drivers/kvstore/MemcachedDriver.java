@@ -36,6 +36,7 @@ import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -82,40 +83,40 @@ public final class MemcachedDriver
 		this.logger.trace ("MemcachedDriver destroyed."); // $NON-NLS-1$
 	}
 	
-	public IResult<Boolean> invokeAddOperation (final String clientId, final String key, final int exp, final byte[] data, final IOperationCompletionHandler<Boolean> complHandler)
+	public IResult<Boolean> invokeAddOperation (final String clientId, final KeyValueMessage kvMessage, final int exp, final IOperationCompletionHandler<Boolean> complHandler)
 	{
-		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.ADD, key, exp, data);
+		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.ADD, kvMessage, exp);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<Boolean> invokeAppendOperation (final String clientId, final String key, final byte[] data, final IOperationCompletionHandler<Boolean> complHandler)
+	public IResult<Boolean> invokeAppendOperation (final String clientId, final KeyValueMessage kvMessage, final IOperationCompletionHandler<Boolean> complHandler)
 	{
-		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.APPEND, key, data);
+		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.APPEND, kvMessage);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<Boolean> invokeCASOperation (final String clientId, final String key, final byte[] data, final IOperationCompletionHandler<Boolean> complHandler)
+	public IResult<Boolean> invokeCASOperation (final String clientId, final KeyValueMessage kvMessage, final IOperationCompletionHandler<Boolean> complHandler)
 	{
-		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.CAS, key, data);
+		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.CAS, kvMessage);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<Map<String, KeyValueMessage>> invokeGetBulkOperation (final String clientId, final List<String> keys, final IOperationCompletionHandler<Map<String, KeyValueMessage>> complHandler)
+	public IResult<Map<String, KeyValueMessage>> invokeGetBulkOperation (final String clientId, final List<String> keys, final EncodingMetadata expectedEncoding, final IOperationCompletionHandler<Map<String, KeyValueMessage>> complHandler)
 	{
 		final String[] aKeys = keys.toArray (new String[keys.size ()]);
-		@SuppressWarnings ("unchecked") final GenericOperation<Map<String, KeyValueMessage>> operation = (GenericOperation<Map<String, KeyValueMessage>>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.GET_BULK, (Object[]) aKeys);
+		@SuppressWarnings ("unchecked") final GenericOperation<Map<String, KeyValueMessage>> operation = (GenericOperation<Map<String, KeyValueMessage>>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.GET_BULK, (Object[]) aKeys, expectedEncoding);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<Boolean> invokePrependOperation (final String clientId, final String key, final byte[] data, final IOperationCompletionHandler<Boolean> complHandler)
+	public IResult<Boolean> invokePrependOperation (final String clientId, final KeyValueMessage kvMessage, final IOperationCompletionHandler<Boolean> complHandler)
 	{
-		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.PREPEND, key, data);
+		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.PREPEND, kvMessage);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<Boolean> invokeReplaceOperation (final String clientId, final String key, final int exp, final byte[] data, final IOperationCompletionHandler<Boolean> complHandler)
+	public IResult<Boolean> invokeReplaceOperation (final String clientId, final KeyValueMessage kvMessage, final int exp, final IOperationCompletionHandler<Boolean> complHandler)
 	{
-		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.REPLACE, key, exp, data);
+		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) super.getOperationFactory (clientId, MemcachedOperationFactory.class).getOperation (KeyValueOperations.REPLACE, kvMessage, exp);
 		return this.startOperation (operation, complHandler);
 	}
 	

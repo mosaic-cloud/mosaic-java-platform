@@ -29,6 +29,7 @@ message SetRequest {
 message GetRequest {
 	required mosaic_cloud.idl.common.CompletionToken token = 1;
 	repeated string key = 2;
+	required mosaic_cloud.idl.common.Envelope envelope = 3;
 }
 
 message GetReply {

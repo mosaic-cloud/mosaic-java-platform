@@ -35,6 +35,7 @@ import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
@@ -147,10 +148,9 @@ public final class MemcachedOperationFactory
 					throws ExecutionException,
 						InterruptedException
 			{
-				final String key = (String) parameters[0];
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
 				final int exp = (Integer) parameters[1];
-				final byte[] data = (byte[]) parameters[2];
-				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.add (key, exp, data);
+				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.add (kvMessage.getKey (), exp, kvMessage.getData ());
 				return opResult.get ();
 			}
 		});
@@ -164,10 +164,9 @@ public final class MemcachedOperationFactory
 					throws ExecutionException,
 						InterruptedException
 			{
-				final String key = (String) parameters[0];
-				final byte[] data = (byte[]) parameters[1];
-				final long cas = MemcachedOperationFactory.this.mcClient.gets (key).getCas ();
-				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.append (cas, key, data);
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
+				final long cas = MemcachedOperationFactory.this.mcClient.gets (kvMessage.getKey ()).getCas ();
+				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.append (cas, kvMessage.getKey (), kvMessage.getData ());
 				return opResult.get ();
 			}
 		});
@@ -181,10 +180,9 @@ public final class MemcachedOperationFactory
 					throws ExecutionException,
 						InterruptedException
 			{
-				final String key = (String) parameters[0];
-				final byte[] data = (byte[]) parameters[1];
-				final long cas = MemcachedOperationFactory.this.mcClient.gets (key).getCas ();
-				final Future<CASResponse> opResult = MemcachedOperationFactory.this.mcClient.asyncCAS (key, cas, data);
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
+				final long cas = MemcachedOperationFactory.this.mcClient.gets (kvMessage.getKey ()).getCas ();
+				final Future<CASResponse> opResult = MemcachedOperationFactory.this.mcClient.asyncCAS (kvMessage.getKey (), cas, kvMessage.getData ());
 				return (opResult.get () == CASResponse.OK);
 			}
 		});
@@ -213,15 +211,14 @@ public final class MemcachedOperationFactory
 					throws ExecutionException,
 						InterruptedException
 			{
-				final String[] keys = (String[]) parameters;
+				final String[] keys = (String[]) parameters[0];
+				final EncodingMetadata expectedEncoding = (EncodingMetadata) parameters[1];
 				final Future<Map<String, Object>> opResult = MemcachedOperationFactory.this.mcClient.asyncGetBulk (keys);
 				final Map<String, KeyValueMessage> result = new HashMap<String, KeyValueMessage> ();
 				KeyValueMessage kvMessage = null;
 				for (final Map.Entry<String, Object> entry : opResult.get ().entrySet ()) {
 					kvMessage = null;
-					if (null != entry.getValue ()) {
-						kvMessage = new KeyValueMessage (entry.getKey (), (byte[]) entry.getValue (), MemcachedDriver.DEFAULT_CONTENT_TYPE, MemcachedDriver.DEFAULT_CONTENT_ENCODING);
-					}
+					kvMessage = new KeyValueMessage (entry.getKey (), (byte[]) entry.getValue (), expectedEncoding.getContentEncoding (), expectedEncoding.getContentType ());
 					result.put (entry.getKey (), kvMessage);
 				}
 				return result;
@@ -238,12 +235,11 @@ public final class MemcachedOperationFactory
 						InterruptedException
 			{
 				final String key = (String) parameters[0];
+				final EncodingMetadata expectedEncoding = (EncodingMetadata) parameters[1];
 				final Future<Object> opResult = MemcachedOperationFactory.this.mcClient.asyncGet (key);
 				final byte[] data = (byte[]) opResult.get ();
 				KeyValueMessage kvMessage = null;
-				if (null != data) {
-					kvMessage = new KeyValueMessage (key, data, MemcachedDriver.DEFAULT_CONTENT_TYPE, MemcachedDriver.DEFAULT_CONTENT_ENCODING);
-				}
+				kvMessage = new KeyValueMessage (key, data, expectedEncoding.getContentEncoding (), expectedEncoding.getContentType ());
 				return kvMessage;
 			}
 		});
@@ -257,10 +253,9 @@ public final class MemcachedOperationFactory
 					throws ExecutionException,
 						InterruptedException
 			{
-				final String key = (String) parameters[0];
-				final byte[] data = (byte[]) parameters[1];
-				final long cas = MemcachedOperationFactory.this.mcClient.gets (key).getCas ();
-				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.prepend (cas, key, data);
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
+				final long cas = MemcachedOperationFactory.this.mcClient.gets (kvMessage.getKey ()).getCas ();
+				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.prepend (cas, kvMessage.getKey (), kvMessage.getData ());
 				return opResult.get ();
 			}
 		});
@@ -274,10 +269,9 @@ public final class MemcachedOperationFactory
 					throws ExecutionException,
 						InterruptedException
 			{
-				final String key = (String) parameters[0];
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
 				final int exp = (Integer) parameters[1];
-				final byte[] data = (byte[]) parameters[2];
-				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.replace (key, exp, data);
+				final Future<Boolean> opResult = MemcachedOperationFactory.this.mcClient.replace (kvMessage.getKey (), exp, kvMessage.getData ());
 				return opResult.get ();
 			}
 		});

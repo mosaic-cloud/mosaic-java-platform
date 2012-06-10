@@ -32,7 +32,9 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
@@ -66,7 +68,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> add (final String key, final int exp, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> add (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("adding to the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -74,8 +76,14 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		requestBuilder.setExpTime (exp);
-		CallbackCompletion<Boolean> result = null;
-		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
+		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
+		if (null != encodingMetadata.getContentEncoding ()) {
+			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
+		}
+		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
+		CallbackCompletion<Void> result = null;
 		try {
 			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
@@ -85,22 +93,27 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (MemcachedMessage.ADD_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class);
+			result = this.sendRequest (message, token, Void.class);
 		}
-		return (result);
+		return result;
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> append (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> append (final String key, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("appending to the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
 		final MemcachedPayloads.AppendRequest.Builder requestBuilder = MemcachedPayloads.AppendRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
-		CallbackCompletion<Boolean> result = null;
-		// FIXME: The encoding meta-data should be obtained from the request's "envelope".
-		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
+		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
+		if (null != encodingMetadata.getContentEncoding ()) {
+			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
+		}
+		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
+		CallbackCompletion<Void> result = null;
 		try {
 			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
@@ -110,21 +123,27 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (MemcachedMessage.APPEND_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class);
+			result = this.sendRequest (message, token, Void.class);
 		}
-		return (result);
+		return result;
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> cas (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> cas (final String key, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("cas-ing the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
 		final MemcachedPayloads.CasRequest.Builder requestBuilder = MemcachedPayloads.CasRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
-		CallbackCompletion<Boolean> result = null;
-		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
+		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
+		if (null != encodingMetadata.getContentEncoding ()) {
+			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
+		}
+		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
+		CallbackCompletion<Void> result = null;
 		try {
 			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
@@ -134,16 +153,16 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (MemcachedMessage.CAS_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class);
+			result = this.sendRequest (message, token, Void.class);
 		}
-		return (result);
+		return result;
 	}
 	
 	@Override
 	@SuppressWarnings ("unchecked")
-	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys, final TExtra extra)
 	{
-		return (this.sendGetRequest (keys, (Class<Map<String, TValue>>) ((Class<?>) Map.class)));
+		return this.sendGetRequest (keys, (Class<Map<String, TValue>>) ((Class<?>) Map.class), extra);
 	}
 	
 	@Override
@@ -157,15 +176,21 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> prepend (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> prepend (final String key, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("prepending to the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
 		final MemcachedPayloads.PrependRequest.Builder requestBuilder = MemcachedPayloads.PrependRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
-		CallbackCompletion<Boolean> result = null;
-		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
+		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
+		if (null != encodingMetadata.getContentEncoding ()) {
+			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
+		}
+		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
+		CallbackCompletion<Void> result = null;
 		try {
 			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
@@ -175,13 +200,13 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (MemcachedMessage.PREPEND_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class);
+			result = this.sendRequest (message, token, Void.class);
 		}
-		return (result);
+		return result;
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> replace (final String key, final int exp, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> replace (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("replacing the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -189,8 +214,14 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		requestBuilder.setExpTime (exp);
-		CallbackCompletion<Boolean> result = null;
-		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
+		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
+		if (null != encodingMetadata.getContentEncoding ()) {
+			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
+		}
+		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
+		CallbackCompletion<Void> result = null;
 		try {
 			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
 			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
@@ -200,9 +231,9 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		}
 		if (result == null) {
 			final Message message = new Message (MemcachedMessage.REPLACE_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class);
+			result = this.sendRequest (message, token, Void.class);
 		}
-		return (result);
+		return result;
 	}
 	
 	@Override

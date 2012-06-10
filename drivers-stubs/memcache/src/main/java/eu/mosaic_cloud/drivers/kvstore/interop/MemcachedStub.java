@@ -36,6 +36,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest;
@@ -114,6 +115,7 @@ public class MemcachedStub
 		int exp;
 		IResult<Boolean> resultStore;
 		DriverOperationFinishedHandler callback;
+		final eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage messageData;
 		final MemcachedDriver driver = super.getDriver (MemcachedDriver.class);
 		final String mssgPrefix = "MemcachedStub - Received request for ";
 		if (message.specification instanceof KeyValueMessage) {
@@ -128,7 +130,7 @@ public class MemcachedStub
 					MemcachedStub.logger.trace (mssgPrefix + " SET key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 					exp = setRequest.getExpTime ();
 					data = setRequest.getValue ().toByteArray ();
-					final eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, setRequest.getEnvelope ().getContentEncoding (), setRequest.getEnvelope ().getContentType ());
+					messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, setRequest.getEnvelope ().getContentEncoding (), setRequest.getEnvelope ().getContentType ());
 					callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
 					resultStore = driver.invokeSetOperation (token.getClientId (), messageData, exp, callback);
 					callback.setDetails (KeyValueOperations.SET, resultStore);
@@ -140,7 +142,8 @@ public class MemcachedStub
 					token = getRequest.getToken ();
 					MemcachedStub.logger.trace (mssgPrefix + "GET_BULK " + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 					callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
-					final IResult<Map<String, eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage>> resultGet = driver.invokeGetBulkOperation (token.getClientId (), getRequest.getKeyList (), callback);
+					final EncodingMetadata expectedEncoding = new EncodingMetadata (getRequest.getEnvelope ().getContentType (), getRequest.getEnvelope ().getContentEncoding ());
+					final IResult<Map<String, eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage>> resultGet = driver.invokeGetBulkOperation (token.getClientId (), getRequest.getKeyList (), expectedEncoding, callback);
 					callback.setDetails (KeyValueOperations.GET_BULK, resultGet);
 					handle = true;
 				}
@@ -159,8 +162,9 @@ public class MemcachedStub
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				exp = addRequest.getExpTime ();
 				data = addRequest.getValue ().toByteArray ();
+				messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, addRequest.getEnvelope ().getContentEncoding (), addRequest.getEnvelope ().getContentType ());
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
-				resultStore = driver.invokeAddOperation (token.getClientId (), key, exp, data, callback);
+				resultStore = driver.invokeAddOperation (token.getClientId (), messageData, exp, callback);
 				callback.setDetails (KeyValueOperations.ADD, resultStore);
 				break;
 			case APPEND_REQUEST :
@@ -168,10 +172,10 @@ public class MemcachedStub
 				token = appendRequest.getToken ();
 				key = appendRequest.getKey ();
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = appendRequest.getExpTime ();
 				data = appendRequest.getValue ().toByteArray ();
+				messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, appendRequest.getEnvelope ().getContentEncoding (), appendRequest.getEnvelope ().getContentType ());
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
-				resultStore = driver.invokeAppendOperation (token.getClientId (), key, data, callback);
+				resultStore = driver.invokeAppendOperation (token.getClientId (), messageData, callback);
 				callback.setDetails (KeyValueOperations.APPEND, resultStore);
 				break;
 			case PREPEND_REQUEST :
@@ -179,10 +183,10 @@ public class MemcachedStub
 				token = prependRequest.getToken ();
 				key = prependRequest.getKey ();
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = prependRequest.getExpTime ();
 				data = prependRequest.getValue ().toByteArray ();
+				messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, prependRequest.getEnvelope ().getContentEncoding (), prependRequest.getEnvelope ().getContentType ());
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
-				resultStore = driver.invokePrependOperation (token.getClientId (), key, data, callback);
+				resultStore = driver.invokePrependOperation (token.getClientId (), messageData, callback);
 				callback.setDetails (KeyValueOperations.PREPEND, resultStore);
 				break;
 			case REPLACE_REQUEST :
@@ -192,8 +196,9 @@ public class MemcachedStub
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				exp = replaceRequest.getExpTime ();
 				data = replaceRequest.getValue ().toByteArray ();
+				messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, replaceRequest.getEnvelope ().getContentEncoding (), replaceRequest.getEnvelope ().getContentType ());
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
-				resultStore = driver.invokeReplaceOperation (token.getClientId (), key, exp, data, callback);
+				resultStore = driver.invokeReplaceOperation (token.getClientId (), messageData, exp, callback);
 				callback.setDetails (KeyValueOperations.REPLACE, resultStore);
 				break;
 			case CAS_REQUEST :
@@ -201,10 +206,10 @@ public class MemcachedStub
 				token = casRequest.getToken ();
 				key = casRequest.getKey ();
 				MemcachedStub.logger.trace (mssgPrefix + mcMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				exp = casRequest.getExpTime ();
 				data = casRequest.getValue ().toByteArray ();
+				messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, casRequest.getEnvelope ().getContentEncoding (), casRequest.getEnvelope ().getContentType ());
 				callback = new DriverOperationFinishedHandler (token, session, MemcachedDriver.class, MemcachedResponseTransmitter.class);
-				resultStore = driver.invokeCASOperation (token.getClientId (), key, data, callback);
+				resultStore = driver.invokeCASOperation (token.getClientId (), messageData, callback);
 				callback.setDetails (KeyValueOperations.CAS, resultStore);
 				break;
 			default:

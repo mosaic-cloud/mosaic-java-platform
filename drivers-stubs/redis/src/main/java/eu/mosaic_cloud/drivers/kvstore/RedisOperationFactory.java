@@ -30,6 +30,7 @@ import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 
 import redis.clients.jedis.Jedis;
@@ -140,10 +141,9 @@ public final class RedisOperationFactory
 				final String key = (String) parameters[0];
 				final byte[] keyBytes = SafeEncoder.encode (key);
 				final byte[] result = RedisOperationFactory.this.redisClient.get (keyBytes);
+				final EncodingMetadata expectedEncoding = (EncodingMetadata) parameters[1];
 				KeyValueMessage kvMessage = null;
-				if (null != result) {
-					kvMessage = new KeyValueMessage (key, result, RedisDriver.DEFAULT_CONTENT_TYPE, RedisDriver.DEFAULT_CONTENT_ENCODING);
-				}
+				kvMessage = new KeyValueMessage (key, result, expectedEncoding.getContentEncoding (), expectedEncoding.getContentType ());
 				return kvMessage;
 			}
 		});

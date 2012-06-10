@@ -53,9 +53,12 @@ public interface IKvStoreConnector<TValue extends Object>
 	 * 
 	 * @param key
 	 *            the key
+	 * @param extra
+	 *            additional information needed for processing the message (e.g.
+	 *            expected message encoding)
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<TValue> get (String key);
+	<TExtra extends MessageEnvelope> CallbackCompletion<TValue> get (String key, final TExtra extra);
 	
 	/**
 	 * Lists the keys of the bucket used by the connector.

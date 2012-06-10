@@ -43,6 +43,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -167,7 +168,8 @@ public class KeyValueStub
 				}
 				key = getRequest.getKey (0);
 				KeyValueStub.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				final IResult<eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage> resultGet = driver.invokeGetOperation (token.getClientId (), key, getCallback);
+				final EncodingMetadata expectedEncoding = new EncodingMetadata (getRequest.getEnvelope ().getContentType (), getRequest.getEnvelope ().getContentEncoding ());
+				final IResult<eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage> resultGet = driver.invokeGetOperation (token.getClientId (), key, expectedEncoding, getCallback);
 				getCallback.setDetails (KeyValueOperations.GET, resultGet);
 				break;
 			case DELETE_REQUEST :

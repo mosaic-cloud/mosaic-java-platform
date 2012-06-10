@@ -121,7 +121,7 @@ public class KeyValueResponseTransmitter
 						envelope.setContentEncoding (entry.getValue ().getContentEncoding ());
 					envelope.setContentType (entry.getValue ().getContentType ());
 					kvEntry.setEnvelope (envelope.build ());
-					if (entry.getValue () == null) {
+					if (entry.getValue ().getData () == null) {
 						kvEntry.setValue (ByteString.EMPTY);
 					} else {
 						kvEntry.setValue (ByteString.copyFrom (entry.getValue ().getData ()));

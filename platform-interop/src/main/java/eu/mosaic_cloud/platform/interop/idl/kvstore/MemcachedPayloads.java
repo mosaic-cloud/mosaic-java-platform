@@ -12,25 +12,25 @@ public final class MemcachedPayloads
 	static {
 		final java.lang.String[] descriptorData =
 				{
-						"\n\017memcached.proto\022\030mosaic_cloud.idl.kvst" + "ore\032\014common.proto\"s\n\nAddRequest\0227\n\005token" + "\030\001 \002(\0132(.mosaic_cloud.idl.common.Complet" + "ionToken\022\013\n\003key\030\002 \002(\t\022\020\n\010exp_time\030\003 \002(\005\022" + "\r\n\005value\030\004 \002(\014\"w\n\016ReplaceRequest\0227\n\005toke" + "n\030\001 \002(\0132(.mosaic_cloud.idl.common.Comple" + "tionToken\022\013\n\003key\030\002 \002(\t\022\020\n\010exp_time\030\003 \002(\005"
-								+ "\022\r\n\005value\030\004 \002(\014\"v\n\rAppendRequest\0227\n\005toke" + "n\030\001 \002(\0132(.mosaic_cloud.idl.common.Comple" + "tionToken\022\013\n\003key\030\002 \002(\t\022\020\n\010exp_time\030\003 \002(\005",
-						"\022\r\n\005value\030\004 \002(\014\"w\n\016PrependRequest\0227\n\005tok" + "en\030\001 \002(\0132(.mosaic_cloud.idl.common.Compl" + "etionToken\022\013\n\003key\030\002 \002(\t\022\020\n\010exp_time\030\003 \002(" + "\005\022\r\n\005value\030\004 \002(\014\"s\n\nCasRequest\0227\n\005token\030" + "\001 \002(\0132(.mosaic_cloud.idl.common.Completi" + "onToken\022\013\n\003key\030\002 \002(\t\022\020\n\010exp_time\030\003 \002(\005\022\r"
-								+ "\n\005value\030\004 \002(\014BC\n,eu.mosaic_cloud.platfor" + "m.interop.idl.kvstoreB\021MemcachedPayloads" + "H\001"};
+						"\n\017memcached.proto\022\030mosaic_cloud.idl.kvst" + "ore\032\014common.proto\"\250\001\n\nAddRequest\0227\n\005toke" + "n\030\001 \002(\0132(.mosaic_cloud.idl.common.Comple" + "tionToken\022\013\n\003key\030\002 \002(\t\022\020\n\010exp_time\030\003 \002(\005" + "\022\r\n\005value\030\004 \002(\014\0223\n\010envelope\030\005 \002(\0132!.mosa" + "ic_cloud.idl.common.Envelope\"\254\001\n\016Replace" + "Request\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.id"
+								+ "l.common.CompletionToken\022\013\n\003key\030\002 \002(\t\022\020\n" + "\010exp_time\030\003 \002(\005\022\r\n\005value\030\004 \002(\014\0223\n\010envelo" + "pe\030\005 \002(\0132!.mosaic_cloud.idl.common.Envel",
+						"ope\"\231\001\n\rAppendRequest\0227\n\005token\030\001 \002(\0132(.m" + "osaic_cloud.idl.common.CompletionToken\022\013" + "\n\003key\030\002 \002(\t\022\r\n\005value\030\003 \002(\014\0223\n\010envelope\030\004" + " \002(\0132!.mosaic_cloud.idl.common.Envelope\"" + "\232\001\n\016PrependRequest\0227\n\005token\030\001 \002(\0132(.mosa" + "ic_cloud.idl.common.CompletionToken\022\013\n\003k" + "ey\030\002 \002(\t\022\r\n\005value\030\003 \002(\014\0223\n\010envelope\030\004 \002("
+								+ "\0132!.mosaic_cloud.idl.common.Envelope\"\226\001\n" + "\nCasRequest\0227\n\005token\030\001 \002(\0132(.mosaic_clou" + "d.idl.common.CompletionToken\022\013\n\003key\030\002 \002(", "\t\022\r\n\005value\030\003 \002(\014\0223\n\010envelope\030\004 \002(\0132!.mos" + "aic_cloud.idl.common.EnvelopeBC\n,eu.mosa" + "ic_cloud.platform.interop.idl.kvstoreB\021M" + "emcachedPayloadsH\001"};
 		final com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner = new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner () {
 			@Override
 			public com.google.protobuf.ExtensionRegistry assignDescriptors (final com.google.protobuf.Descriptors.FileDescriptor root)
 			{
 				MemcachedPayloads.descriptor = root;
 				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AddRequest_descriptor = MemcachedPayloads.getDescriptor ().getMessageTypes ().get (0);
-				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AddRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AddRequest_descriptor, new java.lang.String[] {"Token", "Key", "ExpTime", "Value",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest.Builder.class);
+				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AddRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AddRequest_descriptor, new java.lang.String[] {"Token", "Key", "ExpTime", "Value", "Envelope",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest.Builder.class);
 				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_descriptor = MemcachedPayloads.getDescriptor ().getMessageTypes ().get (1);
-				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_descriptor, new java.lang.String[] {"Token", "Key", "ExpTime", "Value",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest.Builder.class);
+				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_ReplaceRequest_descriptor, new java.lang.String[] {"Token", "Key", "ExpTime", "Value", "Envelope",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest.Builder.class);
 				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AppendRequest_descriptor = MemcachedPayloads.getDescriptor ().getMessageTypes ().get (2);
-				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AppendRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AppendRequest_descriptor, new java.lang.String[] {"Token", "Key", "ExpTime", "Value",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest.Builder.class);
+				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AppendRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_AppendRequest_descriptor, new java.lang.String[] {"Token", "Key", "Value", "Envelope",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest.Builder.class);
 				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_PrependRequest_descriptor = MemcachedPayloads.getDescriptor ().getMessageTypes ().get (3);
-				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_PrependRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_PrependRequest_descriptor, new java.lang.String[] {"Token", "Key", "ExpTime", "Value",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest.Builder.class);
+				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_PrependRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_PrependRequest_descriptor, new java.lang.String[] {"Token", "Key", "Value", "Envelope",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest.Builder.class);
 				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_CasRequest_descriptor = MemcachedPayloads.getDescriptor ().getMessageTypes ().get (4);
-				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_CasRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_CasRequest_descriptor, new java.lang.String[] {"Token", "Key", "ExpTime", "Value",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest.Builder.class);
+				MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_CasRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (MemcachedPayloads.internal_static_mosaic_cloud_idl_kvstore_CasRequest_descriptor, new java.lang.String[] {"Token", "Key", "Value", "Envelope",}, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest.class, eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest.Builder.class);
 				return null;
 			}
 		};
@@ -78,6 +78,18 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
+		{
+			return this.envelope_;
+		}
+		
+		@Override
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+		{
+			return this.envelope_;
+		}
+		
+		@Override
 		public int getExpTime ()
 		{
 			return this.expTime_;
@@ -86,7 +98,7 @@ public final class MemcachedPayloads
 		@Override
 		public String getKey ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -103,9 +115,8 @@ public final class MemcachedPayloads
 		public int getSerializedSize ()
 		{
 			int size = this.memoizedSerializedSize;
-			if (size != -1) {
+			if (size != -1)
 				return size;
-			}
 			size = 0;
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				size += com.google.protobuf.CodedOutputStream.computeMessageSize (1, this.token_);
@@ -118,6 +129,9 @@ public final class MemcachedPayloads
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
 				size += com.google.protobuf.CodedOutputStream.computeBytesSize (4, this.value_);
+			}
+			if (((this.bitField0_ & 0x00000010) == 0x00000010)) {
+				size += com.google.protobuf.CodedOutputStream.computeMessageSize (5, this.envelope_);
 			}
 			size += this.getUnknownFields ().getSerializedSize ();
 			this.memoizedSerializedSize = size;
@@ -140,6 +154,12 @@ public final class MemcachedPayloads
 		public com.google.protobuf.ByteString getValue ()
 		{
 			return this.value_;
+		}
+		
+		@Override
+		public boolean hasEnvelope ()
+		{
+			return ((this.bitField0_ & 0x00000010) == 0x00000010);
 		}
 		
 		@Override
@@ -170,9 +190,8 @@ public final class MemcachedPayloads
 		public final boolean isInitialized ()
 		{
 			final byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
+			if (isInitialized != -1)
 				return isInitialized == 1;
-			}
 			if (!this.hasToken ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
@@ -189,7 +208,15 @@ public final class MemcachedPayloads
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
+			if (!this.hasEnvelope ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
 			if (!this.getToken ().isInitialized ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
+			if (!this.getEnvelope ().isInitialized ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
@@ -226,6 +253,9 @@ public final class MemcachedPayloads
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
 				output.writeBytes (4, this.value_);
 			}
+			if (((this.bitField0_ & 0x00000010) == 0x00000010)) {
+				output.writeMessage (5, this.envelope_);
+			}
 			this.getUnknownFields ().writeTo (output);
 		}
 		
@@ -243,7 +273,7 @@ public final class MemcachedPayloads
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -251,7 +281,7 @@ public final class MemcachedPayloads
 		
 		private com.google.protobuf.ByteString getKeyBytes ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.key_ = b;
@@ -267,6 +297,7 @@ public final class MemcachedPayloads
 			this.key_ = "";
 			this.expTime_ = 0;
 			this.value_ = com.google.protobuf.ByteString.EMPTY;
+			this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 		}
 		
 		static {
@@ -365,12 +396,15 @@ public final class MemcachedPayloads
 		}
 		
 		private int bitField0_;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_;
 		private int expTime_;
-		private java.lang.Object key_;
+		private Object key_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		private com.google.protobuf.ByteString value_;
+		// required .mosaic_cloud.idl.common.Envelope envelope = 5;
+		public static final int ENVELOPE_FIELD_NUMBER = 5;
 		// required int32 exp_time = 3;
 		public static final int EXP_TIME_FIELD_NUMBER = 3;
 		// required string key = 2;
@@ -380,7 +414,6 @@ public final class MemcachedPayloads
 		// required bytes value = 4;
 		public static final int VALUE_FIELD_NUMBER = 4;
 		private static final AddRequest defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -404,7 +437,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -435,6 +468,14 @@ public final class MemcachedPayloads
 					to_bitField0_ |= 0x00000008;
 				}
 				result.value_ = this.value_;
+				if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+					to_bitField0_ |= 0x00000010;
+				}
+				if (this.envelopeBuilder_ == null) {
+					result.envelope_ = this.envelope_;
+				} else {
+					result.envelope_ = this.envelopeBuilder_.build ();
+				}
 				result.bitField0_ = to_bitField0_;
 				this.onBuilt ();
 				return result;
@@ -456,6 +497,24 @@ public final class MemcachedPayloads
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = com.google.protobuf.ByteString.EMPTY;
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
+				this.bitField0_ = (this.bitField0_ & ~0x00000010);
+				return this;
+			}
+			
+			public Builder clearEnvelope ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
+				this.bitField0_ = (this.bitField0_ & ~0x00000010);
 				return this;
 			}
 			
@@ -514,6 +573,33 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					return this.envelope_;
+				} else {
+					return this.envelopeBuilder_.getMessage ();
+				}
+			}
+			
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder ()
+			{
+				this.bitField0_ |= 0x00000010;
+				this.onChanged ();
+				return this.getEnvelopeFieldBuilder ().getBuilder ();
+			}
+			
+			@Override
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+			{
+				if (this.envelopeBuilder_ != null) {
+					return this.envelopeBuilder_.getMessageOrBuilder ();
+				} else {
+					return this.envelope_;
+				}
+			}
+			
+			@Override
 			public int getExpTime ()
 			{
 				return this.expTime_;
@@ -522,7 +608,7 @@ public final class MemcachedPayloads
 			@Override
 			public String getKey ()
 			{
-				final java.lang.Object ref = this.key_;
+				final Object ref = this.key_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.key_ = s;
@@ -566,6 +652,12 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
+			public boolean hasEnvelope ()
+			{
+				return ((this.bitField0_ & 0x00000010) == 0x00000010);
+			}
+			
+			@Override
 			public boolean hasExpTime ()
 			{
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
@@ -604,10 +696,32 @@ public final class MemcachedPayloads
 				if (!this.hasValue ()) {
 					return false;
 				}
+				if (!this.hasEnvelope ()) {
+					return false;
+				}
 				if (!this.getToken ().isInitialized ()) {
 					return false;
 				}
+				if (!this.getEnvelope ().isInitialized ()) {
+					return false;
+				}
 				return true;
+			}
+			
+			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
+			{
+				if (this.envelopeBuilder_ == null) {
+					if (((this.bitField0_ & 0x00000010) == 0x00000010) && (this.envelope_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())) {
+						this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder (this.envelope_).mergeFrom (value).buildPartial ();
+					} else {
+						this.envelope_ = value;
+					}
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.mergeFrom (value);
+				}
+				this.bitField0_ |= 0x00000010;
+				return this;
 			}
 			
 			@Override
@@ -654,6 +768,15 @@ public final class MemcachedPayloads
 							this.value_ = input.readBytes ();
 							break;
 						}
+						case 42 : {
+							final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder ();
+							if (this.hasEnvelope ()) {
+								subBuilder.mergeFrom (this.getEnvelope ());
+							}
+							input.readMessage (subBuilder, extensionRegistry);
+							this.setEnvelope (subBuilder.buildPartial ());
+							break;
+						}
 					}
 				}
 			}
@@ -671,9 +794,8 @@ public final class MemcachedPayloads
 			
 			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest other)
 			{
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest.getDefaultInstance ()) {
+				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest.getDefaultInstance ())
 					return this;
-				}
 				if (other.hasToken ()) {
 					this.mergeToken (other.getToken ());
 				}
@@ -685,6 +807,9 @@ public final class MemcachedPayloads
 				}
 				if (other.hasValue ()) {
 					this.setValue (other.getValue ());
+				}
+				if (other.hasEnvelope ()) {
+					this.mergeEnvelope (other.getEnvelope ());
 				}
 				this.mergeUnknownFields (other.getUnknownFields ());
 				return this;
@@ -703,6 +828,33 @@ public final class MemcachedPayloads
 					this.tokenBuilder_.mergeFrom (value);
 				}
 				this.bitField0_ |= 0x00000001;
+				return this;
+			}
+			
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
+			{
+				if (this.envelopeBuilder_ == null) {
+					if (value == null) {
+						throw new NullPointerException ();
+					}
+					this.envelope_ = value;
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (value);
+				}
+				this.bitField0_ |= 0x00000010;
+				return this;
+			}
+			
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue)
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = builderForValue.build ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (builderForValue.build ());
+				}
+				this.bitField0_ |= 0x00000010;
 				return this;
 			}
 			
@@ -781,9 +933,18 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
+			}
+			
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelopeBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> (this.envelope_, this.getParentForChildren (), this.isClean ());
+					this.envelope_ = null;
+				}
+				return this.envelopeBuilder_;
 			}
 			
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
@@ -799,6 +960,7 @@ public final class MemcachedPayloads
 			{
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
+					this.getEnvelopeFieldBuilder ();
 				}
 			}
 			
@@ -813,10 +975,13 @@ public final class MemcachedPayloads
 			}
 			
 			private int bitField0_;
+			// required .mosaic_cloud.idl.common.Envelope envelope = 5;
+			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> envelopeBuilder_;
 			// required int32 exp_time = 3;
 			private int expTime_;
 			// required string key = 2;
-			private java.lang.Object key_ = "";
+			private Object key_ = "";
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
@@ -831,6 +996,10 @@ public final class MemcachedPayloads
 			extends
 				com.google.protobuf.MessageOrBuilder
 	{
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ();
+		
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ();
+		
 		int getExpTime ();
 		
 		String getKey ();
@@ -840,6 +1009,9 @@ public final class MemcachedPayloads
 		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ();
 		
 		com.google.protobuf.ByteString getValue ();
+		
+		// required .mosaic_cloud.idl.common.Envelope envelope = 5;
+		boolean hasEnvelope ();
 		
 		// required int32 exp_time = 3;
 		boolean hasExpTime ();
@@ -875,15 +1047,21 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
-		public int getExpTime ()
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
 		{
-			return this.expTime_;
+			return this.envelope_;
+		}
+		
+		@Override
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+		{
+			return this.envelope_;
 		}
 		
 		@Override
 		public String getKey ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -900,9 +1078,8 @@ public final class MemcachedPayloads
 		public int getSerializedSize ()
 		{
 			int size = this.memoizedSerializedSize;
-			if (size != -1) {
+			if (size != -1)
 				return size;
-			}
 			size = 0;
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				size += com.google.protobuf.CodedOutputStream.computeMessageSize (1, this.token_);
@@ -911,10 +1088,10 @@ public final class MemcachedPayloads
 				size += com.google.protobuf.CodedOutputStream.computeBytesSize (2, this.getKeyBytes ());
 			}
 			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				size += com.google.protobuf.CodedOutputStream.computeInt32Size (3, this.expTime_);
+				size += com.google.protobuf.CodedOutputStream.computeBytesSize (3, this.value_);
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize (4, this.value_);
+				size += com.google.protobuf.CodedOutputStream.computeMessageSize (4, this.envelope_);
 			}
 			size += this.getUnknownFields ().getSerializedSize ();
 			this.memoizedSerializedSize = size;
@@ -940,9 +1117,9 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
-		public boolean hasExpTime ()
+		public boolean hasEnvelope ()
 		{
-			return ((this.bitField0_ & 0x00000004) == 0x00000004);
+			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
@@ -960,16 +1137,15 @@ public final class MemcachedPayloads
 		@Override
 		public boolean hasValue ()
 		{
-			return ((this.bitField0_ & 0x00000008) == 0x00000008);
+			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
 		public final boolean isInitialized ()
 		{
 			final byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
+			if (isInitialized != -1)
 				return isInitialized == 1;
-			}
 			if (!this.hasToken ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
@@ -978,15 +1154,19 @@ public final class MemcachedPayloads
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
-			if (!this.hasExpTime ()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
 			if (!this.hasValue ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
+			if (!this.hasEnvelope ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
 			if (!this.getToken ().isInitialized ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
+			if (!this.getEnvelope ().isInitialized ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
@@ -1018,10 +1198,10 @@ public final class MemcachedPayloads
 				output.writeBytes (2, this.getKeyBytes ());
 			}
 			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				output.writeInt32 (3, this.expTime_);
+				output.writeBytes (3, this.value_);
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				output.writeBytes (4, this.value_);
+				output.writeMessage (4, this.envelope_);
 			}
 			this.getUnknownFields ().writeTo (output);
 		}
@@ -1040,7 +1220,7 @@ public final class MemcachedPayloads
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -1048,7 +1228,7 @@ public final class MemcachedPayloads
 		
 		private com.google.protobuf.ByteString getKeyBytes ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.key_ = b;
@@ -1062,8 +1242,8 @@ public final class MemcachedPayloads
 		{
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.key_ = "";
-			this.expTime_ = 0;
 			this.value_ = com.google.protobuf.ByteString.EMPTY;
+			this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 		}
 		
 		static {
@@ -1162,22 +1342,21 @@ public final class MemcachedPayloads
 		}
 		
 		private int bitField0_;
-		private int expTime_;
-		private java.lang.Object key_;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_;
+		private Object key_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		private com.google.protobuf.ByteString value_;
-		// required int32 exp_time = 3;
-		public static final int EXP_TIME_FIELD_NUMBER = 3;
+		// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+		public static final int ENVELOPE_FIELD_NUMBER = 4;
 		// required string key = 2;
 		public static final int KEY_FIELD_NUMBER = 2;
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
-		// required bytes value = 4;
-		public static final int VALUE_FIELD_NUMBER = 4;
+		// required bytes value = 3;
+		public static final int VALUE_FIELD_NUMBER = 3;
 		private static final AppendRequest defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -1201,7 +1380,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1227,11 +1406,15 @@ public final class MemcachedPayloads
 				if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
 					to_bitField0_ |= 0x00000004;
 				}
-				result.expTime_ = this.expTime_;
+				result.value_ = this.value_;
 				if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
 					to_bitField0_ |= 0x00000008;
 				}
-				result.value_ = this.value_;
+				if (this.envelopeBuilder_ == null) {
+					result.envelope_ = this.envelope_;
+				} else {
+					result.envelope_ = this.envelopeBuilder_.build ();
+				}
 				result.bitField0_ = to_bitField0_;
 				this.onBuilt ();
 				return result;
@@ -1249,18 +1432,26 @@ public final class MemcachedPayloads
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.key_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.expTime_ = 0;
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = com.google.protobuf.ByteString.EMPTY;
+				this.bitField0_ = (this.bitField0_ & ~0x00000004);
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				return this;
 			}
 			
-			public Builder clearExpTime ()
+			public Builder clearEnvelope ()
 			{
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
-				this.expTime_ = 0;
-				this.onChanged ();
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
+				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				return this;
 			}
 			
@@ -1286,7 +1477,7 @@ public final class MemcachedPayloads
 			
 			public Builder clearValue ()
 			{
-				this.bitField0_ = (this.bitField0_ & ~0x00000008);
+				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = AppendRequest.getDefaultInstance ().getValue ();
 				this.onChanged ();
 				return this;
@@ -1311,15 +1502,36 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
-			public int getExpTime ()
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
 			{
-				return this.expTime_;
+				if (this.envelopeBuilder_ == null) {
+					return this.envelope_;
+				} else {
+					return this.envelopeBuilder_.getMessage ();
+				}
+			}
+			
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder ()
+			{
+				this.bitField0_ |= 0x00000008;
+				this.onChanged ();
+				return this.getEnvelopeFieldBuilder ().getBuilder ();
+			}
+			
+			@Override
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+			{
+				if (this.envelopeBuilder_ != null) {
+					return this.envelopeBuilder_.getMessageOrBuilder ();
+				} else {
+					return this.envelope_;
+				}
 			}
 			
 			@Override
 			public String getKey ()
 			{
-				final java.lang.Object ref = this.key_;
+				final Object ref = this.key_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.key_ = s;
@@ -1363,9 +1575,9 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
-			public boolean hasExpTime ()
+			public boolean hasEnvelope ()
 			{
-				return ((this.bitField0_ & 0x00000004) == 0x00000004);
+				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
@@ -1383,7 +1595,7 @@ public final class MemcachedPayloads
 			@Override
 			public boolean hasValue ()
 			{
-				return ((this.bitField0_ & 0x00000008) == 0x00000008);
+				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
@@ -1395,16 +1607,35 @@ public final class MemcachedPayloads
 				if (!this.hasKey ()) {
 					return false;
 				}
-				if (!this.hasExpTime ()) {
+				if (!this.hasValue ()) {
 					return false;
 				}
-				if (!this.hasValue ()) {
+				if (!this.hasEnvelope ()) {
 					return false;
 				}
 				if (!this.getToken ().isInitialized ()) {
 					return false;
 				}
+				if (!this.getEnvelope ().isInitialized ()) {
+					return false;
+				}
 				return true;
+			}
+			
+			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
+			{
+				if (this.envelopeBuilder_ == null) {
+					if (((this.bitField0_ & 0x00000008) == 0x00000008) && (this.envelope_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())) {
+						this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder (this.envelope_).mergeFrom (value).buildPartial ();
+					} else {
+						this.envelope_ = value;
+					}
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.mergeFrom (value);
+				}
+				this.bitField0_ |= 0x00000008;
+				return this;
 			}
 			
 			@Override
@@ -1441,14 +1672,18 @@ public final class MemcachedPayloads
 							this.key_ = input.readBytes ();
 							break;
 						}
-						case 24 : {
+						case 26 : {
 							this.bitField0_ |= 0x00000004;
-							this.expTime_ = input.readInt32 ();
+							this.value_ = input.readBytes ();
 							break;
 						}
 						case 34 : {
-							this.bitField0_ |= 0x00000008;
-							this.value_ = input.readBytes ();
+							final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder ();
+							if (this.hasEnvelope ()) {
+								subBuilder.mergeFrom (this.getEnvelope ());
+							}
+							input.readMessage (subBuilder, extensionRegistry);
+							this.setEnvelope (subBuilder.buildPartial ());
 							break;
 						}
 					}
@@ -1468,20 +1703,19 @@ public final class MemcachedPayloads
 			
 			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest other)
 			{
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest.getDefaultInstance ()) {
+				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest.getDefaultInstance ())
 					return this;
-				}
 				if (other.hasToken ()) {
 					this.mergeToken (other.getToken ());
 				}
 				if (other.hasKey ()) {
 					this.setKey (other.getKey ());
 				}
-				if (other.hasExpTime ()) {
-					this.setExpTime (other.getExpTime ());
-				}
 				if (other.hasValue ()) {
 					this.setValue (other.getValue ());
+				}
+				if (other.hasEnvelope ()) {
+					this.mergeEnvelope (other.getEnvelope ());
 				}
 				this.mergeUnknownFields (other.getUnknownFields ());
 				return this;
@@ -1503,11 +1737,30 @@ public final class MemcachedPayloads
 				return this;
 			}
 			
-			public Builder setExpTime (final int value)
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
 			{
-				this.bitField0_ |= 0x00000004;
-				this.expTime_ = value;
-				this.onChanged ();
+				if (this.envelopeBuilder_ == null) {
+					if (value == null) {
+						throw new NullPointerException ();
+					}
+					this.envelope_ = value;
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (value);
+				}
+				this.bitField0_ |= 0x00000008;
+				return this;
+			}
+			
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue)
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = builderForValue.build ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (builderForValue.build ());
+				}
+				this.bitField0_ |= 0x00000008;
 				return this;
 			}
 			
@@ -1554,7 +1807,7 @@ public final class MemcachedPayloads
 				if (value == null) {
 					throw new NullPointerException ();
 				}
-				this.bitField0_ |= 0x00000008;
+				this.bitField0_ |= 0x00000004;
 				this.value_ = value;
 				this.onChanged ();
 				return this;
@@ -1578,9 +1831,18 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
+			}
+			
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelopeBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> (this.envelope_, this.getParentForChildren (), this.isClean ());
+					this.envelope_ = null;
+				}
+				return this.envelopeBuilder_;
 			}
 			
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
@@ -1596,6 +1858,7 @@ public final class MemcachedPayloads
 			{
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
+					this.getEnvelopeFieldBuilder ();
 				}
 			}
 			
@@ -1610,14 +1873,15 @@ public final class MemcachedPayloads
 			}
 			
 			private int bitField0_;
-			// required int32 exp_time = 3;
-			private int expTime_;
+			// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> envelopeBuilder_;
 			// required string key = 2;
-			private java.lang.Object key_ = "";
+			private Object key_ = "";
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-			// required bytes value = 4;
+			// required bytes value = 3;
 			private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.AppendRequest)
 		}
@@ -1628,7 +1892,9 @@ public final class MemcachedPayloads
 			extends
 				com.google.protobuf.MessageOrBuilder
 	{
-		int getExpTime ();
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ();
+		
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ();
 		
 		String getKey ();
 		
@@ -1638,8 +1904,8 @@ public final class MemcachedPayloads
 		
 		com.google.protobuf.ByteString getValue ();
 		
-		// required int32 exp_time = 3;
-		boolean hasExpTime ();
+		// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+		boolean hasEnvelope ();
 		
 		// required string key = 2;
 		boolean hasKey ();
@@ -1647,7 +1913,7 @@ public final class MemcachedPayloads
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		boolean hasToken ();
 		
-		// required bytes value = 4;
+		// required bytes value = 3;
 		boolean hasValue ();
 	}
 	
@@ -1672,15 +1938,21 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
-		public int getExpTime ()
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
 		{
-			return this.expTime_;
+			return this.envelope_;
+		}
+		
+		@Override
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+		{
+			return this.envelope_;
 		}
 		
 		@Override
 		public String getKey ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -1697,9 +1969,8 @@ public final class MemcachedPayloads
 		public int getSerializedSize ()
 		{
 			int size = this.memoizedSerializedSize;
-			if (size != -1) {
+			if (size != -1)
 				return size;
-			}
 			size = 0;
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				size += com.google.protobuf.CodedOutputStream.computeMessageSize (1, this.token_);
@@ -1708,10 +1979,10 @@ public final class MemcachedPayloads
 				size += com.google.protobuf.CodedOutputStream.computeBytesSize (2, this.getKeyBytes ());
 			}
 			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				size += com.google.protobuf.CodedOutputStream.computeInt32Size (3, this.expTime_);
+				size += com.google.protobuf.CodedOutputStream.computeBytesSize (3, this.value_);
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize (4, this.value_);
+				size += com.google.protobuf.CodedOutputStream.computeMessageSize (4, this.envelope_);
 			}
 			size += this.getUnknownFields ().getSerializedSize ();
 			this.memoizedSerializedSize = size;
@@ -1737,9 +2008,9 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
-		public boolean hasExpTime ()
+		public boolean hasEnvelope ()
 		{
-			return ((this.bitField0_ & 0x00000004) == 0x00000004);
+			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
@@ -1757,16 +2028,15 @@ public final class MemcachedPayloads
 		@Override
 		public boolean hasValue ()
 		{
-			return ((this.bitField0_ & 0x00000008) == 0x00000008);
+			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
 		public final boolean isInitialized ()
 		{
 			final byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
+			if (isInitialized != -1)
 				return isInitialized == 1;
-			}
 			if (!this.hasToken ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
@@ -1775,15 +2045,19 @@ public final class MemcachedPayloads
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
-			if (!this.hasExpTime ()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
 			if (!this.hasValue ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
+			if (!this.hasEnvelope ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
 			if (!this.getToken ().isInitialized ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
+			if (!this.getEnvelope ().isInitialized ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
@@ -1815,10 +2089,10 @@ public final class MemcachedPayloads
 				output.writeBytes (2, this.getKeyBytes ());
 			}
 			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				output.writeInt32 (3, this.expTime_);
+				output.writeBytes (3, this.value_);
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				output.writeBytes (4, this.value_);
+				output.writeMessage (4, this.envelope_);
 			}
 			this.getUnknownFields ().writeTo (output);
 		}
@@ -1837,7 +2111,7 @@ public final class MemcachedPayloads
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -1845,7 +2119,7 @@ public final class MemcachedPayloads
 		
 		private com.google.protobuf.ByteString getKeyBytes ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.key_ = b;
@@ -1859,8 +2133,8 @@ public final class MemcachedPayloads
 		{
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.key_ = "";
-			this.expTime_ = 0;
 			this.value_ = com.google.protobuf.ByteString.EMPTY;
+			this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 		}
 		
 		static {
@@ -1959,22 +2233,21 @@ public final class MemcachedPayloads
 		}
 		
 		private int bitField0_;
-		private int expTime_;
-		private java.lang.Object key_;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_;
+		private Object key_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		private com.google.protobuf.ByteString value_;
-		// required int32 exp_time = 3;
-		public static final int EXP_TIME_FIELD_NUMBER = 3;
+		// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+		public static final int ENVELOPE_FIELD_NUMBER = 4;
 		// required string key = 2;
 		public static final int KEY_FIELD_NUMBER = 2;
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
-		// required bytes value = 4;
-		public static final int VALUE_FIELD_NUMBER = 4;
+		// required bytes value = 3;
+		public static final int VALUE_FIELD_NUMBER = 3;
 		private static final CasRequest defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -1998,7 +2271,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2024,11 +2297,15 @@ public final class MemcachedPayloads
 				if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
 					to_bitField0_ |= 0x00000004;
 				}
-				result.expTime_ = this.expTime_;
+				result.value_ = this.value_;
 				if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
 					to_bitField0_ |= 0x00000008;
 				}
-				result.value_ = this.value_;
+				if (this.envelopeBuilder_ == null) {
+					result.envelope_ = this.envelope_;
+				} else {
+					result.envelope_ = this.envelopeBuilder_.build ();
+				}
 				result.bitField0_ = to_bitField0_;
 				this.onBuilt ();
 				return result;
@@ -2046,18 +2323,26 @@ public final class MemcachedPayloads
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.key_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.expTime_ = 0;
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = com.google.protobuf.ByteString.EMPTY;
+				this.bitField0_ = (this.bitField0_ & ~0x00000004);
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				return this;
 			}
 			
-			public Builder clearExpTime ()
+			public Builder clearEnvelope ()
 			{
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
-				this.expTime_ = 0;
-				this.onChanged ();
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
+				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				return this;
 			}
 			
@@ -2083,7 +2368,7 @@ public final class MemcachedPayloads
 			
 			public Builder clearValue ()
 			{
-				this.bitField0_ = (this.bitField0_ & ~0x00000008);
+				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = CasRequest.getDefaultInstance ().getValue ();
 				this.onChanged ();
 				return this;
@@ -2108,15 +2393,36 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
-			public int getExpTime ()
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
 			{
-				return this.expTime_;
+				if (this.envelopeBuilder_ == null) {
+					return this.envelope_;
+				} else {
+					return this.envelopeBuilder_.getMessage ();
+				}
+			}
+			
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder ()
+			{
+				this.bitField0_ |= 0x00000008;
+				this.onChanged ();
+				return this.getEnvelopeFieldBuilder ().getBuilder ();
+			}
+			
+			@Override
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+			{
+				if (this.envelopeBuilder_ != null) {
+					return this.envelopeBuilder_.getMessageOrBuilder ();
+				} else {
+					return this.envelope_;
+				}
 			}
 			
 			@Override
 			public String getKey ()
 			{
-				final java.lang.Object ref = this.key_;
+				final Object ref = this.key_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.key_ = s;
@@ -2160,9 +2466,9 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
-			public boolean hasExpTime ()
+			public boolean hasEnvelope ()
 			{
-				return ((this.bitField0_ & 0x00000004) == 0x00000004);
+				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
@@ -2180,7 +2486,7 @@ public final class MemcachedPayloads
 			@Override
 			public boolean hasValue ()
 			{
-				return ((this.bitField0_ & 0x00000008) == 0x00000008);
+				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
@@ -2192,16 +2498,35 @@ public final class MemcachedPayloads
 				if (!this.hasKey ()) {
 					return false;
 				}
-				if (!this.hasExpTime ()) {
+				if (!this.hasValue ()) {
 					return false;
 				}
-				if (!this.hasValue ()) {
+				if (!this.hasEnvelope ()) {
 					return false;
 				}
 				if (!this.getToken ().isInitialized ()) {
 					return false;
 				}
+				if (!this.getEnvelope ().isInitialized ()) {
+					return false;
+				}
 				return true;
+			}
+			
+			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
+			{
+				if (this.envelopeBuilder_ == null) {
+					if (((this.bitField0_ & 0x00000008) == 0x00000008) && (this.envelope_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())) {
+						this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder (this.envelope_).mergeFrom (value).buildPartial ();
+					} else {
+						this.envelope_ = value;
+					}
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.mergeFrom (value);
+				}
+				this.bitField0_ |= 0x00000008;
+				return this;
 			}
 			
 			@Override
@@ -2238,14 +2563,18 @@ public final class MemcachedPayloads
 							this.key_ = input.readBytes ();
 							break;
 						}
-						case 24 : {
+						case 26 : {
 							this.bitField0_ |= 0x00000004;
-							this.expTime_ = input.readInt32 ();
+							this.value_ = input.readBytes ();
 							break;
 						}
 						case 34 : {
-							this.bitField0_ |= 0x00000008;
-							this.value_ = input.readBytes ();
+							final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder ();
+							if (this.hasEnvelope ()) {
+								subBuilder.mergeFrom (this.getEnvelope ());
+							}
+							input.readMessage (subBuilder, extensionRegistry);
+							this.setEnvelope (subBuilder.buildPartial ());
 							break;
 						}
 					}
@@ -2265,20 +2594,19 @@ public final class MemcachedPayloads
 			
 			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest other)
 			{
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest.getDefaultInstance ()) {
+				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest.getDefaultInstance ())
 					return this;
-				}
 				if (other.hasToken ()) {
 					this.mergeToken (other.getToken ());
 				}
 				if (other.hasKey ()) {
 					this.setKey (other.getKey ());
 				}
-				if (other.hasExpTime ()) {
-					this.setExpTime (other.getExpTime ());
-				}
 				if (other.hasValue ()) {
 					this.setValue (other.getValue ());
+				}
+				if (other.hasEnvelope ()) {
+					this.mergeEnvelope (other.getEnvelope ());
 				}
 				this.mergeUnknownFields (other.getUnknownFields ());
 				return this;
@@ -2300,11 +2628,30 @@ public final class MemcachedPayloads
 				return this;
 			}
 			
-			public Builder setExpTime (final int value)
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
 			{
-				this.bitField0_ |= 0x00000004;
-				this.expTime_ = value;
-				this.onChanged ();
+				if (this.envelopeBuilder_ == null) {
+					if (value == null) {
+						throw new NullPointerException ();
+					}
+					this.envelope_ = value;
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (value);
+				}
+				this.bitField0_ |= 0x00000008;
+				return this;
+			}
+			
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue)
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = builderForValue.build ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (builderForValue.build ());
+				}
+				this.bitField0_ |= 0x00000008;
 				return this;
 			}
 			
@@ -2351,7 +2698,7 @@ public final class MemcachedPayloads
 				if (value == null) {
 					throw new NullPointerException ();
 				}
-				this.bitField0_ |= 0x00000008;
+				this.bitField0_ |= 0x00000004;
 				this.value_ = value;
 				this.onChanged ();
 				return this;
@@ -2375,9 +2722,18 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
+			}
+			
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelopeBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> (this.envelope_, this.getParentForChildren (), this.isClean ());
+					this.envelope_ = null;
+				}
+				return this.envelopeBuilder_;
 			}
 			
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
@@ -2393,6 +2749,7 @@ public final class MemcachedPayloads
 			{
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
+					this.getEnvelopeFieldBuilder ();
 				}
 			}
 			
@@ -2407,14 +2764,15 @@ public final class MemcachedPayloads
 			}
 			
 			private int bitField0_;
-			// required int32 exp_time = 3;
-			private int expTime_;
+			// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> envelopeBuilder_;
 			// required string key = 2;
-			private java.lang.Object key_ = "";
+			private Object key_ = "";
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-			// required bytes value = 4;
+			// required bytes value = 3;
 			private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.CasRequest)
 		}
@@ -2425,7 +2783,9 @@ public final class MemcachedPayloads
 			extends
 				com.google.protobuf.MessageOrBuilder
 	{
-		int getExpTime ();
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ();
+		
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ();
 		
 		String getKey ();
 		
@@ -2435,8 +2795,8 @@ public final class MemcachedPayloads
 		
 		com.google.protobuf.ByteString getValue ();
 		
-		// required int32 exp_time = 3;
-		boolean hasExpTime ();
+		// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+		boolean hasEnvelope ();
 		
 		// required string key = 2;
 		boolean hasKey ();
@@ -2444,7 +2804,7 @@ public final class MemcachedPayloads
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		boolean hasToken ();
 		
-		// required bytes value = 4;
+		// required bytes value = 3;
 		boolean hasValue ();
 	}
 	
@@ -2469,15 +2829,21 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
-		public int getExpTime ()
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
 		{
-			return this.expTime_;
+			return this.envelope_;
+		}
+		
+		@Override
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+		{
+			return this.envelope_;
 		}
 		
 		@Override
 		public String getKey ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -2494,9 +2860,8 @@ public final class MemcachedPayloads
 		public int getSerializedSize ()
 		{
 			int size = this.memoizedSerializedSize;
-			if (size != -1) {
+			if (size != -1)
 				return size;
-			}
 			size = 0;
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				size += com.google.protobuf.CodedOutputStream.computeMessageSize (1, this.token_);
@@ -2505,10 +2870,10 @@ public final class MemcachedPayloads
 				size += com.google.protobuf.CodedOutputStream.computeBytesSize (2, this.getKeyBytes ());
 			}
 			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				size += com.google.protobuf.CodedOutputStream.computeInt32Size (3, this.expTime_);
+				size += com.google.protobuf.CodedOutputStream.computeBytesSize (3, this.value_);
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				size += com.google.protobuf.CodedOutputStream.computeBytesSize (4, this.value_);
+				size += com.google.protobuf.CodedOutputStream.computeMessageSize (4, this.envelope_);
 			}
 			size += this.getUnknownFields ().getSerializedSize ();
 			this.memoizedSerializedSize = size;
@@ -2534,9 +2899,9 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
-		public boolean hasExpTime ()
+		public boolean hasEnvelope ()
 		{
-			return ((this.bitField0_ & 0x00000004) == 0x00000004);
+			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
@@ -2554,16 +2919,15 @@ public final class MemcachedPayloads
 		@Override
 		public boolean hasValue ()
 		{
-			return ((this.bitField0_ & 0x00000008) == 0x00000008);
+			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
 		public final boolean isInitialized ()
 		{
 			final byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
+			if (isInitialized != -1)
 				return isInitialized == 1;
-			}
 			if (!this.hasToken ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
@@ -2572,15 +2936,19 @@ public final class MemcachedPayloads
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
-			if (!this.hasExpTime ()) {
-				this.memoizedIsInitialized = 0;
-				return false;
-			}
 			if (!this.hasValue ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
+			if (!this.hasEnvelope ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
 			if (!this.getToken ().isInitialized ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
+			if (!this.getEnvelope ().isInitialized ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
@@ -2612,10 +2980,10 @@ public final class MemcachedPayloads
 				output.writeBytes (2, this.getKeyBytes ());
 			}
 			if (((this.bitField0_ & 0x00000004) == 0x00000004)) {
-				output.writeInt32 (3, this.expTime_);
+				output.writeBytes (3, this.value_);
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
-				output.writeBytes (4, this.value_);
+				output.writeMessage (4, this.envelope_);
 			}
 			this.getUnknownFields ().writeTo (output);
 		}
@@ -2634,7 +3002,7 @@ public final class MemcachedPayloads
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -2642,7 +3010,7 @@ public final class MemcachedPayloads
 		
 		private com.google.protobuf.ByteString getKeyBytes ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.key_ = b;
@@ -2656,8 +3024,8 @@ public final class MemcachedPayloads
 		{
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.key_ = "";
-			this.expTime_ = 0;
 			this.value_ = com.google.protobuf.ByteString.EMPTY;
+			this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 		}
 		
 		static {
@@ -2756,22 +3124,21 @@ public final class MemcachedPayloads
 		}
 		
 		private int bitField0_;
-		private int expTime_;
-		private java.lang.Object key_;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_;
+		private Object key_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		private com.google.protobuf.ByteString value_;
-		// required int32 exp_time = 3;
-		public static final int EXP_TIME_FIELD_NUMBER = 3;
+		// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+		public static final int ENVELOPE_FIELD_NUMBER = 4;
 		// required string key = 2;
 		public static final int KEY_FIELD_NUMBER = 2;
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
-		// required bytes value = 4;
-		public static final int VALUE_FIELD_NUMBER = 4;
+		// required bytes value = 3;
+		public static final int VALUE_FIELD_NUMBER = 3;
 		private static final PrependRequest defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -2795,7 +3162,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2821,11 +3188,15 @@ public final class MemcachedPayloads
 				if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
 					to_bitField0_ |= 0x00000004;
 				}
-				result.expTime_ = this.expTime_;
+				result.value_ = this.value_;
 				if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
 					to_bitField0_ |= 0x00000008;
 				}
-				result.value_ = this.value_;
+				if (this.envelopeBuilder_ == null) {
+					result.envelope_ = this.envelope_;
+				} else {
+					result.envelope_ = this.envelopeBuilder_.build ();
+				}
 				result.bitField0_ = to_bitField0_;
 				this.onBuilt ();
 				return result;
@@ -2843,18 +3214,26 @@ public final class MemcachedPayloads
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.key_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
-				this.expTime_ = 0;
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = com.google.protobuf.ByteString.EMPTY;
+				this.bitField0_ = (this.bitField0_ & ~0x00000004);
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				return this;
 			}
 			
-			public Builder clearExpTime ()
+			public Builder clearEnvelope ()
 			{
-				this.bitField0_ = (this.bitField0_ & ~0x00000004);
-				this.expTime_ = 0;
-				this.onChanged ();
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
+				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				return this;
 			}
 			
@@ -2880,7 +3259,7 @@ public final class MemcachedPayloads
 			
 			public Builder clearValue ()
 			{
-				this.bitField0_ = (this.bitField0_ & ~0x00000008);
+				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = PrependRequest.getDefaultInstance ().getValue ();
 				this.onChanged ();
 				return this;
@@ -2905,15 +3284,36 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
-			public int getExpTime ()
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
 			{
-				return this.expTime_;
+				if (this.envelopeBuilder_ == null) {
+					return this.envelope_;
+				} else {
+					return this.envelopeBuilder_.getMessage ();
+				}
+			}
+			
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder ()
+			{
+				this.bitField0_ |= 0x00000008;
+				this.onChanged ();
+				return this.getEnvelopeFieldBuilder ().getBuilder ();
+			}
+			
+			@Override
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+			{
+				if (this.envelopeBuilder_ != null) {
+					return this.envelopeBuilder_.getMessageOrBuilder ();
+				} else {
+					return this.envelope_;
+				}
 			}
 			
 			@Override
 			public String getKey ()
 			{
-				final java.lang.Object ref = this.key_;
+				final Object ref = this.key_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.key_ = s;
@@ -2957,9 +3357,9 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
-			public boolean hasExpTime ()
+			public boolean hasEnvelope ()
 			{
-				return ((this.bitField0_ & 0x00000004) == 0x00000004);
+				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
@@ -2977,7 +3377,7 @@ public final class MemcachedPayloads
 			@Override
 			public boolean hasValue ()
 			{
-				return ((this.bitField0_ & 0x00000008) == 0x00000008);
+				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
@@ -2989,16 +3389,35 @@ public final class MemcachedPayloads
 				if (!this.hasKey ()) {
 					return false;
 				}
-				if (!this.hasExpTime ()) {
+				if (!this.hasValue ()) {
 					return false;
 				}
-				if (!this.hasValue ()) {
+				if (!this.hasEnvelope ()) {
 					return false;
 				}
 				if (!this.getToken ().isInitialized ()) {
 					return false;
 				}
+				if (!this.getEnvelope ().isInitialized ()) {
+					return false;
+				}
 				return true;
+			}
+			
+			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
+			{
+				if (this.envelopeBuilder_ == null) {
+					if (((this.bitField0_ & 0x00000008) == 0x00000008) && (this.envelope_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())) {
+						this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder (this.envelope_).mergeFrom (value).buildPartial ();
+					} else {
+						this.envelope_ = value;
+					}
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.mergeFrom (value);
+				}
+				this.bitField0_ |= 0x00000008;
+				return this;
 			}
 			
 			@Override
@@ -3035,14 +3454,18 @@ public final class MemcachedPayloads
 							this.key_ = input.readBytes ();
 							break;
 						}
-						case 24 : {
+						case 26 : {
 							this.bitField0_ |= 0x00000004;
-							this.expTime_ = input.readInt32 ();
+							this.value_ = input.readBytes ();
 							break;
 						}
 						case 34 : {
-							this.bitField0_ |= 0x00000008;
-							this.value_ = input.readBytes ();
+							final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder ();
+							if (this.hasEnvelope ()) {
+								subBuilder.mergeFrom (this.getEnvelope ());
+							}
+							input.readMessage (subBuilder, extensionRegistry);
+							this.setEnvelope (subBuilder.buildPartial ());
 							break;
 						}
 					}
@@ -3062,20 +3485,19 @@ public final class MemcachedPayloads
 			
 			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest other)
 			{
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest.getDefaultInstance ()) {
+				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest.getDefaultInstance ())
 					return this;
-				}
 				if (other.hasToken ()) {
 					this.mergeToken (other.getToken ());
 				}
 				if (other.hasKey ()) {
 					this.setKey (other.getKey ());
 				}
-				if (other.hasExpTime ()) {
-					this.setExpTime (other.getExpTime ());
-				}
 				if (other.hasValue ()) {
 					this.setValue (other.getValue ());
+				}
+				if (other.hasEnvelope ()) {
+					this.mergeEnvelope (other.getEnvelope ());
 				}
 				this.mergeUnknownFields (other.getUnknownFields ());
 				return this;
@@ -3097,11 +3519,30 @@ public final class MemcachedPayloads
 				return this;
 			}
 			
-			public Builder setExpTime (final int value)
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
 			{
-				this.bitField0_ |= 0x00000004;
-				this.expTime_ = value;
-				this.onChanged ();
+				if (this.envelopeBuilder_ == null) {
+					if (value == null) {
+						throw new NullPointerException ();
+					}
+					this.envelope_ = value;
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (value);
+				}
+				this.bitField0_ |= 0x00000008;
+				return this;
+			}
+			
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue)
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = builderForValue.build ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (builderForValue.build ());
+				}
+				this.bitField0_ |= 0x00000008;
 				return this;
 			}
 			
@@ -3148,7 +3589,7 @@ public final class MemcachedPayloads
 				if (value == null) {
 					throw new NullPointerException ();
 				}
-				this.bitField0_ |= 0x00000008;
+				this.bitField0_ |= 0x00000004;
 				this.value_ = value;
 				this.onChanged ();
 				return this;
@@ -3172,9 +3613,18 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
+			}
+			
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelopeBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> (this.envelope_, this.getParentForChildren (), this.isClean ());
+					this.envelope_ = null;
+				}
+				return this.envelopeBuilder_;
 			}
 			
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
@@ -3190,6 +3640,7 @@ public final class MemcachedPayloads
 			{
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
+					this.getEnvelopeFieldBuilder ();
 				}
 			}
 			
@@ -3204,14 +3655,15 @@ public final class MemcachedPayloads
 			}
 			
 			private int bitField0_;
-			// required int32 exp_time = 3;
-			private int expTime_;
+			// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> envelopeBuilder_;
 			// required string key = 2;
-			private java.lang.Object key_ = "";
+			private Object key_ = "";
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
-			// required bytes value = 4;
+			// required bytes value = 3;
 			private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.kvstore.PrependRequest)
 		}
@@ -3222,7 +3674,9 @@ public final class MemcachedPayloads
 			extends
 				com.google.protobuf.MessageOrBuilder
 	{
-		int getExpTime ();
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ();
+		
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ();
 		
 		String getKey ();
 		
@@ -3232,8 +3686,8 @@ public final class MemcachedPayloads
 		
 		com.google.protobuf.ByteString getValue ();
 		
-		// required int32 exp_time = 3;
-		boolean hasExpTime ();
+		// required .mosaic_cloud.idl.common.Envelope envelope = 4;
+		boolean hasEnvelope ();
 		
 		// required string key = 2;
 		boolean hasKey ();
@@ -3241,7 +3695,7 @@ public final class MemcachedPayloads
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		boolean hasToken ();
 		
-		// required bytes value = 4;
+		// required bytes value = 3;
 		boolean hasValue ();
 	}
 	
@@ -3266,6 +3720,18 @@ public final class MemcachedPayloads
 		}
 		
 		@Override
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
+		{
+			return this.envelope_;
+		}
+		
+		@Override
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+		{
+			return this.envelope_;
+		}
+		
+		@Override
 		public int getExpTime ()
 		{
 			return this.expTime_;
@@ -3274,7 +3740,7 @@ public final class MemcachedPayloads
 		@Override
 		public String getKey ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -3291,9 +3757,8 @@ public final class MemcachedPayloads
 		public int getSerializedSize ()
 		{
 			int size = this.memoizedSerializedSize;
-			if (size != -1) {
+			if (size != -1)
 				return size;
-			}
 			size = 0;
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				size += com.google.protobuf.CodedOutputStream.computeMessageSize (1, this.token_);
@@ -3306,6 +3771,9 @@ public final class MemcachedPayloads
 			}
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
 				size += com.google.protobuf.CodedOutputStream.computeBytesSize (4, this.value_);
+			}
+			if (((this.bitField0_ & 0x00000010) == 0x00000010)) {
+				size += com.google.protobuf.CodedOutputStream.computeMessageSize (5, this.envelope_);
 			}
 			size += this.getUnknownFields ().getSerializedSize ();
 			this.memoizedSerializedSize = size;
@@ -3328,6 +3796,12 @@ public final class MemcachedPayloads
 		public com.google.protobuf.ByteString getValue ()
 		{
 			return this.value_;
+		}
+		
+		@Override
+		public boolean hasEnvelope ()
+		{
+			return ((this.bitField0_ & 0x00000010) == 0x00000010);
 		}
 		
 		@Override
@@ -3358,9 +3832,8 @@ public final class MemcachedPayloads
 		public final boolean isInitialized ()
 		{
 			final byte isInitialized = this.memoizedIsInitialized;
-			if (isInitialized != -1) {
+			if (isInitialized != -1)
 				return isInitialized == 1;
-			}
 			if (!this.hasToken ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
@@ -3377,7 +3850,15 @@ public final class MemcachedPayloads
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
+			if (!this.hasEnvelope ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
 			if (!this.getToken ().isInitialized ()) {
+				this.memoizedIsInitialized = 0;
+				return false;
+			}
+			if (!this.getEnvelope ().isInitialized ()) {
 				this.memoizedIsInitialized = 0;
 				return false;
 			}
@@ -3414,6 +3895,9 @@ public final class MemcachedPayloads
 			if (((this.bitField0_ & 0x00000008) == 0x00000008)) {
 				output.writeBytes (4, this.value_);
 			}
+			if (((this.bitField0_ & 0x00000010) == 0x00000010)) {
+				output.writeMessage (5, this.envelope_);
+			}
 			this.getUnknownFields ().writeTo (output);
 		}
 		
@@ -3431,7 +3915,7 @@ public final class MemcachedPayloads
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -3439,7 +3923,7 @@ public final class MemcachedPayloads
 		
 		private com.google.protobuf.ByteString getKeyBytes ()
 		{
-			final java.lang.Object ref = this.key_;
+			final Object ref = this.key_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.key_ = b;
@@ -3455,6 +3939,7 @@ public final class MemcachedPayloads
 			this.key_ = "";
 			this.expTime_ = 0;
 			this.value_ = com.google.protobuf.ByteString.EMPTY;
+			this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 		}
 		
 		static {
@@ -3553,12 +4038,15 @@ public final class MemcachedPayloads
 		}
 		
 		private int bitField0_;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_;
 		private int expTime_;
-		private java.lang.Object key_;
+		private Object key_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		private com.google.protobuf.ByteString value_;
+		// required .mosaic_cloud.idl.common.Envelope envelope = 5;
+		public static final int ENVELOPE_FIELD_NUMBER = 5;
 		// required int32 exp_time = 3;
 		public static final int EXP_TIME_FIELD_NUMBER = 3;
 		// required string key = 2;
@@ -3568,7 +4056,6 @@ public final class MemcachedPayloads
 		// required bytes value = 4;
 		public static final int VALUE_FIELD_NUMBER = 4;
 		private static final ReplaceRequest defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -3592,7 +4079,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3623,6 +4110,14 @@ public final class MemcachedPayloads
 					to_bitField0_ |= 0x00000008;
 				}
 				result.value_ = this.value_;
+				if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+					to_bitField0_ |= 0x00000010;
+				}
+				if (this.envelopeBuilder_ == null) {
+					result.envelope_ = this.envelope_;
+				} else {
+					result.envelope_ = this.envelopeBuilder_.build ();
+				}
 				result.bitField0_ = to_bitField0_;
 				this.onBuilt ();
 				return result;
@@ -3644,6 +4139,24 @@ public final class MemcachedPayloads
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.value_ = com.google.protobuf.ByteString.EMPTY;
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
+				this.bitField0_ = (this.bitField0_ & ~0x00000010);
+				return this;
+			}
+			
+			public Builder clearEnvelope ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.clear ();
+				}
+				this.bitField0_ = (this.bitField0_ & ~0x00000010);
 				return this;
 			}
 			
@@ -3702,6 +4215,33 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					return this.envelope_;
+				} else {
+					return this.envelopeBuilder_.getMessage ();
+				}
+			}
+			
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder ()
+			{
+				this.bitField0_ |= 0x00000010;
+				this.onChanged ();
+				return this.getEnvelopeFieldBuilder ().getBuilder ();
+			}
+			
+			@Override
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
+			{
+				if (this.envelopeBuilder_ != null) {
+					return this.envelopeBuilder_.getMessageOrBuilder ();
+				} else {
+					return this.envelope_;
+				}
+			}
+			
+			@Override
 			public int getExpTime ()
 			{
 				return this.expTime_;
@@ -3710,7 +4250,7 @@ public final class MemcachedPayloads
 			@Override
 			public String getKey ()
 			{
-				final java.lang.Object ref = this.key_;
+				final Object ref = this.key_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.key_ = s;
@@ -3754,6 +4294,12 @@ public final class MemcachedPayloads
 			}
 			
 			@Override
+			public boolean hasEnvelope ()
+			{
+				return ((this.bitField0_ & 0x00000010) == 0x00000010);
+			}
+			
+			@Override
 			public boolean hasExpTime ()
 			{
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
@@ -3792,10 +4338,32 @@ public final class MemcachedPayloads
 				if (!this.hasValue ()) {
 					return false;
 				}
+				if (!this.hasEnvelope ()) {
+					return false;
+				}
 				if (!this.getToken ().isInitialized ()) {
 					return false;
 				}
+				if (!this.getEnvelope ().isInitialized ()) {
+					return false;
+				}
 				return true;
+			}
+			
+			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
+			{
+				if (this.envelopeBuilder_ == null) {
+					if (((this.bitField0_ & 0x00000010) == 0x00000010) && (this.envelope_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())) {
+						this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder (this.envelope_).mergeFrom (value).buildPartial ();
+					} else {
+						this.envelope_ = value;
+					}
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.mergeFrom (value);
+				}
+				this.bitField0_ |= 0x00000010;
+				return this;
 			}
 			
 			@Override
@@ -3842,6 +4410,15 @@ public final class MemcachedPayloads
 							this.value_ = input.readBytes ();
 							break;
 						}
+						case 42 : {
+							final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder subBuilder = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder ();
+							if (this.hasEnvelope ()) {
+								subBuilder.mergeFrom (this.getEnvelope ());
+							}
+							input.readMessage (subBuilder, extensionRegistry);
+							this.setEnvelope (subBuilder.buildPartial ());
+							break;
+						}
 					}
 				}
 			}
@@ -3859,9 +4436,8 @@ public final class MemcachedPayloads
 			
 			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest other)
 			{
-				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest.getDefaultInstance ()) {
+				if (other == eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest.getDefaultInstance ())
 					return this;
-				}
 				if (other.hasToken ()) {
 					this.mergeToken (other.getToken ());
 				}
@@ -3873,6 +4449,9 @@ public final class MemcachedPayloads
 				}
 				if (other.hasValue ()) {
 					this.setValue (other.getValue ());
+				}
+				if (other.hasEnvelope ()) {
+					this.mergeEnvelope (other.getEnvelope ());
 				}
 				this.mergeUnknownFields (other.getUnknownFields ());
 				return this;
@@ -3891,6 +4470,33 @@ public final class MemcachedPayloads
 					this.tokenBuilder_.mergeFrom (value);
 				}
 				this.bitField0_ |= 0x00000001;
+				return this;
+			}
+			
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
+			{
+				if (this.envelopeBuilder_ == null) {
+					if (value == null) {
+						throw new NullPointerException ();
+					}
+					this.envelope_ = value;
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (value);
+				}
+				this.bitField0_ |= 0x00000010;
+				return this;
+			}
+			
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue)
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelope_ = builderForValue.build ();
+					this.onChanged ();
+				} else {
+					this.envelopeBuilder_.setMessage (builderForValue.build ());
+				}
+				this.bitField0_ |= 0x00000010;
 				return this;
 			}
 			
@@ -3969,9 +4575,18 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
+			}
+			
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder ()
+			{
+				if (this.envelopeBuilder_ == null) {
+					this.envelopeBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> (this.envelope_, this.getParentForChildren (), this.isClean ());
+					this.envelope_ = null;
+				}
+				return this.envelopeBuilder_;
 			}
 			
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
@@ -3987,6 +4602,7 @@ public final class MemcachedPayloads
 			{
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
+					this.getEnvelopeFieldBuilder ();
 				}
 			}
 			
@@ -4001,10 +4617,13 @@ public final class MemcachedPayloads
 			}
 			
 			private int bitField0_;
+			// required .mosaic_cloud.idl.common.Envelope envelope = 5;
+			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> envelopeBuilder_;
 			// required int32 exp_time = 3;
 			private int expTime_;
 			// required string key = 2;
-			private java.lang.Object key_ = "";
+			private Object key_ = "";
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
@@ -4019,6 +4638,10 @@ public final class MemcachedPayloads
 			extends
 				com.google.protobuf.MessageOrBuilder
 	{
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ();
+		
+		eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ();
+		
 		int getExpTime ();
 		
 		String getKey ();
@@ -4028,6 +4651,9 @@ public final class MemcachedPayloads
 		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ();
 		
 		com.google.protobuf.ByteString getValue ();
+		
+		// required .mosaic_cloud.idl.common.Envelope envelope = 5;
+		boolean hasEnvelope ();
 		
 		// required int32 exp_time = 3;
 		boolean hasExpTime ();

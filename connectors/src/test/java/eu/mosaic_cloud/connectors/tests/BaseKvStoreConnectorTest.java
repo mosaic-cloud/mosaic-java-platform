@@ -54,14 +54,23 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 		Assert.assertNull (this.awaitOutcome (this.connector.delete (k1)));
 		// NOTE: In past this would have returned `false`.
 		Assert.assertNull (this.awaitOutcome (this.connector.delete (k2)));
-		Assert.assertNull (this.awaitFailure (this.connector.get (k1)));
-		Assert.assertNull (this.awaitFailure (this.connector.get (k2)));
+		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
+		final MessageEnvelope extra1 = new MessageEnvelope ();
+		extra1.setEncodingMetadata (encoding1);
+		final EncodingMetadata encoding2 = new EncodingMetadata ("text/plain", "identity");
+		final MessageEnvelope extra2 = new MessageEnvelope ();
+		extra2.setEncodingMetadata (encoding2);
+		Assert.assertNull (this.awaitOutcome (this.connector.get (k1, extra1)));
+		Assert.assertNull (this.awaitOutcome (this.connector.get (k2, extra1)));
 	}
 	
 	protected void testGet ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
-		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1)));
+		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
+		final MessageEnvelope extra1 = new MessageEnvelope ();
+		extra1.setEncodingMetadata (encoding1);
+		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1, extra1)));
 	}
 	
 	protected void testList ()

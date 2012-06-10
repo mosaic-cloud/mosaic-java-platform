@@ -31,6 +31,7 @@ import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
@@ -164,6 +165,7 @@ public final class RiakOperationFactory
 			{
 				KeyValueMessage result = null;
 				final String key = (String) parameters[0];
+				final EncodingMetadata expectedEncoding = (EncodingMetadata) parameters[1];
 				// FIXME: use the vector clock...
 				IRiakObject riakObj = null;
 				try {
@@ -178,6 +180,8 @@ public final class RiakOperationFactory
 				}
 				if (null != riakObj) {
 					result = new KeyValueMessage (key, riakObj.getValue (), riakObj.getUsermeta (IOperationFactory.CONTENT_ENCODING), riakObj.getContentType ());
+				} else {
+					result = new KeyValueMessage (key, null, expectedEncoding.getContentEncoding (), expectedEncoding.getContentType ());
 				}
 				return result;
 			}

@@ -112,9 +112,9 @@ public abstract class RiakDriverTest
 		}
 		Threading.sleep (1000);
 		final IOperationCompletionHandler<KeyValueMessage> handler3 = new TestLoggingHandler<KeyValueMessage> ("check deleted");
-		final IResult<KeyValueMessage> r3 = this.wrapper.invokeGetOperation (RiakDriverTest.keyPrefix, k1, handler3);
+		final IResult<KeyValueMessage> r3 = this.wrapper.invokeGetOperation (RiakDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler3);
 		try {
-			Assert.assertNull (r3.getResult ());
+			Assert.assertNull (r3.getResult ().getData ());
 		} catch (final InterruptedException e) {
 			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
@@ -152,7 +152,7 @@ public abstract class RiakDriverTest
 	{
 		final String k1 = RiakDriverTest.keyPrefix + "_key_famous";
 		final IOperationCompletionHandler<KeyValueMessage> handler = new TestLoggingHandler<KeyValueMessage> ("get");
-		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (RiakDriverTest.keyPrefix, k1, handler);
+		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (RiakDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler);
 		try {
 			final KeyValueMessage mssg = r1.getResult ();
 			Assert.assertEquals ("famous", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));

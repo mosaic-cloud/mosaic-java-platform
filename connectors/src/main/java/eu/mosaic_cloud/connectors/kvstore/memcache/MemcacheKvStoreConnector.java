@@ -50,43 +50,43 @@ public class MemcacheKvStoreConnector<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> add (final String key, final int exp, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> add (final String key, final int exp, final TValue data, final TExtra extra)
 	{
-		return this.proxy.add (key, exp, data);
+		return this.proxy.add (key, exp, data, extra);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> append (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> append (final String key, final TValue data, final TExtra extra)
 	{
-		return this.proxy.append (key, data);
+		return this.proxy.append (key, data, extra);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> cas (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> cas (final String key, final TValue data, final TExtra extra)
 	{
-		return this.proxy.cas (key, data);
+		return this.proxy.cas (key, data, extra);
 	}
 	
 	@Override
-	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys, final TExtra extra)
 	{
-		return this.proxy.getBulk (keys);
+		return this.proxy.getBulk (keys, extra);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> prepend (final String key, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> prepend (final String key, final TValue data, final TExtra extra)
 	{
-		return this.proxy.prepend (key, data);
+		return this.proxy.prepend (key, data, extra);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> replace (final String key, final int exp, final TValue data)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> replace (final String key, final int exp, final TValue data, final TExtra extra)
 	{
-		return this.proxy.replace (key, exp, data);
+		return this.proxy.replace (key, exp, data, extra);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data, final TExtra extra)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		return this.proxy.set (key, exp, data, extra);
 	}

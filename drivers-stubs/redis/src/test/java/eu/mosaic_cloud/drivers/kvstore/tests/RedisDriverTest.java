@@ -115,9 +115,9 @@ public class RedisDriverTest
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<KeyValueMessage> handler3 = new TestLoggingHandler<KeyValueMessage> ("check deleted");
-		final IResult<KeyValueMessage> r3 = this.wrapper.invokeGetOperation (RedisDriverTest.keyPrefix, k1, handler3);
+		final IResult<KeyValueMessage> r3 = this.wrapper.invokeGetOperation (RedisDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler3);
 		try {
-			Assert.assertNull (r3.getResult ());
+			Assert.assertNull (r3.getResult ().getData ());
 		} catch (final InterruptedException e) {
 			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
@@ -147,7 +147,7 @@ public class RedisDriverTest
 	{
 		final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
 		final IOperationCompletionHandler<KeyValueMessage> handler = new TestLoggingHandler<KeyValueMessage> ("get");
-		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (RedisDriverTest.keyPrefix, k1, handler);
+		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (RedisDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler);
 		try {
 			final KeyValueMessage mssg = r1.getResult ();
 			Assert.assertEquals ("fantastic", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));

@@ -125,6 +125,6 @@ public final class RedisDriver
 	private final String host;
 	private String password;
 	private final int port;
-	public static final String DEFAULT_CONTENT_ENCODING = "default";
+	public static final String DEFAULT_CONTENT_ENCODING = null;
 	public static final String DEFAULT_CONTENT_TYPE = "text/plain";
 }

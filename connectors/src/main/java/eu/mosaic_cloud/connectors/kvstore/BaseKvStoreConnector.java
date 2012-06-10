@@ -56,9 +56,9 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	}
 	
 	@Override
-	public CallbackCompletion<TValue> get (final String key)
+	public <TExtra extends MessageEnvelope> CallbackCompletion<TValue> get (final String key, final TExtra extra)
 	{
-		return this.proxy.get (key);
+		return this.proxy.get (key, extra);
 	}
 	
 	@Override

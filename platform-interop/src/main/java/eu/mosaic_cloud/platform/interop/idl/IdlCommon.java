@@ -171,7 +171,7 @@ public final class IdlCommon
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -284,7 +284,6 @@ public final class IdlCommon
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final AbortRequest defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -308,7 +307,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -529,7 +528,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -689,7 +688,7 @@ public final class IdlCommon
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -802,7 +801,6 @@ public final class IdlCommon
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final AccessRequest defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -826,7 +824,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1047,7 +1045,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1116,7 +1114,7 @@ public final class IdlCommon
 		@Override
 		public String getClientId ()
 		{
-			final java.lang.Object ref = this.clientId_;
+			final Object ref = this.clientId_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -1138,7 +1136,7 @@ public final class IdlCommon
 		@Override
 		public String getMessageId ()
 		{
-			final java.lang.Object ref = this.messageId_;
+			final Object ref = this.messageId_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -1235,7 +1233,7 @@ public final class IdlCommon
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -1243,7 +1241,7 @@ public final class IdlCommon
 		
 		private com.google.protobuf.ByteString getClientIdBytes ()
 		{
-			final java.lang.Object ref = this.clientId_;
+			final Object ref = this.clientId_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.clientId_ = b;
@@ -1255,7 +1253,7 @@ public final class IdlCommon
 		
 		private com.google.protobuf.ByteString getMessageIdBytes ()
 		{
-			final java.lang.Object ref = this.messageId_;
+			final Object ref = this.messageId_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.messageId_ = b;
@@ -1367,16 +1365,15 @@ public final class IdlCommon
 		}
 		
 		private int bitField0_;
-		private java.lang.Object clientId_;
+		private Object clientId_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
-		private java.lang.Object messageId_;
+		private Object messageId_;
 		// optional string client_id = 2;
 		public static final int CLIENT_ID_FIELD_NUMBER = 2;
 		// required string message_id = 1;
 		public static final int MESSAGE_ID_FIELD_NUMBER = 1;
 		private static final CompletionToken defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -1400,7 +1397,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1460,7 +1457,7 @@ public final class IdlCommon
 			@Override
 			public String getClientId ()
 			{
-				final java.lang.Object ref = this.clientId_;
+				final Object ref = this.clientId_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.clientId_ = s;
@@ -1485,7 +1482,7 @@ public final class IdlCommon
 			@Override
 			public String getMessageId ()
 			{
-				final java.lang.Object ref = this.messageId_;
+				final Object ref = this.messageId_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.messageId_ = s;
@@ -1622,7 +1619,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1644,9 +1641,9 @@ public final class IdlCommon
 			
 			private int bitField0_;
 			// optional string client_id = 2;
-			private java.lang.Object clientId_ = "";
+			private Object clientId_ = "";
 			// required string message_id = 1;
-			private java.lang.Object messageId_ = "";
+			private Object messageId_ = "";
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.CompletionToken)
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.CompletionToken)
@@ -1684,7 +1681,7 @@ public final class IdlCommon
 		@Override
 		public String getContentEncoding ()
 		{
-			final java.lang.Object ref = this.contentEncoding_;
+			final Object ref = this.contentEncoding_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -1700,7 +1697,7 @@ public final class IdlCommon
 		@Override
 		public String getContentType ()
 		{
-			final java.lang.Object ref = this.contentType_;
+			final Object ref = this.contentType_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -1803,7 +1800,7 @@ public final class IdlCommon
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -1811,7 +1808,7 @@ public final class IdlCommon
 		
 		private com.google.protobuf.ByteString getContentEncodingBytes ()
 		{
-			final java.lang.Object ref = this.contentEncoding_;
+			final Object ref = this.contentEncoding_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.contentEncoding_ = b;
@@ -1823,7 +1820,7 @@ public final class IdlCommon
 		
 		private com.google.protobuf.ByteString getContentTypeBytes ()
 		{
-			final java.lang.Object ref = this.contentType_;
+			final Object ref = this.contentType_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.contentType_ = b;
@@ -1935,8 +1932,8 @@ public final class IdlCommon
 		}
 		
 		private int bitField0_;
-		private java.lang.Object contentEncoding_;
-		private java.lang.Object contentType_;
+		private Object contentEncoding_;
+		private Object contentType_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
 		// optional string content_encoding = 2;
@@ -1944,7 +1941,6 @@ public final class IdlCommon
 		// required string content_type = 1;
 		public static final int CONTENT_TYPE_FIELD_NUMBER = 1;
 		private static final Envelope defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -1968,7 +1964,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2028,7 +2024,7 @@ public final class IdlCommon
 			@Override
 			public String getContentEncoding ()
 			{
-				final java.lang.Object ref = this.contentEncoding_;
+				final Object ref = this.contentEncoding_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.contentEncoding_ = s;
@@ -2041,7 +2037,7 @@ public final class IdlCommon
 			@Override
 			public String getContentType ()
 			{
-				final java.lang.Object ref = this.contentType_;
+				final Object ref = this.contentType_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.contentType_ = s;
@@ -2190,7 +2186,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2212,9 +2208,9 @@ public final class IdlCommon
 			
 			private int bitField0_;
 			// optional string content_encoding = 2;
-			private java.lang.Object contentEncoding_ = "";
+			private Object contentEncoding_ = "";
 			// required string content_type = 1;
-			private java.lang.Object contentType_ = "";
+			private Object contentType_ = "";
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.Envelope)
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.Envelope)
@@ -2258,7 +2254,7 @@ public final class IdlCommon
 		@Override
 		public String getErrorMessage ()
 		{
-			final java.lang.Object ref = this.errorMessage_;
+			final Object ref = this.errorMessage_;
 			if (ref instanceof String) {
 				return (String) ref;
 			} else {
@@ -2375,7 +2371,7 @@ public final class IdlCommon
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -2383,7 +2379,7 @@ public final class IdlCommon
 		
 		private com.google.protobuf.ByteString getErrorMessageBytes ()
 		{
-			final java.lang.Object ref = this.errorMessage_;
+			final Object ref = this.errorMessage_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
 				this.errorMessage_ = b;
@@ -2495,7 +2491,7 @@ public final class IdlCommon
 		}
 		
 		private int bitField0_;
-		private java.lang.Object errorMessage_;
+		private Object errorMessage_;
 		private byte memoizedIsInitialized = -1;
 		private int memoizedSerializedSize = -1;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
@@ -2504,7 +2500,6 @@ public final class IdlCommon
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final Error defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -2528,7 +2523,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2612,7 +2607,7 @@ public final class IdlCommon
 			@Override
 			public String getErrorMessage ()
 			{
-				final java.lang.Object ref = this.errorMessage_;
+				final Object ref = this.errorMessage_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
 					this.errorMessage_ = s;
@@ -2811,7 +2806,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2844,7 +2839,7 @@ public final class IdlCommon
 			
 			private int bitField0_;
 			// required string error_message = 2;
-			private java.lang.Object errorMessage_ = "";
+			private Object errorMessage_ = "";
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
@@ -2978,7 +2973,7 @@ public final class IdlCommon
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -3091,7 +3086,6 @@ public final class IdlCommon
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final NotOk defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -3115,7 +3109,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3336,7 +3330,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3496,7 +3490,7 @@ public final class IdlCommon
 		}
 		
 		@java.lang.Override
-		protected java.lang.Object writeReplace ()
+		protected Object writeReplace ()
 				throws java.io.ObjectStreamException
 		{
 			return super.writeReplace ();
@@ -3609,7 +3603,6 @@ public final class IdlCommon
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final Ok defaultInstance;
-		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
 				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -3633,7 +3626,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
+					throw Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3854,7 +3847,7 @@ public final class IdlCommon
 			{
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}

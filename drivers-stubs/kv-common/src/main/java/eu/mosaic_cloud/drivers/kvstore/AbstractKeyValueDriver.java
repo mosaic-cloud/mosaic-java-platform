@@ -32,6 +32,7 @@ import eu.mosaic_cloud.platform.core.ops.GenericResult;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
@@ -76,10 +77,10 @@ public abstract class AbstractKeyValueDriver
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<KeyValueMessage> invokeGetOperation (final String clientId, final String key, final IOperationCompletionHandler<KeyValueMessage> complHandler)
+	public IResult<KeyValueMessage> invokeGetOperation (final String clientId, final String key, final EncodingMetadata expectedEncoding, final IOperationCompletionHandler<KeyValueMessage> complHandler)
 	{
 		final IOperationFactory opFactory = this.getOperationFactory (clientId);
-		@SuppressWarnings ("unchecked") final GenericOperation<KeyValueMessage> operation = (GenericOperation<KeyValueMessage>) opFactory.getOperation (KeyValueOperations.GET, key);
+		@SuppressWarnings ("unchecked") final GenericOperation<KeyValueMessage> operation = (GenericOperation<KeyValueMessage>) opFactory.getOperation (KeyValueOperations.GET, key, expectedEncoding);
 		return this.startOperation (operation, complHandler);
 	}
 	

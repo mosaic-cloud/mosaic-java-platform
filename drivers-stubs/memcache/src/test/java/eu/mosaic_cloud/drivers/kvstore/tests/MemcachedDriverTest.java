@@ -99,10 +99,12 @@ public class MemcachedDriverTest
 		final String k2 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
 		final byte[] b1 = this.encoder.encode ("wrong", new EncodingMetadata ("text/plain", "identity"));
 		final byte[] b2 = this.encoder.encode ("fabulous", new EncodingMetadata ("text/plain", "identity"));
+		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
+		final KeyValueMessage mssg2 = new KeyValueMessage (k2, b2, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("add1");
 		final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean> ("add2");
-		final IResult<Boolean> r1 = this.wrapper.invokeAddOperation (MemcachedDriverTest.keyPrefix, k1, 30, b1, handler1);
-		final IResult<Boolean> r2 = this.wrapper.invokeAddOperation (MemcachedDriverTest.keyPrefix, k2, 30, b2, handler2);
+		final IResult<Boolean> r1 = this.wrapper.invokeAddOperation (MemcachedDriverTest.keyPrefix, mssg1, 30, handler1);
+		final IResult<Boolean> r2 = this.wrapper.invokeAddOperation (MemcachedDriverTest.keyPrefix, mssg2, 30, handler2);
 		try {
 			Assert.assertFalse (r1.getResult ());
 			Assert.assertTrue (r2.getResult ());
@@ -122,8 +124,9 @@ public class MemcachedDriverTest
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
 		final byte[] b1 = this.encoder.encode (" and miraculous", new EncodingMetadata ("text/plain", "identity"));
+		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("append");
-		final IResult<Boolean> r1 = this.wrapper.invokeAppendOperation (MemcachedDriverTest.keyPrefix, k1, b1, handler);
+		final IResult<Boolean> r1 = this.wrapper.invokeAppendOperation (MemcachedDriverTest.keyPrefix, mssg1, handler);
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
@@ -134,7 +137,7 @@ public class MemcachedDriverTest
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<KeyValueMessage> handler1 = new TestLoggingHandler<KeyValueMessage> ("Get after append");
-		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, handler1);
+		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler1);
 		try {
 			final KeyValueMessage mssg = r2.getResult ();
 			Assert.assertEquals ("fantabulous and miraculous", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
@@ -154,8 +157,9 @@ public class MemcachedDriverTest
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
 		final byte[] b1 = this.encoder.encode ("replaced by dummy", new EncodingMetadata ("text/plain", "identity"));
+		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("cas");
-		final IResult<Boolean> r1 = this.wrapper.invokeCASOperation (MemcachedDriverTest.keyPrefix, k1, b1, handler);
+		final IResult<Boolean> r1 = this.wrapper.invokeCASOperation (MemcachedDriverTest.keyPrefix, mssg1, handler);
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
@@ -166,7 +170,7 @@ public class MemcachedDriverTest
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<KeyValueMessage> handler1 = new TestLoggingHandler<KeyValueMessage> ("Get after cas");
-		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, handler1);
+		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler1);
 		try {
 			final KeyValueMessage mssg = r2.getResult ();
 			Assert.assertEquals ("replaced by dummy", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
@@ -199,9 +203,9 @@ public class MemcachedDriverTest
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<KeyValueMessage> handler1 = new TestLoggingHandler<KeyValueMessage> ("Get after delete");
-		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, handler1);
+		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler1);
 		try {
-			Assert.assertNull (r2.getResult ());
+			Assert.assertNull (r2.getResult ().getData ());
 		} catch (final InterruptedException e) {
 			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
@@ -223,6 +227,7 @@ public class MemcachedDriverTest
 		this.testGetBulk ();
 		this.testAdd ();
 		this.testReplace ();
+		this.testList ();
 		this.testDelete ();
 	}
 	
@@ -233,7 +238,7 @@ public class MemcachedDriverTest
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
 		final IOperationCompletionHandler<KeyValueMessage> handler = new TestLoggingHandler<KeyValueMessage> ("get");
-		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, handler);
+		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler);
 		try {
 			final KeyValueMessage mssg = r1.getResult ();
 			Assert.assertEquals ("fantastic", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
@@ -257,12 +262,27 @@ public class MemcachedDriverTest
 		keys.add (k1);
 		keys.add (k2);
 		final IOperationCompletionHandler<Map<String, KeyValueMessage>> handler = new TestLoggingHandler<Map<String, KeyValueMessage>> ("getBulk");
-		final IResult<Map<String, KeyValueMessage>> r1 = this.wrapper.invokeGetBulkOperation (MemcachedDriverTest.keyPrefix, keys, handler);
+		final IResult<Map<String, KeyValueMessage>> r1 = this.wrapper.invokeGetBulkOperation (MemcachedDriverTest.keyPrefix, keys, new EncodingMetadata ("text/plain", "identity"), handler);
 		try {
 			KeyValueMessage mssg = r1.getResult ().get (k1);
 			Assert.assertEquals ("fantastic", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
 			mssg = r1.getResult ().get (k2);
 			Assert.assertEquals ("famous", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
+		} catch (final InterruptedException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		} catch (final ExecutionException e) {
+			this.exceptions.traceIgnoredException (e);
+			Assert.fail ();
+		}
+	}
+	
+	public void testList ()
+	{
+		final IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>> ("list");
+		final IResult<List<String>> r1 = this.wrapper.invokeListOperation (MemcachedDriverTest.keyPrefix, handler);
+		try {
+			Assert.assertNull (r1.getResult ());
 		} catch (final InterruptedException e) {
 			this.exceptions.traceIgnoredException (e);
 			Assert.fail ();
@@ -279,8 +299,9 @@ public class MemcachedDriverTest
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
 		final byte[] b1 = this.encoder.encode ("it is ", new EncodingMetadata ("text/plain", "identity"));
+		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("prepend");
-		final IResult<Boolean> r1 = this.wrapper.invokePrependOperation (MemcachedDriverTest.keyPrefix, k1, b1, handler);
+		final IResult<Boolean> r1 = this.wrapper.invokePrependOperation (MemcachedDriverTest.keyPrefix, mssg1, handler);
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
@@ -291,7 +312,7 @@ public class MemcachedDriverTest
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<KeyValueMessage> handler1 = new TestLoggingHandler<KeyValueMessage> ("Get after prepend");
-		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, handler1);
+		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler1);
 		try {
 			final KeyValueMessage mssg = r2.getResult ();
 			Assert.assertEquals ("it is fantabulous and miraculous", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
@@ -311,8 +332,9 @@ public class MemcachedDriverTest
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
 		final byte[] b1 = this.encoder.encode ("fantabulous", new EncodingMetadata ("text/plain", "identity"));
+		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("replace");
-		final IResult<Boolean> r1 = this.wrapper.invokeReplaceOperation (MemcachedDriverTest.keyPrefix, k1, 30, b1, handler);
+		final IResult<Boolean> r1 = this.wrapper.invokeReplaceOperation (MemcachedDriverTest.keyPrefix, mssg1, 30, handler);
 		try {
 			Assert.assertTrue (r1.getResult ());
 		} catch (final InterruptedException e) {
@@ -323,7 +345,7 @@ public class MemcachedDriverTest
 			Assert.fail ();
 		}
 		final IOperationCompletionHandler<KeyValueMessage> handler1 = new TestLoggingHandler<KeyValueMessage> ("Get after replace");
-		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, handler1);
+		final IResult<KeyValueMessage> r2 = this.wrapper.invokeGetOperation (MemcachedDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler1);
 		try {
 			final KeyValueMessage mssg = r2.getResult ();
 			Assert.assertEquals ("fantabulous", this.encoder.decode (mssg.getData (), new EncodingMetadata ("text/plain", "identity")));
