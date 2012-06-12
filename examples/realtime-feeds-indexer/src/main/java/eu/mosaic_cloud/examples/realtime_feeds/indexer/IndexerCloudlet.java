@@ -36,6 +36,7 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.core.utils.NullDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 

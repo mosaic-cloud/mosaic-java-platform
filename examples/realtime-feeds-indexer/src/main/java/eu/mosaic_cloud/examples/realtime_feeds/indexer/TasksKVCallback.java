@@ -29,6 +29,7 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
