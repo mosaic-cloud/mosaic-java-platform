@@ -8,12 +8,12 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.components</groupId>
 		<artifactId>components-parent</artifactId>
-		<version>0.5.0_mosaic_dev-SNAPSHOT</version>
+		<version>0.5.1_mosaic_dev-SNAPSHOT</version>
 		<relativePath>../components-parent</relativePath>
 	</parent>
 	
 	<artifactId>components-httpg-jetty-connector</artifactId>
-	<name>mosaic-components-httpg-jetty-connector</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>

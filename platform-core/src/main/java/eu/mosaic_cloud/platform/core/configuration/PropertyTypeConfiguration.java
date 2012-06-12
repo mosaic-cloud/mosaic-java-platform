@@ -240,6 +240,13 @@ public final class PropertyTypeConfiguration
 		return configuration;
 	}
 	
+	@Deprecated
+	public static PropertyTypeConfiguration create (final Properties properties)
+	{
+		final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration (properties);
+		return configuration;
+	}
+	
 	private final Properties properties;
 	private final ConfigurationIdentifier root;
 	

@@ -8,14 +8,14 @@
 	<parent>
 		<groupId>eu.mosaic_cloud</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.5.0_mosaic_dev-SNAPSHOT</version>
+		<version>0.5.1_mosaic_dev-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
 	
 	<groupId>eu.mosaic_cloud.examples</groupId>
 	<artifactId>examples-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>mosaic-examples-parent</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<modules>
 		<module>../realtime-feeds-indexer</module>

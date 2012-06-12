@@ -8,12 +8,12 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.examples</groupId>
 		<artifactId>examples-parent</artifactId>
-		<version>0.5.0_mosaic_dev-SNAPSHOT</version>
+		<version>0.5.1_mosaic_dev-SNAPSHOT</version>
 		<relativePath>../parent</relativePath>
 	</parent>
 	
 	<artifactId>examples-realtime-feeds-indexer</artifactId>
-	<name>mosaic-examples-realtime-feeds-indexer</name>
+	<name>mosaic-${project.artifactId}</name>
 	<description>An example of a cloudlet for Twitter feeds indexing</description>
 	
 	<dependencies>

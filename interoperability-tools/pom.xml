@@ -8,12 +8,12 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.interoperability</groupId>
 		<artifactId>interoperability-parent</artifactId>
-		<version>0.5.0_mosaic_dev-SNAPSHOT</version>
+		<version>0.5.1_mosaic_dev-SNAPSHOT</version>
 		<relativePath>../interoperability-parent</relativePath>
 	</parent>
 	
 	<artifactId>interoperability-tools</artifactId>
-	<name>mosaic-interoperability-tools</name>
+	<name>mosaic-${project.artifactId}</name>
 	
 	<dependencies>
 		<dependency>
