@@ -20,10 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
-
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
 
 /**
  * Interface for AMQP queue publishers. This will be implemented by cloudlets
@@ -39,32 +38,33 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>
-		extends
-			IAmqpQueueConnectorCallback<TContext>
-{
-	/**
-	 * Called when the publisher receives notification that the message
-	 * publishing could not be finished with success.
-	 * 
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> publishFailed (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
-	
-	/**
-	 * Called when the publisher receives confirmation that the message
-	 * publishing finished successfully.
-	 * 
-	 * @param <D>
-	 *            the type of the published message
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> publishSucceeded (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
+public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra extends MessageEnvelope>
+        extends IAmqpQueueConnectorCallback<TContext> {
+
+    /**
+     * Called when the publisher receives notification that the message
+     * publishing could not be finished with success.
+     * 
+     * 
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            the arguments of the callback
+     */
+    CallbackCompletion<Void> publishFailed(TContext context,
+            GenericCallbackCompletionArguments<TExtra> arguments);
+
+    /**
+     * Called when the publisher receives confirmation that the message
+     * publishing finished successfully.
+     * 
+     * @param <D>
+     *            the type of the published message
+     * @param context
+     *            the context of the cloudlet
+     * @param arguments
+     *            the arguments of the callback
+     */
+    CallbackCompletion<Void> publishSucceeded(TContext context,
+            GenericCallbackCompletionArguments<TExtra> arguments);
 }
