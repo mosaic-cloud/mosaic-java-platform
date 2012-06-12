@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.tools;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.connectors.executors.Executor;
 import eu.mosaic_cloud.cloudlets.connectors.executors.IExecutor;
@@ -54,132 +55,76 @@ import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 import com.google.common.base.Preconditions;
 
-public class DefaultConnectorsFactory extends BaseConnectorsFactory implements IConnectorsFactory {
 
-    protected DefaultConnectorsFactory(
-            final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate) {
-        super(delegate);
-    }
-
-    public static final DefaultConnectorsFactory create(final ICloudletController<?> cloudlet,
-            final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate,
-            final ConnectorEnvironment environment) {
-        final DefaultConnectorsFactory factory = new DefaultConnectorsFactory(delegate);
-        DefaultConnectorsFactory.initialize(cloudlet, factory, environment);
-        return factory;
-    }
-
-    protected static final void initialize(final ICloudletController<?> cloudlet,
-            final DefaultConnectorsFactory factory, final ConnectorEnvironment environment) {
-        Preconditions.checkNotNull(factory);
-        Preconditions.checkNotNull(cloudlet);
-        factory.registerFactory(IExecutorFactory.class, new IExecutorFactory() {
-
-            @Override
-            public <TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create(
-                    final IConfiguration configuration,
-                    final IExecutorCallback<TContext, TOutcome, TExtra> callback,
-                    final TContext callbackContext) {
-                return new Executor<TContext, TOutcome, TExtra>(cloudlet, environment
-                        .getThreading(), environment.getExceptions(), configuration, callback,
-                        callbackContext);
-            }
-        });
-        factory.registerFactory(IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory() {
-
-            @Override
-            public <TContext, TTValue, TExtra extends MessageEnvelope> IKvStoreConnector<TTValue, TExtra> create(
-                    final IConfiguration configuration, final Class<TTValue> valueClass,
-                    final DataEncoder<TTValue> valueEncoder,
-                    final IKvStoreConnectorCallback<TContext, TTValue, TExtra> callback,
-                    final TContext callbackContext) {
-                final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TTValue, TExtra> backingConnector = (eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TTValue, TExtra>) factory
-                        .getConnectorFactory(
-                                eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory.class)
-                        .create(configuration, valueClass, valueEncoder);
-                return new GenericKvStoreConnector<TContext, TTValue, TExtra>(cloudlet,
-                        backingConnector, configuration, callback, callbackContext);
-            }
-        });
-        factory.registerFactory(IMemcacheKvStoreConnectorFactory.class,
-                new IMemcacheKvStoreConnectorFactory() {
-
-                    @Override
-                    public <TContext, TValue, TExtra extends MessageEnvelope> IMemcacheKvStoreConnector<TValue, TExtra> create(
-                            final IConfiguration configuration,
-                            final Class<TValue> valueClass,
-                            final DataEncoder<TValue> valueEncoder,
-                            final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback,
-                            final TContext callbackContext) {
-                        final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue, TExtra> backingConnector = (eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue, TExtra>) factory
-                                .getConnectorFactory(
-                                        eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnectorFactory.class)
-                                .create(configuration, valueClass, valueEncoder);
-                        return new MemcacheKvStoreConnector<TContext, TValue, TExtra>(cloudlet,
-                                backingConnector, configuration, callback, callbackContext);
-                    }
-                });
-        factory.registerFactory(IAmqpQueueConsumerConnectorFactory.class,
-                new IAmqpQueueConsumerConnectorFactory() {
-
-                    @Override
-                    public <TContext, Message, TExtra> IAmqpQueueConsumerConnector<Message, TExtra> create(
-                            final IConfiguration configuration,
-                            final Class<Message> messageClass,
-                            final DataEncoder<Message> messageEncoder,
-                            final IAmqpQueueConsumerConnectorCallback<TContext, Message, TExtra> callback,
-                            final TContext callbackContext) {
-                        final AmqpQueueConsumerConnector.Callback<Message> backingCallback = new AmqpQueueConsumerConnector.Callback<Message>();
-                        final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> backingConnector = factory
-                                .getConnectorFactory(
-                                        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory.class)
-                                .create(configuration, messageClass, messageEncoder,
-                                        backingCallback);
-                        return new AmqpQueueConsumerConnector<TContext, Message, TExtra>(cloudlet,
-                                backingConnector, configuration, callback, callbackContext,
-                                backingCallback);
-                    }
-                });
-        factory.registerFactory(IAmqpQueuePublisherConnectorFactory.class,
-                new IAmqpQueuePublisherConnectorFactory() {
-
-                    @Override
-                    public <TContext, Message, TExtra extends MessageEnvelope> IAmqpQueuePublisherConnector<Message, TExtra> create(
-                            final IConfiguration configuration,
-                            final Class<Message> messageClass,
-                            final DataEncoder<Message> messageEncoder,
-                            final IAmqpQueuePublisherConnectorCallback<TContext, Message, TExtra> callback,
-                            final TContext callbackContext) {
-                        final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<Message, TExtra> backingConnector = factory
-                                .getConnectorFactory(
-                                        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory.class)
-                                .create(configuration, messageClass, messageEncoder);
-                        return new AmqpQueuePublisherConnector<TContext, Message, TExtra>(cloudlet,
-                                backingConnector, configuration, callback, callbackContext);
-                    }
-                });
-        factory.registerFactory(IHttpgQueueConnectorFactory.class,
-                new IHttpgQueueConnectorFactory() {
-
-                    @Override
-                    public <TContext, TRequestBody, TResponseBody, TExtra> IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create(
-                            final IConfiguration configuration,
-                            final Class<TRequestBody> requestBodyClass,
-                            final DataEncoder<TRequestBody> requestBodyEncoder,
-                            final Class<TResponseBody> responseBodyClass,
-                            final DataEncoder<TResponseBody> responseBodyEncoder,
-                            final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback,
-                            final TContext callbackContext) {
-                        final HttpgQueueConnector.Callback<TRequestBody, TResponseBody> backingCallback = new HttpgQueueConnector.Callback<TRequestBody, TResponseBody>();
-                        final eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> backingConnector = factory
-                                .getConnectorFactory(
-                                        eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnectorFactory.class)
-                                .create(configuration, requestBodyClass, requestBodyEncoder,
-                                        responseBodyClass, responseBodyEncoder, backingCallback);
-                        return new HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>(
-                                cloudlet, backingConnector, configuration, callback,
-                                callbackContext, backingCallback);
-                    }
-                });
-    }
+public class DefaultConnectorsFactory
+		extends BaseConnectorsFactory
+		implements
+			IConnectorsFactory
+{
+	protected DefaultConnectorsFactory (final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate)
+	{
+		super (delegate);
+	}
+	
+	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.core.IConnectorsFactory delegate, final ConnectorEnvironment environment)
+	{
+		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (delegate);
+		DefaultConnectorsFactory.initialize (cloudlet, factory, environment);
+		return factory;
+	}
+	
+	protected static final void initialize (final ICloudletController<?> cloudlet, final DefaultConnectorsFactory factory, final ConnectorEnvironment environment)
+	{
+		Preconditions.checkNotNull (factory);
+		Preconditions.checkNotNull (cloudlet);
+		factory.registerFactory (IExecutorFactory.class, new IExecutorFactory () {
+			@Override
+			public <TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final IConfiguration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext)
+			{
+				return new Executor<TContext, TOutcome, TExtra> (cloudlet, environment.getThreading (), environment.getExceptions (), configuration, callback, callbackContext);
+			}
+		});
+		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
+			@Override
+			public <TContext, TTValue, TExtra extends MessageEnvelope> IKvStoreConnector<TTValue, TExtra> create (final IConfiguration configuration, final Class<TTValue> valueClass, final DataEncoder<TTValue> valueEncoder, final IKvStoreConnectorCallback<TContext, TTValue, TExtra> callback, final TContext callbackContext)
+			{
+				final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TTValue, TExtra> backingConnector = (eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TTValue, TExtra>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
+				return new GenericKvStoreConnector<TContext, TTValue, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
+			}
+		});
+		factory.registerFactory (IMemcacheKvStoreConnectorFactory.class, new IMemcacheKvStoreConnectorFactory () {
+			@Override
+			public <TContext, TValue, TExtra extends MessageEnvelope> IMemcacheKvStoreConnector<TValue, TExtra> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext)
+			{
+				final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue, TExtra> backingConnector = (eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue, TExtra>) factory.getConnectorFactory (eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
+				return new MemcacheKvStoreConnector<TContext, TValue, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
+			}
+		});
+		factory.registerFactory (IAmqpQueueConsumerConnectorFactory.class, new IAmqpQueueConsumerConnectorFactory () {
+			@Override
+			public <TContext, Message, TExtra> IAmqpQueueConsumerConnector<Message, TExtra> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final IAmqpQueueConsumerConnectorCallback<TContext, Message, TExtra> callback, final TContext callbackContext)
+			{
+				final AmqpQueueConsumerConnector.Callback<Message> backingCallback = new AmqpQueueConsumerConnector.Callback<Message> ();
+				final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<Message> backingConnector = factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory.class).create (configuration, messageClass, messageEncoder, backingCallback);
+				return new AmqpQueueConsumerConnector<TContext, Message, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
+			}
+		});
+		factory.registerFactory (IAmqpQueuePublisherConnectorFactory.class, new IAmqpQueuePublisherConnectorFactory () {
+			@Override
+			public <TContext, Message, TExtra extends MessageEnvelope> IAmqpQueuePublisherConnector<Message, TExtra> create (final IConfiguration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final IAmqpQueuePublisherConnectorCallback<TContext, Message, TExtra> callback, final TContext callbackContext)
+			{
+				final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<Message, TExtra> backingConnector = factory.getConnectorFactory (eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory.class).create (configuration, messageClass, messageEncoder);
+				return new AmqpQueuePublisherConnector<TContext, Message, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
+			}
+		});
+		factory.registerFactory (IHttpgQueueConnectorFactory.class, new IHttpgQueueConnectorFactory () {
+			@Override
+			public <TContext, TRequestBody, TResponseBody, TExtra> IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final IConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext)
+			{
+				final HttpgQueueConnector.Callback<TRequestBody, TResponseBody> backingCallback = new HttpgQueueConnector.Callback<TRequestBody, TResponseBody> ();
+				final eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> backingConnector = factory.getConnectorFactory (eu.mosaic_cloud.connectors.httpg.IHttpgQueueConnectorFactory.class).create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, backingCallback);
+				return new HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
+			}
+		});
+	}
 }

@@ -20,7 +20,9 @@
 
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
+
 
 /**
  * Interface for registering and using for an AMQP resource as a publisher.
@@ -33,8 +35,8 @@ import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueuePublisherConnector<TMessage, TExtra extends MessageEnvelope> extends
-        IAmqpQueueConnector,
-        eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage, TExtra> {
-
-}
+public interface IAmqpQueuePublisherConnector<TMessage, TExtra extends MessageEnvelope>
+		extends
+			IAmqpQueueConnector,
+			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage, TExtra>
+{}

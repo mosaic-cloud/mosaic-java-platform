@@ -20,30 +20,32 @@
 
 package eu.mosaic_cloud.connectors.queue.amqp;
 
+
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-public class AmqpQueuePublisherConnector<TMessage, TExtra extends MessageEnvelope> extends
-        AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<TMessage, TExtra>> implements
-        IAmqpQueuePublisherConnector<TMessage, TExtra> {
 
-    protected AmqpQueuePublisherConnector(
-            final AmqpQueuePublisherConnectorProxy<TMessage, TExtra> proxy) {
-        super(proxy);
-    }
-
-    @Override
-    public CallbackCompletion<Void> publish(final TMessage message, final TExtra extra) {
-        return this.proxy.publish(message, extra);
-    }
-
-    public static <M, E extends MessageEnvelope> AmqpQueuePublisherConnector<M, E> create(
-            final ConnectorConfiguration configuration, final Class<M> messageClass,
-            final DataEncoder<M> messageEncoder) {
-        final AmqpQueuePublisherConnectorProxy<M, E> proxy = AmqpQueuePublisherConnectorProxy
-                .create(configuration, messageClass, messageEncoder);
-        return new AmqpQueuePublisherConnector<M, E>(proxy);
-    }
+public class AmqpQueuePublisherConnector<TMessage, TExtra extends MessageEnvelope>
+		extends AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<TMessage, TExtra>>
+		implements
+			IAmqpQueuePublisherConnector<TMessage, TExtra>
+{
+	protected AmqpQueuePublisherConnector (final AmqpQueuePublisherConnectorProxy<TMessage, TExtra> proxy)
+	{
+		super (proxy);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> publish (final TMessage message, final TExtra extra)
+	{
+		return this.proxy.publish (message, extra);
+	}
+	
+	public static <M, E extends MessageEnvelope> AmqpQueuePublisherConnector<M, E> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder)
+	{
+		final AmqpQueuePublisherConnectorProxy<M, E> proxy = AmqpQueuePublisherConnectorProxy.create (configuration, messageClass, messageEncoder);
+		return new AmqpQueuePublisherConnector<M, E> (proxy);
+	}
 }

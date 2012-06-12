@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.cloudlets.core;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
@@ -29,6 +30,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
+
 /**
  * Interface for cloudlet control operations. Each cloudlet has access to an
  * object implementing this interface and uses it to ask for resources or
@@ -37,21 +39,23 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * @author Georgiana Macariu
  * 
  */
-public interface ICloudletController<Context> extends Callbacks, IConnectorsFactory {
-
-    CallbackCompletion<Void> destroy();
-
-    @CallbackPassthrough
-    IConfiguration getConfiguration();
-
-    @Override
-    @CallbackPassthrough
-    <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory(
-            Class<Factory> factory);
-
-    @CallbackPassthrough
-    CloudletState getState();
-
-    @CallbackPassthrough
-    ThreadingContext getThreadingContext();
+public interface ICloudletController<Context>
+		extends
+			Callbacks,
+			IConnectorsFactory
+{
+	CallbackCompletion<Void> destroy ();
+	
+	@CallbackPassthrough
+	IConfiguration getConfiguration ();
+	
+	@Override
+	@CallbackPassthrough
+	<Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory (Class<Factory> factory);
+	
+	@CallbackPassthrough
+	CloudletState getState ();
+	
+	@CallbackPassthrough
+	ThreadingContext getThreadingContext ();
 }
