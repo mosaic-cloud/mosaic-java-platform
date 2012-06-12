@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
+
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
@@ -40,120 +41,110 @@ import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
-public class PongCloudlet {
 
-    public static final class AmqpConsumerCallback extends
-            DefaultAmqpQueueConsumerConnectorCallback<PongCloudletContext, PingMessage, Void> {
-
-        @Override
-        public CallbackCompletion<Void> consume(final PongCloudletContext context,
-                final AmqpQueueConsumeCallbackArguments<PingMessage> arguments) {
-            // NOTE: retrieve message data
-            final PingMessage ping = arguments.getMessage();
-            this.logger
-                    .info("received ping message with key `{}`; acknowledging...", ping.getKey());
-            final PongMessage pong = new PongMessage(ping.getKey(), null);
-            this.logger.info("sending pong message with key `{}`...", pong.getKey());
-            context.publisher.publish(pong, null);
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> destroySucceeded(final PongCloudletContext context,
-                final CallbackArguments arguments) {
-            this.logger.info("queue consumer connector destroyed successfully.");
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> initializeSucceeded(final PongCloudletContext context,
-                final CallbackArguments arguments) {
-            this.logger.info("queue consumer connector initialized successfully.");
-            return ICallback.SUCCESS;
-        }
-    }
-
-    public static final class AmqpPublisherCallback
-            extends
-            DefaultAmqpPublisherConnectorCallback<PongCloudletContext, PongMessage, MessageEnvelope> {
-
-        @Override
-        public CallbackCompletion<Void> destroySucceeded(final PongCloudletContext context,
-                final CallbackArguments arguments) {
-            this.logger.info("queue publisher connector destroyed successfully.");
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> initializeSucceeded(final PongCloudletContext context,
-                final CallbackArguments arguments) {
-            this.logger.info("queue publisher connector initialized successfully.");
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> publishSucceeded(final PongCloudletContext context,
-                final GenericCallbackCompletionArguments<MessageEnvelope> arguments) {
-            this.logger.info("publish succeeded; exiting...");
-            context.cloudlet.destroy();
-            return ICallback.SUCCESS;
-        }
-    }
-
-    public static final class LifeCycleHandler extends DefaultCloudletCallback<PongCloudletContext> {
-
-        @Override
-        public CallbackCompletion<Void> destroy(final PongCloudletContext context,
-                final CloudletCallbackArguments<PongCloudletContext> arguments) {
-            this.logger.info("destroying cloudlet...");
-            this.logger.info("destroying queue connectors...");
-            return CallbackCompletion.createAndChained(context.consumer.destroy(),
-                    context.publisher.destroy());
-        }
-
-        @Override
-        public CallbackCompletion<Void> destroySucceeded(final PongCloudletContext context,
-                final CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
-            this.logger.info("cloudlet destroyed successfully.");
-            return ICallback.SUCCESS;
-        }
-
-        @Override
-        public CallbackCompletion<Void> initialize(final PongCloudletContext context,
-                final CloudletCallbackArguments<PongCloudletContext> arguments) {
-            this.logger.info("initializing cloudlet...");
-            context.cloudlet = arguments.getCloudlet();
-            final IConfiguration configuration = context.cloudlet.getConfiguration();
-            final IConfiguration consumerConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("queue.consumer"));
-            final IConfiguration publisherConfiguration = configuration
-                    .spliceConfiguration(ConfigurationIdentifier.resolveAbsolute("queue.publisher"));
-            this.logger.info("creating queue connectors...");
-            context.consumer = context.cloudlet.getConnectorFactory(
-                    IAmqpQueueConsumerConnectorFactory.class).create(consumerConfiguration,
-                    PingMessage.class, JsonDataEncoder.create(PingMessage.class),
-                    new AmqpConsumerCallback(), context);
-            context.publisher = context.cloudlet.getConnectorFactory(
-                    IAmqpQueuePublisherConnectorFactory.class).create(publisherConfiguration,
-                    PongMessage.class, JsonDataEncoder.create(PongMessage.class),
-                    new AmqpPublisherCallback(), context);
-            this.logger.info("initializing queue connectors...");
-            return CallbackCompletion.createAndChained(context.consumer.initialize(),
-                    context.publisher.initialize());
-        }
-
-        @Override
-        public CallbackCompletion<Void> initializeSucceeded(final PongCloudletContext context,
-                final CloudletCallbackCompletionArguments<PongCloudletContext> arguments) {
-            this.logger.info("cloudlet initialized successfully.");
-            return ICallback.SUCCESS;
-        }
-    }
-
-    public static final class PongCloudletContext {
-
-        ICloudletController<PongCloudletContext> cloudlet;
-        IAmqpQueueConsumerConnector<PingMessage, Void> consumer;
-        IAmqpQueuePublisherConnector<PongMessage, MessageEnvelope> publisher;
-    }
+public class PongCloudlet
+{
+	public static final class AmqpConsumerCallback
+			extends DefaultAmqpQueueConsumerConnectorCallback<PongCloudletContext, PingMessage, Void>
+	{
+		@Override
+		public CallbackCompletion<Void> consume (final PongCloudletContext context, final AmqpQueueConsumeCallbackArguments<PingMessage> arguments)
+		{
+			// NOTE: retrieve message data
+			final PingMessage ping = arguments.getMessage ();
+			this.logger.info ("received ping message with key `{}`; acknowledging...", ping.getKey ());
+			final PongMessage pong = new PongMessage (ping.getKey (), null);
+			this.logger.info ("sending pong message with key `{}`...", pong.getKey ());
+			context.publisher.publish (pong, null);
+			return ICallback.SUCCESS;
+		}
+		
+		@Override
+		public CallbackCompletion<Void> destroySucceeded (final PongCloudletContext context, final CallbackArguments arguments)
+		{
+			this.logger.info ("queue consumer connector destroyed successfully.");
+			return ICallback.SUCCESS;
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initializeSucceeded (final PongCloudletContext context, final CallbackArguments arguments)
+		{
+			this.logger.info ("queue consumer connector initialized successfully.");
+			return ICallback.SUCCESS;
+		}
+	}
+	
+	public static final class AmqpPublisherCallback
+			extends DefaultAmqpPublisherConnectorCallback<PongCloudletContext, PongMessage, MessageEnvelope>
+	{
+		@Override
+		public CallbackCompletion<Void> destroySucceeded (final PongCloudletContext context, final CallbackArguments arguments)
+		{
+			this.logger.info ("queue publisher connector destroyed successfully.");
+			return ICallback.SUCCESS;
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initializeSucceeded (final PongCloudletContext context, final CallbackArguments arguments)
+		{
+			this.logger.info ("queue publisher connector initialized successfully.");
+			return ICallback.SUCCESS;
+		}
+		
+		@Override
+		public CallbackCompletion<Void> publishSucceeded (final PongCloudletContext context, final GenericCallbackCompletionArguments<MessageEnvelope> arguments)
+		{
+			this.logger.info ("publish succeeded; exiting...");
+			context.cloudlet.destroy ();
+			return ICallback.SUCCESS;
+		}
+	}
+	
+	public static final class LifeCycleHandler
+			extends DefaultCloudletCallback<PongCloudletContext>
+	{
+		@Override
+		public CallbackCompletion<Void> destroy (final PongCloudletContext context, final CloudletCallbackArguments<PongCloudletContext> arguments)
+		{
+			this.logger.info ("destroying cloudlet...");
+			this.logger.info ("destroying queue connectors...");
+			return CallbackCompletion.createAndChained (context.consumer.destroy (), context.publisher.destroy ());
+		}
+		
+		@Override
+		public CallbackCompletion<Void> destroySucceeded (final PongCloudletContext context, final CloudletCallbackCompletionArguments<PongCloudletContext> arguments)
+		{
+			this.logger.info ("cloudlet destroyed successfully.");
+			return ICallback.SUCCESS;
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initialize (final PongCloudletContext context, final CloudletCallbackArguments<PongCloudletContext> arguments)
+		{
+			this.logger.info ("initializing cloudlet...");
+			context.cloudlet = arguments.getCloudlet ();
+			final IConfiguration configuration = context.cloudlet.getConfiguration ();
+			final IConfiguration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue.consumer"));
+			final IConfiguration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue.publisher"));
+			this.logger.info ("creating queue connectors...");
+			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, PingMessage.class, JsonDataEncoder.create (PingMessage.class), new AmqpConsumerCallback (), context);
+			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, PongMessage.class, JsonDataEncoder.create (PongMessage.class), new AmqpPublisherCallback (), context);
+			this.logger.info ("initializing queue connectors...");
+			return CallbackCompletion.createAndChained (context.consumer.initialize (), context.publisher.initialize ());
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initializeSucceeded (final PongCloudletContext context, final CloudletCallbackCompletionArguments<PongCloudletContext> arguments)
+		{
+			this.logger.info ("cloudlet initialized successfully.");
+			return ICallback.SUCCESS;
+		}
+	}
+	
+	public static final class PongCloudletContext
+	{
+		ICloudletController<PongCloudletContext> cloudlet;
+		IAmqpQueueConsumerConnector<PingMessage, Void> consumer;
+		IAmqpQueuePublisherConnector<PongMessage, MessageEnvelope> publisher;
+	}
 }
