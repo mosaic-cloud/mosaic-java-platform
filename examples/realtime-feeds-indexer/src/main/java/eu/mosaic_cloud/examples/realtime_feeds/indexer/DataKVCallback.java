@@ -23,7 +23,6 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -34,7 +33,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class DataKVCallback
-		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, byte[], UUID>
+		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, byte[], IndexerMessageEnvelope>
 {
 	@Override
 	public CallbackCompletion<Void> destroySucceeded (final IndexerCloudletContext context, final CallbackArguments arguments)
@@ -44,7 +43,7 @@ public class DataKVCallback
 	}
 	
 	@Override
-	public CallbackCompletion<Void> getFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<byte[], UUID> arguments)
+	public CallbackCompletion<Void> getFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<byte[], IndexerMessageEnvelope> arguments)
 	{
 		final String key = arguments.getKey ();
 		this.logger.warn ("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key + ")");
@@ -58,11 +57,11 @@ public class DataKVCallback
 	}
 	
 	@Override
-	public CallbackCompletion<Void> getSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<byte[], UUID> arguments)
+	public CallbackCompletion<Void> getSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<byte[], IndexerMessageEnvelope> arguments)
 	{
 		final String key = arguments.getKey ();
 		this.logger.debug ("succeeded fetch (" + DataKVCallback.BUCKET_NAME + "," + key + ")");
-		IndexWorkflow.parseLatestFeed (arguments.getValue (), arguments.getExtra ());
+		IndexWorkflow.parseLatestFeed (arguments.getValue (), arguments.getExtra ().getCorrelation ());
 		return ICallback.SUCCESS;
 	}
 	

@@ -113,7 +113,8 @@ public class IndexWorkflow
 				}
 				this.newTimeline.put ("items", items);
 				this.currentFeedMetaData.put ("timelines", this.newTimeline.getString ("key"));
-				this.context.timelinesStore.set (newTimelineKey, this.newTimeline, this.key);
+				final IndexerMessageEnvelope envelope = new IndexerMessageEnvelope (this.key);
+				this.context.timelinesStore.set (newTimelineKey, this.newTimeline, envelope);
 			} else {
 				this.currentFeedMetaData = this.previousFeedMetaData;
 				this.storeIndexOutcome ();
@@ -135,7 +136,8 @@ public class IndexWorkflow
 			// FIXME: we should check if this feed isn't still pending for indexing...
 			IndexWorkflow.logger.info ("New indexer created for feed " + this.indexMessage.getString ("url") + " ...");
 			IndexWorkflow.logger.debug ("indexing " + this.indexMessage.getString ("url") + " (from data) step 2 (fetching latest data) for " + this.key + "...");
-			this.context.dataStore.get (this.indexMessage.getString ("data"), this.key);
+			final IndexerMessageEnvelope envelope = new IndexerMessageEnvelope (this.key);
+			this.context.dataStore.get (this.indexMessage.getString ("data"), envelope);
 		} catch (final JSONException e) {
 			this.handleError (e);
 		}
@@ -150,12 +152,13 @@ public class IndexWorkflow
 		this.exceptions.traceIgnoredException (e);
 	}
 	
-	private void handleMetadataStored (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
+	private void handleMetadataStored (final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
 	{
 		if (this.indexDone) {
 			this.storeIndexOutcome ();
 		} else {
-			this.context.metadataStore.get (arguments.getKey (), this.key);
+			final IndexerMessageEnvelope envelope = new IndexerMessageEnvelope (this.key);
+			this.context.metadataStore.get (arguments.getKey (), envelope);
 		}
 	}
 	
@@ -163,7 +166,8 @@ public class IndexWorkflow
 	{
 		IndexWorkflow.logger.debug ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 5 (updating meta-data) for " + this.key + "...");
 		try {
-			this.context.metadataStore.set (this.currentFeedMetaData.getString ("key"), this.currentFeedMetaData, this.key);
+			final IndexerMessageEnvelope envelope = new IndexerMessageEnvelope (this.key);
+			this.context.metadataStore.set (this.currentFeedMetaData.getString ("key"), this.currentFeedMetaData, envelope);
 		} catch (final JSONException e) {
 			this.exceptions.traceIgnoredException (e);
 		}
@@ -175,7 +179,8 @@ public class IndexWorkflow
 		final String feedKey = StoreUtils.generateFeedKey (this.indexMessage.getString ("url"));
 		IndexWorkflow.logger.debug ("indexing " + IndexWorkflow.INDEX_TASK_TYPE + " step 3 (fetching latest meta-data) for " + this.key + "...");
 		// FIXME: ??? (I don't remember what the problem was...)
-		this.context.metadataStore.get (feedKey, this.key);
+		final IndexerMessageEnvelope envelope = new IndexerMessageEnvelope (this.key);
+		this.context.metadataStore.get (feedKey, envelope);
 	}
 	
 	/**
@@ -246,9 +251,9 @@ public class IndexWorkflow
 		IndexWorkflow.logger.error (errorBuilder.toString ());
 	}
 	
-	public static void onMetadataStored (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
+	public static void onMetadataStored (final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
 	{
-		IndexWorkflow.getIndexer (arguments.getExtra ()).handleMetadataStored (arguments);
+		IndexWorkflow.getIndexer (arguments.getExtra ().getCorrelation ()).handleMetadataStored (arguments);
 	}
 	
 	/**

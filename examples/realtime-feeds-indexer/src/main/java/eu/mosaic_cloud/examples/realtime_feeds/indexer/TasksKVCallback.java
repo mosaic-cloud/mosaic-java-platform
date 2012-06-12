@@ -35,7 +35,7 @@ import org.json.JSONObject;
 
 
 public class TasksKVCallback
-		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, Void>
+		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, MessageEnvelope>
 {
 	@Override
 	public CallbackCompletion<Void> destroySucceeded (final IndexerCloudletContext context, final CallbackArguments arguments)
@@ -45,13 +45,13 @@ public class TasksKVCallback
 	}
 	
 	@Override
-	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, Void> arguments)
+	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, MessageEnvelope> arguments)
 	{
 		this.handleError (arguments);
 		return ICallback.SUCCESS;
 	}
 	
-	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, Void> arguments)
+	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, MessageEnvelope> arguments)
 	{
 		final String key = arguments.getKey ();
 		this.logger.warn ("failed fetch (" + TasksKVCallback.BUCKET_NAME + "," + key + ")");
