@@ -26,6 +26,7 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 
@@ -34,7 +35,7 @@ import org.junit.BeforeClass;
 
 
 public class RiakKvStoreConnectorTest
-		extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String>>
+		extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String, MessageEnvelope>>
 {
 	@Override
 	public void setUp ()

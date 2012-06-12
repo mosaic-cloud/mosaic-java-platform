@@ -55,10 +55,10 @@ import com.google.protobuf.ByteString;
  *            type of stored data
  * 
  */
-public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
-		extends BaseKvStoreConnectorProxy<TValue>
+public final class MemcacheKvStoreConnectorProxy<TValue extends Object, TExtra extends MessageEnvelope>
+		extends BaseKvStoreConnectorProxy<TValue, TExtra>
 		implements
-			IMemcacheKvStoreConnector<TValue>
+			IMemcacheKvStoreConnector<TValue, TExtra>
 {
 	protected MemcacheKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
 	{
@@ -68,7 +68,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> add (final String key, final int exp, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> add (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("adding to the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -99,7 +99,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> append (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> append (final String key, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("appending to the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -129,7 +129,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> cas (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> cas (final String key, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("cas-ing the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -160,7 +160,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	
 	@Override
 	@SuppressWarnings ("unchecked")
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys, final TExtra extra)
+	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys, final TExtra extra)
 	{
 		return this.sendGetRequest (keys, (Class<Map<String, TValue>>) ((Class<?>) Map.class), extra);
 	}
@@ -176,7 +176,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> prepend (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> prepend (final String key, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("prepending to the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -206,7 +206,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> replace (final String key, final int exp, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> replace (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("replacing the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -252,9 +252,9 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	 *            the key-value store
 	 * @return the proxy
 	 */
-	public static <T extends Object> MemcacheKvStoreConnectorProxy<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
+	public static <T extends Object, TExtra extends MessageEnvelope> MemcacheKvStoreConnectorProxy<T, TExtra> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
 	{
-		final MemcacheKvStoreConnectorProxy<T> proxy = new MemcacheKvStoreConnectorProxy<T> (configuration, encoder);
+		final MemcacheKvStoreConnectorProxy<T, TExtra> proxy = new MemcacheKvStoreConnectorProxy<T, TExtra> (configuration, encoder);
 		return (proxy);
 	}
 	

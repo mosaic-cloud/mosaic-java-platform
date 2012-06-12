@@ -44,6 +44,7 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 import com.google.common.base.Preconditions;
 
@@ -69,14 +70,14 @@ public class DefaultConnectorsFactory
 		Preconditions.checkNotNull (environment);
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
-			public <TValue> IKvStoreConnector<TValue> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
+			public <TValue, TExtra extends MessageEnvelope> IKvStoreConnector<TValue, TExtra> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
 			{
 				return GenericKvStoreConnector.create (ConnectorConfiguration.create (configuration, environment), valueEncoder);
 			}
 		});
 		factory.registerFactory (IMemcacheKvStoreConnectorFactory.class, new IMemcacheKvStoreConnectorFactory () {
 			@Override
-			public <TValue> IMemcacheKvStoreConnector<TValue> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
+			public <TValue, TExtra extends MessageEnvelope> IMemcacheKvStoreConnector<TValue, TExtra> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
 			{
 				return MemcacheKvStoreConnector.create (ConnectorConfiguration.create (configuration, environment), valueEncoder);
 			}

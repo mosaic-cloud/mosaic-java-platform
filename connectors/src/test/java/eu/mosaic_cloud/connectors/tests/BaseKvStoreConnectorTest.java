@@ -32,7 +32,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
-public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreConnector<String, ?>>
+public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreConnector<String, MessageEnvelope, ?>>
 		extends BaseConnectorTest<TConnector, BaseKvStoreConnectorTest.Scenario>
 {
 	@Override
@@ -95,7 +95,7 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	public static class Scenario
 			extends BaseScenario
 	{
-		public <C extends BaseKvStoreConnector<String, ?>> Scenario (final Class<? extends BaseKvStoreConnectorTest<C>> owner, final IConfiguration configuration)
+		public <C extends BaseKvStoreConnector<String, MessageEnvelope, ?>> Scenario (final Class<? extends BaseKvStoreConnectorTest<C>> owner, final IConfiguration configuration)
 		{
 			super (owner, configuration);
 		}

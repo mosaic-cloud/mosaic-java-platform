@@ -44,7 +44,7 @@ import org.junit.Test;
 
 @Ignore
 public class MemcacheKvStoreConnectorTest
-		extends BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String>>
+		extends BaseKvStoreConnectorTest<MemcacheKvStoreConnector<String, MessageEnvelope>>
 {
 	@Override
 	public void setUp ()

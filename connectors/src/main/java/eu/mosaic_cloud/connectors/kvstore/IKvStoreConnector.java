@@ -35,7 +35,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TValue>
  *            type of stored data
  */
-public interface IKvStoreConnector<TValue extends Object>
+public interface IKvStoreConnector<TValue extends Object, TExtra extends MessageEnvelope>
 		extends
 			IConnector
 {
@@ -58,7 +58,7 @@ public interface IKvStoreConnector<TValue extends Object>
 	 *            expected message encoding)
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<TValue> get (String key, final TExtra extra);
+	CallbackCompletion<TValue> get (String key, final TExtra extra);
 	
 	/**
 	 * Lists the keys of the bucket used by the connector.
@@ -78,5 +78,5 @@ public interface IKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra);
+	CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra);
 }

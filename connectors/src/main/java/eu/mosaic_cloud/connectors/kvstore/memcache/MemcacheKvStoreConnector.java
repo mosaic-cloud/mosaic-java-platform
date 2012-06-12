@@ -39,54 +39,54 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TValue>
  *            type of stored data
  */
-public class MemcacheKvStoreConnector<TValue extends Object>
-		extends BaseKvStoreConnector<TValue, MemcacheKvStoreConnectorProxy<TValue>>
+public class MemcacheKvStoreConnector<TValue extends Object, TExtra extends MessageEnvelope>
+		extends BaseKvStoreConnector<TValue, TExtra, MemcacheKvStoreConnectorProxy<TValue, TExtra>>
 		implements
-			IMemcacheKvStoreConnector<TValue>
+			IMemcacheKvStoreConnector<TValue, TExtra>
 {
-	protected MemcacheKvStoreConnector (final MemcacheKvStoreConnectorProxy<TValue> proxy)
+	protected MemcacheKvStoreConnector (final MemcacheKvStoreConnectorProxy<TValue, TExtra> proxy)
 	{
 		super (proxy);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> add (final String key, final int exp, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> add (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		return this.proxy.add (key, exp, data, extra);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> append (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> append (final String key, final TValue data, final TExtra extra)
 	{
 		return this.proxy.append (key, data, extra);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> cas (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> cas (final String key, final TValue data, final TExtra extra)
 	{
 		return this.proxy.cas (key, data, extra);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys, final TExtra extra)
+	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys, final TExtra extra)
 	{
 		return this.proxy.getBulk (keys, extra);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> prepend (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> prepend (final String key, final TValue data, final TExtra extra)
 	{
 		return this.proxy.prepend (key, data, extra);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> replace (final String key, final int exp, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> replace (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		return this.proxy.replace (key, exp, data, extra);
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final int exp, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data, final TExtra extra)
 	{
 		return this.proxy.set (key, exp, data, extra);
 	}
@@ -102,9 +102,9 @@ public class MemcacheKvStoreConnector<TValue extends Object>
 	 * @return the connector
 	 * @throws Throwable
 	 */
-	public static <T extends Object> MemcacheKvStoreConnector<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
+	public static <T extends Object, TExtra extends MessageEnvelope> MemcacheKvStoreConnector<T, TExtra> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
 	{
-		final MemcacheKvStoreConnectorProxy<T> proxy = MemcacheKvStoreConnectorProxy.create (configuration, encoder);
-		return new MemcacheKvStoreConnector<T> (proxy);
+		final MemcacheKvStoreConnectorProxy<T, TExtra> proxy = MemcacheKvStoreConnectorProxy.create (configuration, encoder);
+		return new MemcacheKvStoreConnector<T, TExtra> (proxy);
 	}
 }

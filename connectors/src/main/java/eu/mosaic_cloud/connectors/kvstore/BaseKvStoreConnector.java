@@ -39,10 +39,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TProxy>
  *            type of connector proxy
  */
-public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends BaseKvStoreConnectorProxy<TValue>>
+public abstract class BaseKvStoreConnector<TValue extends Object, TExtra extends MessageEnvelope, TProxy extends BaseKvStoreConnectorProxy<TValue, TExtra>>
 		extends BaseConnector<TProxy>
 		implements
-			IKvStoreConnector<TValue>
+			IKvStoreConnector<TValue, TExtra>
 {
 	protected BaseKvStoreConnector (final TProxy proxy)
 	{
@@ -56,7 +56,7 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<TValue> get (final String key, final TExtra extra)
+	public CallbackCompletion<TValue> get (final String key, final TExtra extra)
 	{
 		return this.proxy.get (key, extra);
 	}
@@ -68,7 +68,7 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	}
 	
 	@Override
-	public <TExtra extends MessageEnvelope> CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra)
 	{
 		return this.proxy.set (key, data, extra);
 	}

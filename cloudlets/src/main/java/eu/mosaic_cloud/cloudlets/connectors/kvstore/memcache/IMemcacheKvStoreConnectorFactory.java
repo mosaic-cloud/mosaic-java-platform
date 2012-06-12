@@ -24,6 +24,7 @@ package eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 
 /**
@@ -36,5 +37,5 @@ public interface IMemcacheKvStoreConnectorFactory
 		extends
 			IConnectorFactory<IMemcacheKvStoreConnector<?, ?>>
 {
-	<TContext, TValue, TExtra> IMemcacheKvStoreConnector<TValue, TExtra> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
+	<TContext, TValue, TExtra extends MessageEnvelope> IMemcacheKvStoreConnector<TValue, TExtra> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
 }

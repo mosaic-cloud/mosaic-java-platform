@@ -24,11 +24,12 @@ package eu.mosaic_cloud.connectors.kvstore;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 
 public interface IKvStoreConnectorFactory
 		extends
-			IConnectorFactory<IKvStoreConnector<?>>
+			IConnectorFactory<IKvStoreConnector<?, ?>>
 {
-	<TValue> IKvStoreConnector<TValue> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
+	<TValue, TExtra extends MessageEnvelope> IKvStoreConnector<TValue, TExtra> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
 }

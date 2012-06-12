@@ -24,6 +24,7 @@ package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 
 /**
@@ -46,5 +47,5 @@ public interface IKvStoreConnectorFactory
 	 * @param callbackContext
 	 * @return
 	 */
-	<TContext, TValue, TExtra> IKvStoreConnector<TValue, TExtra> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
+	<TContext, TValue, TExtra extends MessageEnvelope> IKvStoreConnector<TValue, TExtra> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
 }

@@ -36,9 +36,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TValue>
  *            type of stored data
  */
-public interface IMemcacheKvStoreConnector<TValue extends Object>
+public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends MessageEnvelope>
 		extends
-			IKvStoreConnector<TValue>
+			IKvStoreConnector<TValue, TExtra>
 {
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data
@@ -62,7 +62,7 @@ public interface IMemcacheKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Void> add (String key, int exp, TValue data, final TExtra extra);
+	CallbackCompletion<Void> add (String key, int exp, TValue data, final TExtra extra);
 	
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -75,7 +75,7 @@ public interface IMemcacheKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Void> append (String key, TValue data, final TExtra extra);
+	CallbackCompletion<Void> append (String key, TValue data, final TExtra extra);
 	
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -89,7 +89,7 @@ public interface IMemcacheKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Void> cas (String key, TValue data, final TExtra extra);
+	CallbackCompletion<Void> cas (String key, TValue data, final TExtra extra);
 	
 	/**
 	 * Gets data associated with several keys.
@@ -100,7 +100,7 @@ public interface IMemcacheKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Map<String, TValue>> getBulk (List<String> keys, final TExtra extra);
+	CallbackCompletion<Map<String, TValue>> getBulk (List<String> keys, final TExtra extra);
 	
 	/**
 	 * Adds specified data to an existing key before existing data.
@@ -113,7 +113,7 @@ public interface IMemcacheKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Void> prepend (String key, TValue data, final TExtra extra);
+	CallbackCompletion<Void> prepend (String key, TValue data, final TExtra extra);
 	
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -137,7 +137,7 @@ public interface IMemcacheKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Void> replace (String key, int exp, TValue data, final TExtra extra);
+	CallbackCompletion<Void> replace (String key, int exp, TValue data, final TExtra extra);
 	
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -160,5 +160,5 @@ public interface IMemcacheKvStoreConnector<TValue extends Object>
 	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	<TExtra extends MessageEnvelope> CallbackCompletion<Void> set (String key, int exp, TValue data, final TExtra extra);
+	CallbackCompletion<Void> set (String key, int exp, TValue data, final TExtra extra);
 }

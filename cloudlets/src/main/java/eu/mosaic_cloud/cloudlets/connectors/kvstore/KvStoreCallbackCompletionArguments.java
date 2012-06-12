@@ -136,6 +136,25 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * @param value
 	 *            the value associated with the key (if this callback is used
 	 *            for failed operations this value should contain the error)
+	 */
+	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final String key, final TValue value)
+	{
+		super (cloudlet);
+		this.keys = Arrays.asList (key);
+		this.value = value;
+		this.extra = null;
+	}
+	
+	/**
+	 * Creates a new argument.
+	 * 
+	 * @param cloudlet
+	 *            the cloudlet
+	 * @param key
+	 *            the key used in the operation
+	 * @param value
+	 *            the value associated with the key (if this callback is used
+	 *            for failed operations this value should contain the error)
 	 * @param extra
 	 *            some application specific object
 	 */
