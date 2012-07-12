@@ -1,4 +1,25 @@
+/*
+ * #%L
+ * mosaic-platform-interop
+ * %%
+ * Copyright (C) 2010 - 2012 Institute e-Austria Timisoara (Romania)
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 package eu.mosaic_cloud.platform.interop.specs.dfs;
+
 
 import com.google.protobuf.GeneratedMessage;
 
@@ -10,25 +31,24 @@ import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads;
 import eu.mosaic_cloud.platform.interop.tools.DefaultPBPayloadCoder;
 
-public enum DFSMessage implements
-MessageSpecification{
-	SUCCESS		(MessageType.Exchange, DFSPayloads.SuccessResponse.class),
-	HANDLER		(MessageType.Exchange, DFSPayloads.FileHandlerResponse.class),
-	BYTES		(MessageType.Exchange, DFSPayloads.FileRead.class),
-	OK 			(MessageType.Exchange, IdlCommon.Ok.class),
-	READ 		(MessageType.Exchange, DFSPayloads.ReadFile.class),
-	WRITE 		(MessageType.Exchange, DFSPayloads.WriteFile.class),
-	SEEK 		(MessageType.Exchange, DFSPayloads.SeekFile.class),
-	FLUSH 		(MessageType.Exchange, DFSPayloads.FlushFile.class),
-	OPEN 		(MessageType.Exchange, DFSPayloads.OpenFile.class),
-	CLOSE 		(MessageType.Exchange, DFSPayloads.CloseFile.class),
+
+public enum DFSMessage
+		implements
+			MessageSpecification
+{
+	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class),
+	HANDLER (MessageType.Exchange, DFSPayloads.FileHandlerResponse.class),
+	BYTES (MessageType.Exchange, DFSPayloads.FileRead.class),
+	OK (MessageType.Exchange, IdlCommon.Ok.class),
+	OPEN (MessageType.Exchange, DFSPayloads.OpenFile.class),
+//	CLOSE (MessageType.Exchange, DFSPayloads.CloseFile.class),
 	REMOVE_FILE (MessageType.Exchange, DFSPayloads.RemoveFile.class),
-	REMOVE_DIR 	(MessageType.Exchange, DFSPayloads.RemoveDir.class),
-	LIST 		(MessageType.Exchange, DFSPayloads.ListDir.class),
-	MOVE 		(MessageType.Exchange, DFSPayloads.MoveFile.class),
-	COPY 		(MessageType.Exchange, DFSPayloads.CopyFile.class),
-//	LINK 		(MessageType.Exchange, DFSPayloads.Link.class),
-	MKDIR 		(MessageType.Exchange, DFSPayloads.MakeDir.class);
+	REMOVE_DIR (MessageType.Exchange, DFSPayloads.RemoveDir.class),
+	LIST (MessageType.Exchange, DFSPayloads.ListDir.class),
+	MOVE (MessageType.Exchange, DFSPayloads.MoveFile.class),
+	COPY (MessageType.Exchange, DFSPayloads.CopyFile.class),
+	//	LINK 		(MessageType.Exchange, DFSPayloads.Link.class),
+	MKDIR (MessageType.Exchange, DFSPayloads.MakeDir.class);
 	
 	public PayloadCoder coder = null;
 	public final String identifier;
