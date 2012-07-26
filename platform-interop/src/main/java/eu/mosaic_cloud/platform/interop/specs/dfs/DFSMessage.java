@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.platform.interop.specs.dfs;
 
 
-import com.google.protobuf.GeneratedMessage;
-
 import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.MessageType;
 import eu.mosaic_cloud.interoperability.core.PayloadCoder;
@@ -31,29 +29,26 @@ import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads;
 import eu.mosaic_cloud.platform.interop.tools.DefaultPBPayloadCoder;
 
+import com.google.protobuf.GeneratedMessage;
+
 
 public enum DFSMessage
 		implements
 			MessageSpecification
 {
-	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class),
-	HANDLER (MessageType.Exchange, DFSPayloads.FileHandlerResponse.class),
 	BYTES (MessageType.Exchange, DFSPayloads.FileRead.class),
+	COPY (MessageType.Exchange, DFSPayloads.CopyFile.class),
+	HANDLER (MessageType.Exchange, DFSPayloads.FileHandlerResponse.class),
+	LIST (MessageType.Exchange, DFSPayloads.ListDir.class),
+	//	LINK 		(MessageType.Exchange, DFSPayloads.Link.class),
+	MKDIR (MessageType.Exchange, DFSPayloads.MakeDir.class),
+	MOVE (MessageType.Exchange, DFSPayloads.MoveFile.class),
 	OK (MessageType.Exchange, IdlCommon.Ok.class),
 	OPEN (MessageType.Exchange, DFSPayloads.OpenFile.class),
-//	CLOSE (MessageType.Exchange, DFSPayloads.CloseFile.class),
-	REMOVE_FILE (MessageType.Exchange, DFSPayloads.RemoveFile.class),
 	REMOVE_DIR (MessageType.Exchange, DFSPayloads.RemoveDir.class),
-	LIST (MessageType.Exchange, DFSPayloads.ListDir.class),
-	MOVE (MessageType.Exchange, DFSPayloads.MoveFile.class),
-	COPY (MessageType.Exchange, DFSPayloads.CopyFile.class),
-	//	LINK 		(MessageType.Exchange, DFSPayloads.Link.class),
-	MKDIR (MessageType.Exchange, DFSPayloads.MakeDir.class);
-	
-	public PayloadCoder coder = null;
-	public final String identifier;
-	public final MessageType type;
-	
+	//	CLOSE (MessageType.Exchange, DFSPayloads.CloseFile.class),
+	REMOVE_FILE (MessageType.Exchange, DFSPayloads.RemoveFile.class),
+	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class);
 	DFSMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
 	{
 		this.identifier = Identifiers.generate (this);
@@ -86,4 +81,8 @@ public enum DFSMessage
 	{
 		return this.type;
 	}
+	
+	public PayloadCoder coder = null;
+	public final String identifier;
+	public final MessageType type;
 }
