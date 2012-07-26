@@ -1,0 +1,110 @@
+package mosaic_cloud.idl.dfs;
+
+option java_package = "eu.mosaic_cloud.platform.interop.idl.dfs";
+option java_outer_classname = "DFSPayloads";
+option optimize_for = SPEED;
+
+import "common.proto";
+
+
+message RemoveFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string full_path = 2;
+}
+
+message RemoveDir {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string full_path = 2;
+}
+
+message MakeDir {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string full_path = 2;
+}
+
+message CopyFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string from_path = 2;
+	required string to_path = 3;
+}
+
+message MoveFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string from_path = 2;
+	required string to_path = 3;
+}
+
+message ListDir {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string full_path = 2;
+}
+
+message ListResult {
+		required mosaic_cloud.idl.common.CompletionToken token = 1;
+		repeated ListingItem entry = 2;
+}
+
+message ListingItem {
+		required string name = 1;
+		optional string full_path = 2;
+		optional bool is_directory = 3;
+		optional int64 length=4;
+}
+
+message OpenFile {
+	enum FileOpenMode {
+		READ_SEQUENTIAL = 0;
+		READ_SEEKABLE = 1;
+		OVERWRITE_SEQUENTIAL = 2; 
+		WRITE_SEEKABLE = 3;
+		READ_WRITE_SEEKABLE=4;
+	  }
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string full_path = 2;
+	optional FileOpenMode mode = 3 [default = READ_SEQUENTIAL];
+	optional int64 chunk_size = 4 [default = 1048512];
+}
+
+  
+message FileHandlerResponse {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string file_handler = 2;
+}
+
+message CloseFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string file_handler = 2;
+}
+
+message FileRead {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required bytes data = 2;
+}
+
+message WriteFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string file_handler = 2;
+	required bytes data = 3;
+}
+
+message FlushFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string file_handler = 2;
+}
+
+message SeekFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string file_handler = 2;
+	optional int64 position = 3 [default = 0];
+}
+
+message ReadFile {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required string file_handler = 2;
+	optional int64 num_bytes = 3 [default = 32767];
+}
+
+message SuccessResponse {
+	required mosaic_cloud.idl.common.CompletionToken token = 1;
+	required bool successful = 2;
+}
