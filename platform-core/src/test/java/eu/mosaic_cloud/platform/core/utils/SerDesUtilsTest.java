@@ -39,7 +39,7 @@ public class SerDesUtilsTest
 			implements
 				Serializable
 	{
-		private static final long serialVersionUID = 1L;
 		public Object[] someField = new Object[] {1, 2, true, ""};
+		private static final long serialVersionUID = 1L;
 	}
 }
