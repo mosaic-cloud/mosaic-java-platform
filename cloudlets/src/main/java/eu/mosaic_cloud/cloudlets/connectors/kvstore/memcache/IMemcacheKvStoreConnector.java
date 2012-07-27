@@ -67,7 +67,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> add (String key, TValue value, int exp, TExtra extra);
+	CallbackCompletion<Void> add (String key, TValue value, int exp, TExtra extra);
 	
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -80,7 +80,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> append (String key, TValue value, TExtra extra);
+	CallbackCompletion<Void> append (String key, TValue value, TExtra extra);
 	
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -94,7 +94,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> cas (String key, TValue value, TExtra extra);
+	CallbackCompletion<Void> cas (String key, TValue value, TExtra extra);
 	
 	/**
 	 * Gets data associated with several keys.
@@ -118,7 +118,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> prepend (String key, TValue value, TExtra extra);
+	CallbackCompletion<Void> prepend (String key, TValue value, TExtra extra);
 	
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -142,7 +142,7 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> replace (String key, TValue value, int exp, TExtra extra);
+	CallbackCompletion<Void> replace (String key, TValue value, int exp, TExtra extra);
 	
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -165,5 +165,5 @@ public interface IMemcacheKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> set (String key, TValue value, int exp, TExtra extra);
+	CallbackCompletion<Void> set (String key, TValue value, int exp, TExtra extra);
 }

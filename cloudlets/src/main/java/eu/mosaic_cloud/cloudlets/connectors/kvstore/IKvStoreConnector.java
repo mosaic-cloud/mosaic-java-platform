@@ -53,7 +53,7 @@ public interface IKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> delete (String key, TExtra extra);
+	CallbackCompletion<Void> delete (String key, TExtra extra);
 	
 	/**
 	 * Gets data associated with a single key.
@@ -86,5 +86,5 @@ public interface IKvStoreConnector<TValue, TExtra>
 	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> set (String key, TValue value, TExtra extra);
+	CallbackCompletion<Void> set (String key, TValue value, TExtra extra);
 }
