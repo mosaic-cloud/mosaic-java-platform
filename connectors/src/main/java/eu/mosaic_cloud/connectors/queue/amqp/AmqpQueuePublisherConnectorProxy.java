@@ -37,10 +37,10 @@ import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionWorkflows;
 import com.google.common.base.Preconditions;
 
 
-public final class AmqpQueuePublisherConnectorProxy<TMessage, TExtra extends MessageEnvelope>
+public final class AmqpQueuePublisherConnectorProxy<TMessage>
 		extends AmqpQueueConnectorProxy<TMessage>
 		implements
-			IAmqpQueuePublisherConnector<TMessage, TExtra>
+			IAmqpQueuePublisherConnector<TMessage>
 {
 	private AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
 	{
@@ -87,7 +87,7 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage, TExtra extends Mes
 	}
 	
 	@Override
-	public CallbackCompletion<Void> publish (final TMessage message, final TExtra extra)
+	public CallbackCompletion<Void> publish (final TMessage message)
 	{
 		Preconditions.checkNotNull (message);
 		this.transcript.traceDebugging ("publishing a message to exchange `%s` (of type `%s`) with routing key `%s`...", this.exchange, this.exchangeType, this.publishRoutingKey);
@@ -107,12 +107,12 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage, TExtra extends Mes
 		return (result);
 	}
 	
-	public static <TMessage, TExtra extends MessageEnvelope> AmqpQueuePublisherConnectorProxy<TMessage, TExtra> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
+	public static <TMessage, TExtra extends MessageEnvelope> AmqpQueuePublisherConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
 	{
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
 		// FIXME: the splice below will be done when creating the environment
 		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
-		final AmqpQueuePublisherConnectorProxy<TMessage, TExtra> proxy = new AmqpQueuePublisherConnectorProxy<TMessage, TExtra> (rawProxy, configuration, messageClass, messageEncoder);
+		final AmqpQueuePublisherConnectorProxy<TMessage> proxy = new AmqpQueuePublisherConnectorProxy<TMessage> (rawProxy, configuration, messageClass, messageEncoder);
 		return proxy;
 	}
 	

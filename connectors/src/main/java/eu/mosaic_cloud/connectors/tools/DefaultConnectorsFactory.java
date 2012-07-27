@@ -70,14 +70,14 @@ public class DefaultConnectorsFactory
 		Preconditions.checkNotNull (environment);
 		factory.registerFactory (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
-			public <TValue, TExtra extends MessageEnvelope> IKvStoreConnector<TValue, TExtra> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
+			public <TValue> IKvStoreConnector<TValue> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
 			{
 				return GenericKvStoreConnector.create (ConnectorConfiguration.create (configuration, environment), valueEncoder);
 			}
 		});
 		factory.registerFactory (IMemcacheKvStoreConnectorFactory.class, new IMemcacheKvStoreConnectorFactory () {
 			@Override
-			public <TValue, TExtra extends MessageEnvelope> IMemcacheKvStoreConnector<TValue, TExtra> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
+			public <TValue> IMemcacheKvStoreConnector<TValue> create (final IConfiguration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder)
 			{
 				return MemcacheKvStoreConnector.create (ConnectorConfiguration.create (configuration, environment), valueEncoder);
 			}
@@ -98,7 +98,7 @@ public class DefaultConnectorsFactory
 		});
 		factory.registerFactory (IAmqpQueuePublisherConnectorFactory.class, new IAmqpQueuePublisherConnectorFactory () {
 			@Override
-			public <TMessage, TExtra extends MessageEnvelope> IAmqpQueuePublisherConnector<TMessage, TExtra> create (final IConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
+			public <TMessage> IAmqpQueuePublisherConnector<TMessage> create (final IConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
 			{
 				return AmqpQueuePublisherConnector.create (ConnectorConfiguration.create (configuration, environment), messageClass, messageEncoder);
 			}

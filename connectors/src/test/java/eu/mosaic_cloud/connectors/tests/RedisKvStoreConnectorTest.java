@@ -37,7 +37,7 @@ import org.junit.Ignore;
 
 @Ignore
 public class RedisKvStoreConnectorTest
-		extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String, MessageEnvelope>>
+		extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String>>
 {
 	@Override
 	public void setUp ()

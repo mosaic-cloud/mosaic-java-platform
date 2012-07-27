@@ -34,10 +34,10 @@ import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
  * @param <TValue>
  *            type of stored data
  */
-public class GenericKvStoreConnector<TValue extends Object, TExtra extends MessageEnvelope>
-		extends BaseKvStoreConnector<TValue, TExtra, GenericKvStoreConnectorProxy<TValue, TExtra>>
+public class GenericKvStoreConnector<TValue extends Object>
+		extends BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>>
 {
-	protected GenericKvStoreConnector (final GenericKvStoreConnectorProxy<TValue, TExtra> proxy)
+	protected GenericKvStoreConnector (final GenericKvStoreConnectorProxy<TValue> proxy)
 	{
 		super (proxy);
 	}
@@ -53,9 +53,9 @@ public class GenericKvStoreConnector<TValue extends Object, TExtra extends Messa
 	 * @param threading
 	 * @return the connector
 	 */
-	public static <T, TExtra extends MessageEnvelope> GenericKvStoreConnector<T, TExtra> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
+	public static <T, TExtra extends MessageEnvelope> GenericKvStoreConnector<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
 	{
-		final GenericKvStoreConnectorProxy<T, TExtra> proxy = GenericKvStoreConnectorProxy.create (configuration, encoder);
-		return new GenericKvStoreConnector<T, TExtra> (proxy);
+		final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create (configuration, encoder);
+		return new GenericKvStoreConnector<T> (proxy);
 	}
 }

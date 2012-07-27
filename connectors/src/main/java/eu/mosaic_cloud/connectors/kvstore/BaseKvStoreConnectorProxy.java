@@ -64,10 +64,10 @@ import com.google.protobuf.ByteString;
  *            type of stored data
  * 
  */
-public abstract class BaseKvStoreConnectorProxy<TValue extends Object, TExtra extends MessageEnvelope>
+public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		extends BaseConnectorProxy
 		implements
-			IKvStoreConnector<TValue, TExtra>
+			IKvStoreConnector<TValue>
 {
 	protected BaseKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
 	{
@@ -99,9 +99,9 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object, TExtra ex
 	
 	@Override
 	@SuppressWarnings ("unchecked")
-	public CallbackCompletion<TValue> get (final String key, final TExtra extra)
+	public CallbackCompletion<TValue> get (final String key)
 	{
-		return this.sendGetRequest (Arrays.asList (key), (Class<TValue>) Object.class, extra);
+		return this.sendGetRequest (Arrays.asList (key), (Class<TValue>) Object.class);
 	}
 	
 	@Override
@@ -116,15 +116,15 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object, TExtra ex
 		return ((CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest (message, token, List.class)));
 	}
 	
-	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data)
 	{
-		return this.sendSetRequest (key, data, exp, extra);
+		return this.sendSetRequest (key, data, exp);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra)
+	public CallbackCompletion<Void> set (final String key, final TValue data)
 	{
-		return this.set (key, 0, data, extra);
+		return this.set (key, 0, data);
 	}
 	
 	@Override
@@ -223,7 +223,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object, TExtra ex
 		}
 	}
 	
-	protected <TOutcome> CallbackCompletion<TOutcome> sendGetRequest (final List<String> keys, final Class<TOutcome> outcomeClass, final TExtra extra)
+	protected <TOutcome> CallbackCompletion<TOutcome> sendGetRequest (final List<String> keys, final Class<TOutcome> outcomeClass)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("getting the record with key `%s` (and `%d` other keys) (with request token `%s`)...", keys.get (0), Integer.valueOf (keys.size () - 1), token.getMessageId ());
@@ -238,7 +238,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object, TExtra ex
 		return (this.sendRequest (message, token, outcomeClass));
 	}
 	
-	protected CallbackCompletion<Void> sendSetRequest (final String key, final TValue data, final int exp, final TExtra extra)
+	protected CallbackCompletion<Void> sendSetRequest (final String key, final TValue data, final int exp)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("setting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());

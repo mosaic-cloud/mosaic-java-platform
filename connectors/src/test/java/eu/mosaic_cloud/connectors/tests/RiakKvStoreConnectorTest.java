@@ -35,7 +35,7 @@ import org.junit.BeforeClass;
 
 
 public class RiakKvStoreConnectorTest
-		extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String, MessageEnvelope>>
+		extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String>>
 {
 	@Override
 	public void setUp ()

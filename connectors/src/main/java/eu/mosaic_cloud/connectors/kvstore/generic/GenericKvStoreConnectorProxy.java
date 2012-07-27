@@ -43,8 +43,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            type of stored data
  * 
  */
-public final class GenericKvStoreConnectorProxy<TValue extends Object, TExtra extends MessageEnvelope>
-		extends BaseKvStoreConnectorProxy<TValue, TExtra>
+public final class GenericKvStoreConnectorProxy<TValue extends Object>
+		extends BaseKvStoreConnectorProxy<TValue>
 {
 	protected GenericKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
 	{
@@ -79,9 +79,9 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object, TExtra ex
 	 *            the key-value store
 	 * @return the proxy
 	 */
-	public static <TValue extends Object, TExtra extends MessageEnvelope> GenericKvStoreConnectorProxy<TValue, TExtra> create (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
+	public static <TValue extends Object> GenericKvStoreConnectorProxy<TValue> create (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
 	{
-		final GenericKvStoreConnectorProxy<TValue, TExtra> proxy = new GenericKvStoreConnectorProxy<TValue, TExtra> (configuration, encoder);
+		final GenericKvStoreConnectorProxy<TValue> proxy = new GenericKvStoreConnectorProxy<TValue> (configuration, encoder);
 		return (proxy);
 	}
 	
