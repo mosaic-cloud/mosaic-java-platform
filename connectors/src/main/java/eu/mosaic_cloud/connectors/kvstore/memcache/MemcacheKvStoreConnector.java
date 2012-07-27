@@ -27,7 +27,6 @@ import java.util.Map;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

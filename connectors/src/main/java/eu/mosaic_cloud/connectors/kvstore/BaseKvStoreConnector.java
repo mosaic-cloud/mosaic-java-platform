@@ -24,7 +24,6 @@ package eu.mosaic_cloud.connectors.kvstore;
 import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.BaseConnector;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

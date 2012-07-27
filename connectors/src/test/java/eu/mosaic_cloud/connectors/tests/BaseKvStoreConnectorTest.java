@@ -26,7 +26,6 @@ import java.util.UUID;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 import org.junit.Assert;
 import org.junit.Test;

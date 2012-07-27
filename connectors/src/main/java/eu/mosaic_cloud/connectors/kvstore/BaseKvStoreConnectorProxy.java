@@ -32,7 +32,6 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;

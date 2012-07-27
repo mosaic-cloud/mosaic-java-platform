@@ -44,7 +44,6 @@ import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 import com.google.common.base.Preconditions;
 
