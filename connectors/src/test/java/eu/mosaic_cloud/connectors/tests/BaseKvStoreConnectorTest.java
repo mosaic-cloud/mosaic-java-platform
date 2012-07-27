@@ -54,23 +54,15 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 		Assert.assertNull (this.awaitOutcome (this.connector.delete (k1)));
 		// NOTE: In past this would have returned `false`.
 		Assert.assertNull (this.awaitOutcome (this.connector.delete (k2)));
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		final EncodingMetadata encoding2 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra2 = new MessageEnvelope ();
-		extra2.setEncodingMetadata (encoding2);
-		Assert.assertNull (this.awaitOutcome (this.connector.get (k1, extra1)));
-		Assert.assertNull (this.awaitOutcome (this.connector.get (k2, extra1)));
+		Assert.assertNull (this.awaitOutcome (this.connector.get (k1)));
+		Assert.assertNull (this.awaitOutcome (this.connector.get (k2)));
 	}
 	
 	protected void testGet ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1, extra1)));
+		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
 	protected void testList ()
@@ -82,14 +74,8 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_famous";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		final EncodingMetadata encoding2 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra2 = new MessageEnvelope ();
-		extra2.setEncodingMetadata (encoding2);
-		Assert.assertNull (this.awaitOutcome (this.connector.set (k1, "fantastic", extra1)));
-		Assert.assertNull (this.awaitOutcome (this.connector.set (k2, "famous", extra2)));
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k1, "fantastic")));
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k2, "famous")));
 	}
 	
 	public static class Scenario

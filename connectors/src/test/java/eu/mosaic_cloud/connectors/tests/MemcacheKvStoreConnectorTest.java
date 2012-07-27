@@ -30,7 +30,6 @@ import eu.mosaic_cloud.drivers.kvstore.interop.MemcachedStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
@@ -75,44 +74,29 @@ public class MemcacheKvStoreConnectorTest
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_fabulous";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		final EncodingMetadata encoding2 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra2 = new MessageEnvelope ();
-		extra2.setEncodingMetadata (encoding2);
-		Assert.assertNotNull (this.awaitFailure (this.connector.add (k1, 30, "wrong", extra1)));
-		Assert.assertNull (this.awaitOutcome (this.connector.add (k2, 30, "fabulous", extra1)));
+		Assert.assertNotNull (this.awaitFailure (this.connector.add (k1, 30, "wrong")));
+		Assert.assertNull (this.awaitOutcome (this.connector.add (k2, 30, "fabulous")));
 	}
 	
 	protected void testAppend ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		Assert.assertNull (this.awaitOutcome (this.connector.append (k1, " and miraculous", extra1)));
-		Assert.assertEquals ("fantabulous and miraculous", this.awaitOutcome (this.connector.get (k1, extra1)));
+		Assert.assertNull (this.awaitOutcome (this.connector.append (k1, " and miraculous")));
+		Assert.assertEquals ("fantabulous and miraculous", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
 	protected void testCas ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		Assert.assertNull (this.awaitOutcome (this.connector.cas (k1, "replaced by dummy", extra1)));
-		Assert.assertEquals ("replaced by dummy", this.awaitOutcome (this.connector.get (k1, extra1)));
+		Assert.assertNull (this.awaitOutcome (this.connector.cas (k1, "replaced by dummy")));
+		Assert.assertEquals ("replaced by dummy", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
 	protected void testGetBulk ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_famous";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		final Map<String, String> values = this.awaitOutcome (this.connector.getBulk (Arrays.asList (k1, k2), extra1));
+		final Map<String, String> values = this.awaitOutcome (this.connector.getBulk (Arrays.asList (k1, k2)));
 		Assert.assertNotNull (values);
 		Assert.assertEquals ("fantastic", values.get (k1));
 		Assert.assertEquals ("famous", values.get (k2));
@@ -127,21 +111,15 @@ public class MemcacheKvStoreConnectorTest
 	protected void testPrepend ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		Assert.assertNull (this.awaitOutcome (this.connector.prepend (k1, "it is ", extra1)));
-		Assert.assertEquals ("it is fantabulous and miraculous", this.awaitOutcome (this.connector.get (k1, extra1)));
+		Assert.assertNull (this.awaitOutcome (this.connector.prepend (k1, "it is ")));
+		Assert.assertEquals ("it is fantabulous and miraculous", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
 	protected void testReplace ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		Assert.assertNull (this.awaitOutcome (this.connector.replace (k1, 30, "fantabulous", extra1)));
-		Assert.assertEquals ("fantabulous", this.awaitOutcome (this.connector.get (k1, extra1)));
+		Assert.assertNull (this.awaitOutcome (this.connector.replace (k1, 30, "fantabulous")));
+		Assert.assertEquals ("fantabulous", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
 	@Override
@@ -150,13 +128,8 @@ public class MemcacheKvStoreConnectorTest
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_famous";
 		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra1 = new MessageEnvelope ();
-		extra1.setEncodingMetadata (encoding1);
-		final EncodingMetadata encoding2 = new EncodingMetadata ("text/plain", "identity");
-		final MessageEnvelope extra2 = new MessageEnvelope ();
-		extra2.setEncodingMetadata (encoding2);
-		Assert.assertNull (this.awaitOutcome (this.connector.set (k1, 30, "fantastic", extra1)));
-		Assert.assertNull (this.awaitOutcome (this.connector.set (k2, 30, "famous", extra2)));
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k1, 30, "fantastic")));
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k2, 30, "famous")));
 	}
 	
 	@BeforeClass
