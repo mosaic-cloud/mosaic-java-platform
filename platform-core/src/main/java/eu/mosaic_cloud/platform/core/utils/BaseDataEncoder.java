@@ -75,11 +75,12 @@ public abstract class BaseDataEncoder<TData extends Object>
 	}
 	
 	@Override
-	public final byte[] encode (final TData data, final EncodingMetadata metadata)
+	public final EncodeOutcome encode (final TData data, final EncodingMetadata metadata)
 			throws EncodingException
 	{
-		Preconditions.checkNotNull (metadata);
-		this.checkMetadata (metadata);
+		final EncodingMetadata metadataActual = (metadata != null) ? metadata : this.expectedEncodingMetadata;
+		Preconditions.checkNotNull (metadataActual);
+		this.checkMetadata (metadataActual);
 		if (data != null) {
 			if (!this.dataClass.isInstance (data)) {
 				throw (new EncodingException (String.format ("unexpected data class `%s`", data.getClass ().getName ())));
@@ -91,7 +92,7 @@ public abstract class BaseDataEncoder<TData extends Object>
 		}
 		final byte[] dataBytes;
 		try {
-			dataBytes = this.encodeActual (data, metadata);
+			dataBytes = this.encodeActual (data, metadataActual);
 		} catch (final Throwable exception) {
 			this.exceptions.traceHandledException (exception);
 			throw (new EncodingException ("unexpected abnormal exception", exception));
@@ -99,7 +100,8 @@ public abstract class BaseDataEncoder<TData extends Object>
 		if (dataBytes == null) {
 			throw (new EncodingException ("unexpected `null` data bytes"));
 		}
-		return (dataBytes);
+		final EncodeOutcome outcome = new EncodeOutcome (dataBytes, metadataActual);
+		return (outcome);
 	}
 	
 	@Override
