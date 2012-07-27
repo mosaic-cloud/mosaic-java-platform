@@ -438,7 +438,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -934,7 +934,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AddRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1382,7 +1382,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1833,7 +1833,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.AppendRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2274,7 +2274,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2725,7 +2725,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.CasRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3166,7 +3166,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3617,7 +3617,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.PrependRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -4084,7 +4084,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -4580,7 +4580,7 @@ public final class MemcachedPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads.ReplaceRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}

@@ -400,7 +400,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -711,7 +711,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1166,7 +1166,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1573,7 +1573,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1903,7 +1903,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2066,7 +2066,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2397,7 +2397,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2680,7 +2680,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2996,7 +2996,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3159,7 +3159,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3490,7 +3490,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3773,7 +3773,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -4243,7 +4243,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -4720,7 +4720,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -5192,7 +5192,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -5655,7 +5655,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -6202,7 +6202,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -6653,7 +6653,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -7295,7 +7295,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -7958,7 +7958,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -8381,7 +8381,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -8706,7 +8706,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -9329,7 +9329,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -10086,7 +10086,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -10471,7 +10471,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -10634,7 +10634,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -10977,7 +10977,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -11202,7 +11202,7 @@ public final class AmqpPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
