@@ -224,10 +224,10 @@ public abstract class RiakDriverTest
 	private final BaseExceptionTracer exceptions;
 	private final BasicThreadingContext threadingContext;
 	private RiakDriver wrapper;
+	public static final String MOSAIC_RIAK_PORT_PB_DEFAULT = "22652";
+	public static final String MOSAIC_RIAK_PORT_REST_DEFAULT = "24637";
 	private static String keyPrefix;
 	private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
 	private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
 	private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riak.port";
-	public static final String MOSAIC_RIAK_PORT_REST_DEFAULT = "24637";
-	public static final String MOSAIC_RIAK_PORT_PB_DEFAULT = "22652";
 }

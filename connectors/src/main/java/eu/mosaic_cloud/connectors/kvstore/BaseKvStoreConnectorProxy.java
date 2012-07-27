@@ -30,9 +30,9 @@ import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -125,6 +125,18 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	public CallbackCompletion<Void> set (final String key, final TValue data)
 	{
 		return this.set (key, 0, data);
+	}
+	
+	protected Envelope buildEnvelope (final EncodingMetadata metadata)
+	{
+		final Envelope.Builder builder = Envelope.newBuilder ();
+		if (null != metadata.getContentEncoding ()) {
+			builder.setContentEncoding (metadata.getContentEncoding ());
+		}
+		if (null != metadata.getContentType ()) {
+			builder.setContentType (metadata.getContentType ());
+		}
+		return (builder.build ());
 	}
 	
 	@Override
@@ -261,17 +273,6 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 			result = this.sendRequest (message, token, Void.class);
 		}
 		return (result);
-	}
-	
-	protected Envelope buildEnvelope (final EncodingMetadata metadata) {
-		final Envelope.Builder builder = Envelope.newBuilder ();
-		if (null != metadata.getContentEncoding ()) {
-			builder.setContentEncoding (metadata.getContentEncoding ());
-		}
-		if (null != metadata.getContentType ()) {
-			builder.setContentType (metadata.getContentType ());
-		}
-		return (builder.build ());
 	}
 	
 	protected final DataEncoder<TValue> encoder;
