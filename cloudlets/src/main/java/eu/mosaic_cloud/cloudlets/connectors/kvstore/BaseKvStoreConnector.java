@@ -26,12 +26,11 @@ import java.util.List;
 import eu.mosaic_cloud.cloudlets.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
-public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue, TExtra>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra extends MessageEnvelope>
+public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 		extends BaseConnector<TConnector, TCallback, TContext>
 		implements
 			IKvStoreConnector<TValue, TExtra>
@@ -42,16 +41,16 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	}
 	
 	@Override
-	public CallbackCompletion<Void> delete (final String key)
+	public CallbackCompletion<Boolean> delete (final String key)
 	{
 		return this.delete (key, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> delete (final String key, final TExtra extra)
+	public CallbackCompletion<Boolean> delete (final String key, final TExtra extra)
 	{
 		this.transcript.traceDebugging ("deleting the record with key `%s` and extra `%{object}`...", key, extra);
-		final CallbackCompletion<Void> completion = this.connector.delete (key);
+		final CallbackCompletion<Boolean> completion = this.connector.delete (key);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -72,10 +71,16 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	}
 	
 	@Override
+	public CallbackCompletion<TValue> get (final String key)
+	{
+		return this.get (key, null);
+	}
+	
+	@Override
 	public CallbackCompletion<TValue> get (final String key, final TExtra extra)
 	{
 		this.transcript.traceDebugging ("getting the record with key `%s` and extra `%{object}`...", key, extra);
-		final CallbackCompletion<TValue> completion = this.connector.get (key, extra);
+		final CallbackCompletion<TValue> completion = this.connector.get (key);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -126,10 +131,16 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 	}
 	
 	@Override
-	public CallbackCompletion<Void> set (final String key, final TValue value, final TExtra extra)
+	public CallbackCompletion<Boolean> set (final String key, final TValue value)
+	{
+		return this.set (key, value, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> set (final String key, final TValue value, final TExtra extra)
 	{
 		this.transcript.traceDebugging ("setting the record with key `%s` and extra `%{object}`...", key, extra);
-		final CallbackCompletion<Void> completion = this.connector.set (key, value, extra);
+		final CallbackCompletion<Boolean> completion = this.connector.set (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")

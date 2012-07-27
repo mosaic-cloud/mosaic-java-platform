@@ -28,7 +28,6 @@ import eu.mosaic_cloud.cloudlets.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
@@ -48,8 +47,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEnvelope>
-		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue, TExtra>, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
+		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue>, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 		implements
 			IMemcacheKvStoreConnector<TValue, TExtra>
 {
@@ -61,15 +60,21 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEn
 	 * @param cloudlet
 	 *            the cloudlet controller of the cloudlet using the connector
 	 */
-	public MemcacheKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue, TExtra> connector, final IConfiguration config, final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context)
+	public MemcacheKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue> connector, final IConfiguration config, final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context)
 	{
 		super (cloudlet, connector, config, callback, context);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> add (final String key, final int exp, final TValue value, final TExtra extra)
+	public CallbackCompletion<Boolean> add (final String key, final int exp, final TValue data)
 	{
-		final CallbackCompletion<Void> completion = this.connector.add (key, exp, value, extra);
+		return this.add (key, data, exp, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> add (final String key, final TValue value, final int exp, final TExtra extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.add (key, exp, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -91,9 +96,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEn
 	}
 	
 	@Override
-	public CallbackCompletion<Void> append (final String key, final TValue value, final TExtra extra)
+	public CallbackCompletion<Boolean> append (final String key, final TValue data)
 	{
-		final CallbackCompletion<Void> completion = this.connector.append (key, value, extra);
+		return this.append (key, data, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> append (final String key, final TValue value, final TExtra extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.append (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -115,9 +126,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEn
 	}
 	
 	@Override
-	public CallbackCompletion<Void> cas (final String key, final TValue value, final TExtra extra)
+	public CallbackCompletion<Boolean> cas (final String key, final TValue data)
 	{
-		final CallbackCompletion<Void> completion = this.connector.cas (key, value, extra);
+		return this.cas (key, data, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> cas (final String key, final TValue value, final TExtra extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.cas (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -139,9 +156,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEn
 	}
 	
 	@Override
+	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys)
+	{
+		return this.getBulk (keys, null);
+	}
+	
+	@Override
 	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys, final TExtra extra)
 	{
-		final CallbackCompletion<Map<String, TValue>> completion = this.connector.getBulk (keys, extra);
+		final CallbackCompletion<Map<String, TValue>> completion = this.connector.getBulk (keys);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -163,9 +186,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEn
 	}
 	
 	@Override
-	public CallbackCompletion<Void> prepend (final String key, final TValue value, final TExtra extra)
+	public CallbackCompletion<Boolean> prepend (final String key, final TValue data)
 	{
-		final CallbackCompletion<Void> completion = this.connector.prepend (key, value, extra);
+		return this.prepend (key, data, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> prepend (final String key, final TValue value, final TExtra extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.prepend (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -187,9 +216,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEn
 	}
 	
 	@Override
-	public CallbackCompletion<Void> replace (final String key, final int exp, final TValue value, final TExtra extra)
+	public CallbackCompletion<Boolean> replace (final String key, final int exp, final TValue data)
 	{
-		final CallbackCompletion<Void> completion = this.connector.replace (key, exp, value, extra);
+		return this.replace (key, data, exp, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> replace (final String key, final TValue value, final int exp, final TExtra extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.replace (key, exp, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -211,9 +246,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra extends MessageEn
 	}
 	
 	@Override
-	public CallbackCompletion<Void> set (final String key, final int exp, final TValue value, final TExtra extra)
+	public CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data)
 	{
-		final CallbackCompletion<Void> completion = this.connector.set (key, exp, value, extra);
+		return this.set (key, data, exp, null);
+	}
+	
+	@Override
+	public CallbackCompletion<Boolean> set (final String key, final TValue value, final int exp, final TExtra extra)
+	{
+		final CallbackCompletion<Boolean> completion = this.connector.set (key, exp, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")

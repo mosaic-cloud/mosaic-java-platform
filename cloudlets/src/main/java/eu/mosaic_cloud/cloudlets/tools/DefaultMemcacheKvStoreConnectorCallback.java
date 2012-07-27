@@ -25,7 +25,6 @@ import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.IMemcacheKvStoreConnectorCallback;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -37,7 +36,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
-public class DefaultMemcacheKvStoreConnectorCallback<TContext, TData, TExtra extends MessageEnvelope>
+public class DefaultMemcacheKvStoreConnectorCallback<TContext, TData, TExtra>
 		extends DefaultKvStoreConnectorCallback<TContext, TData, TExtra>
 		implements
 			IMemcacheKvStoreConnectorCallback<TContext, TData, TExtra>
