@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
@@ -35,8 +35,17 @@ import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueuePublisherConnector<TMessage, TExtra extends MessageEnvelope>
+public interface IAmqpQueuePublisherConnector<TMessage, TExtra>
 		extends
 			IAmqpQueueConnector,
-			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage, TExtra>
-{}
+			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage>
+{
+	/**
+	 * Publishes a message to a queue.
+	 * 
+	 * @param data
+	 *            the data to publish
+	 * @param extra
+	 */
+	CallbackCompletion<Void> publish (TMessage data, TExtra extra);
+}

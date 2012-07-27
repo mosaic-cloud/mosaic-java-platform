@@ -22,7 +22,6 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 
 import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -40,7 +39,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra extends MessageEnvelope>
+public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>
 		extends
 			IAmqpQueueConnectorCallback<TContext>
 {

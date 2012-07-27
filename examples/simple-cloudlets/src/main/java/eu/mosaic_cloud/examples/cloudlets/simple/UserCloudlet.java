@@ -38,7 +38,6 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.core.utils.SerializedDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -85,7 +84,7 @@ public class UserCloudlet
 	}
 	
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData, MessageEnvelope>
+			extends DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData, Void>
 	{
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CallbackArguments arguments)
@@ -147,6 +146,6 @@ public class UserCloudlet
 	{
 		ICloudletController<UserCloudletContext> cloudlet;
 		IAmqpQueueConsumerConnector<AuthenticationToken, Void> consumer;
-		IAmqpQueuePublisherConnector<LoggingData, MessageEnvelope> publisher;
+		IAmqpQueuePublisherConnector<LoggingData, Void> publisher;
 	}
 }

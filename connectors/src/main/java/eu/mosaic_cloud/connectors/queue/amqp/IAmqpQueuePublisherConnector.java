@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -32,10 +31,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * 
  * @param <Context>
  *            the type of the context of the cloudlet using this accessor
- * @param <TMessage>
+ * @param <Message>
  *            the type of the published data
  */
-public interface IAmqpQueuePublisherConnector<TMessage, TExtra extends MessageEnvelope>
+public interface IAmqpQueuePublisherConnector<Message>
 		extends
 			IAmqpQueueConnector
 {
@@ -44,7 +43,6 @@ public interface IAmqpQueuePublisherConnector<TMessage, TExtra extends MessageEn
 	 * 
 	 * @param data
 	 *            the data to publish
-	 * @param extra
 	 */
-	CallbackCompletion<Void> publish (TMessage data, TExtra extra);
+	CallbackCompletion<Void> publish (Message data);
 }

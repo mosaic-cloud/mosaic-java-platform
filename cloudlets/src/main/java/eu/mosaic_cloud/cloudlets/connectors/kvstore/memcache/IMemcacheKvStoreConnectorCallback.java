@@ -25,7 +25,6 @@ import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -45,7 +44,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra extends MessageEnvelope>
+public interface IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>
 		extends
 			IKvStoreConnectorCallback<TContext, TValue, TExtra>
 {

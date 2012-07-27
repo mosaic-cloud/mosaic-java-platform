@@ -24,7 +24,6 @@ package eu.mosaic_cloud.cloudlets.connectors.kvstore;
 import java.util.List;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -40,21 +39,32 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  *            the type of the extra data; as an example, this data can be used
  *            correlation
  */
-public interface IKvStoreConnector<TValue, TExtra extends MessageEnvelope>
+public interface IKvStoreConnector<TValue, TExtra>
 		extends
 			IConnector,
-			eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue, TExtra>
+			eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue>
 {
 	/**
 	 * Deletes the given key.
 	 * 
-	 * @param extra
-	 *            some application specific data
 	 * @param key
 	 *            the key to delete
+	 * @param extra
+	 *            some application specific data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> delete (String key, TExtra extra);
+	CallbackCompletion<Boolean> delete (String key, TExtra extra);
+	
+	/**
+	 * Gets data associated with a single key.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param extra
+	 *            some application specific data
+	 * @return a result handle for the operation
+	 */
+	CallbackCompletion<TValue> get (String key, TExtra extra);
 	
 	/**
 	 * Lists the keys in the bucket associated with the connector.
@@ -64,4 +74,17 @@ public interface IKvStoreConnector<TValue, TExtra extends MessageEnvelope>
 	 * @return a result handle for the operation
 	 */
 	CallbackCompletion<List<String>> list (TExtra extra);
+	
+	/**
+	 * Stores the given data and associates it with the specified key.
+	 * 
+	 * @param key
+	 *            the key under which this data should be stored
+	 * @param data
+	 *            the data
+	 * @param extra
+	 *            some application specific data
+	 * @return a result handle for the operation
+	 */
+	CallbackCompletion<Boolean> set (String key, TValue value, TExtra extra);
 }

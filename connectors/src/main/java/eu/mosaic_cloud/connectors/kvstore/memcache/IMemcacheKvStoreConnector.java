@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -36,9 +35,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TValue>
  *            type of stored data
  */
-public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends MessageEnvelope>
+public interface IMemcacheKvStoreConnector<TValue extends Object>
 		extends
-			IKvStoreConnector<TValue, TExtra>
+			IKvStoreConnector<TValue>
 {
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data
@@ -58,11 +57,9 @@ public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends
 	 *            Unix time value rather than an offset from current time.
 	 * @param data
 	 *            the data
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> add (String key, int exp, TValue data, final TExtra extra);
+	CallbackCompletion<Boolean> add (String key, int exp, TValue data);
 	
 	/**
 	 * Adds specified data to an existing key after existing data.
@@ -71,11 +68,9 @@ public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends
 	 *            the key associated with the stored data
 	 * @param data
 	 *            the appended data
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> append (String key, TValue data, final TExtra extra);
+	CallbackCompletion<Boolean> append (String key, TValue data);
 	
 	/**
 	 * Stores specified data but only if no one else has updated since I last
@@ -85,22 +80,18 @@ public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends
 	 *            the key associated with the stored data
 	 * @param data
 	 *            the data
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> cas (String key, TValue data, final TExtra extra);
+	CallbackCompletion<Boolean> cas (String key, TValue data);
 	
 	/**
 	 * Gets data associated with several keys.
 	 * 
 	 * @param keys
 	 *            the keys
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Map<String, TValue>> getBulk (List<String> keys, final TExtra extra);
+	CallbackCompletion<Map<String, TValue>> getBulk (List<String> keys);
 	
 	/**
 	 * Adds specified data to an existing key before existing data.
@@ -109,11 +100,9 @@ public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends
 	 *            the key associated with the stored data
 	 * @param data
 	 *            the pre-appended data
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> prepend (String key, TValue data, final TExtra extra);
+	CallbackCompletion<Boolean> prepend (String key, TValue data);
 	
 	/**
 	 * Stores specified data, but only if the server *does* already hold data
@@ -133,11 +122,9 @@ public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends
 	 *            Unix time value rather than an offset from current time.
 	 * @param data
 	 *            the data
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> replace (String key, int exp, TValue data, final TExtra extra);
+	CallbackCompletion<Boolean> replace (String key, int exp, TValue data);
 	
 	/**
 	 * Stores the given data and associates it with the specified key.
@@ -156,9 +143,7 @@ public interface IMemcacheKvStoreConnector<TValue extends Object, TExtra extends
 	 *            Unix time value rather than an offset from current time.
 	 * @param data
 	 *            the data
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> set (String key, int exp, TValue data, final TExtra extra);
+	CallbackCompletion<Boolean> set (String key, int exp, TValue data);
 }

@@ -22,7 +22,6 @@ package eu.mosaic_cloud.connectors.queue.amqp;
 
 
 import eu.mosaic_cloud.connectors.queue.IQueueConnector;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -156,9 +155,6 @@ public interface IAmqpQueueRawConnector
 	 *            the message, message properties and destination data
 	 * @return a handle to be used in order to know when and how the operation
 	 *         completes
-	 * @throws EncodingException
-	 *             if the message does not contain proper encoding metadata
 	 */
-	CallbackCompletion<Void> publish (final AmqpOutboundMessage message)
-			throws EncodingException;
+	CallbackCompletion<Void> publish (final AmqpOutboundMessage message);
 }

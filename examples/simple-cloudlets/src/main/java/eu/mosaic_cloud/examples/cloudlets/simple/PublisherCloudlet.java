@@ -35,7 +35,6 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -43,7 +42,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class PublisherCloudlet
 {
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, String, MessageEnvelope>
+			extends DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, String, Void>
 	{
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CallbackArguments arguments)
@@ -60,7 +59,7 @@ public class PublisherCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> publishSucceeded (final PublisherCloudletContext context, final GenericCallbackCompletionArguments<MessageEnvelope> arguments)
+		public CallbackCompletion<Void> publishSucceeded (final PublisherCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
 		{
 			context.cloudlet.destroy ();
 			return ICallback.SUCCESS;
@@ -107,6 +106,6 @@ public class PublisherCloudlet
 	public static final class PublisherCloudletContext
 	{
 		ICloudletController<PublisherCloudletContext> cloudlet;
-		IAmqpQueuePublisherConnector<String, MessageEnvelope> publisher;
+		IAmqpQueuePublisherConnector<String, Void> publisher;
 	}
 }

@@ -38,7 +38,7 @@ import org.json.JSONObject;
 
 
 public final class MetadataKVCallback
-		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, IndexerMessageEnvelope>
+		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID>
 {
 	@Override
 	public CallbackCompletion<Void> destroySucceeded (final IndexerCloudletContext context, final CallbackArguments arguments)
@@ -48,40 +48,40 @@ public final class MetadataKVCallback
 	}
 	
 	@Override
-	public CallbackCompletion<Void> getFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	public CallbackCompletion<Void> getFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		this.handleError (arguments);
 		return ICallback.SUCCESS;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> getSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	public CallbackCompletion<Void> getSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		final String key = arguments.getKey ();
 		this.logger.debug ("succeeded fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key + ")");
 		JSONObject value = arguments.getValue ();
 		if (value == null) {
-			value = this.prepareFeedMetaData (context, key, arguments.getExtra ().getCorrelation ());
+			value = this.prepareFeedMetaData (context, key, arguments.getExtra ());
 		}
 		IndexWorkflow.findNewFeeds (value, arguments.getExtra ());
 		return ICallback.SUCCESS;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		this.handleError (arguments);
 		return ICallback.SUCCESS;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> setSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	public CallbackCompletion<Void> setSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		IndexWorkflow.onMetadataStored (arguments);
 		return ICallback.SUCCESS;
 	}
 	
-	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		final String key = arguments.getKey ();
 		this.logger.warn ("failed fetch (" + MetadataKVCallback.BUCKET_NAME + "," + key + ")");

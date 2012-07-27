@@ -24,7 +24,6 @@ package eu.mosaic_cloud.connectors.kvstore;
 import java.util.List;
 
 import eu.mosaic_cloud.connectors.core.IConnector;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -35,7 +34,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TValue>
  *            type of stored data
  */
-public interface IKvStoreConnector<TValue extends Object, TExtra extends MessageEnvelope>
+public interface IKvStoreConnector<TValue extends Object>
 		extends
 			IConnector
 {
@@ -46,19 +45,16 @@ public interface IKvStoreConnector<TValue extends Object, TExtra extends Message
 	 *            the key to delete
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> delete (String key);
+	CallbackCompletion<Boolean> delete (String key);
 	
 	/**
 	 * Gets data associated with a single key.
 	 * 
 	 * @param key
 	 *            the key
-	 * @param extra
-	 *            additional information needed for processing the message (e.g.
-	 *            expected message encoding)
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<TValue> get (String key, final TExtra extra);
+	CallbackCompletion<TValue> get (String key);
 	
 	/**
 	 * Lists the keys of the bucket used by the connector.
@@ -74,9 +70,7 @@ public interface IKvStoreConnector<TValue extends Object, TExtra extends Message
 	 *            the key under which this data should be stored
 	 * @param data
 	 *            the data
-	 * @param extra
-	 *            additional information needed for processing the message
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Void> set (final String key, final TValue data, final TExtra extra);
+	CallbackCompletion<Boolean> set (String key, TValue data);
 }

@@ -38,7 +38,6 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -75,7 +74,7 @@ public class PongCloudlet
 	}
 	
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<PongCloudletContext, PongMessage, MessageEnvelope>
+			extends DefaultAmqpPublisherConnectorCallback<PongCloudletContext, PongMessage, Void>
 	{
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PongCloudletContext context, final CallbackArguments arguments)
@@ -92,7 +91,7 @@ public class PongCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> publishSucceeded (final PongCloudletContext context, final GenericCallbackCompletionArguments<MessageEnvelope> arguments)
+		public CallbackCompletion<Void> publishSucceeded (final PongCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
 		{
 			this.logger.info ("publish succeeded; exiting...");
 			context.cloudlet.destroy ();
@@ -145,6 +144,6 @@ public class PongCloudlet
 	{
 		ICloudletController<PongCloudletContext> cloudlet;
 		IAmqpQueueConsumerConnector<PingMessage, Void> consumer;
-		IAmqpQueuePublisherConnector<PongMessage, MessageEnvelope> publisher;
+		IAmqpQueuePublisherConnector<PongMessage, Void> publisher;
 	}
 }

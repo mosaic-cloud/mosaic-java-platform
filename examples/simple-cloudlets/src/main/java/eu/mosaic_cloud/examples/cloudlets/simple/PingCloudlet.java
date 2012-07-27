@@ -40,7 +40,6 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -82,7 +81,7 @@ public class PingCloudlet
 	}
 	
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<PingCloudletContext, PingMessage, MessageEnvelope>
+			extends DefaultAmqpPublisherConnectorCallback<PingCloudletContext, PingMessage, Void>
 	{
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CallbackArguments arguments)
@@ -148,6 +147,6 @@ public class PingCloudlet
 		ICloudletController<PingCloudletContext> cloudlet;
 		IAmqpQueueConsumerConnector<PongMessage, Void> consumer;
 		final String pingPongKey = UUID.randomUUID ().toString ();
-		IAmqpQueuePublisherConnector<PingMessage, MessageEnvelope> publisher;
+		IAmqpQueuePublisherConnector<PingMessage, Void> publisher;
 	}
 }

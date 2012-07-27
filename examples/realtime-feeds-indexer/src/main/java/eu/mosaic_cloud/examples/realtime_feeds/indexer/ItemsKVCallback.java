@@ -29,14 +29,13 @@ import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.examples.realtime_feeds.indexer.IndexerCloudlet.IndexerCloudletContext;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.json.JSONObject;
 
 
 public class ItemsKVCallback
-		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, MessageEnvelope>
+		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, Void>
 {
 	@Override
 	public CallbackCompletion<Void> destroySucceeded (final IndexerCloudletContext context, final CallbackArguments arguments)
@@ -46,13 +45,13 @@ public class ItemsKVCallback
 	}
 	
 	@Override
-	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, MessageEnvelope> arguments)
+	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, Void> arguments)
 	{
 		this.handleError (arguments);
 		return ICallback.SUCCESS;
 	}
 	
-	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, MessageEnvelope> arguments)
+	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, Void> arguments)
 	{
 		final String key = arguments.getKey ();
 		this.logger.warn ("failed fetch (" + ItemsKVCallback.BUCKET_NAME + "," + key + ")");

@@ -23,6 +23,7 @@ package eu.mosaic_cloud.examples.realtime_feeds.indexer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
@@ -35,7 +36,7 @@ import org.json.JSONObject;
 
 
 public class TimelinesKVCallback
-		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, IndexerMessageEnvelope>
+		extends DefaultKvStoreConnectorCallback<IndexerCloudletContext, JSONObject, UUID>
 {
 	@Override
 	public CallbackCompletion<Void> destroySucceeded (final IndexerCloudletContext context, final CallbackArguments arguments)
@@ -45,20 +46,20 @@ public class TimelinesKVCallback
 	}
 	
 	@Override
-	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	public CallbackCompletion<Void> setFailed (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		this.handleError (arguments);
 		return ICallback.SUCCESS;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> setSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	public CallbackCompletion<Void> setSucceeded (final IndexerCloudletContext context, final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
-		IndexWorkflow.updateFeedMetadata (arguments.getExtra ().getCorrelation ());
+		IndexWorkflow.updateFeedMetadata (arguments.getExtra ());
 		return ICallback.SUCCESS;
 	}
 	
-	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, IndexerMessageEnvelope> arguments)
+	private void handleError (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
 	{
 		final String key = arguments.getKey ();
 		this.logger.warn ("failed fetch (" + TimelinesKVCallback.BUCKET_NAME + "," + key + ")");
