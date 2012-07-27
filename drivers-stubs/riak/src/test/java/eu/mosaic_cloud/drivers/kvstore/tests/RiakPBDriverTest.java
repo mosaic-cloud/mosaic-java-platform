@@ -26,7 +26,7 @@ public class RiakPBDriverTest
 {
 	public RiakPBDriverTest ()
 	{
-		super ();
+		super (RiakDriverTest.MOSAIC_RIAK_PORT_PB_DEFAULT);
 		this.configuration.addParameter ("kvstore.driver_name", "RIAKPB");
 	}
 }

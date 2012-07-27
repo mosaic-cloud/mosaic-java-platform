@@ -56,7 +56,7 @@ import org.junit.Test;
 
 public abstract class RiakDriverTest
 {
-	public RiakDriverTest ()
+	public RiakDriverTest (final String portDefault)
 	{
 		final Transcript transcript = Transcript.create (this);
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
@@ -66,7 +66,7 @@ public abstract class RiakDriverTest
 		this.threadingContext = BasicThreadingContext.create (this, exceptions, exceptions.catcher);
 		this.threadingContext.initialize ();
 		final String host = System.getProperty (RiakDriverTest.MOSAIC_RIAK_HOST, RiakDriverTest.MOSAIC_RIAK_HOST_DEFAULT);
-		final Integer port = Integer.valueOf (System.getProperty (RiakDriverTest.MOSAIC_RIAK_PORT, RiakDriverTest.MOSAIC_RIAK_PORT_DEFAULT));
+		final Integer port = Integer.valueOf (System.getProperty (RiakDriverTest.MOSAIC_RIAK_PORT, portDefault));
 		this.configuration = PropertyTypeConfiguration.create ();
 		this.configuration.addParameter ("kvstore.host", host);
 		this.configuration.addParameter ("kvstore.port", port);
@@ -228,5 +228,6 @@ public abstract class RiakDriverTest
 	private static final String MOSAIC_RIAK_HOST = "mosaic.tests.resources.riak.host";
 	private static final String MOSAIC_RIAK_HOST_DEFAULT = "127.0.0.1";
 	private static final String MOSAIC_RIAK_PORT = "mosaic.tests.resources.riak.port";
-	private static final String MOSAIC_RIAK_PORT_DEFAULT = "22652";
+	public static final String MOSAIC_RIAK_PORT_REST_DEFAULT = "24637";
+	public static final String MOSAIC_RIAK_PORT_PB_DEFAULT = "22652";
 }

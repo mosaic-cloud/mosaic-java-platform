@@ -26,7 +26,7 @@ public class RiakRestDriverTest
 {
 	public RiakRestDriverTest ()
 	{
-		super ();
+		super (RiakDriverTest.MOSAIC_RIAK_PORT_REST_DEFAULT);
 		this.configuration.addParameter ("kvstore.driver_name", "RIAKREST");
 	}
 }
