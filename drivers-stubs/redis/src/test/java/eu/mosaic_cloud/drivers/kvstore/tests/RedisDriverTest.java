@@ -188,14 +188,14 @@ public class RedisDriverTest
 				EncodingException
 	{
 		final String k1 = RedisDriverTest.keyPrefix + "_key_fantastic";
-		final byte[] b1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity")).data;
 		;
 		KeyValueMessage mssg = new KeyValueMessage (k1, b1, RedisDriver.DEFAULT_CONTENT_ENCODING, RedisDriver.DEFAULT_CONTENT_TYPE);
 		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("set 1");
 		final IResult<Boolean> r1 = this.wrapper.invokeSetOperation (RedisDriverTest.keyPrefix, mssg, handler1);
 		Assert.assertNotNull (r1);
 		final String k2 = RedisDriverTest.keyPrefix + "_key_famous";
-		final byte[] b2 = this.encoder.encode ("famous", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b2 = this.encoder.encode ("famous", new EncodingMetadata ("text/plain", "identity")).data;
 		mssg = new KeyValueMessage (k2, b2, RedisDriver.DEFAULT_CONTENT_ENCODING, RedisDriver.DEFAULT_CONTENT_TYPE);
 		final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean> ("set 2");
 		final IResult<Boolean> r2 = this.wrapper.invokeSetOperation (RedisDriverTest.keyPrefix, mssg, handler2);

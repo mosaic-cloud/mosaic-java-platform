@@ -190,13 +190,13 @@ public abstract class RiakDriverTest
 				EncodingException
 	{
 		final String k1 = RiakDriverTest.keyPrefix + "_key_fantastic";
-		final byte[] b1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity")).data;
 		KeyValueMessage mssg = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("set 1");
 		final IResult<Boolean> r1 = this.wrapper.invokeSetOperation (RiakDriverTest.keyPrefix, mssg, handler1);
 		Assert.assertNotNull (r1);
 		final String k2 = RiakDriverTest.keyPrefix + "_key_famous";
-		final byte[] b2 = this.encoder.encode ("famous", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b2 = this.encoder.encode ("famous", new EncodingMetadata ("text/plain", "identity")).data;
 		mssg = new KeyValueMessage (k2, b2, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean> ("set 2");
 		final IResult<Boolean> r2 = this.wrapper.invokeSetOperation (RiakDriverTest.keyPrefix, mssg, handler2);

@@ -97,8 +97,8 @@ public class MemcachedDriverTest
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
 		final String k2 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		final byte[] b1 = this.encoder.encode ("wrong", new EncodingMetadata ("text/plain", "identity"));
-		final byte[] b2 = this.encoder.encode ("fabulous", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b1 = this.encoder.encode ("wrong", new EncodingMetadata ("text/plain", "identity")).data;
+		final byte[] b2 = this.encoder.encode ("fabulous", new EncodingMetadata ("text/plain", "identity")).data;
 		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final KeyValueMessage mssg2 = new KeyValueMessage (k2, b2, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("add1");
@@ -123,7 +123,7 @@ public class MemcachedDriverTest
 				EncodingException
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		final byte[] b1 = this.encoder.encode (" and miraculous", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b1 = this.encoder.encode (" and miraculous", new EncodingMetadata ("text/plain", "identity")).data;
 		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("append");
 		final IResult<Boolean> r1 = this.wrapper.invokeAppendOperation (MemcachedDriverTest.keyPrefix, mssg1, handler);
@@ -156,7 +156,7 @@ public class MemcachedDriverTest
 				EncodingException
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		final byte[] b1 = this.encoder.encode ("replaced by dummy", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b1 = this.encoder.encode ("replaced by dummy", new EncodingMetadata ("text/plain", "identity")).data;
 		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("cas");
 		final IResult<Boolean> r1 = this.wrapper.invokeCASOperation (MemcachedDriverTest.keyPrefix, mssg1, handler);
@@ -298,7 +298,7 @@ public class MemcachedDriverTest
 				EncodingException
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		final byte[] b1 = this.encoder.encode ("it is ", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b1 = this.encoder.encode ("it is ", new EncodingMetadata ("text/plain", "identity")).data;
 		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("prepend");
 		final IResult<Boolean> r1 = this.wrapper.invokePrependOperation (MemcachedDriverTest.keyPrefix, mssg1, handler);
@@ -331,7 +331,7 @@ public class MemcachedDriverTest
 				EncodingException
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fabulous";
-		final byte[] b1 = this.encoder.encode ("fantabulous", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] b1 = this.encoder.encode ("fantabulous", new EncodingMetadata ("text/plain", "identity")).data;
 		final KeyValueMessage mssg1 = new KeyValueMessage (k1, b1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("replace");
 		final IResult<Boolean> r1 = this.wrapper.invokeReplaceOperation (MemcachedDriverTest.keyPrefix, mssg1, 30, handler);
@@ -363,13 +363,13 @@ public class MemcachedDriverTest
 				EncodingException
 	{
 		final String k1 = MemcachedDriverTest.keyPrefix + "_key_fantastic";
-		final byte[] bytes1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] bytes1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity")).data;
 		KeyValueMessage mssg = new KeyValueMessage (k1, bytes1, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("set 1");
 		final IResult<Boolean> r1 = this.wrapper.invokeSetOperation (MemcachedDriverTest.keyPrefix, mssg, 30, handler1);
 		Assert.assertNotNull (r1);
 		final String k2 = MemcachedDriverTest.keyPrefix + "_key_famous";
-		final byte[] bytes2 = this.encoder.encode ("famous", new EncodingMetadata ("text/plain", "identity"));
+		final byte[] bytes2 = this.encoder.encode ("famous", new EncodingMetadata ("text/plain", "identity")).data;
 		mssg = new KeyValueMessage (k2, bytes2, "identity", "text/plain");
 		final IOperationCompletionHandler<Boolean> handler2 = new TestLoggingHandler<Boolean> ("set 2");
 		final IResult<Boolean> r2 = this.wrapper.invokeSetOperation (MemcachedDriverTest.keyPrefix, mssg, 30, handler2);
