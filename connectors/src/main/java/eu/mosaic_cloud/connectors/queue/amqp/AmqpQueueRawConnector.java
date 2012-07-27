@@ -89,11 +89,7 @@ public class AmqpQueueRawConnector
 	
 	@Override
 	public CallbackCompletion<Void> publish (final AmqpOutboundMessage message)
-			throws EncodingException
 	{
-		if ((null == message.getContentType ()) || (null == message.getContentEncoding ())) {
-			throw new EncodingException ("Empty contentType or contentEncoding.");
-		}
 		return this.proxy.publish (message);
 	}
 	
