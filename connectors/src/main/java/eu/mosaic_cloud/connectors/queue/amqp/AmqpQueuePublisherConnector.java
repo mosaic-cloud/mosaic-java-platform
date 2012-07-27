@@ -40,7 +40,7 @@ public class AmqpQueuePublisherConnector<TMessage>
 	@Override
 	public CallbackCompletion<Void> publish (final TMessage message)
 	{
-		return this.proxy.publish (message, extra);
+		return this.proxy.publish (message);
 	}
 	
 	public static <M, E extends MessageEnvelope> AmqpQueuePublisherConnector<M> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder)

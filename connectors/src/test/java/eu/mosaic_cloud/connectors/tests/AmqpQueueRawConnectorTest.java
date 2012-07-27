@@ -35,6 +35,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
@@ -108,8 +109,8 @@ public class AmqpQueueRawConnectorTest
 		final boolean manadatory = ConfigUtils.resolveParameter (configuration, "publisher.amqp.manadatory", Boolean.class, true);
 		final boolean immediate = ConfigUtils.resolveParameter (configuration, "publisher.amqp.immediate", Boolean.class, true);
 		final boolean durable = ConfigUtils.resolveParameter (configuration, "publisher.amqp.durable", Boolean.class, false);
-		final EncodingMetadata encoding = new EncodingMetadata ("text/plain", "identity");
-		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, encoding), manadatory, immediate, durable, null, encoding.getContentEncoding (), encoding.getContentType (), null, null);
+		final EncodeOutcome encode = this.encoder.encode (this.sentMessage, null);
+		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, encode.data, manadatory, immediate, durable, null, encode.metadata.getContentEncoding (), encode.metadata.getContentType (), null, null);
 		Assert.assertTrue (this.awaitSuccess (this.connector.publish (mssg)));
 	}
 	

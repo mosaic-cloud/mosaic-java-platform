@@ -29,6 +29,7 @@ import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -92,16 +93,20 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 		Preconditions.checkNotNull (message);
 		this.transcript.traceDebugging ("publishing a message to exchange `%s` (of type `%s`) with routing key `%s`...", this.exchange, this.exchangeType, this.publishRoutingKey);
 		byte[] data = null;
+		String contentType = null;
+		String contentEncoding = null;
 		CallbackCompletion<Void> result = null;
-		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
 		try {
-			data = this.messageEncoder.encode (message, encodingMetadata);
+			final EncodeOutcome outcome = this.messageEncoder.encode (message, null);
+			data = outcome.data;
+			contentType = outcome.metadata.getContentType ();
+			contentEncoding = outcome.metadata.getContentEncoding ();
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the message failed; deferring!");
 			result = CallbackCompletion.createFailure (exception);
 		}
 		if (result == null) {
-			final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data, encodingMetadata.getContentType ());
+			final AmqpOutboundMessage outbound = new AmqpOutboundMessage (this.exchange, this.publishRoutingKey, data, contentEncoding, contentType);
 			result = this.raw.publish (outbound);
 		}
 		return (result);

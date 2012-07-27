@@ -30,6 +30,7 @@ import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
@@ -76,17 +77,11 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		requestBuilder.setExpTime (exp);
-		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
-		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
-		if (null != encodingMetadata.getContentEncoding ()) {
-			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
-		}
-		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
-		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		CallbackCompletion<Void> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
-			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final EncodeOutcome outcome = this.encoder.encode (data, null);
+			requestBuilder.setValue (ByteString.copyFrom (outcome.data));
+			requestBuilder.setEnvelope (this.buildEnvelope (outcome.metadata));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
 			result = CallbackCompletion.createFailure (exception);
@@ -106,17 +101,11 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		final MemcachedPayloads.AppendRequest.Builder requestBuilder = MemcachedPayloads.AppendRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
-		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
-		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
-		if (null != encodingMetadata.getContentEncoding ()) {
-			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
-		}
-		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
-		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		CallbackCompletion<Void> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
-			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final EncodeOutcome outcome = this.encoder.encode (data, null);
+			requestBuilder.setValue (ByteString.copyFrom (outcome.data));
+			requestBuilder.setEnvelope (this.buildEnvelope (outcome.metadata));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
 			result = CallbackCompletion.createFailure (exception);
@@ -136,17 +125,11 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		final MemcachedPayloads.CasRequest.Builder requestBuilder = MemcachedPayloads.CasRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
-		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
-		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
-		if (null != encodingMetadata.getContentEncoding ()) {
-			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
-		}
-		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
-		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		CallbackCompletion<Void> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
-			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final EncodeOutcome outcome = this.encoder.encode (data, null);
+			requestBuilder.setValue (ByteString.copyFrom (outcome.data));
+			requestBuilder.setEnvelope (this.buildEnvelope (outcome.metadata));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
 			result = CallbackCompletion.createFailure (exception);
@@ -162,7 +145,7 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 	@SuppressWarnings ("unchecked")
 	public CallbackCompletion<Map<String, TValue>> getBulk (final List<String> keys)
 	{
-		return this.sendGetRequest (keys, (Class<Map<String, TValue>>) ((Class<?>) Map.class), extra);
+		return this.sendGetRequest (keys, (Class<Map<String, TValue>>) ((Class<?>) Map.class));
 	}
 	
 	@Override
@@ -183,17 +166,11 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		final MemcachedPayloads.PrependRequest.Builder requestBuilder = MemcachedPayloads.PrependRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
-		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
-		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
-		if (null != encodingMetadata.getContentEncoding ()) {
-			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
-		}
-		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
-		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		CallbackCompletion<Void> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
-			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final EncodeOutcome outcome = this.encoder.encode (data, null);
+			requestBuilder.setValue (ByteString.copyFrom (outcome.data));
+			requestBuilder.setEnvelope (this.buildEnvelope (outcome.metadata));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
 			result = CallbackCompletion.createFailure (exception);
@@ -214,17 +191,11 @@ public final class MemcacheKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		requestBuilder.setExpTime (exp);
-		final EncodingMetadata encodingMetadata = extra.getEncodingMetadata ();
-		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
-		if (null != encodingMetadata.getContentEncoding ()) {
-			envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
-		}
-		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
-		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		CallbackCompletion<Void> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
-			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final EncodeOutcome outcome = this.encoder.encode (data, null);
+			requestBuilder.setValue (ByteString.copyFrom (outcome.data));
+			requestBuilder.setEnvelope (this.buildEnvelope (outcome.metadata));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
 			result = CallbackCompletion.createFailure (exception);
