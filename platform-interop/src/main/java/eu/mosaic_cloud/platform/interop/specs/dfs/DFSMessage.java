@@ -48,6 +48,7 @@ public enum DFSMessage
 	REMOVE_DIR (MessageType.Exchange, DFSPayloads.RemoveDir.class),
 	//	CLOSE (MessageType.Exchange, DFSPayloads.CloseFile.class),
 	REMOVE_FILE (MessageType.Exchange, DFSPayloads.RemoveFile.class),
+	ABORTED (MessageType.Termination, IdlCommon.AbortRequest.class),
 	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class);
 	DFSMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
 	{
