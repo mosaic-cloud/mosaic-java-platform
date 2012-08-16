@@ -46,10 +46,12 @@ public enum DFSMessage
 	OK (MessageType.Exchange, IdlCommon.Ok.class),
 	OPEN (MessageType.Exchange, DFSPayloads.OpenFile.class),
 	REMOVE_DIR (MessageType.Exchange, DFSPayloads.RemoveDir.class),
-	ERROR (MessageType.Exchange, IdlCommon.Error.class),
+	//	CLOSE (MessageType.Exchange, DFSPayloads.CloseFile.class),
 	REMOVE_FILE (MessageType.Exchange, DFSPayloads.RemoveFile.class),
 	ABORTED (MessageType.Termination, IdlCommon.AbortRequest.class),
-	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class);
+	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class),
+	ERROR (MessageType.Exchange, IdlCommon.Error.class),
+	ACCESS (MessageType.Initiation, null);
 	DFSMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
 	{
 		this.identifier = Identifiers.generate (this);
