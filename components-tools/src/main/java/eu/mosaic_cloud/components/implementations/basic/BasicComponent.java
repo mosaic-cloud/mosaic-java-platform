@@ -23,6 +23,7 @@ package eu.mosaic_cloud.components.implementations.basic;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import eu.mosaic_cloud.components.core.ChannelCallbacks;
@@ -30,6 +31,7 @@ import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
+import eu.mosaic_cloud.components.core.ComponentAcquireReply;
 import eu.mosaic_cloud.components.core.ComponentAcquireRequest;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
@@ -38,6 +40,10 @@ import eu.mosaic_cloud.components.core.ComponentCallbacks;
 import eu.mosaic_cloud.components.core.ComponentCastRequest;
 import eu.mosaic_cloud.components.core.ComponentController;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
+import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
+import eu.mosaic_cloud.components.core.ComponentTcpSocketResourceDescriptor;
+import eu.mosaic_cloud.components.core.ComponentTcpSocketResourceSpecification;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
@@ -114,6 +120,7 @@ public final class BasicComponent
 	
 	static enum Action
 	{
+		AcquireReturn (),
 		Call (),
 		CallReturn (),
 		Cast (),
@@ -145,13 +152,39 @@ public final class BasicComponent
 			this.inboundCalls = HashBiMap.create ();
 			this.outboundCalls = HashBiMap.create ();
 			this.registers = HashBiMap.create ();
+			this.acquires = HashBiMap.create ();
 			this.bootstrap ();
 		}
 		
 		@Override
 		public final CallbackCompletion<Void> acquire (final ComponentAcquireRequest request)
 		{
-			throw (new UnsupportedOperationException ());
+			Preconditions.checkNotNull (request);
+			final ComponentResourceSpecification specification = request.specification;
+			final ComponentCallReference reference = request.reference;
+			this.execute (Transition.Executing, State.Ready, new Runnable () {
+				@Override
+				public final void run ()
+				{
+					Preconditions.checkNotNull (specification);
+					Preconditions.checkNotNull (reference);
+					Preconditions.checkArgument (!Backend.this.acquires.containsKey (reference));
+					final HashMap<String, Object> metaData = new HashMap<String, Object> ();
+					metaData.put (Token.Action.string, Token.Acquire.string);
+					final HashMap<String, String> specifications = new HashMap<String, String> ();
+					if (specification instanceof ComponentTcpSocketResourceSpecification)
+						specifications.put (specification.identifier, Token.SocketIpv4Tcp.string);
+					else
+						throw (new IllegalArgumentException ());
+					final String correlation = UUID.randomUUID ().toString ().replace ("-", "");
+					metaData.put (Token.Specifications.string, specifications);
+					metaData.put (Token.Correlation.string, correlation);
+					final ChannelMessage message = ChannelMessage.create (ChannelMessageType.Exchange, metaData, ByteBuffer.allocate (0));
+					Backend.this.acquires.put (reference, correlation);
+					Backend.this.channelController.send (message);
+				}
+			});
+			return (null);
 		}
 		
 		public final boolean await (final long timeout)
@@ -463,6 +496,53 @@ public final class BasicComponent
 			});
 		}
 		
+		final void receivedAcquireReturn (final ChannelMessage message)
+		{
+			final Object correlationValue = message.metaData.get (Token.Correlation.string);
+			Preconditions.checkNotNull (correlationValue, "missing correlation attribute");
+			Preconditions.checkArgument (correlationValue instanceof String, "invalid correlation attribute `%s`", correlationValue);
+			final String correlation = (String) correlationValue;
+			final Object okValue = message.metaData.get (Token.Ok.string);
+			Preconditions.checkNotNull (okValue, "missing ok attribute");
+			Preconditions.checkArgument (okValue instanceof Boolean, "invalid ok attribute `%s`", okValue);
+			final ComponentAcquireReply reply;
+			if (Boolean.TRUE.equals (okValue)) {
+				// FIXME: Someone should refactor this code... (at least...)
+				final Object descriptorsValue = message.metaData.get (Token.Descriptors.string);
+				Preconditions.checkArgument (message.metaData.containsKey (Token.Descriptors.string), "missing descriptors attribute");
+				Preconditions.checkArgument (descriptorsValue instanceof Map, "mismatched descriptors attribute `%s`", descriptorsValue);
+				final Map<?, ?> descriptorsMap = (Map<?, ?>) descriptorsValue;
+				Preconditions.checkArgument (descriptorsMap.size () == 1, "mismatched descriptors attribute `%s`", descriptorsValue);
+				final Map.Entry<?, ?> descriptorPair = descriptorsMap.entrySet ().iterator ().next ();
+				final Object descriptorIdentifierValue = descriptorPair.getKey ();
+				final Object descriptorValue = descriptorPair.getValue ();
+				Preconditions.checkArgument (descriptorIdentifierValue instanceof String, "missmatched descriptors attribute `%s`", descriptorsValue);
+				Preconditions.checkArgument (descriptorIdentifierValue instanceof Map, "missmatched descriptors attribute `%s`", descriptorsValue);
+				final String identifier = (String) descriptorIdentifierValue;
+				final Map<?, ?> descriptorMap = (Map<?, ?>) descriptorValue;
+				final Object typeValue = descriptorMap.get (Token.Type.string);
+				Preconditions.checkArgument (typeValue instanceof String, "mismatched correlation attribute `%s`", correlation);
+				final ComponentResourceDescriptor descriptor;
+				if (Token.SocketIpv4Tcp.string.equals (typeValue)) {
+					final String ip = (String) descriptorMap.get (Token.Ip.string);
+					final int port = ((Number) descriptorMap.get (Token.Port.string)).intValue ();
+					final String fqdn = (String) descriptorMap.get (Token.Fqdn.string);
+					descriptor = ComponentTcpSocketResourceDescriptor.create (identifier, ip, port, fqdn);
+				} else
+					throw (new IllegalArgumentException (String.format ("mismatched correlation attribute `%s`", correlation)));
+				Preconditions.checkArgument (this.acquires.inverse ().containsKey (correlation), "mismatched correlation attribute `%s`", correlation);
+				final ComponentCallReference reference = this.acquires.inverse ().remove (correlation);
+				reply = ComponentAcquireReply.create (descriptor, reference);
+			} else {
+				final Object errorValue = message.metaData.get (Token.Error.string);
+				Preconditions.checkArgument (message.metaData.containsKey (Token.Error.string), "missing error attribute");
+				Preconditions.checkArgument (this.acquires.inverse ().containsKey (correlation), "mismatched correlation attribute `%s`", correlation);
+				final ComponentCallReference reference = this.acquires.inverse ().remove (correlation);
+				reply = ComponentAcquireReply.create (errorValue, reference);
+			}
+			this.componentCallbacksProxy.acquireReturned (this.componentControllerProxy, reply);
+		}
+		
 		final void receivedCall (final ChannelMessage message)
 		{
 			final Object operationValue = message.metaData.get (Token.Operation.string);
@@ -531,6 +611,8 @@ public final class BasicComponent
 				action = Action.Cast;
 			else if (Token.RegisterReturn.string.equals (actionValue))
 				action = Action.RegisterReturn;
+			else if (Token.AcquireReturn.string.equals (actionValue))
+				action = Action.AcquireReturn;
 			else
 				action = null;
 			Preconditions.checkNotNull (action, "invalid action attribute `%s`", actionValue);
@@ -546,6 +628,9 @@ public final class BasicComponent
 					break;
 				case RegisterReturn :
 					this.receivedRegisterReturn (message);
+					break;
+				case AcquireReturn :
+					this.receivedAcquireReturn (message);
 					break;
 				default:
 					Preconditions.checkState (false);
@@ -573,6 +658,7 @@ public final class BasicComponent
 			}
 		}
 		
+		final HashBiMap<ComponentCallReference, String> acquires;
 		final ChannelCallbacks channelCallbacksProxy;
 		ChannelController channelController;
 		final ChannelController channelControllerProxy;
@@ -616,21 +702,30 @@ public final class BasicComponent
 	
 	static enum Token
 	{
+		Acquire ("acquire"),
+		AcquireReturn ("acquire-return"),
 		Action ("action"),
 		Call ("call"),
 		CallReturn ("call-return"),
 		Cast ("cast"),
 		Component ("component"),
 		Correlation ("correlation"),
+		Descriptors ("descriptors"),
 		Error ("error"),
+		Fqdn ("fqdn"),
 		Group ("group"),
 		Inputs ("inputs"),
+		Ip ("ip"),
 		Ok ("ok"),
 		Operation ("operation"),
 		Outputs ("outputs"),
+		Port ("port"),
 		Register ("register"),
 		RegisterReturn ("register-return"),
-		Request ("request");
+		Request ("request"),
+		SocketIpv4Tcp ("socket:ipv4:tcp"),
+		Specifications ("specifications"),
+		Type ("type");
 		Token (final String string)
 		{
 			Preconditions.checkNotNull (string);
