@@ -30,6 +30,7 @@ import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletManager;
 import eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponentFsm.FsmState;
 import eu.mosaic_cloud.cloudlets.implementation.container.CloudletComponentFsm.FsmTransition;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
+import eu.mosaic_cloud.components.core.ComponentAcquireReply;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -393,6 +394,12 @@ public final class CloudletComponent
 				ComponentCallbacks,
 				CallbackHandler
 	{
+		@Override
+		public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
+		{
+			throw (new IllegalStateException ());
+		}
+		
 		@Override
 		public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
 		{

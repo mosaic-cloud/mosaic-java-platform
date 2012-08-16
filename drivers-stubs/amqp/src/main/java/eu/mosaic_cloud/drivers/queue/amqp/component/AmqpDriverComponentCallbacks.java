@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.mosaic_cloud.components.core.ComponentAcquireReply;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -74,6 +75,12 @@ public final class AmqpDriverComponentCallbacks
 		} catch (final IOException e) {
 			this.exceptions.traceIgnoredException (e);
 		}
+	}
+	
+	@Override
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
+	{
+		throw (new IllegalStateException ());
 	}
 	
 	@Override

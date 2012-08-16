@@ -25,6 +25,7 @@ import java.nio.BufferOverflowException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import eu.mosaic_cloud.components.core.ComponentAcquireReply;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -60,6 +61,12 @@ public final class QueueingComponentCallbacks
 		this.queue = queue;
 		this.waitTimeout = waitTimeout;
 		this.exceptions = exceptions;
+	}
+	
+	@Override
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
+	{
+		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override

@@ -30,6 +30,7 @@ import eu.mosaic_cloud.components.core.ChannelController;
 import eu.mosaic_cloud.components.core.ChannelFlow;
 import eu.mosaic_cloud.components.core.ChannelMessage;
 import eu.mosaic_cloud.components.core.ChannelMessageType;
+import eu.mosaic_cloud.components.core.ComponentAcquireRequest;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -145,6 +146,12 @@ public final class BasicComponent
 			this.outboundCalls = HashBiMap.create ();
 			this.registers = HashBiMap.create ();
 			this.bootstrap ();
+		}
+		
+		@Override
+		public final CallbackCompletion<Void> acquire (final ComponentAcquireRequest request)
+		{
+			throw (new UnsupportedOperationException ());
 		}
 		
 		public final boolean await (final long timeout)

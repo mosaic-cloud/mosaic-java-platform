@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Future;
 
+import eu.mosaic_cloud.components.core.ComponentAcquireReply;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -79,6 +80,12 @@ public final class JettyComponentCallbacks
 			JettyComponentContext.callbacks = this;
 			JettyComponent.create ();
 		}
+	}
+	
+	@Override
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
+	{
+		throw (new IllegalStateException ());
 	}
 	
 	public final Future<ComponentCallReply> call (final ComponentIdentifier component, final ComponentCallRequest request)

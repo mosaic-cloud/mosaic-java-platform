@@ -24,6 +24,7 @@ package eu.mosaic_cloud.examples.components.simple;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import eu.mosaic_cloud.components.core.ComponentAcquireReply;
 import eu.mosaic_cloud.components.core.ComponentCallReference;
 import eu.mosaic_cloud.components.core.ComponentCallReply;
 import eu.mosaic_cloud.components.core.ComponentCallRequest;
@@ -56,6 +57,12 @@ public final class AbacusComponentCallbacks
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
 		this.component = null;
 		this.status = Status.Created;
+	}
+	
+	@Override
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
+	{
+		throw (new IllegalStateException ());
 	}
 	
 	@Override
