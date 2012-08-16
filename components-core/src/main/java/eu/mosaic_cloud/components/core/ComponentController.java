@@ -29,6 +29,8 @@ public interface ComponentController
 		extends
 			Callbacks
 {
+	public abstract CallbackCompletion<Void> acquire (final ComponentAcquireRequest request);
+	
 	public abstract CallbackCompletion<Void> bind (final ComponentCallbacks callbacks, final ChannelController channel);
 	
 	public abstract CallbackCompletion<Void> call (final ComponentIdentifier component, final ComponentCallRequest request);

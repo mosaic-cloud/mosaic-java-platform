@@ -29,6 +29,8 @@ public interface ComponentCallbacks
 		extends
 			Callbacks
 {
+	public abstract CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply);
+	
 	public abstract CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request);
 	
 	public abstract CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply);
