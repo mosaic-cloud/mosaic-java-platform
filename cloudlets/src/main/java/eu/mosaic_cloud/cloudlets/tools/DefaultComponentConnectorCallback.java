@@ -22,6 +22,7 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 
 import eu.mosaic_cloud.cloudlets.connectors.components.ComponentAcquireSucceededCallbackArguments;
+import eu.mosaic_cloud.cloudlets.connectors.components.ComponentCallSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.components.ComponentRequestFailedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.connectors.components.IComponentConnectorCallbacks;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -42,5 +43,17 @@ public class DefaultComponentConnectorCallback<TContext, TExtra>
 	public CallbackCompletion<Void> acquireSucceeded (final TContext context, final ComponentAcquireSucceededCallbackArguments<TExtra> arguments)
 	{
 		return this.handleUnhandledCallback (arguments, "Acquire Succeeded", true, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> callFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Call Failed", false, false);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> callSucceeded (final TContext context, final ComponentCallSucceededCallbackArguments<?, TExtra> arguments)
+	{
+		return this.handleUnhandledCallback (arguments, "Call Succeeded", true, false);
 	}
 }

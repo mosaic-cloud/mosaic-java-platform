@@ -26,6 +26,7 @@ import eu.mosaic_cloud.cloudlets.implementation.cloudlet.Cloudlet;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletEnvironment;
 import eu.mosaic_cloud.cloudlets.implementation.container.IComponentConnector;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
+import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
@@ -115,6 +116,18 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 		final IComponentConnector componentConnector = new IComponentConnector () {
 			@Override
 			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource)
+			{
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs)
+			{
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public <TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs)
 			{
 				throw (new UnsupportedOperationException ());
 			}

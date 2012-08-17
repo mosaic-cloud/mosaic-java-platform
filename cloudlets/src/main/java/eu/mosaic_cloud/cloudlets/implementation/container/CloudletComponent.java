@@ -328,7 +328,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceDebugging ("registered the interoperability channel resolver handler.");
 			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.RegisterCompleted) {
 				@Override
-				protected StateAndOutput<FsmState, Void> execute ()
+				protected final StateAndOutput<FsmState, Void> execute ()
 				{
 					return (CloudletComponent.this.componentCallbacksHandler.registerCallbacksExecute ());
 				}
@@ -352,7 +352,7 @@ public final class CloudletComponent
 			CloudletComponent.this.componentControllerProxy.call (identifier, request);
 			CloudletComponent.this.fsm.new FsmFutureCompletionAccess<ComponentCallReply> () {
 				@Override
-				protected Void execute (final Future<ComponentCallReply> future1)
+				protected final Void execute (final Future<ComponentCallReply> future1)
 				{
 					Preconditions.checkState (future == future1);
 					final ComponentCallReply reply;
@@ -403,7 +403,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceDebugging ("unregistered the interoperability channel resolver handler.");
 			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.UnregisterCompleted) {
 				@Override
-				protected StateAndOutput<FsmState, Void> execute ()
+				protected final StateAndOutput<FsmState, Void> execute ()
 				{
 					return (CloudletComponent.this.componentCallbacksHandler.unregisterCallbacksExecute ());
 				}
@@ -424,7 +424,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceDebugging ("acquire returned for the cloudlet component with reference `%{object:identity}` and outcome `%b`...", reply.reference, Boolean.valueOf (reply.ok));
 			return (CloudletComponent.this.fsm.new FsmCallbackAccess () {
 				@Override
-				protected CallbackCompletion<Void> execute ()
+				protected final CallbackCompletion<Void> execute ()
 				{
 					final Trigger<ComponentAcquireReply> trigger = CloudletComponent.this.componentPendingAcquires.remove (reply.reference);
 					if (trigger != null) {
@@ -443,7 +443,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceInformation ("called the cloudlet component with operation `%s` and reference `%{object:identity}`...", request.operation, request.reference);
 			return (CloudletComponent.this.fsm.new FsmCallbackAccess () {
 				@Override
-				protected CallbackCompletion<Void> execute ()
+				protected final CallbackCompletion<Void> execute ()
 				{
 					CloudletComponent.this.transcript.traceError ("called the cloudlet component with an unsupported operation `%s` and reference `%{object:identity}`; returning failure!", request.operation, request.reference);
 					final ComponentCallReply reply = ComponentCallReply.create (false, "unsupported-call", request.reference);
@@ -460,7 +460,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceDebugging ("call returned for the cloudlet component with reference `%{object:identity}` and outcome `%b`...", reply.reference, Boolean.valueOf (reply.ok));
 			return (CloudletComponent.this.fsm.new FsmCallbackAccess () {
 				@Override
-				protected CallbackCompletion<Void> execute ()
+				protected final CallbackCompletion<Void> execute ()
 				{
 					final Trigger<ComponentCallReply> trigger = CloudletComponent.this.componentPendingOutboundCalls.remove (reply.reference);
 					if (trigger != null) {
@@ -479,7 +479,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceInformation ("casted the cloudlet component with operation `%s`...", request.operation);
 			return (CloudletComponent.this.fsm.new FsmCallbackAccess () {
 				@Override
-				protected CallbackCompletion<Void> execute ()
+				protected final CallbackCompletion<Void> execute ()
 				{
 					CloudletComponent.this.transcript.traceError ("casted the cloudlet component with an unsupported operation `%s`; ignoring!", request.operation);
 					return (CallbackCompletion.createOutcome ());
@@ -508,7 +508,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceDebugging ("initialized the cloudlet component.");
 			return (CloudletComponent.this.fsm.new FsmCallbackTransaction (FsmTransition.InitializeCompleted) {
 				@Override
-				protected StateAndOutput<FsmState, CallbackCompletion<Void>> execute ()
+				protected final StateAndOutput<FsmState, CallbackCompletion<Void>> execute ()
 				{
 					CloudletComponent.this.reactor.assignDelegate (CloudletComponent.this.componentControllerProxy, component);
 					// FIXME: this should be asynchronous and handled as part of
@@ -531,7 +531,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceDebugging ("registered the component callbacks handler.");
 			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.RegisterCompleted) {
 				@Override
-				protected StateAndOutput<FsmState, Void> execute ()
+				protected final StateAndOutput<FsmState, Void> execute ()
 				{
 					return (ComponentCallbacksHandler.this.registerCallbacksExecute ());
 				}
@@ -544,7 +544,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceInformation ("registered the cloudlet component.");
 			return (CloudletComponent.this.fsm.new FsmCallbackAccess () {
 				@Override
-				protected CallbackCompletion<Void> execute ()
+				protected final CallbackCompletion<Void> execute ()
 				{
 					// FIXME: log the situation
 					return (CallbackCompletion.createOutcome ());
@@ -558,7 +558,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceInformation ("terminated the cloudlet component.");
 			return (CloudletComponent.this.fsm.new FsmCallbackTransaction (FsmTransition.ExternalDestroy) {
 				@Override
-				protected StateAndOutput<FsmState, CallbackCompletion<Void>> execute ()
+				protected final StateAndOutput<FsmState, CallbackCompletion<Void>> execute ()
 				{
 					CloudletComponent.this.transcript.traceDebugging ("destroying the component controller proxy...");
 					CloudletComponent.this.reactor.destroyProxy (CloudletComponent.this.componentControllerProxy);
@@ -580,7 +580,7 @@ public final class CloudletComponent
 			CloudletComponent.this.transcript.traceDebugging ("unregistered the component callbacks handler.");
 			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.UnregisterCompleted) {
 				@Override
-				protected StateAndOutput<FsmState, Void> execute ()
+				protected final StateAndOutput<FsmState, Void> execute ()
 				{
 					return (ComponentCallbacksHandler.this.unregisterCallbacksExecute ());
 				}
@@ -640,7 +640,7 @@ public final class CloudletComponent
 			final DeferredFuture<ComponentResourceDescriptor> completionFuture = DeferredFuture.create (ComponentResourceDescriptor.class);
 			CloudletComponent.this.fsm.new FsmFutureCompletionAccess<ComponentAcquireReply> () {
 				@Override
-				protected Void execute (final Future<ComponentAcquireReply> future1)
+				protected final Void execute (final Future<ComponentAcquireReply> future1)
 				{
 					Preconditions.checkState (future == future1);
 					final ComponentAcquireReply reply;
@@ -667,13 +667,75 @@ public final class CloudletComponent
 		}
 		
 		@Override
+		public final <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputsClass)
+		{
+			Preconditions.checkNotNull (component);
+			Preconditions.checkNotNull (operation);
+			Preconditions.checkNotNull (outputsClass);
+			CloudletComponent.this.transcript.traceDebugging ("calling to the component `%s` with operation `%s`...", component.string, operation);
+			// FIXME: This should be done in `Active` state
+			// FIXME: This should be done in an `FsmAccess`
+			final ComponentCallReference reference = ComponentCallReference.create ();
+			final ComponentCallRequest request = ComponentCallRequest.create (operation, inputs, reference);
+			final DeferredFuture<ComponentCallReply> future = DeferredFuture.create (ComponentCallReply.class);
+			CloudletComponent.this.componentPendingOutboundCalls.put (reference, future.trigger);
+			CloudletComponent.this.componentControllerProxy.call (component, request);
+			final DeferredFuture<TOutputs> completionFuture = DeferredFuture.create (outputsClass);
+			CloudletComponent.this.fsm.new FsmFutureCompletionAccess<ComponentCallReply> () {
+				@Override
+				protected final Void execute (final Future<ComponentCallReply> future1)
+				{
+					Preconditions.checkState (future == future1);
+					final ComponentCallReply reply;
+					try {
+						reply = future.get ();
+					} catch (final Throwable exception) {
+						CloudletComponent.this.exceptions.traceDeferredException (exception, "calling to the component `%s` with operation `%s` failed; deferring!", component.string, operation);
+						completionFuture.trigger.triggerFailed (exception);
+						return (null);
+					}
+					if (!reply.ok) {
+						final Exception exception = new Exception (ExtendedFormatter.defaultInstance.format ("error: `%s`", reply.outputsOrError));
+						CloudletComponent.this.exceptions.traceDeferredException (exception, "calling to the component `%s` with operation `%s` failed; deferring!", component.string, operation);
+						completionFuture.trigger.triggerFailed (exception);
+						return (null);
+					}
+					CloudletComponent.this.transcript.traceDebugging ("calling to the component `%s` with operation `%s` succeeded.", component.string, operation);
+					if (!outputsClass.isInstance (reply.outputsOrError)) {
+						final Exception exception = new Exception (ExtendedFormatter.defaultInstance.format ("error: expected class `%{class}`; received `%{object:class}`", outputsClass, reply.outputsOrError));
+						CloudletComponent.this.exceptions.traceDeferredException (exception, "calling to the component `%s` with operation `%s` failed; deferring!", component.string, operation);
+						completionFuture.trigger.triggerFailed (exception);
+						return (null);
+					}
+					completionFuture.trigger.triggerSucceeded (outputsClass.cast (reply.outputsOrError));
+					return (null);
+				}
+			}.observe (future);
+			final CallbackCompletion<TOutputs> completion = CallbackCompletion.createDeferred (completionFuture);
+			return (completion);
+		}
+		
+		@Override
+		public final <TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs)
+		{
+			Preconditions.checkNotNull (component);
+			Preconditions.checkNotNull (operation);
+			CloudletComponent.this.transcript.traceDebugging ("casting to the component `%s` with operation `%s`...", component.string, operation);
+			// FIXME: This should be done in `Active` state
+			// FIXME: This should be done in an `FsmAccess`
+			final ComponentCastRequest request = ComponentCastRequest.create (operation, inputs);
+			final CallbackCompletion<Void> completion = CloudletComponent.this.componentControllerProxy.cast (component, request);
+			return (completion);
+		}
+		
+		@Override
 		public final CallbackCompletion<Void> destroy ()
 		{
 			throw (new IllegalStateException ());
 		}
 		
 		@Override
-		public void failedCallbacks (final Callbacks proxy, final Throwable exception)
+		public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
 		{
 			Preconditions.checkState (proxy == CloudletComponent.this.componentConnectorProxy);
 			CloudletComponent.this.handleInternalFailure (proxy, exception);
@@ -686,13 +748,13 @@ public final class CloudletComponent
 		}
 		
 		@Override
-		public void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
+		public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
 		{
 			Preconditions.checkState (proxy == CloudletComponent.this.componentConnectorProxy);
 			CloudletComponent.this.transcript.traceDebugging ("registered the component connector handler.");
 			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.RegisterCompleted) {
 				@Override
-				protected StateAndOutput<FsmState, Void> execute ()
+				protected final StateAndOutput<FsmState, Void> execute ()
 				{
 					return (CloudletComponent.this.componentCallbacksHandler.registerCallbacksExecute ());
 				}
@@ -700,13 +762,13 @@ public final class CloudletComponent
 		}
 		
 		@Override
-		public void unregisteredCallbacks (final Callbacks proxy)
+		public final void unregisteredCallbacks (final Callbacks proxy)
 		{
 			Preconditions.checkState (proxy == CloudletComponent.this.componentConnectorProxy);
 			CloudletComponent.this.transcript.traceDebugging ("unregistered the component connector handler.");
 			CloudletComponent.this.fsm.new FsmVoidTransaction (FsmTransition.UnregisterCompleted) {
 				@Override
-				protected StateAndOutput<FsmState, Void> execute ()
+				protected final StateAndOutput<FsmState, Void> execute ()
 				{
 					return (CloudletComponent.this.componentCallbacksHandler.unregisterCallbacksExecute ());
 				}

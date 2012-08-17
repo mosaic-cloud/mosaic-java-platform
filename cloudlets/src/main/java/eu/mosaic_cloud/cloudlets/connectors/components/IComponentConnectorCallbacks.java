@@ -13,4 +13,8 @@ public interface IComponentConnectorCallbacks<TContext, TExtra>
 	CallbackCompletion<Void> acquireFailed (TContext context, ComponentRequestFailedCallbackArguments<TExtra> arguments);
 	
 	CallbackCompletion<Void> acquireSucceeded (TContext context, ComponentAcquireSucceededCallbackArguments<TExtra> arguments);
+	
+	CallbackCompletion<Void> callFailed (TContext context, ComponentRequestFailedCallbackArguments<TExtra> arguments);
+	
+	CallbackCompletion<Void> callSucceeded (TContext context, ComponentCallSucceededCallbackArguments<?, TExtra> arguments);
 }
