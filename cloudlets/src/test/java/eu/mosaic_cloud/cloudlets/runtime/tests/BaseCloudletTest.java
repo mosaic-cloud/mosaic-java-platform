@@ -24,7 +24,10 @@ package eu.mosaic_cloud.cloudlets.runtime.tests;
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.Cloudlet;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletEnvironment;
+import eu.mosaic_cloud.cloudlets.implementation.container.IComponentConnector;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
+import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
+import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory;
@@ -109,6 +112,25 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	
 	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass)
 	{
+		final IComponentConnector componentConnector = new IComponentConnector () {
+			@Override
+			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource)
+			{
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public CallbackCompletion<Void> destroy ()
+			{
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public CallbackCompletion<Void> initialize ()
+			{
+				throw (new UnsupportedOperationException ());
+			}
+		};
 		final ChannelFactory connectorChannelFactory = new ChannelFactory () {
 			@Override
 			public Channel create ()
@@ -123,10 +145,10 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 				throw (new UnsupportedOperationException ());
 			}
 		};
-		BaseCloudletTest.setUpScenario (owner, scenario, configuration, callbacksClass, contextClass, connectorChannelFactory, connectorChannelResolver);
+		BaseCloudletTest.setUpScenario (owner, scenario, configuration, callbacksClass, contextClass, componentConnector, connectorChannelFactory, connectorChannelResolver);
 	}
 	
-	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final ChannelFactory connectorChannelFactory, final ChannelResolver connectorChannelResolver)
+	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final IComponentConnector componentConnector, final ChannelFactory connectorChannelFactory, final ChannelResolver connectorChannelResolver)
 	{
 		BasicThreadingSecurityManager.initialize ();
 		scenario.transcript = Transcript.create (owner);
@@ -145,7 +167,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 		scenario.contextClass = contextClass;
 		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (scenario.reactor, scenario.threading, scenario.exceptions, connectorChannelFactory, connectorChannelResolver);
 		scenario.connectors = DefaultConnectorsFactory.create (null, connectorEnvironment);
-		scenario.environment = CloudletEnvironment.create (scenario.configuration, scenario.callbacksClass, scenario.contextClass, scenario.callbacksClass.getClassLoader (), scenario.connectors, connectorEnvironment, scenario.reactor, scenario.threading, scenario.exceptions);
+		scenario.environment = CloudletEnvironment.create (scenario.configuration, scenario.callbacksClass, scenario.contextClass, scenario.callbacksClass.getClassLoader (), scenario.connectors, connectorEnvironment, componentConnector, scenario.reactor, scenario.threading, scenario.exceptions);
 	}
 	
 	protected static void tearDownScenario (final BaseScenario<?> scenario)

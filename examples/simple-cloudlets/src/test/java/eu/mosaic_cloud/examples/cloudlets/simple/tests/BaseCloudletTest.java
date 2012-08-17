@@ -25,6 +25,9 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.Cloudlet;
+import eu.mosaic_cloud.cloudlets.implementation.container.IComponentConnector;
+import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
+import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
@@ -36,6 +39,7 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.junit.After;
 import org.junit.Test;
@@ -103,6 +107,25 @@ public abstract class BaseCloudletTest
 				return (scenario.connectorsChannel);
 			}
 		};
+		final IComponentConnector componentConnector = new IComponentConnector () {
+			@Override
+			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource)
+			{
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public CallbackCompletion<Void> destroy ()
+			{
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public CallbackCompletion<Void> initialize ()
+			{
+				throw (new UnsupportedOperationException ());
+			}
+		};
 		final ChannelResolver connectorsChannelResolver = new ChannelResolver () {
 			@Override
 			public void resolve (final String target, final ResolverCallbacks callbacks)
@@ -120,7 +143,7 @@ public abstract class BaseCloudletTest
 				}
 			}
 		};
-		eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.setUpScenario (this.getClass (), scenario, configuration, callbacksClass, contextClass, connectorsChannelFactory, connectorsChannelResolver);
+		eu.mosaic_cloud.cloudlets.runtime.tests.BaseCloudletTest.setUpScenario (this.getClass (), scenario, configuration, callbacksClass, contextClass, componentConnector, connectorsChannelFactory, connectorsChannelResolver);
 		{
 			scenario.connectorsIdentity = UUID.randomUUID ().toString ();
 			scenario.connectorsChannel = ZeroMqChannel.create (scenario.connectorsIdentity, scenario.threading, scenario.exceptions);

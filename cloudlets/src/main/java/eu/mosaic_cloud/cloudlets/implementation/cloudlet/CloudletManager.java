@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
+import eu.mosaic_cloud.cloudlets.implementation.container.IComponentConnector;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
@@ -55,7 +56,7 @@ import com.google.common.base.Preconditions;
  */
 public final class CloudletManager
 {
-	private CloudletManager (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
+	private CloudletManager (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
 	{
 		super ();
 		Preconditions.checkNotNull (configuration);
@@ -63,6 +64,7 @@ public final class CloudletManager
 		Preconditions.checkNotNull (reactor);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
+		Preconditions.checkNotNull (componentConnector);
 		Preconditions.checkNotNull (channelFactory);
 		Preconditions.checkNotNull (channelResolver);
 		synchronized (this.monitor) {
@@ -71,6 +73,7 @@ public final class CloudletManager
 			this.configuration = configuration;
 			this.reactor = reactor;
 			this.threading = threading;
+			this.componentConnector = componentConnector;
 			this.channelFactory = channelFactory;
 			this.channelResolver = channelResolver;
 			this.cloudlets = new ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> ();
@@ -153,7 +156,7 @@ public final class CloudletManager
 		final ExceptionTracer exceptions = new CloudletExceptionTracer ();
 		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, exceptions, this.channelFactory, this.channelResolver);
 		final IConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (null, connectorEnvironment);
-		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.reactor, this.threading, exceptions);
+		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.componentConnector, this.reactor, this.threading, exceptions);
 		final Cloudlet<?> cloudlet = Cloudlet.create (environment);
 		return (cloudlet);
 	}
@@ -207,15 +210,16 @@ public final class CloudletManager
 		return (clasz);
 	}
 	
-	public static final CloudletManager create (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
+	public static final CloudletManager create (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
 	{
-		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, channelFactory, channelResolver));
+		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, componentConnector, channelFactory, channelResolver));
 	}
 	
 	private final ChannelFactory channelFactory;
 	private final ChannelResolver channelResolver;
 	private final ClassLoader classLoader;
 	private final ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> cloudlets;
+	private final IComponentConnector componentConnector;
 	private final IConfiguration configuration;
 	private final TranscriptExceptionTracer exceptions;
 	private final Monitor monitor = Monitor.create (this);

@@ -28,6 +28,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
 
+import eu.mosaic_cloud.cloudlets.connectors.components.ComponentConnector;
+import eu.mosaic_cloud.cloudlets.connectors.components.IComponentConnector;
+import eu.mosaic_cloud.cloudlets.connectors.components.IComponentConnectorCallbacks;
+import eu.mosaic_cloud.cloudlets.connectors.components.IComponentConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
@@ -45,6 +49,7 @@ import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackFunnelHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -554,6 +559,19 @@ public final class Cloudlet<TContext extends Object>
 		}
 	}
 	
+	final class ComponentConnectorFactory
+			implements
+				IComponentConnectorFactory
+	{
+		@Override
+		public final <TConnectorContext, TExtra> IComponentConnector<TExtra> create (final IComponentConnectorCallbacks<TConnectorContext, TExtra> callbacks, final TConnectorContext callbacksContext)
+		{
+			final IConfiguration configuration = PropertyTypeConfiguration.createEmpty ();
+			final IComponentConnector<TExtra> connector = new ComponentConnector<TConnectorContext, TExtra> (Cloudlet.this.controllerProxy, Cloudlet.this.environment.getComponentConnector (), configuration, callbacks, callbacksContext);
+			return connector;
+		}
+	}
+	
 	final class ConnectorFactory<TConnector extends IConnector, TFactory extends IConnectorFactory<? super TConnector>>
 			implements
 				InvocationHandler
@@ -632,6 +650,8 @@ public final class Cloudlet<TContext extends Object>
 		{
 			super ();
 			this.factories = new ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, ConnectorFactory<? extends IConnector, ? extends IConnectorFactory<?>>> ();
+			this.componentConnectorFactory = new ComponentConnectorFactory ();
+			this.factories.put (IComponentConnectorFactory.class, new ConnectorFactory<IComponentConnector<?>, IComponentConnectorFactory> (IComponentConnectorFactory.class, this.componentConnectorFactory));
 		}
 		
 		@Override
@@ -669,6 +689,7 @@ public final class Cloudlet<TContext extends Object>
 			}
 		}
 		
+		private final IComponentConnectorFactory componentConnectorFactory;
 		private final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, ConnectorFactory<? extends IConnector, ? extends IConnectorFactory<?>>> factories;
 	}
 	

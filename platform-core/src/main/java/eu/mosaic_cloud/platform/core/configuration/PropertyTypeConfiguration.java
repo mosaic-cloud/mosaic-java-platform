@@ -178,6 +178,7 @@ public final class PropertyTypeConfiguration
 		return this.properties.getProperty (key, null);
 	}
 	
+	// FIXME: Maybe it should be called `createFromSystem`...
 	public static PropertyTypeConfiguration create ()
 	{
 		final Properties properties = new Properties (System.getProperties ());
@@ -243,6 +244,13 @@ public final class PropertyTypeConfiguration
 	@Deprecated
 	public static PropertyTypeConfiguration create (final Properties properties)
 	{
+		final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration (properties);
+		return configuration;
+	}
+	
+	public static PropertyTypeConfiguration createEmpty ()
+	{
+		final Properties properties = new Properties ();
 		final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration (properties);
 		return configuration;
 	}

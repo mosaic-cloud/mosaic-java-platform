@@ -44,11 +44,11 @@ final class CloudletComponentFsm
 	{
 		super (FsmState.class, FsmTransition.class, transcript, exceptions);
 		this.defineStates (FsmState.class);
-		this.defineTransition (FsmTransition.CreateCompleted, FsmState.CreatePending, FsmState.RegisterPending2);
-		this.defineTransition (FsmTransition.RegisterCompleted, new FsmState[] {FsmState.RegisterPending2, FsmState.RegisterPending1}, new FsmState[] {FsmState.RegisterPending1, FsmState.InitializePending});
+		this.defineTransition (FsmTransition.CreateCompleted, FsmState.CreatePending, FsmState.RegisterPending3);
+		this.defineTransition (FsmTransition.RegisterCompleted, new FsmState[] {FsmState.RegisterPending3, FsmState.RegisterPending2, FsmState.RegisterPending1}, new FsmState[] {FsmState.RegisterPending2, FsmState.RegisterPending1, FsmState.InitializePending});
 		this.defineTransition (FsmTransition.InitializeCompleted, FsmState.InitializePending, FsmState.Active);
-		this.defineTransition (FsmTransition.ExternalDestroy, FsmState.Active, FsmState.UnregisterPending2);
-		this.defineTransition (FsmTransition.UnregisterCompleted, new FsmState[] {FsmState.UnregisterPending2, FsmState.UnregisterPending1}, new FsmState[] {FsmState.UnregisterPending1, FsmState.Destroyed});
+		this.defineTransition (FsmTransition.ExternalDestroy, FsmState.Active, FsmState.UnregisterPending3);
+		this.defineTransition (FsmTransition.UnregisterCompleted, new FsmState[] {FsmState.UnregisterPending3, FsmState.UnregisterPending2, FsmState.UnregisterPending1}, new FsmState[] {FsmState.UnregisterPending2, FsmState.UnregisterPending1, FsmState.Destroyed});
 		this.defineTransition (FsmTransition.InternalFailure, FsmState.values (), new FsmState[] {FsmState.Failed});
 		this.initialize (FsmState.CreatePending);
 		this.component = component;
@@ -263,8 +263,10 @@ final class CloudletComponentFsm
 		InitializePending,
 		RegisterPending1,
 		RegisterPending2,
+		RegisterPending3,
 		UnregisterPending1,
-		UnregisterPending2;
+		UnregisterPending2,
+		UnregisterPending3;
 	}
 	
 	protected abstract class FsmTransaction<Input, Output>

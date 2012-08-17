@@ -72,8 +72,24 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 	@Override
 	public CallbackCompletion<Void> destroy ()
 	{
+		return this.destroy (true);
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initialize ()
+	{
+		return this.initialize (true);
+	}
+	
+	protected CallbackCompletion<Void> destroy (final boolean propagate)
+	{
 		this.transcript.traceDebugging ("destroying the connector adapter...");
-		final CallbackCompletion<Void> completion = this.connector.destroy ();
+		final CallbackCompletion<Void> completion;
+		if (propagate) {
+			completion = this.connector.destroy ();
+		} else {
+			completion = CallbackCompletion.createOutcome ();
+		}
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@Override
@@ -92,11 +108,15 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 		return completion;
 	}
 	
-	@Override
-	public CallbackCompletion<Void> initialize ()
+	protected CallbackCompletion<Void> initialize (final boolean propagate)
 	{
 		this.transcript.traceDebugging ("initializing the connector adapter...");
-		final CallbackCompletion<Void> completion = this.connector.initialize ();
+		final CallbackCompletion<Void> completion;
+		if (propagate) {
+			completion = this.connector.initialize ();
+		} else {
+			completion = CallbackCompletion.createOutcome ();
+		}
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@Override
