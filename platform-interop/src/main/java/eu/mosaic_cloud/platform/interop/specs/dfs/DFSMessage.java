@@ -40,6 +40,7 @@ public enum DFSMessage
 	COPY (MessageType.Exchange, DFSPayloads.CopyFile.class),
 	HANDLER (MessageType.Exchange, DFSPayloads.FileHandlerResponse.class),
 	LIST (MessageType.Exchange, DFSPayloads.ListDir.class),
+	LISTING (MessageType.Exchange, DFSPayloads.ListResult.class),
 	//	LINK 		(MessageType.Exchange, DFSPayloads.Link.class),
 	MKDIR (MessageType.Exchange, DFSPayloads.MakeDir.class),
 	MOVE (MessageType.Exchange, DFSPayloads.MoveFile.class),
@@ -89,3 +90,4 @@ public enum DFSMessage
 	public final String identifier;
 	public final MessageType type;
 }
+
