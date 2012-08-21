@@ -36,10 +36,14 @@ public enum DFSMessage
 		implements
 			MessageSpecification
 {
+	ABORTED (MessageType.Termination, IdlCommon.AbortRequest.class),
+	ACCESS (MessageType.Initiation, null),
 	BYTES (MessageType.Exchange, DFSPayloads.FileRead.class),
 	COPY (MessageType.Exchange, DFSPayloads.CopyFile.class),
+	ERROR (MessageType.Exchange, IdlCommon.Error.class),
 	HANDLER (MessageType.Exchange, DFSPayloads.FileHandlerResponse.class),
 	LIST (MessageType.Exchange, DFSPayloads.ListDir.class),
+	LISTING (MessageType.Exchange, DFSPayloads.ListResult.class),
 	//	LINK 		(MessageType.Exchange, DFSPayloads.Link.class),
 	MKDIR (MessageType.Exchange, DFSPayloads.MakeDir.class),
 	MOVE (MessageType.Exchange, DFSPayloads.MoveFile.class),
