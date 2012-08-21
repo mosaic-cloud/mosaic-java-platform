@@ -1,4 +1,6 @@
+
 package eu.mosaic_cloud.platform.interop.specs.dfs;
+
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -8,6 +10,7 @@ import eu.mosaic_cloud.interoperability.core.MessageSpecification;
 import eu.mosaic_cloud.interoperability.core.RoleSpecification;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.tools.Identifiers;
+
 
 /**
  * Defines the Dfs session: the messages that can be exchanged and the

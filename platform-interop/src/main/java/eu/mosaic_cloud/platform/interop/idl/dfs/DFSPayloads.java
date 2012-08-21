@@ -425,7 +425,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.CloseFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -709,7 +709,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.CloseFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1108,7 +1108,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.CopyFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -1454,7 +1454,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.CopyFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -1812,7 +1812,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.FileHandlerResponse result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2096,7 +2096,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.FileHandlerResponse result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -2425,7 +2425,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.FileRead result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -2695,7 +2695,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.FileRead result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3046,7 +3046,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.FlushFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3330,7 +3330,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.FlushFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -3681,7 +3681,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ListDir result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -3965,7 +3965,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ListDir result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -4368,7 +4368,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ListingItem result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -4675,7 +4675,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ListingItem result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -5100,7 +5100,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ListResult result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -5482,7 +5482,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ListResult result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -5859,7 +5859,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.MakeDir result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -6143,7 +6143,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.MakeDir result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -6542,7 +6542,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.MoveFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -6888,7 +6888,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.MoveFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -7290,7 +7290,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.OpenFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -7667,7 +7667,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.OpenFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -8141,7 +8141,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ReadFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -8467,7 +8467,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.ReadFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -8825,7 +8825,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.RemoveDir result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -9109,7 +9109,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.RemoveDir result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -9460,7 +9460,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.RemoveFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -9744,7 +9744,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.RemoveFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -10117,7 +10117,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.SeekFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -10443,7 +10443,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.SeekFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -10779,7 +10779,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.SuccessResponse result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -11046,7 +11046,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.SuccessResponse result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}
@@ -11423,7 +11423,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.WriteFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result);
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
 				}
 				return result;
 			}
@@ -11755,7 +11755,7 @@ public final class DFSPayloads
 			{
 				final eu.mosaic_cloud.platform.interop.idl.dfs.DFSPayloads.WriteFile result = this.buildPartial ();
 				if (!result.isInitialized ()) {
-					throw Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
+					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
 				}
 				return result;
 			}

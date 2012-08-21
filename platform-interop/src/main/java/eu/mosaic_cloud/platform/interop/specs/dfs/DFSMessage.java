@@ -36,8 +36,11 @@ public enum DFSMessage
 		implements
 			MessageSpecification
 {
+	ABORTED (MessageType.Termination, IdlCommon.AbortRequest.class),
+	ACCESS (MessageType.Initiation, null),
 	BYTES (MessageType.Exchange, DFSPayloads.FileRead.class),
 	COPY (MessageType.Exchange, DFSPayloads.CopyFile.class),
+	ERROR (MessageType.Exchange, IdlCommon.Error.class),
 	HANDLER (MessageType.Exchange, DFSPayloads.FileHandlerResponse.class),
 	LIST (MessageType.Exchange, DFSPayloads.ListDir.class),
 	LISTING (MessageType.Exchange, DFSPayloads.ListResult.class),
@@ -49,10 +52,7 @@ public enum DFSMessage
 	REMOVE_DIR (MessageType.Exchange, DFSPayloads.RemoveDir.class),
 	//	CLOSE (MessageType.Exchange, DFSPayloads.CloseFile.class),
 	REMOVE_FILE (MessageType.Exchange, DFSPayloads.RemoveFile.class),
-	ABORTED (MessageType.Termination, IdlCommon.AbortRequest.class),
-	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class),
-	ERROR (MessageType.Exchange, IdlCommon.Error.class),
-	ACCESS (MessageType.Initiation, null);
+	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class);
 	DFSMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
 	{
 		this.identifier = Identifiers.generate (this);
@@ -90,4 +90,3 @@ public enum DFSMessage
 	public final String identifier;
 	public final MessageType type;
 }
-
