@@ -23,7 +23,6 @@ package eu.mosaic_cloud.connectors.tools;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import eu.mosaic_cloud.connectors.core.IConnector;
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
@@ -36,11 +35,13 @@ public abstract class BaseConnectorsFactory
 		implements
 			IConnectorsFactory
 {
-	protected BaseConnectorsFactory (final IConnectorsFactory delegate)
+	protected BaseConnectorsFactory (final IConnectorsFactory delegate, final ConnectorEnvironment environment)
 	{
 		super ();
+		Preconditions.checkNotNull (environment);
 		this.monitor = Monitor.create (this);
 		this.delegate = delegate;
+		this.environment = environment;
 		this.factories = new ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> ();
 	}
 	
@@ -54,7 +55,7 @@ public abstract class BaseConnectorsFactory
 		return factory;
 	}
 	
-	protected final <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> void registerFactory (final Class<Factory> factoryClass, final Factory factory)
+	protected final <Factory extends IConnectorFactory<?>> void registerFactory (final Class<Factory> factoryClass, final Factory factory)
 	{
 		Preconditions.checkNotNull (factoryClass);
 		Preconditions.checkArgument (factoryClass.isInterface ());
@@ -68,6 +69,7 @@ public abstract class BaseConnectorsFactory
 	}
 	
 	protected final IConnectorsFactory delegate;
+	protected final ConnectorEnvironment environment;
 	protected final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> factories;
 	protected final Monitor monitor;
 }
