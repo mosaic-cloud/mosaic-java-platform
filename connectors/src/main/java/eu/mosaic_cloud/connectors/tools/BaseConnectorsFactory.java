@@ -45,7 +45,7 @@ public abstract class BaseConnectorsFactory
 	}
 	
 	@Override
-	public <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory (final Class<Factory> factoryClass)
+	public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass)
 	{
 		Factory factory = factoryClass.cast (this.factories.get (factoryClass));
 		if ((factory == null) && (this.delegate != null)) {

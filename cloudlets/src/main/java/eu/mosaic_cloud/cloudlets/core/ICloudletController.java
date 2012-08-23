@@ -51,7 +51,7 @@ public interface ICloudletController<Context>
 	
 	@Override
 	@CallbackPassthrough
-	<Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory (Class<Factory> factory);
+	<Factory extends IConnectorFactory<?>> Factory getConnectorFactory (Class<Factory> factory);
 	
 	@CallbackPassthrough
 	CloudletState getState ();

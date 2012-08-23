@@ -572,7 +572,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 	}
 	
-	final class ConnectorFactory<TConnector extends IConnector, TFactory extends IConnectorFactory<? super TConnector>>
+	final class ConnectorFactory<TFactory extends IConnectorFactory<?>>
 			implements
 				InvocationHandler
 	{
@@ -649,13 +649,13 @@ public final class Cloudlet<TContext extends Object>
 		ConnectorsFactory ()
 		{
 			super ();
-			this.factories = new ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, ConnectorFactory<? extends IConnector, ? extends IConnectorFactory<?>>> ();
+			this.factories = new ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, ConnectorFactory<? extends IConnectorFactory<?>>> ();
 			this.componentConnectorFactory = new ComponentConnectorFactory ();
-			this.factories.put (IComponentConnectorFactory.class, new ConnectorFactory<IComponentConnector<?>, IComponentConnectorFactory> (IComponentConnectorFactory.class, this.componentConnectorFactory));
+			this.factories.put (IComponentConnectorFactory.class, new ConnectorFactory<IComponentConnectorFactory> (IComponentConnectorFactory.class, this.componentConnectorFactory));
 		}
 		
 		@Override
-		public <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory (final Class<Factory> factoryClass)
+		public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass)
 		{
 			Preconditions.checkNotNull (factoryClass);
 			Preconditions.checkArgument (factoryClass.isInterface ());
@@ -666,7 +666,7 @@ public final class Cloudlet<TContext extends Object>
 					protected final Factory execute (final Void input)
 					{
 						{
-							final ConnectorFactory<?, ?> factory = ConnectorsFactory.this.factories.get (factoryClass);
+							final ConnectorFactory<?> factory = ConnectorsFactory.this.factories.get (factoryClass);
 							if (factory != null) {
 								return factoryClass.cast (factory.factoryProxy);
 							}
@@ -675,8 +675,8 @@ public final class Cloudlet<TContext extends Object>
 							final Factory factoryDelegate = Cloudlet.this.connectorsFactoryDelegate.getConnectorFactory (factoryClass);
 							Preconditions.checkArgument (factoryDelegate != null);
 							Preconditions.checkArgument (factoryClass.isInstance (factoryDelegate));
-							final ConnectorFactory<Connector, Factory> factory = new ConnectorFactory<Connector, Factory> (factoryClass, factoryDelegate);
-							final ConnectorFactory<?, ?> factory1 = ConnectorsFactory.this.factories.putIfAbsent (factoryClass, factory);
+							final ConnectorFactory<Factory> factory = new ConnectorFactory<Factory> (factoryClass, factoryDelegate);
+							final ConnectorFactory<?> factory1 = ConnectorsFactory.this.factories.putIfAbsent (factoryClass, factory);
 							Preconditions.checkState (factory1 == null);
 							return factory.factoryProxy;
 						}
@@ -690,7 +690,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		private final IComponentConnectorFactory componentConnectorFactory;
-		private final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, ConnectorFactory<? extends IConnector, ? extends IConnectorFactory<?>>> factories;
+		private final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, ConnectorFactory<? extends IConnectorFactory<?>>> factories;
 	}
 	
 	final class ControllerHandler
@@ -791,7 +791,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		@Override
-		public <Connector extends IConnector, Factory extends IConnectorFactory<? super Connector>> Factory getConnectorFactory (final Class<Factory> factory)
+		public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory)
 		{
 			return Cloudlet.this.connectorsFactory.getConnectorFactory (factory);
 		}
