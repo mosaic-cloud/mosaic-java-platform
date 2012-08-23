@@ -281,7 +281,7 @@ public final class Cloudlet<TContext extends Object>
 		Method provideMethod = null;
 		if (provideMethod == null) {
 			try {
-				provideMethod = clasz.getMethod ("provide", ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
+				provideMethod = clasz.getMethod ("provide", ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
 			} catch (final Throwable exception) {
@@ -291,7 +291,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 		if (provideMethod == null) {
 			try {
-				provideMethod = clasz.getMethod ("create", ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
+				provideMethod = clasz.getMethod ("create", ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
 			} catch (final Throwable exception) {
@@ -302,7 +302,7 @@ public final class Cloudlet<TContext extends Object>
 		Constructor<?> provideConstructor = null;
 		if (provideConstructor == null) {
 			try {
-				provideConstructor = clasz.getConstructor (ICloudletController.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class, ConnectorEnvironment.class);
+				provideConstructor = clasz.getConstructor (ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
 			} catch (final Throwable exception) {
@@ -315,7 +315,7 @@ public final class Cloudlet<TContext extends Object>
 		if (provideMethod != null) {
 			try {
 				try {
-					factoryRaw = provideMethod.invoke (null, this.controllerProxy, this.environment.getConnectors (), this.environment.getConnectorEnvironment ());
+					factoryRaw = provideMethod.invoke (null, this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ());
 				} catch (final InvocationTargetException wrapper) {
 					this.exceptions.traceHandledException (wrapper);
 					throw (wrapper.getCause ());
@@ -327,7 +327,7 @@ public final class Cloudlet<TContext extends Object>
 		} else if (provideConstructor != null) {
 			try {
 				try {
-					factoryRaw = provideConstructor.newInstance (this.controllerProxy, this.environment.getConnectors (), this.environment.getConnectorEnvironment ());
+					factoryRaw = provideConstructor.newInstance (this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ());
 				} catch (final InvocationTargetException wrapper) {
 					this.exceptions.traceHandledException (wrapper);
 					throw (wrapper.getCause ());

@@ -31,24 +31,24 @@ import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnectorFactoryInitialize
 public class DefaultConnectorsFactory
 		extends BaseConnectorsFactory
 {
-	protected DefaultConnectorsFactory (final IConnectorsFactory delegate, final ConnectorEnvironment environment)
+	protected DefaultConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
 	{
-		super (delegate, environment);
+		super (environment, delegate);
 	}
 	
 	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment)
 	{
-		return DefaultConnectorsFactory.createBuilder (null, environment).build ();
+		return DefaultConnectorsFactory.createBuilder (environment, null).build ();
 	}
 	
-	public static final DefaultConnectorsFactory create (final IConnectorsFactory delegate, final ConnectorEnvironment environment)
+	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
 	{
-		return DefaultConnectorsFactory.createBuilder (delegate, environment).build ();
+		return DefaultConnectorsFactory.createBuilder (environment, delegate).build ();
 	}
 	
-	public static final Builder createBuilder (final IConnectorsFactory delegate, final ConnectorEnvironment environment)
+	public static final Builder createBuilder (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
 	{
-		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (delegate, environment);
+		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (environment, delegate);
 		final Builder builder = factory.new Builder ();
 		return (builder);
 	}

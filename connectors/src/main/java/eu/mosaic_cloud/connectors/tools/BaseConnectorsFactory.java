@@ -35,13 +35,13 @@ public abstract class BaseConnectorsFactory
 		implements
 			IConnectorsFactory
 {
-	protected BaseConnectorsFactory (final IConnectorsFactory delegate, final ConnectorEnvironment environment)
+	protected BaseConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
 	{
 		super ();
 		Preconditions.checkNotNull (environment);
 		this.monitor = Monitor.create (this);
-		this.delegate = delegate;
 		this.environment = environment;
+		this.delegate = delegate;
 		this.factories = new ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> ();
 	}
 	
