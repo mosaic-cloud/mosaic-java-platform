@@ -26,7 +26,8 @@ import com.google.common.base.Preconditions;
 
 public enum ChannelMessageType
 {
-	Exchange ("exchange");
+	Exchange ("exchange"),
+	Resources ("resources");
 	private ChannelMessageType (final String identifier)
 	{
 		Preconditions.checkNotNull (identifier);

@@ -179,7 +179,7 @@ public final class BasicComponent
 					final String correlation = UUID.randomUUID ().toString ().replace ("-", "");
 					metaData.put (Token.Specifications.string, specifications);
 					metaData.put (Token.Correlation.string, correlation);
-					final ChannelMessage message = ChannelMessage.create (ChannelMessageType.Exchange, metaData, ByteBuffer.allocate (0));
+					final ChannelMessage message = ChannelMessage.create (ChannelMessageType.Resources, metaData, ByteBuffer.allocate (0));
 					Backend.this.acquires.put (reference, correlation);
 					Backend.this.channelController.send (message);
 				}
@@ -517,7 +517,7 @@ public final class BasicComponent
 				final Object descriptorIdentifierValue = descriptorPair.getKey ();
 				final Object descriptorValue = descriptorPair.getValue ();
 				Preconditions.checkArgument (descriptorIdentifierValue instanceof String, "missmatched descriptors attribute `%s`", descriptorsValue);
-				Preconditions.checkArgument (descriptorIdentifierValue instanceof Map, "missmatched descriptors attribute `%s`", descriptorsValue);
+				Preconditions.checkArgument (descriptorValue instanceof Map, "missmatched descriptors attribute `%s`", descriptorsValue);
 				final String identifier = (String) descriptorIdentifierValue;
 				final Map<?, ?> descriptorMap = (Map<?, ?>) descriptorValue;
 				final Object typeValue = descriptorMap.get (Token.Type.string);

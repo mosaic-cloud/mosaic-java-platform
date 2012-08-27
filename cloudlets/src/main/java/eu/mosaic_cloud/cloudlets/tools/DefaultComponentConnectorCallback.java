@@ -36,13 +36,13 @@ public class DefaultComponentConnectorCallback<TContext, TExtra>
 	@Override
 	public CallbackCompletion<Void> acquireFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments)
 	{
-		return this.handleUnhandledCallback (arguments, "Acquire Failed", false, false);
+		return this.handleUnhandledCallback (arguments, "Resources Failed", false, false);
 	}
 	
 	@Override
 	public CallbackCompletion<Void> acquireSucceeded (final TContext context, final ComponentAcquireSucceededCallbackArguments<TExtra> arguments)
 	{
-		return this.handleUnhandledCallback (arguments, "Acquire Succeeded", true, false);
+		return this.handleUnhandledCallback (arguments, "Resources Succeeded", true, false);
 	}
 	
 	@Override
