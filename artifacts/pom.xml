@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+			xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>eu.mosaic_cloud</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.5.1_mosaic_dev-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	
+	<groupId>eu.mosaic_cloud</groupId>
+	<artifactId>artifacts</artifactId>
+	<packaging>pom</packaging>
+	<name>mosaic-${project.artifactId}</name>
+	
+	<modules>
+		<module>../platform-parent</module>
+		<module>../components-parent</module>
+		<module>../interoperability-parent</module>
+		<module>../tools-parent</module>
+		<module>../examples/parent</module>
+		<module>../components-httpg-jetty-container</module>
+		<module>../components-httpg-jetty-connector</module>
+	</modules>
+	
+	<properties>
+		<_maven_pom_classifier>artifacts</_maven_pom_classifier>
+	</properties>
+	
+</project>
