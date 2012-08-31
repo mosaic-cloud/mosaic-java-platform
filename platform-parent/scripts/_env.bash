@@ -27,7 +27,11 @@ _java_env=(
 )
 
 _mvn_this_pom="${_workbench}/pom.xml"
-_mvn_umbrella_pom="${_self_do_realpath_dirname}/../../pom.xml"
+if test -e "${_workbench}/pom-umbrella.xml" ; then
+	_mvn_umbrella_pom="${_workbench}/pom-umbrella.xml"
+else
+	_mvn_umbrella_pom="${_self_do_realpath_dirname}/../../pom.xml"
+fi
 _mvn_args=(
 		--errors
 		--quiet
