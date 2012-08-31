@@ -34,8 +34,10 @@ else
 fi
 _mvn_args=(
 		--errors
-		--quiet
 )
+if test -z "${_mvn_verbose:-}" ; then
+	_mvn_args+=( --quiet )
+fi
 _mvn_env=(
 		PATH="${_PATH}"
 )

@@ -18,17 +18,44 @@ if test -e "${_outputs}/package.tar.gz" ; then
 	rm -- "${_outputs}/package.tar.gz"
 fi
 
-env "${_mvn_env[@]}" "${_mvn_bin}" \
-		-f "${_mvn_pom}" \
-		--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
-		--also-make \
-		--offline \
-		"${_mvn_args[@]}" \
-		package \
-		-DskipTests=true \
-		-D_maven_pom_skip_analyze=true \
-		-D_maven_pom_skip_licenses=true \
-		-D_maven_pom_skip_formatter=true
+case "${_maven_pom_classifier}" in
+	
+	( component )
+		
+		env "${_mvn_env[@]}" "${_mvn_bin}" \
+				-f "${_mvn_pom}" \
+				--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
+				--also-make \
+				--offline \
+				"${_mvn_args[@]}" \
+				package \
+				-DskipTests=true \
+				-D_maven_pom_skip_analyze=true \
+				-D_maven_pom_skip_licenses=true \
+				-D_maven_pom_skip_formatter=true
+	;;
+	
+	( artifacts )
+		
+		# FIXME: We have to fix this...
+		env "${_mvn_env[@]}" "${_mvn_bin}" \
+				-f "${_mvn_pom}" \
+				--also-make \
+				--offline \
+				"${_mvn_args[@]}" \
+				package \
+				-DskipTests=true \
+				-D_maven_pom_skip_analyze=true \
+				-D_maven_pom_skip_licenses=true \
+				-D_maven_pom_skip_formatter=true
+		
+		exit 0
+	;;
+	
+	( * )
+		exit 1
+	;;
+esac
 
 mkdir -- "${_outputs}/package"
 mkdir -- "${_outputs}/package/bin"

@@ -5,13 +5,34 @@ if ! test "${#}" -eq 0 ; then
 	exit 1
 fi
 
-exec env "${_mvn_env[@]}" "${_mvn_bin}" \
-		-f "${_mvn_pom}" \
-		--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
-		--also-make \
-		--update-snapshots \
-		--fail-never \
-		"${_mvn_args[@]}" \
-		dependency:go-offline
+
+case "${_maven_pom_classifier}" in
+	
+	( component )
+		exec env "${_mvn_env[@]}" "${_mvn_bin}" \
+				-f "${_mvn_pom}" \
+				--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
+				--also-make \
+				--update-snapshots \
+				--fail-never \
+				"${_mvn_args[@]}" \
+				dependency:go-offline
+	;;
+	
+	( artifacts )
+		# FIXME: We have to fix this...
+		exec env "${_mvn_env[@]}" "${_mvn_bin}" \
+				-f "${_mvn_pom}" \
+				--also-make \
+				--update-snapshots \
+				--fail-never \
+				"${_mvn_args[@]}" \
+				dependency:go-offline
+	;;
+	
+	( * )
+		exit 1
+	;;
+esac
 
 exit 1
