@@ -1,12 +1,13 @@
 
-package eu.mosaic_cloud.connectors.core;
+package eu.mosaic_cloud.cloudlets.connectors.core;
 
 
 public interface IConnectorsFactoryBuilder
+		extends
+			eu.mosaic_cloud.connectors.core.IConnectorsFactoryBuilder
 {
+	@Override
 	public abstract IConnectorsFactory build ();
 	
 	public abstract void initialize (final IConnectorsFactoryInitializer initializer);
-	
-	public abstract <TFactory extends IConnectorFactory<?>> void register (final Class<TFactory> factoryClass, final TFactory factory);
 }

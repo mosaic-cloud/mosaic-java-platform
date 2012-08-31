@@ -5,6 +5,7 @@ package eu.mosaic_cloud.connectors.tools;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.mosaic_cloud.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.core.IConnectorsFactoryBuilder;
 
 import com.google.common.base.Preconditions;
@@ -20,6 +21,8 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 		super ();
 		Preconditions.checkNotNull (factory);
 		this.factory = factory;
+		this.environment = this.factory.environment;
+		this.delegate = this.factory.delegate;
 		this.built = new AtomicBoolean (false);
 	}
 	
@@ -58,6 +61,8 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 		this.factory.registerFactory (factoryClass, factory);
 	}
 	
+	protected final IConnectorsFactory delegate;
+	protected final ConnectorEnvironment environment;
 	protected final TFactory factory;
 	private final AtomicBoolean built;
 }

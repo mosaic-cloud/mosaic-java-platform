@@ -26,11 +26,14 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.cloudlets.connectors.components.ComponentConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.components.IComponentConnectorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.core.CloudletState;
@@ -60,6 +63,7 @@ import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
+import eu.mosaic_cloud.tools.miscellaneous.ExtendedFormatter;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -266,80 +270,134 @@ public final class Cloudlet<TContext extends Object>
 	
 	private IConnectorsFactory provideConnectorsFactory ()
 	{
-		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.getString ("Cloudlet.1"), String.class, DefaultConnectorsFactory.class.getName ());
-		Preconditions.checkNotNull (className, "unknown cloudlet connectors factory class");
-		final Class<?> clasz;
+		final IConnectorsFactoryBuilder builder = this.provideConnectorsFactoryBuilder ();
+		final List<?> initializers = this.provideConnectorsFactoryInitializers ();
+		for (final Object initializer : initializers) {
+			if (initializer instanceof eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactoryInitializer) {
+				try {
+					builder.initialize ((eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer) initializer);
+				} catch (final Throwable exception) {
+					this.exceptions.traceHandledException (exception);
+					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
+				}
+			} else if (initializer instanceof eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer) {
+				try {
+					builder.initialize ((eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer) initializer);
+				} catch (final Throwable exception) {
+					this.exceptions.traceHandledException (exception);
+					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
+				}
+			} else {
+				throw (new IllegalArgumentException (ExtendedFormatter.defaultInstance.format ("error encountered while initializing cloudlet connectors factory, unexpected initializer class `%{object:class}`", initializer)));
+			}
+		}
+		final IConnectorsFactory factory;
 		try {
-			clasz = this.environment.getClassLoader ().loadClass (className);
+			factory = builder.build ();
 		} catch (final Throwable exception) {
 			this.exceptions.traceHandledException (exception);
-			throw (new IllegalArgumentException (String.format ("error encountered while loading cloudlet connectors factory class `%s`", className), exception));
+			throw (new IllegalArgumentException ("error encountered while building cloudlet connectors factory", exception));
+		}
+		return factory;
+	}
+	
+	private IConnectorsFactoryBuilder provideConnectorsFactoryBuilder ()
+	{
+		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.getString ("Cloudlet.1"), String.class, DefaultConnectorsFactory.Builder.class.getName ());
+		Preconditions.checkNotNull (className, "unknown cloudlet connectors factory builder class");
+		final IConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (IConnectorsFactoryBuilder.class, className, new Class<?>[] {ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
+		return builder;
+	}
+	
+	private List<?> provideConnectorsFactoryInitializers ()
+	{
+		final LinkedList<Object> initializers = new LinkedList<Object> ();
+		final String classNames = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.getString ("Cloudlet.2"), String.class, "");
+		Preconditions.checkNotNull (classNames, "unknown cloudlet connectors factory initializer class");
+		if (classNames.isEmpty ())
+			return initializers;
+		for (final String className : classNames.split (";")) {
+			Preconditions.checkArgument (!classNames.isEmpty (), "invalid cloudlet connectors factory initializer class");
+			final Object initializer = this.provideConnectorsFactoryObject (Object.class, className, new Class<?>[] {}, new Object[] {});
+			initializers.add (initializer);
+		}
+		return initializers;
+	}
+	
+	private <TObject> TObject provideConnectorsFactoryObject (final Class<TObject> classExpected, final String providerClassName, final Class<?>[] provideSignature, final Object[] provideArguments)
+	{
+		final Class<?> providerClass;
+		try {
+			providerClass = this.environment.getClassLoader ().loadClass (providerClassName);
+		} catch (final Throwable exception) {
+			this.exceptions.traceHandledException (exception);
+			throw (new IllegalArgumentException (String.format ("error encountered while loading cloudlet connectors factory class `%s`", providerClassName), exception));
 		}
 		Method provideMethod = null;
 		if (provideMethod == null) {
 			try {
-				provideMethod = clasz.getMethod ("provide", ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class);
+				provideMethod = providerClass.getMethod ("provide", provideSignature);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
 			} catch (final Throwable exception) {
 				this.exceptions.traceHandledException (exception);
-				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", className), exception));
+				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", providerClassName), exception));
 			}
 		}
 		if (provideMethod == null) {
 			try {
-				provideMethod = clasz.getMethod ("create", ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class);
+				provideMethod = providerClass.getMethod ("create", provideSignature);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
 			} catch (final Throwable exception) {
 				this.exceptions.traceHandledException (exception);
-				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", className), exception));
+				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", providerClassName), exception));
 			}
 		}
 		Constructor<?> provideConstructor = null;
 		if (provideConstructor == null) {
 			try {
-				provideConstructor = clasz.getConstructor (ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class);
+				provideConstructor = providerClass.getConstructor (provideSignature);
 			} catch (final NoSuchMethodException exception) {
 				this.exceptions.traceHandledException (exception);
 			} catch (final Throwable exception) {
 				this.exceptions.traceHandledException (exception);
-				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", className), exception));
+				throw (new IllegalArgumentException (String.format ("error encountered while inspecting cloudlet connectors factory class `%s`", providerClassName), exception));
 			}
 		}
 		Preconditions.checkArgument ((provideMethod != null) || (provideConstructor != null));
-		final Object factoryRaw;
+		final Object objectRaw;
 		if (provideMethod != null) {
 			try {
 				try {
-					factoryRaw = provideMethod.invoke (null, this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ());
+					objectRaw = provideMethod.invoke (null, provideArguments);
 				} catch (final InvocationTargetException wrapper) {
 					this.exceptions.traceHandledException (wrapper);
 					throw (wrapper.getCause ());
 				}
 			} catch (final Throwable exception) {
 				this.exceptions.traceDeferredException (exception);
-				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while invocking)", clasz.getName ()), exception));
+				throw (new IllegalArgumentException (String.format ("invalid cloudlet connectors factory class `%s` (error encountered while invocking)", providerClass.getName ()), exception));
 			}
 		} else if (provideConstructor != null) {
 			try {
 				try {
-					factoryRaw = provideConstructor.newInstance (this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ());
+					objectRaw = provideConstructor.newInstance (this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ());
 				} catch (final InvocationTargetException wrapper) {
 					this.exceptions.traceHandledException (wrapper);
 					throw (wrapper.getCause ());
 				}
 			} catch (final Throwable exception) {
 				this.exceptions.traceDeferredException (exception);
-				throw (new IllegalArgumentException (String.format ("invalid callbacks provider class `%s` (error encountered while invocking)", clasz.getName ()), exception));
+				throw (new IllegalArgumentException (String.format ("invalid cloudlet connectors factory class `%s` (error encountered while invocking)", providerClass.getName ()), exception));
 			}
 		} else {
 			throw (new AssertionError ());
 		}
-		Preconditions.checkArgument (factoryRaw != null, "invalid cloudlet connectors factory (is null)");
-		Preconditions.checkArgument (IConnectorsFactory.class.isInstance (factoryRaw), "invalid cloudlet connectors factory `%s` (not an instance of `IConnectorsFactory` (from `eu.mosaic_cloud.cloudlets` package))", clasz.getName ());
-		final IConnectorsFactory factory = (IConnectorsFactory) factoryRaw;
-		return (factory);
+		Preconditions.checkArgument (objectRaw != null, "invalid cloudlet connectors factory (is null)");
+		Preconditions.checkArgument (classExpected.isInstance (objectRaw), "invalid cloudlet connectors factory `%s` (not an instance of `IConnectorsFactory` (from `eu.mosaic_cloud.cloudlets` package))", providerClass.getName ());
+		final TObject object = classExpected.cast (objectRaw);
+		return (object);
 	}
 	
 	public static <Context extends Object> Cloudlet<Context> create (final CloudletEnvironment environment)

@@ -22,10 +22,13 @@ package eu.mosaic_cloud.connectors.tools;
 
 
 import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer;
 import eu.mosaic_cloud.connectors.httpg.HttpgQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueConnectorFactoryInitializer;
+
+import com.google.common.base.Preconditions;
 
 
 public class DefaultConnectorsFactory
@@ -38,37 +41,44 @@ public class DefaultConnectorsFactory
 	
 	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment)
 	{
-		return DefaultConnectorsFactory.createBuilder (environment, null).build ();
+		return DefaultConnectorsFactory.create (environment, null);
 	}
 	
 	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
 	{
-		return DefaultConnectorsFactory.createBuilder (environment, delegate).build ();
+		return DefaultConnectorsFactory.Builder.create (environment, delegate).build ();
 	}
 	
-	public static final Builder createBuilder (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
-		final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (environment, delegate);
-		final Builder builder = factory.new Builder ();
-		return (builder);
-	}
-	
-	public final class Builder
+	public static final class Builder
 			extends BaseConnectorsFactoryBuilder<DefaultConnectorsFactory>
 	{
-		Builder ()
+		Builder (final DefaultConnectorsFactory factory)
 		{
-			super (DefaultConnectorsFactory.this);
+			super (factory);
 			this.initialize ();
+		}
+		
+		@Override
+		public void initialize (final IConnectorsFactoryInitializer initializer)
+		{
+			Preconditions.checkNotNull (initializer);
+			initializer.initialize (this, this.environment, this.delegate);
 		}
 		
 		@Override
 		protected final void initialize_1 ()
 		{
-			GenericKvStoreConnectorFactoryInitializer.defaultInstance.initialize (this, DefaultConnectorsFactory.this.environment, DefaultConnectorsFactory.this.delegate);
-			MemcacheKvStoreConnectorFactoryInitializer.defaultInstance.initialize (this, DefaultConnectorsFactory.this.environment, DefaultConnectorsFactory.this.delegate);
-			AmqpQueueConnectorFactoryInitializer.defaultInstance.initialize (this, DefaultConnectorsFactory.this.environment, DefaultConnectorsFactory.this.delegate);
-			HttpgQueueConnectorFactoryInitializer.defaultInstance.initialize (this, DefaultConnectorsFactory.this.environment, DefaultConnectorsFactory.this.delegate);
+			this.initialize (GenericKvStoreConnectorFactoryInitializer.defaultInstance);
+			this.initialize (MemcacheKvStoreConnectorFactoryInitializer.defaultInstance);
+			this.initialize (AmqpQueueConnectorFactoryInitializer.defaultInstance);
+			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
+		}
+		
+		public static final Builder create (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
+		{
+			final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (environment, delegate);
+			final Builder builder = new Builder (factory);
+			return (builder);
 		}
 	}
 }
