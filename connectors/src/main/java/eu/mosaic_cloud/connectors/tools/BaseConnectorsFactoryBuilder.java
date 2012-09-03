@@ -43,6 +43,7 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 		Preconditions.checkArgument (IConnectorFactory.class.isAssignableFrom (factoryClass));
 		Preconditions.checkNotNull (factory);
 		Preconditions.checkArgument (factoryClass.isInstance (factory));
+		this.factory.registerFactory (factoryClass, factory);
 	}
 	
 	protected void build_1 ()

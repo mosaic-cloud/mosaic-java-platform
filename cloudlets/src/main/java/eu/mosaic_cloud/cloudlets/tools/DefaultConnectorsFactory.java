@@ -80,14 +80,14 @@ public class DefaultConnectorsFactory
 		public void initialize (final eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactoryInitializer initializer)
 		{
 			Preconditions.checkNotNull (initializer);
-			initializer.initialize (this, this.cloudlet, this.environment, this.delegate);
+			initializer.initialize (this, this.cloudlet, this.environment, this.factory);
 		}
 		
 		@Override
 		public void initialize (final IConnectorsFactoryInitializer initializer)
 		{
 			Preconditions.checkNotNull (initializer);
-			initializer.initialize (this, this.environment, this.delegate);
+			initializer.initialize (this, this.environment, this.factory);
 		}
 		
 		@Override

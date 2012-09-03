@@ -275,7 +275,7 @@ public final class Cloudlet<TContext extends Object>
 		for (final Object initializer : initializers) {
 			if (initializer instanceof eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactoryInitializer) {
 				try {
-					builder.initialize ((eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer) initializer);
+					builder.initialize ((eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactoryInitializer) initializer);
 				} catch (final Throwable exception) {
 					this.exceptions.traceHandledException (exception);
 					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
@@ -382,7 +382,7 @@ public final class Cloudlet<TContext extends Object>
 		} else if (provideConstructor != null) {
 			try {
 				try {
-					objectRaw = provideConstructor.newInstance (this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ());
+					objectRaw = provideConstructor.newInstance (provideArguments);
 				} catch (final InvocationTargetException wrapper) {
 					this.exceptions.traceHandledException (wrapper);
 					throw (wrapper.getCause ());
