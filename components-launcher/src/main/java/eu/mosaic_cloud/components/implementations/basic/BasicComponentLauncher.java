@@ -345,7 +345,7 @@ public final class BasicComponentLauncher
 				final String identifier = componentIdentifier.get ();
 				if (identifier != null)
 					try {
-						final URL stopUrl = new URL (controllerBaseUrl, String.format ("/processes/stop?key=%s", identifier));
+						final URL stopUrl = new URL (controllerBaseUrl, String.format ("/v1/processes/stop?key=%s", identifier));
 						stopUrl.openStream ().close ();
 					} catch (final Throwable exception) {
 						exceptions.trace (ExceptionResolution.Ignored, exception);
@@ -359,7 +359,7 @@ public final class BasicComponentLauncher
 		Threading.sleep (BasicComponentLauncher.defaultCreateDelay);
 		logger.debug ("creating component...");
 		try {
-			final URL controllerCreateUrl = new URL (controllerBaseUrl, String.format ("/processes/create?%s", Joiner.on ("&").join (Arrays.asList (controllerCreateUrlArguments))));
+			final URL controllerCreateUrl = new URL (controllerBaseUrl, String.format ("/v1/processes/create?%s", Joiner.on ("&").join (Arrays.asList (controllerCreateUrlArguments))));
 			logger.debug ("{}", controllerCreateUrl.toString ());
 			try {
 				final InputStream createStream = controllerCreateUrl.openStream ();
