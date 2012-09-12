@@ -31,9 +31,9 @@ import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecur
 import com.google.common.base.Preconditions;
 
 
-public final class BasicComponentLauncher
+public final class BasicComponentLauncherMain
 {
-	private BasicComponentLauncher ()
+	private BasicComponentLauncherMain ()
 	{
 		super ();
 		throw (new UnsupportedOperationException ());
@@ -42,7 +42,7 @@ public final class BasicComponentLauncher
 	public static final void main (final String componentCallbacks, final String componentConfiguration, final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentLauncher.main (componentCallbacks, componentConfiguration, arguments, 0);
+		BasicComponentLauncherMain.main (componentCallbacks, componentConfiguration, arguments, 0);
 	}
 	
 	public static final void main (final String componentCallbacks, final String componentConfiguration, final String[] arguments, final int argumentsOffset)
@@ -56,19 +56,19 @@ public final class BasicComponentLauncher
 		finalArguments[0] = componentCallbacks;
 		finalArguments[1] = componentConfiguration;
 		System.arraycopy (arguments, argumentsOffset, finalArguments, 2, arguments.length - argumentsOffset);
-		BasicComponentLauncher.main (finalArguments);
+		BasicComponentLauncherMain.main (finalArguments);
 	}
 	
 	public static final void main (final String componentCallbacks, final String[] arguments)
 			throws Throwable
 	{
-		BasicComponentLauncher.main (componentCallbacks, arguments, 0);
+		BasicComponentLauncherMain.main (componentCallbacks, arguments, 0);
 	}
 	
 	public static final void main (final String componentCallbacks, final String[] arguments, final int argumentsOffset)
 			throws Throwable
 	{
-		BasicComponentLauncher.main (componentCallbacks, "null", arguments, argumentsOffset);
+		BasicComponentLauncherMain.main (componentCallbacks, "null", arguments, argumentsOffset);
 	}
 	
 	public static final void main (final String[] arguments)
@@ -80,7 +80,7 @@ public final class BasicComponentLauncher
 		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, exceptions.catcher);
 		threading.initialize ();
 		final ClassLoader classLoader = ClassLoader.getSystemClassLoader ();
-		BasicComponentLauncher.main (arguments, classLoader, threading, exceptions);
+		BasicComponentLauncherMain.main (arguments, classLoader, threading, exceptions);
 		threading.destroy ();
 	}
 	
