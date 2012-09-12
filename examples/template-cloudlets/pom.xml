@@ -89,14 +89,14 @@
 							that can be used to launch a standalone cloudlet component.
 					-->
 					<execution>
-						<id>cloudlet-component</id>
+						<id>component</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
 						<configuration>
 							<descriptorRefs>
-								<descriptorRef>cloudlet-component</descriptorRef>
+								<descriptorRef>component</descriptorRef>
 							</descriptorRefs>
 							<archive>
 								<manifest>
