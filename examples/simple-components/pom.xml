@@ -30,12 +30,6 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.components</groupId>
-			<artifactId>components-launcher</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.components</groupId>
 			<artifactId>components-tools</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
