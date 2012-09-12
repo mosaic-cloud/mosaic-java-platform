@@ -147,12 +147,12 @@ public final class BasicComponentHarnessPreMain
 			throws Throwable
 	{
 		final ArgumentsProvider arguments = CliFactory.parseArguments (ArgumentsProvider.class, argumentsList);
-		final Class<?> mainClass = ClassLoader.getSystemClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("HarnessPreMain", "Launcher"));
+		final Class<?> mainClass = ClassLoader.getSystemClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("HarnessPreMain", "LocalLauncher"));
 		final String componentCallbacks = arguments.getCallbacksClass ();
 		final List<String> componentConfiguration = (arguments.getCallbacksOptions () != null) ? arguments.getCallbacksOptions () : new LinkedList<String> ();
 		final URL controllerBaseUrl = new URL (arguments.getControllerUrl ());
 		final InetSocketAddress channelAddress = new InetSocketAddress (arguments.getLocalAddress (), arguments.getLocalPort ());
-		final Method mainMethod = mainClass.getMethod ("runLocal", URL.class, InetSocketAddress.class, String.class, List.class);
+		final Method mainMethod = mainClass.getMethod ("launch", URL.class, InetSocketAddress.class, String.class, List.class);
 		try {
 			mainMethod.invoke (null, controllerBaseUrl, channelAddress, componentCallbacks, componentConfiguration);
 		} catch (final InvocationTargetException wrapper) {
