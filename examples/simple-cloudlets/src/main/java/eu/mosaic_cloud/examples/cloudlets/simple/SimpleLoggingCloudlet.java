@@ -115,9 +115,10 @@ public class SimpleLoggingCloudlet
 			this.logger.info ("LoggingCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));
-			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (queueConfiguration, LoggingData.class, SerializedDataEncoder.create (LoggingData.class), new AmqpConsumerCallback (), context);
-			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (queueConfiguration, AuthenticationToken.class, SerializedDataEncoder.create (AuthenticationToken.class), new AmqpPublisherCallback (), context);
+			final IConfiguration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
+			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, LoggingData.class, SerializedDataEncoder.create (LoggingData.class), new AmqpConsumerCallback (), context);
+			final IConfiguration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
+			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, AuthenticationToken.class, SerializedDataEncoder.create (AuthenticationToken.class), new AmqpPublisherCallback (), context);
 			return CallbackCompletion.createAndChained (context.consumer.initialize (), context.publisher.initialize ());
 		}
 		

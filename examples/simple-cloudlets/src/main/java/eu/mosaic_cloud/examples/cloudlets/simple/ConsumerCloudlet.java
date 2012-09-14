@@ -103,7 +103,7 @@ public class ConsumerCloudlet
 			this.logger.info ("ConsumerCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));
+			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
 			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpConsumerCallback (), context);
 			return context.consumer.initialize ();
 		}

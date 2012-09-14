@@ -123,8 +123,8 @@ public class PongCloudlet
 			this.logger.info ("initializing cloudlet...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue.consumer"));
-			final IConfiguration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue.publisher"));
+			final IConfiguration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
+			final IConfiguration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
 			this.logger.info ("creating queue connectors...");
 			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, PingMessage.class, JsonDataEncoder.create (PingMessage.class), new AmqpConsumerCallback (), context);
 			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, PongMessage.class, JsonDataEncoder.create (PongMessage.class), new AmqpPublisherCallback (), context);

@@ -89,7 +89,7 @@ public class PublisherCloudlet
 			this.logger.info ("PublisherCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("queue"));
+			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
 			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpPublisherCallback (), context);
 			return context.publisher.initialize ();
 		}
