@@ -92,13 +92,22 @@ public final class BasicComponentLocalLauncher
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
 		final String channelAddressEncoded = String.format ("tcp:%s:%d", channelAddress.getAddress ().getHostAddress (), Integer.valueOf (channelAddress.getPort ()));
+		final String[] componentCallbacksClassNameParts = componentCallbacks.split ("\\.");
 		final String[] controllerCreateUrlArguments;
 		{
-			final String[] componentCallbacksClassNameParts = componentCallbacks.split ("\\.");
-			final List<String> controllerCreateConfiguration = Arrays.asList (componentCallbacksClassNameParts[componentCallbacksClassNameParts.length - 1], channelAddressEncoded);
-			final String controllerCreateTypeEncoded = URLEncoder.encode ("#mosaic-tests:socat", "UTF-8");
-			final String controllerCreateConfigurationEncoded = URLEncoder.encode (DefaultJsonCoder.defaultInstance.encodeToString (controllerCreateConfiguration), "UTF-8");
-			controllerCreateUrlArguments = new String[] {String.format ("type=%s", controllerCreateTypeEncoded), String.format ("configuration=%s", controllerCreateConfigurationEncoded), "count=1"};
+			// FIXME: At some point in time remove the old variant...
+			final boolean useDeprecated = true;
+			if (!useDeprecated) {
+				final String controllerCreateTypeEncoded = URLEncoder.encode ("#mosaic-tests:socat", "UTF-8");
+				final String controllerCreateConfigurationEncoded = URLEncoder.encode (DefaultJsonCoder.defaultInstance.encodeToString (channelAddressEncoded), "UTF-8");
+				final String controllerCreateAnnotationEncoded = URLEncoder.encode (DefaultJsonCoder.defaultInstance.encodeToString (componentCallbacksClassNameParts[componentCallbacksClassNameParts.length - 1]), "UTF-8");
+				controllerCreateUrlArguments = new String[] {String.format ("type=%s", controllerCreateTypeEncoded), String.format ("configuration=%s", controllerCreateConfigurationEncoded), String.format ("annotation=%s", controllerCreateAnnotationEncoded), "count=1"};
+			} else {
+				final String controllerCreateTypeEncoded = URLEncoder.encode ("#mosaic-tests:socat", "UTF-8");
+				final List<String> controllerCreateConfiguration = Arrays.asList (componentCallbacksClassNameParts[componentCallbacksClassNameParts.length - 1], channelAddressEncoded);
+				final String controllerCreateConfigurationEncoded = URLEncoder.encode (DefaultJsonCoder.defaultInstance.encodeToString (controllerCreateConfiguration), "UTF-8");
+				controllerCreateUrlArguments = new String[] {String.format ("type=%s", controllerCreateTypeEncoded), String.format ("configuration=%s", controllerCreateConfigurationEncoded), "count=1"};
+			}
 		}
 		final AtomicReference<String> componentIdentifier = Atomics.newReference (null);
 		final Runnable run = new Runnable () {
