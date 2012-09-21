@@ -92,10 +92,10 @@ public final class ZeroMqChannel
 		final Acceptor acceptor = new Acceptor (acceptorKey, selfRoleIdentifier, peerRoleIdentifier, specification, callbacks);
 		synchronized (this.state.monitor) {
 			if (this.state.acceptors.containsKey (acceptorKey)) {
-				this.transcript.traceError ("error encountered while registering acceptor: already registered; throwing!");
+				this.transcript.traceError ("error encountered while registering acceptor `%s`: already registered; throwing!", acceptorKey);
 				throw (new IllegalStateException ());
 			}
-			this.transcript.traceDebugging ("registering acceptor: `%s` -> %s...", acceptor.key, acceptor.callbacks);
+			this.transcript.traceDebugging ("registering acceptor `%s`: %s...", acceptor.key, acceptor.callbacks);
 			this.state.acceptors.put (acceptorKey, acceptor);
 		}
 	}
@@ -149,6 +149,7 @@ public final class ZeroMqChannel
 		final String peerRoleIdentifier = peerRole.getIdentifier ();
 		Preconditions.checkNotNull (selfRoleIdentifier);
 		Preconditions.checkNotNull (peerRoleIdentifier);
+		this.transcript.traceDebugging ("registering session `%s`...", specification.getQualifiedName ());
 		final LinkedList<Coder> coders = new LinkedList<Coder> ();
 		for (final MessageSpecification messageSpecification : specification.getMessages ()) {
 			final String messageIdentifier = messageSpecification.getIdentifier ();
@@ -167,10 +168,10 @@ public final class ZeroMqChannel
 				if (this.state.coders.containsKey (coder.key))
 					continue;
 				if (this.state.coders.containsKey (coder.key)) {
-					this.transcript.traceError ("error encountered while registering coder: already registered; throwing!");
+					this.transcript.traceError ("error encountered while registering coder `%s`: already registered; throwing!", coder.key);
 					throw (new IllegalArgumentException ());
 				}
-				this.transcript.traceDebugging ("registering coder: `%s` -> %s...", coder.key, coder.coder);
+				this.transcript.traceDebugging ("registering coder `%s` for `%s`: %s...", coder.key, coder.specification.getQualifiedName (), coder.coder);
 				this.state.coders.put (coder.key, coder);
 			}
 		}
@@ -278,7 +279,7 @@ public final class ZeroMqChannel
 					messageIdentifier = new String (buffer);
 				}
 				if (stream.available () > 0) {
-					this.transcript.traceError ("error encountered while decoding packet: header trailing garbage; ignoring!");
+					this.transcript.traceError ("error encountered while decoding packet of type `%s` for session `%s`: header trailing garbage; ignoring!", messageIdentifier, sessionIdentifier);
 					return;
 				}
 				stream.close ();
@@ -293,7 +294,7 @@ public final class ZeroMqChannel
 			final String coderKey = selfRoleIdentifier + "//" + peerRoleIdentifier + "//" + messageIdentifier;
 			final Coder coder = this.state.coders.get (coderKey);
 			if (coder == null) {
-				this.transcript.traceError ("error encountered while decoding packet: missing coder; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet of type `%s` for session `%s`: missing coder for `%s`; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 				return;
 			}
 			final Session session;
@@ -301,13 +302,14 @@ public final class ZeroMqChannel
 			if (existingSession != null) {
 				session = existingSession;
 			} else {
+				this.transcript.traceDebugging ("accepting session `%s` for `%s`...", sessionIdentifier, acceptorKey);
 				final Acceptor acceptor = this.state.acceptors.get (acceptorKey);
 				if (acceptor == null) {
-					this.transcript.traceError ("error encountered while initiating session: mismatched roles; ignoring!");
+					this.transcript.traceError ("error encountered while initiating session `%s`: missing accepter `%s`; ignoring!", sessionIdentifier, acceptorKey);
 					return;
 				}
 				if (coder.messageType != MessageType.Initiation) {
-					this.transcript.traceError ("error encountered while initiating session: mismatched message type; ignoring!");
+					this.transcript.traceError ("error encountered while initiating session `%s`: mismatched message type `%s`; ignoring!", sessionIdentifier, messageIdentifier);
 					return;
 				}
 				session = new Session (sessionIdentifier, selfRoleIdentifier, peerRoleIdentifier, packet.peer, acceptor.specification, acceptor.callbacks, this.executor);
@@ -316,16 +318,16 @@ public final class ZeroMqChannel
 			}
 			final Object payload;
 			if ((coder.coder == null) && (packet.payload != null)) {
-				this.transcript.traceError ("error encountered while decoding packet: missing coder, but existing payload; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet of type `%s` for session `%s`: missing coder `%s`, but existing payload; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 				return;
 			} else if ((coder.coder != null) && (packet.payload == null)) {
-				this.transcript.traceError ("error encountered while decoding packet: existing coder, but missing payload; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet of type `%s` for session `%s`: existing coder `%s`, but missing payload; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 				return;
 			} else if (packet.payload != null)
 				try {
 					payload = coder.coder.decode (packet.payload);
 				} catch (final Throwable exception) {
-					this.exceptions.traceIgnoredException (exception, "error encountered while decoding packet: coder failed; ignoring!");
+					this.exceptions.traceIgnoredException (exception, "error encountered while decoding packet of type `%s` for session `%s`: coder `%s` failed; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 					return;
 				}
 			else
@@ -340,6 +342,7 @@ public final class ZeroMqChannel
 	final void handlePacketEnqueue (final Session session, final Message message)
 	{
 		synchronized (this.state.monitor) {
+			final String sessionIdentifier = session.sessionIdentifier;
 			final String messageIdentifier;
 			try {
 				messageIdentifier = message.specification.getIdentifier ();
@@ -350,21 +353,21 @@ public final class ZeroMqChannel
 			final String coderKey = session.selfRoleIdentifier + "//" + session.peerRoleIdentifier + "//" + messageIdentifier;
 			final Coder coder = this.state.coders.get (coderKey);
 			if (coder == null) {
-				this.transcript.traceError ("error encountered while decoding packet: missing coder; ignoring!");
+				this.transcript.traceError ("error encountered while decoding packet of type `%s` for session `%s`: missing coder `%s`; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 				return;
 			}
 			final ByteBuffer payload;
 			if ((coder.coder == null) && (message.payload != null)) {
-				this.transcript.traceError ("error encountered while encoding packet: missing coder, but existing payload; ignoring!");
+				this.transcript.traceError ("error encountered while encoding packet of type `%s` for session `%s`: missing coder `%s`, but existing payload; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 				return;
 			} else if ((coder.coder != null) && (message.payload == null)) {
-				this.transcript.traceError ("error encountered while encoding packet: existing coder, but missing payload; ignoring!");
+				this.transcript.traceError ("error encountered while encoding packet of type `%s` for session `%s`: existing coder `%s`, but missing payload; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 				return;
 			} else if (message.payload != null)
 				try {
 					payload = coder.coder.encode (message.payload);
 				} catch (final Throwable exception) {
-					this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet: coder failed; ignoring!");
+					this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet of type `%s` for session `%s`: coder `%s` failed; ignoring!", messageIdentifier, sessionIdentifier, coderKey);
 					return;
 				}
 			else

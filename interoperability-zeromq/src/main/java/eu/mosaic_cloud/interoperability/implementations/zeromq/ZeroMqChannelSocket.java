@@ -111,7 +111,7 @@ public final class ZeroMqChannelSocket
 	
 	final void loop ()
 	{
-		this.transcript.traceDebugging ("loopping...");
+		// this.transcript.traceDebugging ("loopping...");
 		final ZMQ.Poller poller = ZeroMqChannelSocket.defaultContext.poller (3);
 		while (true) {
 			if (this.shouldStop)
@@ -172,7 +172,7 @@ public final class ZeroMqChannelSocket
 	
 	private final void receive ()
 	{
-		this.transcript.traceDebugging ("receiving packet...");
+		// this.transcript.traceDebugging ("receiving packet...");
 		final String peer;
 		final byte[] peer_;
 		final byte[] delimiter;
@@ -245,7 +245,7 @@ public final class ZeroMqChannelSocket
 	
 	private final void send ()
 	{
-		this.transcript.traceDebugging ("sending packet...");
+		// this.transcript.traceDebugging ("sending packet...");
 		final ZeroMqChannelPacket packet = this.outboundPackets.remove ();
 		if (!this.socket.send (packet.peer.getBytes (), ZMQ.SNDMORE)) {
 			this.transcript.traceError ("error encountered while sending packet: ignoring!");
