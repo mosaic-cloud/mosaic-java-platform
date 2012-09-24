@@ -290,6 +290,7 @@ public final class ZeroMqChannel
 				this.exceptions.traceIgnoredException (exception, "error encountered while decoding packet; ignoring!");
 				return;
 			}
+			this.transcript.traceDebugging ("processing inbound packet of type `%s` for session `%s`...", messageIdentifier, sessionIdentifier);
 			final String acceptorKey = selfRoleIdentifier + "//" + peerRoleIdentifier;
 			final String coderKey = selfRoleIdentifier + "//" + peerRoleIdentifier + "//" + messageIdentifier;
 			final Coder coder = this.state.coders.get (coderKey);
@@ -350,6 +351,7 @@ public final class ZeroMqChannel
 				this.exceptions.traceIgnoredException (exception, "error encountered while encoding packet; ignoring!");
 				return;
 			}
+			this.transcript.traceDebugging ("processing outbound packet of type `%s` for session `%s`...", messageIdentifier, sessionIdentifier);
 			final String coderKey = session.selfRoleIdentifier + "//" + session.peerRoleIdentifier + "//" + messageIdentifier;
 			final Coder coder = this.state.coders.get (coderKey);
 			if (coder == null) {
