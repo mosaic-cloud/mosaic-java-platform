@@ -37,6 +37,8 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
+import org.slf4j.Logger;
+
 
 public class ConsumerCloudlet
 {
@@ -46,7 +48,9 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> acknowledgeSucceeded (final ConsumerCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
 		{
-			context.cloudlet.destroy ();
+			context.count += 1;
+			if (context.count >= context.limit)
+				context.cloudlet.destroy ();
 			return ICallback.SUCCESS;
 		}
 		
@@ -54,7 +58,7 @@ public class ConsumerCloudlet
 		public CallbackCompletion<Void> consume (final ConsumerCloudletContext context, final AmqpQueueConsumeCallbackArguments<String> arguments)
 		{
 			final String data = arguments.getMessage ();
-			this.logger.info ("ConsumerCloudlet received message `{}`.", data);
+			context.logger.info ("ConsumerCloudlet received message `{}`.", data);
 			context.consumer.acknowledge (arguments.getToken ());
 			return ICallback.SUCCESS;
 		}
@@ -62,14 +66,14 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.info ("ConsumerCloudlet consumer destroyed successfully.");
+			context.logger.info ("ConsumerCloudlet consumer destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments)
 		{
-			this.logger.info ("ConsumerCloudlet consumer initialized successfully.");
+			context.logger.info ("ConsumerCloudlet consumer initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
@@ -78,6 +82,9 @@ public class ConsumerCloudlet
 	{
 		ICloudletController<ConsumerCloudletContext> cloudlet;
 		IAmqpQueueConsumerConnector<String, Void> consumer;
+		int count = 0;
+		int limit = 10000;
+		Logger logger;
 	}
 	
 	public static final class LifeCycleHandler
@@ -86,22 +93,23 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> destroy (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.info ("ConsumerCloudlet destroying...");
+			context.logger.info ("ConsumerCloudlet destroying...");
 			return context.consumer.destroy ();
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.info ("ConsumerCloudlet destroyed successfully.");
+			context.logger.info ("ConsumerCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.info ("ConsumerCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
+			context.logger = this.logger;
+			context.logger.info ("ConsumerCloudlet initializing...");
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
 			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
 			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpConsumerCallback (), context);
@@ -111,7 +119,7 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments)
 		{
-			this.logger.info ("ConsumerCloudlet initialized successfully.");
+			context.logger.info ("ConsumerCloudlet initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
