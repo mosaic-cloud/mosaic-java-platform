@@ -50,7 +50,7 @@ public class ConsumerCloudlet
 		public CallbackCompletion<Void> acknowledgeSucceeded (final ConsumerCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
 		{
 			{
-				// FIXME: DON'T DO THIS IN YOUR CODE... This is for throteling...
+				// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
 				Threading.sleep (context.delay);
 			}
 			context.count += 1;
