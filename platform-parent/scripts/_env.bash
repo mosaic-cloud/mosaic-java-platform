@@ -64,7 +64,7 @@ test -n "${_maven_pom_version}"
 test -n "${_maven_pom_classifier}"
 
 case "${_maven_pom_classifier}" in
-	( component )
+	( component | *-component )
 		test -n "${_maven_pom_package}"
 		_package_name="${_maven_pom_package}"
 		_package_jar_name="${_maven_pom_artifact}-${_maven_pom_version}-${_maven_pom_classifier}.jar"

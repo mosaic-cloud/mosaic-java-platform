@@ -8,7 +8,7 @@ fi
 
 case "${_maven_pom_classifier}" in
 	
-	( component )
+	( component | *-component )
 		exec env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--projects "${_maven_pom_group}:${_maven_pom_artifact}" \

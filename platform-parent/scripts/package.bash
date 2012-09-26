@@ -20,7 +20,7 @@ fi
 
 case "${_maven_pom_classifier}" in
 	
-	( component )
+	( component | *-component )
 		
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
