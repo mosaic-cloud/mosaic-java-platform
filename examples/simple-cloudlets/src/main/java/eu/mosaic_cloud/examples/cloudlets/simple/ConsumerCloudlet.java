@@ -36,6 +36,7 @@ import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.slf4j.Logger;
 
@@ -48,6 +49,10 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> acknowledgeSucceeded (final ConsumerCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
 		{
+			{
+				// FIXME: DON'T DO THIS IN YOUR CODE... This is for throteling...
+				Threading.sleep (context.delay);
+			}
 			context.count += 1;
 			if (context.count >= context.limit)
 				context.cloudlet.destroy ();
@@ -83,6 +88,7 @@ public class ConsumerCloudlet
 		ICloudletController<ConsumerCloudletContext> cloudlet;
 		IAmqpQueueConsumerConnector<String, Void> consumer;
 		int count = 0;
+		int delay = 50;
 		int limit = 10000;
 		Logger logger;
 	}

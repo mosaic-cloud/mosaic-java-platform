@@ -46,12 +46,11 @@ public class PublisherCloudlet
 {
 	private static CallbackCompletion<Void> maybePushMessage (final PublisherCloudletContext context)
 	{
+		{
+			// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
+			Threading.sleep (context.delay);
+		}
 		if (context.count < context.limit) {
-			{
-				// FIXME: DON'T DO THIS IN YOUR CODE...
-				if (context.count > 0)
-					Threading.sleep (context.delay);
-			}
 			final String data = String.format ("Test message %d! (%s)", Integer.valueOf (context.count), UUID.randomUUID ().toString ());
 			context.logger.info ("PublisherCloudlet sending message `{}`.", data);
 			context.publisher.publish (data, null);
