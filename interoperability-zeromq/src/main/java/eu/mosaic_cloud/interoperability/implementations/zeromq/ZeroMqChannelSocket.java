@@ -63,13 +63,13 @@ public final class ZeroMqChannelSocket
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("accepting on `%s`...", endpoint);
 		if (this.socket == null)
-			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
+			Threading.sleep (ZeroMqChannelSocket.defaultWaitDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		// FIXME: See the `FIXME` in the `connect` method.
 		if (this.acceptingEndpoints.add (endpoint))
 			this.socket.bind (endpoint);
-		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
+		Threading.sleep (ZeroMqChannelSocket.defaultWaitDelay);
 	}
 	
 	public final void connect (final String endpoint)
@@ -77,14 +77,14 @@ public final class ZeroMqChannelSocket
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("connecting to `%s`...", endpoint);
 		if (this.socket == null)
-			Threading.sleep (ZeroMqChannelSocket.defaultDelay);
+			Threading.sleep (ZeroMqChannelSocket.defaultWaitDelay);
 		if (this.socket == null)
 			throw (new IllegalStateException ());
 		// FIXME: ZeroMQ library asserts and crashes if we connect to the same endpoint twice.
 		//-- This should be addressed somehow else. (Also this is not thread safe.)
 		if (this.connectedEndpoints.add (endpoint))
 			this.socket.connect (endpoint);
-		Threading.sleep (ZeroMqChannelSocket.defaultDelay);
+		Threading.sleep (ZeroMqChannelSocket.defaultWaitDelay);
 	}
 	
 	public final ZeroMqChannelPacket dequeue (final long timeout)
@@ -129,8 +129,8 @@ public final class ZeroMqChannelSocket
 				outboundPollIndex = -1;
 			errorPollIndex = poller.register (this.socket, ZMQ.Poller.POLLERR);
 			// FIXME: In version 2.x of ZeroMQ the timeout is expressed in microseconds, but in 3.x it is in milliseconds.
-			//-- Currently we use 2.x, thus the timeout is 5 milliseconds.
-			if (poller.poll (5 * 1000) > 0) {
+			//-- Currently we use 2.x, thus the timeout is in milliseconds.
+			if (poller.poll (ZeroMqChannelSocket.defaultPollDelay * 1000) > 0) {
 				if (((errorPollIndex >= 0) && poller.pollerr (errorPollIndex)) || ((this.socket.getEvents () & ZMQ.Poller.POLLERR) != 0))
 					this.failed ();
 				else {
@@ -291,7 +291,8 @@ public final class ZeroMqChannelSocket
 	ZMQ.Socket socket;
 	final ThreadingContext threading;
 	final Transcript transcript;
-	public static final long defaultDelay = 50;
+	public static final long defaultPollDelay = 5;
+	public static final long defaultWaitDelay = 50;
 	static final ZMQ.Context defaultContext = ZMQ.context (1);
 	
 	private final class Loop
