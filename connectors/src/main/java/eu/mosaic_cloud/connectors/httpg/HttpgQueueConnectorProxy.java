@@ -33,6 +33,7 @@ import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnectorProxy;
 import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
@@ -330,7 +331,8 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			final EncodingMetadata httpBodyEncodingMetadata = new EncodingMetadata (bodyContentType, bodyContentEncoding);
 			final byte[] httpBodyBytes;
 			try {
-				httpBodyBytes = this.responseBodyEncoder.encode (response.body, httpBodyEncodingMetadata);
+				final EncodeOutcome outcome = this.responseBodyEncoder.encode (response.body, httpBodyEncodingMetadata);
+				httpBodyBytes = outcome.data;
 			} catch (final EncodingException exception) {
 				throw (new EncodingException ("invalid body", exception));
 			}
@@ -356,7 +358,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			rawStream.write (httpBodyBytes);
 			final byte[] rawData = rawBytesStream.toByteArray ();
 			// FIXME: We should put the encoding meta-data specific only to the HTTP-gateway.
-			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, null);
+			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, null, null);
 			return (rawMessage);
 		} catch (final EncodingException exception) {
 			throw (exception);

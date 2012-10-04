@@ -43,6 +43,7 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.exceptions.ConnectionException;
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
@@ -148,10 +149,11 @@ public class KeyValueStub
 				token = setRequest.getToken ();
 				key = setRequest.getKey ();
 				data = setRequest.getValue ().toByteArray ();
+				final eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage messageData = new eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage (key, data, setRequest.getEnvelope ().getContentEncoding (), setRequest.getEnvelope ().getContentType ());
 				KeyValueStub.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler setCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
-				final IResult<Boolean> resultSet = driver.invokeSetOperation (token.getClientId (), key, data, setCallback);
+				final IResult<Boolean> resultSet = driver.invokeSetOperation (token.getClientId (), messageData, setCallback);
 				setCallback.setDetails (KeyValueOperations.SET, resultSet);
 				break;
 			case GET_REQUEST :
@@ -166,7 +168,8 @@ public class KeyValueStub
 				}
 				key = getRequest.getKey (0);
 				KeyValueStub.logger.trace (messagePrefix + kvMessage.toString () + " key: " + key + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
-				final IResult<byte[]> resultGet = driver.invokeGetOperation (token.getClientId (), key, getCallback);
+				final EncodingMetadata expectedEncoding = new EncodingMetadata (getRequest.getEnvelope ().getContentType (), getRequest.getEnvelope ().getContentEncoding ());
+				final IResult<eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage> resultGet = driver.invokeGetOperation (token.getClientId (), key, expectedEncoding, getCallback);
 				getCallback.setDetails (KeyValueOperations.GET, resultGet);
 				break;
 			case DELETE_REQUEST :
@@ -299,11 +302,15 @@ public class KeyValueStub
 	 */
 	protected static DriverConnectionData readConnectionData (final IConfiguration config)
 	{
-		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, "localhost");// $NON-NLS-1$ $NON-NLS-2$
+		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, "localhost");// $NON-NLS-1$
+																																						// $NON-NLS-2$
 		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
-		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
-		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.5"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
-		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$
+																																		// $NON-NLS-2$
+		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.5"), String.class, ""); // $NON-NLS-1$
+																																		// $NON-NLS-2$
+		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, ""); // $NON-NLS-1$
+																																		// $NON-NLS-2$
 		DriverConnectionData cData;
 		if ("".equals (user) && "".equals (passwd)) {
 			cData = new DriverConnectionData (resourceHost, resourcePort, driver);

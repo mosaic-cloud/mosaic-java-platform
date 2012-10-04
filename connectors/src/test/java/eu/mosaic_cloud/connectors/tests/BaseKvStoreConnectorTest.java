@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,11 +48,11 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	protected void testDelete ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
-		final String k2 = this.scenario.keyPrefix + "_key_fabulous";
+		final String k2 = this.scenario.keyPrefix + "_key_famous";
 		// NOTE: In past this would have returned `true`.
 		Assert.assertNull (this.awaitOutcome (this.connector.delete (k1)));
 		// NOTE: In past this would have returned `false`.
-		Assert.assertNotNull (this.awaitFailure (this.connector.delete (k2)));
+		Assert.assertNull (this.awaitOutcome (this.connector.delete (k2)));
 		Assert.assertNull (this.awaitOutcome (this.connector.get (k1)));
 		Assert.assertNull (this.awaitOutcome (this.connector.get (k2)));
 	}
@@ -59,6 +60,7 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	protected void testGet ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
+		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
 		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1)));
 	}
 	

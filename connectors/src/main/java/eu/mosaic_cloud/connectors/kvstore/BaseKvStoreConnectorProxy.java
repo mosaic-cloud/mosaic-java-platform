@@ -30,11 +30,13 @@ import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok;
@@ -74,7 +76,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> delete (final String key)
+	public CallbackCompletion<Void> delete (final String key)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("deleting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -82,7 +84,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		final Message message = new Message (KeyValueMessage.DELETE_REQUEST, requestBuilder.build ());
-		return (this.sendRequest (message, token, Boolean.class));
+		return this.sendRequest (message, token, Void.class);
 	}
 	
 	@Override
@@ -99,7 +101,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	@SuppressWarnings ("unchecked")
 	public CallbackCompletion<TValue> get (final String key)
 	{
-		return (this.sendGetRequest (Arrays.asList (key), (Class<TValue>) Object.class));
+		return this.sendGetRequest (Arrays.asList (key), (Class<TValue>) Object.class);
 	}
 	
 	@Override
@@ -114,15 +116,27 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		return ((CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest (message, token, List.class)));
 	}
 	
-	public CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data)
+	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data)
 	{
-		return (this.sendSetRequest (key, data, exp));
+		return this.sendSetRequest (key, data, exp);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final TValue data)
+	public CallbackCompletion<Void> set (final String key, final TValue data)
 	{
-		return (this.set (key, 0, data));
+		return this.set (key, 0, data);
+	}
+	
+	protected Envelope buildEnvelope (final EncodingMetadata metadata)
+	{
+		final Envelope.Builder builder = Envelope.newBuilder ();
+		if (null != metadata.getContentEncoding ()) {
+			builder.setContentEncoding (metadata.getContentEncoding ());
+		}
+		if (null != metadata.getContentType ()) {
+			builder.setContentType (metadata.getContentType ());
+		}
+		return (builder.build ());
 	}
 	
 	@Override
@@ -167,12 +181,11 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 				final Object outcome;
 				if (outcomeClass == Map.class) {
 					final Map<String, TValue> values = new HashMap<String, TValue> ();
-					// FIXME: The encoding meta-data should be obtained from the request's "envelope".
-					final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
 					for (final KVEntry entry : resultEntries) {
+						final Envelope envelope = entry.getEnvelope ();
+						final EncodingMetadata encodingMetadata = new EncodingMetadata (envelope.getContentType (), envelope.getContentEncoding ());
 						final TValue value;
 						final byte[] rawValue = resultEntries.get (0).getValue ().toByteArray ();
-						// FIXME: This `length > 0` should be handled differently...
 						if ((rawValue != null) && (rawValue.length > 0)) {
 							try {
 								value = this.encoder.decode (rawValue, encodingMetadata);
@@ -191,10 +204,9 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 					final TValue value;
 					if (!resultEntries.isEmpty ()) {
 						final byte[] rawValue = resultEntries.get (0).getValue ().toByteArray ();
-						// FIXME: This `length > 0` should be handled differently...
 						if ((rawValue != null) && (rawValue.length > 0)) {
-							// FIXME: The encoding meta-data should be obtained from the request's "envelope".
-							final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+							final Envelope envelope = resultEntries.get (0).getEnvelope ();
+							final EncodingMetadata encodingMetadata = new EncodingMetadata (envelope.getContentType (), envelope.getContentEncoding ());
 							try {
 								value = this.encoder.decode (rawValue, encodingMetadata);
 							} catch (final EncodingException exception) {
@@ -230,11 +242,16 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		final GetRequest.Builder requestBuilder = GetRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.addAllKey (keys);
+		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
+		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
+		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
+		requestBuilder.setEnvelope (envelopeBuilder.build ());
 		final Message message = new Message (KeyValueMessage.GET_REQUEST, requestBuilder.build ());
 		return (this.sendRequest (message, token, outcomeClass));
 	}
 	
-	protected CallbackCompletion<Boolean> sendSetRequest (final String key, final TValue data, final int exp)
+	protected CallbackCompletion<Void> sendSetRequest (final String key, final TValue data, final int exp)
 	{
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("setting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
@@ -242,18 +259,18 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		requestBuilder.setToken (token);
 		requestBuilder.setKey (key);
 		requestBuilder.setExpTime (exp);
-		CallbackCompletion<Boolean> result = null;
-		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
+		CallbackCompletion<Void> result = null;
 		try {
-			final byte[] dataBytes = this.encoder.encode (data, encodingMetadata);
-			requestBuilder.setValue (ByteString.copyFrom (dataBytes));
+			final EncodeOutcome outcome = this.encoder.encode (data, null);
+			requestBuilder.setValue (ByteString.copyFrom (outcome.data));
+			requestBuilder.setEnvelope (this.buildEnvelope (outcome.metadata));
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the value for record with key `%s` failed; deferring!", key);
 			result = CallbackCompletion.createFailure (exception);
 		}
 		if (result == null) {
 			final Message message = new Message (KeyValueMessage.SET_REQUEST, requestBuilder.build ());
-			result = this.sendRequest (message, token, Boolean.class);
+			result = this.sendRequest (message, token, Void.class);
 		}
 		return (result);
 	}

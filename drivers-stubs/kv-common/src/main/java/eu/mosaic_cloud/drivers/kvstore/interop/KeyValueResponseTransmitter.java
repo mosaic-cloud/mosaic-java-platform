@@ -111,15 +111,20 @@ public class KeyValueResponseTransmitter
 			case GET :
 				final GetReply.Builder getPayload = KeyValuePayloads.GetReply.newBuilder ();
 				getPayload.setToken (token);
-				@SuppressWarnings ("unchecked") final Map<String, byte[]> resMap = (Map<String, byte[]>) result;
+				@SuppressWarnings ("unchecked") final Map<String, eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage> resMap = (Map<String, eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage>) result;
 				final List<KVEntry> getResults = new ArrayList<KVEntry> ();
-				for (final Map.Entry<String, byte[]> entry : resMap.entrySet ()) {
+				for (final Map.Entry<String, eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage> entry : resMap.entrySet ()) {
 					final KVEntry.Builder kvEntry = KeyValuePayloads.KVEntry.newBuilder ();
 					kvEntry.setKey (entry.getKey ());
-					if (entry.getValue () == null) {
+					final IdlCommon.Envelope.Builder envelope = IdlCommon.Envelope.newBuilder ();
+					if (null != entry.getValue ().getContentEncoding ())
+						envelope.setContentEncoding (entry.getValue ().getContentEncoding ());
+					envelope.setContentType (entry.getValue ().getContentType ());
+					kvEntry.setEnvelope (envelope.build ());
+					if (entry.getValue ().getData () == null) {
 						kvEntry.setValue (ByteString.EMPTY);
 					} else {
-						kvEntry.setValue (ByteString.copyFrom (entry.getValue ()));
+						kvEntry.setValue (ByteString.copyFrom (entry.getValue ().getData ()));
 					}
 					getResults.add (kvEntry.build ());
 				}

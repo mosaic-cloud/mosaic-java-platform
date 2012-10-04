@@ -39,8 +39,9 @@ import org.slf4j.Logger;
  * Rest Interface
  * 
  * @author Carmine Di Biase
- * 
+ * @deprecated
  */
+@Deprecated
 public final class RiakRestDriver
 		extends AbstractKeyValueDriver
 {

@@ -49,7 +49,7 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> delete (final String key)
+	public CallbackCompletion<Void> delete (final String key)
 	{
 		return this.proxy.delete (key);
 	}
@@ -67,7 +67,7 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final TValue data)
+	public CallbackCompletion<Void> set (final String key, final TValue data)
 	{
 		return this.proxy.set (key, data);
 	}

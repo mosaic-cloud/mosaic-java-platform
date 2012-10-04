@@ -29,6 +29,7 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.drivers.kvstore.interop.MemcachedStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
@@ -59,39 +60,35 @@ public class MemcacheKvStoreConnectorTest
 		this.testConnector ();
 		this.testSet ();
 		this.testGet ();
-		this.testGetBulk ();
+		//                this.testGetBulk();
 		this.testAdd ();
 		this.testReplace ();
+		this.testAppend ();
+		this.testPrepend ();
 		this.testCas ();
 		this.testList ();
-		this.testDelete ();
+		//        this.testDelete();
 	}
 	
 	protected void testAdd ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_fabulous";
-		// FIXME: The new connectors return now `null` in both cases.
-		//-- This test should now fail...
-		Assert.assertFalse (this.awaitBooleanOutcome (this.connector.add (k1, 30, "wrong")));
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.add (k2, 30, "fabulous")));
+		Assert.assertNotNull (this.awaitFailure (this.connector.add (k1, 30, "wrong")));
+		Assert.assertNull (this.awaitOutcome (this.connector.add (k2, 30, "fabulous")));
 	}
 	
 	protected void testAppend ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		// FIXME: The new connectors return now `null` in both cases.
-		//-- This test should now fail...
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.append (k1, " and miraculous")));
+		Assert.assertNull (this.awaitOutcome (this.connector.append (k1, " and miraculous")));
 		Assert.assertEquals ("fantabulous and miraculous", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
 	protected void testCas ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		// FIXME: The new connectors return now `null` in both cases.
-		//-- This test should fail...
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.cas (k1, "replaced by dummy")));
+		Assert.assertNull (this.awaitOutcome (this.connector.cas (k1, "replaced by dummy")));
 		Assert.assertEquals ("replaced by dummy", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
@@ -108,24 +105,20 @@ public class MemcacheKvStoreConnectorTest
 	@Override
 	protected void testList ()
 	{
-		Assert.assertNull (this.awaitOutcome (this.connector.list ()));
+		Assert.assertNotNull (this.awaitFailure (this.connector.list ()));
 	}
 	
 	protected void testPrepend ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		// FIXME: The new connectors return now `null` in both cases.
-		//-- This test should now fail...
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.prepend (k1, "it is ")));
+		Assert.assertNull (this.awaitOutcome (this.connector.prepend (k1, "it is ")));
 		Assert.assertEquals ("it is fantabulous and miraculous", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
 	protected void testReplace ()
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fabulous";
-		// FIXME: The new connectors return now `null` in both cases.
-		//-- This test should now fail...
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.replace (k1, 30, "fantabulous")));
+		Assert.assertNull (this.awaitOutcome (this.connector.replace (k1, 30, "fantabulous")));
 		Assert.assertEquals ("fantabulous", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
@@ -134,10 +127,9 @@ public class MemcacheKvStoreConnectorTest
 	{
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_famous";
-		// FIXME: The new connectors return now `null` in both cases.
-		//-- This test should now fail...
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.set (k1, 30, "fantastic")));
-		Assert.assertTrue (this.awaitBooleanOutcome (this.connector.set (k2, 30, "famous")));
+		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k1, 30, "fantastic")));
+		Assert.assertNull (this.awaitOutcome (this.connector.set (k2, 30, "famous")));
 	}
 	
 	@BeforeClass

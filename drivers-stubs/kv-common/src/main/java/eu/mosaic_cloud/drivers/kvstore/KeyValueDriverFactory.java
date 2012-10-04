@@ -88,8 +88,8 @@ public final class KeyValueDriverFactory
 	{
 		MEMCACHED ("eu.mosaic_cloud.drivers.kvstore.MemcachedDriver"),
 		REDIS ("eu.mosaic_cloud.drivers.kvstore.RedisDriver"),
-		RIAKPB ("eu.mosaic_cloud.drivers.kvstore.RiakPBDriver"),
-		RIAKREST ("eu.mosaic_cloud.drivers.kvstore.RiakRestDriver");
+		RIAKPB ("eu.mosaic_cloud.drivers.kvstore.RiakDriver"),
+		RIAKREST ("eu.mosaic_cloud.drivers.kvstore.RiakDriver");
 		DriverType (final String canonicalClassName)
 		{
 			this.driverClassName = canonicalClassName;

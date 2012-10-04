@@ -33,7 +33,9 @@ import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
@@ -86,7 +88,6 @@ public class AmqpDriverTest
 		this.testDeclareExchange ();
 		this.testDeclareQueue ();
 		this.testBindQueue ();
-		// FIXME: this fails due to threading
 		this.testConsume ();
 		this.testPublish ();
 		this.testConsumeCancel ();
@@ -119,10 +120,10 @@ public class AmqpDriverTest
 	
 	public void testConsumeCancel ()
 	{
-		Threading.sleep (100);
+		Threading.sleep (1000);
 		Assert.assertNotNull (this.consumerTag);
 		this.wrapper.basicCancel (this.consumerTag, null);
-		Threading.sleep (100);
+		Threading.sleep (1000);
 	}
 	
 	public void testDeclareExchange ()
@@ -162,7 +163,8 @@ public class AmqpDriverTest
 		final boolean manadatory = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.manadatory", Boolean.class, true);
 		final boolean immediate = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.immediate", Boolean.class, true);
 		final boolean durable = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.durable", Boolean.class, false);
-		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, this.encoder.encode (this.sentMessage, this.encoder.getExpectedEncodingMetadata ()), manadatory, immediate, durable, null, null, this.encoder.getExpectedEncodingMetadata ().getContentType (), null, null);
+		final EncodeOutcome encode = this.encoder.encode (this.sentMessage, null);
+		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, encode.data, manadatory, immediate, durable, null, encode.metadata.getContentEncoding (), encode.metadata.getContentType (), null, null);
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("publish message");
 		final IResult<Boolean> r = this.wrapper.basicPublish (this.clientId, mssg, handler);
 		Assert.assertTrue (r.getResult ());
@@ -226,8 +228,9 @@ public class AmqpDriverTest
 		public void handleDelivery (final AmqpInboundMessage message)
 		{
 			String recvMessage;
+			final EncodingMetadata encoding = new EncodingMetadata (message.getContentType (), message.getContentEncoding ());
 			try {
-				recvMessage = AmqpDriverTest.this.encoder.decode (message.getData (), AmqpDriverTest.this.encoder.getExpectedEncodingMetadata ());
+				recvMessage = AmqpDriverTest.this.encoder.decode (message.getData (), encoding);
 				Assert.assertTrue ("Received message: " + recvMessage, AmqpDriverTest.this.sentMessage.equals (recvMessage));
 			} catch (final EncodingException e) {
 				Assert.fail ("Delivery exception " + e.getMessage ());

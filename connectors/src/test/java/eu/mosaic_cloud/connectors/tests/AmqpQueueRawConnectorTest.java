@@ -21,14 +21,27 @@
 package eu.mosaic_cloud.connectors.tests;
 
 
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+
 import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
+import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
+import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
+import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -46,15 +59,59 @@ public class AmqpQueueRawConnectorTest
 		this.scenario = AmqpQueueRawConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
 		this.connector = AmqpQueueRawConnector.create (configuration);
+		this.encoder = PlainTextDataEncoder.DEFAULT_INSTANCE;
+		this.sentMessage = "ConnectorTest" + this.clientId;
 	}
 	
 	@Override
 	public void test ()
+			throws InterruptedException,
+				ExecutionException,
+				EncodingException
 	{
 		this.testConnector ();
 		this.testDeclareExchange ();
 		this.testDeclareQueue ();
 		this.testBindQueue ();
+		this.testConsume ();
+		this.testPublish ();
+		this.testConsumeCancel ();
+	}
+	
+	public void testConsume ()
+			throws InterruptedException,
+				ExecutionException
+	{
+		final IConfiguration configuration = this.scenario.getConfiguration ();
+		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
+		final boolean autoAck = ConfigUtils.resolveParameter (configuration, "consumer.amqp.auto_ack", Boolean.class, true);
+		final boolean exclusive = ConfigUtils.resolveParameter (configuration, "consumer.amqp.exclusive", Boolean.class, true);
+		final IAmqpQueueRawConsumerCallback consumerCallback = new ConsumerHandler ();
+		Assert.assertTrue (this.awaitSuccess (this.connector.consume (queue, this.clientId, exclusive, autoAck, consumerCallback)));
+	}
+	
+	public void testConsumeCancel ()
+	{
+		Threading.sleep (1000);
+		Assert.assertNotNull (this.consumerTag);
+		Assert.assertTrue (this.awaitSuccess (this.connector.cancel (this.consumerTag)));
+		Threading.sleep (1000);
+	}
+	
+	public void testPublish ()
+			throws EncodingException,
+				InterruptedException,
+				ExecutionException
+	{
+		final IConfiguration configuration = this.scenario.getConfiguration ();
+		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
+		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");
+		final boolean manadatory = ConfigUtils.resolveParameter (configuration, "publisher.amqp.manadatory", Boolean.class, true);
+		final boolean immediate = ConfigUtils.resolveParameter (configuration, "publisher.amqp.immediate", Boolean.class, true);
+		final boolean durable = ConfigUtils.resolveParameter (configuration, "publisher.amqp.durable", Boolean.class, false);
+		final EncodeOutcome encode = this.encoder.encode (this.sentMessage, null);
+		final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, encode.data, manadatory, immediate, durable, null, encode.metadata.getContentEncoding (), encode.metadata.getContentType (), null, null);
+		Assert.assertTrue (this.awaitSuccess (this.connector.publish (mssg)));
 	}
 	
 	protected void testBindQueue ()
@@ -94,7 +151,7 @@ public class AmqpQueueRawConnectorTest
 		configuration.addParameter ("consumer.amqp.auto_ack", true);
 		configuration.addParameter ("consumer.amqp.exclusive", true);
 		configuration.addParameter ("publisher.amqp.exchange", "tests.exchange");
-		configuration.addParameter ("publisher.amqp.routing_key", "tests.routing-key");
+		configuration.addParameter ("publisher.amqp.routing_key", "tests.queue");
 		configuration.addParameter ("publisher.amqp.manadatory", true);
 		configuration.addParameter ("publisher.amqp.immediate", true);
 		configuration.addParameter ("publisher.amqp.durable", false);
@@ -110,9 +167,54 @@ public class AmqpQueueRawConnectorTest
 		BaseConnectorTest.tearDownScenario (AmqpQueueRawConnectorTest.scenario_);
 	}
 	
+	private final String clientId = UUID.randomUUID ().toString ();
+	private String consumerTag;
+	private DataEncoder<String> encoder;
+	private String sentMessage;
 	private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
 	private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
 	private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
 	private static final String MOSAIC_AMQP_PORT_DEFAULT = "21688";
 	private static BaseScenario scenario_;
+	
+	final class ConsumerHandler
+			implements
+				IAmqpQueueRawConsumerCallback
+	{
+		@Override
+		public CallbackCompletion<Void> handleCancelOk (final String consumerTag)
+		{
+			Assert.assertTrue ("CancelOk - consumer tag compare", consumerTag.equals (AmqpQueueRawConnectorTest.this.consumerTag));
+			return CallbackCompletion.createOutcome ();
+		}
+		
+		@Override
+		public CallbackCompletion<Void> handleConsumeOk (final String consumerTag)
+		{
+			Assert.assertTrue ("ConsumeOk - consumer tag compare", AmqpQueueRawConnectorTest.this.consumerTag == null);
+			AmqpQueueRawConnectorTest.this.consumerTag = consumerTag;
+			return CallbackCompletion.createOutcome ();
+		}
+		
+		@Override
+		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage message)
+		{
+			String recvMessage;
+			final EncodingMetadata encoding = new EncodingMetadata (message.getContentType (), message.getContentEncoding ());
+			try {
+				recvMessage = AmqpQueueRawConnectorTest.this.encoder.decode (message.getData (), encoding);
+				Assert.assertTrue ("Received message: " + recvMessage, AmqpQueueRawConnectorTest.this.sentMessage.equals (recvMessage));
+			} catch (final EncodingException e) {
+				Assert.fail ("Delivery exception " + e.getMessage ());
+			}
+			return CallbackCompletion.createOutcome ();
+		}
+		
+		@Override
+		public CallbackCompletion<Void> handleShutdownSignal (final String consumerTag, final String message)
+		{
+			Assert.assertTrue ("Shutdown - consumer tag compare", consumerTag.equals (AmqpQueueRawConnectorTest.this.consumerTag));
+			return CallbackCompletion.createOutcome ();
+		}
+	}
 }

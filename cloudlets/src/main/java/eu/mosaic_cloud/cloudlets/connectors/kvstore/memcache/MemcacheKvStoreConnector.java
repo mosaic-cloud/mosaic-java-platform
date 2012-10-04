@@ -66,15 +66,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> add (final String key, final int exp, final TValue data)
+	public CallbackCompletion<Void> add (final String key, final int exp, final TValue data)
 	{
 		return this.add (key, data, exp, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> add (final String key, final TValue value, final int exp, final TExtra extra)
+	public CallbackCompletion<Void> add (final String key, final TValue value, final int exp, final TExtra extra)
 	{
-		final CallbackCompletion<Boolean> completion = this.connector.add (key, exp, value);
+		final CallbackCompletion<Void> completion = this.connector.add (key, exp, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -96,15 +96,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> append (final String key, final TValue data)
+	public CallbackCompletion<Void> append (final String key, final TValue data)
 	{
 		return this.append (key, data, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> append (final String key, final TValue value, final TExtra extra)
+	public CallbackCompletion<Void> append (final String key, final TValue value, final TExtra extra)
 	{
-		final CallbackCompletion<Boolean> completion = this.connector.append (key, value);
+		final CallbackCompletion<Void> completion = this.connector.append (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -126,15 +126,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> cas (final String key, final TValue data)
+	public CallbackCompletion<Void> cas (final String key, final TValue data)
 	{
 		return this.cas (key, data, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> cas (final String key, final TValue value, final TExtra extra)
+	public CallbackCompletion<Void> cas (final String key, final TValue value, final TExtra extra)
 	{
-		final CallbackCompletion<Boolean> completion = this.connector.cas (key, value);
+		final CallbackCompletion<Void> completion = this.connector.cas (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -186,15 +186,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> prepend (final String key, final TValue data)
+	public CallbackCompletion<Void> prepend (final String key, final TValue data)
 	{
 		return this.prepend (key, data, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> prepend (final String key, final TValue value, final TExtra extra)
+	public CallbackCompletion<Void> prepend (final String key, final TValue value, final TExtra extra)
 	{
-		final CallbackCompletion<Boolean> completion = this.connector.prepend (key, value);
+		final CallbackCompletion<Void> completion = this.connector.prepend (key, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -216,15 +216,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> replace (final String key, final int exp, final TValue data)
+	public CallbackCompletion<Void> replace (final String key, final int exp, final TValue data)
 	{
 		return this.replace (key, data, exp, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> replace (final String key, final TValue value, final int exp, final TExtra extra)
+	public CallbackCompletion<Void> replace (final String key, final TValue value, final int exp, final TExtra extra)
 	{
-		final CallbackCompletion<Boolean> completion = this.connector.replace (key, exp, value);
+		final CallbackCompletion<Void> completion = this.connector.replace (key, exp, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
@@ -246,15 +246,15 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data)
+	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data)
 	{
 		return this.set (key, data, exp, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final TValue value, final int exp, final TExtra extra)
+	public CallbackCompletion<Void> set (final String key, final TValue value, final int exp, final TExtra extra)
 	{
-		final CallbackCompletion<Boolean> completion = this.connector.set (key, exp, value);
+		final CallbackCompletion<Void> completion = this.connector.set (key, exp, value);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")

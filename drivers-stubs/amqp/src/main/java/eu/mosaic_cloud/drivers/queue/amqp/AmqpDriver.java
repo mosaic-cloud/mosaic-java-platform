@@ -519,7 +519,7 @@ public class AmqpDriver
 					@Override
 					public void run ()
 					{
-						final AmqpInboundMessage message = new AmqpInboundMessage (consumer, envelope.getDeliveryTag (), envelope.getExchange (), envelope.getRoutingKey (), data, ((properties.getDeliveryMode () != null) && (properties.getDeliveryMode () == 2)) ? true : false, properties.getReplyTo (), null, properties.getContentType (), properties.getCorrelationId (), null);
+						final AmqpInboundMessage message = new AmqpInboundMessage (consumer, envelope.getDeliveryTag (), envelope.getExchange (), envelope.getRoutingKey (), data, ((properties.getDeliveryMode () != null) && (properties.getDeliveryMode () == 2)) ? true : false, properties.getReplyTo (), properties.getContentEncoding (), properties.getContentType (), properties.getCorrelationId (), null);
 						consumeCallback.handleDelivery (message);
 					}
 				};

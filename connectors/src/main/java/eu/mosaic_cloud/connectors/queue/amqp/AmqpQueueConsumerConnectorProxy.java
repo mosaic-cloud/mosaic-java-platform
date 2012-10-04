@@ -201,8 +201,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("delivered the message `%s` for consumer `%s`...", token, AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
 			TMessage message = null;
 			CallbackCompletion<Void> result = null;
-			// FIXME: The encoding meta-data should be obtained from the request's "envelope".
-			final EncodingMetadata encodingMetadata = AmqpQueueConsumerConnectorProxy.this.messageEncoder.getExpectedEncodingMetadata ();
+			final EncodingMetadata encodingMetadata = new EncodingMetadata (inbound.getContentType (), inbound.getContentEncoding ());
 			try {
 				message = AmqpQueueConsumerConnectorProxy.this.messageEncoder.decode (data, encodingMetadata);
 			} catch (final EncodingException exception) {

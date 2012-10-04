@@ -29,3 +29,8 @@ message AccessRequest {
 message AbortRequest {
 	required CompletionToken token = 1;
 }
+
+message Envelope {
+	required string content_type = 1;
+	optional string content_encoding = 2;
+}

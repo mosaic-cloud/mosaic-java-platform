@@ -28,6 +28,7 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok;
@@ -116,6 +117,7 @@ public class AmqpResponseTransmitter
 	public void sendDelivery (final Session session, final AmqpInboundMessage message)
 	{
 		final AmqpPayloads.DeliveryMessage.Builder deliveryPayload = DeliveryMessage.newBuilder ();
+		final IdlCommon.Envelope.Builder envelopePayload = Envelope.newBuilder ();
 		deliveryPayload.setConsumerTag (message.getConsumer ());
 		deliveryPayload.setDeliveryTag (message.getDelivery ());
 		deliveryPayload.setExchange (message.getExchange ());
@@ -123,8 +125,12 @@ public class AmqpResponseTransmitter
 		deliveryPayload.setDeliveryMode (message.isDurable () ? 2 : 1);
 		deliveryPayload.setData (ByteString.copyFrom (message.getData ()));
 		if (message.getContentType () != null) {
-			deliveryPayload.setContentType (message.getContentType ());
+			envelopePayload.setContentType (message.getContentType ());
 		}
+		if (message.getContentEncoding () != null) {
+			envelopePayload.setContentEncoding (message.getContentEncoding ());
+		}
+		deliveryPayload.setEnvelope (envelopePayload.build ());
 		if (message.getCallback () != null) {
 			deliveryPayload.setReplyTo (message.getCallback ());
 		}
@@ -170,7 +176,7 @@ public class AmqpResponseTransmitter
 				case GET :
 				case CANCEL :
 				case ACK :
-					final boolean success = (Boolean) result;
+					final boolean success = ((Boolean) result).booleanValue ();
 					if (success) {
 						final Ok.Builder okPayload = IdlCommon.Ok.newBuilder ();
 						okPayload.setToken (token);

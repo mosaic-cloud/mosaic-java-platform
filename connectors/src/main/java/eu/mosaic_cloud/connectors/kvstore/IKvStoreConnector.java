@@ -45,7 +45,7 @@ public interface IKvStoreConnector<TValue extends Object>
 	 *            the key to delete
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> delete (String key);
+	CallbackCompletion<Void> delete (String key);
 	
 	/**
 	 * Gets data associated with a single key.
@@ -72,5 +72,5 @@ public interface IKvStoreConnector<TValue extends Object>
 	 *            the data
 	 * @return a result handle for the operation
 	 */
-	CallbackCompletion<Boolean> set (String key, TValue data);
+	CallbackCompletion<Void> set (String key, TValue data);
 }

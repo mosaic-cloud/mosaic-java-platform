@@ -24,6 +24,7 @@ package eu.mosaic_cloud.connectors.kvstore.generic;
 import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 
 
 /**
@@ -52,7 +53,7 @@ public class GenericKvStoreConnector<TValue extends Object>
 	 * @param threading
 	 * @return the connector
 	 */
-	public static <T> GenericKvStoreConnector<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
+	public static <T, TExtra extends MessageEnvelope> GenericKvStoreConnector<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
 	{
 		final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create (configuration, encoder);
 		return new GenericKvStoreConnector<T> (proxy);

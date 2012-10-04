@@ -48,8 +48,9 @@ import com.basho.riak.client.util.Constants;
  * on the Riak key-value store.
  * 
  * @author Carmine Di Biase, Georgiana Macariu
- * 
+ * @deprecated
  */
+@Deprecated
 public final class RiakRestOperationFactory
 		implements
 			IOperationFactory

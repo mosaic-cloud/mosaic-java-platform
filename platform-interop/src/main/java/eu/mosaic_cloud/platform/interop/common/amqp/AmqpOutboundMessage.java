@@ -113,9 +113,9 @@ public class AmqpOutboundMessage
 	 * @param data
 	 *            the message body
 	 */
-	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final String contentType)
+	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final String contentEncoding, final String contentType)
 	{
-		this (exchange, routingKey, data, false, false, false, null, null, contentType, null, null);
+		this (exchange, routingKey, data, false, false, false, null, contentEncoding, contentType, null, null);
 	}
 	
 	public String getCallback ()

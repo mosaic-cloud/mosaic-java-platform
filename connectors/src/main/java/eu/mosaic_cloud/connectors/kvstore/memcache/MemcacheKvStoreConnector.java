@@ -49,19 +49,19 @@ public class MemcacheKvStoreConnector<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> add (final String key, final int exp, final TValue data)
+	public CallbackCompletion<Void> add (final String key, final int exp, final TValue data)
 	{
 		return this.proxy.add (key, exp, data);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> append (final String key, final TValue data)
+	public CallbackCompletion<Void> append (final String key, final TValue data)
 	{
 		return this.proxy.append (key, data);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> cas (final String key, final TValue data)
+	public CallbackCompletion<Void> cas (final String key, final TValue data)
 	{
 		return this.proxy.cas (key, data);
 	}
@@ -73,19 +73,19 @@ public class MemcacheKvStoreConnector<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> prepend (final String key, final TValue data)
+	public CallbackCompletion<Void> prepend (final String key, final TValue data)
 	{
 		return this.proxy.prepend (key, data);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> replace (final String key, final int exp, final TValue data)
+	public CallbackCompletion<Void> replace (final String key, final int exp, final TValue data)
 	{
 		return this.proxy.replace (key, exp, data);
 	}
 	
 	@Override
-	public CallbackCompletion<Boolean> set (final String key, final int exp, final TValue data)
+	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data)
 	{
 		return this.proxy.set (key, exp, data);
 	}

@@ -30,6 +30,8 @@ import eu.mosaic_cloud.platform.core.ops.GenericOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperation;
 import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
+import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.util.SafeEncoder;
@@ -132,13 +134,17 @@ public final class RedisOperationFactory
 	
 	private IOperation<?> buildGetOperation (final Object ... parameters)
 	{
-		return new GenericOperation<byte[]> (new Callable<byte[]> () {
+		return new GenericOperation<KeyValueMessage> (new Callable<KeyValueMessage> () {
 			@Override
-			public byte[] call ()
+			public KeyValueMessage call ()
 			{
-				final byte[] keyBytes = SafeEncoder.encode ((String) parameters[0]);
+				final String key = (String) parameters[0];
+				final byte[] keyBytes = SafeEncoder.encode (key);
 				final byte[] result = RedisOperationFactory.this.redisClient.get (keyBytes);
-				return result;
+				final EncodingMetadata expectedEncoding = (EncodingMetadata) parameters[1];
+				KeyValueMessage kvMessage = null;
+				kvMessage = new KeyValueMessage (key, result, expectedEncoding.getContentEncoding (), expectedEncoding.getContentType ());
+				return kvMessage;
 			}
 		});
 	}
@@ -165,8 +171,9 @@ public final class RedisOperationFactory
 			@Override
 			public Boolean call ()
 			{
-				final byte[] keyBytes = SafeEncoder.encode ((String) parameters[0]);
-				final byte[] dataBytes = (byte[]) parameters[1];
+				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
+				final byte[] keyBytes = SafeEncoder.encode ((String) kvMessage.getKey ());
+				final byte[] dataBytes = kvMessage.getData ();
 				String opResult = RedisOperationFactory.this.redisClient.set (keyBytes, dataBytes);
 				opResult = opResult.trim ();
 				if (opResult.equalsIgnoreCase ("OK")) {

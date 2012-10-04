@@ -48,9 +48,11 @@ public interface DataEncoder<TData extends Object>
 	 * 
 	 * @param data
 	 *            the data to serialize
-	 * @return the bytes
+	 * @param metadata
+	 *            the desired metadata, but if null use the default
+	 * @return the bytes and the actual metadata which must match the input one if set
 	 */
-	byte[] encode (TData data, EncodingMetadata metadata)
+	EncodeOutcome encode (TData data, EncodingMetadata metadata)
 			throws EncodingException;
 	
 	/**
@@ -59,4 +61,16 @@ public interface DataEncoder<TData extends Object>
 	 * @return encoding metadata
 	 */
 	EncodingMetadata getExpectedEncodingMetadata ();
+	
+	public static final class EncodeOutcome
+	{
+		public EncodeOutcome (final byte[] data, final EncodingMetadata metadata)
+		{
+			this.data = data;
+			this.metadata = metadata;
+		}
+		
+		public final byte[] data;
+		public final EncodingMetadata metadata;
+	}
 }

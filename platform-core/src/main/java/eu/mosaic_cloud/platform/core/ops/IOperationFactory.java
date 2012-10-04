@@ -46,4 +46,6 @@ public interface IOperationFactory
 	 * @return the operation
 	 */
 	IOperation<?> getOperation (IOperationType type, Object ... parameters);
+	
+	public static final String CONTENT_ENCODING = "contentEncoding";
 }
