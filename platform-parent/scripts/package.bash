@@ -143,6 +143,7 @@ cat >"${_outputs}/package/pkg.json" <<EOS
 	"description" : "mOSAIC Components",
 	"directories" : [ "bin", "lib" ],
 	"depends" : [
+		"mosaic-utils",
 		"mosaic-sun-jre"
 	]
 }
