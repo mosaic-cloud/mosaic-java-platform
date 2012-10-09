@@ -5,6 +5,16 @@ if ! test "${#}" -eq 0 ; then
 	exit 1
 fi
 
+if test ! -e "${_outputs}" ; then
+	if test -L "${_outputs}" ; then
+		_outputs_store="$( readlink -- "${_outputs}" )"
+		mkdir -- "${_outputs_store}"
+	else
+		_outputs_store="${_temporary}/$( basename -- "${_workbench}" )--$( readlink -m -- "${_outputs}" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
+		mkdir -- "${_outputs_store}"
+		ln -s -T -- "${_outputs_store}" "${_outputs}"
+	fi
+fi
 
 case "${_maven_pom_classifier}" in
 	
@@ -16,7 +26,8 @@ case "${_maven_pom_classifier}" in
 				--update-snapshots \
 				--fail-never \
 				"${_mvn_args[@]}" \
-				dependency:go-offline
+				dependency:go-offline \
+				initialize
 	;;
 	
 	( artifacts )
@@ -27,7 +38,8 @@ case "${_maven_pom_classifier}" in
 				--update-snapshots \
 				--fail-never \
 				"${_mvn_args[@]}" \
-				dependency:go-offline
+				dependency:go-offline \
+				initialize
 	;;
 	
 	( * )

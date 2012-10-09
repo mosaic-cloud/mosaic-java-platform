@@ -1,9 +1,13 @@
 #!/dev/null
 
+set -e -E -u -o pipefail -o noclobber -o noglob +o braceexpand || exit 1
+trap 'printf "[ee] failed: %s\n" "${BASH_COMMAND}" >&2' ERR || exit 1
+
 _workbench="$( readlink -e -- . )"
 _scripts="${_workbench}/scripts"
-_tools="${_workbench}/.tools"
 _outputs="${_workbench}/.outputs"
+_tools="${mosaic_distribution_tools:-${_workbench}/.tools}"
+_temporary="${mosaic_distribution_temporary:-/tmp}"
 
 _PATH="${_tools}/bin:${PATH}"
 
@@ -34,6 +38,7 @@ else
 fi
 _mvn_args=(
 		--errors
+		-D_maven_pom_outputs="${_temporary}/mosaic-java-platform--$( readlink -m -- "${_self_do_realpath_dirname}/../../.outputs" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
 )
 if test -z "${_mvn_verbose:-}" ; then
 	_mvn_args+=( --quiet )

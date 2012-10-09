@@ -25,6 +25,7 @@
 	</modules>
 	
 	<build>
+		<defaultGoal>validate</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -210,6 +211,39 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${versions.plugins.exec}</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>/bin/bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>
+									if test \
+											\( -n '${_maven_pom_outputs}' -a ! -e '${project.build.directory}' \) -o \
+											\( ! -e '${project.build.directory}' -a -L '${project.build.directory}' \)
+									then
+										if test -L '${project.build.directory}' ; then
+											mkdir -p "$( readlink -m '${project.build.directory}' )" || exit 1
+										else
+											mkdir -p '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' || exit 1
+											ln -s -T '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' '${project.build.directory}' || exit 1
+										fi
+									fi
+									exit 0
+								</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -295,6 +329,7 @@
 		<versions.plugins.dependency>2.4</versions.plugins.dependency>
 		<versions.plugins.deploy>2.7</versions.plugins.deploy>
 		<versions.plugins.eclipse>2.8</versions.plugins.eclipse>
+		<versions.plugins.exec>1.2.1</versions.plugins.exec>
 		<versions.plugins.findbugs>2.3.3</versions.plugins.findbugs>
 		<versions.plugins.jar>2.4</versions.plugins.jar>
 		<versions.plugins.javadoc>2.8</versions.plugins.javadoc>
@@ -324,6 +359,7 @@
 		
 		<_maven_pom_package />
 		<_maven_pom_classifier />
+		<_maven_pom_outputs />
 		
 	</properties>
 	
