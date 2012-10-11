@@ -50,7 +50,7 @@ public class DataKVCallback
 		this.logger.warn ("failed fetch (" + DataKVCallback.BUCKET_NAME + "," + key + ")");
 		final Map<String, String> errorMssg = new HashMap<String, String> (4);
 		errorMssg.put ("reason", "unexpected key-value store error");
-		errorMssg.put ("message", arguments.getValue ().toString ());
+		errorMssg.put ("message", arguments.getError ().toString ());
 		errorMssg.put ("bucket", DataKVCallback.BUCKET_NAME);
 		errorMssg.put ("key", key);
 		IndexWorkflow.onIndexError (errorMssg);

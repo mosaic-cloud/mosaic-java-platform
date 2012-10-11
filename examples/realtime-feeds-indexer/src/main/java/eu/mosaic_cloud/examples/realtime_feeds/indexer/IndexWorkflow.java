@@ -239,11 +239,10 @@ public class IndexWorkflow
 	
 	public static void onIndexError (final Map<String, String> errorMessages)
 	{
-		final StringBuilder errorBuilder = new StringBuilder ();
+		IndexWorkflow.logger.error ("error encountered:");
 		for (final Map.Entry<String, String> entry : errorMessages.entrySet ()) {
-			errorBuilder.append (entry.getKey () + ": " + entry.getValue ());
+			IndexWorkflow.logger.error ("    {} -- {}", entry.getKey (), entry.getValue ());
 		}
-		IndexWorkflow.logger.error (errorBuilder.toString ());
 	}
 	
 	public static void onMetadataStored (final KvStoreCallbackCompletionArguments<JSONObject, UUID> arguments)
