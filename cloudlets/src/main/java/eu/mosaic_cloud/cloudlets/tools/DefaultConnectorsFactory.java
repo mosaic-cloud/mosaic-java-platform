@@ -22,6 +22,8 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactoryBuilder;
+import eu.mosaic_cloud.cloudlets.connectors.executors.ExecutorFactoryInitializer;
+import eu.mosaic_cloud.cloudlets.connectors.executors.IExecutorFactory;
 import eu.mosaic_cloud.cloudlets.connectors.httpg.HttpgQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.MemcacheKvStoreConnectorFactoryInitializer;
@@ -97,6 +99,7 @@ public class DefaultConnectorsFactory
 			this.initialize (MemcacheKvStoreConnectorFactoryInitializer.defaultInstance);
 			this.initialize (AmqpQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
+			this.initialize (ExecutorFactoryInitializer.defaultInstance);
 		}
 		
 		public static final Builder create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
