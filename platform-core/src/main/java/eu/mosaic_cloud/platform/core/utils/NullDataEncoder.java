@@ -46,7 +46,7 @@ public class NullDataEncoder
 	}
 	
 	static {
-		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("appilacion/octet-stream", "identity");
+		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("*", "*");
 		DEFAULT_INSTANCE = NullDataEncoder.create ();
 	}
 	
