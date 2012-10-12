@@ -330,7 +330,7 @@
 		<versions.dependencies.logback>1.0.0</versions.dependencies.logback>
 		<versions.dependencies.protobuf>2.4.1</versions.dependencies.protobuf>
 		<versions.dependencies.redis>2.0.0</versions.dependencies.redis>
-		<versions.dependencies.riak>1.0.5</versions.dependencies.riak>
+		<versions.dependencies.riak>1.0.6</versions.dependencies.riak>
 		<versions.dependencies.servlet-javax>3.0.1</versions.dependencies.servlet-javax>
 		<versions.dependencies.servlet-orbit>3.0.0.v201112011016</versions.dependencies.servlet-orbit>
 		<versions.dependencies.slf4j>1.6.4</versions.dependencies.slf4j>
