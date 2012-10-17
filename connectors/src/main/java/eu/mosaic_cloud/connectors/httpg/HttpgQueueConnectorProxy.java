@@ -206,7 +206,14 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			throws EncodingException
 	{
 		try {
-			// FIXME: We should check that the encoding meta-data to be sure it specific for HTTP-gateway.
+			final String contentType = message.getContentType ();
+			if (!HttpgQueueConnectorProxy.expectedContentType.equals (contentType)) {
+				throw (new EncodingException ("invalid content type"));
+			}
+			final String contentEncoding = message.getContentEncoding ();
+			if (!HttpgQueueConnectorProxy.expectedContentEncoding.equals (contentEncoding)) {
+				throw (new EncodingException ("invalid content encoding"));
+			}
 			final byte[] rawBytes = message.getData ();
 			if (rawBytes.length < 4) {
 				throw (new EncodingException ("invalid message length"));
@@ -357,8 +364,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			rawStream.writeInt (httpBodyBytes.length);
 			rawStream.write (httpBodyBytes);
 			final byte[] rawData = rawBytesStream.toByteArray ();
-			// FIXME: We should put the encoding meta-data specific only to the HTTP-gateway.
-			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, null, null);
+			final AmqpOutboundMessage rawMessage = new AmqpOutboundMessage (token.callbackExchange, token.callbackRoutingKey, rawData, HttpgQueueConnectorProxy.expectedContentEncoding, HttpgQueueConnectorProxy.expectedContentType);
 			return (rawMessage);
 		} catch (final EncodingException exception) {
 			throw (exception);
@@ -399,6 +405,8 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	private final boolean responseExchangeAutoDelete;
 	private final boolean responseExchangeDurable;
 	private final AmqpExchangeType responseExchangeType;
+	public static final String expectedContentEncoding = "binary";
+	public static final String expectedContentType = "application/octet-stream";
 	protected static final ImmutableSet<String> ignoredHttpHeaders = ImmutableSet.of ("content-length", "connection");
 	
 	private final class AmqpConsumerCallback
