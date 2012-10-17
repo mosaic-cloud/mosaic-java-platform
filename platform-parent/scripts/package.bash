@@ -58,8 +58,8 @@ mkdir -- "${_outputs}/package/bin"
 mkdir -- "${_outputs}/package/lib"
 
 mkdir -- "${_outputs}/package/lib/java"
-find "${_workbench}/target/" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
-find "${_workbench}/lib/" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
+find -H "${_workbench}/target" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
+find -H "${_workbench}/lib" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 
 mkdir -- "${_outputs}/package/lib/scripts"
 
@@ -135,8 +135,8 @@ cat >"${_outputs}/package/pkg.json" <<EOS
 {
 	"package" : "${_package_name}",
 	"version" : "${_package_version}",
-	"maintainer" : "mosaic-developers@lists.info.uvt.ro",
-	"description" : "mOSAIC Components",
+	"maintainer" : "developers@mosaic-cloud.eu",
+	"description" : "${_package_name}",
 	"directories" : [ "bin", "lib" ],
 	"depends" : [
 		"mosaic-utils",

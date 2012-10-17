@@ -5,8 +5,8 @@ trap 'printf "[ee] failed: %s\n" "${BASH_COMMAND}" >&2' ERR || exit 1
 
 _workbench="$( readlink -e -- . )"
 _scripts="${_workbench}/scripts"
-_outputs="${_workbench}/.outputs"
 _tools="${mosaic_distribution_tools:-${_workbench}/.tools}"
+_outputs="${_workbench}/.outputs"
 _temporary="${mosaic_distribution_temporary:-/tmp}"
 
 _PATH="${_tools}/bin:${PATH}"
@@ -23,11 +23,16 @@ if test -z "${_mvn_bin}" ; then
 	exit 1
 fi
 
+_generic_env=(
+		PATH="${_PATH}"
+		TMPDIR="${_temporary}"
+)
+
 _java_args=(
 		-server
 )
 _java_env=(
-		PATH="${_PATH}"
+		"${_generic_env[@]}"
 )
 
 _mvn_this_pom="${_workbench}/pom.xml"
@@ -44,7 +49,7 @@ if test -z "${_mvn_verbose:-}" ; then
 	_mvn_args+=( --quiet )
 fi
 _mvn_env=(
-		PATH="${_PATH}"
+		"${_generic_env[@]}"
 )
 
 while read _maven_pom_variable ; do
