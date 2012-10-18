@@ -5,7 +5,7 @@ trap 'printf "[ee] failed: %s\n" "${BASH_COMMAND}" >&2' ERR || exit 1
 export -n BASH_ENV
 
 _workbench="$( readlink -e -- . )"
-_scripts="${_workbench}/.scripts"
+_scripts="${_workbench}/scripts"
 _tools="${mosaic_distribution_tools:-${_workbench}/.tools}"
 _outputs="${_workbench}/.outputs"
 _temporary="${mosaic_distribution_temporary:-/tmp}"
