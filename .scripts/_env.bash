@@ -2,9 +2,10 @@
 
 set -e -E -u -o pipefail -o noclobber -o noglob +o braceexpand || exit 1
 trap 'printf "[ee] failed: %s\n" "${BASH_COMMAND}" >&2' ERR || exit 1
+export -n BASH_ENV
 
 _workbench="$( readlink -e -- . )"
-_scripts="${_workbench}/scripts"
+_scripts="${_workbench}/.scripts"
 _tools="${mosaic_distribution_tools:-${_workbench}/.tools}"
 _outputs="${_workbench}/.outputs"
 _temporary="${mosaic_distribution_temporary:-/tmp}"
@@ -39,11 +40,11 @@ _mvn_this_pom="${_workbench}/pom.xml"
 if test -e "${_workbench}/pom-umbrella.xml" ; then
 	_mvn_umbrella_pom="${_workbench}/pom-umbrella.xml"
 else
-	_mvn_umbrella_pom="${_self_do_realpath_dirname}/../../pom.xml"
+	_mvn_umbrella_pom="${_workbench}/pom.xml"
 fi
 _mvn_args=(
 		--errors
-		-D_maven_pom_outputs="${_temporary}/mosaic-java-platform--$( readlink -m -- "${_self_do_realpath_dirname}/../../.outputs" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
+		-D_maven_pom_outputs="${_temporary}/mosaic-java-platform--$( readlink -m -- "${_workbench}/.outputs" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
 )
 if test -z "${_mvn_verbose:-}" ; then
 	_mvn_args+=( --quiet )
@@ -69,9 +70,9 @@ done <<<"$(
 
 _mvn_pom="${_mvn_umbrella_pom}"
 
-test -n "${_maven_pom_artifact}"
-test -n "${_maven_pom_version}"
-test -n "${_maven_pom_classifier}"
+test -n "${_maven_pom_artifact:-}"
+test -n "${_maven_pom_version:-}"
+test -n "${_maven_pom_classifier:-}"
 
 case "${_maven_pom_classifier}" in
 	( component | *-component )

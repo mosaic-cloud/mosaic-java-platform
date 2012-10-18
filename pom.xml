@@ -231,13 +231,13 @@
 											\( ! -e '${project.build.directory}' -a -L '${project.build.directory}' \)
 									then
 										if test -L '${project.build.directory}' ; then
-											mkdir -p "$( readlink -m '${project.build.directory}' )" || exit 1
+											mkdir -p -- "$( readlink -m -- '${project.build.directory}' )" || exit 1 ;
 										else
-											mkdir -p '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' || exit 1
-											ln -s -T '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' '${project.build.directory}' || exit 1
-										fi
-									fi
-									exit 0
+											mkdir -p -- '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' || exit 1 ;
+											ln -s -T -- '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' '${project.build.directory}' || exit 1 ;
+										fi ;
+									fi ;
+									exit 0 ;
 								</argument>
 							</arguments>
 						</configuration>
