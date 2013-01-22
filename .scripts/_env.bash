@@ -57,9 +57,9 @@ while read _maven_pom_variable ; do
 	test -n "${_maven_pom_variable}" || continue
 	declare "${_maven_pom_variable}"
 done <<<"$(
+		###		--offline \
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_this_pom}" \
-				--offline \
 				"${_mvn_args[@]}" \
 				help:effective-pom \
 				-Doutput=/dev/stderr \
