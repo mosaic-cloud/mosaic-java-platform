@@ -160,6 +160,7 @@
 					<canUpdateLicense>true</canUpdateLicense>
 				</configuration>
 			</plugin>
+			<!-- !!!! currently the plugin is missing some dependencies !!!!
 			<plugin>
 				<groupId>eu.mosaic_cloud.plugins</groupId>
 				<artifactId>java-formatter-maven-plugin</artifactId>
@@ -181,6 +182,7 @@
 					<lineEnding>LF</lineEnding>
 				</configuration>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>

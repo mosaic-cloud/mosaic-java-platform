@@ -34,6 +34,7 @@
 					<skipUpdateLicense>true</skipUpdateLicense>
 				</configuration>
 			</plugin>
+			<!-- !!!! currently the plugin is missing some dependencies !!!!
 			<plugin>
 				<groupId>eu.mosaic_cloud.plugins</groupId>
 				<artifactId>java-formatter-maven-plugin</artifactId>
@@ -44,6 +45,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 	
