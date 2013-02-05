@@ -350,7 +350,7 @@
 		<versions.plugins.javadoc>2.8</versions.plugins.javadoc>
 		<versions.plugins.license>1.0</versions.plugins.license>
 		<versions.plugins.project-info-reports>2.4</versions.plugins.project-info-reports>
-		<versions.plugins.resources>2.5</versions.plugins.resources>
+		<versions.plugins.resources>2.6</versions.plugins.resources>
 		<versions.plugins.site>3.1</versions.plugins.site>
 		<versions.plugins.source>2.1.2</versions.plugins.source>
 		<versions.plugins.surefire>2.11</versions.plugins.surefire>
