@@ -113,16 +113,16 @@ public abstract class BaseDataEncoder<TData extends Object>
 	protected void checkMetadata (final EncodingMetadata metadata)
 			throws EncodingException
 	{
-		if (!this.expectedEncodingMetadata.getContentType ().equals ("*")) {
-			if (metadata.getContentType () == null) {
+		if (!this.expectedEncodingMetadata.hasSameContentEncoding (EncodingMetadata.ANY)) {
+			if (!metadata.hasContentType ()) {
 				this.transcirpt.traceWarning ("decoding binary data with a `null` content-type; ignoring!");
-			} else if (!this.expectedEncodingMetadata.getContentType ().equals (metadata.getContentType ())) {
+			} else if (!this.expectedEncodingMetadata.hasSameContentType (metadata)) {
 				this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-type; throwing!", metadata.getContentType ());
 				throw (new EncodingException (String.format ("unexpected content-type: `%s`", metadata.getContentType ())));
 			}
 		}
-		if (!this.expectedEncodingMetadata.getContentEncoding ().equals ("*")) {
-			if ((metadata.getContentEncoding () != null) && !metadata.getContentEncoding ().isEmpty () && !this.expectedEncodingMetadata.getContentEncoding ().equals (metadata.getContentEncoding ())) {
+		if (!this.expectedEncodingMetadata.hasSameContentType (EncodingMetadata.ANY)) {
+			if (metadata.hasContentEncoding () && !this.expectedEncodingMetadata.hasSameContentEncoding (metadata)) {
 				this.transcirpt.traceError ("encoding / decoding binary data with an unexpected `%s` content-encoding; throwing!", metadata.getContentEncoding ());
 				throw (new EncodingException (String.format ("unexpected content-encoding: `%s`", metadata.getContentEncoding ())));
 			}

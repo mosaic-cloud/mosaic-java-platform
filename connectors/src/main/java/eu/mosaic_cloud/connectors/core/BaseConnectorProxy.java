@@ -32,7 +32,9 @@ import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
+import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
@@ -131,6 +133,18 @@ public abstract class BaseConnectorProxy
 		this.transcript.traceDebugging ("received the interoperability message of type `%s`...", message.specification);
 		this.processResponse (message);
 		return (CallbackCompletion.createOutcome ());
+	}
+	
+	protected Envelope buildEnvelope (final EncodingMetadata metadata)
+	{
+		final Envelope.Builder builder = Envelope.newBuilder ();
+		if (metadata.hasContentEncoding () && !EncodingMetadata.ANY.hasSameContentEncoding (metadata)) {
+			builder.setContentEncoding (metadata.getContentEncoding ());
+		}
+		if (metadata.hasContentType () && !EncodingMetadata.ANY.hasSameContentType (metadata)) {
+			builder.setContentType (metadata.getContentType ());
+		}
+		return (builder.build ());
 	}
 	
 	protected CallbackCompletion<Void> connect (final SessionSpecification session, final Message initMessage)

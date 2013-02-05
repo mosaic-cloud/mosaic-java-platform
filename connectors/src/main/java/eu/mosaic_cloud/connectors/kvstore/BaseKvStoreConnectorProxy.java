@@ -127,18 +127,6 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		return this.set (key, 0, data);
 	}
 	
-	protected Envelope buildEnvelope (final EncodingMetadata metadata)
-	{
-		final Envelope.Builder builder = Envelope.newBuilder ();
-		if (null != metadata.getContentEncoding ()) {
-			builder.setContentEncoding (metadata.getContentEncoding ());
-		}
-		if (null != metadata.getContentType ()) {
-			builder.setContentType (metadata.getContentType ());
-		}
-		return (builder.build ());
-	}
-	
 	@Override
 	protected void processResponse (final Message message)
 	{
@@ -242,11 +230,8 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		final GetRequest.Builder requestBuilder = GetRequest.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.addAllKey (keys);
-		final Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
 		final EncodingMetadata encodingMetadata = this.encoder.getExpectedEncodingMetadata ();
-		envelopeBuilder.setContentEncoding (encodingMetadata.getContentEncoding ());
-		envelopeBuilder.setContentType (encodingMetadata.getContentType ());
-		requestBuilder.setEnvelope (envelopeBuilder.build ());
+		requestBuilder.setEnvelope (this.buildEnvelope (encodingMetadata));
 		final Message message = new Message (KeyValueMessage.GET_REQUEST, requestBuilder.build ());
 		return (this.sendRequest (message, token, outcomeClass));
 	}

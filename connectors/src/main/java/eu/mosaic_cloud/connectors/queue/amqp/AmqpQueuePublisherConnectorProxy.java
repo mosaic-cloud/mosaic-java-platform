@@ -28,6 +28,7 @@ import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
@@ -98,8 +99,12 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 		try {
 			final EncodeOutcome outcome = this.messageEncoder.encode (message, null);
 			data = outcome.data;
-			contentType = outcome.metadata.getContentType ();
-			contentEncoding = outcome.metadata.getContentEncoding ();
+			if (outcome.metadata.hasContentEncoding () && !EncodingMetadata.ANY.hasSameContentEncoding (outcome.metadata)) {
+				contentEncoding = outcome.metadata.getContentEncoding ();
+			}
+			if (outcome.metadata.hasContentType () && !EncodingMetadata.ANY.hasSameContentType (outcome.metadata)) {
+				contentType = outcome.metadata.getContentType ();
+			}
 		} catch (final EncodingException exception) {
 			this.exceptions.traceDeferredException (exception, "encoding the message failed; deferring!");
 			result = CallbackCompletion.createFailure (exception);

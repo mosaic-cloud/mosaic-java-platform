@@ -21,13 +21,18 @@
 package eu.mosaic_cloud.platform.core.utils;
 
 
+import java.util.Objects;
+
+import com.google.common.base.Strings;
+
+
 public final class EncodingMetadata
 {
 	public EncodingMetadata (final String contentType, final String contentEncoding)
 	{
 		super ();
-		this.contentType = contentType;
-		this.contentEncoding = contentEncoding;
+		this.contentType = Strings.emptyToNull (contentType);
+		this.contentEncoding = Strings.emptyToNull (contentEncoding);
 	}
 	
 	public String getContentEncoding ()
@@ -40,7 +45,28 @@ public final class EncodingMetadata
 		return this.contentType;
 	}
 	
+	public boolean hasContentEncoding ()
+	{
+		return this.contentEncoding != null;
+	}
+	
+	public boolean hasContentType ()
+	{
+		return this.contentType != null;
+	}
+	
+	public boolean hasSameContentEncoding (final EncodingMetadata other)
+	{
+		return Objects.equals (this.contentEncoding, other.contentEncoding);
+	}
+	
+	public boolean hasSameContentType (final EncodingMetadata other)
+	{
+		return Objects.equals (this.contentType, other.contentType);
+	}
+	
 	private final String contentEncoding;
 	private final String contentType;
+	public static final EncodingMetadata ANY = new EncodingMetadata ("*", "*");
 	public static final EncodingMetadata NULL = new EncodingMetadata (null, null);
 }

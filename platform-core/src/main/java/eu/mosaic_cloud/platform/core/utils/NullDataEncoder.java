@@ -46,7 +46,7 @@ public class NullDataEncoder
 	}
 	
 	static {
-		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("*", "*");
+		EXPECTED_ENCODING_METADATA = EncodingMetadata.ANY;
 		DEFAULT_INSTANCE = NullDataEncoder.create ();
 	}
 	

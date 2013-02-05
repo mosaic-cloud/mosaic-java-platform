@@ -27,12 +27,12 @@ import eu.mosaic_cloud.connectors.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
 import eu.mosaic_cloud.interoperability.core.Message;
+import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
-import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok;
@@ -232,7 +232,6 @@ public final class AmqpQueueRawConnectorProxy
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("publishing a message (of size `%d`) to exchange `%s` with routing key `%s` (with content-type `%s`, content-encoding `%s`, mandatory `%b`, immediate `%b`, durable `%b`, correlation `%s`, and callback `%s`) (with request token `%s`)", Integer.valueOf (data.length), exchange, routingKey, contentType, contentEncoding, Boolean.valueOf (mandatory), Boolean.valueOf (immediate), Boolean.valueOf (durable), correlation, callback, token.getMessageId ());
 		final AmqpPayloads.PublishRequest.Builder requestBuilder = AmqpPayloads.PublishRequest.newBuilder ();
-		final IdlCommon.Envelope.Builder envelopeBuilder = Envelope.newBuilder ();
 		requestBuilder.setToken (token);
 		requestBuilder.setExchange (exchange);
 		requestBuilder.setRoutingKey (routingKey);
@@ -240,13 +239,7 @@ public final class AmqpQueueRawConnectorProxy
 		requestBuilder.setMandatory (mandatory);
 		requestBuilder.setImmediate (immediate);
 		requestBuilder.setDurable (durable);
-		if (contentType != null) {
-			envelopeBuilder.setContentType (contentType);
-		}
-		if (contentEncoding != null) {
-			envelopeBuilder.setContentEncoding (contentEncoding);
-		}
-		requestBuilder.setEnvelope (envelopeBuilder.build ());
+		requestBuilder.setEnvelope (this.buildEnvelope (new EncodingMetadata (contentType, contentEncoding)));
 		if (correlation != null) {
 			requestBuilder.setCorrelationId (correlation);
 		}

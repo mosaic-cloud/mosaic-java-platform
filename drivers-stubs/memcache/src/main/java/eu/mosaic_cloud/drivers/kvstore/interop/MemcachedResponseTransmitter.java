@@ -92,7 +92,8 @@ public class MemcachedResponseTransmitter
 						final IdlCommon.Envelope.Builder envelope = IdlCommon.Envelope.newBuilder ();
 						if (null != entry.getValue ().getContentEncoding ())
 							envelope.setContentEncoding (entry.getValue ().getContentEncoding ());
-						envelope.setContentType (entry.getValue ().getContentType ());
+						if (null != entry.getValue ().getContentType ())
+							envelope.setContentType (entry.getValue ().getContentType ());
 						kvEntry.setEnvelope (envelope.build ());
 						if (entry.getValue ().getData () == null) {
 							kvEntry.setValue (ByteString.EMPTY);
