@@ -140,9 +140,13 @@ public abstract class BaseConnectorProxy
 		final Envelope.Builder builder = Envelope.newBuilder ();
 		if (metadata.hasContentEncoding () && !EncodingMetadata.ANY.hasSameContentEncoding (metadata)) {
 			builder.setContentEncoding (metadata.getContentEncoding ());
+		} else {
+			builder.setContentEncoding ("");
 		}
 		if (metadata.hasContentType () && !EncodingMetadata.ANY.hasSameContentType (metadata)) {
 			builder.setContentType (metadata.getContentType ());
+		} else {
+			builder.setContentType ("");
 		}
 		return (builder.build ());
 	}

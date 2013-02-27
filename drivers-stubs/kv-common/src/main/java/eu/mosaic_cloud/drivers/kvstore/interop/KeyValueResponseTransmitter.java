@@ -119,8 +119,12 @@ public class KeyValueResponseTransmitter
 					final IdlCommon.Envelope.Builder envelope = IdlCommon.Envelope.newBuilder ();
 					if (null != entry.getValue ().getContentEncoding ())
 						envelope.setContentEncoding (entry.getValue ().getContentEncoding ());
+					else
+						envelope.setContentEncoding ("");
 					if (null != entry.getValue ().getContentType ())
 						envelope.setContentType (entry.getValue ().getContentType ());
+					else
+						envelope.setContentType ("");
 					kvEntry.setEnvelope (envelope.build ());
 					if (entry.getValue ().getData () == null) {
 						kvEntry.setValue (ByteString.EMPTY);

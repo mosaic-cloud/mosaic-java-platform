@@ -126,9 +126,13 @@ public class AmqpResponseTransmitter
 		deliveryPayload.setData (ByteString.copyFrom (message.getData ()));
 		if (message.getContentType () != null) {
 			envelopePayload.setContentType (message.getContentType ());
+		} else {
+			envelopePayload.setContentType ("");
 		}
 		if (message.getContentEncoding () != null) {
 			envelopePayload.setContentEncoding (message.getContentEncoding ());
+		} else {
+			envelopePayload.setContentEncoding ("");
 		}
 		deliveryPayload.setEnvelope (envelopePayload.build ());
 		if (message.getCallback () != null) {
