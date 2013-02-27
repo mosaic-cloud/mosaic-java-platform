@@ -86,7 +86,7 @@ case "${_maven_pom_classifier}" in
 		_mosaic_deploy_artifactory="${_mosaic_deploy_artifactory:-true}"
 	;;
 	( artifacts )
-		_mosaic_deploy_cook="${_mosaic_deploy_cook:-false}"
+		_mosaic_deploy_cook=false
 		_mosaic_deploy_artifactory="${_mosaic_deploy_artifactory:-true}"
 	;;
 	( * )
