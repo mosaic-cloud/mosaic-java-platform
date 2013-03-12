@@ -96,9 +96,9 @@ public final class BasicComponentLauncherMain
 		System.arraycopy (arguments, 0, finalArguments, 0, 2);
 		System.arraycopy (arguments, 3, finalArguments, 2, arguments.length - 3);
 		if ("local".equals (mode))
-			BasicComponentLocalLauncher.launch (arguments, classLoader, threading, exceptions);
+			BasicComponentLocalLauncher.launch (finalArguments, classLoader, threading, exceptions);
 		else if ("remote".equals (mode))
-			BasicComponentRemoteLauncher.launch (arguments, classLoader, threading, exceptions);
+			BasicComponentRemoteLauncher.launch (finalArguments, classLoader, threading, exceptions);
 		else
 			throw (new IllegalArgumentException (String.format ("invalid mode `%s`", mode)));
 	}
