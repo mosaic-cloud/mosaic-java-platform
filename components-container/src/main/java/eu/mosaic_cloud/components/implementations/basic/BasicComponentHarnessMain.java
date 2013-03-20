@@ -308,7 +308,7 @@ public final class BasicComponentHarnessMain
 		final ThreadingContext threading;
 		if (threading_ == null) {
 			transcript.traceDebugging ("creating threading context...");
-			final BasicThreadingContext threading1 = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, UncaughtExceptionHandler.create (exceptions));
+			final BasicThreadingContext threading1 = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, UncaughtExceptionHandler.create (exceptions), classLoader);
 			transcript.traceDebugging ("initializing threading context...");
 			threading1.initialize ();
 			threading = threading1;

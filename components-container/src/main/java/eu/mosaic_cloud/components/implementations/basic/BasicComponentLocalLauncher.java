@@ -74,9 +74,9 @@ public final class BasicComponentLocalLauncher
 		Preconditions.checkNotNull (componentConfiguration);
 		BasicThreadingSecurityManager.initialize ();
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
-		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, exceptions.catcher);
-		threading.initialize ();
 		final ClassLoader classLoader = ClassLoader.getSystemClassLoader ();
+		final BasicThreadingContext threading = BasicThreadingContext.create (BasicComponentHarnessMain.class, exceptions, exceptions.catcher, classLoader);
+		threading.initialize ();
 		BasicComponentLocalLauncher.launch (controllerBaseUrl, channelAddress, componentCallbacks, componentConfiguration, classLoader, threading, exceptions);
 		threading.destroy ();
 	}
