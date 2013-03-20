@@ -29,7 +29,6 @@ import java.util.concurrent.FutureTask;
 
 import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -55,7 +54,7 @@ public abstract class AbstractResourceDriver
 	protected AbstractResourceDriver (final ThreadingContext threading, final int noThreads)
 	{
 		this.pendingResults = new ArrayList<IResult<?>> ();
-		this.executor = threading.createFixedThreadPool (ThreadConfiguration.create (this, "operations", true), noThreads);
+		this.executor = threading.createFixedThreadPool (threading.getThreadConfiguration ().override (this, "operations", true), noThreads);
 		this.logger = Transcript.create (this, true).adaptAs (Logger.class);
 	}
 	

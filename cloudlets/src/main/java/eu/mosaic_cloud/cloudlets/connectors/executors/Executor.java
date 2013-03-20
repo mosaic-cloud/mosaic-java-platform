@@ -55,7 +55,7 @@ public class Executor<TContext, TOutcome, TExtra>
 		this.configuration = configuration;
 		this.callback = callback;
 		this.context = context;
-		final ThreadConfiguration executorConfiguration = ThreadConfiguration.create (this, "tasks", true, Thread.MIN_PRIORITY, exceptions, UncaughtExceptionHandler.create (exceptions));
+		final ThreadConfiguration executorConfiguration = threading.getThreadConfiguration ().override (this, "tasks", true, exceptions, UncaughtExceptionHandler.create (exceptions));
 		this.executor = threading.createFixedThreadPool (executorConfiguration, 1);
 		this.transcript = Transcript.create (this, true);
 		this.transcript.traceDebugging ("creating the cloudlet executor...");

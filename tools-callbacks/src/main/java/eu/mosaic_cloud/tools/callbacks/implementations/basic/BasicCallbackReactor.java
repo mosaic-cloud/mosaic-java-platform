@@ -51,7 +51,6 @@ import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
-import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -888,7 +887,7 @@ public final class BasicCallbackReactor
 				this.threading = threading;
 				this.transcript = Transcript.create (this.facade, true);
 				this.exceptions = TranscriptExceptionTracer.create (this.transcript, exceptions);
-				this.executor = this.threading.createCachedThreadPool (ThreadConfiguration.create (this.facade, "isolates", true));
+				this.executor = this.threading.createCachedThreadPool (this.threading.getThreadConfiguration ().override (this.facade, "isolates", true));
 				this.schedulers = new ConcurrentHashMap<CallbackIsolate, BasicCallbackReactor.Scheduler> ();
 				this.actors = new ConcurrentHashMap<CallbackProxy, BasicCallbackReactor.Actor<?>> ();
 				this.status = Atomics.newReference (Status.Active);
