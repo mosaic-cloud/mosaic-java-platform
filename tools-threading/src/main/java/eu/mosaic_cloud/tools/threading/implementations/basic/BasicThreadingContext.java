@@ -60,7 +60,7 @@ public final class BasicThreadingContext
 		this.owner = BasicThreadingContext.buildOwner (configuration);
 		this.configuration = configuration;
 		this.group = new BasicThreadGroup (group, this.configuration);
-		this.defaultGroup = new BasicThreadGroup (this.group, configuration.setName ("default"));
+		this.defaultGroup = new BasicThreadGroup (this.group, configuration.overrideName ("default"));
 		this.threads = ThreadBundle.create ();
 		this.initialized = new AtomicBoolean (false);
 		this.sealed = new AtomicBoolean (false);
@@ -146,6 +146,12 @@ public final class BasicThreadingContext
 	public final ThreadGroup getDefaultThreadGroup ()
 	{
 		return (this.defaultGroup);
+	}
+	
+	@Override
+	public final ThreadConfiguration getThreadConfiguration ()
+	{
+		return (this.configuration);
 	}
 	
 	public final void initialize ()
@@ -364,7 +370,12 @@ public final class BasicThreadingContext
 	
 	public static final BasicThreadingContext create (final Object owner, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
 	{
-		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, null, true, exceptions, catcher)));
+		return (BasicThreadingContext.create (owner, exceptions, catcher, null));
+	}
+	
+	public static final BasicThreadingContext create (final Object owner, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
+	{
+		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, null, true, exceptions, catcher, classLoader)));
 	}
 	
 	private final ThreadConfiguration configuration;
@@ -471,7 +482,7 @@ public final class BasicThreadingContext
 		@Override
 		public final Thread newThread (final Runnable runnable)
 		{
-			return (new BasicThread (this.group, this.configuration.setName (null), runnable, this.index != null ? this.index.incrementAndGet () : -1));
+			return (new BasicThread (this.group, this.configuration.overrideName (null), runnable, this.index != null ? this.index.incrementAndGet () : -1));
 		}
 		
 		private final ThreadConfiguration configuration;

@@ -46,6 +46,8 @@ public interface ThreadingContext
 	
 	public abstract ThreadGroup getDefaultThreadGroup ();
 	
+	public abstract ThreadConfiguration getThreadConfiguration ();
+	
 	public abstract boolean isActive ();
 	
 	public abstract boolean isManaged (final Thread thread);

@@ -59,7 +59,7 @@ public final class BasicThreadingContextTest
 	public final void testManagedForker ()
 	{
 		final int forkCount = Forker.getCount (this.forkLevel, this.forkFanout, true);
-		final ThreadFactory creator = this.threading.createThreadFactory (ThreadConfiguration.create (this, "forkers", true));
+		final ThreadFactory creator = this.threading.createThreadFactory (this.threading.getThreadConfiguration ().override (this, "forkers", true));
 		final Waiter waiter = new Waiter (forkCount, this.waitTimeout, null);
 		final Forker forker = new Forker (creator, this.forkLevel, this.forkFanout, waiter);
 		forker.fork ();
@@ -76,7 +76,7 @@ public final class BasicThreadingContextTest
 	public final void testUnmanagedCorrectForker ()
 	{
 		final int forkCount = Forker.getCount (this.forkLevel, this.forkFanout, true);
-		final ThreadFactory creator = new ManagedUnmanagedThreadFactory (this.threading, null, ThreadConfiguration.create (this, "forkers", true), forkCount);
+		final ThreadFactory creator = new ManagedUnmanagedThreadFactory (this.threading, null, this.threading.getThreadConfiguration ().override (this, "forkers", true), forkCount);
 		final Waiter waiter = new Waiter (forkCount, this.waitTimeout, null);
 		final Forker forker = new Forker (creator, this.forkLevel, this.forkFanout, waiter);
 		forker.fork ();
@@ -95,7 +95,7 @@ public final class BasicThreadingContextTest
 		final int managedLevel = this.forkLevel / 2;
 		Preconditions.checkArgument (managedLevel >= 2);
 		final int managedCount = Forker.getCount (managedLevel, this.forkFanout, true);
-		final ThreadFactory creator = new ManagedUnmanagedThreadFactory (this.threading, Threading.getRootThreadGroup (), ThreadConfiguration.create (this, "forkers", true), managedCount);
+		final ThreadFactory creator = new ManagedUnmanagedThreadFactory (this.threading, Threading.getRootThreadGroup (), this.threading.getThreadConfiguration ().override (this, "forkers", true), managedCount);
 		final Waiter waiter = new Waiter (1, this.waitTimeout, null);
 		final Forker forker = new Forker (creator, this.forkLevel, this.forkFanout, waiter);
 		forker.fork ();

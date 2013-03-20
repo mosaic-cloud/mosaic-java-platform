@@ -48,34 +48,99 @@ public final class ThreadConfiguration
 		this.classLoader = classLoader;
 	}
 	
-	public final ThreadConfiguration setClassLoader (final ClassLoader classLoader)
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon)
 	{
-		return (new ThreadConfiguration (this.owner, this.name, this.daemon, this.priority, this.exceptions, this.catcher, classLoader));
+		return (ThreadConfiguration.create (owner, name, daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration setName (final String name)
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
 	{
-		return (new ThreadConfiguration (this.owner, name, this.daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
+		return (ThreadConfiguration.create (owner, name, daemon, this.priority, exceptions, catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, this.priority, exceptions, catcher, classLoader));
+	}
+	
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, priority, this.exceptions, this.catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, priority, exceptions, catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, priority, exceptions, catcher, classLoader));
+	}
+	
+	public final ThreadConfiguration overrideCatcher (final Thread.UncaughtExceptionHandler catcher)
+	{
+		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, this.priority, this.exceptions, catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration overrideClassLoader (final ClassLoader classLoader)
+	{
+		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, this.priority, this.exceptions, this.catcher, classLoader));
+	}
+	
+	public final ThreadConfiguration overrideDaemon (final boolean daemon)
+	{
+		return (ThreadConfiguration.create (this.owner, this.name, daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration overrideExceptions (final ExceptionTracer exceptions)
+	{
+		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, this.priority, exceptions, this.catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration overrideName (final String name)
+	{
+		return (ThreadConfiguration.create (this.owner, name, this.daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration overrideOwner (final Object owner)
+	{
+		return (ThreadConfiguration.create (owner, this.name, this.daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
+	}
+	
+	public final ThreadConfiguration overridePriority (final int priority)
+	{
+		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon)
 	{
-		return (ThreadConfiguration.create (owner, name, daemon, -1, null, null));
+		return (ThreadConfiguration.create (owner, name, daemon, -1, null, null, null));
 	}
 	
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
 	{
-		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher));
+		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
+	{
+		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher, classLoader));
 	}
 	
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority)
 	{
-		return (ThreadConfiguration.create (owner, name, daemon, priority, null, null));
+		return (ThreadConfiguration.create (owner, name, daemon, priority, null, null, null));
 	}
 	
 	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
 	{
-		return (new ThreadConfiguration (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, null));
+		return (ThreadConfiguration.create (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
+	{
+		return (new ThreadConfiguration (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, classLoader));
 	}
 	
 	public final Thread.UncaughtExceptionHandler catcher;

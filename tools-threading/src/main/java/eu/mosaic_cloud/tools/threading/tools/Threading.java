@@ -237,22 +237,22 @@ public final class Threading
 	
 	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
+		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, true), runnable));
 	}
 	
 	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, true, exceptions, catcher), runnable));
+		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, true, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
+		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, false), runnable));
 	}
 	
 	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createAndStartThread (threading, ThreadConfiguration.create (owner, name, false, exceptions, catcher), runnable));
+		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, false, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createAndStartThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)
@@ -262,22 +262,22 @@ public final class Threading
 	
 	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true), runnable));
+		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, true), runnable));
 	}
 	
 	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, true, exceptions, catcher), runnable));
+		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, true, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
 	{
-		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false), runnable));
+		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, false), runnable));
 	}
 	
 	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
 	{
-		return (Threading.createThread (threading, ThreadConfiguration.create (owner, name, false, exceptions, catcher), runnable));
+		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, false, exceptions, catcher), runnable));
 	}
 	
 	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)
@@ -645,7 +645,7 @@ public final class Threading
 		Preconditions.checkNotNull (context);
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkNotNull (runnable);
-		Runtime.getRuntime ().addShutdownHook (context.createThread (ThreadConfiguration.create (owner, name, true), runnable));
+		Runtime.getRuntime ().addShutdownHook (context.createThread (context.getThreadConfiguration ().override (owner, name, true), runnable));
 	}
 	
 	public static final <_Object_ extends Object> Reference<? extends _Object_> remove (final ReferenceQueue<_Object_> queue)
