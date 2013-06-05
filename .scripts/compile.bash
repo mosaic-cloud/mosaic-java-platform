@@ -9,21 +9,21 @@ case "${_maven_pom_classifier}" in
 	
 	( component | *-component )
 		
+		###		--offline \
 		exec env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
 				--also-make \
-				--offline \
 				"${_mvn_args[@]}" \
 				compile test-compile
 	;;
 	
 	( artifacts )
 		# FIXME: We have to fix this...
+		###		--offline \
 		exec env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--also-make \
-				--offline \
 				"${_mvn_args[@]}" \
 				compile test-compile
 	;;
