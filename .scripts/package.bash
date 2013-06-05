@@ -18,11 +18,11 @@ case "${_maven_pom_classifier}" in
 	
 	( component | *-component )
 		
+		###		--offline \
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
 				--also-make \
-				--offline \
 				"${_mvn_args[@]}" \
 				package \
 				-DskipTests=true \
@@ -34,10 +34,10 @@ case "${_maven_pom_classifier}" in
 	( artifacts )
 		
 		# FIXME: We have to fix this...
+		###		--offline \
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--also-make \
-				--offline \
 				"${_mvn_args[@]}" \
 				package \
 				-DskipTests=true \
