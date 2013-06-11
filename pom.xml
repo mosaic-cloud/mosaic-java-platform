@@ -288,6 +288,13 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build</groupId>
+				<artifactId>aws-maven</artifactId>
+				<version>${versions.plugins.aws}</version>
+			</extension>
+		</extensions>
 	</build>
 	
 	<reporting>
@@ -340,6 +347,7 @@
 		
 		<versions.plugins.antrun>1.7</versions.plugins.antrun>
 		<versions.plugins.assembly>2.3</versions.plugins.assembly>
+		<versions.plugins.aws>4.4.0.RELEASE</versions.plugins.aws>
 		<versions.plugins.compiler>2.3.2</versions.plugins.compiler>
 		<versions.plugins.dependency>2.4</versions.plugins.dependency>
 		<versions.plugins.deploy>2.7</versions.plugins.deploy>
@@ -390,8 +398,17 @@
 		<repository>
 			<id>developers.mosaic-cloud.eu</id>
 			<name>mOSAIC Repository</name>
-			<layout>default</layout>
 			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>mosaic-aws</id>
+			<name>mOSAIC Repository (AWS)</name>
+			<url>s3://mosaic-java-platform--artifacts/</url>
+			<layout>default</layout>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -399,8 +416,8 @@
 		<repository>
 			<id>files.couchbase.com</id>
 			<name>CouchBase Repository</name>
-			<layout>default</layout>
 			<url>http://files.couchbase.com/maven2</url>
+			<layout>default</layout>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -420,8 +437,17 @@
 		<pluginRepository>
 			<id>developers.mosaic-cloud.eu</id>
 			<name>mOSAIC Repository</name>
-			<layout>default</layout>
 			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>mosaic-aws</id>
+			<name>mOSAIC Repository (AWS)</name>
+			<url>s3://mosaic-java-platform--artifacts/</url>
+			<layout>default</layout>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -493,6 +519,19 @@
 			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
 			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
+		<!--
+		<repository>
+			<id>mosaic-releases-aws</id>
+			<name>mOSAIC Releases Repository (AWS)</name>
+			<url>s3://mosaic-java-platform- -artifacts/</url>
+		</repository>
+		<snapshotRepository>
+			<id>mosaic-snapshots-aws</id>
+			<name>mOSAIC Snapshots Repository (AWS)</name>
+			<url>s3://mosaic-java-platform- -artifacts/</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+		-->
 	</distributionManagement>
 	
 	<issueManagement>
