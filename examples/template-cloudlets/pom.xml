@@ -11,7 +11,7 @@
 	-->
 	<groupId>eu.mosaic_cloud.examples</groupId>
 	<artifactId>examples-template-cloudlets</artifactId>
-	<version>0.6.0_mosaic_dev-SNAPSHOT</version>
+	<version>0.6.0</version>
 	<name>mosaic-${project.artifactId}</name>
 	
 	<!--
@@ -121,7 +121,7 @@
 	
 	<properties>
 		
-		<versions.dependencies.mosaic>0.6.0_mosaic_dev-SNAPSHOT</versions.dependencies.mosaic>
+		<versions.dependencies.mosaic>0.6.0</versions.dependencies.mosaic>
 		<versions.plugins.assembly>2.3</versions.plugins.assembly>
 		<versions.plugins.deploy>2.7</versions.plugins.deploy>
 		<versions.plugins.compiler>2.3.2</versions.plugins.compiler>
