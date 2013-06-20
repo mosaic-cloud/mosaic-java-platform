@@ -18,7 +18,6 @@
 	<name>mosaic-${project.artifactId}</name>
 	
 	<modules>
-		<module>../template-cloudlets</module>
 		<module>../simple-cloudlets</module>
 		<module>../simple-components</module>
 		<module>../interoperability</module>
