@@ -32,9 +32,9 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFacto
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;

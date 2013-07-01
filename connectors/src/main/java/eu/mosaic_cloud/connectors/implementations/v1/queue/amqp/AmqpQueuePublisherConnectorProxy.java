@@ -26,12 +26,12 @@ import java.util.concurrent.Callable;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueuePublisherConnector;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionWorkflows;
 

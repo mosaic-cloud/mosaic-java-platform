@@ -27,7 +27,7 @@ import java.util.Map;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.connectors.v1.kvstore.memcache.IMemcacheKvStoreConnector;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

@@ -18,13 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.configuration;
+package eu.mosaic_cloud.platform.implementations.v1.configuration;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfigurationParameter;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 

@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.utils;
+package eu.mosaic_cloud.platform.v1.core.serialization;
 
 
 import java.util.Objects;

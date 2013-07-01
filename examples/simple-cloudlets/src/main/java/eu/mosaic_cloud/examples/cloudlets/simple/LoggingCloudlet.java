@@ -37,10 +37,10 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultKvStoreConnectorCallback;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.SerializedDataEncoder;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.implementations.v1.serialization.SerializedDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

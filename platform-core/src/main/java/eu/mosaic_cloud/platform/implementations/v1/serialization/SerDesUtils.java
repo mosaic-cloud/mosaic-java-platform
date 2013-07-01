@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.utils;
+package eu.mosaic_cloud.platform.implementations.v1.serialization;
 
 
 import java.io.BufferedReader;

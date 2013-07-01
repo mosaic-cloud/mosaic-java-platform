@@ -34,8 +34,8 @@ import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.DefaultContext;
 import eu.mosaic_cloud.cloudlets.tools.DefaultExecutorCallback;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

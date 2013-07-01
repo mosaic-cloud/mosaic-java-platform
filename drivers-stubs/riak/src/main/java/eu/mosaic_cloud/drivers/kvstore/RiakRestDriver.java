@@ -23,8 +23,8 @@ package eu.mosaic_cloud.drivers.kvstore;
 
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.ops.IOperationFactory;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 

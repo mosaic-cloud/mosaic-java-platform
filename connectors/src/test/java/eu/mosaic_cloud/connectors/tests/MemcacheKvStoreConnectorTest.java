@@ -27,12 +27,12 @@ import java.util.Map;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.memcache.MemcacheKvStoreConnector;
 import eu.mosaic_cloud.drivers.kvstore.interop.MemcachedStub;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
-import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 
 import org.junit.AfterClass;
 import org.junit.Assert;

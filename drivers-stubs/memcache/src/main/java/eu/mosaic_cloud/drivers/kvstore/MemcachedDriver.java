@@ -33,10 +33,10 @@ import eu.mosaic_cloud.drivers.ops.GenericResult;
 import eu.mosaic_cloud.drivers.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.drivers.ops.IOperationFactory;
 import eu.mosaic_cloud.drivers.ops.IResult;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 

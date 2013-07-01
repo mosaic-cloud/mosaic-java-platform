@@ -22,7 +22,7 @@ package eu.mosaic_cloud.cloudlets.connectors.executors;
 
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
 
 public interface IExecutorFactory

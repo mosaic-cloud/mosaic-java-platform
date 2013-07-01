@@ -23,10 +23,10 @@ package eu.mosaic_cloud.platform.core.configuration.tests;
 
 import java.io.FileInputStream;
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;

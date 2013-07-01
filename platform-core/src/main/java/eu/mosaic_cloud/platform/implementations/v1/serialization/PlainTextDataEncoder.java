@@ -18,11 +18,13 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.utils;
+package eu.mosaic_cloud.platform.implementations.v1.serialization;
 
 
 import java.nio.charset.Charset;
 
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 

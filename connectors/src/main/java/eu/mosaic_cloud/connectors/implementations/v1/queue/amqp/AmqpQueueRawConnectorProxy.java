@@ -29,7 +29,6 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
@@ -48,6 +47,7 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelReques
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 

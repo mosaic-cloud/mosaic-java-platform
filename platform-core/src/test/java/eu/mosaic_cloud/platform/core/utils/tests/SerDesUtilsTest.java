@@ -23,7 +23,7 @@ package eu.mosaic_cloud.platform.core.utils.tests;
 
 import java.io.Serializable;
 
-import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+import eu.mosaic_cloud.platform.implementations.v1.serialization.SerDesUtils;
 
 import org.junit.Test;
 

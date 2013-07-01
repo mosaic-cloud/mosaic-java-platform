@@ -33,8 +33,8 @@ import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 public final class AmqpQueueConnectorFactoryInitializer

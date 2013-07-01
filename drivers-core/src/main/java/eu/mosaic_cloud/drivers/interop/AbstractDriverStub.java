@@ -32,7 +32,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;

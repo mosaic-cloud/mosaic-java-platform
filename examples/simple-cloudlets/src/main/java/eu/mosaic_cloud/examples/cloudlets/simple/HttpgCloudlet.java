@@ -33,9 +33,9 @@ import eu.mosaic_cloud.cloudlets.tools.DefaultHttpgQueueConnectorCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

@@ -28,8 +28,8 @@ import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.v1.kvstore.memcache.IMemcacheKvStoreConnector;
 import eu.mosaic_cloud.connectors.v1.kvstore.memcache.IMemcacheKvStoreConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 public final class MemcacheKvStoreConnectorFactoryInitializer

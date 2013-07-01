@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 /**

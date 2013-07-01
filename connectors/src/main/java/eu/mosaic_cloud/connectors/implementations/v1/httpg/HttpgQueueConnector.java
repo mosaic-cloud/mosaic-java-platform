@@ -25,7 +25,7 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 

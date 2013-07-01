@@ -22,8 +22,8 @@ package eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache;
 
 
 import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 /**

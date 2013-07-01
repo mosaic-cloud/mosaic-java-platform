@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
 import com.google.common.base.Preconditions;
 

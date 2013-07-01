@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.connectors.v1.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingSecurityManager;
 

@@ -36,8 +36,7 @@ import eu.mosaic_cloud.drivers.queue.amqp.IAmqpConsumer;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
@@ -55,6 +54,7 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 

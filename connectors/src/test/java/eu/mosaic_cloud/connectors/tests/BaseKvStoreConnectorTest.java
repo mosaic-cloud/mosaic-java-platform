@@ -24,8 +24,8 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 
 import org.junit.Assert;
 import org.junit.Test;

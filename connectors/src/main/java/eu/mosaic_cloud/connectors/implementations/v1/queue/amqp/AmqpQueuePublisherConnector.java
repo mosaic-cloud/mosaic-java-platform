@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueuePublisherConnector;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

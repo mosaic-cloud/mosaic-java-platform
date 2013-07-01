@@ -37,7 +37,7 @@ import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;

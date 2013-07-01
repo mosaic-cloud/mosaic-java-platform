@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
-import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
+import eu.mosaic_cloud.platform.implementations.v1.serialization.JsonDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.junit.Test;

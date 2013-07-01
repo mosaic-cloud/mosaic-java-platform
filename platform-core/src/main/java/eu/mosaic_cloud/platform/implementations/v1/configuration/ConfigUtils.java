@@ -18,7 +18,10 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.configuration;
+package eu.mosaic_cloud.platform.implementations.v1.configuration;
+
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
 
 /**

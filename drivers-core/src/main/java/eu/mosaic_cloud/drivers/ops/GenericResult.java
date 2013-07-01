@@ -80,7 +80,7 @@ public class GenericResult<T>
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.platform.core.IResult#getResult()
+	 * @see eu.mosaic_cloud.platform.v1.core.IResult#getResult()
 	 */
 	@Override
 	public T getResult ()

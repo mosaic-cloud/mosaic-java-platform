@@ -30,8 +30,8 @@ import eu.mosaic_cloud.drivers.ops.GenericOperation;
 import eu.mosaic_cloud.drivers.ops.IOperation;
 import eu.mosaic_cloud.drivers.ops.IOperationFactory;
 import eu.mosaic_cloud.drivers.ops.IOperationType;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.util.SafeEncoder;
@@ -72,7 +72,7 @@ public final class RedisOperationFactory
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * eu.mosaic_cloud.platform.core.IOperationFactory#getOperation(eu.mosaic_cloud
+	 * eu.mosaic_cloud.platform.v1.core.IOperationFactory#getOperation(eu.mosaic_cloud
 	 * .platform.core.IOperationType, java.lang.Object[])
 	 */
 	@Override

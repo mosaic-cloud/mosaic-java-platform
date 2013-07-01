@@ -29,11 +29,11 @@ import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerCallback;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionWorkflows;
 

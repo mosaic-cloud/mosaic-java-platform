@@ -29,8 +29,8 @@ import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 public final class HttpgQueueConnectorFactoryInitializer

@@ -28,18 +28,18 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration
 import eu.mosaic_cloud.connectors.implementations.v1.queue.amqp.AmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
-import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
-import eu.mosaic_cloud.platform.core.utils.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 

@@ -29,8 +29,8 @@ import eu.mosaic_cloud.cloudlets.tools.BaseConnectorsFactoryInitializer;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 import com.google.common.base.Preconditions;
 

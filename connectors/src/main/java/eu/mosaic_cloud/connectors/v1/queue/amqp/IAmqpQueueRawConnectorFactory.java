@@ -22,7 +22,7 @@ package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
 import eu.mosaic_cloud.connectors.v1.queue.IQueueConnectorFactory;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
 
 public interface IAmqpQueueRawConnectorFactory

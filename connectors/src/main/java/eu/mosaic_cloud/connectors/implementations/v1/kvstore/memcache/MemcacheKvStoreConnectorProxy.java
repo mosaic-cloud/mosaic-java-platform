@@ -29,15 +29,15 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.BaseKvStoreConnectorProxy;
 import eu.mosaic_cloud.connectors.v1.kvstore.memcache.IMemcacheKvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Message;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
-import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.MemcachedPayloads;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.protobuf.ByteString;

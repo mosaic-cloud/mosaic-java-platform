@@ -39,11 +39,11 @@ import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.component.AbstractDriverComponentCallbacks;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.common.base.Preconditions;
