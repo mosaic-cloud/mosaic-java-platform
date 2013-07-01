@@ -18,14 +18,34 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.ops;
+package eu.mosaic_cloud.drivers.ops;
 
 
 /**
- * Marker interface for operation types enums.
+ * Factory class which builds the asynchronous calls for the operations
+ * supported by a specific resource. This interface should be implemented for
+ * each resource kind supported by the platform.
  * 
  * @author Georgiana Macariu
  * 
  */
-public interface IOperationType
-{}
+public interface IOperationFactory
+{
+	/**
+	 * Destroys a facory..
+	 */
+	void destroy ();
+	
+	/**
+	 * Builds the asynchronous operation.
+	 * 
+	 * @param type
+	 *            the type of the operation
+	 * @param parameters
+	 *            the parameters of the operation
+	 * @return the operation
+	 */
+	IOperation<?> getOperation (IOperationType type, Object ... parameters);
+	
+	public static final String CONTENT_ENCODING = "contentEncoding";
+}

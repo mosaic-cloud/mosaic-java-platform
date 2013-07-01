@@ -18,20 +18,14 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.utils;
+package eu.mosaic_cloud.drivers.ops;
 
 
-public class MessageEnvelope
-{
-	public EncodingMetadata getEncodingMetadata ()
-	{
-		return this.encodingMetadata;
-	}
-	
-	public void setEncodingMetadata (final EncodingMetadata encodingMetadata)
-	{
-		this.encodingMetadata = encodingMetadata;
-	}
-	
-	private EncodingMetadata encodingMetadata;
-}
+/**
+ * Marker interface for operation types enums.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
+public interface IOperationType
+{}

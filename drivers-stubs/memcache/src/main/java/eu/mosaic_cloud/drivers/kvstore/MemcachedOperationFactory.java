@@ -31,10 +31,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import eu.mosaic_cloud.platform.core.ops.GenericOperation;
-import eu.mosaic_cloud.platform.core.ops.IOperation;
-import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
-import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.drivers.ops.GenericOperation;
+import eu.mosaic_cloud.drivers.ops.IOperation;
+import eu.mosaic_cloud.drivers.ops.IOperationFactory;
+import eu.mosaic_cloud.drivers.ops.IOperationType;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;

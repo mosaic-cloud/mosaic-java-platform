@@ -24,9 +24,9 @@ package eu.mosaic_cloud.drivers.kvstore;
 import java.io.IOException;
 
 import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.drivers.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 

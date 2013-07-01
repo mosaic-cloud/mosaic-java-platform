@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.ops;
+package eu.mosaic_cloud.drivers.ops;
 
 
 import java.util.concurrent.ExecutionException;

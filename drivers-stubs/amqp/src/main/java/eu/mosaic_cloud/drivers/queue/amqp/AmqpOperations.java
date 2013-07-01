@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.drivers.queue.amqp;
 
 
-import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.drivers.ops.IOperationType;
 
 
 /**

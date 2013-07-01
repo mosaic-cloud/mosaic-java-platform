@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.drivers.kvstore;
 
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -29,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.drivers.ops.GenericOperation;
+import eu.mosaic_cloud.drivers.ops.GenericResult;
+import eu.mosaic_cloud.drivers.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.drivers.ops.IOperationFactory;
+import eu.mosaic_cloud.drivers.ops.IResult;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.ops.GenericOperation;
-import eu.mosaic_cloud.platform.core.ops.GenericResult;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
-import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;

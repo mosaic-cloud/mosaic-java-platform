@@ -24,7 +24,6 @@ package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
-import eu.mosaic_cloud.platform.core.utils.MessageEnvelope;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -44,7 +43,7 @@ public class AmqpQueuePublisherConnector<TMessage>
 		return this.proxy.publish (message);
 	}
 	
-	public static <M, E extends MessageEnvelope> AmqpQueuePublisherConnector<M> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder)
+	public static <M> AmqpQueuePublisherConnector<M> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder)
 	{
 		final AmqpQueuePublisherConnectorProxy<M> proxy = AmqpQueuePublisherConnectorProxy.create (configuration, messageClass, messageEncoder);
 		return new AmqpQueuePublisherConnector<M> (proxy);

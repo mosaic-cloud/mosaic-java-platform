@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.ops;
+package eu.mosaic_cloud.drivers.ops;
 
 
 import java.util.concurrent.ExecutionException;
@@ -57,7 +57,7 @@ public class GenericResult<T>
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.platform.core.ops.IResult#cancel()
+	 * @see eu.mosaic_cloud.drivers.ops.IResult#cancel()
 	 */
 	@Override
 	public final boolean cancel ()
@@ -102,7 +102,7 @@ public class GenericResult<T>
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see eu.mosaic_cloud.platform.core.ops.IResult#isDone()
+	 * @see eu.mosaic_cloud.drivers.ops.IResult#isDone()
 	 */
 	@Override
 	public final boolean isDone ()

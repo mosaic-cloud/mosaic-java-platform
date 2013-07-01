@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.platform.core.utils;
+package eu.mosaic_cloud.platform.core.utils.tests;
 
 
 import java.io.Serializable;
@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
+import eu.mosaic_cloud.platform.core.utils.EncodingException;
+import eu.mosaic_cloud.platform.core.utils.JsonDataEncoder;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.junit.Test;

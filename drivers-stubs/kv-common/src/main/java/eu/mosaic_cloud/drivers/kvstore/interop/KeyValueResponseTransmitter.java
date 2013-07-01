@@ -27,9 +27,9 @@ import java.util.Map;
 
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
 import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
+import eu.mosaic_cloud.drivers.ops.IOperationType;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
-import eu.mosaic_cloud.platform.core.ops.IOperationType;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error;

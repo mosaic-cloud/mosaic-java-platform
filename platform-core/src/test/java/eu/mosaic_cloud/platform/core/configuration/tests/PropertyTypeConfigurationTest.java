@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.tests.configuration.tests;
+package eu.mosaic_cloud.platform.core.configuration.tests;
 
 
 import java.io.FileInputStream;

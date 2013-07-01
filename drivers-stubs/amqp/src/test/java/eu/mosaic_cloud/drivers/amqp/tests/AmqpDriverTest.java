@@ -24,14 +24,14 @@ package eu.mosaic_cloud.drivers.amqp.tests;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import eu.mosaic_cloud.drivers.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.drivers.ops.IResult;
+import eu.mosaic_cloud.drivers.ops.tests.TestLoggingHandler;
 import eu.mosaic_cloud.drivers.queue.amqp.AmqpDriver;
 import eu.mosaic_cloud.drivers.queue.amqp.IAmqpConsumer;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
-import eu.mosaic_cloud.platform.core.tests.TestLoggingHandler;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;

@@ -24,10 +24,10 @@ package eu.mosaic_cloud.drivers.queue.amqp;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import eu.mosaic_cloud.platform.core.ops.GenericOperation;
-import eu.mosaic_cloud.platform.core.ops.IOperation;
-import eu.mosaic_cloud.platform.core.ops.IOperationFactory;
-import eu.mosaic_cloud.platform.core.ops.IOperationType;
+import eu.mosaic_cloud.drivers.ops.GenericOperation;
+import eu.mosaic_cloud.drivers.ops.IOperation;
+import eu.mosaic_cloud.drivers.ops.IOperationFactory;
+import eu.mosaic_cloud.drivers.ops.IOperationType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;

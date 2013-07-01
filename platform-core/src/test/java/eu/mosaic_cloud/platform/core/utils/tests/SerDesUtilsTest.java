@@ -18,33 +18,30 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.utils;
+package eu.mosaic_cloud.platform.core.utils.tests;
 
 
-/**
- * Various utility methods.
- * 
- * @author Georgiana Macariu
- * 
- */
-public final class Miscellaneous
+import java.io.Serializable;
+
+import eu.mosaic_cloud.platform.core.utils.SerDesUtils;
+
+import org.junit.Test;
+
+
+public class SerDesUtilsTest
 {
-	private Miscellaneous ()
-	{}
-	
-	/**
-	 * Casts an object to a specified type.
-	 * 
-	 * @param <T>
-	 *            the type to cast to
-	 * @param classToCast
-	 *            the class object for the type
-	 * @param valueToCast
-	 *            the object to cast
-	 * @return the casted object
-	 */
-	public static <T> T cast (final Class<T> classToCast, final Object valueToCast)
+	@Test
+	public void testArray ()
+			throws Throwable
 	{
-		return classToCast.cast (valueToCast);
+		SerDesUtils.toObject (SerDesUtils.pojoToBytes (new SomeClass ()));
+	}
+	
+	public static class SomeClass
+			implements
+				Serializable
+	{
+		public Object[] someField = new Object[] {1, 2, true, ""};
+		private static final long serialVersionUID = 1L;
 	}
 }

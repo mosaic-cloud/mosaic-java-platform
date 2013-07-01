@@ -18,10 +18,10 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.tests;
+package eu.mosaic_cloud.drivers.ops.tests;
 
 
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.drivers.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 

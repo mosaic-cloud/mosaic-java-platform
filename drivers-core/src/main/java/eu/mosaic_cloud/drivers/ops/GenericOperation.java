@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.ops;
+package eu.mosaic_cloud.drivers.ops;
 
 
 import java.util.concurrent.Callable;
@@ -28,7 +28,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import eu.mosaic_cloud.platform.core.exceptions.NullCompletionCallback;
+import eu.mosaic_cloud.drivers.exceptions.NullCompletionCallback;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 

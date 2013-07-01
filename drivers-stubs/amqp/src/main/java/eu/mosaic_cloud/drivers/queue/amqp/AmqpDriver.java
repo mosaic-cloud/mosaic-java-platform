@@ -27,12 +27,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.drivers.AbstractResourceDriver;
 import eu.mosaic_cloud.drivers.ConfigProperties;
+import eu.mosaic_cloud.drivers.ops.GenericOperation;
+import eu.mosaic_cloud.drivers.ops.GenericResult;
+import eu.mosaic_cloud.drivers.ops.IOperationCompletionHandler;
+import eu.mosaic_cloud.drivers.ops.IResult;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.core.ops.GenericOperation;
-import eu.mosaic_cloud.platform.core.ops.GenericResult;
-import eu.mosaic_cloud.platform.core.ops.IOperationCompletionHandler;
-import eu.mosaic_cloud.platform.core.ops.IResult;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;

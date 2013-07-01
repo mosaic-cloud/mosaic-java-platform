@@ -18,16 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.exceptions;
+package eu.mosaic_cloud.drivers.exceptions;
 
 
 /**
- * Exception thrown when a queue-based connection cannot be set.
+ * Exception thrown when no operation completion callback is set.
  * 
  * @author Georgiana Macariu
  * 
  */
-public class ConnectionException
+public class NullCompletionCallback
 		extends Exception
 {
 	/**
@@ -35,7 +35,7 @@ public class ConnectionException
 	 * not initialized, and may subsequently be initialized by a call to
 	 * {@link Throwable#initCause(Throwable)}.
 	 */
-	public ConnectionException ()
+	public NullCompletionCallback ()
 	{
 		super ();
 	}
@@ -49,7 +49,7 @@ public class ConnectionException
 	 *            the detail message. The detail message is saved for later
 	 *            retrieval by the {@link Throwable#getMessage()} method
 	 */
-	public ConnectionException (final String message)
+	public NullCompletionCallback (final String message)
 	{
 		super (message);
 	}
@@ -68,7 +68,7 @@ public class ConnectionException
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public ConnectionException (final String message, final Throwable cause)
+	public NullCompletionCallback (final String message, final Throwable cause)
 	{
 		super (message, cause);
 	}
@@ -85,10 +85,10 @@ public class ConnectionException
 	 *            permitted, and indicates that the cause is nonexistent or
 	 *            unknown.)
 	 */
-	public ConnectionException (final Throwable cause)
+	public NullCompletionCallback (final Throwable cause)
 	{
 		super (cause);
 	}
 	
-	private static final long serialVersionUID = 3353582009957410019L;
+	private static final long serialVersionUID = -3388438945086356985L;
 }
