@@ -23,7 +23,7 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
 
 public interface IConnectorsFactoryBuilder
 		extends
-			eu.mosaic_cloud.connectors.core.IConnectorsFactoryBuilder
+			eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder
 {
 	@Override
 	public abstract IConnectorsFactory build ();

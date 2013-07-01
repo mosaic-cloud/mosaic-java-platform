@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.tests;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.connectors.kvstore.BaseKvStoreConnector;
+import eu.mosaic_cloud.connectors.implementations.v1.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.EncodingMetadata;
 

@@ -26,9 +26,9 @@ import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
 import eu.mosaic_cloud.cloudlets.tools.BaseConnectorsFactoryInitializer;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.utils.DataEncoder;
 
@@ -46,7 +46,7 @@ public final class GenericKvStoreConnectorFactoryInitializer
 			@Override
 			public <TContext, TTValue, TExtra> IKvStoreConnector<TTValue, TExtra> create (final IConfiguration configuration, final Class<TTValue> valueClass, final DataEncoder<TTValue> valueEncoder, final IKvStoreConnectorCallback<TContext, TTValue, TExtra> callback, final TContext callbackContext)
 			{
-				final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TTValue> backingConnector = (eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TTValue>) delegate.getConnectorFactory (eu.mosaic_cloud.connectors.kvstore.IKvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
+				final eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TTValue> backingConnector = (eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TTValue>) delegate.getConnectorFactory (eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
 				return new GenericKvStoreConnector<TContext, TTValue, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
 			}
 		});

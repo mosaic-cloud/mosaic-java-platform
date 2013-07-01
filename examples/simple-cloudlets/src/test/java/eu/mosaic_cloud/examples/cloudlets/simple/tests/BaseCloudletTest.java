@@ -43,11 +43,10 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.base.Preconditions;
-
-import junit.framework.Assert;
 
 
 public abstract class BaseCloudletTest

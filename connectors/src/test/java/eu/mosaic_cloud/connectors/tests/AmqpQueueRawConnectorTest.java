@@ -24,9 +24,9 @@ package eu.mosaic_cloud.connectors.tests;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.connectors.queue.amqp.AmqpQueueRawConnector;
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueRawConsumerCallback;
-import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
+import eu.mosaic_cloud.connectors.implementations.v1.queue.amqp.AmqpQueueRawConnector;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;

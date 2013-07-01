@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.tests;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;

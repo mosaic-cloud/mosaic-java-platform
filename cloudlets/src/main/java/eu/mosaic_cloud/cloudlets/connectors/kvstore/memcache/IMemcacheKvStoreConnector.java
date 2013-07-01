@@ -43,7 +43,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public interface IMemcacheKvStoreConnector<TValue, TExtra>
 		extends
 			IKvStoreConnector<TValue, TExtra>,
-			eu.mosaic_cloud.connectors.kvstore.memcache.IMemcacheKvStoreConnector<TValue>
+			eu.mosaic_cloud.connectors.v1.kvstore.memcache.IMemcacheKvStoreConnector<TValue>
 {
 	/**
 	 * Stores specified data, but only if the server *doesn't* already hold data

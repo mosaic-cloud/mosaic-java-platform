@@ -34,5 +34,5 @@ import eu.mosaic_cloud.cloudlets.connectors.queue.IQueueConnector;
 public interface IAmqpQueueConnector
 		extends
 			IQueueConnector,
-			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConnector
+			eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConnector
 {}

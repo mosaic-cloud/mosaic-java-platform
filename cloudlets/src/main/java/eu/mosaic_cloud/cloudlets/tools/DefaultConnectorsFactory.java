@@ -28,11 +28,11 @@ import eu.mosaic_cloud.cloudlets.connectors.kvstore.generic.GenericKvStoreConnec
 import eu.mosaic_cloud.cloudlets.connectors.kvstore.memcache.MemcacheKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.AmqpQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer;
-import eu.mosaic_cloud.connectors.tools.BaseConnectorsFactory;
-import eu.mosaic_cloud.connectors.tools.BaseConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorsFactory;
+import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorsFactoryBuilder;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer;
 
 import com.google.common.base.Preconditions;
 
@@ -52,7 +52,7 @@ public class DefaultConnectorsFactory
 	
 	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment)
 	{
-		final eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory delegate = eu.mosaic_cloud.connectors.tools.DefaultConnectorsFactory.create (environment);
+		final eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory delegate = eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory.create (environment);
 		return DefaultConnectorsFactory.create (cloudlet, environment, delegate);
 	}
 	

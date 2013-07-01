@@ -43,9 +43,9 @@ import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
  *            correlation
  */
 public class GenericKvStoreConnector<TContext, TValue, TExtra>
-		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TValue>, IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue>, IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 {
-	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector<TValue> connector, final IConfiguration config, final IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context)
+	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue> connector, final IConfiguration config, final IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context)
 	{
 		super (cloudlet, connector, config, callback, context);
 	}

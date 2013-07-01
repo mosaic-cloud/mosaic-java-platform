@@ -32,5 +32,5 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
  */
 public interface IConnectorFactory<TConnector extends IConnector>
 		extends
-			eu.mosaic_cloud.connectors.core.IConnectorFactory<TConnector>
+			eu.mosaic_cloud.connectors.v1.core.IConnectorFactory<TConnector>
 {}

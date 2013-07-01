@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.tests;
 
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.connectors.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.IConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.platform.core.utils.EncodingException;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;

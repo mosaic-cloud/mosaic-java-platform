@@ -46,7 +46,7 @@ import com.google.common.base.Preconditions;
  * @param <TContext>
  *            cloudlet callback context
  */
-public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object>
+public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.v1.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object>
 		implements
 			IConnector,
 			CallbackProxy

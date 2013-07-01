@@ -23,7 +23,7 @@ package eu.mosaic_cloud.cloudlets.connectors.httpg;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.connectors.httpg.HttpgRequestMessage;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 
 
 public class HttpgQueueRequestedCallbackArguments<TRequestBody>

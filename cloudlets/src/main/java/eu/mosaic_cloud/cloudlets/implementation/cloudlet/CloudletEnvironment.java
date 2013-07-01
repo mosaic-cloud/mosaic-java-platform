@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.mosaic_cloud.cloudlets.implementation.container.IComponentConnector;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;

@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.connectors.tests;
 
 
-import eu.mosaic_cloud.connectors.kvstore.generic.GenericKvStoreConnector;
-import eu.mosaic_cloud.connectors.tools.ConnectorConfiguration;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
+import eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.core.configuration.PropertyTypeConfiguration;

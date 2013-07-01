@@ -45,9 +45,9 @@ import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmState;
 import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletFsm.FsmTransition;
 import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.tools.DefaultConnectorsFactory;
-import eu.mosaic_cloud.connectors.core.IConnector;
-import eu.mosaic_cloud.connectors.core.IConnectorFactory;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.core.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -280,9 +280,9 @@ public final class Cloudlet<TContext extends Object>
 					this.exceptions.traceHandledException (exception);
 					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
 				}
-			} else if (initializer instanceof eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer) {
+			} else if (initializer instanceof eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer) {
 				try {
-					builder.initialize ((eu.mosaic_cloud.connectors.core.IConnectorsFactoryInitializer) initializer);
+					builder.initialize ((eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer) initializer);
 				} catch (final Throwable exception) {
 					this.exceptions.traceHandledException (exception);
 					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
@@ -305,7 +305,7 @@ public final class Cloudlet<TContext extends Object>
 	{
 		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.getString ("Cloudlet.1"), String.class, DefaultConnectorsFactory.Builder.class.getName ());
 		Preconditions.checkNotNull (className, "unknown cloudlet connectors factory builder class");
-		final IConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (IConnectorsFactoryBuilder.class, className, new Class<?>[] {ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.core.IConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
+		final IConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (IConnectorsFactoryBuilder.class, className, new Class<?>[] {ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
 		return builder;
 	}
 	

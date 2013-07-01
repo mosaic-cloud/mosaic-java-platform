@@ -24,14 +24,14 @@ package eu.mosaic_cloud.cloudlets.tools;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnector;
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
 
 public abstract class BaseConnectorFactory<TConnector extends IConnector>
-		extends eu.mosaic_cloud.connectors.tools.BaseConnectorFactory<TConnector>
+		extends eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorFactory<TConnector>
 		implements
 			IConnectorFactory<TConnector>
 {

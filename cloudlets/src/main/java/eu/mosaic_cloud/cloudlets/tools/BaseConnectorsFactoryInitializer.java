@@ -23,9 +23,9 @@ package eu.mosaic_cloud.cloudlets.tools;
 
 import eu.mosaic_cloud.cloudlets.connectors.core.IConnectorsFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.core.IConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.tools.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
 
 import com.google.common.base.Preconditions;
 

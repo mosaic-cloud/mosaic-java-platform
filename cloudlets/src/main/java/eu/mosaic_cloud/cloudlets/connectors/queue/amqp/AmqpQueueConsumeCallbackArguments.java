@@ -23,7 +23,7 @@ package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpMessageToken;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
 
 
 /**

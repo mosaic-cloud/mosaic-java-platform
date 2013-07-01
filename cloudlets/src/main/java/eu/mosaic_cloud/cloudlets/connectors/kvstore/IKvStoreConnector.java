@@ -42,7 +42,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public interface IKvStoreConnector<TValue, TExtra>
 		extends
 			IConnector,
-			eu.mosaic_cloud.connectors.kvstore.IKvStoreConnector<TValue>
+			eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnector<TValue>
 {
 	/**
 	 * Deletes the given key.

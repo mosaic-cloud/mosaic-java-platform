@@ -48,7 +48,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
  *            correlation
  */
 public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
-		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue>, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.implementations.v1.kvstore.memcache.MemcacheKvStoreConnector<TValue>, IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 		implements
 			IMemcacheKvStoreConnector<TValue, TExtra>
 {
@@ -60,7 +60,7 @@ public class MemcacheKvStoreConnector<TContext, TValue, TExtra>
 	 * @param cloudlet
 	 *            the cloudlet controller of the cloudlet using the connector
 	 */
-	public MemcacheKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.kvstore.memcache.MemcacheKvStoreConnector<TValue> connector, final IConfiguration config, final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context)
+	public MemcacheKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.implementations.v1.kvstore.memcache.MemcacheKvStoreConnector<TValue> connector, final IConfiguration config, final IMemcacheKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context)
 	{
 		super (cloudlet, connector, config, callback, context);
 	}

@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.queue.amqp.IAmqpMessageToken;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -39,7 +39,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public interface IAmqpQueueConsumerConnector<TMessage, TExtra>
 		extends
 			IAmqpQueueConnector,
-			eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueueConsumerConnector<TMessage>
+			eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector<TMessage>
 {
 	/**
 	 * Acknowledges a message.

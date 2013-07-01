@@ -29,5 +29,5 @@ package eu.mosaic_cloud.cloudlets.connectors.core;
  */
 public interface IConnectorsFactory
 		extends
-			eu.mosaic_cloud.connectors.core.IConnectorsFactory
+			eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory
 {}

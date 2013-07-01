@@ -29,11 +29,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
-		extends BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage>, IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>, TContext>
+		extends BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueuePublisherConnector<TMessage>, IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>, TContext>
 		implements
 			IAmqpQueuePublisherConnector<TMessage, TExtra>
 {
-	public AmqpQueuePublisherConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.queue.amqp.IAmqpQueuePublisherConnector<TMessage> connector, final IConfiguration configuration, final IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context)
+	public AmqpQueuePublisherConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueuePublisherConnector<TMessage> connector, final IConfiguration configuration, final IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context)
 	{
 		super (cloudlet, connector, configuration, callback, context);
 	}
