@@ -21,11 +21,11 @@
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.core.ICallback;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 

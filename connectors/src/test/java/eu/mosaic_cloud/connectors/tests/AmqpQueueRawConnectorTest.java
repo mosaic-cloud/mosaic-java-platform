@@ -37,9 +37,9 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
-import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 

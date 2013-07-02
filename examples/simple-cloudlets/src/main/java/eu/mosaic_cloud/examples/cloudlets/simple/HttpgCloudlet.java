@@ -23,13 +23,13 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.cloudlets.connectors.httpg.HttpgQueueRequestedCallbackArguments;
-import eu.mosaic_cloud.cloudlets.connectors.httpg.IHttpgQueueConnectorFactory;
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.ICallback;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
-import eu.mosaic_cloud.cloudlets.tools.DefaultHttpgQueueConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultHttpgQueueConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.IHttpgQueueConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;

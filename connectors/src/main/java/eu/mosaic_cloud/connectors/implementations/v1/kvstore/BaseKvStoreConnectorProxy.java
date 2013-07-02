@@ -47,9 +47,9 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
-import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.protobuf.ByteString;

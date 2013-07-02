@@ -21,11 +21,11 @@
 package eu.mosaic_cloud.cloudlets.runtime.tests;
 
 
-import eu.mosaic_cloud.cloudlets.core.ICloudletCallback;
-import eu.mosaic_cloud.cloudlets.implementation.cloudlet.Cloudlet;
-import eu.mosaic_cloud.cloudlets.implementation.cloudlet.CloudletEnvironment;
-import eu.mosaic_cloud.cloudlets.implementation.container.IComponentConnector;
-import eu.mosaic_cloud.cloudlets.tools.ConfigProperties;
+import eu.mosaic_cloud.cloudlets.implementation.v1.cloudlets.Cloudlet;
+import eu.mosaic_cloud.cloudlets.implementation.v1.cloudlets.CloudletEnvironment;
+import eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector;
+import eu.mosaic_cloud.cloudlets.implementation.v1.tools.ConfigProperties;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;

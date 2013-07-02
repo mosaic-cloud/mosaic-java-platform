@@ -36,8 +36,8 @@ import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.MemcachedSession;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
-import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
+import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.protobuf.ByteString;

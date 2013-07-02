@@ -23,16 +23,16 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnector;
-import eu.mosaic_cloud.cloudlets.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
-import eu.mosaic_cloud.cloudlets.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.core.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.core.GenericCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.core.ICallback;
-import eu.mosaic_cloud.cloudlets.core.ICloudletController;
-import eu.mosaic_cloud.cloudlets.tools.DefaultAmqpPublisherConnectorCallback;
-import eu.mosaic_cloud.cloudlets.tools.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpPublisherConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
