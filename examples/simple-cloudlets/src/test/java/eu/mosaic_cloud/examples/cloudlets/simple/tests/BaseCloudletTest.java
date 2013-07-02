@@ -23,7 +23,7 @@ package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.cloudlets.implementation.v1.cloudlets.Cloudlet;
+import eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets.Cloudlet;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
@@ -50,7 +50,7 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseCloudletTest
-		extends eu.mosaic_cloud.cloudlets.implementation.v1.tests.BaseCloudletTest<BaseCloudletTest.Scenario<?>>
+		extends eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest<BaseCloudletTest.Scenario<?>>
 {
 	@Override
 	@After
@@ -74,7 +74,7 @@ public abstract class BaseCloudletTest
 		if (this.cloudlet != null) {
 			this.awaitSuccess (this.cloudlet.destroy ());
 		}
-		eu.mosaic_cloud.cloudlets.implementation.v1.tests.BaseCloudletTest.tearDownScenario (this.scenario);
+		eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest.tearDownScenario (this.scenario);
 		this.cloudlet = null;
 		this.scenario = null;
 	}
@@ -155,7 +155,7 @@ public abstract class BaseCloudletTest
 				}
 			}
 		};
-		eu.mosaic_cloud.cloudlets.implementation.v1.tests.BaseCloudletTest.setUpScenario (this.getClass (), scenario, configuration, callbacksClass, contextClass, componentConnector, connectorsChannelFactory, connectorsChannelResolver);
+		eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest.setUpScenario (this.getClass (), scenario, configuration, callbacksClass, contextClass, componentConnector, connectorsChannelFactory, connectorsChannelResolver);
 		{
 			scenario.connectorsIdentity = UUID.randomUUID ().toString ();
 			scenario.connectorsChannel = ZeroMqChannel.create (scenario.connectorsIdentity, scenario.threading, scenario.exceptions);
@@ -215,7 +215,7 @@ public abstract class BaseCloudletTest
 	private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
 	
 	public static class Scenario<Context extends Object>
-			extends eu.mosaic_cloud.cloudlets.implementation.v1.tests.BaseCloudletTest.BaseScenario<Context>
+			extends eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest.BaseScenario<Context>
 	{
 		public AbstractDriverStub amqpDriverStub;
 		public ZeroMqChannel connectorsChannel;
