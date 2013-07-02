@@ -24,7 +24,6 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.executors.ExecutorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.httpg.HttpgQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
-import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.kvstore.memcache.MemcacheKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.queue.amqp.AmqpQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryBuilder;
@@ -95,7 +94,6 @@ public class DefaultConnectorsFactory
 		protected final void initialize_1 ()
 		{
 			this.initialize (GenericKvStoreConnectorFactoryInitializer.defaultInstance);
-			this.initialize (MemcacheKvStoreConnectorFactoryInitializer.defaultInstance);
 			this.initialize (AmqpQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (ExecutorFactoryInitializer.defaultInstance);

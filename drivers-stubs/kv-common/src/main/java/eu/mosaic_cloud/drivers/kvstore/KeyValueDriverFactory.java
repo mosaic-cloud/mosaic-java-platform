@@ -86,8 +86,6 @@ public final class KeyValueDriverFactory
 	
 	public enum DriverType
 	{
-		MEMCACHED ("eu.mosaic_cloud.drivers.kvstore.MemcachedDriver"),
-		REDIS ("eu.mosaic_cloud.drivers.kvstore.RedisDriver"),
 		RIAKPB ("eu.mosaic_cloud.drivers.kvstore.RiakDriver"),
 		RIAKREST ("eu.mosaic_cloud.drivers.kvstore.RiakDriver");
 		DriverType (final String canonicalClassName)

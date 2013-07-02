@@ -23,7 +23,6 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 import eu.mosaic_cloud.connectors.implementations.v1.httpg.HttpgQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
-import eu.mosaic_cloud.connectors.implementations.v1.kvstore.memcache.MemcacheKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.implementations.v1.queue.amqp.AmqpQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer;
@@ -69,7 +68,6 @@ public class DefaultConnectorsFactory
 		protected final void initialize_1 ()
 		{
 			this.initialize (GenericKvStoreConnectorFactoryInitializer.defaultInstance);
-			this.initialize (MemcacheKvStoreConnectorFactoryInitializer.defaultInstance);
 			this.initialize (AmqpQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
 		}
