@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.implementation.v1.components;
+package eu.mosaic_cloud.connectors.v1.components;
 
 
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;

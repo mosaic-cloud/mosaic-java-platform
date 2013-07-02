@@ -34,7 +34,7 @@ import com.google.common.base.Preconditions;
 public final class ComponentConnectorFactoryInitializer
 		extends BaseConnectorsFactoryInitializer
 {
-	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector backingConnector)
+	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector)
 	{
 		super ();
 		Preconditions.checkNotNull (backingConnector);
@@ -47,5 +47,5 @@ public final class ComponentConnectorFactoryInitializer
 		builder.register (IComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
 	}
 	
-	private final eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector backingConnector;
+	private final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector;
 }

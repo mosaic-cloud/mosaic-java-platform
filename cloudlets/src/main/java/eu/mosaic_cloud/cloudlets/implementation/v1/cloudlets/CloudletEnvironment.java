@@ -25,8 +25,8 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.components.IComponentConnector;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;

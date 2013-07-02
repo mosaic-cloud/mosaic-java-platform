@@ -30,7 +30,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public interface IComponentConnector<TExtra>
 		extends
-			IConnector
+			eu.mosaic_cloud.connectors.v1.components.IComponentConnector
 {
 	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource, final TExtra extra);
 	

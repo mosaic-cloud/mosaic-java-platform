@@ -39,7 +39,7 @@ public final class ComponentConnectorFactory
 		implements
 			IComponentConnectorFactory
 {
-	public ComponentConnectorFactory (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector backingConnector, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
+	public ComponentConnectorFactory (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
 	{
 		super (cloudlet, environment, delegate);
 		Preconditions.checkNotNull (backingConnector);
@@ -54,5 +54,5 @@ public final class ComponentConnectorFactory
 		return connector;
 	}
 	
-	private final eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector backingConnector;
+	private final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector;
 }

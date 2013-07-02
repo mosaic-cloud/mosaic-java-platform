@@ -37,13 +37,19 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class ComponentConnector<TContext, TExtra>
-		extends BaseConnector<eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector, IComponentConnectorCallbacks<TContext, TExtra>, TContext>
+		extends BaseConnector<eu.mosaic_cloud.connectors.v1.components.IComponentConnector, IComponentConnectorCallbacks<TContext, TExtra>, TContext>
 		implements
 			IComponentConnector<TExtra>
 {
-	public ComponentConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector connector, final IConfiguration configuration, final IComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context)
+	public ComponentConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector connector, final IConfiguration configuration, final IComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context)
 	{
 		super (cloudlet, connector, configuration, callback, context);
+	}
+	
+	@Override
+	public final CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource)
+	{
+		return (this.connector.acquire (resource));
 	}
 	
 	@Override
@@ -68,6 +74,12 @@ public class ComponentConnector<TContext, TExtra>
 			});
 		}
 		return completion;
+	}
+	
+	@Override
+	public final <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs)
+	{
+		return (this.connector.call (component, operation, inputs, outputs));
 	}
 	
 	@Override

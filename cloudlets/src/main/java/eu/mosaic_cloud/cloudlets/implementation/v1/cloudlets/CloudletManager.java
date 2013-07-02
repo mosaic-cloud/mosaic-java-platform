@@ -24,11 +24,11 @@ package eu.mosaic_cloud.cloudlets.implementation.v1.cloudlets;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
-import eu.mosaic_cloud.cloudlets.implementation.v1.components.IComponentConnector;
 import eu.mosaic_cloud.cloudlets.implementation.v1.tools.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.components.IComponentConnector;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;

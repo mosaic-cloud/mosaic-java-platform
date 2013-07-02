@@ -42,6 +42,7 @@ import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
+import eu.mosaic_cloud.connectors.v1.components.IComponentConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactoryAndResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
