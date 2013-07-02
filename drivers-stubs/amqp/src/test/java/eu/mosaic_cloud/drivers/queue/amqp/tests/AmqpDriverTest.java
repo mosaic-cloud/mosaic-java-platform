@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.amqp.tests;
+package eu.mosaic_cloud.drivers.queue.amqp.tests;
 
 
 import java.util.UUID;

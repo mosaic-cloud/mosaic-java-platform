@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;

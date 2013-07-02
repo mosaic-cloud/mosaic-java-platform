@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.runtime.tests;
+package eu.mosaic_cloud.cloudlets.implementation.v1.tests;
 
 
 import eu.mosaic_cloud.cloudlets.implementation.v1.cloudlets.Cloudlet;

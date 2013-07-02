@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.core.utils.tests;
+package eu.mosaic_cloud.platform.implementations.v1.serialization.tests;
 
 
 import java.io.Serializable;

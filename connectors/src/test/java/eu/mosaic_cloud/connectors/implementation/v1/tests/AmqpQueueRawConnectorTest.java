@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.tests;
+package eu.mosaic_cloud.connectors.implementation.v1.tests;
 
 
 import java.util.UUID;

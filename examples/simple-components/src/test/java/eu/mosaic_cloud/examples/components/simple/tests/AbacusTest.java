@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.examples.components.simple;
+package eu.mosaic_cloud.examples.components.simple.tests;
 
 
 import java.nio.ByteBuffer;
@@ -37,6 +37,7 @@ import eu.mosaic_cloud.components.implementations.basic.BasicChannel;
 import eu.mosaic_cloud.components.implementations.basic.BasicComponent;
 import eu.mosaic_cloud.components.tools.DefaultChannelMessageCoder;
 import eu.mosaic_cloud.components.tools.QueueingComponentCallbacks;
+import eu.mosaic_cloud.examples.components.simple.AbacusComponentCallbacks;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
