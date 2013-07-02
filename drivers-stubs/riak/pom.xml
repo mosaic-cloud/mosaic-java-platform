@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.drivers</groupId>
-			<artifactId>drivers-stubs-kv-common</artifactId>
+			<artifactId>drivers-container</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -44,8 +44,33 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>eu.mosaic_cloud.interoperability</groupId>
+			<artifactId>interoperability-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.interoperability</groupId>
+			<artifactId>interoperability-zeromq</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.components</groupId>
+			<artifactId>components-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-callbacks</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
 			<artifactId>tools-threading</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.tools</groupId>
+			<artifactId>tools-exceptions</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -54,9 +79,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-exceptions</artifactId>
-			<version>${project.version}</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${versions.dependencies.guava}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>

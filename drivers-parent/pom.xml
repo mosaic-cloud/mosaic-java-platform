@@ -21,7 +21,6 @@
 		<module>../drivers-core</module>
 		<module>../drivers-container</module>
 		<module>../drivers-stubs/amqp</module>
-		<module>../drivers-stubs/kv-common</module>
 		<module>../drivers-stubs/riak</module>
 	</modules>
 	

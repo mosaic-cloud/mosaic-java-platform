@@ -40,12 +40,6 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.drivers</groupId>
-			<artifactId>drivers-stubs-kv-common</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.drivers</groupId>
 			<artifactId>drivers-stubs-riak</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
