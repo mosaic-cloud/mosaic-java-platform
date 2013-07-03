@@ -164,7 +164,7 @@ public final class CloudletManager
 	private final Class<?> resolveCloudletCallbacksClass ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet callbacks class name...");
-		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_8, String.class, null); // $NON-NLS-1$
+		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_8, String.class, null);
 		Preconditions.checkNotNull (className, "unknown cloudlet callbacks class");
 		this.transcript.traceDebugging ("resolving the cloudlet callbacks class `%s`...", className);
 		final Class<?> clasz;
@@ -181,7 +181,7 @@ public final class CloudletManager
 	private final IConfiguration resolveCloudletConfiguration ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet configuration...");
-		final String configurationDescriptor = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_10, String.class, null); // $NON-NLS-1$
+		final String configurationDescriptor = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_10, String.class, null);
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet configuration descriptor");
 		this.transcript.traceDebugging ("resolving the cloudlet configuration `%s`...", configurationDescriptor);
 		final IConfiguration configuration;
@@ -197,7 +197,7 @@ public final class CloudletManager
 	private final Class<?> resolveCloudletStateClass ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet state class name...");
-		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_9, String.class, null); // $NON-NLS-1$
+		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_9, String.class, null);
 		Preconditions.checkNotNull (className, "unknown cloudlet context class");
 		this.transcript.traceDebugging ("resolving the cloudlet state class `%s`...", className);
 		final Class<?> clasz;

@@ -71,7 +71,7 @@ public final class RiakDriver
 	public synchronized void destroy ()
 	{
 		super.destroy ();
-		RiakDriver.logger.trace ("RiakDriver destroyed."); // $NON-NLS-1$
+		RiakDriver.logger.trace ("RiakDriver destroyed.");
 	}
 	
 	/*
@@ -110,9 +110,9 @@ public final class RiakDriver
 				ConnectionException
 	{
 		int port, noThreads;
-		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
-		port = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);// $NON-NLS-1$
-		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_2, Integer.class, 1); // $NON-NLS-1$
+		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "");
+		port = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);
+		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_2, Integer.class, 1);
 		final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, KeyValueDriverFactory.DriverType.RIAKREST.toString ());
 		boolean usePb = false;
 		if (driverName.equalsIgnoreCase (KeyValueDriverFactory.DriverType.RIAKPB.toString ())) {

@@ -250,9 +250,9 @@ public class KeyValueStub
 			stub = KeyValueStub.stubs.get (cData);
 			try {
 				if (stub == null) {
-					KeyValueStub.logger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
+					KeyValueStub.logger.trace ("KeyValueStub: create new stub.");
 					final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
-					final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+					final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, "");
 					final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
 					stub = new KeyValueStub (config, transmitter, driver, channel);
 					stub.driverClass = KeyValueDriverFactory.DriverType.valueOf (driverName.toUpperCase (Locale.ENGLISH)).getDriverClass ();
@@ -260,7 +260,7 @@ public class KeyValueStub
 					AbstractDriverStub.incDriverReference (stub);
 					channel.accept (KeyValueSession.DRIVER, stub);
 				} else {
-					KeyValueStub.logger.trace ("KeyValueStub: use existing stub."); // $NON-NLS-1$
+					KeyValueStub.logger.trace ("KeyValueStub: use existing stub.");
 					AbstractDriverStub.incDriverReference (stub);
 				}
 			} catch (final DriverNotFoundException e) {
@@ -276,9 +276,9 @@ public class KeyValueStub
 	{
 		KeyValueStub stub;
 		try {
-			KeyValueStub.logger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
+			KeyValueStub.logger.trace ("KeyValueStub: create new stub.");
 			final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
-			final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+			final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, "");
 			final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
 			stub = new KeyValueStub (config, transmitter, driver, channel);
 			stub.driverClass = KeyValueDriverFactory.DriverType.valueOf (driverName.toUpperCase (Locale.ENGLISH)).getDriverClass ();
@@ -302,15 +302,15 @@ public class KeyValueStub
 	 */
 	protected static DriverConnectionData readConnectionData (final IConfiguration config)
 	{
-		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "localhost");// $NON-NLS-1$
-																																						// $NON-NLS-2$
-		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);// $NON-NLS-1$
-		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, ""); // $NON-NLS-1$
-																																		// $NON-NLS-2$
-		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_5, String.class, ""); // $NON-NLS-1$
-																																		// $NON-NLS-2$
-		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_4, String.class, ""); // $NON-NLS-1$
-																																		// $NON-NLS-2$
+		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "localhost");
+																																						
+		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);
+		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, "");
+																																		
+		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_5, String.class, "");
+																																		
+		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_4, String.class, "");
+																																		
 		DriverConnectionData cData;
 		if ("".equals (user) && "".equals (passwd)) {
 			cData = new DriverConnectionData (resourceHost, resourcePort, driver);
@@ -369,7 +369,7 @@ public class KeyValueStub
 			this.driver.removePendingOperation (this.result);
 			if (this.operation.equals (KeyValueOperations.GET)) {
 				final Map<String, Object> resMap = new HashMap<String, Object> ();
-				resMap.put ("dummy", response); // $NON-NLS-1$
+				resMap.put ("dummy", response);
 				this.transmitter.sendResponse (this.session, this.complToken, this.operation, resMap, false);
 			} else {
 				this.transmitter.sendResponse (this.session, this.complToken, this.operation, response, false);

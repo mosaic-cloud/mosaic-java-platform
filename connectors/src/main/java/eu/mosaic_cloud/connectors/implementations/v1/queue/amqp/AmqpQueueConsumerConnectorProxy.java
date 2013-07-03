@@ -49,19 +49,19 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	{
 		super (rawProxy, configuration, messageClass, messageEncoder);
 		final String identifier = this.raw.getIdentifier ();
-		this.exchange = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_0, String.class, identifier); // $NON-NLS-1$
-		this.exchangeType = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_5, AmqpExchangeType.class, AmqpExchangeType.DIRECT); // $NON-NLS-1$
-		this.exchangeDurable = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_9, Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
-		this.exchangeAutoDelete = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_7, Boolean.class, Boolean.TRUE).booleanValue (); // $NON-NLS-1$
-		this.queue = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_2, String.class, identifier); // $NON-NLS-1$
-		this.queueExclusive = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_6, Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
+		this.exchange = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_0, String.class, identifier);
+		this.exchangeType = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_5, AmqpExchangeType.class, AmqpExchangeType.DIRECT);
+		this.exchangeDurable = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_9, Boolean.class, Boolean.FALSE).booleanValue ();
+		this.exchangeAutoDelete = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_7, Boolean.class, Boolean.TRUE).booleanValue ();
+		this.queue = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_2, String.class, identifier);
+		this.queueExclusive = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_6, Boolean.class, Boolean.FALSE).booleanValue ();
 		this.queueAutoDelete = this.exchangeAutoDelete;
 		this.queueDurable = this.exchangeDurable;
-		this.bindingRoutingKey = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_1, String.class, identifier); // $NON-NLS-1$
+		this.bindingRoutingKey = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_1, String.class, identifier);
 		// FIXME: this should also be made a configurable parameter...
 		this.consumerIdentifier = identifier;
-		this.consumerAutoAck = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_10, Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
-		this.definePassive = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_8, Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
+		this.consumerAutoAck = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_10, Boolean.class, Boolean.FALSE).booleanValue ();
+		this.definePassive = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_8, Boolean.class, Boolean.FALSE).booleanValue ();
 		this.callback = new AmqpConsumerCallback (callback);
 		this.transcript.traceDebugging ("created the queue consumer connector proxy for queue `%s` bound to exchange `%s` (of type `%s`) with routing key `%s`.", this.queue, this.exchange, this.exchangeType, this.bindingRoutingKey);
 		this.transcript.traceDebugging ("using the underlying raw proxy `%{object:identity}`...", this.raw);

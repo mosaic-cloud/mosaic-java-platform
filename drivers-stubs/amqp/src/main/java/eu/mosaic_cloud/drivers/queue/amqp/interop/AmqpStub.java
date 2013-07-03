@@ -130,10 +130,10 @@ public class AmqpStub
 		final AmqpDriver driver = super.getDriver (AmqpDriver.class);
 		switch (amqpMessage) {
 			case ACCESS :
-				AmqpStub.logger.trace ("Received initiation message"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("Received initiation message");
 				break;
 			case ABORTED :
-				AmqpStub.logger.trace ("Received termination message"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("Received termination message");
 				break;
 			case DECL_EXCHANGE_REQUEST :
 				final AmqpPayloads.DeclareExchangeRequest declExchange = (DeclareExchangeRequest) message.payload;
@@ -143,7 +143,7 @@ public class AmqpStub
 				durable = declExchange.getDurable ();
 				autoDelete = declExchange.getAutoDelete ();
 				passive = declExchange.getPassive ();
-				AmqpStub.logger.trace ("AmqpStub - Received request for DECLARE EXCHANGE "); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received request for DECLARE EXCHANGE ");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler exchHandler = new DriverOperationFinishedHandler (token, session);
 				resultBool = driver.declareExchange (token.getClientId (), exchange, AmqpExchangeType.valueOf (type.toString ().toUpperCase ()), durable, autoDelete, passive, exchHandler);
@@ -157,7 +157,7 @@ public class AmqpStub
 				durable = declQueue.getDurable ();
 				autoDelete = declQueue.getAutoDelete ();
 				passive = declQueue.getPassive ();
-				AmqpStub.logger.trace ("AmqpStub - Received request for DECLARE QUEUE"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received request for DECLARE QUEUE");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler queueHandler = new DriverOperationFinishedHandler (token, session);
 				resultBool = driver.declareQueue (token.getClientId (), queue, exclusive, durable, autoDelete, passive, queueHandler);
@@ -169,7 +169,7 @@ public class AmqpStub
 				exchange = bindQueue.getExchange ();
 				queue = bindQueue.getQueue ();
 				routingKey = bindQueue.getRoutingKey ();
-				AmqpStub.logger.trace ("AmqpStub - Received request for BIND QUEUE"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received request for BIND QUEUE");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler bindHandler = new DriverOperationFinishedHandler (token, session);
 				resultBool = driver.bindQueue (token.getClientId (), exchange, queue, routingKey, bindHandler);
@@ -194,7 +194,7 @@ public class AmqpStub
 					replyTo = publish.getReplyTo ();
 				}
 				final AmqpOutboundMessage mssg = new AmqpOutboundMessage (exchange, routingKey, dataBytes, mandatory, immediate, durable, replyTo, envelope.getContentEncoding (), envelope.getContentType (), correlationId, null);
-				AmqpStub.logger.trace ("AmqpStub - Received request for PUBLISH"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received request for PUBLISH");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler pubHandler = new DriverOperationFinishedHandler (token, session);
 				resultBool = driver.basicPublish (token.getClientId (), mssg, pubHandler);
@@ -207,7 +207,7 @@ public class AmqpStub
 				consumer = cop.getConsumer ();
 				exclusive = cop.getExclusive ();
 				autoAck = cop.getAutoAck ();
-				AmqpStub.logger.trace ("AmqpStub - Received request for CONSUME"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received request for CONSUME");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler consHandler = new DriverOperationFinishedHandler (token, session);
 				final IAmqpConsumer consumeCallback = new ConsumerHandler (session);
@@ -219,7 +219,7 @@ public class AmqpStub
 				token = gop.getToken ();
 				queue = gop.getQueue ();
 				autoAck = gop.getAutoAck ();
-				AmqpStub.logger.trace ("AmqpStub - Received request for GET"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received request for GET");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler getHandler = new DriverOperationFinishedHandler (token, session);
 				resultBool = driver.basicGet (token.getClientId (), queue, autoAck, getHandler);
@@ -229,7 +229,7 @@ public class AmqpStub
 				final AmqpPayloads.CancelRequest clop = (CancelRequest) message.payload;
 				token = clop.getToken ();
 				consumer = clop.getConsumer ();
-				AmqpStub.logger.trace ("AmqpStub - Received request for CANCEL"); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received request for CANCEL");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler cancelHandler = new DriverOperationFinishedHandler (token, session);
 				resultBool = driver.basicCancel (consumer, cancelHandler);
@@ -240,7 +240,7 @@ public class AmqpStub
 				token = aop.getToken ();
 				final long delivery = aop.getDelivery ();
 				final boolean multiple = aop.getMultiple ();
-				AmqpStub.logger.trace ("AmqpStub - Received  ACK "); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub - Received  ACK ");
 				// NOTE: execute operation
 				final DriverOperationFinishedHandler ackHandler = new DriverOperationFinishedHandler (token, session);
 				resultBool = driver.basicAck (token.getClientId (), delivery, multiple, ackHandler);
@@ -249,7 +249,7 @@ public class AmqpStub
 			default:
 				final DriverOperationFinishedHandler errHandler = new DriverOperationFinishedHandler (null, session);
 				driver.handleUnsupportedOperationError (amqpMessage.toString (), errHandler);
-				AmqpStub.logger.error ("Unknown amqp message: " + amqpMessage.toString ()); // $NON-NLS-1$
+				AmqpStub.logger.error ("Unknown amqp message: " + amqpMessage.toString ());
 				break;
 		}
 	}
@@ -274,9 +274,9 @@ public class AmqpStub
 				AmqpStub.stub = stub;
 				AbstractDriverStub.incDriverReference (stub);
 				channel.accept (AmqpSession.DRIVER, AmqpStub.stub);
-				AmqpStub.logger.trace ("AmqpStub: created new stub."); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub: created new stub.");
 			} else {
-				AmqpStub.logger.trace ("AmqpStub: use existing stub."); // $NON-NLS-1$
+				AmqpStub.logger.trace ("AmqpStub: use existing stub.");
 				AbstractDriverStub.incDriverReference (stub);
 			}
 		}
@@ -291,7 +291,7 @@ public class AmqpStub
 			final AmqpStub stub = new AmqpStub (config, transmitter, driver, channel);
 			AbstractDriverStub.incDriverReference (stub);
 			channel.accept (AmqpSession.DRIVER, stub);
-			AmqpStub.logger.trace ("AmqpStub: created new stub."); // $NON-NLS-1$
+			AmqpStub.logger.trace ("AmqpStub: created new stub.");
 			return stub;
 		}
 	}
@@ -305,15 +305,15 @@ public class AmqpStub
 	 */
 	protected static DriverConnectionData readConnectionData (final IConfiguration config)
 	{
-		final String resourceHost = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_HOST); // $NON-NLS-1$
-		final int resourcePort = ConfigUtils.resolveParameter (config, "", Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT); // $NON-NLS-1$
-		final String amqpServerUser = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_USER); // $NON-NLS-1$
-		final String amqpServerPasswd = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_PASS); // $NON-NLS-1$
+		final String resourceHost = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_HOST);
+		final int resourcePort = ConfigUtils.resolveParameter (config, "", Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT);
+		final String amqpServerUser = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_USER);
+		final String amqpServerPasswd = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_PASS);
 		DriverConnectionData cData;
 		if (amqpServerUser.equals (ConnectionFactory.DEFAULT_USER) && amqpServerPasswd.equals (ConnectionFactory.DEFAULT_PASS)) {
-			cData = new DriverConnectionData (resourceHost, resourcePort, "AMQP"); // $NON-NLS-1$
+			cData = new DriverConnectionData (resourceHost, resourcePort, "AMQP");
 		} else {
-			cData = new DriverConnectionData (resourceHost, resourcePort, "AMQP", amqpServerUser, amqpServerPasswd); // $NON-NLS-1$
+			cData = new DriverConnectionData (resourceHost, resourcePort, "AMQP", amqpServerUser, amqpServerPasswd);
 		}
 		return cData;
 	}

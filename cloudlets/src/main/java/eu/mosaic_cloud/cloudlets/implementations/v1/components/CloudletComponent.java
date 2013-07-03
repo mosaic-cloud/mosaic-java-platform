@@ -237,7 +237,7 @@ public final class CloudletComponent
 	private final IConfiguration resolveConfiguration ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration...");
-		final String configurationDescriptor = this.componentEnvironment.supplementary.get ("descriptor", String.class, null); // $NON-NLS-1$
+		final String configurationDescriptor = this.componentEnvironment.supplementary.get ("descriptor", String.class, null);
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet component configuration descriptor");
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration `%s`...", configurationDescriptor);
 		final IConfiguration configuration;
@@ -253,7 +253,7 @@ public final class CloudletComponent
 	private final ComponentIdentifier resolveSelfGroup ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet component self-group...");
-		final String groupName = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_3, String.class, ConfigProperties.CloudletComponent_14); // $NON-NLS-1$
+		final String groupName = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_3, String.class, ConfigProperties.CloudletComponent_14);
 		Preconditions.checkNotNull (groupName, "unknown cloudlet component self group");
 		final ComponentIdentifier group = ComponentIdentifier.resolve (groupName);
 		return (group);
