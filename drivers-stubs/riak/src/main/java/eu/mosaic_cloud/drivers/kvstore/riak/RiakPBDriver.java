@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore;
+package eu.mosaic_cloud.drivers.kvstore.riak;
 
 
 import java.io.IOException;
@@ -37,10 +37,13 @@ import org.slf4j.Logger;
 /**
  * Driver class for the Riak key-value database management systems.
  * 
- * @author Georgiana Macariu
+ * Protocol Buffer Interface
  * 
+ * @author Carmine Di Biase
+ * @deprecated
  */
-public final class RiakDriver
+@Deprecated
+public final class RiakPBDriver
 		extends AbstractKeyValueDriver
 {
 	/**
@@ -52,15 +55,12 @@ public final class RiakDriver
 	 *            the hostname of the Riak server
 	 * @param riakPort
 	 *            the port for the Riak server
-	 * @param pb
-	 *            whethet the driver uses protocol buffers
 	 */
-	private RiakDriver (final ThreadingContext threading, final int noThreads, final String riakHost, final int riakPort, final boolean pb)
+	private RiakPBDriver (final ThreadingContext threading, final int noThreads, final String riakHost, final int riakPort)
 	{
 		super (threading, noThreads);
 		this.riakHost = riakHost;
 		this.riakPort = riakPort;
-		this.usePB = pb;
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public final class RiakDriver
 	public synchronized void destroy ()
 	{
 		super.destroy ();
-		RiakDriver.logger.trace ("RiakDriver destroyed."); // $NON-NLS-1$
+		RiakPBDriver.logger.trace ("RiakDriver destroyed."); // $NON-NLS-1$
 	}
 	
 	/*
@@ -83,7 +83,8 @@ public final class RiakDriver
 	{
 		final String bucket = (String) params[0];
 		final String clientId = (String) params[1];
-		final IOperationFactory opFactory = RiakOperationFactory.getFactory (this.riakHost, this.riakPort, bucket, clientId, this.usePB);
+		IOperationFactory opFactory;
+		opFactory = RiakPBOperationFactory.getFactory (this.riakHost, this.riakPort, bucket, clientId);
 		return opFactory;
 	}
 	
@@ -105,7 +106,7 @@ public final class RiakDriver
 	 * @throws IOException
 	 * @throws ConnectionException
 	 */
-	public static RiakDriver create (final IConfiguration config, final ThreadingContext threading)
+	public static RiakPBDriver create (final IConfiguration config, final ThreadingContext threading)
 			throws IOException,
 				ConnectionException
 	{
@@ -113,17 +114,11 @@ public final class RiakDriver
 		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
 		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$
-		final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, KeyValueDriverFactory.DriverType.RIAKREST.toString ());
-		boolean usePb = false;
-		if (driverName.equalsIgnoreCase (KeyValueDriverFactory.DriverType.RIAKPB.toString ())) {
-			usePb = true;
-		}
-		RiakDriver.logger.trace ("Created Riak PB driver for host " + host + ":" + port);
-		return new RiakDriver (threading, noThreads, host, port, usePb);
+		RiakPBDriver.logger.trace ("Created Riak PB driver for host " + host + ":" + port);
+		return new RiakPBDriver (threading, noThreads, host, port);
 	}
 	
 	private final String riakHost;
 	private final int riakPort;
-	private final boolean usePB;
-	private static final Logger logger = Transcript.create (RiakDriver.class).adaptAs (Logger.class);
+	private static final Logger logger = Transcript.create (RiakPBDriver.class).adaptAs (Logger.class);
 }

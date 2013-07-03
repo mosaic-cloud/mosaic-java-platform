@@ -138,7 +138,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.drivers.kvstore.component.KvDriverComponentPreMain</mainClass>
+									<mainClass>eu.mosaic_cloud.drivers.kvstore.riak.component.KvDriverComponentPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

@@ -23,8 +23,8 @@ package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 
 import java.util.concurrent.Callable;
 
-import eu.mosaic_cloud.connectors.implementations.v1.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
+import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerCallback;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector;

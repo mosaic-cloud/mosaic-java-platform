@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.implementations.v1.core;
+package eu.mosaic_cloud.connectors.implementations.v1.tools;
 
 
 import java.util.MissingResourceException;
@@ -43,6 +43,6 @@ public final class ConfigProperties
 	}
 	
 	public static final boolean IN_DEBUGGING = java.lang.management.ManagementFactory.getRuntimeMXBean ().getInputArguments ().toString ().indexOf ("-agentlib:jdwp") > 0;
-	private static final String BUNDLE_NAME = "eu.mosaic_cloud.connectors.config"; // $NON-NLS-1$
+	private static final String BUNDLE_NAME = "eu.mosaic_cloud.connectors.v1.config"; // $NON-NLS-1$
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle (ConfigProperties.BUNDLE_NAME);
 }

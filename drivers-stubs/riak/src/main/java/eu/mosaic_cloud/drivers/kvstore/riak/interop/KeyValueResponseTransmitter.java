@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.interop;
+package eu.mosaic_cloud.drivers.kvstore.riak.interop;
 
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import eu.mosaic_cloud.drivers.interop.ResponseTransmitter;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
+import eu.mosaic_cloud.drivers.kvstore.riak.KeyValueOperations;
 import eu.mosaic_cloud.drivers.ops.IOperationType;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;

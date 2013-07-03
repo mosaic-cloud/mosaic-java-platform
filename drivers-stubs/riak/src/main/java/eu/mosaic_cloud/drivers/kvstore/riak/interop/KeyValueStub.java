@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.interop;
+package eu.mosaic_cloud.drivers.kvstore.riak.interop;
 
 
 import java.io.IOException;
@@ -33,9 +33,9 @@ import eu.mosaic_cloud.drivers.DriverNotFoundException;
 import eu.mosaic_cloud.drivers.exceptions.ConnectionException;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
-import eu.mosaic_cloud.drivers.kvstore.AbstractKeyValueDriver;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueDriverFactory;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueOperations;
+import eu.mosaic_cloud.drivers.kvstore.riak.AbstractKeyValueDriver;
+import eu.mosaic_cloud.drivers.kvstore.riak.KeyValueDriverFactory;
+import eu.mosaic_cloud.drivers.kvstore.riak.KeyValueOperations;
 import eu.mosaic_cloud.drivers.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.drivers.ops.IResult;
 import eu.mosaic_cloud.interoperability.core.Message;

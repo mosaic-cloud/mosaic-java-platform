@@ -21,9 +21,9 @@
 package eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic;
 
 
-import eu.mosaic_cloud.connectors.implementations.v1.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.BaseKvStoreConnectorProxy;
+import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.InitRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;

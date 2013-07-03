@@ -30,7 +30,7 @@ import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.connectors.v1.components.IComponentConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
-import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
+import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.drivers.kvstore.RiakDriver;
+import eu.mosaic_cloud.drivers.kvstore.riak.RiakDriver;
 import eu.mosaic_cloud.drivers.ops.IOperationCompletionHandler;
 import eu.mosaic_cloud.drivers.ops.IResult;
 import eu.mosaic_cloud.drivers.ops.tests.TestLoggingHandler;

@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.tests;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector;
-import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
+import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;

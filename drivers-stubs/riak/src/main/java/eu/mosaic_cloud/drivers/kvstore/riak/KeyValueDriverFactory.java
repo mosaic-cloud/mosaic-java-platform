@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore;
+package eu.mosaic_cloud.drivers.kvstore.riak;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -86,8 +86,8 @@ public final class KeyValueDriverFactory
 	
 	public enum DriverType
 	{
-		RIAKPB ("eu.mosaic_cloud.drivers.kvstore.RiakDriver"),
-		RIAKREST ("eu.mosaic_cloud.drivers.kvstore.RiakDriver");
+		RIAKPB ("eu.mosaic_cloud.drivers.kvstore.riak.RiakDriver"),
+		RIAKREST ("eu.mosaic_cloud.drivers.kvstore.riak.RiakDriver");
 		DriverType (final String canonicalClassName)
 		{
 			this.driverClassName = canonicalClassName;

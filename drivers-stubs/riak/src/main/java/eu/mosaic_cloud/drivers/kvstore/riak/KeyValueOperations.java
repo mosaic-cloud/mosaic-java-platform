@@ -18,24 +18,30 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.component;
+package eu.mosaic_cloud.drivers.kvstore.riak;
 
 
-import eu.mosaic_cloud.drivers.component.AbstractDriverComponentPreMain;
+import eu.mosaic_cloud.drivers.ops.IOperationType;
 
 
-public final class KvDriverComponentPreMain
-		extends Object
+/**
+ * Basic operations supported by a key-value stores and memcached protocol.
+ * 
+ * @author Georgiana Macariu
+ * 
+ */
+public enum KeyValueOperations
+		implements
+			IOperationType
 {
-	private KvDriverComponentPreMain ()
-	{
-		super ();
-		throw (new UnsupportedOperationException ());
-	}
-	
-	public static void main (final String[] arguments)
-			throws Throwable
-	{
-		AbstractDriverComponentPreMain.main (KvDriverComponentCallbacks.class.getName ().replace ("PreMain", "Callbacks"), arguments);
-	}
+	ADD,
+	APPEND,
+	CAS,
+	DELETE,
+	GET,
+	GET_BULK,
+	LIST,
+	PREPEND,
+	REPLACE,
+	SET;
 }

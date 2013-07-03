@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore;
+package eu.mosaic_cloud.drivers.kvstore.riak;
 
 
 import java.io.IOException;

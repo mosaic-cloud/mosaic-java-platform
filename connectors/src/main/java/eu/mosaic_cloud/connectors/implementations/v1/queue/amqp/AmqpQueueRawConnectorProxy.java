@@ -24,8 +24,8 @@ package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorProxy;
-import eu.mosaic_cloud.connectors.implementations.v1.core.ConfigProperties;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
+import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.interoperability.core.Message;

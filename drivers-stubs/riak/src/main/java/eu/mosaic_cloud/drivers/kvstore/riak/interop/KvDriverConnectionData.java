@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.interop;
+package eu.mosaic_cloud.drivers.kvstore.riak.interop;
 
 
 import eu.mosaic_cloud.drivers.interop.DriverConnectionData;

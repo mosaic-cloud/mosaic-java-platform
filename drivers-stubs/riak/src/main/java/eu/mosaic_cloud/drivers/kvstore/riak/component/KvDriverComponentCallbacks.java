@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.drivers.kvstore.component;
+package eu.mosaic_cloud.drivers.kvstore.riak.component;
 
 
 import java.io.IOException;
@@ -37,8 +37,8 @@ import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.component.AbstractDriverComponentCallbacks;
-import eu.mosaic_cloud.drivers.kvstore.KeyValueDriverFactory;
-import eu.mosaic_cloud.drivers.kvstore.interop.KeyValueStub;
+import eu.mosaic_cloud.drivers.kvstore.riak.KeyValueDriverFactory;
+import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
