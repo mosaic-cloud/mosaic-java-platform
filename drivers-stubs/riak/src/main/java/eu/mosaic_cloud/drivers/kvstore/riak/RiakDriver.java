@@ -110,10 +110,10 @@ public final class RiakDriver
 				ConnectionException
 	{
 		int port, noThreads;
-		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
-		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
-		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$
-		final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, KeyValueDriverFactory.DriverType.RIAKREST.toString ());
+		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		port = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);// $NON-NLS-1$
+		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_2, Integer.class, 1); // $NON-NLS-1$
+		final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, KeyValueDriverFactory.DriverType.RIAKREST.toString ());
 		boolean usePb = false;
 		if (driverName.equalsIgnoreCase (KeyValueDriverFactory.DriverType.RIAKPB.toString ())) {
 			usePb = true;

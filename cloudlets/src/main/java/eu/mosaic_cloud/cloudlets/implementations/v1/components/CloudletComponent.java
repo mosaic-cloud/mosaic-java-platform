@@ -253,7 +253,7 @@ public final class CloudletComponent
 	private final ComponentIdentifier resolveSelfGroup ()
 	{
 		this.transcript.traceDebugging ("resolving the cloudlet component self-group...");
-		final String groupName = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("CloudletComponent.3"), String.class, ConfigProperties.getString ("CloudletComponent.14")); // $NON-NLS-1$
+		final String groupName = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_3, String.class, ConfigProperties.CloudletComponent_14); // $NON-NLS-1$
 		Preconditions.checkNotNull (groupName, "unknown cloudlet component self group");
 		final ComponentIdentifier group = ComponentIdentifier.resolve (groupName);
 		return (group);
@@ -345,7 +345,7 @@ public final class CloudletComponent
 			// FIXME: This should be done in `Active` state
 			// FIXME: This should be done in an `FsmAccess`
 			final ComponentIdentifier identifier = ComponentIdentifier.resolve (target);
-			final String operation = ConfigProperties.getString ("CloudletComponent.7");
+			final String operation = ConfigProperties.CloudletComponent_7;
 			final ComponentCallReference reference = ComponentCallReference.create ();
 			final ComponentCallRequest request = ComponentCallRequest.create (operation, null, reference);
 			final DeferredFuture<ComponentCallReply> future = DeferredFuture.create (ComponentCallReply.class);
@@ -369,8 +369,8 @@ public final class CloudletComponent
 						CloudletComponent.this.exceptions.traceIgnoredException (new Exception (), "resolving the interoperability channel endpoint for target `%s` failed; ignoring!", target);
 						return (null);
 					}
-					final String peerIdentifierKey = ConfigProperties.getString ("CloudletComponent.13");
-					final String peerEndpointKey = ConfigProperties.getString ("CloudletComponent.12");
+					final String peerIdentifierKey = ConfigProperties.CloudletComponent_13;
+					final String peerEndpointKey = ConfigProperties.CloudletComponent_12;
 					final String peerIdentifier;
 					final String peerEndpoint;
 					try {

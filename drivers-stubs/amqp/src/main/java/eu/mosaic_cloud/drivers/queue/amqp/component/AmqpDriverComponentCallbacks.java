@@ -69,8 +69,8 @@ public final class AmqpDriverComponentCallbacks
 		try {
 			final IConfiguration configuration = PropertyTypeConfiguration.create (AmqpDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
 			this.setDriverConfiguration (configuration);
-			this.resourceGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("AmqpDriverComponentCallbacks.0"), String.class, "")); // $NON-NLS-1$ $NON-NLS-2$
-			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("AmqpDriverComponentCallbacks.1"), String.class, "")); // $NON-NLS-1$
+			this.resourceGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_0, String.class, "")); // $NON-NLS-1$ $NON-NLS-2$
+			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_1, String.class, "")); // $NON-NLS-1$
 			this.status = Status.Created;
 		} catch (final IOException e) {
 			this.exceptions.traceIgnoredException (e);
@@ -89,8 +89,8 @@ public final class AmqpDriverComponentCallbacks
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
 		if (this.status == Status.Registered) {
-			if (request.operation.equals (ConfigProperties.getString ("AmqpDriverComponentCallbacks.5"))) { // $NON-NLS-1$
-				String channelEndpoint = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("AmqpDriverComponentCallbacks.3"), String.class, ""); // $NON-NLS-1$
+			if (request.operation.equals (ConfigProperties.AmqpDriverComponentCallbacks_5)) { // $NON-NLS-1$
+				String channelEndpoint = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_3, String.class, ""); // $NON-NLS-1$
 				// FIXME: These parameters should be determined through
 				//-- component "resource acquire" operations.
 				//-- Also this hack reduces the number of driver instances of
@@ -104,7 +104,7 @@ public final class AmqpDriverComponentCallbacks
 				} catch (final UnknownHostException e) {
 					this.exceptions.traceIgnoredException (e);
 				}
-				final String channelId = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.getString ("AmqpDriverComponentCallbacks.4"), String.class, ""); // $NON-NLS-1$
+				final String channelId = ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_4, String.class, ""); // $NON-NLS-1$
 				final Map<String, String> outcome = new HashMap<String, String> ();
 				outcome.put ("channelEndpoint", channelEndpoint);
 				outcome.put ("channelIdentifier", channelId);
@@ -169,7 +169,7 @@ public final class AmqpDriverComponentCallbacks
 		final ComponentCallReference callReference = ComponentCallReference.create ();
 		this.pendingReference = callReference;
 		this.status = Status.WaitingResourceResolved;
-		this.component.call (this.resourceGroup, ComponentCallRequest.create (ConfigProperties.getString ("AmqpDriverComponentCallbacks.2"), null, callReference)); // $NON-NLS-1$
+		this.component.call (this.resourceGroup, ComponentCallRequest.create (ConfigProperties.AmqpDriverComponentCallbacks_2, null, callReference)); // $NON-NLS-1$
 		this.logger.trace ("AMQP driver callback initialized.");
 		return null;
 	}
@@ -188,8 +188,8 @@ public final class AmqpDriverComponentCallbacks
 			this.logger.info ("AMQP driver callback registered to group " + this.selfGroup); // $NON-NLS-1$
 			this.status = Status.Registered;
 			// NOTE: create stub and interop channel
-			final String channelId = ConfigProperties.getString ("AmqpDriverComponentCallbacks.4");
-			final String channelEndpoint = ConfigProperties.getString ("AmqpDriverComponentCallbacks.3");
+			final String channelId = ConfigProperties.AmqpDriverComponentCallbacks_4;
+			final String channelEndpoint = ConfigProperties.AmqpDriverComponentCallbacks_3;
 			final ZeroMqChannel driverChannel = this.createDriverChannel (channelId, channelEndpoint, AmqpSession.DRIVER);
 			this.stub = AmqpStub.create (this.getDriverConfiguration (), driverChannel, this.threading);
 		} else {
@@ -201,11 +201,11 @@ public final class AmqpDriverComponentCallbacks
 	private void configureDriver (final String brokerIp, final String port, final String user, final String pass, final String vHost)
 	{
 		try {
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("AmqpDriver.1")), brokerIp); // $NON-NLS-1$
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("AmqpDriver.2")), port); // $NON-NLS-1$
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("AmqpDriver.3")), user); // $NON-NLS-1$
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("AmqpDriver.4")), pass); // $NON-NLS-1$
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.getString ("AmqpDriver.5")), vHost); // $NON-NLS-1$
+			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_1), brokerIp); // $NON-NLS-1$
+			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_2), port); // $NON-NLS-1$
+			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_3), user); // $NON-NLS-1$
+			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_4), pass); // $NON-NLS-1$
+			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_5), vHost); // $NON-NLS-1$
 		} catch (final NullPointerException e) {
 			this.exceptions.traceIgnoredException (e);
 		}

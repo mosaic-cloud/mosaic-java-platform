@@ -303,7 +303,7 @@ public final class Cloudlet<TContext extends Object>
 	
 	private final IConnectorsFactoryBuilder provideConnectorsFactoryBuilder ()
 	{
-		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.getString ("Cloudlet.1"), String.class, DefaultConnectorsFactory.Builder.class.getName ());
+		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.Cloudlet_1, String.class, DefaultConnectorsFactory.Builder.class.getName ());
 		Preconditions.checkNotNull (className, "unknown cloudlet connectors factory builder class");
 		final IConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (IConnectorsFactoryBuilder.class, className, new Class<?>[] {ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
 		return builder;
@@ -312,7 +312,7 @@ public final class Cloudlet<TContext extends Object>
 	private final List<?> provideConnectorsFactoryInitializers ()
 	{
 		final LinkedList<Object> initializers = new LinkedList<Object> ();
-		final String classNames = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.getString ("Cloudlet.2"), String.class, "");
+		final String classNames = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.Cloudlet_2, String.class, "");
 		Preconditions.checkNotNull (classNames, "unknown cloudlet connectors factory initializer class");
 		if (classNames.isEmpty ())
 			return initializers;

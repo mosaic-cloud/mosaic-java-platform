@@ -46,12 +46,12 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 	private AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
 	{
 		super (rawProxy, configuration, messageClass, messageEncoder);
-		this.exchange = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.0"), String.class, this.raw.getIdentifier ()); // $NON-NLS-1$
-		this.exchangeType = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.5"), AmqpExchangeType.class, AmqpExchangeType.DIRECT); // $NON-NLS-1$
-		this.exchangeDurable = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.9"), Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
-		this.exchangeAutoDelete = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.7"), Boolean.class, Boolean.TRUE).booleanValue (); // $NON-NLS-1$
-		this.publishRoutingKey = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.1"), String.class, this.raw.getIdentifier ()); // $NON-NLS-1$
-		this.definePassive = configuration.getConfigParameter (ConfigProperties.getString ("AmqpQueueConnector.8"), Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
+		this.exchange = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_0, String.class, this.raw.getIdentifier ()); // $NON-NLS-1$
+		this.exchangeType = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_5, AmqpExchangeType.class, AmqpExchangeType.DIRECT); // $NON-NLS-1$
+		this.exchangeDurable = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_9, Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
+		this.exchangeAutoDelete = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_7, Boolean.class, Boolean.TRUE).booleanValue (); // $NON-NLS-1$
+		this.publishRoutingKey = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_1, String.class, this.raw.getIdentifier ()); // $NON-NLS-1$
+		this.definePassive = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_8, Boolean.class, Boolean.FALSE).booleanValue (); // $NON-NLS-1$
 		this.transcript.traceDebugging ("created the queue publisher connector proxy for exchange `%s` (of type `%s`) with routing key `%s`.", this.exchange, this.exchangeType, this.publishRoutingKey);
 	}
 	

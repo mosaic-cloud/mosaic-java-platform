@@ -21,30 +21,21 @@
 package eu.mosaic_cloud.cloudlets.implementations.v1.tools;
 
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
-
-
 public final class ConfigProperties
 {
 	private ConfigProperties ()
 	{}
 	
-	public static String getString (final String key)
-	{
-		String value;
-		try {
-			value = ConfigProperties.RESOURCE_BUNDLE.getString (key);
-		} catch (final MissingResourceException exception) {
-			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception, "failed resolving the config-property `%s`...", key);
-			value = '!' + key + '!';
-		}
-		return value;
-	}
+	public static final String CloudletComponent_3 = "self.group.identifier";
+	public static final String CloudletComponent_7 = "mosaic-component:get.channel.data";
+	public static final String CloudletComponent_8 = "cloudlet.main_class";
+	public static final String CloudletComponent_9 = "cloudlet.context_class";
+	public static final String CloudletComponent_10 = "cloudlet.resource_file";
+	public static final String CloudletComponent_11 = "cloudlet.no_instances";
+	public static final String CloudletComponent_12 = "channelEndpoint";
+	public static final String CloudletComponent_13 = "channelIdentifier";
+	public static final String CloudletComponent_14 = "c2e40f0b2c041bc694ace68ace08420d40f9cbc0";
 	
-	public static final boolean IN_DEBUGGING = java.lang.management.ManagementFactory.getRuntimeMXBean ().getInputArguments ().toString ().indexOf ("-agentlib:jdwp") > 0;
-	private static final String BUNDLE_NAME = "eu.mosaic_cloud.cloudlets.v1.config"; // $NON-NLS-1$
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle (ConfigProperties.BUNDLE_NAME);
+	public static final String Cloudlet_1 = "connectors.factory.builder";
+	public static final String Cloudlet_2 = "connectors.factory.initializer";
 }

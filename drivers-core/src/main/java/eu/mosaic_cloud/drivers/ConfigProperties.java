@@ -21,30 +21,40 @@
 package eu.mosaic_cloud.drivers;
 
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
-
-
 public final class ConfigProperties
 {
 	private ConfigProperties ()
 	{}
 	
-	public static String getString (final String key)
-	{
-		String retString;
-		try {
-			retString = ConfigProperties.RESOURCE_BUNDLE.getString (key);
-		} catch (final MissingResourceException exception) {
-			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception, "failed resolving the config-property `%s`...", key);
-			retString = '!' + key + '!';
-		}
-		return retString;
-	}
+	public static final String AmqpDriver_0 = "amqp.driver_threads";
+	public static final String AmqpDriver_1 = "amqp.host";
+	public static final String AmqpDriver_2 = "amqp.port";
+	public static final String AmqpDriver_3 = "amqp.user";
+	public static final String AmqpDriver_4 = "amqp.passwd";
+	public static final String AmqpDriver_5 = "amqp.virtual_host";
+	public static final String AmqpDriver_6 = "amqp.max_reconnection_tries";
+	public static final String AmqpDriver_7 = "amqp.min_reconnection_time";
 	
-	public static final boolean inDebugging = java.lang.management.ManagementFactory.getRuntimeMXBean ().getInputArguments ().toString ().indexOf ("-agentlib:jdwp") > 0;
-	private static final String BUNDLE_NAME = "eu.mosaic_cloud.drivers.config"; // $NON-NLS-1$
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle (ConfigProperties.BUNDLE_NAME);
+	public static final String KVStoreDriver_0 = "kvstore.host";
+	public static final String KVStoreDriver_1 = "kvstore.port";
+	public static final String KVStoreDriver_2 = "kvstore.driver_threads";
+	public static final String KVStoreDriver_3 = "kvstore.bucket";
+	public static final String KVStoreDriver_4 = "kvstore.passwd";
+	public static final String KVStoreDriver_5 = "kvstore.user";
+	public static final String KVStoreDriver_6 = "kvstore.driver_name";
+	
+	public static final String AmqpDriverComponentCallbacks_0 = "resource.group.identifier";
+	public static final String AmqpDriverComponentCallbacks_1 = "self.group.identifier";
+	public static final String AmqpDriverComponentCallbacks_2 = "mosaic-rabbitmq:get-broker-endpoint";
+	public static final String AmqpDriverComponentCallbacks_3 = "interop.driver.endpoint";
+	public static final String AmqpDriverComponentCallbacks_4 = "interop.driver.identity";
+	public static final String AmqpDriverComponentCallbacks_5 = "mosaic-component:get.channel.data";
+	
+	public static final String KVDriverComponentCallbacks_0 = "resource.group.identifier";
+	public static final String KVDriverComponentCallbacks_1 = "self.group.identifier";
+	public static final String KVDriverComponentCallbacks_2 = "mosaic-riak-kv:get-store-pb-endpoint";
+	public static final String KVDriverComponentCallbacks_3 = "interop.driver.endpoint";
+	public static final String KVDriverComponentCallbacks_4 = "interop.driver.identity";
+	public static final String KVDriverComponentCallbacks_5 = "mosaic-component:get.channel.data";
+	public static final String KVDriverComponentCallbacks_6 = "mosaic-riak-kv:get-store-http-endpoint";
 }

@@ -300,10 +300,10 @@ public class AmqpDriver
 	
 	private synchronized void connectResource ()
 	{
-		final String amqpServerHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.1"), String.class, ConnectionFactory.DEFAULT_HOST); // $NON-NLS-1$
-		final int amqpServerPort = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.2"), Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT); // $NON-NLS-1$
-		final String amqpServerUser = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.3"), String.class, ConnectionFactory.DEFAULT_USER); // $NON-NLS-1$
-		final String amqpVirtualHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.5"), String.class, ConnectionFactory.DEFAULT_VHOST); // $NON-NLS-1$
+		final String amqpServerHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_1, String.class, ConnectionFactory.DEFAULT_HOST); // $NON-NLS-1$
+		final int amqpServerPort = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_2, Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT); // $NON-NLS-1$
+		final String amqpServerUser = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_3, String.class, ConnectionFactory.DEFAULT_USER); // $NON-NLS-1$
+		final String amqpVirtualHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_5, String.class, ConnectionFactory.DEFAULT_VHOST); // $NON-NLS-1$
 		final ConnectionFactory factory = new ConnectionFactory ();
 		factory.setHost (amqpServerHost);
 		factory.setPort (amqpServerPort);
@@ -311,7 +311,7 @@ public class AmqpDriver
 			factory.setVirtualHost (amqpVirtualHost);
 		}
 		if (!amqpServerUser.isEmpty ()) {
-			final String amqpServerPasswd = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.getString ("AmqpDriver.4"), String.class, ConnectionFactory.DEFAULT_PASS); // $NON-NLS-1$
+			final String amqpServerPasswd = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_4, String.class, ConnectionFactory.DEFAULT_PASS); // $NON-NLS-1$
 			factory.setUsername (amqpServerUser);
 			factory.setPassword (amqpServerPasswd);
 		}
@@ -363,7 +363,7 @@ public class AmqpDriver
 	 */
 	public static AmqpDriver create (final IConfiguration configuration, final ThreadingContext threading)
 	{
-		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.getString ("AmqpDriver.0"), Integer.class, 1); // $NON-NLS-1$
+		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.AmqpDriver_0, Integer.class, 1); // $NON-NLS-1$
 		AmqpDriver driver = new AmqpDriver (configuration, threading, noThreads);
 		// NOTE: open connection - moved to the stub
 		driver.connectResource ();
@@ -395,8 +395,8 @@ public class AmqpDriver
 	{
 		public ConnectionShutdownListener ()
 		{
-			this.maxReconnectionTries = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.getString ("AmqpDriver.6"), Integer.class, ConnectionShutdownListener.DEFAULT_MAX_RECONNECTION_TRIES); // $NON-NLS-1$
-			this.minReconnectionTime = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.getString ("AmqpDriver.7"), Long.class, ConnectionShutdownListener.DEFAULT_MIN_RECONNECTION_TIME); // $NON-NLS-1$
+			this.maxReconnectionTries = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.AmqpDriver_6, Integer.class, ConnectionShutdownListener.DEFAULT_MAX_RECONNECTION_TRIES); // $NON-NLS-1$
+			this.minReconnectionTime = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.AmqpDriver_7, Long.class, ConnectionShutdownListener.DEFAULT_MIN_RECONNECTION_TIME); // $NON-NLS-1$
 		}
 		
 		@Override

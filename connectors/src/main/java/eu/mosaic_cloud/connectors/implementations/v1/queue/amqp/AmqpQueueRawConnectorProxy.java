@@ -255,7 +255,7 @@ public final class AmqpQueueRawConnectorProxy
 	@Override
 	protected String getDefaultDriverGroup ()
 	{
-		return (ConfigProperties.getString ("AmqpConnector.0"));
+		return (ConfigProperties.AmqpConnector_0);
 	}
 	
 	@Override

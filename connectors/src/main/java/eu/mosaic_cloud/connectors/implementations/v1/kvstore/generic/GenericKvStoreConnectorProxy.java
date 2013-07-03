@@ -48,7 +48,7 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object>
 	protected GenericKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
 	{
 		super (configuration, encoder);
-		this.bucket = super.configuration.getConfigParameter (ConfigProperties.getString ("GenericKvStoreConnector.1"), String.class, "");
+		this.bucket = super.configuration.getConfigParameter (ConfigProperties.GenericKvStoreConnector_1, String.class, "");
 		this.transcript.traceDebugging ("created generic kv store connector proxy for bucket `%s`.", this.bucket);
 	}
 	
@@ -65,7 +65,7 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object>
 	@Override
 	protected String getDefaultDriverGroup ()
 	{
-		return (ConfigProperties.getString ("GenericKvStoreConnector.0"));
+		return (ConfigProperties.GenericKvStoreConnector_0);
 	}
 	
 	/**

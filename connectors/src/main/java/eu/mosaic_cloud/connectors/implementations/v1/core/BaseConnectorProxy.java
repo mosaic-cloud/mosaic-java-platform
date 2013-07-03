@@ -156,9 +156,9 @@ public abstract class BaseConnectorProxy
 	{
 		Preconditions.checkNotNull (session);
 		this.transcript.traceDebugging ("creating and connecting the interoperability session of type `%s`...", session);
-		final String driverEndpoint = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.0"), String.class, null);
-		final String driverIdentity = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.1"), String.class, null);
-		final String driverTarget = this.configuration.getConfigParameter (ConfigProperties.getString ("GenericConnector.2"), String.class, this.getDefaultDriverGroup ());
+		final String driverEndpoint = this.configuration.getConfigParameter (ConfigProperties.GenericConnector_0, String.class, null);
+		final String driverIdentity = this.configuration.getConfigParameter (ConfigProperties.GenericConnector_1, String.class, null);
+		final String driverTarget = this.configuration.getConfigParameter (ConfigProperties.GenericConnector_2, String.class, this.getDefaultDriverGroup ());
 		CallbackCompletion<Void> result;
 		this.channel.register (session);
 		if ((driverEndpoint != null) && (driverIdentity != null)) {

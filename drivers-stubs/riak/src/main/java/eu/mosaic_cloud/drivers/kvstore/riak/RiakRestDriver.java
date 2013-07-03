@@ -104,9 +104,9 @@ public final class RiakRestDriver
 	public static RiakRestDriver create (final IConfiguration config, final ThreadingContext threading)
 	{
 		int port, noThreads;
-		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
-		port = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0); // $NON-NLS-1$
-		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.2"), Integer.class, 1); // $NON-NLS-1$
+		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+		port = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0); // $NON-NLS-1$
+		noThreads = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_2, Integer.class, 1); // $NON-NLS-1$
 		RiakRestDriver.logger.trace ("Created Riak REST driver for host " + host + ":" + port + " [threads=" + noThreads + "]");
 		return new RiakRestDriver (threading, noThreads, host, port);
 	}

@@ -21,28 +21,29 @@
 package eu.mosaic_cloud.connectors.implementations.v1.tools;
 
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
-
-
 public final class ConfigProperties
 {
 	private ConfigProperties ()
 	{}
 	
-	public static String getString (final String key)
-	{
-		try {
-			return ConfigProperties.RESOURCE_BUNDLE.getString (key);
-		} catch (final MissingResourceException exception) {
-			FallbackExceptionTracer.defaultInstance.traceIgnoredException (exception, "failed resolving the config-property `%s`...", key);
-			return '!' + key + '!';
-		}
-	}
-	
-	public static final boolean IN_DEBUGGING = java.lang.management.ManagementFactory.getRuntimeMXBean ().getInputArguments ().toString ().indexOf ("-agentlib:jdwp") > 0;
-	private static final String BUNDLE_NAME = "eu.mosaic_cloud.connectors.v1.config"; // $NON-NLS-1$
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle (ConfigProperties.BUNDLE_NAME);
+	public static final String GenericConnector_0 = "interop.driver.endpoint";
+	public static final String GenericConnector_1 = "interop.driver.identity";
+	public static final String GenericConnector_2 = "interop.driver.group";
+
+	public static final String GenericKvStoreConnector_0 = "a3e40f0b2c041bc694ace68ace08420d40f9cbc0";
+	public static final String GenericKvStoreConnector_1 = "kvstore.bucket";
+
+	public static final String AmqpConnector_0 = "a5e40f0b2c041bc694ace68ace08420d40f9cbc0";
+
+	public static final String AmqpQueueConnector_0 = "amqp.exchange";
+	public static final String AmqpQueueConnector_1 = "amqp.routing_key";
+	public static final String AmqpQueueConnector_2 = "amqp.queue";
+	public static final String AmqpQueueConnector_3 = "publisher";
+	public static final String AmqpQueueConnector_4 = "consumer";
+	public static final String AmqpQueueConnector_5 = "amqp.exchange_type";
+	public static final String AmqpQueueConnector_6 = "amqp.exclusive";
+	public static final String AmqpQueueConnector_7 = "amqp.auto_delete";
+	public static final String AmqpQueueConnector_8 = "amqp.passive";
+	public static final String AmqpQueueConnector_9 = "amqp.durable";
+	public static final String AmqpQueueConnector_10 = "amqp.auto_ack";
 }

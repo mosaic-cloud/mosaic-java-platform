@@ -252,7 +252,7 @@ public class KeyValueStub
 				if (stub == null) {
 					KeyValueStub.logger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
 					final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
-					final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+					final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 					final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
 					stub = new KeyValueStub (config, transmitter, driver, channel);
 					stub.driverClass = KeyValueDriverFactory.DriverType.valueOf (driverName.toUpperCase (Locale.ENGLISH)).getDriverClass ();
@@ -278,7 +278,7 @@ public class KeyValueStub
 		try {
 			KeyValueStub.logger.trace ("KeyValueStub: create new stub."); // $NON-NLS-1$
 			final KeyValueResponseTransmitter transmitter = new KeyValueResponseTransmitter ();
-			final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
+			final String driverName = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, ""); // $NON-NLS-1$ $NON-NLS-2$
 			final AbstractKeyValueDriver driver = KeyValueDriverFactory.createDriver (driverName, config, threadingContext);
 			stub = new KeyValueStub (config, transmitter, driver, channel);
 			stub.driverClass = KeyValueDriverFactory.DriverType.valueOf (driverName.toUpperCase (Locale.ENGLISH)).getDriverClass ();
@@ -302,14 +302,14 @@ public class KeyValueStub
 	 */
 	protected static DriverConnectionData readConnectionData (final IConfiguration config)
 	{
-		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.0"), String.class, "localhost");// $NON-NLS-1$
+		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "localhost");// $NON-NLS-1$
 																																						// $NON-NLS-2$
-		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.1"), Integer.class, 0);// $NON-NLS-1$
-		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.6"), String.class, ""); // $NON-NLS-1$
+		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);// $NON-NLS-1$
+		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, ""); // $NON-NLS-1$
 																																		// $NON-NLS-2$
-		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.5"), String.class, ""); // $NON-NLS-1$
+		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_5, String.class, ""); // $NON-NLS-1$
 																																		// $NON-NLS-2$
-		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.getString ("KVStoreDriver.4"), String.class, ""); // $NON-NLS-1$
+		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_4, String.class, ""); // $NON-NLS-1$
 																																		// $NON-NLS-2$
 		DriverConnectionData cData;
 		if ("".equals (user) && "".equals (passwd)) {
