@@ -15,13 +15,13 @@
 	<inceptionYear>2010</inceptionYear>
 	
 	<modules>
-		<module>./platform-parent</module>
-		<module>./components-parent</module>
-		<module>./interoperability-parent</module>
-		<module>./tools-parent</module>
-		<module>./examples/parent</module>
-		<module>./components-httpg-jetty-container</module>
-		<module>./components-httpg-jetty-connector</module>
+		<module>../platform-parent</module>
+		<module>../components-parent</module>
+		<module>../interoperability-parent</module>
+		<module>../tools-parent</module>
+		<module>../examples/parent</module>
+		<module>../components-httpg-jetty-container</module>
+		<module>../components-httpg-jetty-connector</module>
 	</modules>
 	
 	<build>
